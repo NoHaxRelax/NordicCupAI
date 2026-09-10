@@ -89,7 +89,7 @@ def _find_ckpt() -> str:
 
 
 CKPT = _find_ckpt()
-_ck = torch.load(CKPT, map_location="cpu")
+_ck = torch.load(CKPT, map_location="cpu", weights_only=False)
 _cfg = _ck.get("config", {})
 model = EntityPolicy(d_model=_cfg.get("d_model", 64), n_layers=_cfg.get("n_layers", 2))
 model.load_state_dict(_ck["model"])

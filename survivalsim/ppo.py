@@ -59,16 +59,28 @@ class VecSim:
             types[i], feats[i], mask[i], body[i], alive[i] = featurize_sim(sim, MAX_AG)
         return {"types": types, "feats": feats, "mask": mask, "body": body, "alive": alive}
 
-    def step(self, actions: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        """actions[N, A] -> (rewards[N, A], done[N, A]); resets finished envs."""
+    def step(self, actions: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict[int, tuple]]:
+        """actions[N, A] -> (rewards, done, trunc, final_obs); resets finished envs.
+
+        `done` ends a slot's stream. `trunc` marks the subset that ended by the
+        max_age time limit rather than by death: those are not true terminals,
+        so the value of the final (pre-reset) state is handed back in
+        `final_obs` for bootstrapping. Treating a time limit as death taught
+        the policy that surviving to the end was worth nothing beyond it.
+        """
         rewards = np.zeros((self.n, MAX_AG), np.float32)
         done = np.zeros((self.n, MAX_AG), bool)
+        trunc = np.zeros((self.n, MAX_AG), bool)
+        final_obs: dict[int, tuple] = {}
         for i, sim in enumerate(self.sims):
             k = sim.spec.n_agents
             was = sim.alive.copy()
             _, r, env_done, info = sim.step(actions[i, :k], obs=False)
             rewards[i, :k] = r
             done[i, :k] = was & (~info["alive"] | env_done)
+            if env_done and sim.t >= sim.spec.max_age:
+                trunc[i, :k] = was & info["alive"]
+                final_obs[i] = featurize_sim(sim, MAX_AG)
             if env_done:
                 self.finished.append({
                     "age": float(sim.age.max()),
@@ -78,7 +90,30 @@ class VecSim:
                     "hardness": self.hardness,
                 })
                 self.sims[i] = self._new()
-        return rewards, done
+        return rewards, done, trunc, final_obs
+
+
+class ReturnScaler:
+    """Scale rewards by the running std of the discounted return, per CleanRL's
+    NormalizeReward. The family's score scales differ by orders of magnitude
+    (death penalty 1..60, tree energy 15..220), and an unscaled value target
+    made value clipping at +-0.2 meaningless."""
+
+    def __init__(self, shape: tuple[int, ...], gamma: float, eps: float = 1e-8):
+        self.ret = np.zeros(shape, np.float64)
+        self.gamma, self.eps = gamma, eps
+        self.mean, self.var, self.count = 0.0, 1.0, eps
+
+    def __call__(self, r: np.ndarray, done: np.ndarray) -> np.ndarray:
+        self.ret = self.ret * self.gamma * (~done) + r
+        x = self.ret.reshape(-1)
+        bm, bv, bc = x.mean(), x.var(), x.size
+        delta = bm - self.mean
+        tot = self.count + bc
+        self.mean += delta * bc / tot
+        self.var = (self.var * self.count + bv * bc + delta ** 2 * self.count * bc / tot) / tot
+        self.count = tot
+        return (r / np.sqrt(self.var + self.eps)).astype(np.float32)
 
 
 # --------------------------------------------------------------------- eval
@@ -161,6 +196,8 @@ class Config:
     gamma: float = 0.99
     lam: float = 0.95
     clip: float = 0.2
+    vf_clip: float = 0.0             # 0 = no value clipping (returns are scaled, not bounded)
+    reward_scale: bool = True        # running-return normalisation of rewards
     vf_coef: float = 0.5
     ent_coef: float = 0.01
     max_grad_norm: float = 0.5
@@ -168,6 +205,7 @@ class Config:
     hardness_start: float = 0.15
     eval_every: int = 10             # updates
     eval_episodes: int = 12
+    eval_seed: int = 12345           # fixed, so every eval plays the same held-out set
     seed: int = 0
     d_model: int = 64
     n_layers: int = 2
@@ -193,15 +231,21 @@ def train(cfg: Config) -> Path:
     opt = torch.optim.Adam(model.parameters(), lr=cfg.lr, eps=1e-5)
     step0, best = 0, -np.inf
     if cfg.resume:
-        ck = torch.load(cfg.resume, map_location="cpu")
+        # our own checkpoints carry config dicts and scaler floats, not just tensors
+        ck = torch.load(cfg.resume, map_location="cpu", weights_only=False)
         model.load_state_dict(ck["model"]); opt.load_state_dict(ck["opt"])
         step0, best = ck.get("step", 0), ck.get("best", -np.inf)
 
     N, T = cfg.envs, cfg.horizon
-    vec = VecSim(N, seed=cfg.seed, hardness=cfg.hardness_start)
+    # seed by progress too, so a resumed run draws new worlds instead of
+    # replaying the exact spec sequence it already trained on
+    vec = VecSim(N, seed=cfg.seed + step0 // (N * T), hardness=cfg.hardness_start)
     obs = vec.observe()
     per_rollout = N * T
     n_updates = max(1, (cfg.total_steps - step0) // per_rollout)
+    scaler = ReturnScaler((N, MAX_AG), cfg.gamma)
+    if cfg.resume and "scaler" in ck:
+        scaler.mean, scaler.var, scaler.count = ck["scaler"]
     log_f = (out / "metrics.jsonl").open("a", encoding="utf-8")
     t_start = time.time()
 
@@ -216,6 +260,8 @@ def train(cfg: Config) -> Path:
         "val": np.zeros((T, N, MAX_AG), np.float32),
         "rew": np.zeros((T, N, MAX_AG), np.float32),
         "done": np.zeros((T, N, MAX_AG), bool),
+        "trunc": np.zeros((T, N, MAX_AG), bool),
+        "boot": np.zeros((T, N, MAX_AG), np.float32),   # V(final state) where trunc
     }
 
     trim = trim_tokens
@@ -235,10 +281,11 @@ def train(cfg: Config) -> Path:
 
     step = step0
     for update in range(1, n_updates + 1):
-        # curriculum: adversarial dimensions ramp, geometry does not
-        frac = min(1.0, (update - 1) / max(1.0, cfg.curriculum_frac * n_updates))
+        # Curriculum and lr are functions of the GLOBAL step, so a resumed run
+        # continues where it left off instead of restarting the ramp.
+        frac = min(1.0, step / max(1.0, cfg.curriculum_frac * cfg.total_steps))
         vec.hardness = cfg.hardness_start + (1.0 - cfg.hardness_start) * frac
-        lr_now = cfg.lr * (1.0 - 0.9 * (update - 1) / n_updates)
+        lr_now = cfg.lr * (1.0 - 0.9 * min(1.0, step / cfg.total_steps))
         for g in opt.param_groups:
             g["lr"] = lr_now
 
@@ -248,20 +295,31 @@ def train(cfg: Config) -> Path:
             for k in ("types", "feats", "mask", "body", "alive"):
                 buf[k][t] = obs[k]
             buf["act"][t], buf["logp"][t], buf["val"][t] = act, logp, val
-            rew, done = vec.step(act)
-            buf["rew"][t], buf["done"][t] = rew, done
+            rew, done, trunc, final_obs = vec.step(act)
+            if cfg.reward_scale:
+                rew = scaler(rew, done)
+            buf["rew"][t], buf["done"][t], buf["trunc"][t] = rew, done, trunc
+            if final_obs:
+                # value of the pre-reset final state for time-limit truncations
+                fo = {k: np.stack([final_obs[i][j] for i in final_obs])
+                      for j, k in enumerate(("types", "feats", "mask", "body", "alive"))}
+                _, _, fv = policy_on(fo)
+                for row, i in enumerate(final_obs):
+                    buf["boot"][t, i] = fv[row]
             obs = vec.observe()
         step += per_rollout
         _, _, next_val = policy_on(obs)
 
-        # ---- GAE with per-slot masking
+        # ---- GAE with per-slot masking and truncation bootstrapping
         adv = np.zeros((T, N, MAX_AG), np.float32)
         lastgae = np.zeros((N, MAX_AG), np.float32)
         for t in reversed(range(T)):
             nv = next_val if t == T - 1 else buf["val"][t + 1]
-            nonterm = 1.0 - buf["done"][t].astype(np.float32)
-            delta = buf["rew"][t] + cfg.gamma * nv * nonterm - buf["val"][t]
-            lastgae = delta + cfg.gamma * cfg.lam * nonterm * lastgae
+            done_t, trunc_t = buf["done"][t], buf["trunc"][t]
+            carry = 1.0 - done_t.astype(np.float32)          # stream continues?
+            boot = np.where(trunc_t, buf["boot"][t], nv * carry)  # what to bootstrap from
+            delta = buf["rew"][t] + cfg.gamma * boot - buf["val"][t]
+            lastgae = delta + cfg.gamma * cfg.lam * carry * lastgae
             lastgae = np.where(buf["alive"][t], lastgae, 0.0)
             adv[t] = lastgae
         ret = adv + buf["val"]
@@ -298,8 +356,11 @@ def train(cfg: Config) -> Path:
                 ratio = (logp - b_logp[idx]).exp()
                 a_mb = b_adv[idx]
                 pg = torch.max(-a_mb * ratio, -a_mb * ratio.clamp(1 - cfg.clip, 1 + cfg.clip)).mean()
-                v_clip = b_val[idx] + (v - b_val[idx]).clamp(-cfg.clip, cfg.clip)
-                vf = 0.5 * torch.max((v - b_ret[idx]) ** 2, (v_clip - b_ret[idx]) ** 2).mean()
+                if cfg.vf_clip > 0:
+                    v_clip = b_val[idx] + (v - b_val[idx]).clamp(-cfg.vf_clip, cfg.vf_clip)
+                    vf = 0.5 * torch.max((v - b_ret[idx]) ** 2, (v_clip - b_ret[idx]) ** 2).mean()
+                else:
+                    vf = 0.5 * ((v - b_ret[idx]) ** 2).mean()
                 ent = dist.entropy().mean()
                 loss = pg + cfg.vf_coef * vf - cfg.ent_coef * ent
                 if not torch.isfinite(loss):
@@ -319,7 +380,8 @@ def train(cfg: Config) -> Path:
         fin, vec.finished = vec.finished, []
         rec = {
             "update": update, "step": step, "hardness": round(vec.hardness, 3), "lr": lr_now,
-            "sps": int(step / (time.time() - t_start + 1e-9)),
+            "sps": int((step - step0) / (time.time() - t_start + 1e-9)),
+            "reward_scale": round(float(np.sqrt(scaler.var + scaler.eps)), 4),
             "train/episodes": len(fin),
             "train/age": float(np.mean([f["age"] for f in fin])) if fin else None,
             "train/score": float(np.mean([f["score"] for f in fin])) if fin else None,
@@ -327,14 +389,16 @@ def train(cfg: Config) -> Path:
             "transitions": K, **{f"loss/{k}": round(v, 5) for k, v in stats.items()},
         }
         if update % cfg.eval_every == 0 or update == n_updates:
-            ev = evaluate(model, cfg.eval_episodes, seed=10_000 + update, max_age=cfg.eval_max_age)
+            ev = evaluate(model, cfg.eval_episodes, seed=cfg.eval_seed, max_age=cfg.eval_max_age)
             rec.update(ev)
+            improved = ev["captured/score"] > best
+            best = max(best, ev["captured/score"])
             ck = {"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
-                  "config": asdict(cfg), "eval": ev, "best": best}
+                  "config": asdict(cfg), "eval": ev, "best": best,
+                  "scaler": (float(scaler.mean), float(scaler.var), float(scaler.count))}
             torch.save(ck, out / f"ckpt_{step:09d}.pt")
             torch.save(ck, out / "last.pt")
-            if ev["captured/score"] > best:
-                best = ev["captured/score"]; ck["best"] = best
+            if improved:
                 torch.save(ck, out / "best.pt")
         log_f.write(json.dumps(rec) + "\n"); log_f.flush()
         print(json.dumps({k: v for k, v in rec.items() if k in ("update", "step", "hardness", "sps", "train/age", "train/survived", "captured/age", "captured/survived", "captured/score", "loss/ent")}), flush=True)
