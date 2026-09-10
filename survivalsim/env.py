@@ -68,7 +68,9 @@ class SurvivalSim:
 
     # ----------------------------------------------------------------- step
 
-    def step(self, actions: Iterable[int]) -> tuple[dict, np.ndarray, bool, dict]:
+    def step(self, actions: Iterable[int], obs: bool = True) -> tuple[dict | None, np.ndarray, bool, dict]:
+        """Advance one tick. `obs=False` skips building the payload, for training loops
+        that read state through the array path instead."""
         s = self.spec
         dt = s.dt
         acts = np.asarray(list(actions), dtype=int)
@@ -133,7 +135,41 @@ class SurvivalSim:
         reward = self.score_per_agent() - prev_score
         reward -= s.death_penalty * (was_alive & ~self.alive)
         done = (not self.alive.any()) or (self.t >= s.max_age)
-        return self.observe(), reward, bool(done), {"alive": self.alive.copy()}
+        return (self.observe() if obs else None), reward, bool(done), {"alive": self.alive.copy()}
+
+    # ------------------------------------------------- sensing (shared path)
+
+    def sensed(self, i: int) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[tuple[float, float, float, float]]]:
+        """Everything agent `i` can sense, as arrays, before any formatting.
+
+        Returns (tree_dist, tree_ang, pred_dist, pred_ang, pred_reldir, edges).
+        Both the JSON payload and the training array path are built from this,
+        so they cannot drift apart.
+        """
+        s = self.spec
+        pos, th = self.agent_xy[i], self.agent_th[i]
+
+        def look(points: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+            rel = points - pos
+            dist = np.linalg.norm(rel, axis=1)
+            ang = _wrap(np.arctan2(rel[:, 1], rel[:, 0]) - th)
+            seen = ((dist <= s.vision_range) & (np.abs(ang) <= s.vision_angle)) | (dist <= s.hearing_radius)
+            return dist[seen], ang[seen], seen
+
+        td = ta = np.zeros(0)
+        if s.n_trees and self.tree_ready.any():
+            td, ta, _ = look(self.tree_xy[self.tree_ready])
+        pd = pa = pr = np.zeros(0)
+        if s.n_predators:
+            pd, pa, seen = look(self.pred_xy)
+            pr = _wrap(self.pred_th[seen] - th)
+
+        W = s.world_size
+        corners = [(0.0, 0.0), (W, 0.0), (W, W), (0.0, W)]
+        reach = max(s.vision_range, s.hearing_radius)
+        edges = [(*a, *b) for a, b in zip(corners, corners[1:] + corners[:1])
+                 if _seg_dist(pos, np.array(a), np.array(b)) <= reach]
+        return td, ta, pd, pa, pr, edges
 
     def _step_predators(self, dt: float) -> None:
         s = self.spec
@@ -194,42 +230,19 @@ class SurvivalSim:
         }
 
     def _observations(self, i: int) -> list[dict]:
-        s = self.spec
-        pos, th = self.agent_xy[i], self.agent_th[i]
+        td, ta, pd, pa, pr, edges = self.sensed(i)
         out: list[dict] = []
-
-        def sensed(points: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-            rel = points - pos
-            dist = np.linalg.norm(rel, axis=1)
-            ang = _wrap(np.arctan2(rel[:, 1], rel[:, 0]) - th)
-            seen = ((dist <= s.vision_range) & (np.abs(ang) <= s.vision_angle)) | (dist <= s.hearing_radius)
-            return dist, ang, seen
-
-        if s.n_trees:
-            ready = np.flatnonzero(self.tree_ready)
-            if ready.size:
-                dist, ang, seen = sensed(self.tree_xy[ready])
-                for k in np.flatnonzero(seen):
-                    out.append({"type": "tree", "distance": float(round(dist[k], 4)),
-                                "angle": float(round(ang[k], 4))})
-
-        if s.n_predators:
-            dist, ang, seen = sensed(self.pred_xy)
-            for k in np.flatnonzero(seen):
-                out.append({"type": "predator", "distance": float(round(dist[k], 4)),
-                            "angle": float(round(ang[k], 4)),
-                            # the capture reports predator heading, so evasion can
-                            # depend on where it is looking rather than only range
-                            "rel_dir": float(round(_wrap(self.pred_th[k] - th), 4))})
-
+        for d, a in zip(td, ta):
+            out.append({"type": "tree", "distance": float(round(d, 4)), "angle": float(round(a, 4))})
+        for d, a, r in zip(pd, pa, pr):
+            # the capture reports predator heading, so evasion can depend on
+            # where it is looking rather than only on range
+            out.append({"type": "predator", "distance": float(round(d, 4)),
+                        "angle": float(round(a, 4)), "rel_dir": float(round(r, 4))})
         # Edges came back in ABSOLUTE coords in the capture, unlike everything
         # else, so they are emitted the same way here.
-        W = s.world_size
-        corners = [(0.0, 0.0), (W, 0.0), (W, W), (0.0, W)]
-        for a, b in zip(corners, corners[1:] + corners[:1]):
-            if _seg_dist(pos, np.array(a), np.array(b)) <= max(s.vision_range, s.hearing_radius):
-                out.append({"type": "edge", "coords": [[float(a[0]), float(a[1])],
-                                                       [float(b[0]), float(b[1])]]})
+        for x0, y0, x1, y1 in edges:
+            out.append({"type": "edge", "coords": [[x0, y0], [x1, y1]]})
         return out
 
 

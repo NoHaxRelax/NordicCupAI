@@ -1,0 +1,33 @@
+#!/bin/bash
+### DTU HPC (LSF) job array: one PPO seed per array index.
+###   bsub < hpc/train.lsf
+### Env stepping is single-threaded Python and the policy is tiny, so a few
+### cores per job and many jobs beats one big job. Everything lands in
+### $BLACKHOLE/nordic/runs/<run>/ with checkpoints, so a killed job resumes.
+#BSUB -J "nordic[0-4]"
+#BSUB -q hpc
+#BSUB -n 4
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=2GB]"
+#BSUB -W 10:00
+#BSUB -o /dtu/blackhole/1e/205502/nordic/logs/%J_%I.out
+#BSUB -e /dtu/blackhole/1e/205502/nordic/logs/%J_%I.err
+
+set -euo pipefail
+ROOT=$BLACKHOLE/nordic
+cd "$ROOT"
+mkdir -p logs runs
+
+export OMP_NUM_THREADS=4
+export MKL_NUM_THREADS=4
+SEED=${LSB_JOBINDEX:-0}
+RUN="hpc_s${SEED}"
+RESUME=""
+[ -f "runs/$RUN/last.pt" ] && RESUME="--resume runs/$RUN/last.pt"
+
+echo "host=$(hostname) seed=$SEED run=$RUN resume=${RESUME:-none} start=$(date -Is)"
+exec "$BLACKHOLE/venv-nordic/bin/python" -m survivalsim.ppo \
+  --run "$RUN" --seed "$SEED" \
+  --total-steps 8000000 --envs 64 --horizon 128 \
+  --eval-every 25 --eval-episodes 12 \
+  --out runs $RESUME

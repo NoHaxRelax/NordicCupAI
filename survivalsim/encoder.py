@@ -109,6 +109,63 @@ def featurize_batch(agents: Sequence[dict]) -> dict[str, torch.Tensor]:
     }
 
 
+def featurize_sim(sim, max_ag: int = 4, max_entities: int = MAX_ENTITIES
+                  ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Training fast path: sim state -> padded arrays, bypassing the JSON payload.
+
+    Produces the same numbers as `featurize_agent(sim.observe()[...])` (checked by
+    tests) but reads `sim.sensed(i)` directly, so no dicts are built or parsed.
+    Returns (types[A,L], feats[A,L,D], mask[A,L], body[A,B], alive[A]).
+    """
+    s = sim.spec
+    types = np.zeros((max_ag, max_entities), np.int64)
+    feats = np.zeros((max_ag, max_entities, ENTITY_DIM), np.float32)
+    mask = np.zeros((max_ag, max_entities), bool)
+    body = np.zeros((max_ag, BODY_DIM), np.float32)
+    alive = np.zeros(max_ag, bool)
+
+    scale = max(s.vision_range, s.hearing_radius, 1e-6)
+    hr = s.hearing_radius
+    common = np.zeros(BODY_DIM, np.float32)
+    common[2] = s.speed / 20.0
+    common[3] = s.sprint_mult - 1.0
+    common[4] = hr / 30.0
+    common[5] = s.vision_angle / math.pi
+    common[6] = s.vision_range / 100.0
+    common[7] = math.log1p(s.max_energy) / 8.0
+    common[8 + BIOME_INDEX.get(s.biome, 0)] = 1.0
+
+    for i in range(min(s.n_agents, max_ag)):
+        if not sim.alive[i]:
+            continue
+        alive[i] = True
+        td, ta, pd, pa, pr, edges = sim.sensed(i)
+        nt, npr, ne = len(td), len(pd), len(edges)
+        n = nt + npr + ne
+        if n:
+            dist = np.concatenate([td, pd, np.full(ne, 1e9)])
+            order = np.argsort(dist, kind="stable")[:max_entities]
+            F = np.zeros((n, ENTITY_DIM), np.float32)
+            tp = np.concatenate([np.full(nt, TYPE_INDEX["tree"]), np.full(npr, TYPE_INDEX["predator"]),
+                                 np.full(ne, TYPE_INDEX["edge"])])
+            if nt:
+                F[:nt, 0] = td / scale; F[:nt, 1] = td <= hr
+                F[:nt, 2] = np.cos(ta); F[:nt, 3] = np.sin(ta)
+            if npr:
+                sl = slice(nt, nt + npr)
+                F[sl, 0] = pd / scale; F[sl, 1] = pd <= hr
+                F[sl, 2] = np.cos(pa); F[sl, 3] = np.sin(pa)
+                F[sl, 4] = np.cos(pr); F[sl, 5] = np.sin(pr)
+            if ne:
+                F[nt + npr:, 4:8] = np.asarray(edges, np.float32) / 200.0
+            k = len(order)
+            types[i, :k] = tp[order]; feats[i, :k] = F[order]; mask[i, :k] = True
+        body[i] = common
+        body[i, 0] = sim.energy[i] / max(s.max_energy, 1e-6)
+        body[i, 1] = math.log1p(float(sim.age[i])) / 6.0
+    return types, feats, mask, body, alive
+
+
 # ------------------------------------------------------------------ network
 
 
