@@ -55,18 +55,22 @@ footer{margin-top:4rem;padding-top:1.2rem;border-top:1px solid var(--rule);color
 <div class="wrap">
 
 <h1>Challenge 3: Medical Appointment</h1>
-<p class="sub">Nordic AI Cup 2026 · prepared 11 Sep 2026 · 6 days to the event ·
+<p class="sub">Nordic AI Cup 2026 · updated 12 Sep 2026 · 5 days to the event ·
 Powered by Smørrebrød</p>
 
-<p class="lede">Two research committees (335 agents, 19.2M tokens, ~5,500 tool calls) plus a
-measured baseline on real consultation audio. Three of the findings below overturn
-what looked obvious at the start.</p>
+<p class="lede">Two research committees (335 agents, 19.2M tokens, ~5,500 tool calls) plus
+measured baselines on real consultation audio and on 1,425 clinician-marked notes. Several of
+the findings below overturn what looked obvious at the start, and the ones about the note half
+change where the remaining hours should go.</p>
 
 <div class="grid">
   <div class="stat"><b>62.6 h</b><span>all the free clinical conversation audio in English that exists, worldwide</span></div>
   <div class="stat"><b>9.5 h</b><span>of that with usable time-aligned speaker labels</span></div>
   <div class="stat"><b>0 h</b><span>involving real patients — all of it is role-play</span></div>
   <div class="stat"><b>13.9%</b><span>our measured WER, whisper-large-v3 on PriMock57 mixed channel</span></div>
+  <div class="stat"><b>14.2%</b><span>parakeet-ctc-0.6b, same audio, <em>no GPU</em></span></div>
+  <div class="stat"><b>0.178</b><span>ROUGE-L a human scores writing the note — the ceiling, not the floor</span></div>
+  <div class="stat"><b>64%</b><span>of critical note errors are omissions, not hallucinations</span></div>
 </div>
 
 <h2>Three findings that changed the plan</h2>
@@ -156,13 +160,125 @@ RTF measured on an RTX 5070 Laptop via CTranslate2.</p>
 <tr><td>small.en</td><td class="num">0.165</td><td class="num">0.158</td><td class="num">503</td><td class="num">905</td><td class="num">197</td><td class="num">38.5×</td><td><span class="tag t-dom">dominated</span></td></tr>
 <tr><td>distil-large-v3</td><td class="num">0.154</td><td class="num">0.149</td><td class="num">522</td><td class="num">735</td><td class="num">248</td><td class="num">58.3×</td><td><span class="tag t-front">frontier</span></td></tr>
 <tr><td>large-v3</td><td class="num win">0.139</td><td class="num">0.131</td><td class="num">446</td><td class="num">690</td><td class="num">213</td><td class="num">17.4×</td><td><span class="tag t-front">frontier</span></td></tr>
+<tr><td>parakeet-ctc-0.6b <b>(CPU)</b></td><td class="num win">0.142</td><td class="num">0.132</td><td class="num">517</td><td class="num">671</td><td class="num">198</td><td class="num">9.4×</td><td><span class="tag t-front">frontier</span></td></tr>
 </tbody>
 </table>
+<p><b>Parakeet-CTC matches large-v3 without a GPU.</b> 0.142 against 0.139 is 29 edits apart on
+9,738 words, which is a tie. The distinction is that the Whisper row used CUDA and the Parakeet
+row used fourteen CPU threads, so the two RTF figures are not a race against each other — the
+point is that one of them needed no graphics card to get there, at a third of the parameters.
+Its deletion count is also the lowest in the table (671), which matters because deletions are
+the dominant error here.</p>
+<p>And this is the weaker Parakeet. The variant the survey actually recommends,
+<code>parakeet-tdt-0.6b-v3</code>, has a token-and-duration transducer decoder that
+<code>transformers 5.2.0</code> does not register — it knows <code>parakeet_ctc</code> and
+<code>parakeet_encoder</code> only. TDT needs NeMo, or transformers from git. That is a UCloud
+task with a real environment, not a laptop afternoon, and it is worth doing: TDT scores
+<b>9.42 against large-v3's 13.63 on AMI</b>, the closest public benchmark to overlapping
+two-party conversation.</p>
 <p><b>distil-large-v3 dominates both small.en and base.en outright</b> — better WER <em>and</em>
 1.5× faster than small.en. There is no reason to run the small English models.</p>
 <p><b>Deletions exceed substitutions at every size.</b> At large-v3, 690 deletions against 446
 substitutions. The model isn't mishearing, it's dropping — VAD discarding short utterances, and
 overlapping speech being lost. That is the failure mode to attack, not vocabulary.</p>
+
+<h2>The other half: writing the note</h2>
+<p>Transcription is the visible part of this challenge. The note is what a clinician would
+actually keep, and it is graded on completely different terms. PriMock57 turns out to ship the
+data needed to calibrate it, in a folder most people never open.</p>
+
+<div class="card key">
+<h3><code>human_eval_data/</code> is the most valuable thing in the corpus</h3>
+<p>1,425 notes, each marked up by a clinician: how long they spent fixing it, how many
+statements were wrong, how many things were missing, and whether each fault was critical. Plus
+24 automatic metrics precomputed against four different reference regimes. And, buried in
+<code>results.csv</code>, <b>five independently written notes per consultation</b> on top of the
+doctor's own — which is what makes a human ceiling computable at all.</p>
+<p>It joins to the rest of the corpus only after fixing an ID mismatch:
+<code>results.csv</code> zero-pads to three digits (<code>day1_consultation010</code>) while
+every filename and <code>notes/*.json</code> use two. Joining on the raw string silently drops
+every consultation numbered 10 and up — 11 of 57 — as an empty reference list rather than an
+error.</p>
+</div>
+
+<h3>Nobody scores well on this, including doctors</h3>
+<p>Six people wrote up each consultation. Scoring each against the other five, leave-one-out,
+gives the ceiling on exactly the metric a leaderboard would use.</p>
+<table>
+<thead><tr><th>Note</th><th class="num">ROUGE-L vs the doctor's note</th>
+<th class="num">ROUGE-L vs best of 5 evaluators</th></tr></thead>
+<tbody>
+<tr><td><b>A human writing the right note</b></td><td class="num win">0.178</td><td class="num win">0.338</td></tr>
+<tr><td>model_2 (best of the 10 published systems)</td><td class="num">0.207</td><td class="num">0.328</td></tr>
+<tr><td>model_4 (worst)</td><td class="num">0.164</td><td class="num">0.279</td></tr>
+<tr><td>keywords in transcript order, no model</td><td class="num">0.077</td><td class="num">0.167</td></tr>
+<tr><td>first 131 words of the transcript</td><td class="num">0.068</td><td class="num">0.098</td></tr>
+</tbody>
+</table>
+<p>Every number in that table is computed by <code>medvoice/notes.py</code>, validated against
+the paper's own implementation to within 0.018 mean absolute difference. Against a single
+reference, <b>the published systems straddle the human line</b> and the best of them beats it.
+Two clinicians writing up the same conversation simply do not write the same note.</p>
+
+<div class="card flag">
+<h3>Half the score is available without listening to the consultation</h3>
+<p>Take a real doctor's note about a <em>different patient entirely</em> and score it against
+this consultation's references. Same writer pool, same house style, same shorthand, wrong
+illness.</p>
+<table>
+<thead><tr><th>Note scored against this consultation's 5 evaluator notes</th><th class="num">ROUGE-L</th></tr></thead>
+<tbody>
+<tr><td>the doctor's note for <b>this</b> consultation</td><td class="num">0.235</td></tr>
+<tr><td>the doctor's note for <b>another</b> consultation</td><td class="num lose">0.118</td></tr>
+</tbody>
+</table>
+<p><b>50% of the score survives swapping the patient out.</b> That half is section headings,
+stock phrasing and clinical shorthand. Everything reflecting whether a system understood this
+particular conversation lives in the remaining 0.117 of ROUGE-L.</p>
+<p>The strategic reading: if note generation is graded on single-reference ROUGE, the whole
+field compresses into a band of roughly ±0.02 around a number a human cannot beat, and the
+metric cannot tell a good system from a mediocre one. Match the house style, get to ~0.18, and
+spend the remaining hours on transcription — which feeds the note anyway — rather than on note
+polish that the grader cannot see.</p>
+</div>
+
+<h3>Omissions, not hallucinations</h3>
+<div class="grid">
+  <div class="stat"><b>64%</b><span>of critical errors are omissions, not false statements</span></div>
+  <div class="stat"><b>4.66</b><span>critical omissions per generated note</span></div>
+  <div class="stat"><b>2.63</b><span>critical incorrect statements per generated note</span></div>
+  <div class="stat"><b>3.93</b><span>critical errors in a <em>doctor's own</em> note, marked by another clinician</span></div>
+</div>
+<p>The instinct with a language model in a clinical setting is to clamp down on invention. The
+measured failure is under-coverage: notes leave things out roughly twice as often as they make
+things up, and that is what costs a clinician time. Prompt for recall, use the section list as
+an explicit checklist, and prefer a slightly long note to a terse one.</p>
+<p>The last figure is the calibration that keeps this honest. A doctor's own note, read by a
+different clinician, still draws 3.93 critical corrections. Zero is not the target, and the ten
+published systems average 8.1 against that 3.93 — roughly twice a human's error count, and
+costing 136 seconds of editing against the doctor's 97.</p>
+
+<h3>Which metric to iterate against</h3>
+<p>Ranking all 24 metrics by how well they agree with a clinician's critical-error count
+(Spearman, n=1425):</p>
+<table>
+<thead><tr><th>Metric</th><th class="num">agreement, note level</th><th class="num">agreement, system level</th><th></th></tr></thead>
+<tbody>
+<tr><td>WIL</td><td class="num win">0.687</td><td class="num">0.467</td><td></td></tr>
+<tr><td>ROUGE-4-F1</td><td class="num win">0.676</td><td class="num">0.394</td><td></td></tr>
+<tr><td>ROUGE-3-F1</td><td class="num win">0.672</td><td class="num">0.467</td><td></td></tr>
+<tr><td>BertScore</td><td class="num">0.669</td><td class="num">0.430</td><td><span class="tag t-warn">costs a model</span></td></tr>
+<tr><td>ROUGE-L-F1</td><td class="num">0.634</td><td class="num win">0.564</td><td><span class="tag t-front">best at ranking systems</span></td></tr>
+<tr><td>Stanza+SNOMED (clinical concepts)</td><td class="num lose">0.506</td><td class="num">0.418</td><td></td></tr>
+<tr><td>WER</td><td class="num lose">0.388</td><td class="num">0.273</td><td></td></tr>
+<tr><td>Embedding Average</td><td class="num lose">0.259</td><td class="num lose">0.152</td><td><span class="tag t-dom">useless</span></td></tr>
+</tbody>
+</table>
+<p>n-gram overlap beats embeddings, and the clinical-concept metric is mid-table despite being
+the one that sounds most appropriate. So the dev-loop metric is ROUGE, which is twenty lines
+and no dependency — it is already in <code>medvoice/notes.py</code> and needs nothing installed
+on the day. The system-level column excludes the <code>doctor</code> row, which scores 1.000
+against itself by construction and hands every metric one free correctly-ranked pair.</p>
 
 <h2>Techniques ranked by improvement per engineering hour</h2>
 <table>
@@ -222,9 +338,36 @@ licensed to one individual, so it cannot legally cover the team on shared storag
 Under an offline rule, ungated weights that aren't cached are a dead pipeline at 2 am.</li>
 <li>Mirror PriMock57 to UCloud.</li>
 <li><code>curl</code> the Fareez corpus (1 GB, CC0).</li>
-<li>Fix local CUDA: torch is CPU-only; Blackwell needs a cu128+ build. Also set
-<code>HF_HUB_DISABLE_XET=1</code> or large-v3 fails to download with a brotli error.</li>
+<li>Fix local CUDA: torch is CPU-only; Blackwell needs a cu128+ build.</li>
 </ol>
+
+<h3>Environment landmines, all six hit and solved locally</h3>
+<p>Every one of these presents as a different problem than it is, and each would cost a morning
+if met cold on the 17th. They are in the repo's code, not just in this list.</p>
+<table>
+<thead><tr><th>Symptom</th><th>Actual cause</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>cublas64_12.dll is not found</code></td><td>pip's nvidia wheels install DLLs outside PATH</td>
+    <td><code>medvoice/asr.py:_register_cuda_dlls()</code> — needs <em>both</em>
+    <code>os.add_dll_directory</code> and <code>os.environ["PATH"]</code></td></tr>
+<tr><td><code>Can't load tokenizer</code> / <code>Can't load model</code></td>
+    <td><code>huggingface_hub</code> silently truncating downloads:
+    <code>brotli: decoder called with data when can_accept_more_data() is False</code></td>
+    <td><code>curl -sL -H "Accept-Encoding: identity"</code>. <code>HF_HUB_DISABLE_XET=1</code>
+    masks it on big files and it comes back on small ones</td></tr>
+<tr><td><code>model type 'parakeet_tdt' not recognized</code></td>
+    <td>transformers 5.2.0 registers <code>parakeet_ctc</code> and <code>parakeet_encoder</code> only</td>
+    <td>NeMo, or transformers from git. Not a laptop job</td></tr>
+<tr><td><code>Input type (float) and bias type (c10::BFloat16) should be the same</code></td>
+    <td>Parakeet ships bf16 weights; audio features arrive float32</td>
+    <td><code>from_pretrained(..., dtype=torch.float32)</code></td></tr>
+<tr><td><code>OMP: Error #15 ... libiomp5md.dll already initialized</code></td>
+    <td>torch and MKL each link their own OpenMP</td><td><code>KMP_DUPLICATE_LIB_OK=TRUE</code></td></tr>
+<tr><td>Eleven consultations have no reference notes</td>
+    <td><code>results.csv</code> pads consultation ids to 3 digits, everything else to 2</td>
+    <td><code>medvoice/notes.py:norm_cid()</code>. Fails silently, never raises</td></tr>
+</tbody>
+</table>
 
 <footer>
 Built from two adversarially-verified research committees plus a measured baseline on

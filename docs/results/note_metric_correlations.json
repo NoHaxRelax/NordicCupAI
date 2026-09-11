@@ -1,0 +1,184 @@
+{
+  "note_level": {
+    "BLEU*": {
+      "time_sec": 0.5565,
+      "critical_errors": 0.6536,
+      "all_errors": 0.6978
+    },
+    "BertScore*": {
+      "time_sec": 0.5707,
+      "critical_errors": 0.6688,
+      "all_errors": 0.7104
+    },
+    "CHRF*": {
+      "time_sec": 0.463,
+      "critical_errors": 0.5291,
+      "all_errors": 0.5814
+    },
+    "Embedding Avg*": {
+      "time_sec": 0.0642,
+      "critical_errors": 0.259,
+      "all_errors": 0.2231
+    },
+    "GreedyMatching*": {
+      "time_sec": 0.2946,
+      "critical_errors": 0.4205,
+      "all_errors": 0.4363
+    },
+    "Levenshtein dist.": {
+      "time_sec": 0.6001,
+      "critical_errors": 0.5656,
+      "all_errors": 0.6503
+    },
+    "MER": {
+      "time_sec": 0.5648,
+      "critical_errors": 0.6521,
+      "all_errors": 0.703
+    },
+    "METEOR*": {
+      "time_sec": 0.5287,
+      "critical_errors": 0.6254,
+      "all_errors": 0.6744
+    },
+    "MoverScore*": {
+      "time_sec": 0.5699,
+      "critical_errors": 0.6393,
+      "all_errors": 0.687
+    },
+    "ROUGE-1-F1*": {
+      "time_sec": 0.4434,
+      "critical_errors": 0.5466,
+      "all_errors": 0.5805
+    },
+    "ROUGE-2-F1*": {
+      "time_sec": 0.5506,
+      "critical_errors": 0.6434,
+      "all_errors": 0.6937
+    },
+    "ROUGE-3-F1*": {
+      "time_sec": 0.576,
+      "critical_errors": 0.6717,
+      "all_errors": 0.7343
+    },
+    "ROUGE-4-F1*": {
+      "time_sec": 0.5752,
+      "critical_errors": 0.6758,
+      "all_errors": 0.7455
+    },
+    "ROUGE-L-F1*": {
+      "time_sec": 0.5381,
+      "critical_errors": 0.6343,
+      "all_errors": 0.661
+    },
+    "ROUGE-L-Pr*": {
+      "time_sec": 0.3656,
+      "critical_errors": 0.489,
+      "all_errors": 0.4999
+    },
+    "ROUGE-L-Re*": {
+      "time_sec": 0.5198,
+      "critical_errors": 0.6013,
+      "all_errors": 0.6402
+    },
+    "ROUGE-WE*": {
+      "time_sec": 0.4958,
+      "critical_errors": 0.584,
+      "all_errors": 0.6211
+    },
+    "SkipThoughts*": {
+      "time_sec": 0.2292,
+      "critical_errors": 0.3372,
+      "all_errors": 0.3659
+    },
+    "Stanza+Snomed*": {
+      "time_sec": 0.3537,
+      "critical_errors": 0.5064,
+      "all_errors": 0.5276
+    },
+    "USE*": {
+      "time_sec": 0.3657,
+      "critical_errors": 0.4455,
+      "all_errors": 0.4745
+    },
+    "VectorExtrema*": {
+      "time_sec": 0.4241,
+      "critical_errors": 0.5276,
+      "all_errors": 0.5498
+    },
+    "WER": {
+      "time_sec": 0.3264,
+      "critical_errors": 0.3881,
+      "all_errors": 0.4116
+    },
+    "WIL": {
+      "time_sec": 0.5896,
+      "critical_errors": 0.6867,
+      "all_errors": 0.7467
+    },
+    "WMD": {
+      "time_sec": 0.4211,
+      "critical_errors": 0.5272,
+      "all_errors": 0.5606
+    }
+  },
+  "system_level": {
+    "BLEU*": 0.4545,
+    "BertScore*": 0.4303,
+    "CHRF*": 0.4424,
+    "Embedding Avg*": 0.1515,
+    "GreedyMatching*": 0.297,
+    "Levenshtein dist.": 0.3212,
+    "MER": 0.4303,
+    "METEOR*": 0.2242,
+    "MoverScore*": 0.4061,
+    "ROUGE-1-F1*": 0.3939,
+    "ROUGE-2-F1*": 0.5152,
+    "ROUGE-3-F1*": 0.4667,
+    "ROUGE-4-F1*": 0.3939,
+    "ROUGE-L-F1*": 0.5636,
+    "ROUGE-L-Pr*": 0.4788,
+    "ROUGE-L-Re*": 0.2848,
+    "ROUGE-WE*": 0.3818,
+    "SkipThoughts*": 0.2121,
+    "Stanza+Snomed*": 0.4182,
+    "USE*": 0.4061,
+    "VectorExtrema*": 0.3576,
+    "WER": 0.2727,
+    "WIL": 0.4667,
+    "WMD": 0.4667
+  },
+  "regime_gap": {
+    "ROUGE-L-F1*": {
+      "avg": 0.4808,
+      "edited_note": 0.807,
+      "eval_note": 0.2558,
+      "human_note": 0.3796,
+      "max": 0.8351
+    },
+    "BertScore*": {
+      "avg": 0.8801,
+      "edited_note": 0.9412,
+      "eval_note": 0.8366,
+      "human_note": 0.8624,
+      "max": 0.9492
+    },
+    "Stanza+Snomed*": {
+      "avg": 0.5262,
+      "edited_note": 0.8036,
+      "eval_note": 0.3304,
+      "human_note": 0.4445,
+      "max": 0.8294
+    },
+    "METEOR*": {
+      "avg": 0.3176,
+      "edited_note": 0.4601,
+      "eval_note": 0.1583,
+      "human_note": 0.3344,
+      "max": 0.5537
+    }
+  },
+  "human_ceiling": {
+    "critical_errors": 3.93,
+    "time_sec": 96.6
+  }
+}

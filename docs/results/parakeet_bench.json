@@ -1,0 +1,142 @@
+{
+  "model": "parakeet-ctc-0.6b",
+  "condition": "mixed",
+  "device": "cpu",
+  "chunk_s": 25.0,
+  "consultations": 6,
+  "wer": 0.1423,
+  "wer_no_backchannel": 0.1316,
+  "sub": 517,
+  "del": 671,
+  "ins": 198,
+  "ref_words": 9738,
+  "audio_h": 0.949,
+  "decode_s": 365.4,
+  "rtf": 9.4,
+  "worst_words": [
+    [
+      "i",
+      69
+    ],
+    [
+      "ok",
+      65
+    ],
+    [
+      "yeah",
+      60
+    ],
+    [
+      "is",
+      49
+    ],
+    [
+      "you",
+      46
+    ],
+    [
+      "no",
+      43
+    ],
+    [
+      "and",
+      37
+    ],
+    [
+      "that",
+      37
+    ],
+    [
+      "it",
+      32
+    ],
+    [
+      "a",
+      28
+    ],
+    [
+      "the",
+      26
+    ],
+    [
+      "have",
+      21
+    ],
+    [
+      "to",
+      20
+    ],
+    [
+      "your",
+      17
+    ],
+    [
+      "not",
+      13
+    ],
+    [
+      "am",
+      13
+    ],
+    [
+      "are",
+      12
+    ],
+    [
+      "any",
+      12
+    ],
+    [
+      "ohh",
+      12
+    ],
+    [
+      "just",
+      11
+    ]
+  ],
+  "per_file": [
+    {
+      "cid": "day1_consultation01",
+      "wer": 0.1433,
+      "chunks": 19,
+      "audio_s": 457.9,
+      "decode_s": 49.6
+    },
+    {
+      "cid": "day1_consultation02",
+      "wer": 0.1385,
+      "chunks": 22,
+      "audio_s": 559.2,
+      "decode_s": 58.7
+    },
+    {
+      "cid": "day1_consultation03",
+      "wer": 0.136,
+      "chunks": 21,
+      "audio_s": 544.3,
+      "decode_s": 58.4
+    },
+    {
+      "cid": "day1_consultation04",
+      "wer": 0.1663,
+      "chunks": 24,
+      "audio_s": 615.5,
+      "decode_s": 66.4
+    },
+    {
+      "cid": "day1_consultation05",
+      "wer": 0.1303,
+      "chunks": 24,
+      "audio_s": 577.0,
+      "decode_s": 61.7
+    },
+    {
+      "cid": "day1_consultation06",
+      "wer": 0.1397,
+      "chunks": 26,
+      "audio_s": 662.5,
+      "decode_s": 70.6
+    }
+  ]
+}
