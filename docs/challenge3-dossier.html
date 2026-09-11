@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Challenge 3 Dossier — Medical Appointment</title>
+<style>
+:root{
+  --ink:#12161c; --dim:#5a6573; --rule:#d9dee5; --bg:#fbfbfa; --card:#fff;
+  --good:#1f6f4a; --bad:#b3261e; --warn:#8a5a00; --accent:#2f4fa8;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);
+     -webkit-font-smoothing:antialiased}
+.wrap{max-width:60rem;margin:0 auto;padding:3rem clamp(1rem,4vw,2rem) 6rem}
+h1{font-size:2rem;line-height:1.15;letter-spacing:-.02em;margin:0 0 .4rem}
+.sub{color:var(--dim);margin:0 0 2.5rem;font-size:.95rem}
+h2{font-size:1.25rem;letter-spacing:-.01em;margin:3rem 0 .9rem;padding-top:1.2rem;
+   border-top:1px solid var(--rule)}
+h3{font-size:1rem;margin:1.8rem 0 .5rem}
+p,li{color:#26303c}
+code,.mono{font-family:var(--mono);font-size:.87em;background:#eef1f5;padding:.1em .35em;border-radius:3px}
+pre{background:#11151b;color:#e6e9ef;padding:.9rem 1rem;border-radius:6px;overflow-x:auto;
+    font-family:var(--mono);font-size:.82rem;line-height:1.5}
+pre code{background:none;padding:0;color:inherit}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.88rem}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);font-weight:600}
+tbody tr:hover{background:#f2f5f9}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.win{color:var(--good);font-weight:600}
+.lose{color:var(--bad)}
+.tag{display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;
+     padding:.15rem .4rem;border-radius:3px;font-weight:600;white-space:nowrap}
+.t-front{background:#e3f0e9;color:var(--good)}
+.t-dom{background:#f7e4e3;color:var(--bad)}
+.t-warn{background:#fbf0da;color:var(--warn)}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:1.1rem 1.25rem;margin:1.2rem 0}
+.card.flag{border-left:3px solid var(--bad)}
+.card.key{border-left:3px solid var(--accent)}
+.card h3{margin-top:0}
+.lede{font-size:1.05rem;border-left:3px solid var(--accent);padding-left:1rem;margin:1.5rem 0;color:#26303c}
+ol li,ul li{margin:.35rem 0}
+footer{margin-top:4rem;padding-top:1.2rem;border-top:1px solid var(--rule);color:var(--dim);font-size:.82rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.8rem;margin:1.2rem 0}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:.9rem 1rem}
+.stat b{display:block;font-size:1.7rem;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.1}
+.stat span{font-size:.78rem;color:var(--dim)}
+@media (max-width:640px){table{font-size:.8rem}th,td{padding:.4rem .35rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Challenge 3: Medical Appointment</h1>
+<p class="sub">Nordic AI Cup 2026 · prepared 11 Sep 2026 · 6 days to the event ·
+Powered by Smørrebrød</p>
+
+<p class="lede">Two research committees (335 agents, 19.2M tokens, ~5,500 tool calls) plus a
+measured baseline on real consultation audio. Three of the findings below overturn
+what looked obvious at the start.</p>
+
+<div class="grid">
+  <div class="stat"><b>62.6 h</b><span>all the free clinical conversation audio in English that exists, worldwide</span></div>
+  <div class="stat"><b>9.5 h</b><span>of that with usable time-aligned speaker labels</span></div>
+  <div class="stat"><b>0 h</b><span>involving real patients — all of it is role-play</span></div>
+  <div class="stat"><b>13.9%</b><span>our measured WER, whisper-large-v3 on PriMock57 mixed channel</span></div>
+</div>
+
+<h2>Three findings that changed the plan</h2>
+
+<div class="card flag">
+<h3>1. A “medical ASR” model is worse than Whisper base on consultations</h3>
+<p><code>google/medasr</code> scores <b class="lose">42.8 WER</b> on PriMock57 against
+<b class="win">19.1</b> for plain <code>whisper-base.en</code>. It was trained on
+<em>dictation</em> — a clinician speaking alone, formally, to a microphone. A consultation is
+two people interrupting each other. The register mismatch is fatal.</p>
+<p>This is the measured form of the argument against fine-tuning on ICD-10 strings. Our own
+error analysis says the same thing from the other direction: the most-missed words at every
+model size were <code>i, is, you, ok, yeah, and, it, that, the, a</code>. Not one medical term.
+<b>The model is not failing on vocabulary.</b></p>
+</div>
+
+<div class="card flag">
+<h3>2. Whisper is no longer the frontier</h3>
+<p><code>nvidia/parakeet-tdt-0.6b-v3</code> dominates <code>whisper-large-v3</code> on
+<em>every axis simultaneously</em>: better average WER (4.86 vs 5.78), better on AMI which is the
+closest public proxy for two-person conversation (9.42 vs 13.63), better long-form, ~13× the
+throughput, and a third of the parameters. It also emits native word-level timestamps, which
+deletes the forced-alignment stage entirely.</p>
+<p>My baseline was built on the wrong model. It still stands as a measurement of our harness,
+but Parakeet is the model to beat.</p>
+</div>
+
+<div class="card flag">
+<h3>3. LLM post-correction of the transcript makes things worse</h3>
+<p>The evidence is consistent and it includes PriMock57 specifically:</p>
+<table>
+<thead><tr><th>Study</th><th>Baseline WER</th><th>After LLM correction</th></tr></thead>
+<tbody>
+<tr><td>Gemini on PriMock57 (2501.15310)</td><td class="num">9.34</td><td class="num lose">10.43</td></tr>
+<tr><td>Amazon on PriMock57</td><td class="num">9.98</td><td class="num lose">12.10</td></tr>
+<tr><td>ChatGPT on TED-LIUM (2307.04172)</td><td class="num">3.89</td><td class="num lose">5.84</td></tr>
+<tr><td>“Sound of Healthcare”, PriMock57</td><td class="num">12.14</td><td class="num lose">12.42</td></tr>
+</tbody>
+</table>
+<p>The crossover is around <b>12–16% baseline WER</b>. Below that, correction is a pure loss.
+Our 13.9% sits right on the boundary, so this must be gated behind a measured delta, never
+assumed. If built at all, constrain the output to the N-best list rather than letting it
+rewrite freely.</p>
+</div>
+
+<h2>The recommended stack</h2>
+<table>
+<thead><tr><th>Layer</th><th>Primary</th><th>Why</th><th>Fallback</th></tr></thead>
+<tbody>
+<tr><td>ASR</td><td><code>parakeet-tdt-0.6b-v3</code><br><span class="tag t-front">CC BY 4.0</span></td>
+    <td>Best open long-form WER, RTFx 1003, native word timestamps, NeMo biasing hook</td>
+    <td><code>faster-whisper</code> + <code>distil-large-v3</code> (MIT)</td></tr>
+<tr><td>Alignment</td><td><em>none</em></td><td>Parakeet's own timestamps. A stage you don't run can't fail.</td>
+    <td><code>Qwen3-ForcedAligner-0.6B</code> (Apache-2.0)</td></tr>
+<tr><td>Diarization</td><td><code>diar_streaming_sortformer_4spk-v2.1</code></td>
+    <td>CALLHOME 2-spk DER 5.65; AMI-IHM 15.90. Clustering-free, so no speaker-count failure.</td>
+    <td><code>pyannote/speaker-diarization-community-1</code> <span class="tag t-warn">gated</span></td></tr>
+<tr><td>Biasing</td><td>NeMo TurboBias, 200–500 curated terms</td>
+    <td>MultiMed key-phrase F 62.5 → 75.8 <em>and</em> WER 13.6 → 12.9, at 2–5% RTFx</td>
+    <td>two-pass <code>faster-whisper</code> hotwords</td></tr>
+<tr><td>Structuring</td><td><code>Qwen3.8-27B</code> non-thinking, 5-shot</td>
+    <td>Rank 1 of 109 on BRIDGE few-shot (55.67)</td>
+    <td><code>gemma-4-26B-A4B-it</code> (3.8B active)</td></tr>
+</tbody>
+</table>
+
+<div class="card key">
+<h3>The ten-minute check that could delete a whole layer</h3>
+<p>If the organiser's audio has clinician and patient on <b>separate channels</b> (as PriMock57
+does), run per-channel ASR and skip diarization entirely. Zero DER, zero added latency.
+Check this first.</p>
+<p><b>But:</b> our own measurement says it isn't free. Per-channel scored 0.375–0.423 WER against
+0.139 mixed, with high deletions <em>and</em> high insertions at once — the signature of
+<b>microphone bleed</b>. Both channels transcribe the same speech. Cross-channel energy gating
+is required before this becomes the easy win it looks like.</p>
+</div>
+
+<h2>Our measured baseline</h2>
+<p>6 held-out PriMock57 consultations, 0.95 h, 9,856 reference words, mixed to one channel.
+RTF measured on an RTX 5070 Laptop via CTranslate2.</p>
+<table>
+<thead><tr><th>Model</th><th class="num">WER</th><th class="num">no-backchannel</th>
+<th class="num">sub</th><th class="num">del</th><th class="num">ins</th><th class="num">RTF</th><th></th></tr></thead>
+<tbody>
+<tr><td>tiny.en</td><td class="num">0.234</td><td class="num">0.230</td><td class="num">1043</td><td class="num">919</td><td class="num">318</td><td class="num">69.7×</td><td><span class="tag t-front">frontier</span></td></tr>
+<tr><td>base.en</td><td class="num">0.195</td><td class="num">0.187</td><td class="num">695</td><td class="num">928</td><td class="num">272</td><td class="num">41.6×</td><td><span class="tag t-dom">dominated</span></td></tr>
+<tr><td>small.en</td><td class="num">0.165</td><td class="num">0.158</td><td class="num">503</td><td class="num">905</td><td class="num">197</td><td class="num">38.5×</td><td><span class="tag t-dom">dominated</span></td></tr>
+<tr><td>distil-large-v3</td><td class="num">0.154</td><td class="num">0.149</td><td class="num">522</td><td class="num">735</td><td class="num">248</td><td class="num">58.3×</td><td><span class="tag t-front">frontier</span></td></tr>
+<tr><td>large-v3</td><td class="num win">0.139</td><td class="num">0.131</td><td class="num">446</td><td class="num">690</td><td class="num">213</td><td class="num">17.4×</td><td><span class="tag t-front">frontier</span></td></tr>
+</tbody>
+</table>
+<p><b>distil-large-v3 dominates both small.en and base.en outright</b> — better WER <em>and</em>
+1.5× faster than small.en. There is no reason to run the small English models.</p>
+<p><b>Deletions exceed substitutions at every size.</b> At large-v3, 690 deletions against 446
+substitutions. The model isn't mishearing, it's dropping — VAD discarding short utterances, and
+overlapping speech being lost. That is the failure mode to attack, not vocabulary.</p>
+
+<h2>Techniques ranked by improvement per engineering hour</h2>
+<table>
+<thead><tr><th>#</th><th>Technique</th><th>Measured effect</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Match the organiser's text normalisation</td><td class="win">10.6 → 7.4 WER on ESB (30% relative)</td><td>1 h</td></tr>
+<tr><td>2</td><td>VAD-gate before ASR</td><td class="win">78.78 → 10.52 WER at batch 32; 104.8 → 8.0 on noisy audio</td><td>1 h</td></tr>
+<tr><td>3</td><td>Check for multi-channel audio</td><td class="win">deletes the diarization layer if true</td><td>10 min</td></tr>
+<tr><td>4</td><td>Fix <code>num_speakers=2</code></td><td>6.52 DER on classic clustering; ~0.1 on neural (variance only)</td><td>1 min</td></tr>
+<tr><td>5</td><td>Curated 200–500 term context biasing</td><td class="win">key-phrase F 62.5 → 75.8, WER 13.6 → 12.9</td><td>½ day</td></tr>
+<tr><td>6</td><td>5 fixed few-shot exemplars (extraction only)</td><td class="win">BRIDGE +8.0 mean; medication extraction 2.39 → 40.97</td><td>2 h</td></tr>
+<tr><td>—</td><td class="lose">Chain-of-thought on clinical extraction</td><td class="lose">−2.36 mean; 95 of 109 models worse</td><td>skip</td></tr>
+<tr><td>—</td><td class="lose">Free-form LLM transcript rewriting</td><td class="lose">worse in every study below ~12% WER</td><td>skip</td></tr>
+<tr><td>—</td><td class="lose">Large static hotword lists (N≈70)</td><td class="lose">avg WER 10.3 → 12.1</td><td>skip</td></tr>
+</tbody>
+</table>
+
+<h2>Data: pull these, ignore the rest</h2>
+<table>
+<thead><tr><th>Corpus</th><th class="num">Hours</th><th>Licence</th><th>Speaker labels</th><th>Get it</th></tr></thead>
+<tbody>
+<tr><td><b>Fareez OSCE interviews</b></td><td class="num">51.9</td><td>CC0</td><td>turn-level, no timestamps</td>
+    <td><code>ndownloader.figshare.com/files/30598530</code></td></tr>
+<tr><td><b>PriMock57</b> <span class="tag t-front">have it</span></td><td class="num">8.63</td><td>CC BY 4.0</td>
+    <td class="win">per-channel, time-aligned</td><td><code>git lfs clone</code> — <b>mirror now</b></td></tr>
+<tr><td>BeTraC-2026 (synthetic)</td><td class="num">1146</td><td>CC BY 4.0</td><td>none</td><td><code>hf download BeTraC/betrac-2026</code></td></tr>
+<tr><td>AppTek call-centre</td><td class="num">151</td><td>CC BY-SA</td><td class="win">exact who-said-what schema</td><td>HF</td></tr>
+<tr><td>ACI-Bench + MTS-Dialog</td><td class="num">0 (text)</td><td>CC BY 4.0</td><td>tagged dialogue</td><td>12 MB, substrate for synthesis</td></tr>
+</tbody>
+</table>
+
+<div class="card flag">
+<h3>Babylon Health is insolvent</h3>
+<p>PriMock57 is the single most valuable asset per hour and the only one with time-aligned
+speaker labels. Its LFS endpoint served bytes today. <b>Mirror the 2 GB to UCloud this week</b>
+rather than trusting it on the 17th. We have a local copy already.</p>
+</div>
+
+<h2>Licence landmines</h2>
+<ul>
+<li><code>nvidia/canary-1b</code> is CC-BY-<b>NC</b>. Every other canary variant is fine. Easy to grab the wrong one.</li>
+<li><code>diar_sortformer_4spk-v1</code> is NC; streaming <b>v2/v2.1 are clean and better</b>.</li>
+<li><code>granite-speech-5.0-470m-turboctc-<b>nc</b></code> vs the identically named Apache-2.0 repo without the suffix.</li>
+<li>All large <b>DiariZen</b> checkpoints are NC. MIT escape hatch: <code>BUT-FIT/diarizen-meeting-base</code>.</li>
+<li><code>torchaudio MMS_FA</code> weights are NC. Use <code>WAV2VEC2_ASR_BASE_960H</code> (MIT).</li>
+<li><b>AGPL-3.0</b>: FreeScribe, LLM-AIx. A served <code>/predict</code> endpoint is exactly the network-use
+trigger. Read them, copy nothing.</li>
+<li><b>UMLS</b> takes up to 5 business days — from today that lands <b>18 Sep, mid-event</b> — and is
+licensed to one individual, so it cannot legally cover the team on shared storage.</li>
+</ul>
+
+<h2>Do this today</h2>
+<ol>
+<li><b>Accept the HF gates now</b> (five minutes, auto-approved, highest-consequence step in the plan):
+<code>pyannote/speaker-diarization-community-1</code>, <code>speaker-diarization-3.1</code>,
+<code>segmentation-3.0</code>, <code>CohereLabs/cohere-transcribe-03-2026</code>.
+Under an offline rule, ungated weights that aren't cached are a dead pipeline at 2 am.</li>
+<li>Mirror PriMock57 to UCloud.</li>
+<li><code>curl</code> the Fareez corpus (1 GB, CC0).</li>
+<li>Fix local CUDA: torch is CPU-only; Blackwell needs a cu128+ build. Also set
+<code>HF_HUB_DISABLE_XET=1</code> or large-v3 fails to download with a brotli error.</li>
+</ol>
+
+<footer>
+Built from two adversarially-verified research committees plus a measured baseline on
+PriMock57. Every number here was either fetched and checked by a verifier agent or measured
+locally; claims that could not be verified were dropped rather than softened.
+</footer>
+
+</div>
+</body>
+</html>

@@ -2,3 +2,11 @@ __pycache__/
 *.pyc
 .venv/
 runs/
+
+# derived audio and downloaded model artifacts: regenerate, never commit
+work/
+scisci/
+runs/
+*.wav
+*.tar.gz
+ar.xml
