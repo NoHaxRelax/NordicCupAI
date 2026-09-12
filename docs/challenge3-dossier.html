@@ -347,6 +347,66 @@ and no dependency — it is already in <code>medvoice/notes.py</code> and needs 
 on the day. The system-level column excludes the <code>doctor</code> row, which scores 1.000
 against itself by construction and hands every metric one free correctly-ranked pair.</p>
 
+<h2>What the 13.9% is actually made of</h2>
+<p>If the evaluation audio is synthesised, our WER is the wrong number to plan against. So we
+rendered the same six PriMock57 transcripts through TTS and re-scored them. Same words, same
+references, same scorer, only the acoustics change, which is what makes the difference
+attributable. Three conditions, and the middle one is the whole point.</p>
+<table>
+<thead><tr><th>Condition</th><th class="num">WER</th><th class="num">no-bc</th><th class="num">sub</th>
+<th class="num">del</th><th class="num">ins</th><th class="num">content recall</th></tr></thead>
+<tbody>
+<tr><td>real recording, mixed down</td><td class="num">0.139</td><td class="num">0.131</td>
+    <td class="num">446</td><td class="num">690</td><td class="num">213</td><td class="num">0.909</td></tr>
+<tr><td>TTS voices at the <b>original timestamps</b></td><td class="num">0.122</td><td class="num">0.108</td>
+    <td class="num">218</td><td class="num">658</td><td class="num">317</td><td class="num">0.901</td></tr>
+<tr><td>TTS voices, sequential, <b>no overlap</b></td><td class="num win">0.043</td><td class="num win">0.046</td>
+    <td class="num">101</td><td class="num">35</td><td class="num">286</td><td class="num win">0.959</td></tr>
+</tbody>
+</table>
+<p>The timed condition preserves every pause, interruption and overlap the humans actually
+produced: 112 seconds of two-speaker overlap per consultation. So the first row minus the second
+is what microphones and rooms cost, and the second minus the third is what overlap costs.</p>
+
+<div class="card key">
+<h3>Deletions are overlap, essentially all of it</h3>
+<table>
+<thead><tr><th>Holding one factor fixed and changing the other</th><th class="num">deletions</th></tr></thead>
+<tbody>
+<tr><td>swap real microphones for clean synthetic audio, overlap unchanged</td>
+    <td class="num">690 → 658, <b>−5%</b></td></tr>
+<tr><td>remove the overlap, voices unchanged</td>
+    <td class="num win">658 → 35, <b>−95%</b></td></tr>
+</tbody>
+</table>
+<p>Earlier this dossier said deletions were the failure mode to attack and blamed "VAD discarding
+short utterances, and overlapping speech being lost". The VAD half was already refuted by
+ablation (0.139 either way). This settles the rest: <b>overlap is the entire story</b>. Whisper
+drops what is spoken over, and audio quality barely touches it.</p>
+<p>Substitutions behave the opposite way, halving from 446 to 218 on clean audio at unchanged
+overlap. So the two error types have two different causes: <b>substitutions are audio quality,
+deletions are overlap.</b> Any technique aimed at "deletions" that does not address simultaneous
+speech is aimed at nothing.</p>
+<p>Overlap costs 0.079 WER against recording quality's 0.016, a factor of five. If the organisers
+render dialogue turns sequentially, which is the cheap way to build it, we should expect
+<b>roughly 4% WER and 96% content recall</b> and the ASR workstream is finished before it starts.</p>
+</div>
+
+<div class="card flag">
+<h3>Four honest limits on that table</h3>
+<ol>
+<li>The TTS reads the reference transcript verbatim, so there is no pronunciation ambiguity at
+all. For TTS-generated evaluation data this is exactly representative, because the generated text
+<em>is</em> the ground truth. As a proxy for recorded speech it is optimistic.</li>
+<li>One voice pair, <code>en-GB-RyanNeural</code> and <code>en-GB-SoniaNeural</code>. Voice
+diversity is untested, and if the organisers used voice cloning their speakers will vary far more.</li>
+<li>We rendered with edge-tts, not with Chatterbox, which is the engine they actually forked.</li>
+<li>Insertions <em>rise</em> in both clean conditions, 213 to 317 and 286, and we have not
+explained why. Most likely the TTS voicing written disfluencies ("um", "uh") that the human
+recording delivered differently. It is the one number in the table we cannot account for.</li>
+</ol>
+</div>
+
 <h2>Does the meaning survive 13.9% WER? Yes.</h2>
 <p>WER weights every token the same, so losing two hundred "yeah"s scores like losing every drug
 name. Half our substitution-and-deletion mass sits on twenty function words, so the headline

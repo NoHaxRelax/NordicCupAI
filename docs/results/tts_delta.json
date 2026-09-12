@@ -1,0 +1,28 @@
+{
+  "model": "large-v3",
+  "danish": false,
+  "conditions": {
+    "tts-timed": {
+      "condition": "tts-timed",
+      "wer": 0.1225,
+      "wer_no_backchannel": 0.1085,
+      "sub": 218,
+      "del": 658,
+      "ins": 317,
+      "ref_words": 9738,
+      "content_recall": 0.9008,
+      "render_s": 556.6
+    },
+    "tts-seq": {
+      "condition": "tts-seq",
+      "wer": 0.0433,
+      "wer_no_backchannel": 0.0457,
+      "sub": 101,
+      "del": 35,
+      "ins": 286,
+      "ref_words": 9738,
+      "content_recall": 0.9587,
+      "render_s": 538.3
+    }
+  }
+}
