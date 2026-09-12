@@ -178,7 +178,7 @@ def main() -> None:
     print(f"{'':<26} sub {counts.subs}  del {counts.dels}  ins {counts.ins}  "
           f"of {counts.ref_len} words")
     print(f"{'':<26} rtf {row['rtf']}x on {device}")
-    print("most-missed: " + ", ".join(f"{w}({n})" for w, n in row["worst_words"][:12]))
+    print("worst words (sub+del): " + ", ".join(f"{w}({n})" for w, n in row["worst_words"][:12]))
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

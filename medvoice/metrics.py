@@ -169,8 +169,16 @@ def term_recall(ref: str, hyp: str, terms: set[str], **kw) -> tuple[int, int]:
 
 
 def error_profile(pairs: list[tuple[str, str]], top: int = 25, **kw) -> list[tuple[str, int]]:
-    """The reference words a system most often gets wrong. This is the list that
-    tells you what to put in a biasing lexicon."""
+    """The reference words a system most often gets wrong, counting substitutions
+    AND deletions together. It is not a deletion list, and printing it under a
+    heading like "most-missed" invites exactly that misreading: on large-v3 mixed
+    these twenty types carry 563 of 1136 combined S+D errors, 49.6% of the mass,
+    and every one of them is a function word or a backchannel.
+
+    So this ranks what a system gets wrong, not what it drops, and a lexicon built
+    from the head of it would bias towards "ok" and "yeah". For whether the words
+    that carry clinical meaning survive, use term_recall against a content-term
+    set instead."""
     bad: dict[str, int] = {}
     for r, h in pairs:
         for op, rt, _ in align(normalise(r, **kw), normalise(h, **kw))[1]:

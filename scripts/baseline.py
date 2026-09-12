@@ -60,7 +60,7 @@ def main() -> None:
                         | {"model": size, "load_s": round(load_s, 1)})
             if cond == "mixed":
                 worst = ", ".join(f"{w}({n})" for w, n in r["worst_words"][:10])
-                print(f"{'':<18} {'':<12} most-missed: {worst}")
+                print(f"{'':<18} {'':<12} worst words (sub+del): {worst}")
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

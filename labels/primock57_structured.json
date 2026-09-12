@@ -10,7 +10,7 @@
       "interval_days": "[min, max] agreed interval, or null when none was given. 0 means same day.",
       "modality": "ambulance | a_and_e | f2f_gp | remote_gp | blood_test | specialist | physio | self_referral | pharmacy | none",
       "booked": "true if an appointment was actually arranged during the consultation, false if the patient was told to arrange it",
-      "conditional": "true if the follow-up is contingent on symptoms (safety-netting). Almost always true: a GP follow-up is usually 'come back IF'. A system that reports an unconditional date here is wrong even when the number matches.",
+      "conditional": "true if the follow-up is contingent on symptoms (safety-netting). Measured 28 true, 29 false across the 57, so it is close to a coin flip and every trivial baseline scores ~0.49 on it. An earlier version of this note claimed it is 'almost always true', which its own data contradicts. Populate the field, because an omitted field scores zero, but do not spend prompt budget on it.",
       "trigger": "the safety-netting condition in the clinician's own words, condensed"
     },
     "flags": "corpus defects found while reading. See _defects.",
