@@ -73,6 +73,73 @@ change where the remaining hours should go.</p>
   <div class="stat"><b>64%</b><span>of critical note errors are omissions, not hallucinations</span></div>
 </div>
 
+<h2>What last year's healthcare challenge actually was</h2>
+<p>Elias's hypothesis, checked: this may be last year's healthcare challenge with audio bolted
+on the front. Ambolt's 2025 repo is public and his own solution is on a branch of
+<code>bforbanks/dm-i-ai-2025</code>. Both were read. The 2025 healthcare task was:</p>
+
+<table>
+<thead><tr><th></th><th>Emergency Healthcare RAG, DM i AI 2025</th></tr></thead>
+<tbody>
+<tr><td>Input</td><td>one medical statement, a sentence or two of text</td></tr>
+<tr><td>Output</td><td><code>{"statement_is_true": 0|1, "statement_topic": 0..114}</code></td></tr>
+<tr><td>Scoring</td><td>plain accuracy, computed separately for each of the two fields</td></tr>
+<tr><td>Knowledge base</td><td><b>given to you</b>: 115 topics, 7.1 MB of StatPearls articles</td></tr>
+<tr><td>Data</td><td>200 train / 200 validation / 749 evaluation</td></tr>
+<tr><td>Latency</td><td><b>5 seconds per statement</b>, hard</td></tr>
+<tr><td>Compute</td><td><b>24 GB VRAM ceiling</b>, fully offline, no cloud API at inference</td></tr>
+<tr><td>Serving</td><td>FastAPI <code>POST /predict</code>, the grader calls your endpoint</td></tr>
+<tr><td>Submission</td><td>validate as often as you like, <b>submit to evaluation exactly once</b></td></tr>
+</tbody>
+</table>
+
+<div class="card key">
+<h3>This settles the retrieval argument, in Elias's favour, on the other side of the pipeline</h3>
+<p>The measured case against retrieval was about the <em>transcript</em>: a consultation is
+around 2,050 tokens, it fits in context whole, and chunking it can only discard the context that
+resolves ambiguity. That still holds.</p>
+<p>But last year's task retrieved over a <b>115-topic reference corpus the organisers handed
+you</b>, and that is a completely different and entirely justified use of retrieval. 7.1 MB does
+not fit in any context window. If 2026 follows the same pattern, the knowledge base is where the
+retrieval layer belongs, and we already own a tuned one.</p>
+<p>So the rule is: <b>retrieve over the knowledge, not over the transcript.</b></p>
+</div>
+
+<h3>What transfers from our 2025 solution</h3>
+<p>On the <code>elias</code> branch, <code>combined-model-2</code> is a hybrid retriever:
+BM25 for exact medical terminology, <code>all-mpnet-base-v2</code> for semantics, combined by
+reciprocal rank fusion, chunked on markdown medical headers at 600 words with 100 overlap, top-8
+candidates into a single LLM call that answers both fields at once. The LLM was
+<code>gemma3:27b</code> through Ollama, with 12b and <code>deepseek-r1:32b</code> as switchable
+alternatives. Sibling branches carry a Bayesian-optimised sweep over the fusion weights and a
+reranking layer.</p>
+<p>Reported at 9.55 s per statement on an M4 Mac against a 5 s budget, with GPU expected to
+close the gap. If the 5 s limit returns <em>and</em> ASR now sits in front of it, that budget is
+the thing to design against first. Parakeet-CTC runs 9.4x real time on CPU alone, so a
+30-second clip costs about 3 s of the 5 before the language model starts.</p>
+
+<div class="card flag">
+<h3>Two Ambolt repos, and an honest note about what they do and do not prove</h3>
+<p>Of Ambolt's ten public repositories, exactly two were touched on <b>31 August 2026</b>, nine
+seconds apart, seventeen days before the event: <code>speaches</code> (an OpenAI-compatible
+speech server, which gained a <b>speaker diarization endpoint</b> upstream in December) and
+<code>chatterbox-tts-api</code> (local text-to-speech with voice cloning). No other repo shares
+that date.</p>
+<p><b>What this does not show:</b> neither fork contains a single Ambolt commit. Both are
+identical to or behind upstream, and both were created in February 2026. The 31 August event
+changed metadata only, not code, so it was a visibility, description or settings change. It is
+not evidence of work in progress, and an earlier draft of this page said it was.</p>
+<p><b>What it is still worth:</b> a company forks a TTS engine with voice cloning and a speech
+server with diarization, seven months before running a speech challenge, and then touches
+exactly those two a fortnight before it. The cheap inference is that the evaluation audio may be
+<b>TTS-generated rather than recorded</b>. If so it is clean, one speaker at a time, no
+cross-talk and no room noise, and every WER number on this page is pessimistic. Plan for it as a
+likely case, not a confirmed one.</p>
+</div>
+
+<p><code>reference/dmiai2025/</code> holds the 2025 brief, its request and response DTO, and the
+115-topic mapping.</p>
+
 <h2>Three findings that changed the plan</h2>
 
 <div class="card flag">
