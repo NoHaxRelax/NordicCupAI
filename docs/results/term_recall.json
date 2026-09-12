@@ -1,0 +1,38 @@
+{
+  "model": "large-v3",
+  "hotwords": false,
+  "wer": 0.1385,
+  "wer_no_backchannel": 0.1311,
+  "categories": {
+    "diagnoses": {
+      "found": 29,
+      "present": 33,
+      "recall": 0.8788
+    },
+    "drugs": {
+      "found": 26,
+      "present": 35,
+      "recall": 0.7429
+    },
+    "investigations": {
+      "found": 5,
+      "present": 5,
+      "recall": 1.0
+    },
+    "red_flags": {
+      "found": 51,
+      "present": 52,
+      "recall": 0.9808
+    },
+    "temporal": {
+      "found": 109,
+      "present": 117,
+      "recall": 0.9316
+    }
+  },
+  "overall": {
+    "found": 220,
+    "present": 242,
+    "recall": 0.9091
+  }
+}

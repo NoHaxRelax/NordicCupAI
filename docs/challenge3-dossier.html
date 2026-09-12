@@ -347,6 +347,56 @@ and no dependency — it is already in <code>medvoice/notes.py</code> and needs 
 on the day. The system-level column excludes the <code>doctor</code> row, which scores 1.000
 against itself by construction and hands every metric one free correctly-ranked pair.</p>
 
+<h2>Does the meaning survive 13.9% WER? Yes.</h2>
+<p>WER weights every token the same, so losing two hundred "yeah"s scores like losing every drug
+name. Half our substitution-and-deletion mass sits on twenty function words, so the headline
+number may be almost entirely noise nobody grades. The test that matters is whether the
+clinically meaningful words survive. Measured on the same six consultations,
+<code>scripts/term_recall.py</code>:</p>
+<div class="grid">
+  <div class="stat"><b>0.981</b><span>red flag words survive (ambulance, chest, bleeding): 51 of 52</span></div>
+  <div class="stat"><b>0.932</b><span>temporal expressions, the follow-up intervals: 109 of 117</span></div>
+  <div class="stat"><b>0.909</b><span>all clinical content: 220 of 242</span></div>
+  <div class="stat"><b>0.743</b><span>drug names, the only weak category: 26 of 35</span></div>
+</div>
+<p>And the sharper version: of the consultations where the gold diagnosis word is spoken aloud,
+<b>3 of 3 survived and none were lost</b>.</p>
+
+<div class="card key">
+<h3>In half the sample the diagnosis is never said out loud</h3>
+<p>Three of six clinicians wrote "viral URTI", "UTI" and "heart failure exacerbation" having
+uttered none of those phrases. No ASR quality recovers a word nobody spoke. For those cases the
+task is inference from symptoms, not transcription.</p>
+<p>Which settles the allocation question: <b>this challenge is inference-limited, not
+transcription-limited.</b> Whisper large-v3 out of the box already delivers 91% of the clinical
+content, and further ASR work competes for hours against the half of the problem where
+transcription is irrelevant by construction.</p>
+</div>
+
+<h3>Contextual biasing is actively harmful here, which reverses our earlier ranking</h3>
+<p>This was ranked fifth by expected value per hour on the strength of published results. We
+measured it and it is the worst thing we tried.</p>
+<table>
+<thead><tr><th>Condition</th><th class="num">WER</th><th class="num">content recall</th><th>what happened</th></tr></thead>
+<tbody>
+<tr><td>plain decode</td><td class="num win">0.139</td><td class="num win">0.909</td><td>the baseline</td></tr>
+<tr><td><code>initial_prompt</code>, a fluent sentence</td><td class="num">0.135</td><td class="num">0.897</td>
+    <td>0.4 WER points better on a metric made of backchannel, 1.2 points worse on the metric we care about</td></tr>
+<tr><td><code>hotwords</code>, 94 terms</td><td class="num lose">0.528</td><td class="num lose">0.599</td><td>a third of each transcript missing</td></tr>
+<tr><td><code>hotwords</code>, 25 terms</td><td class="num lose">0.858</td><td class="num lose">0.219</td><td></td></tr>
+<tr><td><code>hotwords</code>, 10 terms</td><td class="num lose">0.648</td><td class="num lose">0.413</td><td>output collapses to 196 words</td></tr>
+</tbody>
+</table>
+<p>The damage is not list-size overflow, because it is not monotonic in list size. faster-whisper
+injects hotwords as prompt context, and the model <em>continues the word list</em> rather than
+treating it as a vocabulary hint. The 10-term output ends:</p>
+<pre><code>labyrinthitis lumbar fasciitis lumbar fasciitis labyrinthitis labyrinthitis
+labyrinthitis labyrinthitis levothyroxine levothyroxine levothyroxine</code></pre>
+<p>Fewer and rarer terms bias harder and collapse faster, which is why 10 terms beat 94 for
+sheer damage. <b>Do not pass <code>hotwords</code> to faster-whisper.</b> If a term list is
+needed, apply it after decoding as a fuzzy-match repair over the hypothesis, where a bad
+suggestion cannot destroy the transcript.</p>
+
 <h2>Techniques ranked by improvement per engineering hour</h2>
 <table>
 <thead><tr><th>#</th><th>Technique</th><th>Measured effect</th><th>Cost</th></tr></thead>
@@ -355,7 +405,10 @@ against itself by construction and hands every metric one free correctly-ranked 
 <tr><td>2</td><td>VAD-gate before ASR</td><td class="win">78.78 → 10.52 WER at batch 32; 104.8 → 8.0 on noisy audio</td><td>1 h</td></tr>
 <tr><td>3</td><td>Check for multi-channel audio</td><td class="win">deletes the diarization layer if true</td><td>10 min</td></tr>
 <tr><td>4</td><td>Fix <code>num_speakers=2</code></td><td>6.52 DER on classic clustering; ~0.1 on neural (variance only)</td><td>1 min</td></tr>
-<tr><td>5</td><td>Curated 200–500 term context biasing</td><td class="win">key-phrase F 62.5 → 75.8, WER 13.6 → 12.9</td><td>½ day</td></tr>
+<tr><td>—</td><td class="lose">Context biasing via faster-whisper <code>hotwords</code></td>
+    <td class="lose">we measured WER 0.139 → <b>0.648</b>. Total decoder collapse</td><td>skip</td></tr>
+<tr><td>—</td><td class="lose"><code>initial_prompt</code> with a natural sentence</td>
+    <td class="lose">WER 0.139 → 0.135, but content recall 0.909 → 0.897</td><td>skip</td></tr>
 <tr><td>6</td><td>5 fixed few-shot exemplars (extraction only)</td><td class="win">BRIDGE +8.0 mean; medication extraction 2.39 → 40.97</td><td>2 h</td></tr>
 <tr><td>—</td><td class="lose">Chain-of-thought on clinical extraction</td><td class="lose">−2.36 mean; 95 of 109 models worse</td><td>skip</td></tr>
 <tr><td>—</td><td class="lose">Free-form LLM transcript rewriting</td><td class="lose">worse in every study below ~12% WER</td><td>skip</td></tr>

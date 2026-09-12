@@ -1,0 +1,41 @@
+{
+  "_about": "The words that carry clinical meaning in a PriMock57 consultation. Two uses from one artifact: the measurement set for content-term recall (does the meaning survive transcription, as opposed to the function words), and the contextual biasing lexicon to feed faster-whisper's `hotwords` or an initial_prompt.",
+  "_why": "WER counts every token equally, so a model that drops 200 'yeah's and keeps every drug name scores the same as one that does the reverse. On large-v3 mixed, twenty function-word and backchannel types carry 563 of 1136 combined substitution-plus-deletion errors, 49.6% of the error mass. Whether 13.9% WER is survivable depends entirely on which half the errors land in, and that is what this set measures.",
+  "_sources": "Diagnosis terms are the canonical labels from primock57_structured.json. Drugs and investigations were read out of the 57 clinician notes. Keep single tokens where possible: term_recall works on normalised tokens, so multi-word terms are listed by their distinctive head word.",
+  "diagnoses": [
+    "gastroenteritis", "migraine", "uti", "cystitis", "urti", "lrti", "influenza",
+    "dermatitis", "eczema", "asthma", "bronchitis", "labyrinthitis", "bursitis",
+    "anaphylaxis", "urticaria", "cellulitis", "meningitis", "malaria", "dengue",
+    "appendicitis", "hypothyroidism", "depression", "anxiety", "insomnia",
+    "stroke", "cva", "tia", "infarction", "embolism", "gord", "pneumonia",
+    "constipation", "sclerosis", "lyme", "pregnancy", "ectopic", "palsy",
+    "arthritis", "puo", "pyrexia", "tumour", "cancer", "diabetes", "hypertension"
+  ],
+  "drugs": [
+    "paracetamol", "ibuprofen", "naproxen", "aspirin", "codeine",
+    "nitrofurantoin", "amoxicillin", "clindamycin", "penicillin", "trimethoprim",
+    "metformin", "lisinopril", "losartan", "amlodipine", "bisoprolol",
+    "furosemide", "simvastatin", "atorvastatin", "thyroxine", "levothyroxine",
+    "salbutamol", "ventolin", "clenil", "beclometasone", "prednisolone",
+    "betnovate", "hydrocortisone", "emollient", "cetraben", "diprobase",
+    "dermol", "e45", "cetirizine", "fexofenadine", "antihistamine",
+    "microgynon", "mercilon", "cerazette", "implanon", "mebeverine",
+    "sertraline", "melatonin", "stemetil", "prochlorperazine",
+    "dioralyte", "diarolyte", "methotrexate", "inhaler", "steroid", "antibiotics"
+  ],
+  "investigations": [
+    "ecg", "echo", "bloods", "fbc", "crp", "esr", "tsh", "bnp", "troponin",
+    "urinalysis", "msu", "dipstick", "swab", "culture", "serology", "xray",
+    "ct", "mri", "ultrasound", "spirometry", "peak", "flow", "bp", "temperature"
+  ],
+  "red_flags": [
+    "ambulance", "999", "emergency", "urgent", "hospital", "paramedic",
+    "breathless", "haemoptysis", "haematuria", "weakness", "numbness",
+    "photophobia", "stiffness", "rash", "fever", "vomiting", "bleeding",
+    "collapse", "faint", "chest"
+  ],
+  "temporal": [
+    "days", "day", "weeks", "week", "months", "month", "hours", "hour",
+    "tomorrow", "today", "fortnight", "morning", "monday", "friday"
+  ]
+}
