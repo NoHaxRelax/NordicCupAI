@@ -55,6 +55,39 @@ VOICES = {"Doctor": "en-GB-RyanNeural", "Patient": "en-GB-SoniaNeural"}
 VOICES_DA = {"Doctor": "da-DK-JeppeNeural", "Patient": "da-DK-ChristelNeural"}
 
 
+class _Translated:
+    """An Utterance with its text replaced, keeping the original timing."""
+
+    __slots__ = ("speaker", "start", "end", "_text")
+
+    def __init__(self, u, text: str):
+        self.speaker, self.start, self.end, self._text = u.speaker, u.start, u.end, text
+
+    def clean(self, *a, **k) -> str:
+        return self._text
+
+
+def translator():
+    """en->da machine translation, 75 MB, runs on CPU in seconds per utterance."""
+    from transformers import MarianMTModel, MarianTokenizer
+
+    name = "Helsinki-NLP/opus-mt-en-da"
+    tok = MarianTokenizer.from_pretrained(name)
+    mt = MarianMTModel.from_pretrained(name).eval()
+    memo: dict[str, str] = {}
+
+    def go(text: str) -> str:
+        if text not in memo:
+            import torch
+            b = tok([text], return_tensors="pt", truncation=True, max_length=512)
+            with torch.inference_mode():
+                y = mt.generate(**b, max_new_tokens=512, num_beams=1)
+            memo[text] = tok.decode(y[0], skip_special_tokens=True)
+        return memo[text]
+
+    return go
+
+
 async def _say(text: str, voice: str, cache: Path) -> np.ndarray:
     """Synthesise one utterance, cached on disk by (text, voice).
 
@@ -151,15 +184,26 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=6)
     ap.add_argument("--modes", default="timed,seq")
     ap.add_argument("--model", default="large-v3")
-    ap.add_argument("--danish", action="store_true", help="render in Danish instead")
+    # Three language conditions, and the distinction between the last two matters.
+    # Pointing Danish voices at English text does NOT test Danish audio; it tests
+    # heavily accented English, because the words and the reference are still
+    # English. That is a real scenario (Danish clinicians working in English) and
+    # worth its own row, but it is not the one that would cost us a day.
+    ap.add_argument("--lang", default="en", choices=("en", "accent", "da"),
+                    help="en: UK voices on English text. accent: Danish voices on English "
+                         "text, scored against the English reference, i.e. accented English. "
+                         "da: translate the transcript to Danish first, render it, decode as "
+                         "Danish and score against the translation.")
     ap.add_argument("--out", default="runs/tts_delta.json")
     args = ap.parse_args()
 
     from medvoice.asr import get_model, transcribe
 
-    voices = VOICES_DA if args.danish else VOICES
-    work = Path("work") / ("tts_da" if args.danish else "tts")
+    voices = VOICES if args.lang == "en" else VOICES_DA
+    work = Path("work") / f"tts_{args.lang}"
     cache = work / "clips"
+    translate = translator() if args.lang == "da" else None
+    asr_lang = "da" if args.lang == "da" else "en"
 
     cons = load()
     _, dev = split(cons)
@@ -169,20 +213,28 @@ def main() -> None:
 
     print(f"{len(dev)} consultations, voices {list(voices.values())}\n")
     model = get_model(args.model)
-    rows, out = [], {"model": args.model, "danish": args.danish, "conditions": {}}
+    rows, out = [], {"model": args.model, "lang": args.lang, "conditions": {}}
 
     for mode in args.modes.split(","):
         pairs, meta, t0 = [], [], time.perf_counter()
         for c in dev:
             wav = work / f"{c.cid}_{mode}.wav"
+            utts, ref = c.utterances, c.reference()
+            if translate is not None:
+                # The translation becomes BOTH the spoken text and the reference,
+                # which is exactly the regime a TTS-generated challenge lives in:
+                # the generated text IS the ground truth. Translation errors move
+                # both sides together and so cannot inflate the score.
+                utts = [_Translated(u, translate(u.clean())) for u in utts if u.clean().strip()]
+                ref = " ".join(u.clean() for u in utts)
             if not (wav.is_file() and wav.stat().st_size > 4096):
                 wav.parent.mkdir(parents=True, exist_ok=True)
-                audio, m = asyncio.run(render(c.utterances, voices, mode, cache))
+                audio, m = asyncio.run(render(utts, voices, mode, cache))
                 sf.write(wav, audio, SR)
             else:
                 m = {"cached": True}
-            r = transcribe(wav, model)
-            pairs.append((c.reference(), r.hypothesis))
+            r = transcribe(wav, model, language=asr_lang)
+            pairs.append((ref, r.hypothesis))
             m["cid"] = c.cid
             m["real_s"] = round(c.duration, 1)
             meta.append(m)
@@ -202,8 +254,12 @@ def main() -> None:
         out["conditions"][f"tts-{mode}"] = {k: v for k, v in row.items() if k != "per_file"}
         rows.append(row)
 
-    # the reference point, measured earlier on the same six consultations
+    # the reference point, measured earlier on the same six consultations. Only
+    # comparable for lang=en: the other arms are scored against different text.
     real = json.loads(Path("runs/term_recall.json").read_text(encoding="utf-8"))
+    if args.lang != "en":
+        real = {"wer": float("nan"), "wer_no_backchannel": float("nan"),
+                "overall": {"recall": float("nan")}}
     print(f"{'condition':<14}{'WER':>8}{'no-bc':>8}{'sub':>7}{'del':>7}{'ins':>7}{'content':>9}")
     print("-" * 60)
     print(f"{'real (mixed)':<14}{real['wer']:>8.3f}{real['wer_no_backchannel']:>8.3f}"

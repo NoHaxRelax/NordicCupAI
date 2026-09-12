@@ -392,6 +392,33 @@ render dialogue turns sequentially, which is the cheap way to build it, we shoul
 <b>roughly 4% WER and 96% content recall</b> and the ASR workstream is finished before it starts.</p>
 </div>
 
+<h3>Accented English is five times more expensive than clean English</h3>
+<p>Pointing the Danish voices at the English transcripts, still scored against the English
+reference, gives heavily Danish-accented English. That is a real scenario, since a Nordic
+championship may well feature Nordic speakers working in English, and it is much harder than
+either arm above.</p>
+<table>
+<thead><tr><th>Sequential, no overlap, same six consultations</th><th class="num">WER</th>
+<th class="num">sub</th><th class="num">del</th><th class="num">content recall</th></tr></thead>
+<tbody>
+<tr><td>UK voices</td><td class="num win">0.043</td><td class="num">101</td><td class="num">35</td><td class="num win">0.959</td></tr>
+<tr><td>Danish voices, English words</td><td class="num lose">0.219</td><td class="num">967</td><td class="num">643</td><td class="num lose">0.806</td></tr>
+</tbody>
+</table>
+<p>Accent costs more than overlap and recording quality combined, and unlike them it also eats
+content recall, dropping it below the real-recording baseline of 0.909. Note the error shape:
+substitutions rise almost tenfold while deletions rise from 35 to 643, so accent damages both
+channels where overlap damaged only deletions and recording quality only substitutions.</p>
+<p>Compare the sequential rows and not the timed ones. The Danish voices take longer to say the
+same English words, so placing them at the original timestamps produces 174 seconds of overlap
+per consultation against the UK arm's 112. The timed comparison therefore confounds accent with
+extra overlap; the sequential rows have zero overlap on both sides and isolate accent cleanly.</p>
+<p>This arm was first run under a <code>--danish</code> flag and reported as a Danish-language
+result. It is not: the words and the reference are English throughout and only the voice is
+Danish. The genuine Danish arm translates the transcript first, so the Danish text is both what
+gets spoken and what gets scored, which is the regime a generated challenge lives in and which
+also means translation errors move both sides together rather than flattering the score.</p>
+
 <div class="card flag">
 <h3>Four honest limits on that table</h3>
 <ol>

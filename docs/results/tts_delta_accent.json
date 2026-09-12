@@ -1,0 +1,28 @@
+{
+  "model": "large-v3",
+  "lang": "accent",
+  "conditions": {
+    "tts-timed": {
+      "condition": "tts-timed",
+      "wer": 0.3113,
+      "wer_no_backchannel": 0.2997,
+      "sub": 1021,
+      "del": 1641,
+      "ins": 369,
+      "ref_words": 9738,
+      "content_recall": 0.7355,
+      "render_s": 522.9
+    },
+    "tts-seq": {
+      "condition": "tts-seq",
+      "wer": 0.2186,
+      "wer_no_backchannel": 0.2241,
+      "sub": 967,
+      "del": 643,
+      "ins": 519,
+      "ref_words": 9738,
+      "content_recall": 0.8058,
+      "render_s": 477.9
+    }
+  }
+}
