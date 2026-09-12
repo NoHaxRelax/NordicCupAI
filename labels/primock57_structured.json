@@ -1,0 +1,1106 @@
+{
+  "_about": "Hand-built structured labels for PriMock57, in the shape we expect Challenge 3 to require: a differential diagnosis list and a follow-up plan. Read off the clinician's own note for each consultation, by a human (Claude) reading all 57 notes in full, not by regex. Derived from PriMock57 (Babylon Health, CC BY 4.0); this file is offered under the same licence.",
+  "_why": "The organisers are unlikely to ask for a full transcript, because free text is miserable to rank. A small JSON object is easy to grade. These labels let us measure a pipeline end to end before the event, on the exact output shape we expect, instead of guessing.",
+  "_schema": {
+    "diagnoses": "Ordered differential, most likely first, as the clinician recorded it. Lower-cased free text, normalised to a canonical name (e.g. 'UTI' not 'urine infection'). A condition the clinician named only to EXCLUDE is included and marked in diagnoses_to_exclude, because 'need to rule out malaria' is a clinically load-bearing statement that a grader would expect.",
+    "diagnoses_to_exclude": "Subset of diagnoses that were raised as things to rule out rather than as the working diagnosis.",
+    "diagnosis_explicit": "false where the note has no Imp/DDx/Diagnosis line and the diagnosis had to be read out of the plan or history. 9 of 57. A system should not be penalised for these the same way.",
+    "followup": {
+      "urgency": "emergency (ambulance called during the consultation) | urgent_today | days | weeks | conditional_only | none",
+      "interval_days": "[min, max] agreed interval, or null when none was given. 0 means same day.",
+      "modality": "ambulance | a_and_e | f2f_gp | remote_gp | blood_test | specialist | physio | self_referral | pharmacy | none",
+      "booked": "true if an appointment was actually arranged during the consultation, false if the patient was told to arrange it",
+      "conditional": "true if the follow-up is contingent on symptoms (safety-netting). Almost always true: a GP follow-up is usually 'come back IF'. A system that reports an unconditional date here is wrong even when the number matches.",
+      "trigger": "the safety-netting condition in the clinician's own words, condensed"
+    },
+    "flags": "corpus defects found while reading. See _defects.",
+    "patient_concerns": "Conditions the PATIENT raised as a fear, recorded under ICE. Present in 2 of 57. Not a differential: a system that lists the patient's cancer worry as a candidate diagnosis is making a clinically different claim from the one the note makes."
+  },
+  "_defects": {
+    "presenting_complaint_mismatch": "The presenting_complaint field disagrees with the note body in 5 consultations: day2_consultation05 (note says so explicitly), day3_consultation09, day4_consultation06, day4_consultation09, day5_consultation11. Do not use that field as a label or as a prompt hint without checking.",
+    "duplicated_note_body": "day2_consultation06 and day4_consultation09 have their entire note pasted twice. Any length-sensitive metric is distorted for these two.",
+    "leaked_note": "day5_consultation09's note has the whole of day5_consultation10's note appended to it, including a stray timestamp line. Scoring day5_consultation09 against it measures the wrong consultation for the back half.",
+    "note": "All four defects are in the published corpus, not in our loader."
+  },
+  "consultations": {
+    "day1_consultation01": {
+      "diagnoses": [
+        "gastroenteritis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          3,
+          5
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if symptoms not improving, sooner if feeling more unwell"
+      }
+    },
+    "day1_consultation02": {
+      "diagnoses": [
+        "eczema flare"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "weeks",
+        "interval_days": [
+          10,
+          14
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if symptoms no better, or earlier if worsening"
+      }
+    },
+    "day1_consultation03": {
+      "diagnoses": [
+        "migraine"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "to discuss prophylactic treatment; earlier if worsening headache, vomiting or visual symptoms"
+      },
+      "patient_concerns": [
+        "brain tumour"
+      ]
+    },
+    "day1_consultation04": {
+      "diagnoses": [
+        "viral URTI",
+        "influenza"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          5,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better; urgent review if shortness of breath, chest pain or fever"
+      }
+    },
+    "day1_consultation05": {
+      "diagnoses": [
+        "UTI",
+        "pregnancy"
+      ],
+      "diagnoses_to_exclude": [
+        "pregnancy"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          1,
+          2
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if symptoms not improving, earlier if fever, abdominal pain or vomiting"
+      }
+    },
+    "day1_consultation06": {
+      "diagnoses": [
+        "heart failure exacerbation"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "earlier if chest pain, shortness of breath or dizziness"
+      }
+    },
+    "day1_consultation07": {
+      "diagnoses": [
+        "viral URTI",
+        "LRTI"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better; delayed antibiotic script to start at 24-48h if not improving"
+      }
+    },
+    "day1_consultation08": {
+      "diagnoses": [
+        "dermatitis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "or earlier if worsening symptoms or any concerns"
+      }
+    },
+    "day1_consultation09": {
+      "diagnoses": [
+        "UTI",
+        "cystitis",
+        "pregnancy"
+      ],
+      "diagnoses_to_exclude": [
+        "pregnancy"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          3,
+          3
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better, earlier if fever, back pain, vomiting or more unwell"
+      }
+    },
+    "day1_consultation10": {
+      "diagnoses": [
+        "UTI"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better, earlier if fever, back pain or vomiting"
+      }
+    },
+    "day1_consultation11": {
+      "diagnoses": [
+        "gastroenteritis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          2,
+          2
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "or earlier if worsening symptoms"
+      }
+    },
+    "day1_consultation12": {
+      "diagnoses": [
+        "gastroenteritis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          3,
+          5
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better, earlier if worsening diarrhoea, vomiting, abdominal pain or reduced oral intake"
+      }
+    },
+    "day1_consultation13": {
+      "diagnoses": [
+        "migraine"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "to discuss prophylactic treatment; patient aware of red flag symptoms"
+      }
+    },
+    "day1_consultation14": {
+      "diagnoses": [
+        "viral URTI"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          5,
+          5
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better, earlier if fever, shortness of breath or chest pain"
+      }
+    },
+    "day1_consultation15": {
+      "diagnoses": [
+        "contact dermatitis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "weeks",
+        "interval_days": [
+          10,
+          14
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if no better, or earlier if worsening symptoms"
+      }
+    },
+    "day2_consultation01": {
+      "diagnoses": [
+        "impacted ear wax",
+        "tinnitus"
+      ],
+      "diagnoses_to_exclude": [
+        "impacted ear wax"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          5,
+          5
+        ],
+        "modality": "f2f_gp",
+        "booked": true,
+        "conditional": false,
+        "trigger": "to examine the ear; ring back in the interim if any problems"
+      }
+    },
+    "day2_consultation02": {
+      "diagnoses": [
+        "olecranon bursitis",
+        "septic arthritis",
+        "rheumatoid arthritis"
+      ],
+      "diagnoses_to_exclude": [
+        "septic arthritis",
+        "rheumatoid arthritis"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "review after the rheumatology bloods return; contact back if any deterioration, warned about septic arthritis"
+      }
+    },
+    "day2_consultation03": {
+      "diagnoses": [
+        "Bell's palsy",
+        "focal neurology"
+      ],
+      "diagnoses_to_exclude": [
+        "focal neurology"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "face to face today for neurological and ear examination"
+      }
+    },
+    "day2_consultation04": {
+      "diagnoses": [
+        "LRTI"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "face to face assessment today to listen to chest and check observations"
+      }
+    },
+    "day2_consultation05": {
+      "diagnoses": [
+        "TIA",
+        "antiphospholipid syndrome"
+      ],
+      "diagnoses_to_exclude": [
+        "antiphospholipid syndrome"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "specialist",
+        "booked": true,
+        "conditional": false,
+        "trigger": "urgent TIA clinic, referral faxed now; A&E if any prolonged symptoms"
+      }
+    },
+    "day2_consultation06": {
+      "diagnoses": [
+        "insect bite reaction",
+        "anaphylaxis",
+        "cellulitis"
+      ],
+      "diagnoses_to_exclude": [
+        "anaphylaxis",
+        "cellulitis"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "none",
+        "booked": false,
+        "conditional": true,
+        "trigger": "urgent review if red flag symptoms; ring back if concerns or anxiety"
+      },
+      "flags": [
+        "duplicated_note_body"
+      ]
+    },
+    "day2_consultation07": {
+      "diagnoses": [
+        "acute coronary syndrome"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "emergency",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "ambulance",
+        "booked": true,
+        "conditional": false,
+        "trigger": "blue light ambulance called during the consultation, stayed on the line until handover"
+      }
+    },
+    "day2_consultation08": {
+      "diagnoses": [
+        "pyrexia of unknown origin",
+        "malaria"
+      ],
+      "diagnoses_to_exclude": [
+        "malaria"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "face to face today, then bloods including thick and thin films"
+      }
+    },
+    "day2_consultation09": {
+      "diagnoses": [
+        "stroke"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "emergency",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "ambulance",
+        "booked": true,
+        "conditional": false,
+        "trigger": "blue light ambulance called during the consultation"
+      }
+    },
+    "day2_consultation10": {
+      "diagnoses": [
+        "tension headache",
+        "migraine"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "review in a week; ring back sooner if any red flag symptoms"
+      }
+    },
+    "day3_consultation01": {
+      "diagnoses": [
+        "anaphylaxis",
+        "food allergy"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "emergency",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "ambulance",
+        "booked": false,
+        "conditional": false,
+        "trigger": "999 call advised now; after hospital discharge book a review to consider an epipen"
+      }
+    },
+    "day3_consultation02": {
+      "diagnoses": [
+        "malaria",
+        "dengue",
+        "meningitis"
+      ],
+      "diagnoses_to_exclude": [
+        "malaria",
+        "dengue",
+        "meningitis"
+      ],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "urgent appointment within a few hours, A&E if not possible"
+      }
+    },
+    "day3_consultation03": {
+      "diagnoses": [
+        "hypothyroidism",
+        "anaemia"
+      ],
+      "diagnoses_to_exclude": [
+        "anaemia"
+      ],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "blood_test",
+        "booked": false,
+        "conditional": false,
+        "trigger": "bloods first, then book an appointment after the text message; contact urgently if chest pain with palpitations or change in bowel habit"
+      }
+    },
+    "day3_consultation04": {
+      "diagnoses": [
+        "asthma exacerbation"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          0,
+          2
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "chest reviewed within 2 days; A&E if increasingly breathless before being seen"
+      }
+    },
+    "day3_consultation05": {
+      "diagnoses": [
+        "labyrinthitis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "face to face to have ears checked; A&E if limb weakness or vomiting"
+      }
+    },
+    "day3_consultation06": {
+      "diagnoses": [
+        "urticaria",
+        "anaphylaxis"
+      ],
+      "diagnoses_to_exclude": [
+        "anaphylaxis"
+      ],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "emergency",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "ambulance",
+        "booked": false,
+        "conditional": false,
+        "trigger": "antihistamine immediately and call an ambulance to rule out anaphylaxis"
+      }
+    },
+    "day3_consultation07": {
+      "diagnoses": [
+        "eczema"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "weeks",
+        "interval_days": [
+          14,
+          14
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "if not better in two weeks; speak to a doctor urgently if worse or allergic reaction"
+      }
+    },
+    "day3_consultation08": {
+      "diagnoses": [
+        "upper respiratory tract infection"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": [
+          21,
+          21
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "call back if breathlessness, wheeze, or cough lasting more than 3 weeks"
+      }
+    },
+    "day3_consultation09": {
+      "diagnoses": [
+        "multiple sclerosis"
+      ],
+      "diagnoses_to_exclude": [
+        "multiple sclerosis"
+      ],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "specialist",
+        "booked": false,
+        "conditional": false,
+        "trigger": "urgent neurology review; A&E if progressing weakness, vomiting, visual disturbance or fits"
+      },
+      "flags": [
+        "presenting_complaint_mismatch"
+      ]
+    },
+    "day3_consultation10": {
+      "diagnoses": [
+        "gastroenteritis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "stool sample if diarrhoea beyond a week or any blood; book an appointment if more than 8 episodes a day"
+      }
+    },
+    "day4_consultation01": {
+      "diagnoses": [
+        "myocardial infarction",
+        "pulmonary embolism",
+        "GORD"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "emergency",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "ambulance",
+        "booked": true,
+        "conditional": false,
+        "trigger": "ambulance called for further investigation and assessment"
+      }
+    },
+    "day4_consultation02": {
+      "diagnoses": [
+        "hypothyroidism"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "blood_test",
+        "booked": false,
+        "conditional": false,
+        "trigger": "further examination and blood tests"
+      }
+    },
+    "day4_consultation03": {
+      "diagnoses": [
+        "pulmonary embolism"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "a_and_e",
+        "booked": false,
+        "conditional": false,
+        "trigger": "further examination and investigation in an acute setting"
+      }
+    },
+    "day4_consultation04": {
+      "diagnoses": [
+        "asthma exacerbation",
+        "allergic reaction"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "antihistamine plus further examination and investigation; unable to speak in full sentences"
+      }
+    },
+    "day4_consultation05": {
+      "diagnoses": [
+        "gastroenteritis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "visit the surgery if symptoms do not improve"
+      }
+    },
+    "day4_consultation06": {
+      "diagnoses": [
+        "migraine",
+        "meningitis"
+      ],
+      "diagnoses_to_exclude": [
+        "meningitis"
+      ],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "face to face today as first onset headache; needs neurological assessment and check for neck stiffness, fever and rash"
+      },
+      "flags": [
+        "presenting_complaint_mismatch"
+      ],
+      "patient_concerns": [
+        "brain tumour",
+        "stroke"
+      ]
+    },
+    "day4_consultation07": {
+      "diagnoses": [
+        "viral upper respiratory tract infection"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": [
+          5,
+          5
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "expected better in 5 days, review then if no better; sooner if sudden change in breathlessness"
+      }
+    },
+    "day4_consultation08": {
+      "diagnoses": [
+        "depression",
+        "hypothyroidism"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "blood_test",
+        "booked": false,
+        "conditional": false,
+        "trigger": "TSH and FBC, then examination and GP review"
+      }
+    },
+    "day4_consultation09": {
+      "diagnoses": [
+        "asthma exacerbation"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "none",
+        "booked": false,
+        "conditional": true,
+        "trigger": "seek further medical attention if worsening breathlessness or concerns"
+      },
+      "flags": [
+        "presenting_complaint_mismatch",
+        "duplicated_note_body"
+      ]
+    },
+    "day4_consultation10": {
+      "diagnoses": [
+        "constipation",
+        "pelvic inflammatory disease",
+        "sexually transmitted infection",
+        "UTI",
+        "pregnancy"
+      ],
+      "diagnoses_to_exclude": [
+        "pregnancy"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "further examination and investigations, pregnancy test and U+E"
+      }
+    },
+    "day5_consultation01": {
+      "diagnoses": [
+        "tension headache",
+        "migraine",
+        "meningitis"
+      ],
+      "diagnoses_to_exclude": [
+        "meningitis"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "get BP and temperature checked; call straight back if worsening or persistent headache, fever, rash or new symptoms; review if headaches become regular"
+      }
+    },
+    "day5_consultation02": {
+      "diagnoses": [
+        "UTI"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "contact if fever, back pain, persistent symptoms, or recurrent episodes"
+      }
+    },
+    "day5_consultation03": {
+      "diagnoses": [
+        "anxiety disorder",
+        "insomnia"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "self_referral",
+        "booked": false,
+        "conditional": true,
+        "trigger": "self refer to NHS talking therapies, online CBT meanwhile, bloods for the palpitations; contact if mood worse or unable to cope with work"
+      }
+    },
+    "day5_consultation04": {
+      "diagnoses": [
+        "abdominal pain of unknown cause",
+        "ectopic pregnancy"
+      ],
+      "diagnoses_to_exclude": [
+        "ectopic pregnancy"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": true,
+        "conditional": false,
+        "trigger": "urgent examination booked today, pregnancy test today, contact immediately if positive or if pain worse"
+      }
+    },
+    "day5_consultation05": {
+      "diagnoses": [
+        "UTI"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "pharmacy",
+        "booked": false,
+        "conditional": true,
+        "trigger": "call back if fever, persistent or worsening pain, or recurrent similar symptoms"
+      }
+    },
+    "day5_consultation06": {
+      "diagnoses": [
+        "gastroenteritis",
+        "food poisoning",
+        "bacterial gastroenteritis"
+      ],
+      "diagnoses_to_exclude": [
+        "bacterial gastroenteritis"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "urgent_today",
+        "interval_days": [
+          0,
+          0
+        ],
+        "modality": "f2f_gp",
+        "booked": true,
+        "conditional": false,
+        "trigger": "urgent appointment booked to assess hydration, stool culture sent; A&E if worse in the meantime"
+      }
+    },
+    "day5_consultation07": {
+      "diagnoses": [
+        "viral bronchitis"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": [
+          7,
+          14
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "expected to settle in 1-2 weeks; contact if symptoms worsen, fever persists, phlegm or blood in sputum"
+      }
+    },
+    "day5_consultation08": {
+      "diagnoses": [
+        "asthma exacerbation"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": false,
+        "trigger": "review next week with peak flow diary; urgent appointment if wheeze not settling or feels unwell meanwhile"
+      }
+    },
+    "day5_consultation09": {
+      "diagnoses": [
+        "Lyme disease",
+        "chronic fatigue"
+      ],
+      "diagnoses_to_exclude": [
+        "Lyme disease"
+      ],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "days",
+        "interval_days": [
+          7,
+          7
+        ],
+        "modality": "blood_test",
+        "booked": false,
+        "conditional": false,
+        "trigger": "screening bloods including Lyme serology, then GP follow up one week later"
+      },
+      "flags": [
+        "leaked_note"
+      ]
+    },
+    "day5_consultation10": {
+      "diagnoses": [
+        "migraine"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "f2f_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "needs neurological examination; contact straight away if worse, A&E if severe or unrelenting"
+      }
+    },
+    "day5_consultation11": {
+      "diagnoses": [
+        "patellofemoral knee pain"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": false,
+      "followup": {
+        "urgency": "days",
+        "interval_days": null,
+        "modality": "physio",
+        "booked": false,
+        "conditional": true,
+        "trigger": "physiotherapy referral; see a doctor urgently if persistent swelling, heat, redness or locking"
+      },
+      "flags": [
+        "presenting_complaint_mismatch"
+      ]
+    },
+    "day5_consultation12": {
+      "diagnoses": [
+        "new onset headache"
+      ],
+      "diagnoses_to_exclude": [],
+      "diagnosis_explicit": true,
+      "followup": {
+        "urgency": "conditional_only",
+        "interval_days": null,
+        "modality": "remote_gp",
+        "booked": false,
+        "conditional": true,
+        "trigger": "contact a doctor asap if pain not settling, worse, or new symptoms; further GP assessment if episodes recur"
+      }
+    }
+  }
+}
