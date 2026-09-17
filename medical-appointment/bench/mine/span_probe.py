@@ -95,15 +95,27 @@ def base_table() -> dict:
     return json.loads(TABLE.read_text(encoding='utf-8'))
 
 
+def retry(fn, *args, tries: int = 6, wait: float = 10.0):
+    """The portal's status list is long by now and a read occasionally times out; retry with a pause."""
+    for i in range(tries):
+        try:
+            return fn(*args)
+        except Exception as e:  # noqa: BLE001
+            if i == tries - 1:
+                raise
+            print(f'    portal call failed ({type(e).__name__}), retry {i + 1}/{tries - 1} in {wait:.0f}s', flush=True)
+            time.sleep(wait)
+
+
 def one_run(url: str, table: dict, key: str, guess: list[float], poll: float) -> float:
     TABLE.write_text(json.dumps(table, indent=1), encoding='utf-8')
-    before = {v.get('submitted_at') for v in portal_status.fetch().get('validations', [])}
+    before = {v.get('submitted_at') for v in retry(portal_status.fetch).get('validations', [])}
     for attempt in range(3):
-        q = portal_status.queue_validation(url.rstrip('/') + '/predict')
+        q = retry(portal_status.queue_validation, url.rstrip('/') + '/predict')
         t0 = time.time()
         while True:
             time.sleep(poll)
-            vals = [v for v in portal_status.fetch().get('validations', []) if v.get('submitted_at') not in before]
+            vals = [v for v in retry(portal_status.fetch).get('validations', []) if v.get('submitted_at') not in before]
             newest = max(vals, key=lambda v: v.get('submitted_at') or '', default=None)
             if newest and newest.get('finished_at'):
                 break
