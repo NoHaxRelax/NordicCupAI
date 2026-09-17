@@ -122,6 +122,21 @@ class H(SimpleHTTPRequestHandler):
             return self._audio(p[len('/audio/'):])
         return super().do_GET()
 
+    def do_HEAD(self):
+        p = unquote(self.path.split('?', 1)[0])
+        if p.startswith('/audio/') or p.startswith('/val-audio/'):
+            name = p.split('/', 2)[2]
+            f = (AUDIO if p.startswith('/audio/') else self.DUMP) / name
+            if not name.endswith('.mp3') or not f.exists():
+                self.send_error(404); return
+            self.send_response(200)
+            self.send_header('Content-Type', 'audio/mpeg')
+            self.send_header('Accept-Ranges', 'bytes')
+            self.send_header('Content-Length', str(f.stat().st_size))
+            self.end_headers()
+            return
+        return super().do_HEAD()
+
     def do_POST(self):
         p = unquote(self.path)
         if p.startswith('/api/val/labels/'):

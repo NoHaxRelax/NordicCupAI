@@ -247,16 +247,39 @@ document.addEventListener('mousemove', e => {
   tip.style.left = x + 'px'; tip.style.top = (y + 120 > window.innerHeight ? e.clientY - 100 : y) + 'px';
 });
 function mark(t) { document.querySelectorAll('.playing').forEach(x => x.classList.remove('playing')); if (t) t.classList.add('playing'); }
+const note = m => { $('audio-note').textContent = m; };
+let actx = null, curSrc = null;
+const decoded = {};
+function stopClip() { if (curSrc) { try { curSrc.stop(); } catch (e) {} curSrc = null; } }
+async function playClip(key, btn) {
+  // Embedded gold clip: decode the MP3 bytes in the page and play them through Web Audio,
+  // which does not depend on the host allowing data: media sources.
+  const uri = CLIPS[key];
+  const bin = atob(uri.split(',')[1]); const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  audio.pause(); stopClip();
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') await actx.resume();
+    const ab = decoded[key] || (decoded[key] = await actx.decodeAudioData(bytes.buffer.slice(0)));
+    const src = actx.createBufferSource(); src.buffer = ab; src.connect(actx.destination);
+    src.onended = () => { if (curSrc === src) { curSrc = null; mark(null); } };
+    src.start(); curSrc = src; mark(btn); note(`playing gold clip ${key.replace('conversation_sample_', 's')} (${ab.duration.toFixed(2)} s)`);
+  } catch (e) {
+    try { audio.src = uri; stopAt = null; await audio.play(); mark(btn); note('playing via audio element'); }
+    catch (e2) { note('playback failed: ' + (e.message || e) + ' / ' + (e2.message || e2)); }
+  }
+}
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-s]');
   if (!t) return;
-  if (t.dataset.key && CLIPS[t.dataset.key] && !(audioOK && e.shiftKey)) {   // embedded clip of the gold interval
-    audio.src = CLIPS[t.dataset.key]; stopAt = null; audio.currentTime = 0; audio.play(); mark(t); return;
-  }
-  if (!audioOK) return;
+  if (t.dataset.key && CLIPS[t.dataset.key] && !(audioOK && e.shiftKey)) { playClip(t.dataset.key, t); return; }
+  if (!audioOK) { note('no local audio: open http://localhost:9060/timeline.html for full playback'); return; }
+  stopClip();
   const src = `/audio/${t.dataset.c}.mp3`;
   if (!audio.src.endsWith(src)) audio.src = src;
-  audio.currentTime = +t.dataset.s; stopAt = +t.dataset.e; audio.play(); mark(t);
+  audio.currentTime = +t.dataset.s; stopAt = +t.dataset.e;
+  audio.play().then(() => { mark(t); note(`playing ${t.dataset.c.replace('conversation_sample_', 's')} ${fmt(+t.dataset.s)} → ${fmt(+t.dataset.e)}`); }).catch(err => note('playback failed: ' + err.message));
 });
 audio.addEventListener('ended', () => mark(null));
 audio.addEventListener('timeupdate', () => { if (stopAt !== null && audio.currentTime >= stopAt) { audio.pause(); stopAt = null; document.querySelectorAll('.playing').forEach(x => x.classList.remove('playing')); } });
@@ -269,6 +292,10 @@ $('zoom').oninput = () => { pxs = +$('zoom').value; $('zv').textContent = pxs + 
 $('filter').onchange = $('sort').onchange = $('hideok').onchange = $('showtxt').onchange = render;
 try { const z = localStorage.getItem('tl.zoom'); if (z) { pxs = +z; $('zoom').value = z; $('zv').textContent = z + ' px/s'; } } catch (e) {}
 $('zoom').addEventListener('change', () => { try { localStorage.setItem('tl.zoom', String(pxs)); } catch (e) {} });
-fetch('/audio/' + SETS[0].convs[0].stem + '.mp3', { method: 'HEAD' }).then(r => { audioOK = r.ok; $('audio-note').textContent = r.ok ? 'local audio available: click any bar or ▶ to play it' : (Object.keys(CLIPS).length ? `${Object.keys(CLIPS).length} gold clips embedded` : ''); render(); }).catch(() => {});
+const nClips = Object.keys(CLIPS).length;
+note(nClips ? `${nClips} gold clips embedded` : '');
+fetch('/audio/' + SETS[0].convs[0].stem + '.mp3', { headers: { Range: 'bytes=0-1' } })
+  .then(r => { audioOK = r.ok; if (r.ok) { note('local audio available: click any bar or ▶ to play it'); render(); } })
+  .catch(() => {});
 render();
 </script>
