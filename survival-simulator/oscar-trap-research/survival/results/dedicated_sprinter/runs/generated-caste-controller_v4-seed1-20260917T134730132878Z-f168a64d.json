@@ -1,0 +1,703 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter generated caste controller_v4 seed 1",
+    "policy": "caste / controller_v4",
+    "seed": 1,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 1.0,
+    "scenario": "generated",
+    "notes": "Original generated map, normal spawns, food and birth costs. Observation-only policy. Diagnostic hidden state is not a policy input. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "d7ace7c1da248cb452bf869b967cb590f5c6667479d67bddc0830e832be2f84c",
+    "created_at": "2026-09-17T13:47:30.133392+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "generated-caste-controller_v4-seed1-20260917T134730132878Z-f168a64d",
+    "parameters": {
+      "seed": 1,
+      "mode": "caste",
+      "horizon": 3000
+    },
+    "requested_horizon": 3000,
+    "reproduction": {
+      "original_id": "fullgame-caste-1:000",
+      "source": "fullgame-caste-1.json",
+      "row": 0,
+      "original_metrics_sha256": "db7eef1b1b5d0894f1617a44a7f796231fed4d51bf697b9abd93d57d5a5b74dc",
+      "controller": "controller_v4",
+      "original_outcome": {
+        "duration": 684.4,
+        "score": 684.6678
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 862.5,
+    "score": 849.2204,
+    "frames": 1280,
+    "reason": "extinction"
+  },
+  "result": {
+    "seed": 1,
+    "mode": "caste",
+    "horizon": 3000,
+    "duration": 862.5,
+    "score": 849.2204,
+    "alive": 0,
+    "births": 78,
+    "captured_agents": 42,
+    "stats": {
+      "assignments": 54,
+      "bait_action_ticks": 8167,
+      "conflict_ticks": 0,
+      "peak_baits": 2,
+      "preparation": [
+        {
+          "t": 170.4999999999946,
+          "agent_id": 5,
+          "energy": 475.25646781301714,
+          "age": 159.09999999999525,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 196.39999999999313,
+          "agent_id": 0,
+          "energy": 456.45618476302116,
+          "age": 196.39999999999313,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 206.39999999999256,
+          "agent_id": 5,
+          "energy": 312.59471149322064,
+          "age": 194.9999999999932,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 254.9999999999898,
+          "agent_id": 15,
+          "energy": 476.10785289915884,
+          "age": 13.499999999999968,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 329.10000000000633,
+          "agent_id": 8,
+          "energy": 267.64904272785776,
+          "age": 120.39999999999743,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 344.4000000000098,
+          "agent_id": 20,
+          "energy": 417.702320053918,
+          "age": 17.49999999999998,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 361.30000000001365,
+          "agent_id": 20,
+          "energy": 403.9234463325196,
+          "age": 34.40000000000022,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 364.5000000000144,
+          "agent_id": 20,
+          "energy": 393.29857150453375,
+          "age": 37.600000000000264,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 419.5000000000269,
+          "agent_id": 27,
+          "energy": 497.8172201590976,
+          "age": 34.200000000000216,
+          "walk": 7.963871891690988,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 424.300000000028,
+          "agent_id": 27,
+          "energy": 470.2692604007493,
+          "age": 38.90000000000028,
+          "walk": 7.963871891690988,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 430.40000000002937,
+          "agent_id": 20,
+          "energy": 361.16607865594654,
+          "age": 103.2999999999984,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 441.5000000000319,
+          "agent_id": 27,
+          "energy": 397.366043764974,
+          "age": 56.10000000000053,
+          "walk": 7.963871891690988,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 469.50000000003826,
+          "agent_id": 29,
+          "energy": 489.40117848735173,
+          "age": 66.00000000000053,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 471.1000000000386,
+          "agent_id": 33,
+          "energy": 466.3706555982664,
+          "age": 44.700000000000365,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 560.3471080042407
+        },
+        {
+          "t": 477.00000000003996,
+          "agent_id": 33,
+          "energy": 491.204191230021,
+          "age": 50.60000000000045,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 560.3471080042407
+        },
+        {
+          "t": 477.10000000004,
+          "agent_id": 32,
+          "energy": 492.3925814708972,
+          "age": 52.80000000000048,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 487.60000000004237,
+          "agent_id": 34,
+          "energy": 384.20675547083795,
+          "age": 39.000000000000284,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 492.1000000000434,
+          "agent_id": 34,
+          "energy": 249.67394510484272,
+          "age": 43.50000000000035,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 519.2000000000495,
+          "agent_id": 33,
+          "energy": 201.80884779972476,
+          "age": 92.799999999999,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 560.3471080042407
+        },
+        {
+          "t": 540.0000000000542,
+          "agent_id": 34,
+          "energy": 359.2142581940343,
+          "age": 91.39999999999908,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 555.8000000000578,
+          "agent_id": 37,
+          "energy": 223.73743196219004,
+          "age": 22.50000000000005,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 560.3471080042407
+        },
+        {
+          "t": 560.0000000000588,
+          "agent_id": 35,
+          "energy": 489.0343657755318,
+          "age": 78.39999999999982,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 569.900000000061,
+          "agent_id": 33,
+          "energy": 192.31337178456684,
+          "age": 143.49999999999613,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 560.3471080042407
+        },
+        {
+          "t": 604.7000000000689,
+          "agent_id": 40,
+          "energy": 459.41154312985844,
+          "age": 39.60000000000029,
+          "walk": 6.571167606480134,
+          "sprint": 20,
+          "capacity": 500.0
+        },
+        {
+          "t": 640.8000000000771,
+          "agent_id": 44,
+          "energy": 392.3071193914901,
+          "age": 57.70000000000055,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 650.3000000000793,
+          "agent_id": 52,
+          "energy": 479.7917604677815,
+          "age": 9.89999999999998,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 653.20000000008,
+          "agent_id": 44,
+          "energy": 515.9402193131015,
+          "age": 70.10000000000029,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 654.2000000000802,
+          "agent_id": 52,
+          "energy": 349.0254522815177,
+          "age": 13.799999999999967,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 656.6000000000807,
+          "agent_id": 52,
+          "energy": 329.85307296724613,
+          "age": 16.19999999999996,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 664.9000000000826,
+          "agent_id": 54,
+          "energy": 316.74751281295283,
+          "age": 11.199999999999976,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 665.0000000000827,
+          "agent_id": 44,
+          "energy": 375.3258871025835,
+          "age": 81.89999999999962,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 665.1000000000827,
+          "agent_id": 54,
+          "energy": 313.17317798915826,
+          "age": 11.399999999999975,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 665.6000000000828,
+          "agent_id": 44,
+          "energy": 362.67955064745075,
+          "age": 82.49999999999959,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 665.7000000000828,
+          "agent_id": 54,
+          "energy": 309.27124329803644,
+          "age": 11.999999999999973,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 665.8000000000828,
+          "agent_id": 44,
+          "energy": 354.79485305865353,
+          "age": 82.69999999999958,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 666.1000000000829,
+          "agent_id": 44,
+          "energy": 342.4109480906406,
+          "age": 82.99999999999956,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 666.600000000083,
+          "agent_id": 51,
+          "energy": 213.29167555521178,
+          "age": 44.50000000000036,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 669.4000000000837,
+          "agent_id": 51,
+          "energy": 189.73339828141954,
+          "age": 47.3000000000004,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 684.9000000000872,
+          "agent_id": 58,
+          "energy": 252.97645395011784,
+          "age": 10.999999999999977,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 886.5293324138075
+        },
+        {
+          "t": 700.1000000000906,
+          "agent_id": 55,
+          "energy": 358.18172972803137,
+          "age": 34.200000000000216,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 702.1000000000911,
+          "agent_id": 59,
+          "energy": 318.2146047258386,
+          "age": 24.100000000000072,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 703.4000000000914,
+          "agent_id": 59,
+          "energy": 271.7694499122841,
+          "age": 25.40000000000009,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 722.5000000000957,
+          "agent_id": 55,
+          "energy": 561.5747357738567,
+          "age": 56.600000000000534,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 726.7000000000967,
+          "agent_id": 59,
+          "energy": 466.222269371347,
+          "age": 48.70000000000042,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 727.3000000000968,
+          "agent_id": 58,
+          "energy": 809.0071137283804,
+          "age": 53.40000000000049,
+          "walk": 10,
+          "sprint": 20,
+          "capacity": 886.5293324138075
+        },
+        {
+          "t": 728.8000000000972,
+          "agent_id": 59,
+          "energy": 475.8400957851103,
+          "age": 50.80000000000045,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 732.500000000098,
+          "agent_id": 59,
+          "energy": 517.7116730871593,
+          "age": 54.500000000000504,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 742.1000000001002,
+          "agent_id": 59,
+          "energy": 391.2055328854593,
+          "age": 64.10000000000063,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 747.4000000001014,
+          "agent_id": 59,
+          "energy": 276.9730557444894,
+          "age": 69.40000000000033,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 777.5000000001082,
+          "agent_id": 59,
+          "energy": 412.0600635145395,
+          "age": 99.49999999999862,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 787.2000000001104,
+          "agent_id": 70,
+          "energy": 210.94144297114374,
+          "age": 9.699999999999982,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 788.0000000001106,
+          "agent_id": 59,
+          "energy": 386.80727400820524,
+          "age": 109.99999999999802,
+          "walk": 12.48056036060968,
+          "sprint": 29.71839979628808,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 816.100000000117,
+          "agent_id": 70,
+          "energy": 543.0776021006352,
+          "age": 38.50000000000028,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        },
+        {
+          "t": 842.9000000001231,
+          "agent_id": 70,
+          "energy": 368.8751161097292,
+          "age": 65.20000000000057,
+          "walk": 12.48056036060968,
+          "sprint": 20,
+          "capacity": 597.2896239909019
+        }
+      ]
+    },
+    "active_predator_ticks_with_any_bait": 20618,
+    "target_fraction_when_any_bait": 0.27577844601804247,
+    "samples": [
+      {
+        "t": 50.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 51.42480000000046
+      },
+      {
+        "t": 100.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 104.85419999999847
+      },
+      {
+        "t": 150.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 158.2061999999957
+      },
+      {
+        "t": 200.0,
+        "alive": 6,
+        "predators": 1,
+        "baits": 2,
+        "births": 8,
+        "score": 213.36319999999293
+      },
+      {
+        "t": 250.0,
+        "alive": 6,
+        "predators": 1,
+        "baits": 0,
+        "births": 17,
+        "score": 262.71879611905086
+      },
+      {
+        "t": 300.0,
+        "alive": 6,
+        "predators": 2,
+        "baits": 1,
+        "births": 18,
+        "score": 314.45319611906217
+      },
+      {
+        "t": 350.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 2,
+        "births": 23,
+        "score": 365.3211244029749
+      },
+      {
+        "t": 400.0,
+        "alive": 5,
+        "predators": 3,
+        "baits": 1,
+        "births": 29,
+        "score": 415.5862806790235
+      },
+      {
+        "t": 450.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 1,
+        "births": 35,
+        "score": 469.02648067903493
+      },
+      {
+        "t": 500.0,
+        "alive": 6,
+        "predators": 5,
+        "baits": 2,
+        "births": 37,
+        "score": 518.439727143202
+      },
+      {
+        "t": 550.0,
+        "alive": 6,
+        "predators": 5,
+        "baits": 1,
+        "births": 39,
+        "score": 566.8709789063233
+      },
+      {
+        "t": 600.0,
+        "alive": 6,
+        "predators": 5,
+        "baits": 0,
+        "births": 48,
+        "score": 612.0682850724389
+      },
+      {
+        "t": 650.0,
+        "alive": 6,
+        "predators": 6,
+        "baits": 2,
+        "births": 53,
+        "score": 664.9422850724488
+      },
+      {
+        "t": 700.0,
+        "alive": 6,
+        "predators": 7,
+        "baits": 0,
+        "births": 63,
+        "score": 704.658436535352
+      },
+      {
+        "t": 750.0,
+        "alive": 6,
+        "predators": 7,
+        "baits": 2,
+        "births": 70,
+        "score": 748.1856957211364
+      },
+      {
+        "t": 800.0,
+        "alive": 6,
+        "predators": 7,
+        "baits": 1,
+        "births": 73,
+        "score": 792.2435204905811
+      },
+      {
+        "t": 850.0,
+        "alive": 3,
+        "predators": 7,
+        "baits": 0,
+        "births": 81,
+        "score": 839.3078124101974
+      }
+    ],
+    "wall_seconds": 86.56167870899662,
+    "run_id": "generated-caste-controller_v4-seed1-20260917T134730132878Z-f168a64d",
+    "replay": "results/dedicated_sprinter/replays/generated-caste-controller_v4-seed1-20260917T134730132878Z-f168a64d.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "fullgame-caste-1:000",
+      "source": "fullgame-caste-1.json",
+      "row": 0,
+      "original_metrics_sha256": "db7eef1b1b5d0894f1617a44a7f796231fed4d51bf697b9abd93d57d5a5b74dc",
+      "controller": "controller_v4",
+      "original_outcome": {
+        "duration": 684.4,
+        "score": 684.6678
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

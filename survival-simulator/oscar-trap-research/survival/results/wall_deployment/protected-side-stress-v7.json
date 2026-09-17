@@ -1,0 +1,2690 @@
+{
+  "scope": "Bounded local evaluations; setup/evaluation privileges never enter WallPolicy.\n\nRun from repo root with survival/.venv/bin/python .../experiments.py --help.\nGenerated mode preserves the complete native initial game and spawn rules.\nSite mode arranges three founders and one awake predator at a natural wall;\nterrain, obstacles, native food, native aging and all paid births remain intact.\n",
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "policy_sha256": "484f61dfee082c05c5673ea1646b129cbd3d2614a35837e695c79aa30cc584e1",
+  "runs": [
+    {
+      "seed": 7,
+      "mode": "site",
+      "wall": true,
+      "horizon": 180.0,
+      "seconds": 5.9,
+      "native_predators": true,
+      "stress": true,
+      "ripeness_wait": 15.0,
+      "site": {
+        "wall_index": 32,
+        "wall": [
+          131.20558388846865,
+          1002.7885358097084,
+          30.71904226243958,
+          85.654779164183
+        ],
+        "anchor": [
+          168.92462615090824,
+          1045.6159253918
+        ],
+        "predator": [
+          119.20558388846865,
+          1045.6159253918
+        ],
+        "normal": [
+          1,
+          0
+        ],
+        "thickness": 30.71904226243958,
+        "length": 85.654779164183,
+        "trees": 6,
+        "fruits": 0,
+        "quality": 8.353982066082033,
+        "stress_predator": [
+          368.92462615090824,
+          1045.6159253918
+        ]
+      },
+      "alive": 0,
+      "score": 2.5148,
+      "births": [],
+      "deaths": [
+        {
+          "time": 2.5,
+          "id": 1,
+          "age": 2.6,
+          "energy": 142.17,
+          "cause": "capture"
+        },
+        {
+          "time": 4.3,
+          "id": 2,
+          "age": 4.4,
+          "energy": 104.65,
+          "cause": "capture"
+        },
+        {
+          "time": 5.8,
+          "id": 0,
+          "age": 5.9,
+          "energy": 94.26,
+          "cause": "capture"
+        }
+      ],
+      "meals": [
+        {
+          "time": 2.8,
+          "agent": 0,
+          "energy": 25.6
+        }
+      ],
+      "captures": 3,
+      "food_count": 1,
+      "food_energy": 25.6,
+      "max_generation": 0,
+      "held_fraction": 0.4067796610169492,
+      "first_hold_loss": 2.1,
+      "held_final60": 0.4067796610169492,
+      "policy_metrics": {
+        "edge_corrections": 0,
+        "max_edge_correction": 0.0,
+        "rest_attempts": 0,
+        "recognition": 1,
+        "handoffs": 0,
+        "emergency_flees": 81,
+        "predicted_births": 0,
+        "abandoned": 1
+      },
+      "policy_events": [
+        {
+          "time": 0.1,
+          "kind": "recognize_acquired",
+          "holder": 0,
+          "anchor": [
+            0.0,
+            -8.710195506056227e-16
+          ]
+        },
+        {
+          "time": 1.6,
+          "kind": "abandon_protected_side_intrusion",
+          "holder": 0,
+          "perceived_predators": [
+            [
+              -115.19118984558895,
+              -14.782154240994014
+            ]
+          ],
+          "anchor": [
+            0.0,
+            -8.710195506056227e-16
+          ],
+          "normal": [
+            -1.0,
+            -1.2443136437223182e-16
+          ],
+          "sensed_by": [
+            {
+              "agent": 0,
+              "pose": [
+                1.8222382111848104e-15,
+                1.2755999835418889e-15
+              ],
+              "theta": 0.7000000000000002,
+              "observations": []
+            },
+            {
+              "agent": 1,
+              "pose": [
+                -30.408567128385293,
+                -16.511932939231535
+              ],
+              "theta": 3.1211929692125704,
+              "observations": [
+                {
+                  "type": "Predator",
+                  "distance": 84.80026679882896,
+                  "angle": -2.220446049250313e-15,
+                  "rel_dir": 0.035842959655132844
+                }
+              ]
+            },
+            {
+              "agent": 2,
+              "pose": [
+                -51.39347264093181,
+                24.02965862764508
+              ],
+              "theta": -2.7472959756874697,
+              "observations": [
+                {
+                  "type": "Predator",
+                  "distance": 74.67600376744645,
+                  "angle": 0.15224531278649334,
+                  "rel_dir": 0.6027846347211758
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "trace": [
+        {
+          "time": 0.1,
+          "alive": 3,
+          "score": 0.1,
+          "map_groups": 0,
+          "map_edges": 0,
+          "predators": 2,
+          "trees": 38,
+          "fruits": 32,
+          "held": true,
+          "roles": {},
+          "agents": [
+            {
+              "id": 0,
+              "x": 168.9,
+              "y": 1045.6,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 203.9,
+              "y": 1065.6,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 203.9,
+              "y": 1025.6,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0
+        },
+        {
+          "time": 5.1,
+          "alive": 1,
+          "score": 2.657,
+          "map_groups": 1,
+          "map_edges": 12,
+          "predators": 2,
+          "trees": 34,
+          "fruits": 41,
+          "held": false,
+          "roles": {
+            "0": "escape"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 193.7,
+              "y": 844.0,
+              "energy": 99.1,
+              "age": 5.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        }
+      ],
+      "legal_actions": 129,
+      "pose_error_mean": 0.0,
+      "pose_error_max": 0.0,
+      "score_note": "Native score: elapsed seconds plus gross fruit energy/1000 minus captured reserve/100."
+    },
+    {
+      "seed": 7,
+      "mode": "site",
+      "wall": false,
+      "horizon": 180.0,
+      "seconds": 3.5,
+      "native_predators": true,
+      "stress": true,
+      "ripeness_wait": 15.0,
+      "site": {
+        "wall_index": 32,
+        "wall": [
+          131.20558388846865,
+          1002.7885358097084,
+          30.71904226243958,
+          85.654779164183
+        ],
+        "anchor": [
+          168.92462615090824,
+          1045.6159253918
+        ],
+        "predator": [
+          119.20558388846865,
+          1045.6159253918
+        ],
+        "normal": [
+          1,
+          0
+        ],
+        "thickness": 30.71904226243958,
+        "length": 85.654779164183,
+        "trees": 6,
+        "fruits": 0,
+        "quality": 8.353982066082033,
+        "stress_predator": [
+          368.92462615090824,
+          1045.6159253918
+        ]
+      },
+      "alive": 0,
+      "score": -0.3468,
+      "births": [],
+      "deaths": [
+        {
+          "time": 2.4,
+          "id": 1,
+          "age": 2.5,
+          "energy": 143.44,
+          "cause": "capture"
+        },
+        {
+          "time": 2.7,
+          "id": 2,
+          "age": 2.8,
+          "energy": 136.65,
+          "cause": "capture"
+        },
+        {
+          "time": 3.4,
+          "id": 0,
+          "age": 3.5,
+          "energy": 106.95,
+          "cause": "capture"
+        }
+      ],
+      "meals": [
+        {
+          "time": 1.8,
+          "agent": 2,
+          "energy": 23.6
+        }
+      ],
+      "captures": 3,
+      "food_count": 1,
+      "food_energy": 23.6,
+      "max_generation": 0,
+      "held_fraction": 0.14285714285714285,
+      "first_hold_loss": 0.6,
+      "held_final60": 0.14285714285714285,
+      "policy_metrics": {
+        "edge_corrections": 0,
+        "max_edge_correction": 0.0,
+        "rest_attempts": 0,
+        "recognition": 0,
+        "handoffs": 0,
+        "emergency_flees": 46,
+        "predicted_births": 0,
+        "abandoned": 0
+      },
+      "policy_events": [],
+      "trace": [
+        {
+          "time": 0.1,
+          "alive": 3,
+          "score": 0.1,
+          "map_groups": 0,
+          "map_edges": 0,
+          "predators": 2,
+          "trees": 38,
+          "fruits": 32,
+          "held": true,
+          "roles": {},
+          "agents": [
+            {
+              "id": 0,
+              "x": 168.9,
+              "y": 1045.6,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 203.9,
+              "y": 1065.6,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 203.9,
+              "y": 1025.6,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0
+        }
+      ],
+      "legal_actions": 88,
+      "pose_error_mean": 0.0,
+      "pose_error_max": 0,
+      "score_note": "Native score: elapsed seconds plus gross fruit energy/1000 minus captured reserve/100."
+    },
+    {
+      "seed": 8,
+      "mode": "site",
+      "wall": true,
+      "horizon": 180.0,
+      "seconds": 98.8,
+      "native_predators": true,
+      "stress": true,
+      "ripeness_wait": 15.0,
+      "site": {
+        "wall_index": 57,
+        "wall": [
+          1352.141011842688,
+          663.8876678714732,
+          30.460051259347843,
+          85.08704235021457
+        ],
+        "anchor": [
+          1345.141011842688,
+          706.4311890465806
+        ],
+        "predator": [
+          1394.6010631020358,
+          706.4311890465806
+        ],
+        "normal": [
+          -1,
+          0
+        ],
+        "thickness": 30.460051259347843,
+        "length": 85.08704235021457,
+        "trees": 2,
+        "fruits": 4,
+        "quality": 7.059779059602805,
+        "stress_predator": [
+          1025.141011842688,
+          706.4311890465806
+        ]
+      },
+      "alive": 0,
+      "score": 90.0281,
+      "births": [
+        {
+          "time": 47.6,
+          "parent": 1,
+          "child": 5,
+          "cost": 100,
+          "child_energy": 75.0,
+          "generation": 1
+        },
+        {
+          "time": 74.1,
+          "parent": 5,
+          "child": 6,
+          "cost": 100,
+          "child_energy": 75.0,
+          "generation": 2
+        },
+        {
+          "time": 74.5,
+          "parent": 2,
+          "child": 7,
+          "cost": 100,
+          "child_energy": 75.0,
+          "generation": 1
+        }
+      ],
+      "deaths": [
+        {
+          "time": 47.5,
+          "id": 0,
+          "age": 47.6,
+          "energy": 96.65,
+          "cause": "capture"
+        },
+        {
+          "time": 77.3,
+          "id": 6,
+          "age": 3.3,
+          "energy": 93.28,
+          "cause": "capture"
+        },
+        {
+          "time": 79.0,
+          "id": 5,
+          "age": 31.5,
+          "energy": 101.17,
+          "cause": "capture"
+        },
+        {
+          "time": 81.6,
+          "id": 1,
+          "age": 81.7,
+          "energy": 233.46,
+          "cause": "capture"
+        },
+        {
+          "time": 95.5,
+          "id": 2,
+          "age": 95.6,
+          "energy": 86.62,
+          "cause": "capture"
+        },
+        {
+          "time": 98.7,
+          "id": 7,
+          "age": 24.3,
+          "energy": 429.55,
+          "cause": "capture"
+        }
+      ],
+      "meals": [
+        {
+          "time": 13.5,
+          "agent": 1,
+          "energy": 20
+        },
+        {
+          "time": 16.4,
+          "agent": 1,
+          "energy": 52.8
+        },
+        {
+          "time": 24.6,
+          "agent": 1,
+          "energy": 53.2
+        },
+        {
+          "time": 30.2,
+          "agent": 1,
+          "energy": 58.4
+        },
+        {
+          "time": 32.5,
+          "agent": 2,
+          "energy": 45.0
+        },
+        {
+          "time": 39.8,
+          "agent": 1,
+          "energy": 57.8
+        },
+        {
+          "time": 47.8,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 48.5,
+          "agent": 5,
+          "energy": 40.4
+        },
+        {
+          "time": 48.7,
+          "agent": 5,
+          "energy": 27.4
+        },
+        {
+          "time": 49.8,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 51.2,
+          "agent": 5,
+          "energy": 54.4
+        },
+        {
+          "time": 51.3,
+          "agent": 5,
+          "energy": 57.4
+        },
+        {
+          "time": 56.3,
+          "agent": 1,
+          "energy": 55.2
+        },
+        {
+          "time": 59.0,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 59.7,
+          "agent": 5,
+          "energy": 51.2
+        },
+        {
+          "time": 62.2,
+          "agent": 1,
+          "energy": 55.8
+        },
+        {
+          "time": 65.9,
+          "agent": 5,
+          "energy": 56.4
+        },
+        {
+          "time": 66.1,
+          "agent": 2,
+          "energy": 54.8
+        },
+        {
+          "time": 70.0,
+          "agent": 5,
+          "energy": 45.6
+        },
+        {
+          "time": 73.0,
+          "agent": 2,
+          "energy": 30.2
+        },
+        {
+          "time": 74.4,
+          "agent": 2,
+          "energy": 53.6
+        },
+        {
+          "time": 74.4,
+          "agent": 5,
+          "energy": 20
+        },
+        {
+          "time": 74.4,
+          "agent": 6,
+          "energy": 28.6
+        },
+        {
+          "time": 75.0,
+          "agent": 7,
+          "energy": 37.0
+        },
+        {
+          "time": 79.4,
+          "agent": 7,
+          "energy": 58.4
+        },
+        {
+          "time": 80.9,
+          "agent": 7,
+          "energy": 60.0
+        },
+        {
+          "time": 81.0,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 81.2,
+          "agent": 7,
+          "energy": 55.6
+        },
+        {
+          "time": 88.4,
+          "agent": 7,
+          "energy": 60.0
+        },
+        {
+          "time": 90.7,
+          "agent": 7,
+          "energy": 60.0
+        },
+        {
+          "time": 90.9,
+          "agent": 7,
+          "energy": 60.0
+        },
+        {
+          "time": 96.9,
+          "agent": 7,
+          "energy": 60.0
+        },
+        {
+          "time": 98.3,
+          "agent": 7,
+          "energy": 26.2
+        }
+      ],
+      "captures": 6,
+      "food_count": 33,
+      "food_energy": 1635.4,
+      "max_generation": 2,
+      "held_fraction": 0.5182186234817814,
+      "first_hold_loss": 51.3,
+      "held_final60": 0.20666666666666667,
+      "policy_metrics": {
+        "edge_corrections": 3,
+        "max_edge_correction": 13.523784375702107,
+        "rest_attempts": 0,
+        "recognition": 1,
+        "handoffs": 0,
+        "emergency_flees": 197,
+        "predicted_births": 3,
+        "abandoned": 1
+      },
+      "policy_events": [
+        {
+          "time": 0.1,
+          "kind": "recognize_acquired",
+          "holder": 0,
+          "anchor": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "time": 47.5,
+          "kind": "abandon_protected_side_intrusion",
+          "holder": 0,
+          "perceived_predators": [
+            [
+              47.62594888448314,
+              7.192226387480657
+            ],
+            [
+              -3.6463913655465574,
+              -37.91522140735729
+            ]
+          ],
+          "anchor": [
+            0.0,
+            0.0
+          ],
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "sensed_by": [
+            {
+              "agent": 0,
+              "pose": [
+                2.110298205101437e-10,
+                1.6082983617457374e-09
+              ],
+              "theta": 1.4840734641020727,
+              "observations": [
+                {
+                  "type": "Predator",
+                  "distance": 48.16595402888785,
+                  "angle": -1.334191128588472,
+                  "rel_dir": 0.09716905472775395
+                },
+                {
+                  "type": "Predator",
+                  "distance": 38.0901586303228,
+                  "angle": 3.132438154504264,
+                  "rel_dir": -0.03557644615570332
+                }
+              ]
+            },
+            {
+              "agent": 1,
+              "pose": [
+                -135.44307901192593,
+                -67.68514532802814
+              ],
+              "theta": 3.0366433342064107,
+              "observations": []
+            },
+            {
+              "agent": 2,
+              "pose": [
+                -145.0754757984334,
+                -64.64292476323031
+              ],
+              "theta": -1.9307200291565645,
+              "observations": []
+            }
+          ]
+        }
+      ],
+      "trace": [
+        {
+          "time": 0.1,
+          "alive": 3,
+          "score": 0.1,
+          "map_groups": 0,
+          "map_edges": 0,
+          "predators": 2,
+          "trees": 27,
+          "fruits": 32,
+          "held": true,
+          "roles": {},
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1310.1,
+              "y": 686.4,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1310.1,
+              "y": 726.4,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0
+        },
+        {
+          "time": 5.1,
+          "alive": 3,
+          "score": 5.1,
+          "map_groups": 1,
+          "map_edges": 18,
+          "predators": 2,
+          "trees": 36,
+          "fruits": 40,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 144.3,
+              "age": 5.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1286.4,
+              "y": 668.2,
+              "energy": 142.4,
+              "age": 5.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 140.2,
+              "age": 5.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 10.1,
+          "alive": 3,
+          "score": 10.1,
+          "map_groups": 1,
+          "map_edges": 19,
+          "predators": 2,
+          "trees": 49,
+          "fruits": 54,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 138.8,
+              "age": 10.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1286.4,
+              "y": 668.2,
+              "energy": 136.8,
+              "age": 10.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 134.6,
+              "age": 10.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 15.1,
+          "alive": 3,
+          "score": 15.12,
+          "map_groups": 1,
+          "map_edges": 20,
+          "predators": 2,
+          "trees": 50,
+          "fruits": 58,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 133.2,
+              "age": 15.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1286.4,
+              "y": 668.2,
+              "energy": 151.3,
+              "age": 15.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 129.1,
+              "age": 15.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 20.1,
+          "alive": 3,
+          "score": 20.173,
+          "map_groups": 1,
+          "map_edges": 21,
+          "predators": 2,
+          "trees": 56,
+          "fruits": 61,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 127.7,
+              "age": 20.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1286.0,
+              "y": 548.2,
+              "energy": 192.2,
+              "age": 20.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 123.5,
+              "age": 20.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 25.1,
+          "alive": 3,
+          "score": 25.226,
+          "map_groups": 1,
+          "map_edges": 22,
+          "predators": 2,
+          "trees": 68,
+          "fruits": 67,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 122.1,
+              "age": 25.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1241.6,
+              "y": 604.7,
+              "energy": 235.5,
+              "age": 25.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 117.9,
+              "age": 25.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 30.1,
+          "alive": 3,
+          "score": 30.226,
+          "map_groups": 1,
+          "map_edges": 23,
+          "predators": 2,
+          "trees": 73,
+          "fruits": 81,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 116.5,
+              "age": 30.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1241.6,
+              "y": 604.7,
+              "energy": 229.9,
+              "age": 30.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 112.4,
+              "age": 30.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 35.1,
+          "alive": 3,
+          "score": 35.329,
+          "map_groups": 1,
+          "map_edges": 24,
+          "predators": 2,
+          "trees": 77,
+          "fruits": 96,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 111.0,
+              "age": 35.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1264.2,
+              "y": 609.7,
+              "energy": 280.6,
+              "age": 35.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1276.6,
+              "y": 680.0,
+              "energy": 151.8,
+              "age": 35.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 40.1,
+          "alive": 3,
+          "score": 40.387,
+          "map_groups": 1,
+          "map_edges": 27,
+          "predators": 2,
+          "trees": 85,
+          "fruits": 118,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "find_fruit",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 105.4,
+              "age": 40.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1266.7,
+              "y": 499.7,
+              "energy": 325.5,
+              "age": 40.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1200.1,
+              "y": 641.8,
+              "energy": 141.2,
+              "age": 40.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 45.1,
+          "alive": 3,
+          "score": 45.387,
+          "map_groups": 1,
+          "map_edges": 28,
+          "predators": 2,
+          "trees": 90,
+          "fruits": 145,
+          "held": true,
+          "roles": {
+            "0": "hold",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 99.9,
+              "age": 45.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1266.7,
+              "y": 499.7,
+              "energy": 319.9,
+              "age": 45.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1200.1,
+              "y": 641.8,
+              "energy": 135.6,
+              "age": 45.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 50.1,
+          "alive": 3,
+          "score": 49.608,
+          "map_groups": 1,
+          "map_edges": 36,
+          "predators": 2,
+          "trees": 94,
+          "fruits": 159,
+          "held": true,
+          "roles": {
+            "1": "forage",
+            "2": "find_fruit",
+            "5": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1342.9,
+              "y": 699.6,
+              "energy": 312.3,
+              "age": 50.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1325.9,
+              "y": 793.2,
+              "energy": 117.0,
+              "age": 50.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 1094.3,
+              "y": 681.1,
+              "energy": 134.2,
+              "age": 2.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 55.1,
+          "alive": 3,
+          "score": 54.72,
+          "map_groups": 1,
+          "map_edges": 41,
+          "predators": 2,
+          "trees": 100,
+          "fruits": 162,
+          "held": false,
+          "roles": {
+            "1": "forage",
+            "2": "forage",
+            "5": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1316.9,
+              "y": 691.6,
+              "energy": 294.4,
+              "age": 55.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1333.3,
+              "y": 786.5,
+              "energy": 111.3,
+              "age": 55.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 1045.0,
+              "y": 647.1,
+              "energy": 237.4,
+              "age": 7.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 60.1,
+          "alive": 3,
+          "score": 59.887,
+          "map_groups": 1,
+          "map_edges": 47,
+          "predators": 2,
+          "trees": 97,
+          "fruits": 176,
+          "held": false,
+          "roles": {
+            "1": "forage",
+            "2": "scan_orchard",
+            "5": "find_fruit"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1101.1,
+              "y": 581.0,
+              "energy": 379.8,
+              "age": 60.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1333.3,
+              "y": 786.5,
+              "energy": 105.9,
+              "age": 60.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 975.9,
+              "y": 658.6,
+              "energy": 279.6,
+              "age": 12.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 65.1,
+          "alive": 3,
+          "score": 64.942,
+          "map_groups": 1,
+          "map_edges": 48,
+          "predators": 2,
+          "trees": 83,
+          "fruits": 211,
+          "held": false,
+          "roles": {
+            "1": "forage",
+            "2": "forage",
+            "5": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1381.2,
+              "y": 548.1,
+              "energy": 413.9,
+              "age": 65.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1335.0,
+              "y": 836.5,
+              "energy": 97.7,
+              "age": 65.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 975.9,
+              "y": 658.6,
+              "energy": 274.1,
+              "age": 17.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 70.1,
+          "alive": 3,
+          "score": 70.099,
+          "map_groups": 1,
+          "map_edges": 51,
+          "predators": 2,
+          "trees": 85,
+          "fruits": 234,
+          "held": false,
+          "roles": {
+            "1": "retire",
+            "2": "scan_orchard",
+            "5": "escape"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1381.2,
+              "y": 548.1,
+              "energy": 408.3,
+              "age": 70.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1338.9,
+              "y": 951.8,
+              "energy": 141.2,
+              "age": 70.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 1030.2,
+              "y": 694.8,
+              "energy": 345.8,
+              "age": 22.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 75.1,
+          "alive": 5,
+          "score": 75.269,
+          "map_groups": 1,
+          "map_edges": 59,
+          "predators": 2,
+          "trees": 86,
+          "fruits": 247,
+          "held": false,
+          "roles": {
+            "1": "escape",
+            "2": "retire",
+            "5": "escape",
+            "6": "find_fruit",
+            "7": "forage"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1290.0,
+              "y": 379.2,
+              "energy": 341.3,
+              "age": 75.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1320.4,
+              "y": 776.7,
+              "energy": 110.7,
+              "age": 75.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 873.2,
+              "y": 305.0,
+              "energy": 162.8,
+              "age": 27.5,
+              "generation": 1
+            },
+            {
+              "id": 6,
+              "x": 857.6,
+              "y": 312.1,
+              "energy": 100.5,
+              "age": 1.0,
+              "generation": 2
+            },
+            {
+              "id": 7,
+              "x": 1384.4,
+              "y": 768.7,
+              "energy": 108.5,
+              "age": 0.6,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 80.1,
+          "alive": 3,
+          "score": 78.383,
+          "map_groups": 1,
+          "map_edges": 74,
+          "predators": 2,
+          "trees": 84,
+          "fruits": 255,
+          "held": false,
+          "roles": {
+            "1": "escape",
+            "2": "retire",
+            "7": "forage"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 935.0,
+              "y": 101.4,
+              "energy": 209.5,
+              "age": 80.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1320.4,
+              "y": 776.7,
+              "energy": 105.2,
+              "age": 80.1,
+              "generation": 0
+            },
+            {
+              "id": 7,
+              "x": 1390.1,
+              "y": 811.4,
+              "energy": 155.1,
+              "age": 5.6,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 85.1,
+          "alive": 2,
+          "score": 81.224,
+          "map_groups": 1,
+          "map_edges": 78,
+          "predators": 2,
+          "trees": 83,
+          "fruits": 252,
+          "held": false,
+          "roles": {
+            "2": "retire",
+            "7": "forage"
+          },
+          "agents": [
+            {
+              "id": 2,
+              "x": 1320.4,
+              "y": 776.7,
+              "energy": 99.6,
+              "age": 85.1,
+              "generation": 0
+            },
+            {
+              "id": 7,
+              "x": 1250.5,
+              "y": 943.6,
+              "energy": 252.3,
+              "age": 10.6,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 90.1,
+          "alive": 2,
+          "score": 86.284,
+          "map_groups": 1,
+          "map_edges": 78,
+          "predators": 2,
+          "trees": 76,
+          "fruits": 251,
+          "held": false,
+          "roles": {
+            "2": "retire",
+            "7": "forage"
+          },
+          "agents": [
+            {
+              "id": 2,
+              "x": 1320.4,
+              "y": 776.7,
+              "energy": 94.1,
+              "age": 90.1,
+              "generation": 0
+            },
+            {
+              "id": 7,
+              "x": 1435.9,
+              "y": 779.8,
+              "energy": 293.1,
+              "age": 15.6,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 95.1,
+          "alive": 2,
+          "score": 91.404,
+          "map_groups": 1,
+          "map_edges": 81,
+          "predators": 2,
+          "trees": 74,
+          "fruits": 242,
+          "held": false,
+          "roles": {
+            "2": "retire",
+            "7": "forage"
+          },
+          "agents": [
+            {
+              "id": 2,
+              "x": 1320.4,
+              "y": 776.7,
+              "energy": 88.5,
+              "age": 95.1,
+              "generation": 0
+            },
+            {
+              "id": 7,
+              "x": 1521.9,
+              "y": 797.8,
+              "energy": 402.4,
+              "age": 20.6,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        }
+      ],
+      "legal_actions": 2837,
+      "pose_error_mean": 0.0,
+      "pose_error_max": 0.0,
+      "score_note": "Native score: elapsed seconds plus gross fruit energy/1000 minus captured reserve/100."
+    },
+    {
+      "seed": 8,
+      "mode": "site",
+      "wall": false,
+      "horizon": 180.0,
+      "seconds": 99.2,
+      "native_predators": true,
+      "stress": true,
+      "ripeness_wait": 15.0,
+      "site": {
+        "wall_index": 57,
+        "wall": [
+          1352.141011842688,
+          663.8876678714732,
+          30.460051259347843,
+          85.08704235021457
+        ],
+        "anchor": [
+          1345.141011842688,
+          706.4311890465806
+        ],
+        "predator": [
+          1394.6010631020358,
+          706.4311890465806
+        ],
+        "normal": [
+          -1,
+          0
+        ],
+        "thickness": 30.460051259347843,
+        "length": 85.08704235021457,
+        "trees": 2,
+        "fruits": 4,
+        "quality": 7.059779059602805,
+        "stress_predator": [
+          1025.141011842688,
+          706.4311890465806
+        ]
+      },
+      "alive": 0,
+      "score": 92.4623,
+      "births": [
+        {
+          "time": 73.3,
+          "parent": 1,
+          "child": 5,
+          "cost": 100,
+          "child_energy": 75.0,
+          "generation": 1
+        },
+        {
+          "time": 73.6,
+          "parent": 1,
+          "child": 6,
+          "cost": 100,
+          "child_energy": 75.0,
+          "generation": 1
+        }
+      ],
+      "deaths": [
+        {
+          "time": 81.3,
+          "id": 0,
+          "age": 81.4,
+          "energy": 367.13,
+          "cause": "capture"
+        },
+        {
+          "time": 84.4,
+          "id": 2,
+          "age": 84.5,
+          "energy": 64.28,
+          "cause": "capture"
+        },
+        {
+          "time": 84.7,
+          "id": 5,
+          "age": 11.5,
+          "energy": 208.11,
+          "cause": "capture"
+        },
+        {
+          "time": 93.1,
+          "id": 6,
+          "age": 19.6,
+          "energy": 145.46,
+          "cause": "capture"
+        },
+        {
+          "time": 99.1,
+          "id": 1,
+          "age": 99.2,
+          "energy": 8.69,
+          "cause": "capture"
+        }
+      ],
+      "meals": [
+        {
+          "time": 15.6,
+          "agent": 0,
+          "energy": 51.2
+        },
+        {
+          "time": 17.2,
+          "agent": 0,
+          "energy": 54.4
+        },
+        {
+          "time": 22.1,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 23.6,
+          "agent": 0,
+          "energy": 60.0
+        },
+        {
+          "time": 25.9,
+          "agent": 0,
+          "energy": 56.0
+        },
+        {
+          "time": 26.1,
+          "agent": 0,
+          "energy": 60.0
+        },
+        {
+          "time": 46.6,
+          "agent": 2,
+          "energy": 45.8
+        },
+        {
+          "time": 47.3,
+          "agent": 0,
+          "energy": 60.0
+        },
+        {
+          "time": 58.2,
+          "agent": 0,
+          "energy": 51.6
+        },
+        {
+          "time": 58.8,
+          "agent": 1,
+          "energy": 20.8
+        },
+        {
+          "time": 65.4,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 73.2,
+          "agent": 1,
+          "energy": 60.0
+        },
+        {
+          "time": 73.5,
+          "agent": 1,
+          "energy": 54.6
+        },
+        {
+          "time": 73.7,
+          "agent": 1,
+          "energy": 32.0
+        },
+        {
+          "time": 74.4,
+          "agent": 5,
+          "energy": 60.0
+        },
+        {
+          "time": 75.0,
+          "agent": 6,
+          "energy": 53.8
+        },
+        {
+          "time": 77.9,
+          "agent": 5,
+          "energy": 60.0
+        },
+        {
+          "time": 78.7,
+          "agent": 5,
+          "energy": 58.8
+        },
+        {
+          "time": 83.4,
+          "agent": 6,
+          "energy": 60.0
+        },
+        {
+          "time": 83.5,
+          "agent": 6,
+          "energy": 60.0
+        },
+        {
+          "time": 83.7,
+          "agent": 6,
+          "energy": 60.0
+        },
+        {
+          "time": 86.8,
+          "agent": 6,
+          "energy": 60.0
+        }
+      ],
+      "captures": 5,
+      "food_count": 22,
+      "food_energy": 1199.0,
+      "max_generation": 1,
+      "held_fraction": 0.004032258064516129,
+      "first_hold_loss": 0.5,
+      "held_final60": 0.0,
+      "policy_metrics": {
+        "edge_corrections": 6,
+        "max_edge_correction": 18.354445963233488,
+        "rest_attempts": 0,
+        "recognition": 0,
+        "handoffs": 0,
+        "emergency_flees": 120,
+        "predicted_births": 2,
+        "abandoned": 0
+      },
+      "policy_events": [],
+      "trace": [
+        {
+          "time": 0.1,
+          "alive": 3,
+          "score": 0.1,
+          "map_groups": 0,
+          "map_edges": 0,
+          "predators": 2,
+          "trees": 27,
+          "fruits": 32,
+          "held": true,
+          "roles": {},
+          "agents": [
+            {
+              "id": 0,
+              "x": 1345.1,
+              "y": 706.4,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1310.1,
+              "y": 686.4,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1310.1,
+              "y": 726.4,
+              "energy": 149.9,
+              "age": 0.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0
+        },
+        {
+          "time": 5.1,
+          "alive": 3,
+          "score": 5.1,
+          "map_groups": 1,
+          "map_edges": 16,
+          "predators": 2,
+          "trees": 36,
+          "fruits": 40,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1291.1,
+              "y": 671.4,
+              "energy": 136.0,
+              "age": 5.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1279.3,
+              "y": 679.1,
+              "energy": 141.0,
+              "age": 5.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1287.1,
+              "y": 674.5,
+              "energy": 140.5,
+              "age": 5.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 10.1,
+          "alive": 3,
+          "score": 10.1,
+          "map_groups": 1,
+          "map_edges": 17,
+          "predators": 2,
+          "trees": 45,
+          "fruits": 48,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1291.1,
+              "y": 671.4,
+              "energy": 130.4,
+              "age": 10.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1279.3,
+              "y": 679.1,
+              "energy": 135.5,
+              "age": 10.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1287.1,
+              "y": 674.5,
+              "energy": 134.9,
+              "age": 10.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 15.1,
+          "alive": 3,
+          "score": 15.1,
+          "map_groups": 1,
+          "map_edges": 17,
+          "predators": 2,
+          "trees": 47,
+          "fruits": 50,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1291.1,
+              "y": 671.4,
+              "energy": 124.8,
+              "age": 15.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1279.3,
+              "y": 679.1,
+              "energy": 129.9,
+              "age": 15.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1287.1,
+              "y": 674.5,
+              "energy": 129.4,
+              "age": 15.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 20.1,
+          "alive": 3,
+          "score": 20.206,
+          "map_groups": 1,
+          "map_edges": 20,
+          "predators": 2,
+          "trees": 56,
+          "fruits": 52,
+          "held": false,
+          "roles": {
+            "0": "forage",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1267.3,
+              "y": 581.5,
+              "energy": 199.5,
+              "age": 20.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1295.1,
+              "y": 647.0,
+              "energy": 120.4,
+              "age": 20.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1287.1,
+              "y": 674.5,
+              "energy": 123.8,
+              "age": 20.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 25.1,
+          "alive": 3,
+          "score": 25.326,
+          "map_groups": 1,
+          "map_edges": 30,
+          "predators": 2,
+          "trees": 62,
+          "fruits": 58,
+          "held": false,
+          "roles": {
+            "0": "forage",
+            "1": "forage",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1331.4,
+              "y": 612.4,
+              "energy": 225.6,
+              "age": 25.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1313.4,
+              "y": 747.0,
+              "energy": 156.9,
+              "age": 25.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1277.0,
+              "y": 677.5,
+              "energy": 112.0,
+              "age": 25.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 30.1,
+          "alive": 3,
+          "score": 30.442,
+          "map_groups": 1,
+          "map_edges": 31,
+          "predators": 2,
+          "trees": 67,
+          "fruits": 67,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1232.5,
+              "y": 616.4,
+              "energy": 329.6,
+              "age": 30.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1264.6,
+              "y": 660.3,
+              "energy": 146.4,
+              "age": 30.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1277.0,
+              "y": 677.5,
+              "energy": 106.4,
+              "age": 30.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 35.1,
+          "alive": 3,
+          "score": 35.442,
+          "map_groups": 1,
+          "map_edges": 33,
+          "predators": 2,
+          "trees": 70,
+          "fruits": 82,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1222.7,
+              "y": 577.6,
+              "energy": 322.0,
+              "age": 35.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1265.2,
+              "y": 580.3,
+              "energy": 136.5,
+              "age": 35.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1346.6,
+              "y": 638.1,
+              "energy": 96.6,
+              "age": 35.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 40.1,
+          "alive": 3,
+          "score": 40.442,
+          "map_groups": 1,
+          "map_edges": 33,
+          "predators": 2,
+          "trees": 76,
+          "fruits": 102,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1222.7,
+              "y": 577.6,
+              "energy": 316.4,
+              "age": 40.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1265.2,
+              "y": 580.3,
+              "energy": 131.0,
+              "age": 40.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1346.6,
+              "y": 638.1,
+              "energy": 91.0,
+              "age": 40.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 45.1,
+          "alive": 3,
+          "score": 45.442,
+          "map_groups": 1,
+          "map_edges": 33,
+          "predators": 2,
+          "trees": 80,
+          "fruits": 119,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1222.7,
+              "y": 577.6,
+              "energy": 310.9,
+              "age": 45.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1265.2,
+              "y": 580.3,
+              "energy": 125.4,
+              "age": 45.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1346.6,
+              "y": 638.1,
+              "energy": 85.5,
+              "age": 45.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 50.1,
+          "alive": 3,
+          "score": 50.547,
+          "map_groups": 1,
+          "map_edges": 41,
+          "predators": 2,
+          "trees": 86,
+          "fruits": 120,
+          "held": false,
+          "roles": {
+            "0": "scan_orchard",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1200.2,
+              "y": 508.0,
+              "energy": 354.2,
+              "age": 50.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1265.2,
+              "y": 580.3,
+              "energy": 119.8,
+              "age": 50.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1254.0,
+              "y": 578.8,
+              "energy": 120.1,
+              "age": 50.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 55.1,
+          "alive": 3,
+          "score": 55.547,
+          "map_groups": 1,
+          "map_edges": 41,
+          "predators": 2,
+          "trees": 94,
+          "fruits": 140,
+          "held": false,
+          "roles": {
+            "0": "forage",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1200.2,
+              "y": 508.0,
+              "energy": 348.9,
+              "age": 55.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1265.2,
+              "y": 580.3,
+              "energy": 114.3,
+              "age": 55.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1254.0,
+              "y": 578.8,
+              "energy": 114.6,
+              "age": 55.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 60.1,
+          "alive": 3,
+          "score": 60.62,
+          "map_groups": 1,
+          "map_edges": 44,
+          "predators": 2,
+          "trees": 86,
+          "fruits": 162,
+          "held": false,
+          "roles": {
+            "0": "forage",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1278.5,
+              "y": 509.2,
+              "energy": 390.5,
+              "age": 60.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1165.3,
+              "y": 658.1,
+              "energy": 122.6,
+              "age": 60.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1254.0,
+              "y": 578.8,
+              "energy": 109.0,
+              "age": 60.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 65.1,
+          "alive": 3,
+          "score": 65.62,
+          "map_groups": 1,
+          "map_edges": 46,
+          "predators": 2,
+          "trees": 79,
+          "fruits": 179,
+          "held": false,
+          "roles": {
+            "0": "forage",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1278.5,
+              "y": 509.2,
+              "energy": 385.5,
+              "age": 65.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1165.3,
+              "y": 658.1,
+              "energy": 117.0,
+              "age": 65.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1236.7,
+              "y": 568.7,
+              "energy": 102.1,
+              "age": 65.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 70.1,
+          "alive": 3,
+          "score": 70.68,
+          "map_groups": 1,
+          "map_edges": 47,
+          "predators": 2,
+          "trees": 73,
+          "fruits": 206,
+          "held": false,
+          "roles": {
+            "0": "retire",
+            "1": "scan_orchard",
+            "2": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1278.5,
+              "y": 509.2,
+              "energy": 379.9,
+              "age": 70.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1138.2,
+              "y": 700.1,
+              "energy": 168.8,
+              "age": 70.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1236.7,
+              "y": 568.7,
+              "energy": 96.6,
+              "age": 70.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 75.1,
+          "alive": 5,
+          "score": 75.94,
+          "map_groups": 1,
+          "map_edges": 53,
+          "predators": 2,
+          "trees": 71,
+          "fruits": 219,
+          "held": false,
+          "roles": {
+            "0": "retire",
+            "1": "retire",
+            "2": "retire",
+            "5": "forage",
+            "6": "forage"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1278.5,
+              "y": 509.2,
+              "energy": 374.3,
+              "age": 75.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1120.8,
+              "y": 658.0,
+              "energy": 105.3,
+              "age": 75.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1392.5,
+              "y": 606.1,
+              "energy": 81.1,
+              "age": 75.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 1169.5,
+              "y": 696.6,
+              "energy": 125.7,
+              "age": 1.8,
+              "generation": 1
+            },
+            {
+              "id": 6,
+              "x": 1047.6,
+              "y": 570.7,
+              "energy": 119.0,
+              "age": 1.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 80.1,
+          "alive": 5,
+          "score": 81.059,
+          "map_groups": 1,
+          "map_edges": 55,
+          "predators": 2,
+          "trees": 70,
+          "fruits": 226,
+          "held": false,
+          "roles": {
+            "0": "retire",
+            "1": "retire",
+            "2": "retire",
+            "5": "scan_orchard",
+            "6": "scan_orchard"
+          },
+          "agents": [
+            {
+              "id": 0,
+              "x": 1278.5,
+              "y": 509.2,
+              "energy": 368.8,
+              "age": 80.1,
+              "generation": 0
+            },
+            {
+              "id": 1,
+              "x": 1120.8,
+              "y": 658.0,
+              "energy": 99.7,
+              "age": 80.1,
+              "generation": 0
+            },
+            {
+              "id": 2,
+              "x": 1392.5,
+              "y": 606.1,
+              "energy": 75.5,
+              "age": 80.1,
+              "generation": 0
+            },
+            {
+              "id": 5,
+              "x": 1494.4,
+              "y": 626.5,
+              "energy": 220.6,
+              "age": 6.8,
+              "generation": 1
+            },
+            {
+              "id": 6,
+              "x": 1110.8,
+              "y": 648.2,
+              "energy": 108.1,
+              "age": 6.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 85.1,
+          "alive": 2,
+          "score": 79.844,
+          "map_groups": 1,
+          "map_edges": 58,
+          "predators": 2,
+          "trees": 68,
+          "fruits": 230,
+          "held": false,
+          "roles": {
+            "1": "retire",
+            "6": "find_fruit"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1120.8,
+              "y": 658.0,
+              "energy": 94.2,
+              "age": 85.1,
+              "generation": 0
+            },
+            {
+              "id": 6,
+              "x": 1156.7,
+              "y": 562.8,
+              "energy": 260.5,
+              "age": 11.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 90.1,
+          "alive": 2,
+          "score": 84.904,
+          "map_groups": 1,
+          "map_edges": 59,
+          "predators": 2,
+          "trees": 68,
+          "fruits": 229,
+          "held": false,
+          "roles": {
+            "1": "retire",
+            "6": "escape"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1120.8,
+              "y": 658.0,
+              "energy": 88.6,
+              "age": 90.1,
+              "generation": 0
+            },
+            {
+              "id": 6,
+              "x": 1133.5,
+              "y": 272.8,
+              "energy": 236.3,
+              "age": 16.5,
+              "generation": 1
+            }
+          ],
+          "max_pose_error": 0.0
+        },
+        {
+          "time": 95.1,
+          "alive": 1,
+          "score": 88.449,
+          "map_groups": 1,
+          "map_edges": 64,
+          "predators": 2,
+          "trees": 65,
+          "fruits": 226,
+          "held": false,
+          "roles": {
+            "1": "retire"
+          },
+          "agents": [
+            {
+              "id": 1,
+              "x": 1120.8,
+              "y": 658.0,
+              "energy": 54.0,
+              "age": 95.1,
+              "generation": 0
+            }
+          ],
+          "max_pose_error": 0.0
+        }
+      ],
+      "legal_actions": 2960,
+      "pose_error_mean": 0.0,
+      "pose_error_max": 0.0,
+      "score_note": "Native score: elapsed seconds plus gross fruit energy/1000 minus captured reserve/100."
+    }
+  ]
+}

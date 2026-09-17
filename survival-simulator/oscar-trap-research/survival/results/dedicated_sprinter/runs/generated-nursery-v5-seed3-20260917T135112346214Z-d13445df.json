@@ -1,0 +1,210 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter generated nursery v5 seed 3",
+    "policy": "nursery / v5",
+    "seed": 3,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 1.0,
+    "scenario": "generated",
+    "notes": "Original generated map, normal spawns, food and birth costs. Observation-only policy. Diagnostic hidden state is not a policy input. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "ed52fe5fd816329f771909642c0230f696434a7f4e12bc69f8bc4dedbf673ad2",
+    "created_at": "2026-09-17T13:51:12.357022+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "generated-nursery-v5-seed3-20260917T135112346214Z-d13445df",
+    "parameters": {
+      "seed": 3,
+      "mode": "nursery",
+      "horizon": 3000
+    },
+    "requested_horizon": 3000,
+    "reproduction": {
+      "original_id": "fullgame-nursery-3:000",
+      "source": "fullgame-nursery-3.json",
+      "row": 0,
+      "original_metrics_sha256": "f4013fe4a5a66c16d07bd3cfdb6d51c642d0f86e60f69948047b32d68b7cf6d2",
+      "controller": "controller",
+      "original_outcome": {
+        "duration": 857.5,
+        "score": 858.8968
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 857.5,
+    "score": 858.8968,
+    "frames": 1378,
+    "reason": "extinction"
+  },
+  "result": {
+    "seed": 3,
+    "mode": "nursery",
+    "horizon": 3000,
+    "duration": 857.5,
+    "score": 858.8968,
+    "alive": 0,
+    "births": 65,
+    "captured_agents": 23,
+    "stats": {},
+    "active_predator_ticks_with_any_bait": 0,
+    "target_fraction_when_any_bait": 0.0,
+    "samples": [
+      {
+        "t": 50.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 52.206800000000456
+      },
+      {
+        "t": 100.0,
+        "alive": 6,
+        "predators": 1,
+        "baits": 0,
+        "births": 9,
+        "score": 104.11959999999843
+      },
+      {
+        "t": 150.0,
+        "alive": 6,
+        "predators": 2,
+        "baits": 0,
+        "births": 14,
+        "score": 148.64976304302138
+      },
+      {
+        "t": 200.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 0,
+        "births": 17,
+        "score": 201.48116304301865
+      },
+      {
+        "t": 250.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 0,
+        "births": 18,
+        "score": 253.02416304301585
+      },
+      {
+        "t": 300.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 0,
+        "births": 21,
+        "score": 304.7108334227814
+      },
+      {
+        "t": 350.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 0,
+        "births": 22,
+        "score": 357.7630334227929
+      },
+      {
+        "t": 400.0,
+        "alive": 6,
+        "predators": 4,
+        "baits": 0,
+        "births": 27,
+        "score": 410.78183342280454
+      },
+      {
+        "t": 450.0,
+        "alive": 6,
+        "predators": 8,
+        "baits": 0,
+        "births": 36,
+        "score": 460.31644327154123
+      },
+      {
+        "t": 500.0,
+        "alive": 6,
+        "predators": 8,
+        "baits": 0,
+        "births": 40,
+        "score": 508.0954354722332
+      },
+      {
+        "t": 550.0,
+        "alive": 6,
+        "predators": 8,
+        "baits": 0,
+        "births": 46,
+        "score": 554.9507977711083
+      },
+      {
+        "t": 600.0,
+        "alive": 6,
+        "predators": 9,
+        "baits": 0,
+        "births": 50,
+        "score": 605.7815178092878
+      },
+      {
+        "t": 650.0,
+        "alive": 6,
+        "predators": 9,
+        "baits": 0,
+        "births": 55,
+        "score": 654.5931064197546
+      },
+      {
+        "t": 700.0,
+        "alive": 6,
+        "predators": 9,
+        "baits": 0,
+        "births": 59,
+        "score": 706.2742963438059
+      },
+      {
+        "t": 750.0,
+        "alive": 6,
+        "predators": 9,
+        "baits": 0,
+        "births": 63,
+        "score": 752.6223098463363
+      },
+      {
+        "t": 800.0,
+        "alive": 3,
+        "predators": 11,
+        "baits": 0,
+        "births": 66,
+        "score": 800.6963721407031
+      },
+      {
+        "t": 850.0,
+        "alive": 3,
+        "predators": 11,
+        "baits": 0,
+        "births": 70,
+        "score": 851.3968082449354
+      }
+    ],
+    "wall_seconds": 191.21641895899666,
+    "run_id": "generated-nursery-v5-seed3-20260917T135112346214Z-d13445df",
+    "replay": "results/dedicated_sprinter/replays/generated-nursery-v5-seed3-20260917T135112346214Z-d13445df.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "fullgame-nursery-3:000",
+      "source": "fullgame-nursery-3.json",
+      "row": 0,
+      "original_metrics_sha256": "f4013fe4a5a66c16d07bd3cfdb6d51c642d0f86e60f69948047b32d68b7cf6d2",
+      "controller": "controller",
+      "original_outcome": {
+        "duration": 857.5,
+        "score": 858.8968
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

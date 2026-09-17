@@ -1,0 +1,625 @@
+{
+  "parameters": {
+    "seed": 0,
+    "energy": 150,
+    "gap": 60,
+    "heading": 0.0,
+    "pred_energy": 102.0,
+    "seconds": 30,
+    "policy": "single",
+    "reserve_angle": 3.141592653589793,
+    "reserve_gap": 60,
+    "food": "none",
+    "workers": 0,
+    "worker_near": false,
+    "predators": 1,
+    "pairs": 1
+  },
+  "active_ticks": 286,
+  "occupied_ticks": 20,
+  "active_retention": 0.06993,
+  "worker_target_ticks": 0,
+  "longest_active_gap_seconds": 26.6,
+  "actual_target_switches": 0,
+  "baits_alive": 0,
+  "workers_alive": 0,
+  "worker_seconds": 0.0,
+  "bait_captures": 1,
+  "worker_captures": 0,
+  "deaths": [
+    {
+      "t": 2.0,
+      "id": 0,
+      "captured": true,
+      "remaining_energy": 97.0
+    }
+  ],
+  "per_predator_retention": {
+    "0": 0.06993
+  },
+  "first_active_target_gap": 2.0,
+  "first_capture": 2.0,
+  "min_bait_predator_separation": 11.6,
+  "per_predator_longest_gap": {
+    "0": 26.6
+  },
+  "confirmed_target_changes": [],
+  "birth_cost": 0.0,
+  "peak_population": 1,
+  "population_seconds": 1.9,
+  "captured_agent_energy": 97.0,
+  "food_waste": {
+    "bait": 0.0,
+    "worker": 0.0
+  },
+  "newborn_prepared": [],
+  "births": [],
+  "food_count": {
+    "bait": 0,
+    "worker": 0
+  },
+  "food_energy": {
+    "bait": 0.0,
+    "worker": 0.0
+  },
+  "movement_turn_energy": {
+    "bait": 51.0,
+    "worker": 0.0
+  },
+  "energy_remaining": {},
+  "events": [],
+  "trace": [
+    {
+      "t": 0.1,
+      "agents": [
+        [
+          0,
+          870.0,
+          600.0,
+          149.4
+        ]
+      ],
+      "predators": [
+        [
+          815.0,
+          600.0,
+          99.5,
+          false
+        ]
+      ],
+      "target": [
+        0
+      ],
+      "active": 0,
+      "incoming": null
+    },
+    {
+      "t": 1.1,
+      "agents": [
+        [
+          0,
+          1006.0,
+          600.0,
+          110.2
+        ]
+      ],
+      "predators": [
+        [
+          965.0,
+          600.0,
+          74.0,
+          false
+        ]
+      ],
+      "target": [
+        0
+      ],
+      "active": 0,
+      "incoming": null
+    },
+    {
+      "t": 2.1,
+      "agents": [],
+      "predators": [
+        [
+          1111.0,
+          600.0,
+          147.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 3.1,
+      "agents": [],
+      "predators": [
+        [
+          1220.0,
+          614.0,
+          141.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 4.1,
+      "agents": [],
+      "predators": [
+        [
+          1322.0,
+          651.3,
+          136.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 5.1,
+      "agents": [],
+      "predators": [
+        [
+          1414.3,
+          710.8,
+          130.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 6.1,
+      "agents": [],
+      "predators": [
+        [
+          1492.8,
+          787.5,
+          125.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 7.1,
+      "agents": [],
+      "predators": [
+        [
+          1540.9,
+          885.3,
+          119.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 8.1,
+      "agents": [],
+      "predators": [
+        [
+          1529.0,
+          993.3,
+          114.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 9.1,
+      "agents": [],
+      "predators": [
+        [
+          1484.1,
+          1093.3,
+          108.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 10.1,
+      "agents": [],
+      "predators": [
+        [
+          1395.0,
+          1143.1,
+          102.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 11.1,
+      "agents": [],
+      "predators": [
+        [
+          1295.6,
+          1096.6,
+          97.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 12.1,
+      "agents": [],
+      "predators": [
+        [
+          1200.4,
+          1042.1,
+          91.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 13.1,
+      "agents": [],
+      "predators": [
+        [
+          1120.9,
+          967.3,
+          86.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 14.1,
+      "agents": [],
+      "predators": [
+        [
+          1046.2,
+          886.7,
+          80.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 15.1,
+      "agents": [],
+      "predators": [
+        [
+          965.3,
+          812.7,
+          74.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 16.1,
+      "agents": [],
+      "predators": [
+        [
+          872.3,
+          754.5,
+          69.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 17.1,
+      "agents": [],
+      "predators": [
+        [
+          796.1,
+          675.7,
+          63.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 18.1,
+      "agents": [],
+      "predators": [
+        [
+          725.0,
+          592.0,
+          58.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 19.1,
+      "agents": [],
+      "predators": [
+        [
+          684.6,
+          490.2,
+          52.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 20.1,
+      "agents": [],
+      "predators": [
+        [
+          657.4,
+          383.9,
+          47.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 21.1,
+      "agents": [],
+      "predators": [
+        [
+          628.6,
+          278.0,
+          41.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 22.1,
+      "agents": [],
+      "predators": [
+        [
+          580.8,
+          179.2,
+          35.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 23.1,
+      "agents": [],
+      "predators": [
+        [
+          514.0,
+          92.1,
+          30.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 24.1,
+      "agents": [],
+      "predators": [
+        [
+          418.8,
+          41.2,
+          24.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 25.1,
+      "agents": [],
+      "predators": [
+        [
+          313.8,
+          69.5,
+          19.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 26.1,
+      "agents": [],
+      "predators": [
+        [
+          215.8,
+          119.0,
+          13.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 27.1,
+      "agents": [],
+      "predators": [
+        [
+          129.5,
+          186.7,
+          8.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 28.1,
+      "agents": [],
+      "predators": [
+        [
+          75.5,
+          280.8,
+          2.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 29.1,
+      "agents": [],
+      "predators": [
+        [
+          78.1,
+          335.3,
+          14.7,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    }
+  ],
+  "replay": "replays/single-ve1f67bfc66-seed0-20260917T134545886641Z-57f8cce588.json.gz",
+  "run_id": "single-ve1f67bfc66-seed0-20260917T134545886641Z-57f8cce588",
+  "recording_kind": "new_reproduction",
+  "reproduction": {
+    "source_case": "pilot[2]",
+    "source_file": "pilot.json",
+    "source_file_sha256": "aeac51b87255a4353b778354ed799f0728fb7a75cbe05798a255c52fa91de235",
+    "source_row_index": 2,
+    "source_controller_sha256": "c6cbdb6b8e14780a0a295b2979668599592d83d82f46c083e2278a2e6810a14e",
+    "selected_controller": "controller_before_relay",
+    "selected_controller_sha256": "e1f67bfc66fef9519ee77a7e3070cbce5692171e14e972da1ab581e8bfdf53b7",
+    "limitations": "Closest preserved pre-relay controller. Original full source hash is unavailable; radial/MPC behavior is retained.",
+    "original_parameters": {
+      "seed": 0,
+      "energy": 150,
+      "gap": 60,
+      "heading": 0.0,
+      "pred_energy": 102.0,
+      "seconds": 30,
+      "policy": "single",
+      "reserve_angle": 3.141592653589793,
+      "reserve_gap": 60,
+      "food": "none",
+      "workers": 0,
+      "worker_near": false,
+      "predators": 1
+    }
+  }
+}

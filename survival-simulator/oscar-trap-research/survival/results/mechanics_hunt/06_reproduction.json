@@ -1,0 +1,537 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "scope": "local exact-engine reproduction mechanics; no remote calls or submissions",
+  "known_reproductions": [
+    "strict parent energy >100 gate and 100-energy charge",
+    "newborn starts at 75 energy",
+    "six traits independently attempt 10% multiplicative mutation and have upper caps"
+  ],
+  "birth_gate_and_action_order": {
+    "classification": "engine fixture; all cases use one action for the parent",
+    "finding": "movement and turning costs are charged before the strict >100 birth gate; passive drain follows birth",
+    "interaction_note": "If the marginal-energy parent dies in non_agent_step, list removal skips the appended child for that tick; the child remains age 0/energy 75 with no cached observation. This is only a 0.1-energy timing effect and does not grow population.",
+    "cases": [
+      {
+        "initial_energy": 100.0,
+        "move_distance": 0.0,
+        "turn_angle": 0.0,
+        "birth_occurred": false,
+        "parent_survived_tick": true,
+        "parent_energy_after_tick": 99.9,
+        "child_energy_after_tick": null,
+        "child_age_after_tick": null,
+        "child_observation_cached": null,
+        "population_after_tick": 1
+      },
+      {
+        "initial_energy": 100.0001,
+        "move_distance": 0.0,
+        "turn_angle": 0.0,
+        "birth_occurred": true,
+        "parent_survived_tick": false,
+        "parent_energy_after_tick": null,
+        "child_energy_after_tick": 75.0,
+        "child_age_after_tick": 0.0,
+        "child_observation_cached": false,
+        "population_after_tick": 1
+      },
+      {
+        "initial_energy": 100.11,
+        "move_distance": 0.0,
+        "turn_angle": 0.0,
+        "birth_occurred": true,
+        "parent_survived_tick": true,
+        "parent_energy_after_tick": 0.009999999999999426,
+        "child_energy_after_tick": 74.9,
+        "child_age_after_tick": 0.1,
+        "child_observation_cached": true,
+        "population_after_tick": 2
+      },
+      {
+        "initial_energy": 150.0,
+        "move_distance": 0.0,
+        "turn_angle": 0.0,
+        "birth_occurred": true,
+        "parent_survived_tick": true,
+        "parent_energy_after_tick": 49.9,
+        "child_energy_after_tick": 74.9,
+        "child_age_after_tick": 0.1,
+        "child_observation_cached": true,
+        "population_after_tick": 2
+      },
+      {
+        "initial_energy": 102.0,
+        "move_distance": 0.0,
+        "turn_angle": 0.0,
+        "birth_occurred": true,
+        "parent_survived_tick": true,
+        "parent_energy_after_tick": 1.9,
+        "child_energy_after_tick": 74.9,
+        "child_age_after_tick": 0.1,
+        "child_observation_cached": true,
+        "population_after_tick": 2
+      },
+      {
+        "initial_energy": 102.0,
+        "move_distance": 20.0,
+        "turn_angle": 0.0,
+        "birth_occurred": false,
+        "parent_survived_tick": true,
+        "parent_energy_after_tick": 96.4,
+        "child_energy_after_tick": null,
+        "child_age_after_tick": null,
+        "child_observation_cached": null,
+        "population_after_tick": 1
+      },
+      {
+        "initial_energy": 102.0,
+        "move_distance": 0.0,
+        "turn_angle": 3.141592653589793,
+        "birth_occurred": true,
+        "parent_survived_tick": true,
+        "parent_energy_after_tick": 1.4,
+        "child_energy_after_tick": 74.9,
+        "child_age_after_tick": 0.1,
+        "child_observation_cached": true,
+        "population_after_tick": 2
+      }
+    ]
+  },
+  "inheritance_distribution": {
+    "classification": "privileged direct-birth Monte Carlo; exact upstream spawn method, no ecology or energy budget",
+    "samples": 20000,
+    "rng_seed": 6172026,
+    "parent_traits": {
+      "speed": 10.0,
+      "sprint_speed": 20.0,
+      "max_energy": 500.0,
+      "hearing_radius": 50.0,
+      "vision_radius": 200.0,
+      "cone_angle": 1.0471975511965976
+    },
+    "per_trait": {
+      "speed": {
+        "apparent_change_rate": 0.0946,
+        "increase_rate": 0.0488,
+        "decrease_rate": 0.0458,
+        "expected_apparent_change_rate_below_cap": 0.1
+      },
+      "sprint_speed": {
+        "apparent_change_rate": 0.0979,
+        "increase_rate": 0.0464,
+        "decrease_rate": 0.0515,
+        "expected_apparent_change_rate_below_cap": 0.1
+      },
+      "max_energy": {
+        "apparent_change_rate": 0.10055,
+        "increase_rate": 0.05145,
+        "decrease_rate": 0.0491,
+        "expected_apparent_change_rate_below_cap": 0.1
+      },
+      "hearing_radius": {
+        "apparent_change_rate": 0.0961,
+        "increase_rate": 0.0478,
+        "decrease_rate": 0.0483,
+        "expected_apparent_change_rate_below_cap": 0.1
+      },
+      "vision_radius": {
+        "apparent_change_rate": 0.09875,
+        "increase_rate": 0.0484,
+        "decrease_rate": 0.05035,
+        "expected_apparent_change_rate_below_cap": 0.1
+      },
+      "cone_angle": {
+        "apparent_change_rate": 0.10005,
+        "increase_rate": 0.0489,
+        "decrease_rate": 0.05115,
+        "expected_apparent_change_rate_below_cap": 0.1
+      }
+    },
+    "any_apparent_trait_change_rate": 0.46095,
+    "no_apparent_trait_change_rate": 0.53905,
+    "expected_any_change_rate": 0.46855899999999995,
+    "changed_trait_count_histogram": {
+      "0": 10781,
+      "1": 7001,
+      "2": 1921,
+      "3": 272,
+      "4": 25,
+      "5": 0,
+      "6": 0
+    },
+    "max_age": {
+      "parent_value_fixture": 1000000000.0,
+      "child_min": 60.001186229016696,
+      "child_max": 119.99461349206277,
+      "child_mean": 89.98318342391819,
+      "source_rule": "fresh Uniform(60,120); not inherited and not exposed in ObservationResponse"
+    }
+  },
+  "caps_floors_and_energy": {
+    "classification": "privileged fixtures; exact upstream inheritance and interaction methods",
+    "upper_caps": {
+      "speed": 20,
+      "sprint_speed": 40,
+      "max_energy": 1000,
+      "hearing_radius": "chunk_size/4",
+      "vision_radius": "chunk_size",
+      "cone_angle": "pi/2"
+    },
+    "at_cap_monte_carlo": {
+      "samples": 10000,
+      "rates": {
+        "speed": {
+          "unchanged_rate": 0.9499,
+          "decrease_rate": 0.0501,
+          "increase_rate": 0.0,
+          "expected_at_cap": {
+            "unchanged": 0.95,
+            "decrease": 0.05,
+            "increase": 0.0
+          }
+        },
+        "sprint_speed": {
+          "unchanged_rate": 0.9488,
+          "decrease_rate": 0.0512,
+          "increase_rate": 0.0,
+          "expected_at_cap": {
+            "unchanged": 0.95,
+            "decrease": 0.05,
+            "increase": 0.0
+          }
+        },
+        "max_energy": {
+          "unchanged_rate": 0.9486,
+          "decrease_rate": 0.0514,
+          "increase_rate": 0.0,
+          "expected_at_cap": {
+            "unchanged": 0.95,
+            "decrease": 0.05,
+            "increase": 0.0
+          }
+        },
+        "hearing_radius": {
+          "unchanged_rate": 0.9493,
+          "decrease_rate": 0.0507,
+          "increase_rate": 0.0,
+          "expected_at_cap": {
+            "unchanged": 0.95,
+            "decrease": 0.05,
+            "increase": 0.0
+          }
+        },
+        "vision_radius": {
+          "unchanged_rate": 0.9474,
+          "decrease_rate": 0.0526,
+          "increase_rate": 0.0,
+          "expected_at_cap": {
+            "unchanged": 0.95,
+            "decrease": 0.05,
+            "increase": 0.0
+          }
+        },
+        "cone_angle": {
+          "unchanged_rate": 0.9533,
+          "decrease_rate": 0.0467,
+          "increase_rate": 0.0,
+          "expected_at_cap": {
+            "unchanged": 0.95,
+            "decrease": 0.05,
+            "increase": 0.0
+          }
+        }
+      }
+    },
+    "lower_floor": {
+      "explicit_floor_exists": false,
+      "sample_parent_value": 1e-09,
+      "minimum_children": {
+        "speed": 5.116553575575698e-10,
+        "sprint_speed": 5.45997910092723e-10,
+        "max_energy": 5.330710289037586e-10,
+        "hearing_radius": 5.248779737474495e-10,
+        "vision_radius": 5.032574329437991e-10,
+        "cone_angle": 5.360456690333465e-10
+      }
+    },
+    "sterile_below_gate": {
+      "max_energy": 90.0,
+      "population": 1,
+      "can_ever_cross_strict_birth_gate_via_fruit": false
+    },
+    "newborn_above_own_cap": {
+      "parent_max_energy": 120.0,
+      "births_to_first_seeded_example": 101,
+      "child_energy_before_touching_fruit": 75.0,
+      "child_max_energy": 62.06677030231086,
+      "child_energy_after_touching_fruit": 62.06677030231086,
+      "note": "Fruit was artificially placed for isolation; eating clamps energy downward to max_energy."
+    }
+  },
+  "placement_geometry": {
+    "classification": "privileged placement fixtures; source method unmodified",
+    "empty_center": {
+      "samples": 10000,
+      "mean_radial_distance": 19.974520139808334,
+      "min": 10.00214585828855,
+      "max": 29.99902112253995,
+      "source_distribution": "radius Uniform(10,30), not area-uniform"
+    },
+    "near_boundary": {
+      "parent": [
+        35,
+        35
+      ],
+      "samples": 10000,
+      "exact_parent_fallback_rate": 0.6614,
+      "mean_resulting_distance": 6.649233439789262
+    },
+    "one_sided_clearance_mismatch": {
+      "seed": 7,
+      "child_x": 144.17563213274448,
+      "child_y": 111.64124554444945,
+      "obstacle": {
+        "x": 100,
+        "y": 70,
+        "width": 40,
+        "height": 60
+      },
+      "spawn_clearance_function_said_free": true,
+      "centered_collision_function_says_overlap": true
+    },
+    "predator_occupancy_ignored": {
+      "fixture_seed": 73,
+      "planned_spawn_radius": 20.042808872494692,
+      "predator_placed_at_planned_child_position": [
+        196.2671809452721,
+        219.69213674043556
+      ],
+      "child_died_in_birth_tick": true,
+      "note": "Adversarial arranged geometry; demonstrates hazard, not an acquisition rate."
+    }
+  },
+  "lineage_economics": {
+    "classification": "optimistic exact-distribution Monte Carlo; immortal founder, unlimited food, no predators",
+    "trials": 10000,
+    "max_births": 5000,
+    "rng_seed": 696969,
+    "first_visible_improvement_with_no_visible_trait_loss": {
+      "median_births": 3.0,
+      "p90_births": 10,
+      "mean_births": 4.8006,
+      "not_reached": 0,
+      "median_birth_energy": 300.0,
+      "median_equivalent_ripe_60_energy_fruits_ignoring_passive_cost": 5.0
+    },
+    "first_effective_movement_improvement": {
+      "median_births": 14.0,
+      "p90_births": 47,
+      "mean_births": 20.5357,
+      "not_reached": 0,
+      "median_birth_energy": 1400.0,
+      "median_equivalent_ripe_60_energy_fruits_ignoring_passive_cost": 23.333333333333332
+    },
+    "first_joint_effective_movement_and_max_energy_improvement": {
+      "median_births": 276.0,
+      "p90_births": 905,
+      "mean_births": 396.1946,
+      "not_reached": 0,
+      "median_birth_energy": 27600.0,
+      "median_equivalent_ripe_60_energy_fruits_ignoring_passive_cost": 460.0
+    },
+    "ordinary_observation": "All six inherited traits are returned exactly after birth; parentage and max_age are not."
+  },
+  "generated_map_validation": {
+    "classification": "contract-compliant default generated maps; one action per five pre-existing agents; no spawned-child action",
+    "default_dimensions": [
+      1600,
+      1200
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      42
+    ],
+    "runs": [
+      {
+        "seed": 1,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 13.646975857590338,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      },
+      {
+        "seed": 2,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 18.983650907378557,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 55.6848907320822,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      },
+      {
+        "seed": 3,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 27.968210323968446,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 29.465869382196292,
+          "vision_radius": 200.0,
+          "cone_angle": 0.8466005767237481
+        }
+      },
+      {
+        "seed": 4,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 28.645987022480888,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 19.28706773632333,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 0.7653829594064268
+        }
+      },
+      {
+        "seed": 5,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 23.22033993749391,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 641.3632728654992,
+          "hearing_radius": 25.198030567336154,
+          "vision_radius": 200.0,
+          "cone_angle": 1.3799534035466738
+        }
+      },
+      {
+        "seed": 6,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 12.487666447613956,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 14.37623440962412,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      },
+      {
+        "seed": 7,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 24.169342801380083,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      },
+      {
+        "seed": 8,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 0.0,
+        "fell_back_exactly_to_parent": true,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      },
+      {
+        "seed": 9,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 10.613305316103476,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 10.0,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      },
+      {
+        "seed": 42,
+        "population_after": 6,
+        "parent_energy_after": 49.9,
+        "child_energy_after": 74.9,
+        "child_returned_in_same_response": true,
+        "placement_distance": 20.105594564156178,
+        "fell_back_exactly_to_parent": false,
+        "child_traits": {
+          "speed": 9.974961315496891,
+          "sprint_speed": 20.0,
+          "max_energy": 500.0,
+          "hearing_radius": 50.0,
+          "vision_radius": 200.0,
+          "cone_angle": 1.0471975511965976
+        }
+      }
+    ],
+    "fallback_count": 1,
+    "same_response_child_count": 10
+  }
+}

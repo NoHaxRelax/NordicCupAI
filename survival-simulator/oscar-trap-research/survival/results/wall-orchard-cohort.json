@@ -1,0 +1,8179 @@
+{
+  "scope": "Privileged-coordinate wall holder/forager rotations, original local physics.\n\nArranged held wall, two 150-energy founders, 1-3 native age-zero trees.\nNo energy injections, duplicate actions, added fruit, or free replacements.\nNew predator spawning is disabled; new tree spawning is an explicit ablation.\n",
+  "runs": [
+    {
+      "seed": 1,
+      "initial_trees": 3,
+      "spacing": 90,
+      "mode": "relay_birth",
+      "new_tree_spawning": false,
+      "width": 32,
+      "height": 80,
+      "founder_max_age": 90,
+      "cap": 6,
+      "retire_age": 65,
+      "preserve_food": true,
+      "cohort": true,
+      "horizon": 300,
+      "seconds": 169.6,
+      "alive": 0,
+      "generations": 2,
+      "births": [
+        {
+          "time": 39.7,
+          "parent": 1,
+          "child": 2,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 65.9,
+          "parent": 1,
+          "child": 3,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 75.1,
+          "parent": 2,
+          "child": 4,
+          "generation": 2,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        }
+      ],
+      "handoffs": [
+        {
+          "time": 65.9,
+          "outgoing": 0,
+          "incoming": 1
+        },
+        {
+          "time": 75.1,
+          "outgoing": 1,
+          "incoming": 2
+        },
+        {
+          "time": 105.0,
+          "outgoing": 2,
+          "incoming": 4
+        }
+      ],
+      "deaths": [
+        {
+          "id": 0,
+          "time": 94.6,
+          "age": 94.6,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 1,
+          "time": 121.2,
+          "age": 121.1,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 4,
+          "time": 137.7,
+          "age": 62.6,
+          "cause": "depleted",
+          "generation": 2
+        },
+        {
+          "id": 3,
+          "time": 137.8,
+          "age": 71.9,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 2,
+          "time": 169.6,
+          "age": 129.8,
+          "cause": "depleted",
+          "generation": 1
+        }
+      ],
+      "captures": 0,
+      "food_count": 19,
+      "food_energy": 909.6,
+      "meals": [
+        {
+          "time": 31.7,
+          "energy": 20,
+          "agent": 1
+        },
+        {
+          "time": 39.6,
+          "energy": 42.2,
+          "agent": 1
+        },
+        {
+          "time": 39.6,
+          "energy": 21.2,
+          "agent": 1
+        },
+        {
+          "time": 40.0,
+          "energy": 59.0,
+          "agent": 1
+        },
+        {
+          "time": 41.7,
+          "energy": 59.6,
+          "agent": 1
+        },
+        {
+          "time": 46.0,
+          "energy": 58.6,
+          "agent": 1
+        },
+        {
+          "time": 46.6,
+          "energy": 58.2,
+          "agent": 1
+        },
+        {
+          "time": 47.4,
+          "energy": 58.8,
+          "agent": 1
+        },
+        {
+          "time": 47.6,
+          "energy": 58.2,
+          "agent": 1
+        },
+        {
+          "time": 50.0,
+          "energy": 35.6,
+          "agent": 2
+        },
+        {
+          "time": 56.2,
+          "energy": 21.4,
+          "agent": 1
+        },
+        {
+          "time": 56.8,
+          "energy": 40.4,
+          "agent": 1
+        },
+        {
+          "time": 56.9,
+          "energy": 21.4,
+          "agent": 2
+        },
+        {
+          "time": 57.4,
+          "energy": 60.0,
+          "agent": 2
+        },
+        {
+          "time": 59.1,
+          "energy": 60.0,
+          "agent": 2
+        },
+        {
+          "time": 65.1,
+          "energy": 56.6,
+          "agent": 1
+        },
+        {
+          "time": 67.2,
+          "energy": 59.2,
+          "agent": 2
+        },
+        {
+          "time": 70.7,
+          "energy": 59.4,
+          "agent": 2
+        },
+        {
+          "time": 71.1,
+          "energy": 59.8,
+          "agent": 2
+        }
+      ],
+      "tree_patch_empty_at": 60.8,
+      "hold_fraction": 0.8242924528301887,
+      "attention_fraction": 0.8119103773584906,
+      "first_hold_loss": 139.9,
+      "trace": [
+        {
+          "time": 0.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            772.0,
+            585.0
+          ],
+          "held": true
+        },
+        {
+          "time": 5.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            773.9,
+            592.8
+          ],
+          "held": true
+        },
+        {
+          "time": 10.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            772.9,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 15.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            772.8,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 20.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            773.0,
+            592.5
+          ],
+          "held": true
+        },
+        {
+          "time": 25.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 2,
+          "predator": [
+            772.6,
+            603.6
+          ],
+          "held": true
+        },
+        {
+          "time": 30.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 7,
+          "predator": [
+            773.6,
+            587.9
+          ],
+          "held": true
+        },
+        {
+          "time": 35.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 114.9,
+              "age": 35.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 134.9,
+              "age": 35.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 7,
+          "predator": [
+            772.3,
+            598.8
+          ],
+          "held": true
+        },
+        {
+          "time": 40.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 109.9,
+              "age": 40.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 149.3,
+              "age": 40.1,
+              "x": 941.6,
+              "y": 652.8,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 74.6,
+              "age": 0.4,
+              "x": 950.1,
+              "y": 622.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 7,
+          "predator": [
+            773.9,
+            613.7
+          ],
+          "held": true
+        },
+        {
+          "time": 45.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 104.9,
+              "age": 45.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 199.4,
+              "age": 45.1,
+              "x": 937.2,
+              "y": 562.9,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 69.6,
+              "age": 5.4,
+              "x": 950.1,
+              "y": 622.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 7,
+          "predator": [
+            772.9,
+            605.6
+          ],
+          "held": true
+        },
+        {
+          "time": 50.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 99.9,
+              "age": 50.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 421.7,
+              "age": 50.1,
+              "x": 890.4,
+              "y": 544.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 98.7,
+              "age": 10.4,
+              "x": 945.1,
+              "y": 651.6,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 5,
+          "predator": [
+            773.5,
+            594.6
+          ],
+          "held": true
+        },
+        {
+          "time": 55.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 94.9,
+              "age": 55.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 416.7,
+              "age": 55.1,
+              "x": 890.4,
+              "y": 544.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 93.7,
+              "age": 15.4,
+              "x": 945.1,
+              "y": 651.6,
+              "retired": false
+            }
+          ],
+          "trees": 2,
+          "fruits": 7,
+          "predator": [
+            772.2,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 60.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 89.9,
+              "age": 60.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 468.5,
+              "age": 60.1,
+              "x": 892.4,
+              "y": 644.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 221.6,
+              "age": 20.4,
+              "x": 907.0,
+              "y": 583.7,
+              "retired": false
+            }
+          ],
+          "trees": 1,
+          "fruits": 4,
+          "predator": [
+            773.4,
+            612.7
+          ],
+          "held": true
+        },
+        {
+          "time": 65.1,
+          "holder": 0,
+          "incoming": 1,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 84.9,
+              "age": 65.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 463.0,
+              "age": 65.1,
+              "x": 884.0,
+              "y": 639.3,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 216.6,
+              "age": 25.4,
+              "x": 907.0,
+              "y": 583.7,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 4,
+          "predator": [
+            771.9,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 70.1,
+          "holder": 1,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 65.3,
+              "age": 70.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 392.0,
+              "age": 70.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 266.8,
+              "age": 30.4,
+              "x": 903.0,
+              "y": 522.7,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 70.8,
+              "age": 4.2,
+              "x": 834.5,
+              "y": 593.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 2,
+          "predator": [
+            773.4,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 75.1,
+          "holder": 1,
+          "incoming": 2,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 60.3,
+              "age": 75.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 387.0,
+              "age": 75.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 370.4,
+              "age": 35.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 62.8,
+              "age": 9.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            774.0,
+            586.6
+          ],
+          "held": true
+        },
+        {
+          "time": 80.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 55.3,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 367.4,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 265.4,
+              "age": 40.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 57.8,
+              "age": 14.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 70.0,
+              "age": 5.0,
+              "x": 843.1,
+              "y": 610.3,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.3,
+            601.9
+          ],
+          "held": true
+        },
+        {
+          "time": 85.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 50.3,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 362.4,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 260.4,
+              "age": 45.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 52.8,
+              "age": 19.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 65.0,
+              "age": 10.0,
+              "x": 843.1,
+              "y": 610.3,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            772.3,
+            602.0
+          ],
+          "held": true
+        },
+        {
+          "time": 90.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 44.4,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 356.5,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 255.4,
+              "age": 50.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 47.8,
+              "age": 24.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 60.0,
+              "age": 15.0,
+              "x": 843.1,
+              "y": 610.3,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            771.7,
+            605.7
+          ],
+          "held": true
+        },
+        {
+          "time": 95.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 306.2,
+              "age": 95.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 250.4,
+              "age": 55.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 42.8,
+              "age": 29.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 55.0,
+              "age": 20.0,
+              "x": 843.1,
+              "y": 610.3,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.5,
+            605.4
+          ],
+          "held": true
+        },
+        {
+          "time": 100.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 252.4,
+              "age": 100.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 245.4,
+              "age": 60.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 37.8,
+              "age": 34.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 50.0,
+              "age": 25.0,
+              "x": 843.1,
+              "y": 610.3,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.1,
+            583.4
+          ],
+          "held": true
+        },
+        {
+          "time": 105.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 196.2,
+              "age": 105.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 239.9,
+              "age": 65.4,
+              "x": 831.6,
+              "y": 605.1,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 32.8,
+              "age": 39.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 43.9,
+              "age": 30.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.4,
+            605.4
+          ],
+          "held": true
+        },
+        {
+          "time": 110.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 137.4,
+              "age": 110.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 220.8,
+              "age": 70.4,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 27.8,
+              "age": 44.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 38.9,
+              "age": 35.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.2,
+            583.2
+          ],
+          "held": true
+        },
+        {
+          "time": 115.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 76.1,
+              "age": 115.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 215.8,
+              "age": 75.4,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 22.8,
+              "age": 49.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 33.9,
+              "age": 40.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.2,
+            579.0
+          ],
+          "held": true
+        },
+        {
+          "time": 120.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 12.3,
+              "age": 120.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 210.8,
+              "age": 80.4,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 17.8,
+              "age": 54.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 28.9,
+              "age": 45.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            772.6,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 125.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 205.9,
+              "age": 85.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 12.8,
+              "age": 59.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 23.9,
+              "age": 50.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            772.9,
+            590.4
+          ],
+          "held": true
+        },
+        {
+          "time": 130.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 200.9,
+              "age": 90.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 7.8,
+              "age": 64.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 18.9,
+              "age": 55.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.1,
+            604.8
+          ],
+          "held": true
+        },
+        {
+          "time": 135.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 195.9,
+              "age": 95.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 2.8,
+              "age": 69.2,
+              "x": 890.7,
+              "y": 615.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 13.9,
+              "age": 60.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.4,
+            604.6
+          ],
+          "held": true
+        },
+        {
+          "time": 140.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 190.9,
+              "age": 100.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            707.2,
+            588.8
+          ],
+          "held": false
+        },
+        {
+          "time": 145.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 185.9,
+              "age": 105.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            165.3,
+            588.1
+          ],
+          "held": false
+        },
+        {
+          "time": 150.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 180.9,
+              "age": 110.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            267.9,
+            170.2
+          ],
+          "held": false
+        },
+        {
+          "time": 155.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 175.9,
+              "age": 115.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            792.6,
+            163.1
+          ],
+          "held": false
+        },
+        {
+          "time": 160.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 125.9,
+              "age": 120.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            1064.6,
+            197.1
+          ],
+          "held": false
+        },
+        {
+          "time": 165.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 59.5,
+              "age": 125.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            1427.0,
+            454.7
+          ],
+          "held": false
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "initial_trees": 3,
+      "spacing": 90,
+      "mode": "relay_birth",
+      "new_tree_spawning": true,
+      "width": 32,
+      "height": 80,
+      "founder_max_age": 90,
+      "cap": 6,
+      "retire_age": 65,
+      "preserve_food": true,
+      "cohort": true,
+      "horizon": 300,
+      "seconds": 244.4,
+      "alive": 0,
+      "generations": 1,
+      "births": [
+        {
+          "time": 39.9,
+          "parent": 1,
+          "child": 2,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 66.7,
+          "parent": 1,
+          "child": 3,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 106.3,
+          "parent": 1,
+          "child": 4,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 133.8,
+          "parent": 1,
+          "child": 5,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        }
+      ],
+      "handoffs": [
+        {
+          "time": 66.7,
+          "outgoing": 0,
+          "incoming": 2
+        },
+        {
+          "time": 106.3,
+          "outgoing": 2,
+          "incoming": 3
+        },
+        {
+          "time": 133.8,
+          "outgoing": 3,
+          "incoming": 4
+        },
+        {
+          "time": 172.0,
+          "outgoing": 4,
+          "incoming": 5
+        },
+        {
+          "time": 207.5,
+          "outgoing": 5,
+          "incoming": 1
+        }
+      ],
+      "deaths": [
+        {
+          "id": 0,
+          "time": 98.8,
+          "age": 98.8,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 2,
+          "time": 154.3,
+          "age": 114.4,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 3,
+          "time": 178.4,
+          "age": 111.6,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 1,
+          "time": 209.9,
+          "age": 209.8,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 4,
+          "time": 229.2,
+          "age": 122.7,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 5,
+          "time": 244.4,
+          "age": 110.5,
+          "cause": "capture",
+          "generation": 1
+        }
+      ],
+      "captures": 1,
+      "food_count": 73,
+      "food_energy": 3656.2,
+      "meals": [
+        {
+          "time": 39.6,
+          "energy": 56.2,
+          "agent": 1
+        },
+        {
+          "time": 39.8,
+          "energy": 26.2,
+          "agent": 1
+        },
+        {
+          "time": 40.0,
+          "energy": 34.4,
+          "agent": 1
+        },
+        {
+          "time": 40.2,
+          "energy": 20.4,
+          "agent": 1
+        },
+        {
+          "time": 40.4,
+          "energy": 59.6,
+          "agent": 1
+        },
+        {
+          "time": 41.4,
+          "energy": 32.2,
+          "agent": 1
+        },
+        {
+          "time": 41.6,
+          "energy": 58.8,
+          "agent": 2
+        },
+        {
+          "time": 41.7,
+          "energy": 32.0,
+          "agent": 2
+        },
+        {
+          "time": 41.7,
+          "energy": 59.4,
+          "agent": 2
+        },
+        {
+          "time": 42.6,
+          "energy": 25.2,
+          "agent": 1
+        },
+        {
+          "time": 42.7,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 47.2,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 47.8,
+          "energy": 59.8,
+          "agent": 1
+        },
+        {
+          "time": 51.5,
+          "energy": 24.8,
+          "agent": 2
+        },
+        {
+          "time": 52.2,
+          "energy": 59.8,
+          "agent": 2
+        },
+        {
+          "time": 52.3,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 55.6,
+          "energy": 59.0,
+          "agent": 2
+        },
+        {
+          "time": 57.4,
+          "energy": 40.4,
+          "agent": 2
+        },
+        {
+          "time": 58.1,
+          "energy": 48.6,
+          "agent": 2
+        },
+        {
+          "time": 58.5,
+          "energy": 38.4,
+          "agent": 2
+        },
+        {
+          "time": 66.9,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 67.0,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 67.2,
+          "energy": 53.0,
+          "agent": 3
+        },
+        {
+          "time": 67.8,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 67.8,
+          "energy": 38.6,
+          "agent": 3
+        },
+        {
+          "time": 67.8,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 68.6,
+          "energy": 45.0,
+          "agent": 0
+        },
+        {
+          "time": 69.4,
+          "energy": 26.2,
+          "agent": 3
+        },
+        {
+          "time": 69.5,
+          "energy": 32.2,
+          "agent": 3
+        },
+        {
+          "time": 71.0,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 72.4,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 73.4,
+          "energy": 59.0,
+          "agent": 3
+        },
+        {
+          "time": 83.6,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 95.0,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 100.3,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 105.8,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 107.2,
+          "energy": 24.8,
+          "agent": 1
+        },
+        {
+          "time": 107.3,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 107.5,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 107.6,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 110.4,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 110.5,
+          "energy": 59.8,
+          "agent": 4
+        },
+        {
+          "time": 126.4,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 127.9,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 131.9,
+          "energy": 58.6,
+          "agent": 1
+        },
+        {
+          "time": 132.9,
+          "energy": 58.8,
+          "agent": 1
+        },
+        {
+          "time": 136.1,
+          "energy": 59.2,
+          "agent": 1
+        },
+        {
+          "time": 137.7,
+          "energy": 58.8,
+          "agent": 1
+        },
+        {
+          "time": 144.3,
+          "energy": 25.6,
+          "agent": 5
+        },
+        {
+          "time": 148.4,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 153.1,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 154.2,
+          "energy": 58.6,
+          "agent": 1
+        },
+        {
+          "time": 155.0,
+          "energy": 56.6,
+          "agent": 1
+        },
+        {
+          "time": 155.1,
+          "energy": 59.2,
+          "agent": 1
+        },
+        {
+          "time": 155.1,
+          "energy": 59.0,
+          "agent": 5
+        },
+        {
+          "time": 159.1,
+          "energy": 59.4,
+          "agent": 1
+        },
+        {
+          "time": 164.5,
+          "energy": 58.4,
+          "agent": 1
+        },
+        {
+          "time": 173.0,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 180.4,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 181.9,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 185.2,
+          "energy": 44.2,
+          "agent": 1
+        },
+        {
+          "time": 186.5,
+          "energy": 50.6,
+          "agent": 1
+        },
+        {
+          "time": 188.2,
+          "energy": 58.4,
+          "agent": 1
+        },
+        {
+          "time": 191.8,
+          "energy": 27.2,
+          "agent": 1
+        },
+        {
+          "time": 193.5,
+          "energy": 42.4,
+          "agent": 1
+        },
+        {
+          "time": 194.9,
+          "energy": 21.8,
+          "agent": 1
+        },
+        {
+          "time": 196.6,
+          "energy": 31.4,
+          "agent": 1
+        },
+        {
+          "time": 197.6,
+          "energy": 46.6,
+          "agent": 1
+        },
+        {
+          "time": 201.0,
+          "energy": 28.8,
+          "agent": 1
+        },
+        {
+          "time": 201.6,
+          "energy": 33.2,
+          "agent": 1
+        },
+        {
+          "time": 202.4,
+          "energy": 56.4,
+          "agent": 1
+        },
+        {
+          "time": 204.0,
+          "energy": 29.8,
+          "agent": 1
+        },
+        {
+          "time": 205.0,
+          "energy": 59.4,
+          "agent": 1
+        }
+      ],
+      "tree_patch_empty_at": null,
+      "hold_fraction": 0.8600654664484452,
+      "attention_fraction": 0.8588379705400983,
+      "first_hold_loss": 210.3,
+      "trace": [
+        {
+          "time": 0.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 4,
+          "fruits": 0,
+          "predator": [
+            772.0,
+            585.0
+          ],
+          "held": true
+        },
+        {
+          "time": 5.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 42,
+          "fruits": 0,
+          "predator": [
+            773.9,
+            592.8
+          ],
+          "held": true
+        },
+        {
+          "time": 10.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 56,
+          "fruits": 0,
+          "predator": [
+            772.9,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 15.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 74,
+          "fruits": 0,
+          "predator": [
+            772.8,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 20.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 89,
+          "fruits": 0,
+          "predator": [
+            773.0,
+            592.5
+          ],
+          "held": true
+        },
+        {
+          "time": 25.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 105,
+          "fruits": 17,
+          "predator": [
+            772.6,
+            603.6
+          ],
+          "held": true
+        },
+        {
+          "time": 30.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 114,
+          "fruits": 36,
+          "predator": [
+            773.6,
+            587.9
+          ],
+          "held": true
+        },
+        {
+          "time": 35.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 114.9,
+              "age": 35.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 114.9,
+              "age": 35.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 119,
+          "fruits": 66,
+          "predator": [
+            772.3,
+            598.8
+          ],
+          "held": true
+        },
+        {
+          "time": 40.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 109.9,
+              "age": 40.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 124.2,
+              "age": 40.1,
+              "x": 930.1,
+              "y": 647.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 74.8,
+              "age": 0.2,
+              "x": 909.0,
+              "y": 625.2,
+              "retired": false
+            }
+          ],
+          "trees": 130,
+          "fruits": 110,
+          "predator": [
+            773.9,
+            613.7
+          ],
+          "held": true
+        },
+        {
+          "time": 45.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 104.9,
+              "age": 45.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 305.6,
+              "age": 45.1,
+              "x": 974.1,
+              "y": 508.6,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 217.0,
+              "age": 5.2,
+              "x": 938.4,
+              "y": 572.9,
+              "retired": false
+            }
+          ],
+          "trees": 135,
+          "fruits": 144,
+          "predator": [
+            772.9,
+            605.6
+          ],
+          "held": true
+        },
+        {
+          "time": 50.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 99.9,
+              "age": 50.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 404.4,
+              "age": 50.1,
+              "x": 1009.2,
+              "y": 722.1,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 210.0,
+              "age": 10.2,
+              "x": 956.1,
+              "y": 608.7,
+              "retired": false
+            }
+          ],
+          "trees": 144,
+          "fruits": 195,
+          "predator": [
+            773.5,
+            594.6
+          ],
+          "held": true
+        },
+        {
+          "time": 55.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 94.9,
+              "age": 55.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 447.9,
+              "age": 55.1,
+              "x": 919.8,
+              "y": 510.2,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 284.6,
+              "age": 15.2,
+              "x": 959.1,
+              "y": 708.7,
+              "retired": false
+            }
+          ],
+          "trees": 144,
+          "fruits": 239,
+          "predator": [
+            772.2,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 60.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 89.9,
+              "age": 60.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 442.9,
+              "age": 60.1,
+              "x": 919.8,
+              "y": 510.2,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 453.5,
+              "age": 20.2,
+              "x": 934.5,
+              "y": 471.9,
+              "retired": false
+            }
+          ],
+          "trees": 128,
+          "fruits": 282,
+          "predator": [
+            773.4,
+            612.7
+          ],
+          "held": true
+        },
+        {
+          "time": 65.1,
+          "holder": 0,
+          "incoming": 2,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 84.9,
+              "age": 65.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 437.9,
+              "age": 65.1,
+              "x": 919.8,
+              "y": 510.2,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 448.0,
+              "age": 25.2,
+              "x": 928.0,
+              "y": 479.5,
+              "retired": false
+            }
+          ],
+          "trees": 116,
+          "fruits": 338,
+          "predator": [
+            771.9,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 70.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 110.3,
+              "age": 70.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 447.4,
+              "age": 70.1,
+              "x": 937.5,
+              "y": 441.4,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 435.0,
+              "age": 30.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 325.1,
+              "age": 3.4,
+              "x": 1002.6,
+              "y": 633.0,
+              "retired": false
+            }
+          ],
+          "trees": 114,
+          "fruits": 377,
+          "predator": [
+            773.4,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 75.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 105.3,
+              "age": 75.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 442.4,
+              "age": 75.1,
+              "x": 937.5,
+              "y": 441.4,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 430.0,
+              "age": 35.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 484.1,
+              "age": 8.4,
+              "x": 949.6,
+              "y": 659.0,
+              "retired": false
+            }
+          ],
+          "trees": 98,
+          "fruits": 396,
+          "predator": [
+            774.0,
+            586.6
+          ],
+          "held": true
+        },
+        {
+          "time": 80.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 100.3,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 437.4,
+              "age": 80.1,
+              "x": 937.5,
+              "y": 441.4,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 425.0,
+              "age": 40.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 479.1,
+              "age": 13.4,
+              "x": 949.6,
+              "y": 659.0,
+              "retired": false
+            }
+          ],
+          "trees": 90,
+          "fruits": 407,
+          "predator": [
+            773.3,
+            601.9
+          ],
+          "held": true
+        },
+        {
+          "time": 85.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 95.3,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 486.4,
+              "age": 85.1,
+              "x": 985.0,
+              "y": 551.5,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 420.0,
+              "age": 45.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 474.1,
+              "age": 18.4,
+              "x": 949.6,
+              "y": 659.0,
+              "retired": false
+            }
+          ],
+          "trees": 85,
+          "fruits": 399,
+          "predator": [
+            772.3,
+            602.0
+          ],
+          "held": true
+        },
+        {
+          "time": 90.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 89.4,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 480.5,
+              "age": 90.1,
+              "x": 985.0,
+              "y": 551.5,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 415.0,
+              "age": 50.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 469.1,
+              "age": 23.4,
+              "x": 949.6,
+              "y": 659.0,
+              "retired": false
+            }
+          ],
+          "trees": 93,
+          "fruits": 383,
+          "predator": [
+            771.7,
+            605.7
+          ],
+          "held": true
+        },
+        {
+          "time": 95.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 38.1,
+              "age": 95.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 486.7,
+              "age": 95.1,
+              "x": 1034.9,
+              "y": 554.1,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 410.0,
+              "age": 55.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 464.1,
+              "age": 28.4,
+              "x": 949.6,
+              "y": 659.0,
+              "retired": false
+            }
+          ],
+          "trees": 88,
+          "fruits": 370,
+          "predator": [
+            773.5,
+            605.4
+          ],
+          "held": true
+        },
+        {
+          "time": 100.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 433.9,
+              "age": 100.0,
+              "x": 1034.9,
+              "y": 554.1,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 405.0,
+              "age": 60.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 459.1,
+              "age": 33.4,
+              "x": 949.6,
+              "y": 659.0,
+              "retired": false
+            }
+          ],
+          "trees": 88,
+          "fruits": 347,
+          "predator": [
+            773.1,
+            583.4
+          ],
+          "held": true
+        },
+        {
+          "time": 105.1,
+          "holder": 2,
+          "incoming": 3,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 436.2,
+              "age": 105.0,
+              "x": 1062.6,
+              "y": 565.8,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 400.0,
+              "age": 65.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 453.1,
+              "age": 38.4,
+              "x": 931.5,
+              "y": 650.5,
+              "retired": false
+            }
+          ],
+          "trees": 91,
+          "fruits": 329,
+          "predator": [
+            773.4,
+            605.4
+          ],
+          "held": true
+        },
+        {
+          "time": 110.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 405.7,
+              "age": 110.0,
+              "x": 1013.8,
+              "y": 473.9,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 380.4,
+              "age": 70.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 442.1,
+              "age": 43.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 178.7,
+              "age": 3.8,
+              "x": 980.5,
+              "y": 594.1,
+              "retired": false
+            }
+          ],
+          "trees": 91,
+          "fruits": 310,
+          "predator": [
+            773.2,
+            583.2
+          ],
+          "held": true
+        },
+        {
+          "time": 115.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 402.4,
+              "age": 115.0,
+              "x": 1037.4,
+              "y": 441.6,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 375.4,
+              "age": 75.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 437.1,
+              "age": 48.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 231.0,
+              "age": 8.8,
+              "x": 1029.0,
+              "y": 581.9,
+              "retired": false
+            }
+          ],
+          "trees": 95,
+          "fruits": 291,
+          "predator": [
+            773.2,
+            579.0
+          ],
+          "held": true
+        },
+        {
+          "time": 120.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 338.6,
+              "age": 120.0,
+              "x": 1037.4,
+              "y": 441.6,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 365.6,
+              "age": 80.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 432.1,
+              "age": 53.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 226.0,
+              "age": 13.8,
+              "x": 1029.0,
+              "y": 581.9,
+              "retired": false
+            }
+          ],
+          "trees": 94,
+          "fruits": 270,
+          "predator": [
+            772.6,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 125.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 262.4,
+              "age": 125.0,
+              "x": 978.9,
+              "y": 632.8,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 319.3,
+              "age": 85.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 427.1,
+              "age": 58.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 221.0,
+              "age": 18.8,
+              "x": 1029.0,
+              "y": 581.9,
+              "retired": false
+            }
+          ],
+          "trees": 89,
+          "fruits": 264,
+          "predator": [
+            772.9,
+            590.4
+          ],
+          "held": true
+        },
+        {
+          "time": 130.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 299.6,
+              "age": 130.0,
+              "x": 912.3,
+              "y": 629.1,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 270.4,
+              "age": 90.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 422.1,
+              "age": 63.4,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 216.0,
+              "age": 23.8,
+              "x": 1029.0,
+              "y": 581.9,
+              "retired": false
+            }
+          ],
+          "trees": 87,
+          "fruits": 260,
+          "predator": [
+            773.1,
+            604.8
+          ],
+          "held": true
+        },
+        {
+          "time": 135.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 241.2,
+              "age": 135.0,
+              "x": 864.7,
+              "y": 684.3,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 219.0,
+              "age": 95.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 410.6,
+              "age": 68.4,
+              "x": 934.5,
+              "y": 666.9,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 200.7,
+              "age": 28.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 73.7,
+              "age": 1.3,
+              "x": 861.3,
+              "y": 695.4,
+              "retired": false
+            }
+          ],
+          "trees": 85,
+          "fruits": 272,
+          "predator": [
+            773.4,
+            604.6
+          ],
+          "held": true
+        },
+        {
+          "time": 140.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 279.4,
+              "age": 140.0,
+              "x": 954.5,
+              "y": 641.2,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 165.1,
+              "age": 100.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 390.2,
+              "age": 73.4,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 195.7,
+              "age": 33.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 68.7,
+              "age": 6.3,
+              "x": 861.3,
+              "y": 695.4,
+              "retired": false
+            }
+          ],
+          "trees": 84,
+          "fruits": 267,
+          "predator": [
+            772.7,
+            608.6
+          ],
+          "held": true
+        },
+        {
+          "time": 145.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 203.2,
+              "age": 145.0,
+              "x": 954.5,
+              "y": 641.2,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 108.8,
+              "age": 105.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 347.3,
+              "age": 78.4,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 190.7,
+              "age": 38.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 86.8,
+              "age": 11.3,
+              "x": 883.7,
+              "y": 650.8,
+              "retired": false
+            }
+          ],
+          "trees": 86,
+          "fruits": 260,
+          "predator": [
+            772.1,
+            600.9
+          ],
+          "held": true
+        },
+        {
+          "time": 150.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 177.9,
+              "age": 150.0,
+              "x": 1021.4,
+              "y": 529.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 49.9,
+              "age": 110.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 301.8,
+              "age": 83.4,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 185.7,
+              "age": 43.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 81.8,
+              "age": 16.3,
+              "x": 883.7,
+              "y": 650.8,
+              "retired": false
+            }
+          ],
+          "trees": 84,
+          "fruits": 264,
+          "predator": [
+            772.4,
+            600.5
+          ],
+          "held": true
+        },
+        {
+          "time": 155.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 260.8,
+              "age": 155.0,
+              "x": 907.2,
+              "y": 656.2,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 254.8,
+              "age": 88.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 180.7,
+              "age": 48.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 74.3,
+              "age": 21.3,
+              "x": 888.7,
+              "y": 601.0,
+              "retired": false
+            }
+          ],
+          "trees": 88,
+          "fruits": 261,
+          "predator": [
+            773.8,
+            600.4
+          ],
+          "held": true
+        },
+        {
+          "time": 160.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 291.2,
+              "age": 160.0,
+              "x": 865.3,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 204.4,
+              "age": 93.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 175.7,
+              "age": 53.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 127.8,
+              "age": 26.3,
+              "x": 889.6,
+              "y": 591.1,
+              "retired": false
+            }
+          ],
+          "trees": 84,
+          "fruits": 255,
+          "predator": [
+            773.4,
+            600.5
+          ],
+          "held": true
+        },
+        {
+          "time": 165.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 261.8,
+              "age": 165.0,
+              "x": 853.7,
+              "y": 627.7,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 151.5,
+              "age": 98.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 170.7,
+              "age": 58.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 122.8,
+              "age": 31.3,
+              "x": 889.6,
+              "y": 591.1,
+              "retired": false
+            }
+          ],
+          "trees": 87,
+          "fruits": 246,
+          "predator": [
+            772.3,
+            596.1
+          ],
+          "held": true
+        },
+        {
+          "time": 170.1,
+          "holder": 4,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 173.0,
+              "age": 170.0,
+              "x": 853.7,
+              "y": 627.7,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 96.0,
+              "age": 103.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 165.7,
+              "age": 63.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 117.8,
+              "age": 36.3,
+              "x": 889.6,
+              "y": 591.1,
+              "retired": false
+            }
+          ],
+          "trees": 90,
+          "fruits": 250,
+          "predator": [
+            773.1,
+            595.8
+          ],
+          "held": true
+        },
+        {
+          "time": 175.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 132.7,
+              "age": 175.0,
+              "x": 1002.5,
+              "y": 526.5,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 38.1,
+              "age": 108.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 146.1,
+              "age": 68.8,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 109.4,
+              "age": 41.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 89,
+          "fruits": 243,
+          "predator": [
+            773.5,
+            606.4
+          ],
+          "held": true
+        },
+        {
+          "time": 180.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 32.0,
+              "age": 180.0,
+              "x": 886.1,
+              "y": 604.1,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 141.2,
+              "age": 73.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 104.4,
+              "age": 46.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 92,
+          "fruits": 243,
+          "predator": [
+            772.7,
+            590.8
+          ],
+          "held": true
+        },
+        {
+          "time": 185.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 41.7,
+              "age": 185.0,
+              "x": 875.8,
+              "y": 567.5,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 136.2,
+              "age": 78.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 99.4,
+              "age": 51.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 90,
+          "fruits": 239,
+          "predator": [
+            773.1,
+            591.1
+          ],
+          "held": true
+        },
+        {
+          "time": 190.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 91.6,
+              "age": 190.0,
+              "x": 869.2,
+              "y": 633.9,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 131.2,
+              "age": 83.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 94.4,
+              "age": 56.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 94,
+          "fruits": 250,
+          "predator": [
+            772.3,
+            602.0
+          ],
+          "held": true
+        },
+        {
+          "time": 195.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 73.2,
+              "age": 195.0,
+              "x": 959.7,
+              "y": 592.5,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 126.2,
+              "age": 88.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 89.4,
+              "age": 61.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 93,
+          "fruits": 256,
+          "predator": [
+            773.7,
+            586.7
+          ],
+          "held": true
+        },
+        {
+          "time": 200.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 31.0,
+              "age": 200.0,
+              "x": 960.6,
+              "y": 586.6,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 121.2,
+              "age": 93.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 84.4,
+              "age": 66.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 84,
+          "fruits": 257,
+          "predator": [
+            773.4,
+            597.3
+          ],
+          "held": true
+        },
+        {
+          "time": 205.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 113.8,
+              "age": 205.0,
+              "x": 991.1,
+              "y": 761.2,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 116.2,
+              "age": 98.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 79.4,
+              "age": 71.3,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 83,
+          "fruits": 254,
+          "predator": [
+            773.6,
+            582.3
+          ],
+          "held": true
+        },
+        {
+          "time": 210.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 111.3,
+              "age": 103.6,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 61.4,
+              "age": 76.3,
+              "x": 1045.9,
+              "y": 733.8,
+              "retired": true
+            }
+          ],
+          "trees": 81,
+          "fruits": 255,
+          "predator": [
+            765.1,
+            633.7
+          ],
+          "held": true
+        },
+        {
+          "time": 215.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 106.3,
+              "age": 108.6,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 54.9,
+              "age": 81.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 86,
+          "fruits": 261,
+          "predator": [
+            736.9,
+            839.6
+          ],
+          "held": false
+        },
+        {
+          "time": 220.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 101.3,
+              "age": 113.6,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 49.9,
+              "age": 86.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 84,
+          "fruits": 263,
+          "predator": [
+            396.0,
+            1092.3
+          ],
+          "held": false
+        },
+        {
+          "time": 225.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 51.9,
+              "age": 118.6,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 5,
+              "energy": 44.9,
+              "age": 91.3,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 83,
+          "fruits": 273,
+          "predator": [
+            101.4,
+            733.3
+          ],
+          "held": false
+        },
+        {
+          "time": 230.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 5,
+              "energy": 40.0,
+              "age": 96.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 81,
+          "fruits": 281,
+          "predator": [
+            319.8,
+            230.2
+          ],
+          "held": false
+        },
+        {
+          "time": 235.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 5,
+              "energy": 35.0,
+              "age": 101.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 83,
+          "fruits": 283,
+          "predator": [
+            614.4,
+            126.1
+          ],
+          "held": false
+        },
+        {
+          "time": 240.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 5,
+              "energy": 30.0,
+              "age": 106.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 80,
+          "fruits": 283,
+          "predator": [
+            836.2,
+            360.8
+          ],
+          "held": false
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "initial_trees": 3,
+      "spacing": 90,
+      "mode": "relay_birth",
+      "new_tree_spawning": false,
+      "width": 32,
+      "height": 80,
+      "founder_max_age": 90,
+      "cap": 6,
+      "retire_age": 65,
+      "preserve_food": true,
+      "cohort": true,
+      "horizon": 300,
+      "seconds": 154.7,
+      "alive": 0,
+      "generations": 1,
+      "births": [
+        {
+          "time": 43.3,
+          "parent": 1,
+          "child": 2,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 66.1,
+          "parent": 1,
+          "child": 3,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        }
+      ],
+      "handoffs": [
+        {
+          "time": 66.1,
+          "outgoing": 0,
+          "incoming": 1
+        },
+        {
+          "time": 75.3,
+          "outgoing": 1,
+          "incoming": 2
+        },
+        {
+          "time": 108.6,
+          "outgoing": 2,
+          "incoming": 3
+        }
+      ],
+      "deaths": [
+        {
+          "id": 0,
+          "time": 99.6,
+          "age": 99.6,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 1,
+          "time": 111.1,
+          "age": 111.0,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 3,
+          "time": 138.2,
+          "age": 72.1,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 2,
+          "time": 154.7,
+          "age": 111.3,
+          "cause": "depleted",
+          "generation": 1
+        }
+      ],
+      "captures": 0,
+      "food_count": 11,
+      "food_energy": 579.2,
+      "meals": [
+        {
+          "time": 40.4,
+          "energy": 58.4,
+          "agent": 1
+        },
+        {
+          "time": 43.2,
+          "energy": 59.0,
+          "agent": 1
+        },
+        {
+          "time": 43.2,
+          "energy": 45.4,
+          "agent": 1
+        },
+        {
+          "time": 52.5,
+          "energy": 22.0,
+          "agent": 1
+        },
+        {
+          "time": 52.6,
+          "energy": 59.8,
+          "agent": 1
+        },
+        {
+          "time": 53.4,
+          "energy": 51.0,
+          "agent": 2
+        },
+        {
+          "time": 55.3,
+          "energy": 51.2,
+          "agent": 1
+        },
+        {
+          "time": 56.2,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 64.3,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 66.5,
+          "energy": 53.6,
+          "agent": 0
+        },
+        {
+          "time": 68.1,
+          "energy": 58.8,
+          "agent": 2
+        }
+      ],
+      "tree_patch_empty_at": 62.5,
+      "hold_fraction": 0.9036845507433743,
+      "attention_fraction": 0.8933419521654816,
+      "first_hold_loss": 139.9,
+      "trace": [
+        {
+          "time": 0.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            772.0,
+            585.0
+          ],
+          "held": true
+        },
+        {
+          "time": 5.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            773.9,
+            592.8
+          ],
+          "held": true
+        },
+        {
+          "time": 10.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            772.9,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 15.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            772.8,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 20.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 0,
+          "predator": [
+            773.0,
+            592.5
+          ],
+          "held": true
+        },
+        {
+          "time": 25.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 2,
+          "predator": [
+            772.6,
+            603.6
+          ],
+          "held": true
+        },
+        {
+          "time": 30.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 2,
+          "predator": [
+            773.6,
+            587.9
+          ],
+          "held": true
+        },
+        {
+          "time": 35.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 114.9,
+              "age": 35.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 114.9,
+              "age": 35.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 4,
+          "predator": [
+            772.3,
+            598.8
+          ],
+          "held": true
+        },
+        {
+          "time": 40.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 109.9,
+              "age": 40.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 109.9,
+              "age": 40.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 7,
+          "predator": [
+            773.9,
+            613.7
+          ],
+          "held": true
+        },
+        {
+          "time": 45.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 104.9,
+              "age": 45.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 163.2,
+              "age": 45.1,
+              "x": 929.8,
+              "y": 630.6,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 73.2,
+              "age": 1.8,
+              "x": 952.3,
+              "y": 633.8,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 5,
+          "predator": [
+            772.9,
+            605.6
+          ],
+          "held": true
+        },
+        {
+          "time": 50.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 99.9,
+              "age": 50.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 158.2,
+              "age": 50.1,
+              "x": 929.8,
+              "y": 630.6,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 68.2,
+              "age": 6.8,
+              "x": 952.3,
+              "y": 633.8,
+              "retired": false
+            }
+          ],
+          "trees": 3,
+          "fruits": 7,
+          "predator": [
+            773.5,
+            594.6
+          ],
+          "held": true
+        },
+        {
+          "time": 55.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 94.9,
+              "age": 55.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 228.0,
+              "age": 55.1,
+              "x": 880.5,
+              "y": 586.9,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 113.7,
+              "age": 11.8,
+              "x": 947.0,
+              "y": 642.2,
+              "retired": false
+            }
+          ],
+          "trees": 2,
+          "fruits": 5,
+          "predator": [
+            772.2,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 60.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 89.9,
+              "age": 60.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 328.2,
+              "age": 60.1,
+              "x": 899.2,
+              "y": 705.5,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 108.7,
+              "age": 16.8,
+              "x": 947.0,
+              "y": 642.2,
+              "retired": false
+            }
+          ],
+          "trees": 1,
+          "fruits": 3,
+          "predator": [
+            773.4,
+            612.7
+          ],
+          "held": true
+        },
+        {
+          "time": 65.1,
+          "holder": 0,
+          "incoming": 1,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 84.9,
+              "age": 65.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 374.7,
+              "age": 65.1,
+              "x": 905.6,
+              "y": 551.3,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 103.7,
+              "age": 21.8,
+              "x": 947.0,
+              "y": 642.2,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 2,
+          "predator": [
+            771.9,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 70.1,
+          "holder": 1,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 118.9,
+              "age": 70.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 264.9,
+              "age": 70.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 155.0,
+              "age": 26.8,
+              "x": 932.8,
+              "y": 594.3,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 71.0,
+              "age": 4.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.4,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 75.1,
+          "holder": 1,
+          "incoming": 2,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 113.9,
+              "age": 75.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 259.9,
+              "age": 75.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 145.5,
+              "age": 31.8,
+              "x": 842.9,
+              "y": 599.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 66.0,
+              "age": 9.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            774.0,
+            586.6
+          ],
+          "held": true
+        },
+        {
+          "time": 80.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 108.9,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 240.3,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 139.5,
+              "age": 36.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 61.0,
+              "age": 14.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.3,
+            601.9
+          ],
+          "held": true
+        },
+        {
+          "time": 85.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 103.9,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 235.3,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 134.5,
+              "age": 41.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 56.0,
+              "age": 19.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            772.3,
+            602.0
+          ],
+          "held": true
+        },
+        {
+          "time": 90.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 98.0,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 229.4,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 129.5,
+              "age": 46.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 51.0,
+              "age": 24.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            771.7,
+            605.7
+          ],
+          "held": true
+        },
+        {
+          "time": 95.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 46.7,
+              "age": 95.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 178.1,
+              "age": 95.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 124.5,
+              "age": 51.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 46.0,
+              "age": 29.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.5,
+            605.4
+          ],
+          "held": true
+        },
+        {
+          "time": 100.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 125.4,
+              "age": 100.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 119.5,
+              "age": 56.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 41.0,
+              "age": 34.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.1,
+            583.4
+          ],
+          "held": true
+        },
+        {
+          "time": 105.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 69.1,
+              "age": 105.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 114.5,
+              "age": 61.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 36.0,
+              "age": 39.0,
+              "x": 848.7,
+              "y": 595.8,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.4,
+            605.4
+          ],
+          "held": true
+        },
+        {
+          "time": 110.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 10.3,
+              "age": 110.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 102.0,
+              "age": 66.8,
+              "x": 951.6,
+              "y": 677.2,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 29.7,
+              "age": 44.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.2,
+            583.2
+          ],
+          "held": true
+        },
+        {
+          "time": 115.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 90.0,
+              "age": 71.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 24.7,
+              "age": 49.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.2,
+            579.0
+          ],
+          "held": true
+        },
+        {
+          "time": 120.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 85.0,
+              "age": 76.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 19.7,
+              "age": 54.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            772.6,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 125.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 80.0,
+              "age": 81.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 14.7,
+              "age": 59.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            772.9,
+            590.4
+          ],
+          "held": true
+        },
+        {
+          "time": 130.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 75.0,
+              "age": 86.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 9.7,
+              "age": 64.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.1,
+            604.8
+          ],
+          "held": true
+        },
+        {
+          "time": 135.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 70.0,
+              "age": 91.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 4.7,
+              "age": 69.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            773.4,
+            604.6
+          ],
+          "held": true
+        },
+        {
+          "time": 140.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 65.0,
+              "age": 96.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            706.9,
+            586.1
+          ],
+          "held": false
+        },
+        {
+          "time": 145.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 60.0,
+              "age": 101.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            177.7,
+            705.5
+          ],
+          "held": false
+        },
+        {
+          "time": 150.1,
+          "holder": null,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 52.9,
+              "age": 106.7,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            }
+          ],
+          "trees": 0,
+          "fruits": 0,
+          "predator": [
+            285.3,
+            1113.6
+          ],
+          "held": false
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "initial_trees": 3,
+      "spacing": 90,
+      "mode": "relay_birth",
+      "new_tree_spawning": true,
+      "width": 32,
+      "height": 80,
+      "founder_max_age": 90,
+      "cap": 6,
+      "retire_age": 65,
+      "preserve_food": true,
+      "cohort": true,
+      "horizon": 300,
+      "seconds": 300.0,
+      "alive": 1,
+      "generations": 3,
+      "births": [
+        {
+          "time": 42.1,
+          "parent": 1,
+          "child": 2,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 66.9,
+          "parent": 1,
+          "child": 3,
+          "generation": 1,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 76.7,
+          "parent": 2,
+          "child": 4,
+          "generation": 2,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 109.9,
+          "parent": 3,
+          "child": 5,
+          "generation": 2,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 134.0,
+          "parent": 4,
+          "child": 6,
+          "generation": 3,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 177.3,
+          "parent": 4,
+          "child": 7,
+          "generation": 3,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        },
+        {
+          "time": 204.4,
+          "parent": 4,
+          "child": 8,
+          "generation": 3,
+          "energy_cost": 100,
+          "child_energy": 75.0
+        }
+      ],
+      "handoffs": [
+        {
+          "time": 66.9,
+          "outgoing": 0,
+          "incoming": 1
+        },
+        {
+          "time": 76.7,
+          "outgoing": 1,
+          "incoming": 2
+        },
+        {
+          "time": 109.9,
+          "outgoing": 2,
+          "incoming": 3
+        },
+        {
+          "time": 134.0,
+          "outgoing": 3,
+          "incoming": 5
+        },
+        {
+          "time": 177.3,
+          "outgoing": 5,
+          "incoming": 6
+        },
+        {
+          "time": 204.4,
+          "outgoing": 6,
+          "incoming": 7
+        },
+        {
+          "time": 214.8,
+          "outgoing": 7,
+          "incoming": 8
+        },
+        {
+          "time": 227.5,
+          "outgoing": 8,
+          "incoming": 7
+        },
+        {
+          "time": 240.4,
+          "outgoing": 7,
+          "incoming": 8
+        }
+      ],
+      "deaths": [
+        {
+          "id": 0,
+          "time": 94.6,
+          "age": 94.6,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 1,
+          "time": 117.8,
+          "age": 117.7,
+          "cause": "depleted",
+          "generation": 0
+        },
+        {
+          "id": 2,
+          "time": 153.8,
+          "age": 111.6,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 3,
+          "time": 168.6,
+          "age": 101.6,
+          "cause": "depleted",
+          "generation": 1
+        },
+        {
+          "id": 6,
+          "time": 230.3,
+          "age": 96.3,
+          "cause": "depleted",
+          "generation": 3
+        },
+        {
+          "id": 5,
+          "time": 247.8,
+          "age": 137.9,
+          "cause": "depleted",
+          "generation": 2
+        },
+        {
+          "id": 7,
+          "time": 258.6,
+          "age": 81.1,
+          "cause": "depleted",
+          "generation": 3
+        },
+        {
+          "id": 4,
+          "time": 261.8,
+          "age": 185.0,
+          "cause": "depleted",
+          "generation": 2
+        }
+      ],
+      "captures": 0,
+      "food_count": 86,
+      "food_energy": 4282.8,
+      "meals": [
+        {
+          "time": 28.5,
+          "energy": 20,
+          "agent": 1
+        },
+        {
+          "time": 42.0,
+          "energy": 58.8,
+          "agent": 1
+        },
+        {
+          "time": 44.8,
+          "energy": 58.6,
+          "agent": 1
+        },
+        {
+          "time": 44.8,
+          "energy": 38.8,
+          "agent": 1
+        },
+        {
+          "time": 45.3,
+          "energy": 58.8,
+          "agent": 1
+        },
+        {
+          "time": 47.6,
+          "energy": 59.8,
+          "agent": 1
+        },
+        {
+          "time": 49.8,
+          "energy": 59.2,
+          "agent": 1
+        },
+        {
+          "time": 52.5,
+          "energy": 27.2,
+          "agent": 2
+        },
+        {
+          "time": 60.1,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 64.3,
+          "energy": 60.0,
+          "agent": 1
+        },
+        {
+          "time": 65.1,
+          "energy": 31.4,
+          "agent": 1
+        },
+        {
+          "time": 65.2,
+          "energy": 58.6,
+          "agent": 2
+        },
+        {
+          "time": 67.4,
+          "energy": 60.0,
+          "agent": 2
+        },
+        {
+          "time": 70.8,
+          "energy": 59.6,
+          "agent": 2
+        },
+        {
+          "time": 72.5,
+          "energy": 30.8,
+          "agent": 2
+        },
+        {
+          "time": 73.1,
+          "energy": 60.0,
+          "agent": 2
+        },
+        {
+          "time": 74.8,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 75.8,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 76.2,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 76.4,
+          "energy": 60.0,
+          "agent": 2
+        },
+        {
+          "time": 77.7,
+          "energy": 59.8,
+          "agent": 3
+        },
+        {
+          "time": 78.6,
+          "energy": 59.4,
+          "agent": 4
+        },
+        {
+          "time": 79.1,
+          "energy": 32.6,
+          "agent": 3
+        },
+        {
+          "time": 79.4,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 82.4,
+          "energy": 33.6,
+          "agent": 3
+        },
+        {
+          "time": 83.1,
+          "energy": 60.0,
+          "agent": 3
+        },
+        {
+          "time": 87.0,
+          "energy": 59.8,
+          "agent": 4
+        },
+        {
+          "time": 91.2,
+          "energy": 42.2,
+          "agent": 3
+        },
+        {
+          "time": 93.8,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 95.2,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 95.5,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 108.4,
+          "energy": 38.0,
+          "agent": 3
+        },
+        {
+          "time": 111.8,
+          "energy": 60.0,
+          "agent": 5
+        },
+        {
+          "time": 112.7,
+          "energy": 60.0,
+          "agent": 5
+        },
+        {
+          "time": 114.3,
+          "energy": 60.0,
+          "agent": 5
+        },
+        {
+          "time": 119.2,
+          "energy": 59.2,
+          "agent": 5
+        },
+        {
+          "time": 120.6,
+          "energy": 59.4,
+          "agent": 5
+        },
+        {
+          "time": 124.5,
+          "energy": 58.6,
+          "agent": 5
+        },
+        {
+          "time": 128.1,
+          "energy": 60.0,
+          "agent": 5
+        },
+        {
+          "time": 129.5,
+          "energy": 60.0,
+          "agent": 5
+        },
+        {
+          "time": 133.1,
+          "energy": 60.0,
+          "agent": 5
+        },
+        {
+          "time": 133.3,
+          "energy": 36.8,
+          "agent": 5
+        },
+        {
+          "time": 136.2,
+          "energy": 25.4,
+          "agent": 3
+        },
+        {
+          "time": 140.8,
+          "energy": 28.6,
+          "agent": 4
+        },
+        {
+          "time": 142.0,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 144.8,
+          "energy": 35.4,
+          "agent": 6
+        },
+        {
+          "time": 145.1,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 149.5,
+          "energy": 60.0,
+          "agent": 6
+        },
+        {
+          "time": 157.0,
+          "energy": 60.0,
+          "agent": 6
+        },
+        {
+          "time": 165.7,
+          "energy": 36.8,
+          "agent": 6
+        },
+        {
+          "time": 165.7,
+          "energy": 59.8,
+          "agent": 6
+        },
+        {
+          "time": 174.1,
+          "energy": 60.0,
+          "agent": 6
+        },
+        {
+          "time": 188.6,
+          "energy": 41.4,
+          "agent": 7
+        },
+        {
+          "time": 189.4,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 197.3,
+          "energy": 58.8,
+          "agent": 4
+        },
+        {
+          "time": 200.0,
+          "energy": 46.8,
+          "agent": 4
+        },
+        {
+          "time": 200.3,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 200.7,
+          "energy": 32.0,
+          "agent": 4
+        },
+        {
+          "time": 201.1,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 205.5,
+          "energy": 21.4,
+          "agent": 6
+        },
+        {
+          "time": 206.8,
+          "energy": 42.8,
+          "agent": 4
+        },
+        {
+          "time": 206.8,
+          "energy": 20.4,
+          "agent": 5
+        },
+        {
+          "time": 207.2,
+          "energy": 35.6,
+          "agent": 8
+        },
+        {
+          "time": 207.5,
+          "energy": 58.8,
+          "agent": 4
+        },
+        {
+          "time": 208.0,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 210.8,
+          "energy": 59.0,
+          "agent": 4
+        },
+        {
+          "time": 213.4,
+          "energy": 59.2,
+          "agent": 4
+        },
+        {
+          "time": 216.0,
+          "energy": 59.0,
+          "agent": 7
+        },
+        {
+          "time": 218.5,
+          "energy": 59.8,
+          "agent": 4
+        },
+        {
+          "time": 225.8,
+          "energy": 34.8,
+          "agent": 4
+        },
+        {
+          "time": 227.4,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 227.7,
+          "energy": 59.8,
+          "agent": 4
+        },
+        {
+          "time": 229.0,
+          "energy": 60.0,
+          "agent": 8
+        },
+        {
+          "time": 230.2,
+          "energy": 59.4,
+          "agent": 4
+        },
+        {
+          "time": 234.5,
+          "energy": 53.8,
+          "agent": 4
+        },
+        {
+          "time": 237.6,
+          "energy": 60.0,
+          "agent": 4
+        },
+        {
+          "time": 238.7,
+          "energy": 60.0,
+          "agent": 8
+        },
+        {
+          "time": 243.2,
+          "energy": 39.2,
+          "agent": 7
+        },
+        {
+          "time": 246.0,
+          "energy": 54.2,
+          "agent": 7
+        },
+        {
+          "time": 252.1,
+          "energy": 24.2,
+          "agent": 4
+        },
+        {
+          "time": 252.3,
+          "energy": 21.8,
+          "agent": 4
+        },
+        {
+          "time": 252.8,
+          "energy": 32.8,
+          "agent": 4
+        },
+        {
+          "time": 256.1,
+          "energy": 36.2,
+          "agent": 4
+        },
+        {
+          "time": 257.3,
+          "energy": 21.8,
+          "agent": 4
+        },
+        {
+          "time": 258.9,
+          "energy": 21.8,
+          "agent": 4
+        },
+        {
+          "time": 260.5,
+          "energy": 21.0,
+          "agent": 4
+        }
+      ],
+      "tree_patch_empty_at": null,
+      "hold_fraction": 1.0,
+      "attention_fraction": 0.982,
+      "first_hold_loss": null,
+      "trace": [
+        {
+          "time": 0.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 149.9,
+              "age": 0.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 4,
+          "fruits": 0,
+          "predator": [
+            772.0,
+            585.0
+          ],
+          "held": true
+        },
+        {
+          "time": 5.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 144.9,
+              "age": 5.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 43,
+          "fruits": 0,
+          "predator": [
+            773.9,
+            592.8
+          ],
+          "held": true
+        },
+        {
+          "time": 10.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 139.9,
+              "age": 10.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 59,
+          "fruits": 0,
+          "predator": [
+            772.9,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 15.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 134.9,
+              "age": 15.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 73,
+          "fruits": 0,
+          "predator": [
+            772.8,
+            614.7
+          ],
+          "held": true
+        },
+        {
+          "time": 20.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 129.9,
+              "age": 20.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 86,
+          "fruits": 0,
+          "predator": [
+            773.0,
+            592.5
+          ],
+          "held": true
+        },
+        {
+          "time": 25.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 124.9,
+              "age": 25.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 97,
+          "fruits": 14,
+          "predator": [
+            772.6,
+            603.6
+          ],
+          "held": true
+        },
+        {
+          "time": 30.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 119.9,
+              "age": 30.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 139.9,
+              "age": 30.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 103,
+          "fruits": 36,
+          "predator": [
+            773.6,
+            587.9
+          ],
+          "held": true
+        },
+        {
+          "time": 35.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 114.9,
+              "age": 35.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 134.9,
+              "age": 35.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 115,
+          "fruits": 64,
+          "predator": [
+            772.3,
+            598.8
+          ],
+          "held": true
+        },
+        {
+          "time": 40.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 109.9,
+              "age": 40.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 129.9,
+              "age": 40.1,
+              "x": 913.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 121,
+          "fruits": 105,
+          "predator": [
+            773.9,
+            613.7
+          ],
+          "held": true
+        },
+        {
+          "time": 45.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 104.9,
+              "age": 45.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 175.6,
+              "age": 45.1,
+              "x": 906.2,
+              "y": 584.3,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 72.0,
+              "age": 3.0,
+              "x": 889.6,
+              "y": 545.0,
+              "retired": false
+            }
+          ],
+          "trees": 130,
+          "fruits": 136,
+          "predator": [
+            772.9,
+            605.6
+          ],
+          "held": true
+        },
+        {
+          "time": 50.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 99.9,
+              "age": 50.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 338.4,
+              "age": 50.1,
+              "x": 949.0,
+              "y": 589.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 67.0,
+              "age": 8.0,
+              "x": 889.6,
+              "y": 545.0,
+              "retired": false
+            }
+          ],
+          "trees": 133,
+          "fruits": 183,
+          "predator": [
+            773.5,
+            594.6
+          ],
+          "held": true
+        },
+        {
+          "time": 55.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 94.9,
+              "age": 55.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 333.4,
+              "age": 55.1,
+              "x": 949.0,
+              "y": 589.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 87.2,
+              "age": 13.0,
+              "x": 871.6,
+              "y": 509.3,
+              "retired": false
+            }
+          ],
+          "trees": 137,
+          "fruits": 253,
+          "predator": [
+            772.2,
+            601.4
+          ],
+          "held": true
+        },
+        {
+          "time": 60.1,
+          "holder": 0,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 89.9,
+              "age": 60.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 323.4,
+              "age": 60.1,
+              "x": 882.9,
+              "y": 664.7,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 82.2,
+              "age": 18.0,
+              "x": 871.6,
+              "y": 509.3,
+              "retired": false
+            }
+          ],
+          "trees": 120,
+          "fruits": 311,
+          "predator": [
+            773.4,
+            612.7
+          ],
+          "held": true
+        },
+        {
+          "time": 65.1,
+          "holder": 0,
+          "incoming": 1,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 84.9,
+              "age": 65.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 1,
+              "energy": 430.9,
+              "age": 65.1,
+              "x": 979.0,
+              "y": 678.2,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 76.7,
+              "age": 23.0,
+              "x": 864.1,
+              "y": 515.9,
+              "retired": false
+            }
+          ],
+          "trees": 97,
+          "fruits": 350,
+          "predator": [
+            771.9,
+            597.7
+          ],
+          "held": true
+        },
+        {
+          "time": 70.1,
+          "holder": 1,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 65.3,
+              "age": 70.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 348.6,
+              "age": 70.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 182.3,
+              "age": 28.0,
+              "x": 948.1,
+              "y": 618.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 71.8,
+              "age": 3.2,
+              "x": 819.9,
+              "y": 616.1,
+              "retired": false
+            }
+          ],
+          "trees": 95,
+          "fruits": 379,
+          "predator": [
+            773.4,
+            597.3
+          ],
+          "held": true
+        },
+        {
+          "time": 75.1,
+          "holder": 1,
+          "incoming": 2,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 60.3,
+              "age": 75.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 343.6,
+              "age": 75.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 2,
+              "energy": 312.2,
+              "age": 33.0,
+              "x": 916.9,
+              "y": 479.5,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 114.3,
+              "age": 8.2,
+              "x": 989.4,
+              "y": 489.0,
+              "retired": false
+            }
+          ],
+          "trees": 92,
+          "fruits": 399,
+          "predator": [
+            773.7,
+            597.0
+          ],
+          "held": true
+        },
+        {
+          "time": 80.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 55.3,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 324.0,
+              "age": 80.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 238.2,
+              "age": 38.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 362.2,
+              "age": 13.2,
+              "x": 1080.3,
+              "y": 695.1,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 123.5,
+              "age": 3.4,
+              "x": 954.5,
+              "y": 709.1,
+              "retired": false
+            }
+          ],
+          "trees": 95,
+          "fruits": 402,
+          "predator": [
+            773.7,
+            596.7
+          ],
+          "held": true
+        },
+        {
+          "time": 85.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 50.3,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 319.0,
+              "age": 85.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 233.2,
+              "age": 43.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 440.8,
+              "age": 18.2,
+              "x": 1079.9,
+              "y": 495.1,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 118.5,
+              "age": 8.4,
+              "x": 954.5,
+              "y": 709.1,
+              "retired": false
+            }
+          ],
+          "trees": 96,
+          "fruits": 404,
+          "predator": [
+            773.7,
+            596.0
+          ],
+          "held": true
+        },
+        {
+          "time": 90.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 0,
+              "energy": 44.4,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 1,
+              "energy": 313.1,
+              "age": 90.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 228.2,
+              "age": 48.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 435.8,
+              "age": 23.2,
+              "x": 1079.9,
+              "y": 495.1,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 168.3,
+              "age": 13.4,
+              "x": 1054.5,
+              "y": 710.8,
+              "retired": false
+            }
+          ],
+          "trees": 100,
+          "fruits": 386,
+          "predator": [
+            772.5,
+            591.7
+          ],
+          "held": true
+        },
+        {
+          "time": 95.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 262.8,
+              "age": 95.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 223.2,
+              "age": 53.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 472.5,
+              "age": 28.2,
+              "x": 1075.3,
+              "y": 486.2,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 204.3,
+              "age": 18.4,
+              "x": 933.6,
+              "y": 462.5,
+              "retired": false
+            }
+          ],
+          "trees": 103,
+          "fruits": 378,
+          "predator": [
+            773.9,
+            591.5
+          ],
+          "held": true
+        },
+        {
+          "time": 100.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 209.0,
+              "age": 100.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 218.2,
+              "age": 58.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 467.5,
+              "age": 33.2,
+              "x": 1075.3,
+              "y": 486.2,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 316.8,
+              "age": 23.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            }
+          ],
+          "trees": 101,
+          "fruits": 351,
+          "predator": [
+            772.9,
+            602.3
+          ],
+          "held": true
+        },
+        {
+          "time": 105.1,
+          "holder": 2,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 152.8,
+              "age": 105.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 213.2,
+              "age": 63.0,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 3,
+              "energy": 462.5,
+              "age": 38.2,
+              "x": 1075.3,
+              "y": 486.2,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 311.8,
+              "age": 28.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            }
+          ],
+          "trees": 104,
+          "fruits": 314,
+          "predator": [
+            773.4,
+            609.0
+          ],
+          "held": true
+        },
+        {
+          "time": 110.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 94.0,
+              "age": 110.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 207.2,
+              "age": 68.0,
+              "x": 840.1,
+              "y": 610.3,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 381.7,
+              "age": 43.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 306.8,
+              "age": 33.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 74.3,
+              "age": 0.2,
+              "x": 832.6,
+              "y": 602.6,
+              "retired": false
+            }
+          ],
+          "trees": 105,
+          "fruits": 289,
+          "predator": [
+            772.5,
+            608.6
+          ],
+          "held": true
+        },
+        {
+          "time": 115.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 1,
+              "energy": 32.7,
+              "age": 115.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 2,
+              "energy": 188.6,
+              "age": 73.0,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 376.7,
+              "age": 48.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 301.8,
+              "age": 38.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 227.8,
+              "age": 5.2,
+              "x": 1026.8,
+              "y": 490.0,
+              "retired": false
+            }
+          ],
+          "trees": 109,
+          "fruits": 288,
+          "predator": [
+            773.2,
+            612.6
+          ],
+          "held": true
+        },
+        {
+          "time": 120.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 183.7,
+              "age": 77.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 371.7,
+              "age": 53.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 296.8,
+              "age": 43.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 277.5,
+              "age": 10.2,
+              "x": 1052.6,
+              "y": 532.8,
+              "retired": false
+            }
+          ],
+          "trees": 108,
+          "fruits": 285,
+          "predator": [
+            773.4,
+            612.5
+          ],
+          "held": true
+        },
+        {
+          "time": 125.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 178.7,
+              "age": 82.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 366.7,
+              "age": 58.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 291.8,
+              "age": 48.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 385.5,
+              "age": 15.2,
+              "x": 1057.9,
+              "y": 462.0,
+              "retired": false
+            }
+          ],
+          "trees": 104,
+          "fruits": 291,
+          "predator": [
+            773.9,
+            601.8
+          ],
+          "held": true
+        },
+        {
+          "time": 130.1,
+          "holder": 3,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 173.7,
+              "age": 87.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 343.1,
+              "age": 63.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 4,
+              "energy": 286.8,
+              "age": 53.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 484.0,
+              "age": 20.2,
+              "x": 1012.4,
+              "y": 677.3,
+              "retired": false
+            }
+          ],
+          "trees": 106,
+          "fruits": 297,
+          "predator": [
+            772.6,
+            594.8
+          ],
+          "held": true
+        },
+        {
+          "time": 135.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 168.7,
+              "age": 92.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 299.8,
+              "age": 68.2,
+              "x": 917.3,
+              "y": 656.6,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 181.8,
+              "age": 58.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 495.6,
+              "age": 25.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 73.9,
+              "age": 1.1,
+              "x": 900.0,
+              "y": 508.2,
+              "retired": false
+            }
+          ],
+          "trees": 99,
+          "fruits": 292,
+          "predator": [
+            772.6,
+            594.4
+          ],
+          "held": true
+        },
+        {
+          "time": 140.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 155.9,
+              "age": 97.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 275.7,
+              "age": 73.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 176.8,
+              "age": 63.4,
+              "x": 924.4,
+              "y": 492.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 490.6,
+              "age": 30.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 68.9,
+              "age": 6.1,
+              "x": 900.0,
+              "y": 508.2,
+              "retired": false
+            }
+          ],
+          "trees": 92,
+          "fruits": 297,
+          "predator": [
+            771.7,
+            590.2
+          ],
+          "held": true
+        },
+        {
+          "time": 145.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 100.7,
+              "age": 102.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 232.8,
+              "age": 78.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 246.9,
+              "age": 68.4,
+              "x": 1024.9,
+              "y": 726.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 485.6,
+              "age": 35.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 95.3,
+              "age": 11.1,
+              "x": 923.8,
+              "y": 431.8,
+              "retired": false
+            }
+          ],
+          "trees": 85,
+          "fruits": 300,
+          "predator": [
+            773.3,
+            610.8
+          ],
+          "held": true
+        },
+        {
+          "time": 150.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 2,
+              "energy": 43.0,
+              "age": 107.9,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 3,
+              "energy": 187.5,
+              "age": 83.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 301.4,
+              "age": 73.4,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 480.6,
+              "age": 40.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 136.3,
+              "age": 16.1,
+              "x": 979.5,
+              "y": 706.2,
+              "retired": false
+            }
+          ],
+          "trees": 83,
+          "fruits": 307,
+          "predator": [
+            773.0,
+            611.1
+          ],
+          "held": true
+        },
+        {
+          "time": 155.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 3,
+              "energy": 140.6,
+              "age": 88.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 296.4,
+              "age": 78.4,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 475.6,
+              "age": 45.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 131.3,
+              "age": 21.1,
+              "x": 979.5,
+              "y": 706.2,
+              "retired": false
+            }
+          ],
+          "trees": 84,
+          "fruits": 308,
+          "predator": [
+            773.6,
+            610.9
+          ],
+          "held": true
+        },
+        {
+          "time": 160.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 3,
+              "energy": 90.2,
+              "age": 93.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 291.4,
+              "age": 83.4,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 470.6,
+              "age": 50.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 178.8,
+              "age": 26.1,
+              "x": 1040.5,
+              "y": 569.2,
+              "retired": false
+            }
+          ],
+          "trees": 88,
+          "fruits": 300,
+          "predator": [
+            773.9,
+            588.5
+          ],
+          "held": true
+        },
+        {
+          "time": 165.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 3,
+              "energy": 37.4,
+              "age": 98.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 4,
+              "energy": 286.4,
+              "age": 88.4,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 465.6,
+              "age": 55.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 172.3,
+              "age": 31.1,
+              "x": 1018.5,
+              "y": 548.8,
+              "retired": false
+            }
+          ],
+          "trees": 90,
+          "fruits": 278,
+          "predator": [
+            772.6,
+            584.5
+          ],
+          "held": true
+        },
+        {
+          "time": 170.1,
+          "holder": 5,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 281.5,
+              "age": 93.3,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 460.6,
+              "age": 60.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 260.4,
+              "age": 36.1,
+              "x": 967.2,
+              "y": 501.1,
+              "retired": false
+            }
+          ],
+          "trees": 90,
+          "fruits": 271,
+          "predator": [
+            773.7,
+            606.1
+          ],
+          "held": true
+        },
+        {
+          "time": 175.1,
+          "holder": 5,
+          "incoming": 6,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 276.5,
+              "age": 98.3,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 455.6,
+              "age": 65.2,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 6,
+              "energy": 303.9,
+              "age": 41.1,
+              "x": 1016.7,
+              "y": 691.4,
+              "retired": false
+            }
+          ],
+          "trees": 91,
+          "fruits": 255,
+          "predator": [
+            772.9,
+            595.0
+          ],
+          "held": true
+        },
+        {
+          "time": 180.1,
+          "holder": 6,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 171.5,
+              "age": 103.3,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 436.6,
+              "age": 70.2,
+              "x": 1063.1,
+              "y": 744.1,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 288.2,
+              "age": 46.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 72.2,
+              "age": 2.8,
+              "x": 1003.4,
+              "y": 727.6,
+              "retired": false
+            }
+          ],
+          "trees": 98,
+          "fruits": 246,
+          "predator": [
+            773.3,
+            610.0
+          ],
+          "held": true
+        },
+        {
+          "time": 185.1,
+          "holder": 6,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 166.5,
+              "age": 108.3,
+              "x": 1024.6,
+              "y": 736.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 431.0,
+              "age": 75.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 283.2,
+              "age": 51.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 67.2,
+              "age": 7.8,
+              "x": 1003.4,
+              "y": 727.6,
+              "retired": false
+            }
+          ],
+          "trees": 93,
+          "fruits": 243,
+          "predator": [
+            772.2,
+            587.6
+          ],
+          "held": true
+        },
+        {
+          "time": 190.1,
+          "holder": 6,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 215.0,
+              "age": 113.3,
+              "x": 899.9,
+              "y": 699.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 426.0,
+              "age": 80.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 278.2,
+              "age": 56.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 100.1,
+              "age": 12.8,
+              "x": 1064.4,
+              "y": 761.6,
+              "retired": false
+            }
+          ],
+          "trees": 96,
+          "fruits": 257,
+          "predator": [
+            773.3,
+            598.4
+          ],
+          "held": true
+        },
+        {
+          "time": 195.1,
+          "holder": 6,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 174.9,
+              "age": 118.3,
+              "x": 899.9,
+              "y": 699.8,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 421.0,
+              "age": 85.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 273.2,
+              "age": 61.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 95.1,
+              "age": 17.8,
+              "x": 1064.4,
+              "y": 761.6,
+              "retired": false
+            }
+          ],
+          "trees": 96,
+          "fruits": 263,
+          "predator": [
+            773.2,
+            583.4
+          ],
+          "held": true
+        },
+        {
+          "time": 200.1,
+          "holder": 6,
+          "incoming": 7,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 200.1,
+              "age": 123.3,
+              "x": 986.6,
+              "y": 518.4,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 416.0,
+              "age": 90.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 266.9,
+              "age": 66.1,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 87.2,
+              "age": 22.8,
+              "x": 1015.3,
+              "y": 728.7,
+              "retired": false
+            }
+          ],
+          "trees": 98,
+          "fruits": 264,
+          "predator": [
+            773.6,
+            594.2
+          ],
+          "held": true
+        },
+        {
+          "time": 205.1,
+          "holder": 7,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 179.7,
+              "age": 128.3,
+              "x": 1056.4,
+              "y": 469.6,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 411.0,
+              "age": 95.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 224.0,
+              "age": 71.1,
+              "x": 883.0,
+              "y": 636.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 70.6,
+              "age": 27.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 74.3,
+              "age": 0.7,
+              "x": 1067.2,
+              "y": 469.5,
+              "retired": false
+            }
+          ],
+          "trees": 103,
+          "fruits": 260,
+          "predator": [
+            772.8,
+            609.1
+          ],
+          "held": true
+        },
+        {
+          "time": 210.1,
+          "holder": 7,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 262.4,
+              "age": 133.3,
+              "x": 920.0,
+              "y": 571.0,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 426.4,
+              "age": 100.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 192.5,
+              "age": 76.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 65.6,
+              "age": 32.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 102.4,
+              "age": 5.7,
+              "x": 1024.0,
+              "y": 494.6,
+              "retired": false
+            }
+          ],
+          "trees": 101,
+          "fruits": 280,
+          "predator": [
+            772.8,
+            601.2
+          ],
+          "held": true
+        },
+        {
+          "time": 215.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 302.1,
+              "age": 138.3,
+              "x": 905.4,
+              "y": 564.9,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 421.4,
+              "age": 105.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 148.2,
+              "age": 81.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 59.8,
+              "age": 37.8,
+              "x": 829.7,
+              "y": 585.4,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 86.1,
+              "age": 10.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 100,
+          "fruits": 299,
+          "predator": [
+            772.9,
+            590.5
+          ],
+          "held": true
+        },
+        {
+          "time": 220.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 281.5,
+              "age": 143.3,
+              "x": 976.1,
+              "y": 494.2,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 368.9,
+              "age": 110.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 101.4,
+              "age": 86.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 111.1,
+              "age": 42.8,
+              "x": 852.2,
+              "y": 536.5,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 81.1,
+              "age": 15.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 96,
+          "fruits": 308,
+          "predator": [
+            773.4,
+            582.8
+          ],
+          "held": true
+        },
+        {
+          "time": 225.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 203.6,
+              "age": 148.3,
+              "x": 976.1,
+              "y": 494.2,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 307.5,
+              "age": 115.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 52.1,
+              "age": 91.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 106.1,
+              "age": 47.8,
+              "x": 852.2,
+              "y": 536.5,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 76.1,
+              "age": 20.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 88,
+          "fruits": 317,
+          "predator": [
+            773.4,
+            582.7
+          ],
+          "held": true
+        },
+        {
+          "time": 230.1,
+          "holder": 7,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 261.3,
+              "age": 153.3,
+              "x": 934.4,
+              "y": 722.2,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 243.6,
+              "age": 120.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 6,
+              "energy": 0.2,
+              "age": 96.1,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 97.6,
+              "age": 52.8,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 123.1,
+              "age": 25.7,
+              "x": 979.2,
+              "y": 634.8,
+              "retired": false
+            }
+          ],
+          "trees": 85,
+          "fruits": 318,
+          "predator": [
+            772.6,
+            582.7
+          ],
+          "held": true
+        },
+        {
+          "time": 235.1,
+          "holder": 7,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 289.0,
+              "age": 158.3,
+              "x": 966.6,
+              "y": 689.9,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 177.2,
+              "age": 125.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 92.7,
+              "age": 57.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 115.6,
+              "age": 30.7,
+              "x": 1004.5,
+              "y": 591.7,
+              "retired": false
+            }
+          ],
+          "trees": 87,
+          "fruits": 320,
+          "predator": [
+            773.5,
+            604.4
+          ],
+          "held": true
+        },
+        {
+          "time": 240.1,
+          "holder": 7,
+          "incoming": 8,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 254.1,
+              "age": 163.3,
+              "x": 1048.5,
+              "y": 518.5,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 108.4,
+              "age": 130.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 71.1,
+              "age": 62.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 156.1,
+              "age": 35.7,
+              "x": 839.0,
+              "y": 579.9,
+              "retired": false
+            }
+          ],
+          "trees": 87,
+          "fruits": 304,
+          "predator": [
+            773.1,
+            593.2
+          ],
+          "held": true
+        },
+        {
+          "time": 245.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 166.2,
+              "age": 168.3,
+              "x": 1048.5,
+              "y": 518.5,
+              "retired": false
+            },
+            {
+              "id": 5,
+              "energy": 37.0,
+              "age": 135.2,
+              "x": 1073.0,
+              "y": 750.0,
+              "retired": true
+            },
+            {
+              "id": 7,
+              "energy": 66.5,
+              "age": 67.7,
+              "x": 942.2,
+              "y": 632.9,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 149.8,
+              "age": 40.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 85,
+          "fruits": 301,
+          "predator": [
+            772.8,
+            608.2
+          ],
+          "held": true
+        },
+        {
+          "time": 250.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 75.8,
+              "age": 173.3,
+              "x": 1048.5,
+              "y": 518.5,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 79.3,
+              "age": 72.6,
+              "x": 937.6,
+              "y": 675.7,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 144.8,
+              "age": 45.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 86,
+          "fruits": 300,
+          "predator": [
+            773.1,
+            585.3
+          ],
+          "held": true
+        },
+        {
+          "time": 255.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 49.6,
+              "age": 178.3,
+              "x": 909.8,
+              "y": 660.5,
+              "retired": false
+            },
+            {
+              "id": 7,
+              "energy": 29.7,
+              "age": 77.6,
+              "x": 930.4,
+              "y": 726.1,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 139.8,
+              "age": 50.7,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 88,
+          "fruits": 287,
+          "predator": [
+            773.8,
+            581.3
+          ],
+          "held": true
+        },
+        {
+          "time": 260.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 4,
+              "energy": 18.0,
+              "age": 183.3,
+              "x": 868.9,
+              "y": 596.5,
+              "retired": false
+            },
+            {
+              "id": 8,
+              "energy": 134.9,
+              "age": 55.6,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 80,
+          "fruits": 275,
+          "predator": [
+            773.1,
+            611.4
+          ],
+          "held": true
+        },
+        {
+          "time": 265.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 130.0,
+              "age": 60.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 78,
+          "fruits": 269,
+          "predator": [
+            772.4,
+            600.5
+          ],
+          "held": true
+        },
+        {
+          "time": 270.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 125.0,
+              "age": 65.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 77,
+          "fruits": 270,
+          "predator": [
+            773.3,
+            593.5
+          ],
+          "held": true
+        },
+        {
+          "time": 275.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 120.0,
+              "age": 70.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 76,
+          "fruits": 265,
+          "predator": [
+            772.8,
+            593.2
+          ],
+          "held": true
+        },
+        {
+          "time": 280.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 115.0,
+              "age": 75.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 80,
+          "fruits": 259,
+          "predator": [
+            773.1,
+            593.0
+          ],
+          "held": true
+        },
+        {
+          "time": 285.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 110.0,
+              "age": 80.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 78,
+          "fruits": 264,
+          "predator": [
+            773.7,
+            592.9
+          ],
+          "held": true
+        },
+        {
+          "time": 290.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 105.0,
+              "age": 85.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 74,
+          "fruits": 274,
+          "predator": [
+            773.8,
+            581.6
+          ],
+          "held": true
+        },
+        {
+          "time": 295.1,
+          "holder": 8,
+          "incoming": null,
+          "agents": [
+            {
+              "id": 8,
+              "energy": 100.0,
+              "age": 90.5,
+              "x": 823.0,
+              "y": 600.0,
+              "retired": false
+            }
+          ],
+          "trees": 74,
+          "fruits": 269,
+          "predator": [
+            773.0,
+            596.6
+          ],
+          "held": true
+        }
+      ]
+    }
+  ]
+}

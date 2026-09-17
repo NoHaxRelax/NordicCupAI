@@ -1,0 +1,1671 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "scope": {
+    "engine": "unmodified vendored simulator methods",
+    "synthetic": "arranged flat fixtures; random tree/predator spawning removed and labeled",
+    "generated": "default-size generated maps with one explicit default-energy starting predator",
+    "remote_actions": "none",
+    "action_contract": "all environment steps issue at most one action per living returned agent"
+  },
+  "known_reproductions_and_extensions": {
+    "rest_threshold": {
+      "one_tick_boundary": [
+        {
+          "start_energy": 99.0,
+          "end_energy": 102.0,
+          "resting": true,
+          "distance_moved": 0.0
+        },
+        {
+          "start_energy": 100.0,
+          "end_energy": 103.0,
+          "resting": true,
+          "distance_moved": 0.0
+        },
+        {
+          "start_energy": 100.000001,
+          "end_energy": 97.450001,
+          "resting": false,
+          "distance_moved": 15.0
+        }
+      ],
+      "overlap_from_zero": {
+        "death_tick": 35,
+        "safe_completed_ticks": 34,
+        "safe_seconds": 3.4,
+        "selected_trace": [
+          {
+            "tick": 1,
+            "energy": 3.0,
+            "resting": true,
+            "agent_alive": true
+          },
+          {
+            "tick": 33,
+            "energy": 99.0,
+            "resting": true,
+            "agent_alive": true
+          },
+          {
+            "tick": 34,
+            "energy": 102.0,
+            "resting": true,
+            "agent_alive": true
+          },
+          {
+            "tick": 35,
+            "energy": 200.0,
+            "resting": false,
+            "agent_alive": false
+          }
+        ]
+      }
+    },
+    "last_lunge_before_sleep": {
+      "cases": [
+        {
+          "case": "contact_after_low_energy_move",
+          "agent_start_x": 814.0,
+          "predator_end_x": 811.0,
+          "predator_end_energy": 149.45000000000002,
+          "predator_resting": false,
+          "agent_alive": false,
+          "score": -1.399
+        },
+        {
+          "case": "no_contact_control",
+          "agent_start_x": 840.0,
+          "predator_end_x": 811.0,
+          "predator_end_energy": -0.45000000000000007,
+          "predator_resting": true,
+          "agent_alive": true,
+          "score": 0.1
+        }
+      ],
+      "interpretation": "An already-active predator can spend below zero, complete its movement/contact check, and remain active if the victim replenishes it. Failed contact puts the same predator to sleep."
+    },
+    "overlap_pileup": {
+      "cases": [
+        {
+          "start_resting": false,
+          "survivors": 0,
+          "predator_energy": 200.0,
+          "predator_resting": false,
+          "score": -4.397
+        },
+        {
+          "start_resting": true,
+          "survivors": 3,
+          "predator_energy": 3.0,
+          "predator_resting": true,
+          "score": 0.1
+        }
+      ],
+      "interpretation": "One active contact pass can kill every overlapping agent; resting skips the whole pass."
+    }
+  },
+  "target_selection": {
+    "nearest_switch": {
+      "first_direction": 0.25,
+      "after_one_unit_distance_swap": -0.25
+    },
+    "equal_distance_tie": {
+      "above_first_direction": 0.25,
+      "below_first_direction": -0.25,
+      "engine_note": "Predator.step uses the first minimum; Environment supplies a set-derived order, not agent ID order."
+    },
+    "epsilon_control": {
+      "above_first_direction": -0.25,
+      "below_first_direction": -0.25
+    }
+  },
+  "gaze_branch": {
+    "distance": 100.0,
+    "rows": [
+      {
+        "relative_agent_gaze": 0.0,
+        "requested_move": 15,
+        "relative_move_direction": 0.0,
+        "turn": 0.0
+      },
+      {
+        "relative_agent_gaze": -1e-09,
+        "requested_move": 15,
+        "relative_move_direction": 0.7853981633974483,
+        "turn": -0.11809870574240673
+      },
+      {
+        "relative_agent_gaze": 1e-09,
+        "requested_move": 15,
+        "relative_move_direction": -0.7853981633974483,
+        "turn": 0.11809870574240673
+      },
+      {
+        "relative_agent_gaze": -1.5707963267948966,
+        "requested_move": 15,
+        "relative_move_direction": 0.7853981633974483,
+        "turn": -0.11809870574240673
+      },
+      {
+        "relative_agent_gaze": 1.5707963267948966,
+        "requested_move": 15,
+        "relative_move_direction": -0.7853981633974483,
+        "turn": 0.11809870574240673
+      },
+      {
+        "relative_agent_gaze": -1.5707963277948966,
+        "requested_move": 15,
+        "relative_move_direction": 0.0,
+        "turn": 0.0
+      },
+      {
+        "relative_agent_gaze": 1.5707963277948966,
+        "requested_move": 15,
+        "relative_move_direction": 0.0,
+        "turn": 0.0
+      },
+      {
+        "relative_agent_gaze": 3.141592653589793,
+        "requested_move": 15,
+        "relative_move_direction": 0.0,
+        "turn": 0.0
+      }
+    ]
+  },
+  "predator_spawn_one_shot": {
+    "blocked_returned_none": true,
+    "free_spawn_succeeded": true,
+    "predator_count_after_both_calls": 1,
+    "practical_scope": "Generated starting and timed spawn calls can be wasted when their single random point overlaps an obstacle. This lowers realized predator pressure but is not player-controlled."
+  },
+  "cached_observation_gaze_fixtures": [
+    {
+      "mode": "exact",
+      "ticks": 16,
+      "survived": false,
+      "contact_or_horizon_s": 1.6,
+      "observed_fraction": 0.875,
+      "predator_rest_fraction": 0.0,
+      "minimum_center_gap": 13.065814172520817,
+      "agent_energy": 148.1305662947923,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 189.69016662146913,
+          "predator_energy": 197.44109614373275,
+          "predator_resting": false,
+          "agent_energy": 149.86816901138164,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 2,
+          "gap": 179.39738910755446,
+          "predator_energy": 194.88168085552138,
+          "predator_resting": false,
+          "agent_energy": 149.73633802276328,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 3,
+          "gap": 169.1237118432951,
+          "predator_energy": 192.3216928908979,
+          "predator_resting": false,
+          "agent_energy": 149.56377218925928,
+          "seen": true,
+          "turn": -0.45594457887560047
+        },
+        {
+          "tick": 4,
+          "gap": 158.87156511641376,
+          "predator_energy": 189.7610594610834,
+          "predator_resting": false,
+          "agent_energy": 149.45435690104793,
+          "seen": true,
+          "turn": -0.059158000552506085
+        },
+        {
+          "tick": 5,
+          "gap": 148.64386758824867,
+          "predator_energy": 187.1996931737129,
+          "predator_resting": false,
+          "agent_energy": 149.34436893642447,
+          "seen": true,
+          "turn": -0.06275623257079355
+        },
+        {
+          "tick": 6,
+          "gap": 138.44416480657253,
+          "predator_energy": 184.637487900509,
+          "predator_resting": false,
+          "agent_energy": 149.23373550660997,
+          "seen": true,
+          "turn": -0.06681180997540626
+        },
+        {
+          "tick": 7,
+          "gap": 128.27681994996746,
+          "predator_energy": 182.0743130917173,
+          "predator_resting": false,
+          "agent_energy": 149.1223692192395,
+          "seen": true,
+          "turn": -0.07141648980351523
+        },
+        {
+          "tick": 8,
+          "gap": 118.14728206271334,
+          "predator_energy": 179.51000578949422,
+          "predator_resting": false,
+          "agent_energy": 149.01016394603562,
+          "seen": true,
+          "turn": -0.07668799326471909
+        },
+        {
+          "tick": 10,
+          "gap": 98.03135579734362,
+          "predator_energy": 174.37710543661944,
+          "predator_resting": false,
+          "agent_energy": 148.78268183502087,
+          "seen": true,
+          "turn": -0.08989543111346521
+        }
+      ]
+    },
+    {
+      "mode": "fixed_small",
+      "ticks": 16,
+      "survived": false,
+      "contact_or_horizon_s": 1.6,
+      "observed_fraction": 0.875,
+      "predator_rest_fraction": 0.0,
+      "minimum_center_gap": 13.065814172520817,
+      "agent_energy": 148.1337493936541,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 189.69016662146913,
+          "predator_energy": 197.44109614373275,
+          "predator_resting": false,
+          "agent_energy": 149.86816901138164,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 2,
+          "gap": 179.39738910755446,
+          "predator_energy": 194.88168085552138,
+          "predator_resting": false,
+          "agent_energy": 149.73633802276328,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 3,
+          "gap": 169.1237118432951,
+          "predator_energy": 192.3216928908979,
+          "predator_resting": false,
+          "agent_energy": 149.5669552881211,
+          "seen": true,
+          "turn": -0.43594457887560045
+        },
+        {
+          "tick": 4,
+          "gap": 158.87156511641376,
+          "predator_energy": 189.7610594610834,
+          "predator_resting": false,
+          "agent_energy": 149.45753999990976,
+          "seen": true,
+          "turn": -0.059158000552506085
+        },
+        {
+          "tick": 5,
+          "gap": 148.64386758824867,
+          "predator_energy": 187.1996931737129,
+          "predator_resting": false,
+          "agent_energy": 149.3475520352863,
+          "seen": true,
+          "turn": -0.06275623257079355
+        },
+        {
+          "tick": 6,
+          "gap": 138.44416480657253,
+          "predator_energy": 184.637487900509,
+          "predator_resting": false,
+          "agent_energy": 149.2369186054718,
+          "seen": true,
+          "turn": -0.06681180997540626
+        },
+        {
+          "tick": 7,
+          "gap": 128.27681994996746,
+          "predator_energy": 182.0743130917173,
+          "predator_resting": false,
+          "agent_energy": 149.1255523181013,
+          "seen": true,
+          "turn": -0.07141648980351523
+        },
+        {
+          "tick": 8,
+          "gap": 118.14728206271334,
+          "predator_energy": 179.51000578949422,
+          "predator_resting": false,
+          "agent_energy": 149.01334704489744,
+          "seen": true,
+          "turn": -0.07668799326471909
+        },
+        {
+          "tick": 10,
+          "gap": 98.03135579734362,
+          "predator_energy": 174.37710543661944,
+          "predator_resting": false,
+          "agent_energy": 148.7858649338827,
+          "seen": true,
+          "turn": -0.08989543111346521
+        }
+      ]
+    },
+    {
+      "mode": "alternate_small",
+      "ticks": 16,
+      "survived": false,
+      "contact_or_horizon_s": 1.6,
+      "observed_fraction": 0.875,
+      "predator_rest_fraction": 0.0,
+      "minimum_center_gap": 13.065814172520817,
+      "agent_energy": 148.11465080048308,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 189.69016662146913,
+          "predator_energy": 197.44109614373275,
+          "predator_resting": false,
+          "agent_energy": 149.86816901138164,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 2,
+          "gap": 179.39738910755446,
+          "predator_energy": 194.88168085552138,
+          "predator_resting": false,
+          "agent_energy": 149.73633802276328,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 3,
+          "gap": 169.1237118432951,
+          "predator_energy": 192.3216928908979,
+          "predator_resting": false,
+          "agent_energy": 149.5669552881211,
+          "seen": true,
+          "turn": -0.43594457887560045
+        },
+        {
+          "tick": 4,
+          "gap": 158.87156511641376,
+          "predator_energy": 189.7610594610834,
+          "predator_resting": false,
+          "agent_energy": 149.45117380218608,
+          "seen": true,
+          "turn": -0.09915800055250612
+        },
+        {
+          "tick": 5,
+          "gap": 148.64386758824867,
+          "predator_energy": 187.1996931737129,
+          "predator_resting": false,
+          "agent_energy": 149.3475520352863,
+          "seen": true,
+          "turn": -0.02275623257079351
+        },
+        {
+          "tick": 6,
+          "gap": 138.44416480657253,
+          "predator_energy": 184.637487900509,
+          "predator_resting": false,
+          "agent_energy": 149.23055240774812,
+          "seen": true,
+          "turn": -0.10681180997540629
+        },
+        {
+          "tick": 7,
+          "gap": 128.27681994996746,
+          "predator_energy": 182.0743130917173,
+          "predator_resting": false,
+          "agent_energy": 149.1255523181013,
+          "seen": true,
+          "turn": -0.03141648980351519
+        },
+        {
+          "tick": 8,
+          "gap": 118.14728206271334,
+          "predator_energy": 179.51000578949422,
+          "predator_resting": false,
+          "agent_energy": 149.00698084717376,
+          "seen": true,
+          "turn": -0.11668799326471913
+        },
+        {
+          "tick": 10,
+          "gap": 98.03135579734362,
+          "predator_energy": 174.37710543661944,
+          "predator_resting": false,
+          "agent_energy": 148.779498736159,
+          "seen": true,
+          "turn": -0.12989543111346524
+        }
+      ]
+    },
+    {
+      "mode": "alternate_medium",
+      "ticks": 16,
+      "survived": false,
+      "contact_or_horizon_s": 1.6,
+      "observed_fraction": 0.875,
+      "predator_rest_fraction": 0.0,
+      "minimum_center_gap": 13.065814172521083,
+      "agent_energy": 147.58237279184422,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 189.69016662146913,
+          "predator_energy": 197.44109614373275,
+          "predator_resting": false,
+          "agent_energy": 149.86816901138164,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 2,
+          "gap": 179.39738910755446,
+          "predator_energy": 194.88168085552138,
+          "predator_resting": false,
+          "agent_energy": 149.73633802276328,
+          "seen": false,
+          "turn": 0.2
+        },
+        {
+          "tick": 3,
+          "gap": 169.1237118432951,
+          "predator_energy": 192.3216928908979,
+          "predator_resting": false,
+          "agent_energy": 149.59560317787765,
+          "seen": true,
+          "turn": -0.2559445788756003
+        },
+        {
+          "tick": 4,
+          "gap": 158.87156511641373,
+          "predator_energy": 189.7610594610834,
+          "predator_resting": false,
+          "agent_energy": 149.42252591242953,
+          "seen": true,
+          "turn": -0.45915800055250644
+        },
+        {
+          "tick": 5,
+          "gap": 148.64386758824867,
+          "predator_energy": 187.1996931737129,
+          "predator_resting": false,
+          "agent_energy": 149.26885189981624,
+          "seen": true,
+          "turn": 0.3372437674292068
+        },
+        {
+          "tick": 6,
+          "gap": 138.44416480657262,
+          "predator_energy": 184.637487900509,
+          "predator_resting": false,
+          "agent_energy": 149.115823352394,
+          "seen": true,
+          "turn": -0.3331881900245941
+        },
+        {
+          "tick": 7,
+          "gap": 128.27681994996746,
+          "predator_energy": 182.0743130917173,
+          "predator_resting": false,
+          "agent_energy": 148.96352766252772,
+          "seen": true,
+          "turn": 0.32858351019648513
+        },
+        {
+          "tick": 8,
+          "gap": 118.14728206271329,
+          "predator_energy": 179.51000578949422,
+          "predator_resting": false,
+          "agent_energy": 148.81207095849484,
+          "seen": true,
+          "turn": -0.3233120067352817
+        },
+        {
+          "tick": 10,
+          "gap": 98.0313557973436,
+          "predator_energy": 174.37710543661944,
+          "predator_resting": false,
+          "agent_energy": 148.51222911503612,
+          "seen": true,
+          "turn": -0.31010456888653515
+        }
+      ]
+    }
+  ],
+  "cached_observation_walking_retreat": [
+    {
+      "mode": "exact",
+      "ticks": 38,
+      "survived": false,
+      "contact_or_horizon_s": 3.8,
+      "initial_gap": 200.0,
+      "minimum_gap": 10.0,
+      "maximum_gap": 200.0,
+      "observed_fraction": 0.8947368421052632,
+      "agent_energy": 127.20000000000022,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 195.0,
+          "agent": [
+            610.0,
+            600.0,
+            149.4
+          ],
+          "predator": [
+            415.0,
+            600.0,
+            197.45,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 2,
+          "gap": 190.0,
+          "agent": [
+            620.0,
+            600.0,
+            148.8
+          ],
+          "predator": [
+            430.0,
+            600.0,
+            194.89999999999998,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 3,
+          "gap": 185.0,
+          "agent": [
+            630.0,
+            600.0,
+            148.20000000000002
+          ],
+          "predator": [
+            445.0,
+            600.0,
+            192.34999999999997,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 4,
+          "gap": 180.0,
+          "agent": [
+            640.0,
+            600.0,
+            147.60000000000002
+          ],
+          "predator": [
+            460.0,
+            600.0,
+            189.79999999999995,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 5,
+          "gap": 175.0,
+          "agent": [
+            650.0,
+            600.0,
+            147.00000000000003
+          ],
+          "predator": [
+            475.0,
+            600.0,
+            187.24999999999994,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 6,
+          "gap": 170.0,
+          "agent": [
+            660.0,
+            600.0,
+            146.40000000000003
+          ],
+          "predator": [
+            490.0,
+            600.0,
+            184.69999999999993,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 7,
+          "gap": 165.0,
+          "agent": [
+            670.0,
+            600.0,
+            145.80000000000004
+          ],
+          "predator": [
+            505.0,
+            600.0,
+            182.14999999999992,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 8,
+          "gap": 160.0,
+          "agent": [
+            680.0,
+            600.0,
+            145.20000000000005
+          ],
+          "predator": [
+            520.0,
+            600.0,
+            179.5999999999999,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 9,
+          "gap": 155.0,
+          "agent": [
+            690.0,
+            600.0,
+            144.60000000000005
+          ],
+          "predator": [
+            535.0,
+            600.0,
+            177.0499999999999,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 10,
+          "gap": 150.0,
+          "agent": [
+            700.0,
+            600.0,
+            144.00000000000006
+          ],
+          "predator": [
+            550.0,
+            600.0,
+            174.4999999999999,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 20,
+          "gap": 100.0,
+          "agent": [
+            800.0,
+            600.0,
+            138.0000000000001
+          ],
+          "predator": [
+            700.0,
+            600.0,
+            148.99999999999977,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 30,
+          "gap": 50.0,
+          "agent": [
+            900.0,
+            600.0,
+            132.00000000000017
+          ],
+          "predator": [
+            850.0,
+            600.0,
+            123.49999999999969,
+            false
+          ],
+          "seen": true
+        }
+      ]
+    },
+    {
+      "mode": "fixed_small",
+      "ticks": 90,
+      "survived": true,
+      "contact_or_horizon_s": 9.0,
+      "initial_gap": 200.0,
+      "minimum_gap": 162.59686533317938,
+      "maximum_gap": 219.74056083114942,
+      "observed_fraction": 0.7888888888888889,
+      "agent_energy": 95.37902328719007,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 195.0,
+          "agent": [
+            610.0,
+            600.0,
+            149.4
+          ],
+          "predator": [
+            415.0,
+            600.0,
+            197.45,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 2,
+          "gap": 190.0,
+          "agent": [
+            620.0,
+            600.0,
+            148.8
+          ],
+          "predator": [
+            430.0,
+            600.0,
+            194.89999999999998,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 3,
+          "gap": 185.0,
+          "agent": [
+            630.0,
+            600.0,
+            148.20000000000002
+          ],
+          "predator": [
+            445.0,
+            600.0,
+            192.34999999999997,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 4,
+          "gap": 180.0,
+          "agent": [
+            640.0,
+            600.0,
+            147.60000000000002
+          ],
+          "predator": [
+            460.0,
+            600.0,
+            189.79999999999995,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 5,
+          "gap": 179.7066814206881,
+          "agent": [
+            650.0,
+            600.0,
+            146.9968169011382
+          ],
+          "predator": [
+            470.6066017177982,
+            610.6066017177982,
+            187.2406009352774,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 6,
+          "gap": 179.39738910755452,
+          "agent": [
+            660.0,
+            600.0,
+            146.3968169011382
+          ],
+          "predator": [
+            481.7896819024067,
+            620.6035371274432,
+            184.6816808555213,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 7,
+          "gap": 179.08858333625443,
+          "agent": [
+            669.9843551015557,
+            599.4408459907696,
+            145.78791304487098
+          ],
+          "predator": [
+            493.515104754948,
+            629.9584534247225,
+            182.12274618587253,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 8,
+          "gap": 178.7802649316341,
+          "agent": [
+            679.9217222765893,
+            598.3233784840543,
+            145.1789946291933
+          ],
+          "predator": [
+            505.7468572756803,
+            638.6408626682194,
+            179.56379690163416,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 9,
+          "gap": 178.47243471750542,
+          "agent": [
+            689.7807526808018,
+            596.6502020173263,
+            144.57006162939018
+          ],
+          "predator": [
+            518.4471483346846,
+            646.6222539640133,
+            177.00483297814057,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 10,
+          "gap": 178.16509351661983,
+          "agent": [
+            699.5301912404178,
+            594.4256913357892,
+            143.96111402077688
+          ],
+          "predator": [
+            531.5765145969987,
+            653.8762005829243,
+            174.44585439075814,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 20,
+          "gap": 175.11875742913045,
+          "agent": [
+            784.3894727885653,
+            544.0691620649361,
+            137.8708290427788
+          ],
+          "predator": [
+            676.8349928960397,
+            682.2668938067087,
+            148.85525660820187,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 30,
+          "gap": 172.12221876791105,
+          "agent": [
+            828.4267233131981,
+            455.81413125051404,
+            131.77905628730542
+          ],
+          "predator": [
+            814.2046684927546,
+            627.3477762017974,
+            123.26316560934859,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 40,
+          "gap": 169.17627844045614,
+          "agent": [
+            816.7217995644454,
+            357.92491377298296,
+            125.68577169964183
+          ],
+          "predator": [
+            898.6350339428645,
+            505.9480039333661,
+            97.66955741991664,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 50,
+          "gap": 166.2817204633099,
+          "agent": [
+            752.458374558391,
+            283.22344595018205,
+            119.59095171501717
+          ],
+          "predator": [
+            900.8959733727464,
+            358.1626867954616,
+            72.07440857477187,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 60,
+          "gap": 163.4393088594162,
+          "agent": [
+            657.2574378638645,
+            257.9769066802909,
+            113.49457335056329
+          ],
+          "predator": [
+            819.0944878602025,
+            235.14760688974897,
+            46.477696210992,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 70,
+          "gap": 179.30240646910428,
+          "agent": [
+            563.5133750870102,
+            289.5474983558377,
+            107.411335307038
+          ],
+          "predator": [
+            709.2228962090895,
+            185.0578413557967,
+            34.89833008721801,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 80,
+          "gap": 202.34963868945994,
+          "agent": [
+            486.4892128059207,
+            353.12398530497813,
+            101.37902328719001
+          ],
+          "predator": [
+            599.799373489076,
+            185.4749955564189,
+            29.342254303992846,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 90,
+          "gap": 219.74056083114942,
+          "agent": [
+            411.3164939894008,
+            419.07140637458764,
+            95.37902328719007
+          ],
+          "predator": [
+            494.1896995628281,
+            215.55741208335337,
+            23.809400094952416,
+            false
+          ],
+          "seen": false
+        }
+      ]
+    },
+    {
+      "mode": "alternate_small",
+      "ticks": 90,
+      "survived": true,
+      "contact_or_horizon_s": 9.0,
+      "initial_gap": 200.0,
+      "minimum_gap": 162.59686533317944,
+      "maximum_gap": 219.7405608311496,
+      "observed_fraction": 0.7888888888888889,
+      "agent_energy": 95.37889872615649,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 195.0,
+          "agent": [
+            610.0,
+            600.0,
+            149.4
+          ],
+          "predator": [
+            415.0,
+            600.0,
+            197.45,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 2,
+          "gap": 190.0,
+          "agent": [
+            620.0,
+            600.0,
+            148.8
+          ],
+          "predator": [
+            430.0,
+            600.0,
+            194.89999999999998,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 3,
+          "gap": 185.0,
+          "agent": [
+            630.0,
+            600.0,
+            148.20000000000002
+          ],
+          "predator": [
+            445.0,
+            600.0,
+            192.34999999999997,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 4,
+          "gap": 180.0,
+          "agent": [
+            640.0,
+            600.0,
+            147.60000000000002
+          ],
+          "predator": [
+            460.0,
+            600.0,
+            189.79999999999995,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 5,
+          "gap": 179.7066814206881,
+          "agent": [
+            650.0,
+            600.0,
+            146.9968169011382
+          ],
+          "predator": [
+            470.6066017177982,
+            610.6066017177982,
+            187.2406009352774,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 6,
+          "gap": 179.39738910755452,
+          "agent": [
+            660.0,
+            600.0,
+            146.39045070341453
+          ],
+          "predator": [
+            481.7896819024067,
+            620.6035371274432,
+            184.6816808555213,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 7,
+          "gap": 179.08858333625443,
+          "agent": [
+            669.9843551015557,
+            599.4408459907696,
+            145.78791304487098
+          ],
+          "predator": [
+            493.515104754948,
+            629.9584534247225,
+            182.12274618587253,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 8,
+          "gap": 178.7802649316341,
+          "agent": [
+            679.9217222765893,
+            598.3233784840543,
+            145.17262843146966
+          ],
+          "predator": [
+            505.7468572756803,
+            638.6408626682194,
+            179.56379690163416,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 9,
+          "gap": 178.47243471750542,
+          "agent": [
+            689.7807526808018,
+            596.6502020173263,
+            144.5700616293902
+          ],
+          "predator": [
+            518.4471483346846,
+            646.6222539640133,
+            177.00483297814057,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 10,
+          "gap": 178.16509351661983,
+          "agent": [
+            699.5301912404178,
+            594.4256913357892,
+            143.95474782305322
+          ],
+          "predator": [
+            531.5765145969987,
+            653.8762005829243,
+            174.44585439075814,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 20,
+          "gap": 175.11875742913045,
+          "agent": [
+            784.3894727885653,
+            544.0691620649361,
+            137.8644628450551
+          ],
+          "predator": [
+            676.8349928960397,
+            682.2668938067087,
+            148.85525660820187,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 30,
+          "gap": 172.12221876791105,
+          "agent": [
+            828.4267233131981,
+            455.81413125051404,
+            131.77269008958174
+          ],
+          "predator": [
+            814.2046684927546,
+            627.3477762017974,
+            123.26316560934859,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 40,
+          "gap": 169.17627844045614,
+          "agent": [
+            816.7217995644454,
+            357.92491377298296,
+            125.67940550191815
+          ],
+          "predator": [
+            898.6350339428645,
+            505.9480039333661,
+            97.66955741991664,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 50,
+          "gap": 166.28172046330994,
+          "agent": [
+            752.458374558391,
+            283.223445950182,
+            119.5845855172935
+          ],
+          "predator": [
+            900.8959733727464,
+            358.1626867954616,
+            72.07440857477187,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 60,
+          "gap": 163.43930885941631,
+          "agent": [
+            657.2574378638645,
+            257.9769066802908,
+            113.48820715283958
+          ],
+          "predator": [
+            819.0944878602027,
+            235.14760688974891,
+            46.477696210992,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 70,
+          "gap": 179.30240646910445,
+          "agent": [
+            563.5133750870101,
+            289.54749835583755,
+            107.4049691093143
+          ],
+          "predator": [
+            709.2228962090896,
+            185.05784135579657,
+            34.89833008721801,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 80,
+          "gap": 202.34963868946008,
+          "agent": [
+            486.4892128059206,
+            353.1239853049779,
+            101.37889872615644
+          ],
+          "predator": [
+            599.7993734890761,
+            185.47499555641863,
+            29.342254303992853,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 90,
+          "gap": 219.7405608311496,
+          "agent": [
+            411.31649398940067,
+            419.0714063745874,
+            95.37889872615649
+          ],
+          "predator": [
+            494.1896995628282,
+            215.55741208335303,
+            23.809400094952423,
+            false
+          ],
+          "seen": false
+        }
+      ]
+    },
+    {
+      "mode": "alternate_medium",
+      "ticks": 90,
+      "survived": true,
+      "contact_or_horizon_s": 9.0,
+      "initial_gap": 200.0,
+      "minimum_gap": 162.59686533317984,
+      "maximum_gap": 216.44387394864418,
+      "observed_fraction": 0.7888888888888889,
+      "agent_energy": 92.12962421875775,
+      "trace": [
+        {
+          "tick": 1,
+          "gap": 195.0,
+          "agent": [
+            610.0,
+            600.0,
+            149.4
+          ],
+          "predator": [
+            415.0,
+            600.0,
+            197.45,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 2,
+          "gap": 190.0,
+          "agent": [
+            620.0,
+            600.0,
+            148.8
+          ],
+          "predator": [
+            430.0,
+            600.0,
+            194.89999999999998,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 3,
+          "gap": 185.0,
+          "agent": [
+            630.0,
+            600.0,
+            148.20000000000002
+          ],
+          "predator": [
+            445.0,
+            600.0,
+            192.34999999999997,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 4,
+          "gap": 180.0,
+          "agent": [
+            640.0,
+            600.0,
+            147.60000000000002
+          ],
+          "predator": [
+            460.0,
+            600.0,
+            189.79999999999995,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 5,
+          "gap": 179.7066814206881,
+          "agent": [
+            650.0,
+            600.0,
+            146.96816901138166
+          ],
+          "predator": [
+            470.6066017177982,
+            610.6066017177982,
+            187.2406009352774,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 6,
+          "gap": 179.3973891075545,
+          "agent": [
+            660.0,
+            600.0,
+            146.3045070341449
+          ],
+          "predator": [
+            480.6035371274433,
+            599.4235215331896,
+            184.68069043861072,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 7,
+          "gap": 179.08858333625443,
+          "agent": [
+            669.9843551015557,
+            599.4408459907696,
+            145.6497489131754
+          ],
+          "predator": [
+            491.20916851452074,
+            610.0310934929473,
+            182.12076202389454,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 8,
+          "gap": 178.78026493163406,
+          "agent": [
+            679.9843550597133,
+            599.441760785504,
+            144.9950053516163
+          ],
+          "predator": [
+            501.20507912329333,
+            598.847097288485,
+            179.56081565489754,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 9,
+          "gap": 178.47243471750545,
+          "agent": [
+            689.968658881405,
+            598.8816918646091,
+            144.34027637418268
+          ],
+          "predator": [
+            511.80973679813343,
+            609.4556426929904,
+            177.00085129539522,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 10,
+          "gap": 178.16509351661995,
+          "agent": [
+            699.9686587134668,
+            598.883524557949,
+            143.68556200555923
+          ],
+          "predator": [
+            521.8046190547641,
+            598.2707274641615,
+            174.4408689091709,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 20,
+          "gap": 175.1187574291307,
+          "agent": [
+            799.889393849706,
+            596.0923884144438,
+            137.13922721118993
+          ],
+          "predator": [
+            624.7720462375341,
+            595.3897015706222,
+            148.8400456170739,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 30,
+          "gap": 172.12221876791148,
+          "agent": [
+            899.8087918945658,
+            593.3013277116679,
+            130.59438019429584
+          ],
+          "predator": [
+            727.6883918888486,
+            592.510065769778,
+            123.23737991055434,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 40,
+          "gap": 169.17627844045677,
+          "agent": [
+            999.7268088345049,
+            590.5103429713427,
+            124.05104500959199
+          ],
+          "predator": [
+            830.5528113426988,
+            589.6318444765707,
+            97.63283586091735,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 50,
+          "gap": 166.28172046331008,
+          "agent": [
+            1099.6434000395702,
+            587.7194345912852,
+            117.50924522184917
+          ],
+          "predator": [
+            933.3644761034429,
+            586.7550617992639,
+            72.02637785051189,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 60,
+          "gap": 163.43930885941683,
+          "agent": [
+            1199.5585203643052,
+            584.9286028352507,
+            110.96900381393561
+          ],
+          "predator": [
+            1036.122577040159,
+            583.8797414572135,
+            46.417970691116686,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 70,
+          "gap": 179.30240646910448,
+          "agent": [
+            1299.4701615816036,
+            581.624396969539,
+            104.41562208509339
+          ],
+          "predator": [
+            1120.1843952552524,
+            584.0671328097293,
+            34.795455757322884,
+            false
+          ],
+          "seen": true
+        },
+        {
+          "tick": 80,
+          "gap": 201.4369647350018,
+          "agent": [
+            1398.9023010762367,
+            586.7806078674307,
+            98.1296242187577
+          ],
+          "predator": [
+            1201.183032303707,
+            625.3025693661206,
+            29.21348952850659,
+            false
+          ],
+          "seen": false
+        },
+        {
+          "tick": 90,
+          "gap": 216.44387394864418,
+          "agent": [
+            1497.8676070734991,
+            601.12871606566,
+            92.12962421875775
+          ],
+          "predator": [
+            1296.3652384480006,
+            680.1524214217762,
+            23.684802043712285,
+            false
+          ],
+          "seen": false
+        }
+      ]
+    }
+  ],
+  "rejected_or_bounded_hypotheses": [
+    "Sleeping contact is not a permanent refuge: the zero-energy overlap dies on wake tick 35.",
+    "A predator does not commit to a target; a one-unit nearest-distance swap changes its choice immediately.",
+    "Equal-distance target ties are not a controllable agent-ID rule; they inherit set-derived observation order.",
+    "Resting status and predator energy are absent from public observations, so exact wake countdown requires inferred history."
+  ]
+}

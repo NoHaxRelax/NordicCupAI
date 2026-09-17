@@ -1,0 +1,167 @@
+{
+  "kind": "controlled mechanics and optimistic genetic model",
+  "mutation": {
+    "trials": 10000,
+    "seed": 9172026,
+    "max_births": 500,
+    "assumption": "Best parent immortal, unlimited births and food; no ecological validation.",
+    "effective_walk_speed_greater_than": {
+      "15.0": {
+        "median_births": 45.0,
+        "p10_births": 15,
+        "p90_births": 97,
+        "mean_births_censored": 51.8358,
+        "fraction_success_by_birth_budget": {
+          "10": 0.0501,
+          "20": 0.1729,
+          "40": 0.4491,
+          "80": 0.8219,
+          "160": 0.9887
+        },
+        "not_reached_by_max_births": 0
+      },
+      "16.0": {
+        "median_births": 50.0,
+        "p10_births": 17,
+        "p90_births": 106,
+        "mean_births_censored": 57.0032,
+        "fraction_success_by_birth_budget": {
+          "10": 0.0391,
+          "20": 0.141,
+          "40": 0.3901,
+          "80": 0.7778,
+          "160": 0.9829
+        },
+        "not_reached_by_max_births": 0
+      },
+      "19.999999": {
+        "median_births": 71.0,
+        "p10_births": 28,
+        "p90_births": 137,
+        "mean_births_censored": 77.846,
+        "fraction_success_by_birth_budget": {
+          "10": 0.009,
+          "20": 0.0476,
+          "40": 0.2008,
+          "80": 0.5899,
+          "160": 0.9489
+        },
+        "not_reached_by_max_births": 0
+      }
+    }
+  },
+  "old_agent_costs": [
+    {
+      "age_seconds": 60,
+      "total_passive_energy_per_second_when_old": 7.0,
+      "mature_fruits_per_minute_to_cover_idle": 7.0
+    },
+    {
+      "age_seconds": 90,
+      "total_passive_energy_per_second_when_old": 10.0,
+      "mature_fruits_per_minute_to_cover_idle": 10.0
+    },
+    {
+      "age_seconds": 100,
+      "total_passive_energy_per_second_when_old": 11.0,
+      "mature_fruits_per_minute_to_cover_idle": 11.0
+    },
+    {
+      "age_seconds": 120,
+      "total_passive_energy_per_second_when_old": 13.0,
+      "mature_fruits_per_minute_to_cover_idle": 13.0
+    },
+    {
+      "age_seconds": 200,
+      "total_passive_energy_per_second_when_old": 21.0,
+      "mature_fruits_per_minute_to_cover_idle": 21.0
+    }
+  ],
+  "source_probes": {
+    "movement": [
+      {
+        "case": "baseline_walk",
+        "distance_actual": 10.0,
+        "movement_energy": 0.5,
+        "total_energy_per_second_including_young_idle": 6.0
+      },
+      {
+        "case": "baseline_just_faster_than_predator",
+        "distance_actual": 15.099999999999994,
+        "movement_energy": 3.0500000000000114,
+        "total_energy_per_second_including_young_idle": 31.500000000000114
+      },
+      {
+        "case": "baseline_full_sprint",
+        "distance_actual": 20.0,
+        "movement_energy": 5.5,
+        "total_energy_per_second_including_young_idle": 56.0
+      },
+      {
+        "case": "low_energy_sprint_request",
+        "distance_actual": 10.0,
+        "movement_energy": 0.5,
+        "total_energy_per_second_including_young_idle": 6.0
+      },
+      {
+        "case": "selected_just_faster_than_predator",
+        "distance_actual": 15.099999999999994,
+        "movement_energy": 0.7549999999999955,
+        "total_energy_per_second_including_young_idle": 8.549999999999955
+      },
+      {
+        "case": "walk_greater_than_sprint",
+        "distance_actual": 12.0,
+        "movement_energy": 0.5999999999999943,
+        "total_energy_per_second_including_young_idle": 6.999999999999943
+      },
+      {
+        "case": "river_full_sprint",
+        "distance_actual": 6.0,
+        "movement_energy": 5.5,
+        "total_energy_per_second_including_young_idle": 56.0
+      }
+    ],
+    "fruit_timeline": [
+      {
+        "sim_seconds": 0.0,
+        "internal_age": 0,
+        "energy": 20,
+        "radius": 5
+      },
+      {
+        "sim_seconds": 10.0,
+        "internal_age": 19.99999999999996,
+        "energy": 40.00000000000007,
+        "radius": 6.999999999999957
+      },
+      {
+        "sim_seconds": 20.0,
+        "internal_age": 40.00000000000003,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      },
+      {
+        "sim_seconds": 30.0,
+        "internal_age": 60.00000000000031,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      },
+      {
+        "sim_seconds": 50.0,
+        "internal_age": 100.00000000000088,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      }
+    ],
+    "fruit_removed_at_sim_seconds_by_source_loop": 50.0,
+    "fresh_and_ripe_observations_identical": true,
+    "fruit_observation": [
+      {
+        "type": "Fruit",
+        "distance": 30.0,
+        "angle": 0.0
+      }
+    ]
+  }
+}

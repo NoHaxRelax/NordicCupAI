@@ -1,0 +1,189 @@
+{
+  "status": "new_reproduction",
+  "provenance": {
+    "source_name": "dogleg-negative-pilot.json",
+    "source_sha256": "9879d92155211f5c24b2e13e3b47e3292f7e7c6767af8fab4d4b012127287d6f",
+    "row_index": 2,
+    "fidelity_note": "Exact historical controller revision is unavailable; this is a current-controller rerun of the saved configuration, not an exact historical replay. Current close-entry dogleg goes in the positive direction; the historical pilot used the opposite direction.",
+    "configuration_changes": [],
+    "historical_experiment_sha256": {
+      "advance.py": "9017e75deb2d3e6acd0ddd2fad5e1fad5c69e192f9125af2e1fd89b534296173",
+      "base_snapshot.py": "fdc3a1b47ebe8ff9745ee8641944522bc7d92b6fd0ceea74aaa3a264115efc4a",
+      "base_snapshot_v1.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "4fb645622eb2bfde6cf6e6eaeefa78f4474b14874f0d557bca5c24dd82d7ada5",
+      "controller.py": "b66a76c33d1a11e654018822a909859dd969ddf2bb3f3a849de57bf9f6048fee",
+      "controller_v2.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "probe.py": "27a4f5c4fe86abbc1bfa31e86a5a9f029c1f54b9a5f2d1d289aa0c6032eb5976",
+      "run.py": "cccdc8de5bc729c0afea27e2a0b911962494af37f71c7de72b743442f6b43b9d",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505"
+    }
+  },
+  "metric_differences": {
+    "elapsed_s": {
+      "historical": 0.1,
+      "reproduced": 0.9999999999999999
+    },
+    "score": {
+      "historical": -1.3439999999999999,
+      "reproduced": -0.4732969096575338
+    },
+    "first_capture_s": {
+      "historical": 0.1,
+      "reproduced": 0.9999999999999999
+    },
+    "joint_fraction": {
+      "historical": 0.0,
+      "reproduced": 0.8
+    }
+  },
+  "result": {
+    "case": {
+      "native": true,
+      "seed": 37,
+      "site": {
+        "center": [
+          237.0,
+          362.0
+        ],
+        "angle": 0.5235987755982988,
+        "width": 51.0,
+        "common_water_width": 46.0,
+        "obstructed_samples": 3,
+        "nearby_native_trees": [
+          [
+            {
+              "position": [
+                184.86296520868402,
+                294.62895742668815
+              ],
+              "age": 41.84007565051165
+            }
+          ],
+          [
+            {
+              "position": [
+                318.2183128583936,
+                432.76189366289964
+              ],
+              "age": 22.867457350465152
+            },
+            {
+              "position": [
+                383.4452119739118,
+                402.55948074344013
+              ],
+              "age": 37.1115657134585
+            }
+          ]
+        ],
+        "nearby_native_fruits": [
+          [
+            {
+              "position": [
+                193.3238947181906,
+                250.6939273046769
+              ],
+              "energy": 20
+            }
+          ],
+          []
+        ]
+      },
+      "site_index": 8,
+      "collision_model": true,
+      "seconds": 75,
+      "outside": 30,
+      "heading": 0.15,
+      "safety_launch": true
+    },
+    "elapsed_s": 0.9999999999999999,
+    "alive": 1,
+    "score": -0.4732969096575338,
+    "acquired_s": null,
+    "water_fraction": 0.8,
+    "bait_attention_fraction": 1.0,
+    "joint_fraction": 0.8,
+    "active_joint_fraction": 0.8,
+    "after_acquisition_s": 0.0,
+    "after_acquisition_joint_fraction": 0.0,
+    "after_acquisition_water_fraction": 0.0,
+    "after_acquisition_attention_fraction": 0.0,
+    "first_capture_s": 0.9999999999999999,
+    "first_depletion_s": null,
+    "deaths": [
+      {
+        "t": 0.9999999999999999,
+        "id": 1,
+        "cause": "capture",
+        "energy": 147.32969096575337,
+        "age": 0.9999999999999999,
+        "max_age": 74.25326116788841
+      }
+    ],
+    "handoffs": [],
+    "births": [],
+    "newborn_localization": [],
+    "movement_turn_energy": {
+      "0": 45.21270205983795,
+      "1": 1.670309034246685
+    },
+    "absorbed_native_fruit_energy": {},
+    "birth_energy_cost": 0,
+    "energy_remaining": {
+      "0": 103.7872979401621
+    },
+    "maximum_pose_error": 0,
+    "worker_living_seconds": 0.0,
+    "worker_captures": 0,
+    "maximum_predators": 1,
+    "trace": [
+      {
+        "t": 0.1,
+        "active": [
+          0,
+          1
+        ],
+        "agents": [
+          {
+            "id": 0,
+            "uv": [
+              35.50000000000002,
+              20.000000000000014
+            ],
+            "energy": 144.4,
+            "age": 0.1
+          },
+          {
+            "id": 1,
+            "uv": [
+              27.49999999999999,
+              60.00000000000001
+            ],
+            "energy": 149.5805086292275,
+            "age": 0.1
+          }
+        ],
+        "predators": [
+          {
+            "uv": [
+              40.66843383095937,
+              2.2415719871039776
+            ],
+            "water": false,
+            "target": 0
+          }
+        ],
+        "pose_error": 0,
+        "score": 0.1
+      }
+    ],
+    "fallback_s": null,
+    "recording": {
+      "path": "results/water_deployment/replays/Mapped-water-deployment-v9f0b3cc3-seed37-193728c9ff3c.json.gz",
+      "duration": 1.0,
+      "score": -0.4733,
+      "frames": 2,
+      "reason": "loss or extinction stopped the run"
+    }
+  }
+}

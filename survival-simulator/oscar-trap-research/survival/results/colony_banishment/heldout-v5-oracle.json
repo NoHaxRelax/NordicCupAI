@@ -1,0 +1,5747 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "protocol": {
+    "version": 5,
+    "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+    "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+    "heldout_generated_seeds": [
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208
+    ],
+    "heldout_fixture_seeds": [
+      21,
+      22,
+      23,
+      24
+    ],
+    "generated_horizon": 600,
+    "fixture_horizon": 300,
+    "settings": {
+      "variant": "rest",
+      "min_fuel": 300,
+      "population": 4,
+      "release_radius": 450,
+      "guide_limit": 18,
+      "risk_gate": true
+    },
+    "selection": "Same conservative controller as v4; canonical observation ordering and six-decimal precision fix an observed null-comparison confound. Fresh held-out seeds, frozen before running.",
+    "prefix": "heldout-v5"
+  },
+  "runs": [
+    {
+      "scenario": "forest",
+      "seed": 21,
+      "mode": "oracle-control",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 558.1568697114226,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 570.3131312054309,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 302.83599,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1176.8,
+        "worker_seconds": 1176.8,
+        "worker_exposure_100": 278.8,
+        "worker_exposure_50": 50.8,
+        "all_exposure_100": 278.8,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 5937.3995,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 758.2,
+        "colony_intrusion_seconds": 208.4,
+        "harvest_energy": 15290.6416,
+        "fruit_count": 341,
+        "captures": 7,
+        "guide_captures": 0,
+        "worker_captures": 7,
+        "starvation_deaths": 2,
+        "births": 9,
+        "peak_agents": 4,
+        "predators_spawned": 4,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [
+        {
+          "t": 142.4,
+          "kind": "capture",
+          "aid": 1,
+          "role": "worker",
+          "energy": 55.571
+        },
+        {
+          "t": 150.4,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -0.022
+        },
+        {
+          "t": 153.7,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -0.773
+        },
+        {
+          "t": 165.7,
+          "kind": "capture",
+          "aid": 3,
+          "role": "worker",
+          "energy": 177.795
+        },
+        {
+          "t": 169.2,
+          "kind": "capture",
+          "aid": 6,
+          "role": "worker",
+          "energy": 228.371
+        },
+        {
+          "t": 173.9,
+          "kind": "capture",
+          "aid": 5,
+          "role": "worker",
+          "energy": 101.675
+        },
+        {
+          "t": 179.6,
+          "kind": "capture",
+          "aid": 4,
+          "role": "worker",
+          "energy": 184.523
+        },
+        {
+          "t": 186.8,
+          "kind": "capture",
+          "aid": 7,
+          "role": "worker",
+          "energy": 103.298
+        },
+        {
+          "t": 281.8,
+          "kind": "capture",
+          "aid": 9,
+          "role": "worker",
+          "energy": 394.233
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.238,
+          "agents": 4,
+          "predators": 0,
+          "energy": 635.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.463,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1692.5,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.679,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1823.72,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.852,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1840.58,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 41.982,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1858.15,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.155,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1907.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.335,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1907.28,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.688,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1900.83,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 83.076,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1908.6,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.705,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1820.19,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 104.239,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1862.15,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 114.533,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1551.68,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 125.402,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1535.11,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 135.847,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1177.4,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 146.247,
+          "agents": 4,
+          "predators": 4,
+          "energy": 791.91,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 156.162,
+          "agents": 4,
+          "predators": 4,
+          "energy": 433.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 167.098,
+          "agents": 4,
+          "predators": 4,
+          "energy": 874.78,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 173.911,
+          "agents": 4,
+          "predators": 4,
+          "energy": 736.49,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 181.463,
+          "agents": 4,
+          "predators": 4,
+          "energy": 438.56,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 190.968,
+          "agents": 3,
+          "predators": 4,
+          "energy": 664.69,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 201.524,
+          "agents": 4,
+          "predators": 4,
+          "energy": 970.3,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 212.058,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1257.43,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 222.493,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1184.28,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 232.872,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1205.04,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 243.475,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1531.62,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 254.004,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1890.57,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 264.209,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1891.09,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 274.598,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1834.64,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 285.089,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1681.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 292.007,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1079.2,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.008,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 16.93,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "28975fc1c2b99c4b13d2e2e9f0eeff507e8e1e0a761a92f410a2aff799d06a11",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "forest",
+      "seed": 21,
+      "mode": "oracle",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 558.1568697114226,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 570.3131312054309,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 203.5,
+      "score": 196.24632,
+      "alive": 0,
+      "metrics": {
+        "agent_seconds": 749.4,
+        "worker_seconds": 681.1,
+        "worker_exposure_100": 95.4,
+        "worker_exposure_50": 23.9,
+        "all_exposure_100": 120.6,
+        "guide_seconds": 68.3,
+        "guide_move_energy": 786.3318,
+        "worker_move_energy": 2381.9321,
+        "guide_target_seconds": 26.9,
+        "predator_active_seconds": 387.3,
+        "colony_intrusion_seconds": 77.6,
+        "harvest_energy": 7899.6416,
+        "fruit_count": 183,
+        "captures": 8,
+        "guide_captures": 1,
+        "worker_captures": 7,
+        "starvation_deaths": 3,
+        "births": 7,
+        "peak_agents": 4,
+        "predators_spawned": 3,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 432.9779
+      },
+      "events": [
+        {
+          "t": 24.2,
+          "kind": "guide_selected",
+          "aid": 2,
+          "energy": 431.42,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 24.4,
+          "kind": "pursuit_inferred",
+          "aid": 2,
+          "distance": 84.51
+        },
+        {
+          "t": 33.0,
+          "kind": "release_attempt",
+          "aid": 2,
+          "point": [
+            831.6721606848473,
+            77.51219803090893
+          ],
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ],
+          "inferred_still": 2,
+          "energy": 297.64
+        },
+        {
+          "t": 35.1,
+          "kind": "separated",
+          "aid": 2,
+          "energy": 284.56
+        },
+        {
+          "t": 43.9,
+          "kind": "guide_finished",
+          "aid": 2,
+          "energy": 253.72
+        },
+        {
+          "t": 66.9,
+          "kind": "guide_selected",
+          "aid": 2,
+          "energy": 456.11,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 67.1,
+          "kind": "pursuit_inferred",
+          "aid": 2,
+          "distance": 92.16
+        },
+        {
+          "t": 70.7,
+          "kind": "lost_contact",
+          "aid": 2,
+          "remote": false
+        },
+        {
+          "t": 72.3,
+          "kind": "guide_finished",
+          "aid": 2,
+          "energy": 440.45
+        },
+        {
+          "t": 78.7,
+          "kind": "capture",
+          "aid": 3,
+          "role": "worker",
+          "energy": 461.607
+        },
+        {
+          "t": 97.6,
+          "kind": "guide_selected",
+          "aid": 4,
+          "energy": 456.55,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 101.7,
+          "kind": "acquisition_timeout",
+          "aid": 4
+        },
+        {
+          "t": 103.6,
+          "kind": "guide_finished",
+          "aid": 4,
+          "energy": 399.76
+        },
+        {
+          "t": 112.7,
+          "kind": "guide_selected",
+          "aid": 4,
+          "energy": 490.95,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 112.7,
+          "kind": "pursuit_inferred",
+          "aid": 4,
+          "distance": 49.72
+        },
+        {
+          "t": 120.4,
+          "kind": "release_attempt",
+          "aid": 4,
+          "point": [
+            892.7179473018451,
+            126.7104571398589
+          ],
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ],
+          "inferred_still": 2,
+          "energy": 428.17
+        },
+        {
+          "t": 122.6,
+          "kind": "separated",
+          "aid": 4,
+          "energy": 494.0
+        },
+        {
+          "t": 134.2,
+          "kind": "guide_finished",
+          "aid": 4,
+          "energy": 437.42
+        },
+        {
+          "t": 143.6,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -0.205
+        },
+        {
+          "t": 149.9,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -0.6
+        },
+        {
+          "t": 153.9,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -1.461
+        },
+        {
+          "t": 161.7,
+          "kind": "capture",
+          "aid": 7,
+          "role": "worker",
+          "energy": 30.522
+        },
+        {
+          "t": 166.7,
+          "kind": "capture",
+          "aid": 5,
+          "role": "worker",
+          "energy": 64.583
+        },
+        {
+          "t": 168.2,
+          "kind": "capture",
+          "aid": 4,
+          "role": "worker",
+          "energy": 101.148
+        },
+        {
+          "t": 188.2,
+          "kind": "guide_selected",
+          "aid": 8,
+          "energy": 359.85,
+          "home": [
+            315.7807253860286,
+            200.08807006663218
+          ]
+        },
+        {
+          "t": 188.7,
+          "kind": "pursuit_inferred",
+          "aid": 8,
+          "distance": 61.03
+        },
+        {
+          "t": 190.5,
+          "kind": "capture",
+          "aid": 9,
+          "role": "worker",
+          "energy": 183.334
+        },
+        {
+          "t": 194.3,
+          "kind": "capture",
+          "aid": 6,
+          "role": "worker",
+          "energy": 329.239
+        },
+        {
+          "t": 197.9,
+          "kind": "capture",
+          "aid": 10,
+          "role": "worker",
+          "energy": 138.229
+        },
+        {
+          "t": 203.5,
+          "kind": "capture",
+          "aid": 8,
+          "role": "guide",
+          "energy": 206.67
+        }
+      ],
+      "releases": [
+        {
+          "t": 33.0,
+          "aid": 2,
+          "predator": 0,
+          "home": [
+            280.8819597940435,
+            568.40877752644
+          ],
+          "return_t": 66.1,
+          "actual_predator": [
+            831.6721757394179,
+            77.51224042312639
+          ],
+          "guide_energy": 297.64
+        },
+        {
+          "t": 120.4,
+          "aid": 4,
+          "predator": 1,
+          "home": [
+            66.42313006107764,
+            302.3761486945302
+          ],
+          "return_t": null,
+          "actual_predator": [
+            892.7179480982929,
+            126.71045808734965
+          ],
+          "guide_energy": 428.17
+        }
+      ],
+      "guide_episodes": [
+        {
+          "start": 24.2,
+          "aid": 2,
+          "predator": 0,
+          "worker_center": [
+            291.1995464514275,
+            591.951919544909
+          ],
+          "initial_distance": 243.63365524274224,
+          "max_distance": 1326.255063659612,
+          "end": 43.9,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 66.9,
+          "aid": 2,
+          "predator": 0,
+          "worker_center": [
+            263.5985206705622,
+            531.9521723293432
+          ],
+          "initial_distance": 150.31909142958676,
+          "max_distance": 468.05520968656725,
+          "end": 72.3,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 97.6,
+          "aid": 4,
+          "predator": 1,
+          "worker_center": [
+            422.67334521430104,
+            411.824348091286
+          ],
+          "initial_distance": 202.0156605798703,
+          "max_distance": 752.5720486530042,
+          "end": 103.6,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 112.7,
+          "aid": 4,
+          "predator": 1,
+          "worker_center": [
+            260.17495016490835,
+            368.21768854085684
+          ],
+          "initial_distance": 347.8165280403528,
+          "max_distance": 1300.2363388342478,
+          "end": 134.2,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 188.2,
+          "aid": 8,
+          "predator": 0,
+          "worker_center": [
+            206.74462670002515,
+            146.33196937247524
+          ],
+          "initial_distance": 94.83447395925704,
+          "max_distance": 1340.6397843040882,
+          "end": null
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.238,
+          "agents": 4,
+          "predators": 0,
+          "energy": 635.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.463,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1692.5,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.679,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1823.72,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.787,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1761.56,
+          "guide": 2,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 41.787,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1659.03,
+          "guide": 2,
+          "phase": "return"
+        },
+        {
+          "t": 50.2,
+          "score": 52.154,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1932.87,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.274,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1937.01,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.544,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1915.03,
+          "guide": 2,
+          "phase": "lead"
+        },
+        {
+          "t": 80.2,
+          "score": 78.562,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1702.59,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 89.17,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1878.06,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 99.601,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1685.41,
+          "guide": 4,
+          "phase": "lead"
+        },
+        {
+          "t": 110.2,
+          "score": 110.378,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1800.32,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 120.69,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1479.14,
+          "guide": 4,
+          "phase": "lead"
+        },
+        {
+          "t": 130.2,
+          "score": 131.141,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1363.79,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 140.2,
+          "score": 141.275,
+          "agents": 4,
+          "predators": 3,
+          "energy": 900.62,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 151.535,
+          "agents": 4,
+          "predators": 3,
+          "energy": 536.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 161.659,
+          "agents": 4,
+          "predators": 3,
+          "energy": 413.28,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 169.757,
+          "agents": 1,
+          "predators": 3,
+          "energy": 133.46,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 180.481,
+          "agents": 3,
+          "predators": 3,
+          "energy": 706.34,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 191.347,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1193.94,
+          "guide": 8,
+          "phase": "lead"
+        },
+        {
+          "t": 200.2,
+          "score": 195.013,
+          "agents": 1,
+          "predators": 3,
+          "energy": 261.61,
+          "guide": 8,
+          "phase": "lead"
+        }
+      ],
+      "localization_pair_error_mean": 0.36,
+      "localization_pair_error_p95": 1.742,
+      "wall_seconds": 10.91,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "28975fc1c2b99c4b13d2e2e9f0eeff507e8e1e0a761a92f410a2aff799d06a11",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "forest",
+      "seed": 22,
+      "mode": "oracle-control",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 588.6432911116495,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 605.0760843378384,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 302.94774,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1180.7,
+        "worker_seconds": 1180.7,
+        "worker_exposure_100": 79.1,
+        "worker_exposure_50": 17.5,
+        "all_exposure_100": 79.1,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 2804.2716,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 458.6,
+        "colony_intrusion_seconds": 76.1,
+        "harvest_energy": 10665.4978,
+        "fruit_count": 265,
+        "captures": 5,
+        "guide_captures": 0,
+        "worker_captures": 5,
+        "starvation_deaths": 2,
+        "births": 7,
+        "peak_agents": 4,
+        "predators_spawned": 3,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [
+        {
+          "t": 154.0,
+          "kind": "capture",
+          "aid": 2,
+          "role": "worker",
+          "energy": 56.858
+        },
+        {
+          "t": 154.5,
+          "kind": "capture",
+          "aid": 0,
+          "role": "worker",
+          "energy": 178.907
+        },
+        {
+          "t": 154.9,
+          "kind": "capture",
+          "aid": 1,
+          "role": "worker",
+          "energy": 49.118
+        },
+        {
+          "t": 164.4,
+          "kind": "energy_death",
+          "aid": 3,
+          "role": "worker",
+          "energy": -0.951
+        },
+        {
+          "t": 249.3,
+          "kind": "capture",
+          "aid": 7,
+          "role": "worker",
+          "energy": 391.551
+        },
+        {
+          "t": 253.7,
+          "kind": "capture",
+          "aid": 8,
+          "role": "worker",
+          "energy": 99.868
+        },
+        {
+          "t": 298.0,
+          "kind": "energy_death",
+          "aid": 6,
+          "role": "worker",
+          "energy": -0.463
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.304,
+          "agents": 4,
+          "predators": 0,
+          "energy": 701.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.564,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1786.85,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.694,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1843.83,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.81,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1778.13,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 42.0,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1823.22,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.119,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1883.93,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.277,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1901.75,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.303,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1873.99,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 83.008,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1946.29,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.138,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1901.17,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 103.357,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1901.56,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 113.737,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1811.97,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 124.403,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1815.17,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 134.742,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1519.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 145.058,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1161.31,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 155.373,
+          "agents": 4,
+          "predators": 2,
+          "energy": 763.45,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 163.0,
+          "agents": 3,
+          "predators": 2,
+          "energy": 365.91,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 173.304,
+          "agents": 3,
+          "predators": 2,
+          "energy": 432.71,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 184.623,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1530.41,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 194.956,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1752.72,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 205.16,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1865.13,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 215.181,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1837.16,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 225.309,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1886.49,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 235.453,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1882.89,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 245.542,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1902.01,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 251.987,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1426.25,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 261.587,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1553.74,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 272.31,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1741.23,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 282.31,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1289.37,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 292.557,
+          "agents": 4,
+          "predators": 3,
+          "energy": 920.25,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.041,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 14.35,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "227e9677ac16f37db6d447b8551b5564df89ea1f24f0ec73343391c66208700a",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "forest",
+      "seed": 22,
+      "mode": "oracle",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 588.6432911116495,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 605.0760843378384,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 313.14908,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1194.3,
+        "worker_seconds": 1143.2,
+        "worker_exposure_100": 45.5,
+        "worker_exposure_50": 7.0,
+        "all_exposure_100": 69.6,
+        "guide_seconds": 51.1,
+        "guide_move_energy": 630.2797,
+        "worker_move_energy": 3072.5679,
+        "guide_target_seconds": 19.2,
+        "predator_active_seconds": 526.0,
+        "colony_intrusion_seconds": 42.8,
+        "harvest_energy": 14081.6978,
+        "fruit_count": 352,
+        "captures": 1,
+        "guide_captures": 1,
+        "worker_captures": 0,
+        "starvation_deaths": 4,
+        "births": 5,
+        "peak_agents": 4,
+        "predators_spawned": 4,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 125.1502
+      },
+      "events": [
+        {
+          "t": 25.7,
+          "kind": "guide_selected",
+          "aid": 2,
+          "energy": 455.41,
+          "home": [
+            366.732271769909,
+            561.7224445412033
+          ]
+        },
+        {
+          "t": 25.7,
+          "kind": "pursuit_inferred",
+          "aid": 2,
+          "distance": 43.72
+        },
+        {
+          "t": 34.0,
+          "kind": "release_attempt",
+          "aid": 2,
+          "point": [
+            184.67737630575547,
+            72.77349855154705
+          ],
+          "home": [
+            366.732271769909,
+            561.7224445412033
+          ],
+          "inferred_still": 2,
+          "energy": 282.51
+        },
+        {
+          "t": 35.9,
+          "kind": "separated",
+          "aid": 2,
+          "energy": 270.75
+        },
+        {
+          "t": 51.9,
+          "kind": "capture",
+          "aid": 2,
+          "role": "guide",
+          "energy": 97.788
+        },
+        {
+          "t": 51.9,
+          "kind": "guide_lost",
+          "aid": 2,
+          "phase": "return"
+        },
+        {
+          "t": 106.8,
+          "kind": "guide_selected",
+          "aid": 4,
+          "energy": 474.22,
+          "home": [
+            237.9888739053585,
+            593.9808060214956
+          ]
+        },
+        {
+          "t": 106.8,
+          "kind": "pursuit_inferred",
+          "aid": 4,
+          "distance": 46.32
+        },
+        {
+          "t": 114.9,
+          "kind": "release_attempt",
+          "aid": 4,
+          "point": [
+            289.21086218577307,
+            41.45539303986009
+          ],
+          "home": [
+            237.9888739053585,
+            593.9808060214956
+          ],
+          "inferred_still": 2,
+          "energy": 377.94
+        },
+        {
+          "t": 116.9,
+          "kind": "separated",
+          "aid": 4,
+          "energy": 365.53
+        },
+        {
+          "t": 122.1,
+          "kind": "guide_finished",
+          "aid": 4,
+          "energy": 333.88
+        },
+        {
+          "t": 136.1,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -1.395
+        },
+        {
+          "t": 177.7,
+          "kind": "guide_selected",
+          "aid": 5,
+          "energy": 468.0,
+          "home": [
+            429.01042927707715,
+            557.4553114259819
+          ]
+        },
+        {
+          "t": 181.8,
+          "kind": "acquisition_timeout",
+          "aid": 5
+        },
+        {
+          "t": 187.1,
+          "kind": "guide_finished",
+          "aid": 5,
+          "energy": 410.93
+        },
+        {
+          "t": 249.2,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -0.126
+        },
+        {
+          "t": 253.6,
+          "kind": "energy_death",
+          "aid": 3,
+          "role": "worker",
+          "energy": -0.195
+        },
+        {
+          "t": 265.1,
+          "kind": "energy_death",
+          "aid": 4,
+          "role": "worker",
+          "energy": -2.126
+        }
+      ],
+      "releases": [
+        {
+          "t": 34.0,
+          "aid": 2,
+          "predator": 0,
+          "home": [
+            264.37893912906367,
+            570.5249458275629
+          ],
+          "return_t": null,
+          "actual_predator": [
+            184.67738909353517,
+            72.7735438084897
+          ],
+          "guide_energy": 282.51
+        },
+        {
+          "t": 114.9,
+          "aid": 4,
+          "predator": 1,
+          "home": [
+            246.79473147199656,
+            352.0595003412797
+          ],
+          "return_t": 120.8,
+          "actual_predator": [
+            289.2108607560056,
+            41.4553540287863
+          ],
+          "guide_energy": 377.94
+        }
+      ],
+      "guide_episodes": [
+        {
+          "start": 25.7,
+          "aid": 2,
+          "predator": 0,
+          "worker_center": [
+            249.90975290022618,
+            551.2006520241034
+          ],
+          "initial_distance": 49.37268679256744,
+          "max_distance": 1402.5971405348178,
+          "end": 51.9,
+          "end_kind": "guide_lost"
+        },
+        {
+          "start": 106.8,
+          "aid": 4,
+          "predator": 1,
+          "worker_center": [
+            192.82937718705037,
+            541.4908736981512
+          ],
+          "initial_distance": 51.1721225466441,
+          "max_distance": 525.2444110031704,
+          "end": 122.1,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 177.7,
+          "aid": 5,
+          "predator": 1,
+          "worker_center": [
+            199.95789727515626,
+            752.829666192633
+          ],
+          "initial_distance": 132.94676710283008,
+          "max_distance": 691.4257793174444,
+          "end": 187.1,
+          "end_kind": "guide_finished"
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.304,
+          "agents": 4,
+          "predators": 0,
+          "energy": 701.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.564,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1786.85,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.694,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1843.83,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.81,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1762.2,
+          "guide": 2,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 41.908,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1647.53,
+          "guide": 2,
+          "phase": "return"
+        },
+        {
+          "t": 50.2,
+          "score": 51.96,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1552.41,
+          "guide": 2,
+          "phase": "return"
+        },
+        {
+          "t": 60.2,
+          "score": 61.583,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1912.1,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 71.678,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1886.85,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 81.717,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1859.15,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 91.915,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1890.37,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 102.063,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1871.81,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 112.521,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1764.9,
+          "guide": 4,
+          "phase": "lead"
+        },
+        {
+          "t": 120.2,
+          "score": 122.854,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1430.06,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 130.2,
+          "score": 133.706,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1432.0,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 144.517,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1671.68,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 155.027,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1702.4,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 165.358,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1546.52,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 176.055,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1616.88,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 186.628,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1456.44,
+          "guide": 5,
+          "phase": "lead"
+        },
+        {
+          "t": 190.2,
+          "score": 197.492,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1607.25,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 208.095,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1561.18,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 218.559,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1326.88,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 229.072,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1093.17,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 240.055,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1194.11,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 250.354,
+          "agents": 4,
+          "predators": 3,
+          "energy": 598.07,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 261.187,
+          "agents": 4,
+          "predators": 3,
+          "energy": 437.16,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 271.894,
+          "agents": 4,
+          "predators": 3,
+          "energy": 490.63,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 282.31,
+          "agents": 4,
+          "predators": 3,
+          "energy": 511.79,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 292.783,
+          "agents": 4,
+          "predators": 3,
+          "energy": 683.62,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 303.169,
+          "agents": 4,
+          "predators": 3,
+          "energy": 783.53,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.106,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 17.22,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "227e9677ac16f37db6d447b8551b5564df89ea1f24f0ec73343391c66208700a",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "obstacles",
+      "seed": 21,
+      "mode": "oracle-control",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 566.5089558323369,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 576.8502002380533,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 315.34077,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1198.2,
+        "worker_seconds": 1198.2,
+        "worker_exposure_100": 237.0,
+        "worker_exposure_50": 39.6,
+        "all_exposure_100": 237.0,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 5172.994,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 742.2,
+        "colony_intrusion_seconds": 200.0,
+        "harvest_energy": 16069.3884,
+        "fruit_count": 373,
+        "captures": 2,
+        "guide_captures": 0,
+        "worker_captures": 2,
+        "starvation_deaths": 2,
+        "births": 4,
+        "peak_agents": 4,
+        "predators_spawned": 5,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [
+        {
+          "t": 185.2,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -1.669
+        },
+        {
+          "t": 195.6,
+          "kind": "energy_death",
+          "aid": 3,
+          "role": "worker",
+          "energy": -1.981
+        },
+        {
+          "t": 198.8,
+          "kind": "capture",
+          "aid": 0,
+          "role": "worker",
+          "energy": 44.694
+        },
+        {
+          "t": 210.7,
+          "kind": "capture",
+          "aid": 2,
+          "role": "worker",
+          "energy": 28.167
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.238,
+          "agents": 4,
+          "predators": 0,
+          "energy": 635.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.56,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1739.16,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.766,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1849.83,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.854,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1737.25,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 42.16,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1909.08,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.25,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1896.18,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.485,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1955.84,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.605,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1872.78,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 83.236,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1863.36,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.918,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1884.74,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 104.351,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1685.02,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 114.954,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1706.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 125.669,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1753.0,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 136.23,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1588.42,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 146.343,
+          "agents": 4,
+          "predators": 3,
+          "energy": 992.25,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 156.48,
+          "agents": 4,
+          "predators": 4,
+          "energy": 391.61,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 168.602,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1638.69,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 179.394,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1521.46,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 189.686,
+          "agents": 4,
+          "predators": 4,
+          "energy": 925.24,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 200.278,
+          "agents": 4,
+          "predators": 5,
+          "energy": 613.29,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 210.904,
+          "agents": 4,
+          "predators": 5,
+          "energy": 800.26,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 221.595,
+          "agents": 4,
+          "predators": 5,
+          "energy": 983.87,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 231.8,
+          "agents": 4,
+          "predators": 5,
+          "energy": 983.66,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 242.43,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1303.75,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 252.696,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1324.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 263.279,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1603.4,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 273.568,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1592.25,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 284.039,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1895.42,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 294.674,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1913.86,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 304.823,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1747.05,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.124,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 18.62,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "28975fc1c2b99c4b13d2e2e9f0eeff507e8e1e0a761a92f410a2aff799d06a11",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "obstacles",
+      "seed": 21,
+      "mode": "oracle",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 566.5089558323369,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 576.8502002380533,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 304.3845,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1184.0,
+        "worker_seconds": 1124.6,
+        "worker_exposure_100": 92.7,
+        "worker_exposure_50": 15.7,
+        "all_exposure_100": 120.8,
+        "guide_seconds": 59.4,
+        "guide_move_energy": 738.016,
+        "worker_move_energy": 3537.2846,
+        "guide_target_seconds": 29.3,
+        "predator_active_seconds": 665.3,
+        "colony_intrusion_seconds": 101.8,
+        "harvest_energy": 13816.1884,
+        "fruit_count": 354,
+        "captures": 4,
+        "guide_captures": 2,
+        "worker_captures": 2,
+        "starvation_deaths": 3,
+        "births": 7,
+        "peak_agents": 4,
+        "predators_spawned": 4,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 559.1532
+      },
+      "events": [
+        {
+          "t": 25.7,
+          "kind": "guide_selected",
+          "aid": 3,
+          "energy": 468.08,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 25.7,
+          "kind": "pursuit_inferred",
+          "aid": 3,
+          "distance": 45.02
+        },
+        {
+          "t": 31.7,
+          "kind": "capture",
+          "aid": 3,
+          "role": "guide",
+          "energy": 351.034
+        },
+        {
+          "t": 31.7,
+          "kind": "guide_lost",
+          "aid": 3,
+          "phase": "lead"
+        },
+        {
+          "t": 36.0,
+          "kind": "guide_selected",
+          "aid": 1,
+          "energy": 474.1,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 40.0,
+          "kind": "acquisition_timeout",
+          "aid": 1
+        },
+        {
+          "t": 41.8,
+          "kind": "guide_finished",
+          "aid": 1,
+          "energy": 493.19
+        },
+        {
+          "t": 76.1,
+          "kind": "guide_selected",
+          "aid": 4,
+          "energy": 491.39,
+          "home": [
+            491.88029047891047,
+            639.3633670678485
+          ]
+        },
+        {
+          "t": 76.1,
+          "kind": "pursuit_inferred",
+          "aid": 4,
+          "distance": 47.04
+        },
+        {
+          "t": 79.9,
+          "kind": "lost_contact",
+          "aid": 4,
+          "remote": false
+        },
+        {
+          "t": 81.6,
+          "kind": "guide_finished",
+          "aid": 4,
+          "energy": 436.37
+        },
+        {
+          "t": 174.7,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -1.238
+        },
+        {
+          "t": 176.6,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -1.618
+        },
+        {
+          "t": 177.0,
+          "kind": "capture",
+          "aid": 1,
+          "role": "worker",
+          "energy": 56.354
+        },
+        {
+          "t": 195.1,
+          "kind": "guide_selected",
+          "aid": 6,
+          "energy": 488.92,
+          "home": [
+            486.9455379312071,
+            913.8787164936389
+          ]
+        },
+        {
+          "t": 195.1,
+          "kind": "pursuit_inferred",
+          "aid": 6,
+          "distance": 49.19
+        },
+        {
+          "t": 213.2,
+          "kind": "abort_to_escape",
+          "aid": 6,
+          "energy": 279.14,
+          "remote": false
+        },
+        {
+          "t": 215.3,
+          "kind": "separated",
+          "aid": 6,
+          "energy": 266.04
+        },
+        {
+          "t": 233.2,
+          "kind": "capture",
+          "aid": 6,
+          "role": "guide",
+          "energy": 440.432
+        },
+        {
+          "t": 233.2,
+          "kind": "guide_lost",
+          "aid": 6,
+          "phase": "return"
+        },
+        {
+          "t": 246.0,
+          "kind": "energy_death",
+          "aid": 4,
+          "role": "worker",
+          "energy": -0.906
+        },
+        {
+          "t": 277.7,
+          "kind": "guide_selected",
+          "aid": 8,
+          "energy": 393.14,
+          "home": [
+            390.182728608837,
+            1071.6053478901356
+          ]
+        },
+        {
+          "t": 277.7,
+          "kind": "pursuit_inferred",
+          "aid": 8,
+          "distance": 46.33
+        },
+        {
+          "t": 280.9,
+          "kind": "lost_contact",
+          "aid": 8,
+          "remote": false
+        },
+        {
+          "t": 281.4,
+          "kind": "guide_finished",
+          "aid": 8,
+          "energy": 358.14
+        },
+        {
+          "t": 287.5,
+          "kind": "capture",
+          "aid": 5,
+          "role": "worker",
+          "energy": 95.349
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [
+        {
+          "start": 25.7,
+          "aid": 3,
+          "predator": 0,
+          "worker_center": [
+            260.59420731497363,
+            576.0292501854448
+          ],
+          "initial_distance": 86.90721974442683,
+          "max_distance": 567.5744684796084,
+          "end": 31.7,
+          "end_kind": "guide_lost"
+        },
+        {
+          "start": 36.0,
+          "aid": 1,
+          "predator": 0,
+          "worker_center": [
+            300.69594696543726,
+            672.4571494230044
+          ],
+          "initial_distance": 114.8899243732999,
+          "max_distance": 544.0701052283059,
+          "end": 41.8,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 76.1,
+          "aid": 4,
+          "predator": 0,
+          "worker_center": [
+            333.1827730329551,
+            657.3716962836843
+          ],
+          "initial_distance": 93.67843097755103,
+          "max_distance": 457.38019335919887,
+          "end": 81.6,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 195.1,
+          "aid": 6,
+          "predator": 3,
+          "worker_center": [
+            432.96012403267645,
+            882.5016543620428
+          ],
+          "initial_distance": 89.61135297352742,
+          "max_distance": 1156.6931821873543,
+          "end": 233.2,
+          "end_kind": "guide_lost"
+        },
+        {
+          "start": 277.7,
+          "aid": 8,
+          "predator": 0,
+          "worker_center": [
+            299.9717632778206,
+            1000.8921856910443
+          ],
+          "initial_distance": 93.02830110921045,
+          "max_distance": 363.0567497542779,
+          "end": 281.4,
+          "end_kind": "guide_finished"
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.238,
+          "agents": 4,
+          "predators": 0,
+          "energy": 635.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.56,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1739.16,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.766,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1849.83,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.827,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1696.01,
+          "guide": 3,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 38.801,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1420.69,
+          "guide": 1,
+          "phase": "return"
+        },
+        {
+          "t": 50.2,
+          "score": 49.268,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1707.91,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 59.703,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1894.3,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 69.918,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1919.42,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 80.117,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1856.56,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 90.2,
+          "score": 90.507,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1913.69,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 100.758,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1864.0,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 111.047,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1697.19,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 121.642,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1630.24,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 132.238,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1580.77,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 142.333,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1069.59,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 152.514,
+          "agents": 4,
+          "predators": 3,
+          "energy": 595.54,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 163.18,
+          "agents": 4,
+          "predators": 3,
+          "energy": 473.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 173.884,
+          "agents": 4,
+          "predators": 3,
+          "energy": 348.08,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 183.921,
+          "agents": 2,
+          "predators": 3,
+          "energy": 247.24,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 194.798,
+          "agents": 4,
+          "predators": 4,
+          "energy": 704.18,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 205.555,
+          "agents": 4,
+          "predators": 4,
+          "energy": 966.58,
+          "guide": 6,
+          "phase": "lead"
+        },
+        {
+          "t": 210.2,
+          "score": 216.432,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1339.57,
+          "guide": 6,
+          "phase": "lead"
+        },
+        {
+          "t": 220.2,
+          "score": 226.911,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1462.37,
+          "guide": 6,
+          "phase": "return"
+        },
+        {
+          "t": 230.2,
+          "score": 237.43,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1424.52,
+          "guide": 6,
+          "phase": "return"
+        },
+        {
+          "t": 240.2,
+          "score": 243.649,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1171.02,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 253.939,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1173.51,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 264.29,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1375.8,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 274.466,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1342.1,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 284.6,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1230.39,
+          "guide": 8,
+          "phase": "lead"
+        },
+        {
+          "t": 290.2,
+          "score": 293.864,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1045.4,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.047,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 18.48,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "28975fc1c2b99c4b13d2e2e9f0eeff507e8e1e0a761a92f410a2aff799d06a11",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "obstacles",
+      "seed": 22,
+      "mode": "oracle-control",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 572.2477207074818,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 628.8985853635492,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 309.11102,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1199.0,
+        "worker_seconds": 1199.0,
+        "worker_exposure_100": 137.0,
+        "worker_exposure_50": 22.1,
+        "all_exposure_100": 137.0,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 3932.6683,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 531.4,
+        "colony_intrusion_seconds": 125.3,
+        "harvest_energy": 13133.8978,
+        "fruit_count": 329,
+        "captures": 3,
+        "guide_captures": 0,
+        "worker_captures": 3,
+        "starvation_deaths": 3,
+        "births": 6,
+        "peak_agents": 4,
+        "predators_spawned": 3,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [
+        {
+          "t": 182.2,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -0.843
+        },
+        {
+          "t": 190.2,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -0.262
+        },
+        {
+          "t": 192.5,
+          "kind": "energy_death",
+          "aid": 3,
+          "role": "worker",
+          "energy": -1.256
+        },
+        {
+          "t": 201.5,
+          "kind": "capture",
+          "aid": 2,
+          "role": "worker",
+          "energy": 58.03
+        },
+        {
+          "t": 270.8,
+          "kind": "capture",
+          "aid": 5,
+          "role": "worker",
+          "energy": 144.686
+        },
+        {
+          "t": 298.8,
+          "kind": "capture",
+          "aid": 4,
+          "role": "worker",
+          "energy": 204.098
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.304,
+          "agents": 4,
+          "predators": 0,
+          "energy": 701.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.564,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1786.85,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.717,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1857.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.854,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1841.74,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 42.08,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1925.02,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.14,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1907.91,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.287,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1936.76,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.737,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1930.29,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 82.851,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1900.97,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 92.96,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1859.49,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 103.243,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1878.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 113.744,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1760.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 124.506,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1761.69,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 135.087,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1682.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 146.001,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1800.69,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 156.779,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1766.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 167.106,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1191.4,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 177.648,
+          "agents": 4,
+          "predators": 3,
+          "energy": 839.3,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 188.773,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1008.95,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 199.433,
+          "agents": 3,
+          "predators": 3,
+          "energy": 810.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 210.202,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1068.34,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 219.973,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1186.09,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 230.151,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1260.49,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 240.256,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1263.73,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 250.625,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1486.08,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 260.697,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1424.29,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 270.86,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1410.56,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 281.264,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1520.02,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 290.722,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1813.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 301.211,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1780.61,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.017,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 18.11,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "227e9677ac16f37db6d447b8551b5564df89ea1f24f0ec73343391c66208700a",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "obstacles",
+      "seed": 22,
+      "mode": "oracle",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 572.2477207074818,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 628.8985853635492,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 310.73043,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1199.0,
+        "worker_seconds": 1181.9,
+        "worker_exposure_100": 65.7,
+        "worker_exposure_50": 12.5,
+        "all_exposure_100": 70.4,
+        "guide_seconds": 17.1,
+        "guide_move_energy": 236.6284,
+        "worker_move_energy": 2907.3168,
+        "guide_target_seconds": 9.7,
+        "predator_active_seconds": 558.5,
+        "colony_intrusion_seconds": 59.1,
+        "harvest_energy": 11675.0978,
+        "fruit_count": 293,
+        "captures": 1,
+        "guide_captures": 0,
+        "worker_captures": 1,
+        "starvation_deaths": 5,
+        "births": 6,
+        "peak_agents": 4,
+        "predators_spawned": 5,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 55.6
+      },
+      "events": [
+        {
+          "t": 25.4,
+          "kind": "guide_selected",
+          "aid": 3,
+          "energy": 462.81,
+          "home": [
+            366.732271769909,
+            561.7224445412033
+          ]
+        },
+        {
+          "t": 25.4,
+          "kind": "pursuit_inferred",
+          "aid": 3,
+          "distance": 43.25
+        },
+        {
+          "t": 34.0,
+          "kind": "release_attempt",
+          "aid": 3,
+          "point": [
+            279.8826511895116,
+            1090.7746117629222
+          ],
+          "home": [
+            366.732271769909,
+            561.7224445412033
+          ],
+          "inferred_still": 2,
+          "energy": 349.41
+        },
+        {
+          "t": 36.0,
+          "kind": "separated",
+          "aid": 3,
+          "energy": 336.97
+        },
+        {
+          "t": 40.8,
+          "kind": "guide_finished",
+          "aid": 3,
+          "energy": 307.72
+        },
+        {
+          "t": 162.5,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -1.495
+        },
+        {
+          "t": 168.2,
+          "kind": "energy_death",
+          "aid": 3,
+          "role": "worker",
+          "energy": -0.078
+        },
+        {
+          "t": 216.9,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -0.678
+        },
+        {
+          "t": 226.5,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -0.41
+        },
+        {
+          "t": 250.4,
+          "kind": "capture",
+          "aid": 7,
+          "role": "worker",
+          "energy": 98.993
+        },
+        {
+          "t": 286.6,
+          "kind": "energy_death",
+          "aid": 5,
+          "role": "worker",
+          "energy": -1.372
+        },
+        {
+          "t": 298.4,
+          "kind": "guide_selected",
+          "aid": 8,
+          "energy": 396.38,
+          "home": [
+            431.7230034311643,
+            194.08399610184853
+          ]
+        },
+        {
+          "t": 298.4,
+          "kind": "pursuit_inferred",
+          "aid": 8,
+          "distance": 58.6
+        }
+      ],
+      "releases": [
+        {
+          "t": 34.0,
+          "aid": 3,
+          "predator": 0,
+          "home": [
+            254.03798190859501,
+            565.1804433427552
+          ],
+          "return_t": 130.1,
+          "actual_predator": [
+            279.8826427948403,
+            1090.7746274122271
+          ],
+          "guide_energy": 349.41
+        }
+      ],
+      "guide_episodes": [
+        {
+          "start": 25.4,
+          "aid": 3,
+          "predator": 0,
+          "worker_center": [
+            273.0476133262844,
+            555.7431085194567
+          ],
+          "initial_distance": 101.0113014282152,
+          "max_distance": 652.9942424799171,
+          "end": 40.8,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 298.4,
+          "aid": 8,
+          "predator": 4,
+          "worker_center": [
+            767.7597856847734,
+            279.4944537911369
+          ],
+          "initial_distance": 747.2056643279715,
+          "max_distance": 748.3435519379747,
+          "end": null
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.304,
+          "agents": 4,
+          "predators": 0,
+          "energy": 701.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.564,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1786.85,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.717,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1857.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.851,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1831.94,
+          "guide": 3,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 41.923,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1738.75,
+          "guide": 3,
+          "phase": "return"
+        },
+        {
+          "t": 50.2,
+          "score": 52.247,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1917.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.298,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1917.81,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.399,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1920.46,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 82.459,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1905.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 92.621,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1894.77,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 102.795,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1905.73,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 113.094,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1730.41,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 123.692,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1667.31,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 134.316,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1651.36,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 144.749,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1234.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 155.15,
+          "agents": 4,
+          "predators": 2,
+          "energy": 958.42,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 165.368,
+          "agents": 4,
+          "predators": 2,
+          "energy": 462.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 176.721,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1074.51,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 187.998,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1796.41,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 198.491,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1780.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 208.676,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1451.02,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 218.854,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1117.03,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 229.229,
+          "agents": 4,
+          "predators": 3,
+          "energy": 952.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 239.566,
+          "agents": 4,
+          "predators": 3,
+          "energy": 972.26,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 249.817,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1010.74,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 260.128,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1125.32,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 269.44,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1165.79,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 279.543,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1132.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 290.179,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1460.91,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 300.473,
+          "agents": 4,
+          "predators": 5,
+          "energy": 1277.66,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.126,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 19.21,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "227e9677ac16f37db6d447b8551b5564df89ea1f24f0ec73343391c66208700a",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "river",
+      "seed": 21,
+      "mode": "oracle-control",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 566.5089558323369,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 576.8502002380533,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 307.45535,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1199.2,
+        "worker_seconds": 1199.2,
+        "worker_exposure_100": 71.4,
+        "worker_exposure_50": 12.6,
+        "all_exposure_100": 71.4,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 3368.2891,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 528.7,
+        "colony_intrusion_seconds": 76.0,
+        "harvest_energy": 11950.4477,
+        "fruit_count": 304,
+        "captures": 2,
+        "guide_captures": 0,
+        "worker_captures": 2,
+        "starvation_deaths": 2,
+        "births": 4,
+        "peak_agents": 4,
+        "predators_spawned": 3,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [
+        {
+          "t": 118.6,
+          "kind": "capture",
+          "aid": 3,
+          "role": "worker",
+          "energy": 403.794
+        },
+        {
+          "t": 150.7,
+          "kind": "capture",
+          "aid": 0,
+          "role": "worker",
+          "energy": 45.716
+        },
+        {
+          "t": 180.6,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -0.541
+        },
+        {
+          "t": 184.8,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -1.194
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.238,
+          "agents": 4,
+          "predators": 0,
+          "energy": 635.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.442,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1639.26,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.747,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1824.67,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.909,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1723.07,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 42.165,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1803.75,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.402,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1921.88,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.451,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1870.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.613,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1884.52,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 82.873,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1902.89,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.167,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1871.7,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 103.719,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1875.62,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 114.135,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1790.97,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 120.575,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1158.62,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 131.143,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1213.32,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 141.587,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1123.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 152.032,
+          "agents": 4,
+          "predators": 3,
+          "energy": 920.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 162.356,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1023.3,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 172.675,
+          "agents": 4,
+          "predators": 3,
+          "energy": 856.67,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 183.101,
+          "agents": 4,
+          "predators": 3,
+          "energy": 751.22,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 193.501,
+          "agents": 4,
+          "predators": 3,
+          "energy": 838.8,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 204.627,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1754.21,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 214.889,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1840.34,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 225.264,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1842.79,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 235.598,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1885.81,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 245.788,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1806.77,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 256.253,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1860.47,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 266.562,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1824.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 276.936,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1728.6,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 287.499,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1672.03,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 297.602,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1172.63,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.18,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 19.41,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "28975fc1c2b99c4b13d2e2e9f0eeff507e8e1e0a761a92f410a2aff799d06a11",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "river",
+      "seed": 21,
+      "mode": "oracle",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 566.5089558323369,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 576.8502002380533,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 303.04874,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1180.3,
+        "worker_seconds": 1101.5,
+        "worker_exposure_100": 85.4,
+        "worker_exposure_50": 25.8,
+        "all_exposure_100": 119.7,
+        "guide_seconds": 78.8,
+        "guide_move_energy": 852.6081,
+        "worker_move_energy": 3351.3845,
+        "guide_target_seconds": 37.0,
+        "predator_active_seconds": 520.8,
+        "colony_intrusion_seconds": 93.4,
+        "harvest_energy": 14039.9347,
+        "fruit_count": 351,
+        "captures": 6,
+        "guide_captures": 0,
+        "worker_captures": 6,
+        "starvation_deaths": 2,
+        "births": 8,
+        "peak_agents": 4,
+        "predators_spawned": 4,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 477.4873
+      },
+      "events": [
+        {
+          "t": 25.7,
+          "kind": "guide_selected",
+          "aid": 2,
+          "energy": 440.23,
+          "home": [
+            361.2328655724077,
+            565.4809922483586
+          ]
+        },
+        {
+          "t": 29.7,
+          "kind": "acquisition_timeout",
+          "aid": 2
+        },
+        {
+          "t": 31.8,
+          "kind": "guide_finished",
+          "aid": 2,
+          "energy": 332.33
+        },
+        {
+          "t": 109.6,
+          "kind": "capture",
+          "aid": 3,
+          "role": "worker",
+          "energy": 476.482
+        },
+        {
+          "t": 113.0,
+          "kind": "capture",
+          "aid": 1,
+          "role": "worker",
+          "energy": 428.402
+        },
+        {
+          "t": 118.1,
+          "kind": "guide_selected",
+          "aid": 4,
+          "energy": 476.03,
+          "home": [
+            417.5155448395063,
+            723.144944694689
+          ]
+        },
+        {
+          "t": 118.1,
+          "kind": "pursuit_inferred",
+          "aid": 4,
+          "distance": 43.64
+        },
+        {
+          "t": 126.5,
+          "kind": "release_attempt",
+          "aid": 4,
+          "point": [
+            57.492204927470496,
+            159.44159641118821
+          ],
+          "home": [
+            417.5155448395063,
+            723.144944694689
+          ],
+          "inferred_still": 2,
+          "energy": 401.57
+        },
+        {
+          "t": 129.7,
+          "kind": "separated",
+          "aid": 4,
+          "energy": 497.0
+        },
+        {
+          "t": 163.2,
+          "kind": "guide_finished",
+          "aid": 4,
+          "energy": 238.37
+        },
+        {
+          "t": 174.9,
+          "kind": "guide_selected",
+          "aid": 5,
+          "energy": 478.62,
+          "home": [
+            620.7002624602919,
+            703.3225802497489
+          ]
+        },
+        {
+          "t": 174.9,
+          "kind": "pursuit_inferred",
+          "aid": 5,
+          "distance": 44.77
+        },
+        {
+          "t": 180.4,
+          "kind": "lost_contact",
+          "aid": 5,
+          "remote": false
+        },
+        {
+          "t": 183.0,
+          "kind": "guide_finished",
+          "aid": 5,
+          "energy": 376.98
+        },
+        {
+          "t": 200.5,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -2.404
+        },
+        {
+          "t": 247.8,
+          "kind": "capture",
+          "aid": 4,
+          "role": "worker",
+          "energy": 26.823
+        },
+        {
+          "t": 253.5,
+          "kind": "capture",
+          "aid": 0,
+          "role": "worker",
+          "energy": 7.86
+        },
+        {
+          "t": 253.8,
+          "kind": "guide_selected",
+          "aid": 6,
+          "energy": 360.61,
+          "home": [
+            718.5458634126933,
+            603.8013577816746
+          ]
+        },
+        {
+          "t": 256.0,
+          "kind": "energy_death",
+          "aid": 5,
+          "role": "worker",
+          "energy": -0.129
+        },
+        {
+          "t": 257.8,
+          "kind": "acquisition_timeout",
+          "aid": 6
+        },
+        {
+          "t": 261.1,
+          "kind": "guide_finished",
+          "aid": 6,
+          "energy": 429.97
+        },
+        {
+          "t": 261.5,
+          "kind": "capture",
+          "aid": 7,
+          "role": "worker",
+          "energy": 87.514
+        },
+        {
+          "t": 283.9,
+          "kind": "capture",
+          "aid": 8,
+          "role": "worker",
+          "energy": 72.038
+        },
+        {
+          "t": 288.2,
+          "kind": "guide_selected",
+          "aid": 9,
+          "energy": 348.32,
+          "home": [
+            584.1498442551502,
+            554.0460154411531
+          ]
+        },
+        {
+          "t": 288.3,
+          "kind": "pursuit_inferred",
+          "aid": 9,
+          "distance": 99.58
+        },
+        {
+          "t": 299.2,
+          "kind": "release_attempt",
+          "aid": 9,
+          "point": [
+            435.66484968778775,
+            1118.4440941860348
+          ],
+          "home": [
+            584.1498442551502,
+            554.0460154411531
+          ],
+          "inferred_still": 2,
+          "energy": 279.9
+        }
+      ],
+      "releases": [
+        {
+          "t": 126.5,
+          "aid": 4,
+          "predator": 1,
+          "home": [
+            447.11295894774565,
+            800.7336329432468
+          ],
+          "return_t": 170.3,
+          "actual_predator": [
+            57.49220949919427,
+            159.44159629215255
+          ],
+          "guide_energy": 401.57
+        },
+        {
+          "t": 299.2,
+          "aid": 9,
+          "predator": 2,
+          "home": [
+            704.53772647796,
+            515.8777932628495
+          ],
+          "return_t": null,
+          "actual_predator": [
+            435.66486320185186,
+            1118.4441452271392
+          ],
+          "guide_energy": 279.9
+        }
+      ],
+      "guide_episodes": [
+        {
+          "start": 25.7,
+          "aid": 2,
+          "predator": 0,
+          "worker_center": [
+            274.9540555814367,
+            576.1848134513398
+          ],
+          "initial_distance": 25.377146543688088,
+          "max_distance": 571.7954465170794,
+          "end": 31.8,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 118.1,
+          "aid": 4,
+          "predator": 1,
+          "worker_center": [
+            290.0497219627426,
+            750.4796202017156
+          ],
+          "initial_distance": 121.11371252312897,
+          "max_distance": 1433.304914757748,
+          "end": 163.2,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 174.9,
+          "aid": 5,
+          "predator": 0,
+          "worker_center": [
+            641.6938614437971,
+            629.1130214570486
+          ],
+          "initial_distance": 115.51309817326529,
+          "max_distance": 473.0387265977619,
+          "end": 183.0,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 253.8,
+          "aid": 6,
+          "predator": 2,
+          "worker_center": [
+            418.2381294185556,
+            479.37023075281115
+          ],
+          "initial_distance": 88.04822712234424,
+          "max_distance": 407.6118530298236,
+          "end": 261.1,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 288.2,
+          "aid": 9,
+          "predator": 3,
+          "worker_center": [
+            542.1039455860756,
+            538.9189983932224
+          ],
+          "initial_distance": 132.52224750138393,
+          "max_distance": 561.0140159655435,
+          "end": null
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.238,
+          "agents": 4,
+          "predators": 0,
+          "energy": 635.35,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.442,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1639.26,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.747,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1824.67,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.858,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1613.22,
+          "guide": 2,
+          "phase": "return"
+        },
+        {
+          "t": 40.2,
+          "score": 42.302,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1891.28,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.409,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1910.3,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.501,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1934.57,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.594,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1893.66,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 82.781,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1845.59,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.133,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1856.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 103.902,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1923.69,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 109.881,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1367.45,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 117.006,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1786.39,
+          "guide": 4,
+          "phase": "lead"
+        },
+        {
+          "t": 130.2,
+          "score": 127.543,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1815.63,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 140.2,
+          "score": 138.035,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1686.98,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 150.2,
+          "score": 148.464,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1654.57,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 160.2,
+          "score": 158.835,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1499.28,
+          "guide": 4,
+          "phase": "return"
+        },
+        {
+          "t": 170.2,
+          "score": 169.422,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1540.15,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 179.826,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1363.84,
+          "guide": 5,
+          "phase": "lead"
+        },
+        {
+          "t": 190.2,
+          "score": 190.164,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1210.52,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 200.565,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1036.0,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 211.118,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1215.78,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 221.783,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1495.9,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 232.116,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1198.2,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 242.536,
+          "agents": 4,
+          "predators": 3,
+          "energy": 861.79,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 252.776,
+          "agents": 4,
+          "predators": 3,
+          "energy": 663.77,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 262.921,
+          "agents": 2,
+          "predators": 3,
+          "energy": 530.68,
+          "guide": 6,
+          "phase": "return"
+        },
+        {
+          "t": 270.2,
+          "score": 272.514,
+          "agents": 4,
+          "predators": 4,
+          "energy": 646.74,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 283.184,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1075.98,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 292.995,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1245.04,
+          "guide": 9,
+          "phase": "lead"
+        }
+      ],
+      "localization_pair_error_mean": 0.15,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 19.15,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "28975fc1c2b99c4b13d2e2e9f0eeff507e8e1e0a761a92f410a2aff799d06a11",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "river",
+      "seed": 22,
+      "mode": "oracle-control",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 572.2477207074818,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 628.8985853635492,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 311.29351,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1174.5,
+        "worker_seconds": 1174.5,
+        "worker_exposure_100": 120.6,
+        "worker_exposure_50": 18.4,
+        "all_exposure_100": 120.6,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 3671.1921,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 467.3,
+        "colony_intrusion_seconds": 108.9,
+        "harvest_energy": 12606.6978,
+        "fruit_count": 314,
+        "captures": 2,
+        "guide_captures": 0,
+        "worker_captures": 2,
+        "starvation_deaths": 3,
+        "births": 5,
+        "peak_agents": 4,
+        "predators_spawned": 5,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [
+        {
+          "t": 167.8,
+          "kind": "capture",
+          "aid": 2,
+          "role": "worker",
+          "energy": 32.489
+        },
+        {
+          "t": 187.9,
+          "kind": "energy_death",
+          "aid": 3,
+          "role": "worker",
+          "energy": -0.16
+        },
+        {
+          "t": 192.7,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -0.093
+        },
+        {
+          "t": 198.7,
+          "kind": "energy_death",
+          "aid": 0,
+          "role": "worker",
+          "energy": -1.174
+        },
+        {
+          "t": 236.5,
+          "kind": "capture",
+          "aid": 7,
+          "role": "worker",
+          "energy": 103.356
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.304,
+          "agents": 4,
+          "predators": 0,
+          "energy": 701.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.606,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1828.52,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.704,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1856.22,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.772,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1755.88,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 42.046,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1842.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.27,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1929.8,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.344,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1918.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.344,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1863.41,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 82.522,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1917.86,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 92.609,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1848.61,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 102.824,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1865.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 113.694,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1849.88,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 124.634,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1741.97,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 135.256,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1649.11,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 146.024,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1682.42,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 156.682,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1596.89,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 166.897,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1063.45,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 176.903,
+          "agents": 4,
+          "predators": 2,
+          "energy": 516.03,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 187.606,
+          "agents": 4,
+          "predators": 2,
+          "energy": 508.02,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 198.172,
+          "agents": 3,
+          "predators": 2,
+          "energy": 376.68,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 208.536,
+          "agents": 3,
+          "predators": 2,
+          "energy": 319.97,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 219.061,
+          "agents": 3,
+          "predators": 2,
+          "energy": 707.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 229.628,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1054.67,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 239.94,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1044.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 249.184,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1037.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 259.521,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1128.83,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 270.27,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1579.98,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 270.2,
+          "score": 280.737,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1755.4,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 290.799,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1610.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 301.165,
+          "agents": 4,
+          "predators": 4,
+          "energy": 1586.71,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.0,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 17.53,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "227e9677ac16f37db6d447b8551b5564df89ea1f24f0ec73343391c66208700a",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    },
+    {
+      "scenario": "river",
+      "seed": 22,
+      "mode": "oracle",
+      "horizon": 300,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18,
+        "risk_gate": true
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 572.2477207074818,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 628.8985853635492,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 300.0,
+      "score": 312.91214,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 1187.5,
+        "worker_seconds": 1172.9,
+        "worker_exposure_100": 134.3,
+        "worker_exposure_50": 21.8,
+        "all_exposure_100": 138.1,
+        "guide_seconds": 14.6,
+        "guide_move_energy": 118.1258,
+        "worker_move_energy": 3589.984,
+        "guide_target_seconds": 0.6,
+        "predator_active_seconds": 449.8,
+        "colony_intrusion_seconds": 128.0,
+        "harvest_energy": 14682.4978,
+        "fruit_count": 334,
+        "captures": 3,
+        "guide_captures": 0,
+        "worker_captures": 3,
+        "starvation_deaths": 2,
+        "births": 5,
+        "peak_agents": 4,
+        "predators_spawned": 3,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 86.3655
+      },
+      "events": [
+        {
+          "t": 25.0,
+          "kind": "guide_selected",
+          "aid": 1,
+          "energy": 467.43,
+          "home": [
+            366.732271769909,
+            561.7224445412033
+          ]
+        },
+        {
+          "t": 26.2,
+          "kind": "pursuit_inferred",
+          "aid": 1,
+          "distance": 71.14
+        },
+        {
+          "t": 30.8,
+          "kind": "lost_contact",
+          "aid": 1,
+          "remote": false
+        },
+        {
+          "t": 32.5,
+          "kind": "guide_finished",
+          "aid": 1,
+          "energy": 413.84
+        },
+        {
+          "t": 166.0,
+          "kind": "capture",
+          "aid": 3,
+          "role": "worker",
+          "energy": 15.934
+        },
+        {
+          "t": 183.1,
+          "kind": "capture",
+          "aid": 0,
+          "role": "worker",
+          "energy": 63.397
+        },
+        {
+          "t": 203.9,
+          "kind": "energy_death",
+          "aid": 1,
+          "role": "worker",
+          "energy": -1.901
+        },
+        {
+          "t": 206.9,
+          "kind": "energy_death",
+          "aid": 2,
+          "role": "worker",
+          "energy": -2.607
+        },
+        {
+          "t": 217.3,
+          "kind": "capture",
+          "aid": 6,
+          "role": "worker",
+          "energy": 102.231
+        },
+        {
+          "t": 259.4,
+          "kind": "guide_selected",
+          "aid": 8,
+          "energy": 478.78,
+          "home": [
+            557.3395127379629,
+            389.4539978792745
+          ]
+        },
+        {
+          "t": 259.4,
+          "kind": "pursuit_inferred",
+          "aid": 8,
+          "distance": 92.18
+        },
+        {
+          "t": 264.7,
+          "kind": "lost_contact",
+          "aid": 8,
+          "remote": false
+        },
+        {
+          "t": 266.3,
+          "kind": "guide_finished",
+          "aid": 8,
+          "energy": 487.23
+        }
+      ],
+      "releases": [],
+      "guide_episodes": [
+        {
+          "start": 25.0,
+          "aid": 1,
+          "predator": 0,
+          "worker_center": [
+            285.1552695789779,
+            578.1902483987578
+          ],
+          "initial_distance": 116.67473068905517,
+          "max_distance": 630.5725087316794,
+          "end": 32.5,
+          "end_kind": "guide_finished"
+        },
+        {
+          "start": 259.4,
+          "aid": 8,
+          "predator": 0,
+          "worker_center": [
+            462.80377307389455,
+            345.8642520165322
+          ],
+          "initial_distance": 149.40545157026176,
+          "max_distance": 529.2860985804703,
+          "end": 266.3,
+          "end_kind": "guide_finished"
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.304,
+          "agents": 4,
+          "predators": 0,
+          "energy": 701.44,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.606,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1828.52,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.704,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1856.22,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.87,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1774.16,
+          "guide": 1,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 42.218,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1915.77,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.345,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1903.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.419,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1901.51,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.526,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1943.13,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 82.649,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1868.5,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.445,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1941.67,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 100.2,
+          "score": 103.9,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1926.84,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 110.2,
+          "score": 114.751,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1809.11,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 120.2,
+          "score": 125.637,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1814.6,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 130.2,
+          "score": 136.461,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1665.36,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 140.2,
+          "score": 146.856,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1376.6,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 150.2,
+          "score": 156.996,
+          "agents": 4,
+          "predators": 2,
+          "energy": 860.26,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 160.2,
+          "score": 167.323,
+          "agents": 4,
+          "predators": 2,
+          "energy": 431.29,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 170.2,
+          "score": 178.207,
+          "agents": 4,
+          "predators": 2,
+          "energy": 619.41,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 180.2,
+          "score": 188.961,
+          "agents": 4,
+          "predators": 2,
+          "energy": 589.76,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 190.2,
+          "score": 199.208,
+          "agents": 4,
+          "predators": 2,
+          "energy": 739.04,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 200.2,
+          "score": 209.766,
+          "agents": 4,
+          "predators": 2,
+          "energy": 769.76,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 210.2,
+          "score": 219.958,
+          "agents": 3,
+          "predators": 2,
+          "energy": 608.86,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 220.2,
+          "score": 230.231,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1387.14,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 230.2,
+          "score": 240.891,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1923.07,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 240.2,
+          "score": 250.915,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1869.38,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 250.2,
+          "score": 261.018,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1899.65,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 260.2,
+          "score": 271.098,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1838.18,
+          "guide": 8,
+          "phase": "lead"
+        },
+        {
+          "t": 270.2,
+          "score": 281.843,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1893.87,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 280.2,
+          "score": 292.404,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1886.49,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 290.2,
+          "score": 302.565,
+          "agents": 4,
+          "predators": 3,
+          "energy": 1590.45,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.06,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 19.87,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "227e9677ac16f37db6d447b8551b5564df89ea1f24f0ec73343391c66208700a",
+      "policy_sha256": "2a613e699512bca8b937e4d01f67c1a2de891fa8eb757b276c9550cf1aea6c12",
+      "harness_sha256": "22e07736a6a1d9f7254cec5abe3737b8fed2b7c06a0b8769d8040808e497a74e",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations"
+    }
+  ],
+  "scope": "Local held-out strategy evaluation; no external operations.",
+  "pairing_note": "Same setup seeds; behavior changes consumption of shared RNG. Object-set iteration and floating geometry can also cause repeat divergence."
+}

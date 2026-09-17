@@ -1,0 +1,107 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter protection-v5.json row 13 (controller)",
+    "policy": "adaptive / v5",
+    "seed": 305,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 0.5,
+    "scenario": "arranged-worker-protection",
+    "notes": "Privileged arranged geometry and initial energy; finite prepared food/trees if configured. No new tree or predator spawns. Actions use only cached observations. Stationary workers when present. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "e1205d19e9a101a2b4c15d8b1cb7b144e0dd70da216ac611acc30deeb222b8f4",
+    "created_at": "2026-09-17T13:50:40.044876+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "arranged-worker-protection-adaptive-v5-seed305-20260917T135040043690Z-1dbb3584",
+    "parameters": {
+      "seed": 305,
+      "heading": 0,
+      "position": [
+        500,
+        600
+      ],
+      "rotation": 0,
+      "energy": 150,
+      "food": "orchard",
+      "controller": {
+        "center": "auto"
+      },
+      "workers": 2
+    },
+    "requested_horizon": 90,
+    "reproduction": {
+      "original_id": "protection-v5:013",
+      "source": "protection-v5.json",
+      "row": 13,
+      "original_metrics_sha256": "75dafb1c4c35dac46718a5885148fe489b6f1e5ad16088e058dedae76cfda283",
+      "controller": "controller",
+      "original_outcome": {
+        "score": 86.82599999999934
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 90.0,
+    "score": 86.826,
+    "frames": 188,
+    "reason": "fixed protection horizon reached"
+  },
+  "result": {
+    "scenario": {
+      "seed": 305,
+      "heading": 0,
+      "position": [
+        500,
+        600
+      ],
+      "rotation": 0,
+      "energy": 150,
+      "food": "orchard",
+      "controller": {
+        "center": "auto"
+      }
+    },
+    "mode": "adaptive",
+    "horizon": 90,
+    "workers_alive": 0,
+    "worker_captures": 2,
+    "worker_starvations": 0,
+    "worker_seconds": 59.2,
+    "first_worker_capture": 29.50000000000015,
+    "first_worker_target": 27.900000000000126,
+    "bait_death": 8.299999999999986,
+    "deaths": {
+      "0": {
+        "t": 8.3,
+        "cause": "capture"
+      },
+      "2": {
+        "t": 29.5,
+        "cause": "capture"
+      },
+      "1": {
+        "t": 29.7,
+        "cause": "capture"
+      }
+    },
+    "bait_target_fraction_over_whole_horizon": 0.10323383084577115,
+    "score": 86.82599999999934,
+    "run_id": "arranged-worker-protection-adaptive-v5-seed305-20260917T135040043690Z-1dbb3584",
+    "replay": "results/dedicated_sprinter/replays/arranged-worker-protection-adaptive-v5-seed305-20260917T135040043690Z-1dbb3584.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "protection-v5:013",
+      "source": "protection-v5.json",
+      "row": 13,
+      "original_metrics_sha256": "75dafb1c4c35dac46718a5885148fe489b6f1e5ad16088e058dedae76cfda283",
+      "controller": "controller",
+      "original_outcome": {
+        "score": 86.82599999999934
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

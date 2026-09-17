@@ -1,0 +1,896 @@
+[
+  {
+    "file": "survival/results/colony_banishment/heldout-fixtures.json",
+    "scenario": "forest",
+    "control": "control",
+    "treatment": "banish",
+    "n": 4,
+    "score_wins": 0,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": -11.3496,
+      "duration_delta": 0.0,
+      "harvest_delta": -958.5295,
+      "capture_delta": 3,
+      "worker_exposure_delta": -29.625,
+      "worker_exposure_rate_delta": -1.9241,
+      "worker_seconds_delta": -77.3
+    },
+    "score_mean_bootstrap95": [
+      -20.925,
+      -4.911
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 11,
+        "score_delta": -25.436930000000018,
+        "duration_delta": 0.0,
+        "harvest_delta": -419.2000000000007,
+        "capture_delta": 9,
+        "worker_exposure_delta": 5.0,
+        "worker_exposure_rate_delta": 1.9174822556606061,
+        "worker_seconds_delta": -187.10000000000002,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 12,
+        "score_delta": -9.038580000000024,
+        "duration_delta": 0.0,
+        "harvest_delta": 57.282100000000355,
+        "capture_delta": 2,
+        "worker_exposure_delta": 62.60000000000001,
+        "worker_exposure_rate_delta": 5.68661470374847,
+        "worker_seconds_delta": -45.5,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 13,
+        "score_delta": -3.535669999999982,
+        "duration_delta": 0.0,
+        "harvest_delta": -710.8000000000011,
+        "capture_delta": 1,
+        "worker_exposure_delta": -82.89999999999999,
+        "worker_exposure_rate_delta": -6.9294561578690015,
+        "worker_seconds_delta": -9.099999999999909,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 14,
+        "score_delta": -7.387290000000007,
+        "duration_delta": 0.0,
+        "harvest_delta": -2761.3999999999996,
+        "capture_delta": 0,
+        "worker_exposure_delta": -103.2,
+        "worker_exposure_rate_delta": -8.370900571981268,
+        "worker_seconds_delta": -67.5,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "control": {
+        "score": 312.59718,
+        "duration": 300.0,
+        "reached_horizon": 4,
+        "harvest": 13784.131300000001,
+        "captures": 1.5,
+        "worker_captures": 1.5,
+        "guide_captures": 0,
+        "worker_seconds": 1191.125,
+        "worker_exposure": 113.55,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "banish": {
+        "score": 301.2475625,
+        "duration": 300.0,
+        "reached_horizon": 4,
+        "harvest": 12825.601825,
+        "captures": 4.5,
+        "worker_captures": 3.5,
+        "guide_captures": 1,
+        "worker_seconds": 1113.825,
+        "worker_exposure": 83.92500000000001,
+        "guide_seconds": 58.95,
+        "guide_movement_energy": 536.2228250000001,
+        "guide_target_seconds": 18.075,
+        "guides": 16,
+        "releases": 3,
+        "returned": 3,
+        "observed_return_delay_median": 24.6,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-fixtures.json",
+    "scenario": "obstacles",
+    "control": "control",
+    "treatment": "banish",
+    "n": 4,
+    "score_wins": 3,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": 40.2385,
+      "duration_delta": 34.525,
+      "harvest_delta": 2189.185,
+      "capture_delta": -2.5,
+      "worker_exposure_delta": -47.975,
+      "worker_exposure_rate_delta": -4.5749,
+      "worker_seconds_delta": 120.675
+    },
+    "score_mean_bootstrap95": [
+      1.526,
+      110.998
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 11,
+        "score_delta": 5.633469999999988,
+        "duration_delta": 0.0,
+        "harvest_delta": 2574.2000000000007,
+        "capture_delta": -1,
+        "worker_exposure_delta": -34.0,
+        "worker_exposure_rate_delta": -2.76912661998763,
+        "worker_seconds_delta": -14.5,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 12,
+        "score_delta": 10.749379999999974,
+        "duration_delta": 0.0,
+        "harvest_delta": 2199.339900000001,
+        "capture_delta": -6,
+        "worker_exposure_delta": -79.3,
+        "worker_exposure_rate_delta": -7.0167034612506365,
+        "worker_seconds_delta": 10.400000000000091,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 13,
+        "score_delta": 146.11950000000002,
+        "duration_delta": 138.1,
+        "harvest_delta": 5535.800000000001,
+        "capture_delta": -5,
+        "worker_exposure_delta": -8.099999999999998,
+        "worker_exposure_rate_delta": -2.7413382129605433,
+        "worker_seconds_delta": 548.6999999999999,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 14,
+        "score_delta": -1.5482700000000023,
+        "duration_delta": 0.0,
+        "harvest_delta": -1552.6000000000004,
+        "capture_delta": 2,
+        "worker_exposure_delta": -70.5,
+        "worker_exposure_rate_delta": -5.772512286391291,
+        "worker_seconds_delta": -61.90000000000009,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "control": {
+        "score": 269.8336625,
+        "duration": 265.475,
+        "reached_horizon": 3,
+        "harvest": 9898.29725,
+        "captures": 4.25,
+        "worker_captures": 4.25,
+        "guide_captures": 0,
+        "worker_seconds": 1034.525,
+        "worker_exposure": 96.95,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "banish": {
+        "score": 310.0721825,
+        "duration": 300.0,
+        "reached_horizon": 4,
+        "harvest": 12087.482225,
+        "captures": 1.75,
+        "worker_captures": 1.75,
+        "guide_captures": 0,
+        "worker_seconds": 1155.2,
+        "worker_exposure": 48.975,
+        "guide_seconds": 27.275,
+        "guide_movement_energy": 271.69370000000004,
+        "guide_target_seconds": 8.725,
+        "guides": 7,
+        "releases": 2,
+        "returned": 2,
+        "observed_return_delay_median": 15.499999999999993,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-fixtures.json",
+    "scenario": "river",
+    "control": "control",
+    "treatment": "banish",
+    "n": 4,
+    "score_wins": 1,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": -22.2849,
+      "duration_delta": -19.15,
+      "harvest_delta": 369.8832,
+      "capture_delta": 1.5,
+      "worker_exposure_delta": 3.825,
+      "worker_exposure_rate_delta": 1.3131,
+      "worker_seconds_delta": -96.95
+    },
+    "score_mean_bootstrap95": [
+      -64.771,
+      0.77
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 11,
+        "score_delta": -85.53070000000002,
+        "duration_delta": -76.6,
+        "harvest_delta": -2421.2000000000007,
+        "capture_delta": 5,
+        "worker_exposure_delta": 69.8,
+        "worker_exposure_rate_delta": 10.204250794612005,
+        "worker_seconds_delta": -339.29999999999995,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 12,
+        "score_delta": 2.096619999999973,
+        "duration_delta": 0.0,
+        "harvest_delta": 3105.7999999999993,
+        "capture_delta": -4,
+        "worker_exposure_delta": -47.8,
+        "worker_exposure_rate_delta": -4.80495399440138,
+        "worker_seconds_delta": 59.0,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 13,
+        "score_delta": -2.4936400000000276,
+        "duration_delta": 0.0,
+        "harvest_delta": 1237.3330000000005,
+        "capture_delta": 2,
+        "worker_exposure_delta": -6.599999999999994,
+        "worker_exposure_rate_delta": -0.530690885830492,
+        "worker_seconds_delta": -7.0,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 14,
+        "score_delta": -3.2117399999999634,
+        "duration_delta": 0.0,
+        "harvest_delta": -442.39999999999964,
+        "capture_delta": 3,
+        "worker_exposure_delta": -0.10000000000000142,
+        "worker_exposure_rate_delta": 0.38381327327417847,
+        "worker_seconds_delta": -100.5,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "control": {
+        "score": 309.3540775,
+        "duration": 300.0,
+        "reached_horizon": 4,
+        "harvest": 12107.94445,
+        "captures": 2.75,
+        "worker_captures": 2.75,
+        "guide_captures": 0,
+        "worker_seconds": 1157.975,
+        "worker_exposure": 74.75,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "banish": {
+        "score": 287.0692125,
+        "duration": 280.85,
+        "reached_horizon": 3,
+        "harvest": 12477.8277,
+        "captures": 4.25,
+        "worker_captures": 3.75,
+        "guide_captures": 0.5,
+        "worker_seconds": 1061.025,
+        "worker_exposure": 78.575,
+        "guide_seconds": 49.25,
+        "guide_movement_energy": 426.481475,
+        "guide_target_seconds": 15.225000000000001,
+        "guides": 11,
+        "releases": 4,
+        "returned": 3,
+        "observed_return_delay_median": 6.299999999999997,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-generated.json",
+    "scenario": "generated",
+    "control": "control",
+    "treatment": "banish",
+    "n": 8,
+    "score_wins": 5,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": 39.2465,
+      "duration_delta": 39.5125,
+      "harvest_delta": 1069.625,
+      "capture_delta": 0.5,
+      "worker_exposure_delta": 0.5875,
+      "worker_exposure_rate_delta": -0.7455,
+      "worker_seconds_delta": 71.2375
+    },
+    "score_mean_bootstrap95": [
+      -91.724,
+      167.681
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 101,
+        "score_delta": 309.70898,
+        "duration_delta": 305.5,
+        "harvest_delta": 8820.0,
+        "capture_delta": 4,
+        "worker_exposure_delta": 266.9,
+        "worker_exposure_rate_delta": 10.449596062619847,
+        "worker_seconds_delta": 966.0999999999999,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 102,
+        "score_delta": 283.30203,
+        "duration_delta": 292.3,
+        "harvest_delta": 8496.400000000001,
+        "capture_delta": 14,
+        "worker_exposure_delta": 81.19999999999999,
+        "worker_exposure_rate_delta": -0.9203329900048476,
+        "worker_seconds_delta": 952.3000000000002,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 103,
+        "score_delta": -281.49007,
+        "duration_delta": -276.0,
+        "harvest_delta": -9200.0,
+        "capture_delta": -6,
+        "worker_exposure_delta": -132.5,
+        "worker_exposure_rate_delta": -6.153918884655315,
+        "worker_seconds_delta": -1144.6999999999998,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 104,
+        "score_delta": -170.09791,
+        "duration_delta": -171.7,
+        "harvest_delta": -4331.199999999999,
+        "capture_delta": -10,
+        "worker_exposure_delta": -71.1,
+        "worker_exposure_rate_delta": -2.229091854405847,
+        "worker_seconds_delta": -646.3,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 105,
+        "score_delta": 43.170999999999935,
+        "duration_delta": 47.39999999999998,
+        "harvest_delta": 683.4000000000015,
+        "capture_delta": 6,
+        "worker_exposure_delta": 52.0,
+        "worker_exposure_rate_delta": 2.4498391722084394,
+        "worker_seconds_delta": -51.59999999999991,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 106,
+        "score_delta": 13.010619999999903,
+        "duration_delta": 0.0,
+        "harvest_delta": 837.5999999999985,
+        "capture_delta": -13,
+        "worker_exposure_delta": -170.7,
+        "worker_exposure_rate_delta": -7.592532459618778,
+        "worker_seconds_delta": 63.0,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 107,
+        "score_delta": 127.51443000000006,
+        "duration_delta": 119.10000000000002,
+        "harvest_delta": 3572.7999999999993,
+        "capture_delta": -5,
+        "worker_exposure_delta": -57.1,
+        "worker_exposure_rate_delta": -3.3493770361664095,
+        "worker_seconds_delta": 298.9000000000001,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 108,
+        "score_delta": -11.146810000000073,
+        "duration_delta": -0.5,
+        "harvest_delta": -322.0,
+        "capture_delta": 14,
+        "worker_exposure_delta": 36.0,
+        "worker_exposure_rate_delta": 1.3817439193698606,
+        "worker_seconds_delta": 132.20000000000027,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "control": {
+        "score": 494.64949375000003,
+        "duration": 490.325,
+        "reached_horizon": 2,
+        "harvest": 15404.1,
+        "captures": 8.875,
+        "worker_captures": 8.875,
+        "guide_captures": 0,
+        "worker_seconds": 1933.5874999999999,
+        "worker_exposure": 123.2875,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "banish": {
+        "score": 533.8960275,
+        "duration": 529.8375,
+        "reached_horizon": 4,
+        "harvest": 16473.725,
+        "captures": 9.375,
+        "worker_captures": 9.25,
+        "guide_captures": 0.125,
+        "worker_seconds": 2004.825,
+        "worker_exposure": 123.875,
+        "guide_seconds": 24.8125,
+        "guide_movement_energy": 234.093175,
+        "guide_target_seconds": 5.65,
+        "guides": 6,
+        "releases": 3,
+        "returned": 3,
+        "observed_return_delay_median": 34.200000000000045,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-generated.json",
+    "scenario": "generated",
+    "control": "nursery",
+    "treatment": "control",
+    "n": 8,
+    "score_wins": 3,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": -33.1736,
+      "duration_delta": -44.7875,
+      "harvest_delta": -9556.2,
+      "capture_delta": -8.875,
+      "worker_exposure_delta": -120.425,
+      "worker_exposure_rate_delta": -1.4848,
+      "worker_seconds_delta": -1121.875
+    },
+    "score_mean_bootstrap95": [
+      -142.547,
+      80.719
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 101,
+        "score_delta": -226.56128999999999,
+        "duration_delta": -241.29999999999995,
+        "harvest_delta": -14580.2,
+        "capture_delta": -13,
+        "worker_exposure_delta": -184.7,
+        "worker_exposure_rate_delta": -3.720737531554018,
+        "worker_seconds_delta": -1877.9,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 102,
+        "score_delta": -248.88326,
+        "duration_delta": -260.7,
+        "harvest_delta": -18589.6,
+        "capture_delta": -19,
+        "worker_exposure_delta": -346.6,
+        "worker_exposure_rate_delta": -4.741301318222869,
+        "worker_seconds_delta": -1883.5,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 103,
+        "score_delta": 255.94161000000003,
+        "duration_delta": 238.09999999999997,
+        "harvest_delta": 6134.199999999999,
+        "capture_delta": -2,
+        "worker_exposure_delta": 40.39999999999999,
+        "worker_exposure_rate_delta": 0.604398944035029,
+        "worker_seconds_delta": 481.89999999999986,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 104,
+        "score_delta": 133.08173,
+        "duration_delta": 125.10000000000002,
+        "harvest_delta": -5090.200000000001,
+        "capture_delta": -10,
+        "worker_exposure_delta": -102.3,
+        "worker_exposure_rate_delta": -3.0689628278061973,
+        "worker_seconds_delta": -367.3000000000002,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 105,
+        "score_delta": -19.409490000000005,
+        "duration_delta": -47.39999999999998,
+        "harvest_delta": -12043.800000000003,
+        "capture_delta": -14,
+        "worker_exposure_delta": -42.400000000000006,
+        "worker_exposure_rate_delta": 0.8040230587618089,
+        "worker_seconds_delta": -1287.7000000000003,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 106,
+        "score_delta": 14.662590000000023,
+        "duration_delta": 0.0,
+        "harvest_delta": -8712.400000000001,
+        "capture_delta": -2,
+        "worker_exposure_delta": 60.70000000000002,
+        "worker_exposure_rate_delta": 5.513776638923879,
+        "worker_seconds_delta": -1232.0,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 107,
+        "score_delta": -153.69662000000005,
+        "duration_delta": -153.89999999999998,
+        "harvest_delta": -12552.0,
+        "capture_delta": -4,
+        "worker_exposure_delta": -272.1,
+        "worker_exposure_rate_delta": -5.041807850091866,
+        "worker_seconds_delta": -1700.8000000000002,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 108,
+        "score_delta": -20.52373,
+        "duration_delta": -18.200000000000045,
+        "harvest_delta": -11015.599999999999,
+        "capture_delta": -7,
+        "worker_exposure_delta": -116.39999999999999,
+        "worker_exposure_rate_delta": -2.228130919024901,
+        "worker_seconds_delta": -1107.7000000000003,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "nursery": {
+        "score": 527.82305125,
+        "duration": 535.1125,
+        "reached_horizon": 4,
+        "harvest": 24960.3,
+        "captures": 17.75,
+        "worker_captures": 17.75,
+        "guide_captures": 0,
+        "worker_seconds": 3055.4625,
+        "worker_exposure": 243.7125,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "control": {
+        "score": 494.64949375000003,
+        "duration": 490.325,
+        "reached_horizon": 2,
+        "harvest": 15404.1,
+        "captures": 8.875,
+        "worker_captures": 8.875,
+        "guide_captures": 0,
+        "worker_seconds": 1933.5874999999999,
+        "worker_exposure": 123.2875,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-oracle.json",
+    "scenario": "forest",
+    "control": "oracle-control",
+    "treatment": "oracle",
+    "n": 2,
+    "score_wins": 1,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": 1.7067,
+      "duration_delta": 0.0,
+      "harvest_delta": -364.0,
+      "capture_delta": -3,
+      "worker_exposure_delta": -16.2,
+      "worker_exposure_rate_delta": -1.5486,
+      "worker_seconds_delta": 14.95
+    },
+    "score_mean_bootstrap95": [
+      -3.053,
+      6.467
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 11,
+        "score_delta": 6.466970000000003,
+        "duration_delta": 0.0,
+        "harvest_delta": -155.0,
+        "capture_delta": -6,
+        "worker_exposure_delta": -3.799999999999997,
+        "worker_exposure_rate_delta": -0.36965850169855125,
+        "worker_seconds_delta": 4.5,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 12,
+        "score_delta": -3.0534999999999854,
+        "duration_delta": 0.0,
+        "harvest_delta": -573.0,
+        "capture_delta": 0,
+        "worker_exposure_delta": -28.599999999999994,
+        "worker_exposure_rate_delta": -2.7275500086881164,
+        "worker_seconds_delta": 25.40000000000009,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "oracle-control": {
+        "score": 303.432315,
+        "duration": 300.0,
+        "reached_horizon": 2,
+        "harvest": 12991.579300000001,
+        "captures": 6.5,
+        "worker_captures": 6.5,
+        "guide_captures": 0,
+        "worker_seconds": 1135.8,
+        "worker_exposure": 118.85,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "oracle": {
+        "score": 305.13905,
+        "duration": 300.0,
+        "reached_horizon": 2,
+        "harvest": 12627.579300000001,
+        "captures": 3.5,
+        "worker_captures": 2.5,
+        "guide_captures": 1,
+        "worker_seconds": 1150.75,
+        "worker_exposure": 102.65,
+        "guide_seconds": 42.4,
+        "guide_movement_energy": 487.52930000000003,
+        "guide_target_seconds": 23.2,
+        "guides": 7,
+        "releases": 1,
+        "returned": 1,
+        "observed_return_delay_median": 35.0,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-oracle.json",
+    "scenario": "obstacles",
+    "control": "oracle-control",
+    "treatment": "oracle",
+    "n": 2,
+    "score_wins": 0,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": -7.9707,
+      "duration_delta": 0.0,
+      "harvest_delta": -1906.3501,
+      "capture_delta": 3.5,
+      "worker_exposure_delta": -16.4,
+      "worker_exposure_rate_delta": -0.8548,
+      "worker_seconds_delta": -67.05
+    },
+    "score_mean_bootstrap95": [
+      -9.907,
+      -6.034
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 11,
+        "score_delta": -9.907449999999983,
+        "duration_delta": 0.0,
+        "harvest_delta": 799.4997999999996,
+        "capture_delta": 5,
+        "worker_exposure_delta": -14.200000000000003,
+        "worker_exposure_rate_delta": -0.21104662642681682,
+        "worker_seconds_delta": -119.69999999999982,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 12,
+        "score_delta": -6.033929999999998,
+        "duration_delta": 0.0,
+        "harvest_delta": -4612.199999999999,
+        "capture_delta": 2,
+        "worker_exposure_delta": -18.599999999999994,
+        "worker_exposure_rate_delta": -1.498635822486203,
+        "worker_seconds_delta": -14.400000000000091,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "oracle-control": {
+        "score": 311.20622000000003,
+        "duration": 300.0,
+        "reached_horizon": 2,
+        "harvest": 14319.2039,
+        "captures": 2.5,
+        "worker_captures": 2.5,
+        "guide_captures": 0,
+        "worker_seconds": 1195.15,
+        "worker_exposure": 94.55,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "oracle": {
+        "score": 303.23553000000004,
+        "duration": 300.0,
+        "reached_horizon": 2,
+        "harvest": 12412.8538,
+        "captures": 6,
+        "worker_captures": 6,
+        "guide_captures": 0,
+        "worker_seconds": 1128.1,
+        "worker_exposure": 78.15,
+        "guide_seconds": 67.1,
+        "guide_movement_energy": 534.36325,
+        "guide_target_seconds": 15.1,
+        "guides": 7,
+        "releases": 2,
+        "returned": 2,
+        "observed_return_delay_median": 41.849999999999994,
+        "boundary_violations": 0
+      }
+    }
+  },
+  {
+    "file": "survival/results/colony_banishment/heldout-oracle.json",
+    "scenario": "river",
+    "control": "oracle-control",
+    "treatment": "oracle",
+    "n": 2,
+    "score_wins": 1,
+    "score_ties": 0,
+    "mean_deltas": {
+      "score_delta": -0.6154,
+      "duration_delta": 0.0,
+      "harvest_delta": 2803.4,
+      "capture_delta": -0.5,
+      "worker_exposure_delta": -15.1,
+      "worker_exposure_rate_delta": -0.7502,
+      "worker_seconds_delta": -61.7
+    },
+    "score_mean_bootstrap95": [
+      -4.276,
+      3.045
+    ],
+    "bootstrap_note": "Descriptive paired seed bootstrap; small exploratory samples, not confirmatory inference.",
+    "pairs": [
+      {
+        "seed": 11,
+        "score_delta": 3.045289999999966,
+        "duration_delta": 0.0,
+        "harvest_delta": 2886.7999999999993,
+        "capture_delta": -5,
+        "worker_exposure_delta": -5.900000000000006,
+        "worker_exposure_rate_delta": -0.5393820032552954,
+        "worker_seconds_delta": 3.0,
+        "identical_initial_rng": true
+      },
+      {
+        "seed": 12,
+        "score_delta": -4.2760000000000105,
+        "duration_delta": 0.0,
+        "harvest_delta": 2720.0,
+        "capture_delta": 4,
+        "worker_exposure_delta": -24.299999999999983,
+        "worker_exposure_rate_delta": -0.9609436777306468,
+        "worker_seconds_delta": -126.39999999999986,
+        "identical_initial_rng": true
+      }
+    ],
+    "arms": {
+      "oracle-control": {
+        "score": 307.140535,
+        "duration": 300.0,
+        "reached_horizon": 2,
+        "harvest": 12286.440200000001,
+        "captures": 6,
+        "worker_captures": 6,
+        "guide_captures": 0,
+        "worker_seconds": 1165.6999999999998,
+        "worker_exposure": 110.44999999999999,
+        "guide_seconds": 0.0,
+        "guide_movement_energy": 0.0,
+        "guide_target_seconds": 0.0,
+        "guides": 0,
+        "releases": 0,
+        "returned": 0,
+        "observed_return_delay_median": null,
+        "boundary_violations": 0
+      },
+      "oracle": {
+        "score": 306.52518,
+        "duration": 300.0,
+        "reached_horizon": 2,
+        "harvest": 15089.840199999999,
+        "captures": 5.5,
+        "worker_captures": 4.5,
+        "guide_captures": 1,
+        "worker_seconds": 1104.0,
+        "worker_exposure": 95.35,
+        "guide_seconds": 90.9,
+        "guide_movement_energy": 938.5433,
+        "guide_target_seconds": 35.25,
+        "guides": 9,
+        "releases": 7,
+        "returned": 3,
+        "observed_return_delay_median": 22.700000000000017,
+        "boundary_violations": 0
+      }
+    }
+  }
+]

@@ -1,0 +1,234 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter generated nursery v5 seed 1",
+    "policy": "nursery / v5",
+    "seed": 1,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 1.0,
+    "scenario": "generated",
+    "notes": "Original generated map, normal spawns, food and birth costs. Observation-only policy. Diagnostic hidden state is not a policy input. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "ed52fe5fd816329f771909642c0230f696434a7f4e12bc69f8bc4dedbf673ad2",
+    "created_at": "2026-09-17T13:48:25.690890+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "generated-nursery-v5-seed1-20260917T134825689051Z-bf69c8ce",
+    "parameters": {
+      "seed": 1,
+      "mode": "nursery",
+      "horizon": 3000
+    },
+    "requested_horizon": 3000,
+    "reproduction": {
+      "original_id": "fullgame-nursery-1:000",
+      "source": "fullgame-nursery-1.json",
+      "row": 0,
+      "original_metrics_sha256": "74c382e5c61e05e159ff70273d27e5b96f408947157f06eb12d2e3a9bab18ca9",
+      "controller": "controller",
+      "original_outcome": {
+        "duration": 1023.7,
+        "score": 1014.5726
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 1023.7,
+    "score": 1014.5726,
+    "frames": 1588,
+    "reason": "extinction"
+  },
+  "result": {
+    "seed": 1,
+    "mode": "nursery",
+    "horizon": 3000,
+    "duration": 1023.7,
+    "score": 1014.5726,
+    "alive": 0,
+    "births": 78,
+    "captured_agents": 28,
+    "stats": {},
+    "active_predator_ticks_with_any_bait": 0,
+    "target_fraction_when_any_bait": 0.0,
+    "samples": [
+      {
+        "t": 50.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 51.42480000000046
+      },
+      {
+        "t": 100.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 104.85419999999847
+      },
+      {
+        "t": 150.0,
+        "alive": 6,
+        "predators": 0,
+        "baits": 0,
+        "births": 8,
+        "score": 158.2061999999957
+      },
+      {
+        "t": 200.0,
+        "alive": 6,
+        "predators": 1,
+        "baits": 0,
+        "births": 9,
+        "score": 209.48369644876524
+      },
+      {
+        "t": 250.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 0,
+        "births": 9,
+        "score": 265.3000964487649
+      },
+      {
+        "t": 300.0,
+        "alive": 6,
+        "predators": 3,
+        "baits": 0,
+        "births": 17,
+        "score": 315.3317044315952
+      },
+      {
+        "t": 350.0,
+        "alive": 6,
+        "predators": 4,
+        "baits": 0,
+        "births": 22,
+        "score": 358.66235520743237
+      },
+      {
+        "t": 400.0,
+        "alive": 6,
+        "predators": 4,
+        "baits": 0,
+        "births": 26,
+        "score": 404.9828029657603
+      },
+      {
+        "t": 450.0,
+        "alive": 6,
+        "predators": 5,
+        "baits": 0,
+        "births": 31,
+        "score": 452.78853364457854
+      },
+      {
+        "t": 500.0,
+        "alive": 6,
+        "predators": 5,
+        "baits": 0,
+        "births": 34,
+        "score": 498.0788870674496
+      },
+      {
+        "t": 550.0,
+        "alive": 6,
+        "predators": 6,
+        "baits": 0,
+        "births": 38,
+        "score": 550.5228870674601
+      },
+      {
+        "t": 600.0,
+        "alive": 6,
+        "predators": 6,
+        "baits": 0,
+        "births": 43,
+        "score": 591.7841278317671
+      },
+      {
+        "t": 650.0,
+        "alive": 6,
+        "predators": 6,
+        "baits": 0,
+        "births": 49,
+        "score": 644.045179391643
+      },
+      {
+        "t": 700.0,
+        "alive": 3,
+        "predators": 6,
+        "baits": 0,
+        "births": 53,
+        "score": 688.3929774346138
+      },
+      {
+        "t": 750.0,
+        "alive": 6,
+        "predators": 6,
+        "baits": 0,
+        "births": 59,
+        "score": 740.857177434624
+      },
+      {
+        "t": 800.0,
+        "alive": 6,
+        "predators": 7,
+        "baits": 0,
+        "births": 59,
+        "score": 792.868177434634
+      },
+      {
+        "t": 850.0,
+        "alive": 6,
+        "predators": 8,
+        "baits": 0,
+        "births": 65,
+        "score": 841.5341608056946
+      },
+      {
+        "t": 900.0,
+        "alive": 4,
+        "predators": 8,
+        "baits": 0,
+        "births": 69,
+        "score": 891.1342884910769
+      },
+      {
+        "t": 950.0,
+        "alive": 6,
+        "predators": 8,
+        "baits": 0,
+        "births": 75,
+        "score": 944.0380884910874
+      },
+      {
+        "t": 1000.0,
+        "alive": 6,
+        "predators": 8,
+        "baits": 0,
+        "births": 79,
+        "score": 993.3534198566653
+      }
+    ],
+    "wall_seconds": 70.04142575000878,
+    "run_id": "generated-nursery-v5-seed1-20260917T134825689051Z-bf69c8ce",
+    "replay": "results/dedicated_sprinter/replays/generated-nursery-v5-seed1-20260917T134825689051Z-bf69c8ce.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "fullgame-nursery-1:000",
+      "source": "fullgame-nursery-1.json",
+      "row": 0,
+      "original_metrics_sha256": "74c382e5c61e05e159ff70273d27e5b96f408947157f06eb12d2e3a9bab18ca9",
+      "controller": "controller",
+      "original_outcome": {
+        "duration": 1023.7,
+        "score": 1014.5726
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

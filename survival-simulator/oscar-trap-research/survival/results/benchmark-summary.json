@@ -1,0 +1,55 @@
+{
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    42
+  ],
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "policy_sha256": "ed52fe5fd816329f771909642c0230f696434a7f4e12bc69f8bc4dedbf673ad2",
+  "platform": "macOS arm64",
+  "modes": {
+    "dummy": {
+      "runs": 10,
+      "mean_score": 32.321220000000004,
+      "median_score": 27.809,
+      "mean_survival_seconds": 32.12,
+      "min_survival_seconds": 14.6,
+      "max_survival_seconds": 74.1,
+      "completed_3000_seconds": 0
+    },
+    "greedy": {
+      "runs": 10,
+      "mean_score": 396.801935,
+      "median_score": 418.07306500000004,
+      "mean_survival_seconds": 371.78999999999996,
+      "min_survival_seconds": 47.8,
+      "max_survival_seconds": 703.4,
+      "completed_3000_seconds": 0
+    },
+    "nursery": {
+      "runs": 10,
+      "mean_score": 631.163676,
+      "median_score": 619.264085,
+      "mean_survival_seconds": 641.18,
+      "min_survival_seconds": 93.6,
+      "max_survival_seconds": 1034.5,
+      "completed_3000_seconds": 0
+    },
+    "speed": {
+      "runs": 10,
+      "mean_score": 469.845009,
+      "median_score": 482.22531000000004,
+      "mean_survival_seconds": 479.17,
+      "min_survival_seconds": 93.6,
+      "max_survival_seconds": 847.5,
+      "completed_3000_seconds": 0
+    }
+  }
+}

@@ -1,0 +1,488 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "scope": "local-only original engine mechanics; fixtures and removed systems explicitly labelled",
+  "known_fruit_timing": {
+    "timeline": [
+      {
+        "tick": 0,
+        "sim_seconds_before_tick": 0.0,
+        "internal_age": 0,
+        "energy": 20,
+        "radius": 5
+      },
+      {
+        "tick": 1,
+        "sim_seconds_before_tick": 0.1,
+        "internal_age": 0.2,
+        "energy": 20.2,
+        "radius": 5.02
+      },
+      {
+        "tick": 100,
+        "sim_seconds_before_tick": 10.0,
+        "internal_age": 19.99999999999996,
+        "energy": 40.00000000000007,
+        "radius": 6.999999999999957
+      },
+      {
+        "tick": 199,
+        "sim_seconds_before_tick": 19.9,
+        "internal_age": 39.800000000000026,
+        "energy": 59.80000000000035,
+        "radius": 8.979999999999915
+      },
+      {
+        "tick": 200,
+        "sim_seconds_before_tick": 20.0,
+        "internal_age": 40.00000000000003,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      },
+      {
+        "tick": 201,
+        "sim_seconds_before_tick": 20.1,
+        "internal_age": 40.20000000000003,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      },
+      {
+        "tick": 499,
+        "sim_seconds_before_tick": 49.9,
+        "internal_age": 99.80000000000088,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      },
+      {
+        "tick": 500,
+        "sim_seconds_before_tick": 50.0,
+        "internal_age": 100.00000000000088,
+        "energy": 60.000000000000355,
+        "radius": 8.999999999999915
+      }
+    ],
+    "removed_at_sim_seconds_in_source_order": 50.0,
+    "fresh_and_ripe_observations_identical": true,
+    "observation_payload": [
+      {
+        "type": "Fruit",
+        "distance": 30.0,
+        "angle": 0.0
+      }
+    ],
+    "classification": "known result reproduced; standalone source Fruit plus ordinary observation method"
+  },
+  "full_energy_scoring_and_stale_fruit_observation": {
+    "fruit_energy": 60.000000000000355,
+    "fruit_bonus_while_storage_full": 0.06000000000000036,
+    "energy_after_collection": 500.0,
+    "collector_response_still_contains_consumed_fruit": true,
+    "next_response_contains_fruit": false,
+    "practical_magnitude": "one stale response can cause one wasted follow-up action; ripe bonus is about 0.06",
+    "classification": "contract-compliant; controller sees the stale payload through ordinary observations"
+  },
+  "stale_tree_observation": {
+    "response_contains_tree_removed_later_in_same_tick": true,
+    "next_response_contains_tree": false,
+    "classification": "arranged old-tree fixture; stale payload is available through ordinary observations"
+  },
+  "fruit_waiting_tradeoff": {
+    "known_fresh_fruit": {
+      "immediate": {
+        "alive": true,
+        "energy": 144.40000000000114,
+        "score": 20.12000000000002,
+        "fruit_collected_at": 0.1,
+        "fruit_remaining": false,
+        "sim_time": 20.100000000000016
+      },
+      "wait_20_seconds": {
+        "alive": true,
+        "energy": 184.4000000000015,
+        "score": 20.160000000000014,
+        "fruit_collected_at": 20.100000000000016,
+        "fruit_remaining": false,
+        "sim_time": 20.100000000000016
+      }
+    },
+    "first_seen_but_already_40_seconds_old": {
+      "immediate": {
+        "alive": true,
+        "energy": 184.4000000000015,
+        "score": 20.160000000000018,
+        "fruit_collected_at": 0.1,
+        "fruit_remaining": false,
+        "sim_time": 20.100000000000016
+      },
+      "blind_wait_20_seconds": {
+        "alive": true,
+        "energy": 124.40000000000114,
+        "score": 20.100000000000016,
+        "fruit_collected_at": null,
+        "fruit_remaining": false,
+        "sim_time": 20.100000000000016
+      }
+    },
+    "low_energy_fresh_fruit": {
+      "move_to_food": {
+        "alive": true,
+        "energy": 17.099999999999717,
+        "fruit_collected": true,
+        "sim_time": 20.100000000000016
+      },
+      "blind_wait": {
+        "alive": false,
+        "energy": null,
+        "score": 18.099999999999987,
+        "fruit_collected_at": null,
+        "fruit_remaining": true,
+        "sim_time": 18.099999999999987
+      }
+    },
+    "practical_magnitude": "when birth time is known and energy is safe, 20 seconds adds about 40 energy and 0.04 direct score; blind waiting can lose all 60 energy or kill the agent",
+    "ordinary_observation_boundary": "fruit age is hidden; known birth time requires continuous coverage of the patch before first sighting. Fixture setup knows age, but the proposed gate uses only first-seen history and current agent energy.",
+    "contract": "one action per observed living agent per tick"
+  },
+  "tree_lifecycle": {
+    "death_age_seconds": {
+      "0.05": {
+        "n": 300,
+        "min": 51.14999999999923,
+        "p10": 53.199999999999115,
+        "median": 56.47499999999893,
+        "mean": 56.422499999998934,
+        "p90": 59.149999999998776,
+        "max": 63.44999999999853,
+        "dt": 0.05
+      },
+      "0.1": {
+        "n": 300,
+        "min": 51.700000000000465,
+        "p10": 54.3000000000005,
+        "median": 58.100000000000556,
+        "mean": 58.15933333333389,
+        "p90": 62.10000000000061,
+        "max": 66.10000000000052,
+        "dt": 0.1
+      },
+      "0.2": {
+        "n": 300,
+        "min": 51.000000000000185,
+        "p10": 55.00000000000024,
+        "median": 60.00000000000031,
+        "mean": 59.87533333333364,
+        "p90": 64.80000000000038,
+        "max": 69.80000000000045,
+        "dt": 0.2
+      }
+    },
+    "fruits_created_per_new_forest_tree_at_official_local_dt_0.1": {
+      "n": 300,
+      "min": 0,
+      "p10": 1,
+      "median": 4.0,
+      "mean": 3.68,
+      "p90": 6,
+      "max": 10
+    },
+    "finding": "death threshold is resampled every tick, so a new tree usually dies in the mid-50s rather than receiving one fixed 50-100 second lifetime; death age is dt-sensitive",
+    "classification": "engine-executed isolated fixture; unrelated global spawning disabled; no agents or fruit consumption"
+  },
+  "synchronized_rot_list_skip": {
+    "fruit_counts_by_tick": [
+      8,
+      4,
+      2,
+      1,
+      0
+    ],
+    "extra_lifetime_for_last_item_seconds": 0.3,
+    "classification": "fixture-only synchronized rot batch; list-removal skip, negligible natural strategic value"
+  },
+  "stacked_fruit_collection": {
+    "ripe_fruits_collected_in_one_tick": 5,
+    "fruit_observations_in_returned_stale_payload": 5,
+    "direct_score_bonus": 0.3000000000000018,
+    "classification": "synthetic co-located fixture; contract-compliant automatic collection, while exact co-location is unlikely naturally"
+  },
+  "blocked_tree_spawn_negative_control": {
+    "tree_created_inside_obstacle_when_no_attempts": true,
+    "fruit_created_inside_same_obstacle": false,
+    "classification": "synthetic max_attempts=0 fixture; normal calls retry 50 times, so not a practical tactic"
+  },
+  "tree_spawn_attempt_formula": [
+    {
+      "time": 0,
+      "trees": 1,
+      "raw_probability_before_biome_acceptance": 10.0,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 0,
+      "trees": 10,
+      "raw_probability_before_biome_acceptance": 2.0,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 0,
+      "trees": 50,
+      "raw_probability_before_biome_acceptance": 0.4,
+      "effective_attempt_probability": 0.4
+    },
+    {
+      "time": 0,
+      "trees": 100,
+      "raw_probability_before_biome_acceptance": 0.2,
+      "effective_attempt_probability": 0.2
+    },
+    {
+      "time": 60,
+      "trees": 1,
+      "raw_probability_before_biome_acceptance": 8.705505632961241,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 60,
+      "trees": 10,
+      "raw_probability_before_biome_acceptance": 1.7411011265922482,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 60,
+      "trees": 50,
+      "raw_probability_before_biome_acceptance": 0.34822022531844965,
+      "effective_attempt_probability": 0.34822022531844965
+    },
+    {
+      "time": 60,
+      "trees": 100,
+      "raw_probability_before_biome_acceptance": 0.17411011265922482,
+      "effective_attempt_probability": 0.17411011265922482
+    },
+    {
+      "time": 300,
+      "trees": 1,
+      "raw_probability_before_biome_acceptance": 5.0,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 300,
+      "trees": 10,
+      "raw_probability_before_biome_acceptance": 1.0,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 300,
+      "trees": 50,
+      "raw_probability_before_biome_acceptance": 0.2,
+      "effective_attempt_probability": 0.2
+    },
+    {
+      "time": 300,
+      "trees": 100,
+      "raw_probability_before_biome_acceptance": 0.1,
+      "effective_attempt_probability": 0.1
+    },
+    {
+      "time": 600,
+      "trees": 1,
+      "raw_probability_before_biome_acceptance": 2.5,
+      "effective_attempt_probability": 1.0
+    },
+    {
+      "time": 600,
+      "trees": 10,
+      "raw_probability_before_biome_acceptance": 0.5,
+      "effective_attempt_probability": 0.5
+    },
+    {
+      "time": 600,
+      "trees": 50,
+      "raw_probability_before_biome_acceptance": 0.1,
+      "effective_attempt_probability": 0.1
+    },
+    {
+      "time": 600,
+      "trees": 100,
+      "raw_probability_before_biome_acceptance": 0.05,
+      "effective_attempt_probability": 0.05
+    }
+  ],
+  "generated_map_survey": {
+    "seeds": [
+      1,
+      7,
+      42
+    ],
+    "horizon": 120.0,
+    "runs": [
+      {
+        "seed": 1,
+        "initial_tree_attempts": 50,
+        "initial_trees_created": 32,
+        "initial_tree_age_range": [
+          23.36962250537543,
+          79.48702309606936
+        ],
+        "tree_births": 191,
+        "tree_deaths": 148,
+        "fruit_births": 484,
+        "fruit_removals_without_consumers": 326,
+        "samples": [
+          {
+            "time": 0.0,
+            "trees": 32,
+            "mature_trees_age_at_least_20": 32,
+            "fruits_in_world": 32,
+            "pairs_within_25": 1,
+            "max_neighbors_within_50_including_self": 3,
+            "fruit_pairs_within_10": 1,
+            "max_fruits_within_15_of_one_fruit_including_self": 2
+          },
+          {
+            "time": 30.0,
+            "trees": 81,
+            "mature_trees_age_at_least_20": 43,
+            "fruits_in_world": 85,
+            "pairs_within_25": 4,
+            "max_neighbors_within_50_including_self": 3,
+            "fruit_pairs_within_10": 5,
+            "max_fruits_within_15_of_one_fruit_including_self": 3
+          },
+          {
+            "time": 60.0,
+            "trees": 103,
+            "mature_trees_age_at_least_20": 81,
+            "fruits_in_world": 227,
+            "pairs_within_25": 6,
+            "max_neighbors_within_50_including_self": 4,
+            "fruit_pairs_within_10": 21,
+            "max_fruits_within_15_of_one_fruit_including_self": 4
+          },
+          {
+            "time": 120.0,
+            "trees": 75,
+            "mature_trees_age_at_least_20": 49,
+            "fruits_in_world": 190,
+            "pairs_within_25": 6,
+            "max_neighbors_within_50_including_self": 3,
+            "fruit_pairs_within_10": 12,
+            "max_fruits_within_15_of_one_fruit_including_self": 4
+          }
+        ]
+      },
+      {
+        "seed": 7,
+        "initial_tree_attempts": 50,
+        "initial_trees_created": 38,
+        "initial_tree_age_range": [
+          20.489271422742632,
+          79.13003595090322
+        ],
+        "tree_births": 201,
+        "tree_deaths": 160,
+        "fruit_births": 488,
+        "fruit_removals_without_consumers": 308,
+        "samples": [
+          {
+            "time": 0.0,
+            "trees": 38,
+            "mature_trees_age_at_least_20": 38,
+            "fruits_in_world": 32,
+            "pairs_within_25": 0,
+            "max_neighbors_within_50_including_self": 2,
+            "fruit_pairs_within_10": 0,
+            "max_fruits_within_15_of_one_fruit_including_self": 1
+          },
+          {
+            "time": 30.0,
+            "trees": 83,
+            "mature_trees_age_at_least_20": 43,
+            "fruits_in_world": 94,
+            "pairs_within_25": 4,
+            "max_neighbors_within_50_including_self": 3,
+            "fruit_pairs_within_10": 1,
+            "max_fruits_within_15_of_one_fruit_including_self": 2
+          },
+          {
+            "time": 60.0,
+            "trees": 105,
+            "mature_trees_age_at_least_20": 80,
+            "fruits_in_world": 207,
+            "pairs_within_25": 12,
+            "max_neighbors_within_50_including_self": 5,
+            "fruit_pairs_within_10": 11,
+            "max_fruits_within_15_of_one_fruit_including_self": 4
+          },
+          {
+            "time": 120.0,
+            "trees": 79,
+            "mature_trees_age_at_least_20": 51,
+            "fruits_in_world": 212,
+            "pairs_within_25": 6,
+            "max_neighbors_within_50_including_self": 3,
+            "fruit_pairs_within_10": 16,
+            "max_fruits_within_15_of_one_fruit_including_self": 4
+          }
+        ]
+      },
+      {
+        "seed": 42,
+        "initial_tree_attempts": 50,
+        "initial_trees_created": 19,
+        "initial_tree_age_range": [
+          21.86602807573158,
+          79.73774007218461
+        ],
+        "tree_births": 178,
+        "tree_deaths": 131,
+        "fruit_births": 373,
+        "fruit_removals_without_consumers": 222,
+        "samples": [
+          {
+            "time": 0.0,
+            "trees": 19,
+            "mature_trees_age_at_least_20": 19,
+            "fruits_in_world": 32,
+            "pairs_within_25": 1,
+            "max_neighbors_within_50_including_self": 2,
+            "fruit_pairs_within_10": 0,
+            "max_fruits_within_15_of_one_fruit_including_self": 1
+          },
+          {
+            "time": 30.0,
+            "trees": 76,
+            "mature_trees_age_at_least_20": 38,
+            "fruits_in_world": 68,
+            "pairs_within_25": 2,
+            "max_neighbors_within_50_including_self": 3,
+            "fruit_pairs_within_10": 3,
+            "max_fruits_within_15_of_one_fruit_including_self": 3
+          },
+          {
+            "time": 60.0,
+            "trees": 97,
+            "mature_trees_age_at_least_20": 75,
+            "fruits_in_world": 133,
+            "pairs_within_25": 9,
+            "max_neighbors_within_50_including_self": 5,
+            "fruit_pairs_within_10": 11,
+            "max_fruits_within_15_of_one_fruit_including_self": 3
+          },
+          {
+            "time": 120.0,
+            "trees": 66,
+            "mature_trees_age_at_least_20": 41,
+            "fruits_in_world": 183,
+            "pairs_within_25": 4,
+            "max_neighbors_within_50_including_self": 5,
+            "fruit_pairs_within_10": 10,
+            "max_fruits_within_15_of_one_fruit_including_self": 3
+          }
+        ]
+      }
+    ],
+    "classification": "unmodified generated maps and normal stochastic entity logic; agents omitted, so fruit stock is an upper bound and no policy advantage is claimed"
+  },
+  "contract": "all controller probes issue at most one action per observed living agent per tick",
+  "privileged_state_boundary": "ages, object identity, exact positions and list membership are diagnostics only; ordinary policies receive type/distance/angle without fruit or tree IDs/ages"
+}

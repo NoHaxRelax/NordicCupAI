@@ -1,0 +1,3719 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "script_sha256": "a253002b8195c2e5ca03142eeedcb0b58921de648b3edcf00ca0b71480ed56ac",
+  "scope": "Controlled flat patches; observed policy tracks fruit in a verified local coordinate frame; oracle alone receives true fruit ages. No predators, internal obstacles, or remote validation.",
+  "runs": [
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 109.1,
+      "score": 60.0202,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.2,
+      "actual_energy_received": 20.2,
+      "mean_harvest_age": 0.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 0.1,
+          "energy": 20.2
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 159.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 149.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 139.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 129.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 119.0,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 109.1,
+      "score": 60.0202,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.2,
+      "actual_energy_received": 20.2,
+      "mean_harvest_age": 0.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 0.1,
+          "energy": 20.2
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 159.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 149.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 139.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 129.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 119.0,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 20.1,
+          "age_seconds": 20.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 20.1,
+          "age_seconds": 20.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 10,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 129.1,
+      "score": 60.0402,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 40.2,
+      "actual_energy_received": 40.2,
+      "mean_harvest_age": 10.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 10.1,
+          "energy": 40.2
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 179.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 169.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 159.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 149.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 139.0,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 10,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 129.1,
+      "score": 60.0402,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 40.2,
+      "actual_energy_received": 40.2,
+      "mean_harvest_age": 10.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 10.1,
+          "energy": 40.2
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 179.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 169.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 159.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 149.0,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 139.0,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 10,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 100,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 10.1,
+          "age_seconds": 20.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 10,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 30.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 20.1,
+          "age_seconds": 30.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 25,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 25.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 25.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 25,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 25.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 25.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 25,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 25.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 25.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 25,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 45.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 20.1,
+          "age_seconds": 45.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 40,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 40.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 40.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 40,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 40.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 40.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 40,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 40.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 40.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 40,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 89.275,
+      "score": 60.0,
+      "fruits_eaten": 0,
+      "fruit_nutrition": 0,
+      "actual_energy_received": 0.0,
+      "mean_harvest_age": null,
+      "rotten_fruits": 1,
+      "movement_energy": 0.725,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 102,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 129.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 119.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 109.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 99.175,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 49,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 49.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 49.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 49,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 49.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 49.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 49,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 49.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 0.2,
+          "age_seconds": 49.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 198.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 188.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 49,
+      "appearance": "initial",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 89.275,
+      "score": 60.0,
+      "fruits_eaten": 0,
+      "fruit_nutrition": 0,
+      "actual_energy_received": 0.0,
+      "mean_harvest_age": null,
+      "rotten_fruits": 1,
+      "movement_energy": 0.725,
+      "turn_energy": 0.0,
+      "known_new_tracks": 0,
+      "unknown_age_tracks": 1,
+      "waiting_agent_ticks": 12,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.4,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 129.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 119.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 109.175,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 99.175,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 109.3,
+      "score": 60.0204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 159.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 149.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 139.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 129.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 119.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 21.2,
+          "age_seconds": 20.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 129.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 199,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 21.1,
+          "age_seconds": 20.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 129.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 148.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 21.2,
+          "age_seconds": 20.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 139.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 129.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 178.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 168.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 158.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 15,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 34.3,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.3204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.3
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 14.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 24.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 14.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 4.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 15,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 34.3,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.3204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 3,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.3
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 14.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 24.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 14.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 4.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 15,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 34.3,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.3204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.3
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 14.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 24.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 14.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 4.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 15,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 34.3,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.3204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 3,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.3
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 14.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 24.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 14.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 4.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 30,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 49.3,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 49.3204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 49.3
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 29.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 39.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 29.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 19.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 9.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 30,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 49.4,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 49.4204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.0,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 1,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 49.4
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 29.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 39.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 29.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 19.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 9.3,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 30,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 49.3,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 49.3204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 49.3
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 29.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 39.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 29.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 19.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 9.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 30,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 49.4,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 49.4204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.0,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 1,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 49.4
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 29.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 39.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 29.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 19.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 9.3,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 45,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 4.3,
+      "score": 60.0204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 44.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 54.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 44.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 34.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 24.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 14.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 45,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 4.4,
+      "score": 60.0204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.0,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 1,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 44.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 54.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 44.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 34.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 24.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 14.3,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 45,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 4.3,
+      "score": 60.0204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 44.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 54.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 44.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 34.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 24.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 14.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 45,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 4.4,
+      "score": 60.0204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.0,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 1,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 44.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 54.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 44.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 34.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 24.3,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 14.3,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 60,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 19.3,
+      "score": 60.0204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 59.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 69.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 59.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 49.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 39.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 29.2,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 60,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 58.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 21.2,
+          "age_seconds": 20.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 59.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 49.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 39.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 88.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 78.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 68.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 60,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 58.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.0,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 199,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 21.1,
+          "age_seconds": 20.0,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 59.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 49.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 39.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 88.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 78.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 68.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "blind",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 60,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 0,
+      "horizon": 60,
+      "duration": 60.0,
+      "alive": 1,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 58.9,
+      "score": 60.06,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 60.0,
+      "actual_energy_received": 60.0,
+      "mean_harvest_age": 20.1,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 200,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [],
+      "harvests": [
+        {
+          "t": 21.2,
+          "age_seconds": 20.1,
+          "energy": 60.0
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 59.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 49.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 39.175,
+          "fruits": 1,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 88.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 40.1,
+          "alive": 1,
+          "energy": 78.8,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 50.1,
+          "alive": 1,
+          "energy": 68.8,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 70,
+      "horizon": 40,
+      "duration": 34.1,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.1204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.1
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 159.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 148.299,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 43.149,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 70,
+      "horizon": 40,
+      "duration": 34.1,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.1204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 3,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.1
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 159.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 148.299,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 43.149,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 70,
+      "horizon": 40,
+      "duration": 34.1,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 34.1204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 34.1
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 149.9,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 159.2,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 20.1,
+          "alive": 1,
+          "energy": 148.299,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 30.1,
+          "alive": 1,
+          "energy": 43.149,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "immediate",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 100,
+      "horizon": 40,
+      "duration": 14.6,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 14.6204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 0,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 14.6
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 148.899,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 53.049,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "observed",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 100,
+      "horizon": 40,
+      "duration": 14.6,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 14.6204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 3,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 14.6
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 148.899,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 53.049,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    },
+    {
+      "mode": "oracle",
+      "seed": 0,
+      "patch": false,
+      "reproduce": false,
+      "initial_energy": 150,
+      "initial_fruit_age": 0,
+      "appearance": "new",
+      "initial_agent_age": 100,
+      "horizon": 40,
+      "duration": 14.6,
+      "alive": 0,
+      "total_created": 1,
+      "peak_agents": 1,
+      "remaining_energy": 0,
+      "score": 14.6204,
+      "fruits_eaten": 1,
+      "fruit_nutrition": 20.4,
+      "actual_energy_received": 20.4,
+      "mean_harvest_age": 0.2,
+      "rotten_fruits": 0,
+      "movement_energy": 1.1,
+      "turn_energy": 0.0,
+      "known_new_tracks": 1,
+      "unknown_age_tracks": 0,
+      "waiting_agent_ticks": 0,
+      "emergency_pick_decisions": 2,
+      "unlocalized_agent_ticks": 0,
+      "max_pose_error": 0.0,
+      "deaths": [
+        {
+          "id": 0,
+          "t": 14.6
+        }
+      ],
+      "harvests": [
+        {
+          "t": 1.3,
+          "age_seconds": 0.2,
+          "energy": 20.4
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.1,
+          "alive": 1,
+          "energy": 148.899,
+          "fruits": 0,
+          "trees": 0
+        },
+        {
+          "t": 10.1,
+          "alive": 1,
+          "energy": 53.049,
+          "fruits": 0,
+          "trees": 0
+        }
+      ],
+      "tree_births": false,
+      "patch_radius": 250
+    }
+  ]
+}

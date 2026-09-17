@@ -1,0 +1,3670 @@
+{
+  "parameters": {
+    "seed": 103,
+    "energy": 500,
+    "gap": 55,
+    "heading": 1.8,
+    "pred_energy": 102.0,
+    "seconds": 120,
+    "policy": "none",
+    "reserve_angle": -1.4,
+    "reserve_gap": 80,
+    "food": "trees",
+    "workers": 2,
+    "worker_near": true,
+    "predators": 1,
+    "pairs": 1,
+    "relay": true,
+    "forage": true,
+    "newborn_ready": 140,
+    "switch_energy": 120,
+    "dwell": 10,
+    "renew": true
+  },
+  "active_ticks": 1030,
+  "occupied_ticks": 0,
+  "active_retention": 0.0,
+  "worker_target_ticks": 0,
+  "longest_active_gap_seconds": 103.0,
+  "actual_target_switches": 0,
+  "baits_alive": 0,
+  "workers_alive": 0,
+  "worker_seconds": 230.8,
+  "bait_captures": 0,
+  "worker_captures": 0,
+  "deaths": [
+    {
+      "t": 112.3,
+      "id": 2,
+      "captured": false,
+      "remaining_energy": -1.21
+    },
+    {
+      "t": 118.7,
+      "id": 1,
+      "captured": false,
+      "remaining_energy": -1.25
+    }
+  ],
+  "per_predator_retention": {
+    "0": 0.0
+  },
+  "first_active_target_gap": 0.0,
+  "first_capture": null,
+  "min_bait_predator_separation": null,
+  "per_predator_longest_gap": {
+    "0": 103.0
+  },
+  "confirmed_target_changes": [],
+  "birth_cost": 0.0,
+  "peak_population": 2,
+  "population_seconds": 230.8,
+  "captured_agent_energy": 0.0,
+  "food_waste": {
+    "bait": 0.0,
+    "worker": 0.0
+  },
+  "newborn_prepared": [],
+  "births": [],
+  "food_count": {
+    "bait": 0,
+    "worker": 29
+  },
+  "food_energy": {
+    "bait": 0.0,
+    "worker": 780.6
+  },
+  "movement_turn_energy": {
+    "bait": 0.0,
+    "worker": 329.07
+  },
+  "energy_remaining": {},
+  "events": [],
+  "trace": [
+    {
+      "t": 0.1,
+      "agents": [
+        [
+          1,
+          1050.0,
+          500.0,
+          149.8
+        ],
+        [
+          2,
+          1050.0,
+          570.0,
+          149.9
+        ]
+      ],
+      "predators": [
+        [
+          797.5,
+          610.7,
+          101.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 1.1,
+      "agents": [
+        [
+          1,
+          1050.0,
+          500.0,
+          148.3
+        ],
+        [
+          2,
+          1050.0,
+          570.0,
+          148.5
+        ]
+      ],
+      "predators": [
+        [
+          776.6,
+          718.7,
+          95.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 2.1,
+      "agents": [
+        [
+          1,
+          1050.0,
+          500.0,
+          146.7
+        ],
+        [
+          2,
+          1050.0,
+          570.0,
+          146.9
+        ]
+      ],
+      "predators": [
+        [
+          756.7,
+          826.7,
+          90.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 3.1,
+      "agents": [
+        [
+          1,
+          1050.0,
+          500.0,
+          145.2
+        ],
+        [
+          2,
+          1050.0,
+          570.0,
+          145.4
+        ]
+      ],
+      "predators": [
+        [
+          744.6,
+          935.8,
+          84.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 4.1,
+      "agents": [
+        [
+          1,
+          1050.0,
+          500.0,
+          143.6
+        ],
+        [
+          2,
+          1050.0,
+          570.0,
+          143.8
+        ]
+      ],
+      "predators": [
+        [
+          756.3,
+          1045.0,
+          79.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 5.1,
+      "agents": [
+        [
+          1,
+          1050.0,
+          500.0,
+          142.1
+        ],
+        [
+          2,
+          1050.0,
+          570.0,
+          142.3
+        ]
+      ],
+      "predators": [
+        [
+          802.2,
+          1143.3,
+          73.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 6.1,
+      "agents": [
+        [
+          1,
+          982.6,
+          573.9,
+          136.0
+        ],
+        [
+          2,
+          995.8,
+          595.8,
+          138.0
+        ]
+      ],
+      "predators": [
+        [
+          900.8,
+          1115.6,
+          67.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 7.1,
+      "agents": [
+        [
+          1,
+          916.4,
+          639.1,
+          153.5
+        ],
+        [
+          2,
+          902.2,
+          628.2,
+          131.9
+        ]
+      ],
+      "predators": [
+        [
+          994.7,
+          1059.0,
+          62.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 8.1,
+      "agents": [
+        [
+          1,
+          839.7,
+          698.6,
+          170.3
+        ],
+        [
+          2,
+          808.1,
+          639.8,
+          149.2
+        ]
+      ],
+      "predators": [
+        [
+          1100.6,
+          1030.4,
+          56.7,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 9.1,
+      "agents": [
+        [
+          1,
+          775.6,
+          670.5,
+          165.6
+        ],
+        [
+          2,
+          716.1,
+          642.4,
+          173.6
+        ]
+      ],
+      "predators": [
+        [
+          1210.4,
+          1026.7,
+          51.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 10.1,
+      "agents": [
+        [
+          1,
+          810.6,
+          599.7,
+          160.4
+        ],
+        [
+          2,
+          742.7,
+          600.1,
+          169.7
+        ]
+      ],
+      "predators": [
+        [
+          1320.1,
+          1034.2,
+          45.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 11.1,
+      "agents": [
+        [
+          1,
+          835.7,
+          593.0,
+          190.6
+        ],
+        [
+          2,
+          777.2,
+          545.0,
+          205.1
+        ]
+      ],
+      "predators": [
+        [
+          1429.8,
+          1028.6,
+          40.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 12.1,
+      "agents": [
+        [
+          1,
+          902.6,
+          622.9,
+          228.9
+        ],
+        [
+          2,
+          789.5,
+          519.3,
+          221.3
+        ]
+      ],
+      "predators": [
+        [
+          1535.6,
+          1000.2,
+          34.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 13.1,
+      "agents": [
+        [
+          1,
+          888.9,
+          628.3,
+          226.2
+        ],
+        [
+          2,
+          793.1,
+          533.9,
+          239.3
+        ]
+      ],
+      "predators": [
+        [
+          1559.4,
+          902.3,
+          28.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 14.1,
+      "agents": [
+        [
+          1,
+          793.4,
+          658.1,
+          220.2
+        ],
+        [
+          2,
+          777.7,
+          632.7,
+          233.3
+        ]
+      ],
+      "predators": [
+        [
+          1534.3,
+          796.3,
+          23.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 15.1,
+      "agents": [
+        [
+          1,
+          708.1,
+          648.7,
+          239.1
+        ],
+        [
+          2,
+          724.8,
+          648.1,
+          228.5
+        ]
+      ],
+      "predators": [
+        [
+          1488.9,
+          696.3,
+          17.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 16.1,
+      "agents": [
+        [
+          1,
+          712.4,
+          609.7,
+          260.4
+        ],
+        [
+          2,
+          730.4,
+          599.7,
+          224.2
+        ]
+      ],
+      "predators": [
+        [
+          1462.7,
+          589.6,
+          12.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 17.1,
+      "agents": [
+        [
+          1,
+          718.6,
+          603.8,
+          277.2
+        ],
+        [
+          2,
+          730.9,
+          589.0,
+          220.9
+        ]
+      ],
+      "predators": [
+        [
+          1431.5,
+          484.4,
+          6.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 18.1,
+      "agents": [
+        [
+          1,
+          745.8,
+          539.3,
+          272.5
+        ],
+        [
+          2,
+          763.7,
+          497.4,
+          240.4
+        ]
+      ],
+      "predators": [
+        [
+          1409.5,
+          376.7,
+          0.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 19.1,
+      "agents": [
+        [
+          1,
+          792.5,
+          555.8,
+          268.2
+        ],
+        [
+          2,
+          789.8,
+          527.7,
+          237.0
+        ]
+      ],
+      "predators": [
+        [
+          1406.6,
+          354.8,
+          23.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 20.1,
+      "agents": [
+        [
+          1,
+          835.6,
+          600.6,
+          295.2
+        ],
+        [
+          2,
+          829.2,
+          604.9,
+          231.5
+        ]
+      ],
+      "predators": [
+        [
+          1406.6,
+          354.8,
+          53.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 21.1,
+      "agents": [
+        [
+          1,
+          842.1,
+          678.5,
+          290.2
+        ],
+        [
+          2,
+          841.7,
+          678.6,
+          249.8
+        ]
+      ],
+      "predators": [
+        [
+          1406.6,
+          354.8,
+          83.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 22.1,
+      "agents": [
+        [
+          1,
+          854.5,
+          662.9,
+          287.7
+        ],
+        [
+          2,
+          854.2,
+          662.9,
+          247.3
+        ]
+      ],
+      "predators": [
+        [
+          1396.7,
+          312.0,
+          99.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 23.1,
+      "agents": [
+        [
+          1,
+          916.9,
+          584.7,
+          281.7
+        ],
+        [
+          2,
+          916.7,
+          584.8,
+          241.3
+        ]
+      ],
+      "predators": [
+        [
+          1376.3,
+          204.1,
+          94.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 24.1,
+      "agents": [
+        [
+          1,
+          941.6,
+          553.7,
+          306.2
+        ],
+        [
+          2,
+          941.6,
+          553.7,
+          238.0
+        ]
+      ],
+      "predators": [
+        [
+          1346.9,
+          98.4,
+          88.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 25.1,
+      "agents": [
+        [
+          1,
+          941.6,
+          553.7,
+          304.7
+        ],
+        [
+          2,
+          941.6,
+          553.7,
+          236.4
+        ]
+      ],
+      "predators": [
+        [
+          1268.8,
+          41.8,
+          82.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 26.1,
+      "agents": [
+        [
+          1,
+          941.6,
+          553.7,
+          303.1
+        ],
+        [
+          2,
+          941.6,
+          553.7,
+          234.8
+        ]
+      ],
+      "predators": [
+        [
+          1161.5,
+          57.7,
+          77.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 27.1,
+      "agents": [
+        [
+          1,
+          871.8,
+          558.6,
+          298.4
+        ],
+        [
+          2,
+          861.8,
+          559.3,
+          229.7
+        ]
+      ],
+      "predators": [
+        [
+          1055.9,
+          87.7,
+          71.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 28.1,
+      "agents": [
+        [
+          1,
+          841.8,
+          560.7,
+          295.5
+        ],
+        [
+          2,
+          838.5,
+          561.0,
+          251.5
+        ]
+      ],
+      "predators": [
+        [
+          947.8,
+          107.9,
+          66.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 29.1,
+      "agents": [
+        [
+          1,
+          841.8,
+          560.7,
+          293.9
+        ],
+        [
+          2,
+          838.5,
+          561.0,
+          249.9
+        ]
+      ],
+      "predators": [
+        [
+          840.5,
+          131.6,
+          60.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 30.1,
+      "agents": [
+        [
+          1,
+          743.4,
+          578.4,
+          287.9
+        ],
+        [
+          2,
+          740.1,
+          578.9,
+          243.9
+        ]
+      ],
+      "predators": [
+        [
+          739.6,
+          173.2,
+          54.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 31.1,
+      "agents": [
+        [
+          1,
+          652.0,
+          596.8,
+          307.2
+        ],
+        [
+          2,
+          644.8,
+          599.7,
+          284.8
+        ]
+      ],
+      "predators": [
+        [
+          649.8,
+          236.3,
+          49.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 32.1,
+      "agents": [
+        [
+          1,
+          652.0,
+          596.8,
+          305.6
+        ],
+        [
+          2,
+          644.8,
+          599.7,
+          283.2
+        ]
+      ],
+      "predators": [
+        [
+          556.1,
+          293.7,
+          43.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 33.1,
+      "agents": [
+        [
+          1,
+          663.9,
+          645.7,
+          323.2
+        ],
+        [
+          2,
+          662.6,
+          642.8,
+          279.2
+        ]
+      ],
+      "predators": [
+        [
+          460.6,
+          347.6,
+          38.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 34.1,
+      "agents": [
+        [
+          1,
+          683.5,
+          641.6,
+          320.7
+        ],
+        [
+          2,
+          682.3,
+          639.2,
+          276.8
+        ]
+      ],
+      "predators": [
+        [
+          363.8,
+          399.4,
+          32.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 35.1,
+      "agents": [
+        [
+          1,
+          768.4,
+          623.9,
+          339.4
+        ],
+        [
+          2,
+          770.1,
+          633.6,
+          270.6
+        ]
+      ],
+      "predators": [
+        [
+          276.4,
+          465.9,
+          27.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 36.1,
+      "agents": [
+        [
+          1,
+          773.3,
+          653.2,
+          336.3
+        ],
+        [
+          2,
+          773.3,
+          653.2,
+          295.2
+        ]
+      ],
+      "predators": [
+        [
+          190.3,
+          534.1,
+          21.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 37.1,
+      "agents": [
+        [
+          1,
+          813.0,
+          608.1,
+          332.0
+        ],
+        [
+          2,
+          813.0,
+          608.1,
+          291.0
+        ]
+      ],
+      "predators": [
+        [
+          121.0,
+          619.0,
+          15.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 38.1,
+      "agents": [
+        [
+          1,
+          860.2,
+          554.4,
+          357.5
+        ],
+        [
+          2,
+          868.9,
+          558.0,
+          285.8
+        ]
+      ],
+      "predators": [
+        [
+          90.4,
+          723.4,
+          10.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 39.1,
+      "agents": [
+        [
+          1,
+          916.8,
+          564.6,
+          382.3
+        ],
+        [
+          2,
+          916.0,
+          564.8,
+          321.3
+        ]
+      ],
+      "predators": [
+        [
+          114.5,
+          830.2,
+          4.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 40.1,
+      "agents": [
+        [
+          1,
+          896.3,
+          595.0,
+          377.6
+        ],
+        [
+          2,
+          889.3,
+          595.4,
+          316.2
+        ]
+      ],
+      "predators": [
+        [
+          155.6,
+          920.1,
+          2.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 41.1,
+      "agents": [
+        [
+          1,
+          874.6,
+          609.1,
+          394.9
+        ],
+        [
+          2,
+          869.6,
+          608.3,
+          312.8
+        ]
+      ],
+      "predators": [
+        [
+          155.6,
+          920.1,
+          32.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 42.1,
+      "agents": [
+        [
+          1,
+          778.4,
+          636.3,
+          388.9
+        ],
+        [
+          2,
+          773.9,
+          637.3,
+          306.8
+        ]
+      ],
+      "predators": [
+        [
+          155.6,
+          920.1,
+          62.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 43.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          414.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          331.1
+        ]
+      ],
+      "predators": [
+        [
+          155.6,
+          920.1,
+          92.8,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 44.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          413.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          329.5
+        ]
+      ],
+      "predators": [
+        [
+          195.2,
+          986.1,
+          97.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 45.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          411.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          328.0
+        ]
+      ],
+      "predators": [
+        [
+          265.5,
+          1070.3,
+          92.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 46.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          410.2
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          326.4
+        ]
+      ],
+      "predators": [
+        [
+          361.0,
+          1121.9,
+          86.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 47.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          408.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          324.9
+        ]
+      ],
+      "predators": [
+        [
+          467.7,
+          1102.4,
+          81.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 48.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          407.1
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          323.3
+        ]
+      ],
+      "predators": [
+        [
+          575.1,
+          1078.8,
+          75.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 49.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          405.6
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          321.7
+        ]
+      ],
+      "predators": [
+        [
+          682.5,
+          1056.5,
+          70.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 50.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          404.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          320.2
+        ]
+      ],
+      "predators": [
+        [
+          791.1,
+          1040.4,
+          64.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 51.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          402.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          318.6
+        ]
+      ],
+      "predators": [
+        [
+          894.8,
+          1004.2,
+          58.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 52.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          400.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          317.1
+        ]
+      ],
+      "predators": [
+        [
+          991.8,
+          952.9,
+          53.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 53.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          399.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          315.5
+        ]
+      ],
+      "predators": [
+        [
+          1090.6,
+          904.8,
+          47.7,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 54.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          397.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          314.0
+        ]
+      ],
+      "predators": [
+        [
+          1192.3,
+          863.6,
+          42.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 55.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          396.2
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          312.4
+        ]
+      ],
+      "predators": [
+        [
+          1299.4,
+          839.9,
+          36.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 56.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          394.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          310.8
+        ]
+      ],
+      "predators": [
+        [
+          1407.8,
+          855.9,
+          31.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 57.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          393.1
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          309.3
+        ]
+      ],
+      "predators": [
+        [
+          1509.9,
+          896.0,
+          25.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 58.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          391.5
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          307.7
+        ]
+      ],
+      "predators": [
+        [
+          1558.9,
+          982.2,
+          19.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 59.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          390.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          306.2
+        ]
+      ],
+      "predators": [
+        [
+          1537.3,
+          1088.7,
+          14.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 60.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          388.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          304.6
+        ]
+      ],
+      "predators": [
+        [
+          1457.8,
+          1146.3,
+          8.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 61.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          386.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          303.1
+        ]
+      ],
+      "predators": [
+        [
+          1375.2,
+          1074.1,
+          2.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 62.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          385.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          301.5
+        ]
+      ],
+      "predators": [
+        [
+          1336.0,
+          1021.1,
+          11.5,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 63.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          383.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          299.9
+        ]
+      ],
+      "predators": [
+        [
+          1336.0,
+          1021.1,
+          41.5,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 64.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          382.2
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          298.4
+        ]
+      ],
+      "predators": [
+        [
+          1336.0,
+          1021.1,
+          71.5,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 65.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          380.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          296.8
+        ]
+      ],
+      "predators": [
+        [
+          1336.0,
+          1021.1,
+          101.5,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 66.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          379.1
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          295.3
+        ]
+      ],
+      "predators": [
+        [
+          1279.2,
+          927.2,
+          95.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 67.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          377.5
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          293.7
+        ]
+      ],
+      "predators": [
+        [
+          1225.8,
+          831.2,
+          90.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 68.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          376.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          292.2
+        ]
+      ],
+      "predators": [
+        [
+          1174.4,
+          734.3,
+          84.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 69.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          374.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          290.6
+        ]
+      ],
+      "predators": [
+        [
+          1121.1,
+          638.7,
+          79.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 70.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          372.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          289.0
+        ]
+      ],
+      "predators": [
+        [
+          1061.5,
+          546.7,
+          73.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 71.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          371.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          287.5
+        ]
+      ],
+      "predators": [
+        [
+          991.7,
+          462.3,
+          68.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 72.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          369.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          285.9
+        ]
+      ],
+      "predators": [
+        [
+          917.7,
+          381.1,
+          62.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 73.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          368.2
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          284.4
+        ]
+      ],
+      "predators": [
+        [
+          828.6,
+          317.0,
+          56.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 74.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          366.6
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          282.8
+        ]
+      ],
+      "predators": [
+        [
+          727.5,
+          274.4,
+          51.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 75.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          365.1
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          281.3
+        ]
+      ],
+      "predators": [
+        [
+          627.3,
+          230.3,
+          45.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 76.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          363.5
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          279.7
+        ]
+      ],
+      "predators": [
+        [
+          536.8,
+          168.0,
+          40.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 77.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          362.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          278.1
+        ]
+      ],
+      "predators": [
+        [
+          436.2,
+          124.2,
+          34.7,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 78.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          360.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          276.6
+        ]
+      ],
+      "predators": [
+        [
+          327.6,
+          109.2,
+          29.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 79.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          358.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          275.0
+        ]
+      ],
+      "predators": [
+        [
+          219.1,
+          125.2,
+          23.7,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 80.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          357.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          273.5
+        ]
+      ],
+      "predators": [
+        [
+          116.6,
+          164.5,
+          18.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 81.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          355.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          271.9
+        ]
+      ],
+      "predators": [
+        [
+          53.4,
+          247.0,
+          12.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 82.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          354.2
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          270.4
+        ]
+      ],
+      "predators": [
+        [
+          102.4,
+          345.1,
+          6.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 83.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          352.6
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          268.8
+        ]
+      ],
+      "predators": [
+        [
+          160.2,
+          438.4,
+          1.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 84.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          351.1
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          267.3
+        ]
+      ],
+      "predators": [
+        [
+          179.4,
+          465.3,
+          20.6,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 85.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          349.5
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          265.7
+        ]
+      ],
+      "predators": [
+        [
+          179.4,
+          465.3,
+          50.6,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 86.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          348.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          264.1
+        ]
+      ],
+      "predators": [
+        [
+          179.4,
+          465.3,
+          80.6,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 87.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          346.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          262.6
+        ]
+      ],
+      "predators": [
+        [
+          197.6,
+          492.8,
+          99.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 88.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          344.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          261.0
+        ]
+      ],
+      "predators": [
+        [
+          255.7,
+          585.9,
+          94.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 89.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          343.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          259.5
+        ]
+      ],
+      "predators": [
+        [
+          296.8,
+          687.4,
+          88.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 90.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          340.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          257.0
+        ]
+      ],
+      "predators": [
+        [
+          327.0,
+          793.1,
+          83.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 91.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          330.2
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          246.4
+        ]
+      ],
+      "predators": [
+        [
+          345.0,
+          900.9,
+          77.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 92.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          319.5
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          235.7
+        ]
+      ],
+      "predators": [
+        [
+          358.4,
+          1009.9,
+          72.1,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 93.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          308.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          224.8
+        ]
+      ],
+      "predators": [
+        [
+          396.8,
+          1112.4,
+          66.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 94.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          297.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          213.9
+        ]
+      ],
+      "predators": [
+        [
+          487.6,
+          1133.4,
+          60.7,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 95.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          286.7
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          202.9
+        ]
+      ],
+      "predators": [
+        [
+          584.6,
+          1082.1,
+          55.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 96.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          275.6
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          191.8
+        ]
+      ],
+      "predators": [
+        [
+          680.8,
+          1028.7,
+          49.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 97.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          264.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          180.6
+        ]
+      ],
+      "predators": [
+        [
+          767.4,
+          961.5,
+          44.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 98.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          253.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          169.2
+        ]
+      ],
+      "predators": [
+        [
+          852.5,
+          892.3,
+          38.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 99.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          241.6
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          157.8
+        ]
+      ],
+      "predators": [
+        [
+          940.0,
+          825.9,
+          32.8,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 100.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          230.1
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          146.3
+        ]
+      ],
+      "predators": [
+        [
+          1023.5,
+          754.8,
+          27.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 101.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          218.5
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          134.7
+        ]
+      ],
+      "predators": [
+        [
+          1088.8,
+          666.5,
+          21.7,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 102.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          206.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          122.9
+        ]
+      ],
+      "predators": [
+        [
+          1149.2,
+          574.8,
+          16.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 103.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          194.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          111.1
+        ]
+      ],
+      "predators": [
+        [
+          1198.7,
+          476.7,
+          10.5,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 104.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          183.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          99.2
+        ]
+      ],
+      "predators": [
+        [
+          1255.7,
+          382.8,
+          4.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 105.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          171.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          87.2
+        ]
+      ],
+      "predators": [
+        [
+          1321.0,
+          309.7,
+          2.9,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 106.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          158.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          75.1
+        ]
+      ],
+      "predators": [
+        [
+          1321.0,
+          309.7,
+          32.9,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 107.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          146.6
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          62.8
+        ]
+      ],
+      "predators": [
+        [
+          1321.0,
+          309.7,
+          62.9,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 108.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          134.3
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          50.5
+        ]
+      ],
+      "predators": [
+        [
+          1321.0,
+          309.7,
+          92.9,
+          true
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 109.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          121.9
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          38.1
+        ]
+      ],
+      "predators": [
+        [
+          1379.4,
+          259.5,
+          98.0,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 110.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          109.4
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          25.6
+        ]
+      ],
+      "predators": [
+        [
+          1453.8,
+          178.7,
+          92.4,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 111.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          96.8
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          12.9
+        ]
+      ],
+      "predators": [
+        [
+          1507.8,
+          83.2,
+          86.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 112.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          84.0
+        ],
+        [
+          2,
+          732.9,
+          623.0,
+          0.2
+        ]
+      ],
+      "predators": [
+        [
+          1551.8,
+          41.0,
+          81.2,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 113.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          71.2
+        ]
+      ],
+      "predators": [
+        [
+          1551.7,
+          40.8,
+          75.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 114.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          58.3
+        ]
+      ],
+      "predators": [
+        [
+          1551.8,
+          40.7,
+          69.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 115.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          45.3
+        ]
+      ],
+      "predators": [
+        [
+          1551.9,
+          40.6,
+          64.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 116.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          32.1
+        ]
+      ],
+      "predators": [
+        [
+          1551.9,
+          40.3,
+          58.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 117.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          18.9
+        ]
+      ],
+      "predators": [
+        [
+          1552.0,
+          40.2,
+          52.9,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 118.1,
+      "agents": [
+        [
+          1,
+          738.1,
+          625.8,
+          5.6
+        ]
+      ],
+      "predators": [
+        [
+          1552.2,
+          40.3,
+          47.3,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    },
+    {
+      "t": 119.1,
+      "agents": [],
+      "predators": [
+        [
+          1552.4,
+          40.2,
+          41.6,
+          false
+        ]
+      ],
+      "target": [
+        null
+      ],
+      "active": null,
+      "incoming": null
+    }
+  ],
+  "replay": "replays/none-vaf470cdd48-seed103-20260917T134559980720Z-a26092d0d3.json.gz",
+  "run_id": "none-vaf470cdd48-seed103-20260917T134559980720Z-a26092d0d3",
+  "recording_kind": "new_reproduction",
+  "reproduction": {
+    "source_case": "heldout-invalid-single-baseline[15]",
+    "source_file": "heldout-invalid-single-baseline.json",
+    "source_file_sha256": "140a63ff4e8b8571c0eb6c4372142c3008b31bc6cb02b858667252d615f7e2dd",
+    "source_row_index": 15,
+    "source_controller_sha256": "5284e31d047d6087125795f6966e8c8ea5023489c1927c6dae0f731b4a70a453",
+    "selected_controller": "controller_stage3",
+    "selected_controller_sha256": "af470cdd4826edf2cdc58da3a79fef1b37f98b43d108e3862a1943df5ec6f24f",
+    "limitations": "Excluded historical baseline. Closest preserved controller. Original orbit_single label dispatched MPC; reproduce it explicitly as single/MPC.",
+    "original_parameters": {
+      "seed": 103,
+      "energy": 500,
+      "gap": 55,
+      "heading": 1.8,
+      "pred_energy": 102.0,
+      "seconds": 120,
+      "policy": "none",
+      "reserve_angle": -1.4,
+      "reserve_gap": 80,
+      "food": "trees",
+      "workers": 2,
+      "worker_near": true,
+      "predators": 1,
+      "relay": true,
+      "forage": true,
+      "newborn_ready": 140,
+      "switch_energy": 120,
+      "dwell": 10,
+      "renew": true
+    }
+  }
+}
