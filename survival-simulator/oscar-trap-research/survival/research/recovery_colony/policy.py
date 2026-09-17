@@ -12,9 +12,10 @@ import math
 
 from reacquisition_sol.policy_global_sweep_gaze import GlobalSweepGaze
 from real_map_guide_sol.policy_v15_hearing_reacquisition_frozen import wrap
+from integrated_guide.spatial_geometry import SpatialGeometry
 
 
-class ColonyScout(GlobalSweepGaze):
+class ColonyScout(SpatialGeometry, GlobalSweepGaze):
     """GlobalSweepGaze with projections capped to the child's native traits."""
 
     def act(self, observations, sim_time):
@@ -73,6 +74,9 @@ class RecoveryColony:
         self.controllers = {guide_id: ColonyScout(static_map, bait_id=bait_id,
                                                    guide_id=guide_id)}
         self.pending_birth = False
+        self.pending_since = None
+        self.birth_action_due = False
+        self.missing_since = None
         self.replacements_requested = 0
         self.finished = False
         self.events = []
@@ -89,19 +93,38 @@ class RecoveryColony:
         # the replacement. Any unexpected extras remain stationary below.
         aid = children[0]
         self.guide_role_ids.append(aid)
-        self.controllers[aid] = ColonyScout(self.static_map, bait_id=self.bait_id,
-                                             guide_id=aid)
+        scout = ColonyScout(self.static_map, bait_id=self.bait_id, guide_id=aid)
+        predecessor = self.controllers.get(self.active_guide_id)
+        inherited_point = (getattr(predecessor, "last_predator_point", None)
+                           if predecessor is not None else None)
+        inherited_time = (getattr(predecessor, "last_predator_seen", -1e9)
+                          if predecessor is not None else -1e9)
+        # This is policy memory produced from an earlier ordinary DTO and
+        # static-map localization. It gives the replacement a route toward the
+        # last public sighting; the global sweep takes over when it is stale.
+        if inherited_point is not None:
+            scout.last_predator_point = tuple(inherited_point)
+            scout.last_predator_seen = float(inherited_time)
+        self.controllers[aid] = scout
         self.active_guide_id = aid
         self.pending_birth = False
+        self.pending_since = None
+        self.missing_since = None
         self.events.append({"time": round(sim_time, 1),
                             "kind": "native_colony_scout_registered",
                             "agent_id": aid,
-                            "replacement_number": self.replacements_requested})
+                            "replacement_number": self.replacements_requested,
+                            "inherited_public_last_sighting": inherited_point is not None})
 
     @staticmethod
     def _still(agent_id):
         return {"agent_id": agent_id, "move_distance": 0.,
                 "move_direction": 0., "turn_angle": 0., "spawn_agent": False}
+
+    @staticmethod
+    def _nearest_predator(state):
+        return min((float(row["distance"]) for row in state["observations"]
+                    if row.get("type") == "Predator"), default=None)
 
     def act(self, observations, sim_time):
         states = {state["agent_id"]: state for state in observations}
@@ -112,11 +135,28 @@ class RecoveryColony:
         if controller is not None and getattr(controller, "released", False):
             self.finished = True
 
-        if (not self.finished and active not in states and not self.pending_birth
+        if active in states:
+            self.missing_since = None
+        elif self.missing_since is None:
+            self.missing_since = sim_time
+        if (self.pending_birth and self.pending_since is not None
+                and sim_time - self.pending_since >= 1.):
+            # A request may produce a child that dies before reaching a DTO.
+            # Permit a later attempt, while the action-count budget remains.
+            self.pending_birth = False
+            self.pending_since = None
+        bait_nearest = (self._nearest_predator(states[self.bait_id])
+                        if self.bait_id in states else None)
+        bait_holding = bait_nearest is not None and bait_nearest < 30.
+        settled = self.missing_since is not None and sim_time - self.missing_since >= 3.
+        if (not self.finished and active not in states and settled and not bait_holding
+                and not self.pending_birth
                 and self.replacements_requested < self.MAX_REPLACEMENTS
                 and self.bait_id in states):
             self.replacements_requested += 1
             self.pending_birth = True
+            self.pending_since = sim_time
+            self.birth_action_due = True
             self.events.append({"time": round(sim_time, 1),
                                 "kind": "bait_colony_replacement_request",
                                 "dead_guide_id": active,
@@ -127,10 +167,12 @@ class RecoveryColony:
         for aid in sorted(states):
             if aid == self.bait_id:
                 action = self._still(aid)
-                if self.pending_birth:
+                if self.birth_action_due:
                     action["spawn_agent"] = True
+                    self.birth_action_due = False
                 self.decisions[aid] = {"rule": "stationary_bait_colony",
-                                      "replacement_pending": self.pending_birth}
+                                      "replacement_pending": self.pending_birth,
+                                      "bait_close_predator_hold": bait_holding}
             elif aid == self.active_guide_id and not self.finished:
                 scout = self.controllers[aid]
                 action = scout.act([states[aid]], sim_time)[0]

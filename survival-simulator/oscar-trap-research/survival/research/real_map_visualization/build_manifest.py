@@ -10,11 +10,15 @@ sys.path.insert(0, str(ROOT / "debugger"))
 from replay_stream import iter_frames
 RESULT_DIRS = [ROOT / "results" / name for name in ("real_map_intake_sol", "simple_chase", "release_validation", "replaceable_sites", "terrain_guide", "sequential_real_map")]
 RESULT_DIRS.extend(ROOT / "results/short_overlap_sol" / name for name in ("approach_probe", "reacquire_probe", "v13_fresh", "v15_regression", "v16_emergency_probe", "v19_early_safety", "v20_contact_safe", "v20_fresh16"))
-RESULT_DIRS.extend(p for parent in (ROOT / "results/short_overlap_sol", ROOT / "results/reacquisition_sol")
-                   for p in parent.iterdir() if p.is_dir() and p.name != "replays" and p not in RESULT_DIRS)
+RESULT_DIRS.extend(p for p in (ROOT / "results/short_overlap_sol").iterdir()
+                   if p.is_dir() and p.name.startswith(("v26_", "v28_", "v29_", "v30_", "v31_", "v33_")) and p not in RESULT_DIRS)
+RESULT_DIRS.extend(p for p in (ROOT / "results/reacquisition_sol").iterdir()
+                   if p.is_dir() and p.name != "replays")
 
 
 def classify(receipt):
+    if str(receipt.get("conditional_delivery_status", "")).startswith("invalid_"):
+        return "invalid setup"
     if str(receipt.get("schema", "")).startswith("sequential-real-map-encounter-v"):
         return "sequential pilot" if receipt.get("success") else "failure"
     if receipt.get("schema") in ("replaceable-site-native-handoff-audit-v1", "replaceable-site-native-handoff-v1", "replaceable-site-native-crowd-handoff-v1"):
@@ -113,7 +117,18 @@ def main():
                 temporary = chunk.with_suffix(f".{__import__('os').getpid()}.tmp")
                 temporary.write_bytes(gzip.compress(json.dumps(items,separators=(",",":")).encode(),compresslevel=1))
                 temporary.replace(chunk)
-        for frame in iter_frames(replay_path):
+        # Chunks are atomically written from this immutable replay. An interrupted
+        # library rebuild can validate its existing native-only chunks without
+        # decompressing the much larger entity-state stream again.
+        chunk_paths = [chunk_dir / f"{i}.json.gz" for i in range((expected+99)//100)]
+        reuse_chunks = all(p.exists() and p.stat().st_mtime_ns >= replay_path.stat().st_mtime_ns
+                           for p in chunk_paths)
+        def chunk_frames():
+            for chunk in chunk_paths:
+                with gzip.open(chunk, "rt") as stream:
+                    yield from json.load(stream)
+        source_frames = chunk_frames() if reuse_chunks else iter_frames(replay_path)
+        for frame in source_frames:
             if "native_image" not in frame:
                 native = False
                 break
@@ -152,6 +167,8 @@ def main():
         if kind == "prepared handoff":
             setup_label = receipt.get('setup_label', 'prepared native-map bait replacement')
             guide_role, parent_role, child_role = 'replacement bait', 'old bait', 'not_spawned'
+        if kind == "invalid setup":
+            setup_label = receipt.get('setup_label', 'invalid privileged setup; excluded from reliability')
         if str(receipt.get("schema", "")).startswith("sequential-real-map-encounter-v"):
             setup_label = "repeated random predator + adjacent guide; predeployed bait"
             guide_role, parent_role, child_role = "independent guides", "not_applicable", "not_spawned"
@@ -189,14 +206,32 @@ def main():
         if score.get("receipt") and score.get("schema") == "guide-delivery-causal-score-v2":
             strict_scores["/" + score["receipt"].lstrip("/")] = (score_path, score)
     v4_scores = {}
+    sys.path.insert(0, str(ROOT / "research/reliability_eval"))
+    from protocol_v4 import PROTOCOL_SHA256 as current_v4_hash
     for score_path in sorted((ROOT / "results").rglob("*.score-v4.json"), key=lambda p:p.stat().st_mtime_ns):
         score = json.loads(score_path.read_text())
-        if score.get("receipt") and score.get("schema") == "guide-delivery-causal-score-v4":
+        if (score.get("receipt") and score.get("schema") == "guide-delivery-causal-score-v4"
+                and score.get("protocol_sha256") == current_v4_hash):
             v4_scores["/" + score["receipt"].lstrip("/")] = (score_path, score)
     # Apply evaluator sidecars to presentation only, including cached rows.
     # Immutable original success stays visible separately.
     for row in rows:
         original = json.loads((ROOT / row['receipt'].lstrip('/')).read_text())
+        if row.get('kind') == 'invalid setup':
+            row['success'] = False
+            row['guided_delivered'] = 0
+            continue
+        if (original.get('schema') == 'real-map-intake-result-v2'
+                and row['receipt'] not in strict_scores and row['receipt'] not in v4_scores):
+            row['kind'] = 'unscored native run'
+            row['success'] = None
+            row['guided_delivered'] = original.get('guided_delivered', 0)
+            row['failure_stage'] = 'causal scoring pending; raw harness count only'
+            row.pop('strict_v4_score', None)
+            row.pop('capture_audit', None)
+            policy_label = original.get('policy', 'policy').split(':')[0].split('.')[-1]
+            row['title'] = (f"[{policy_label}] unscored · map {row.get('map_seed')} · "
+                            f"{row.get('seconds',0):g}s · {Path(row['receipt']).stem[-8:]}")
         if original.get('child_births'):
             row['guide_role'], row['parent_role'], row['child_role'] = 'guide lineage', 'parent guide', 'native reserve guides'
             row['guide_births'] = len(original['child_births'])
@@ -246,7 +281,7 @@ def main():
             row["title"] = (f"[{row.get('policy_label', 'policy')}] v4 {'PASS' if score['pass'] else 'FAIL'} · "
                 f"map {row.get('map_seed')} · fixture {row.get('fixture_seed')} · {row.get('seconds', 0):g}s · "
                 f"{Path(row['receipt']).stem[-8:]}")
-    order = {"full game": 0, "capture pilot": .5, "sequential pilot": .6, "prepared handoff": .75, "partial pilot": 3.5, "failure": 1, "no-birth diagnostic": 2,
+    order = {"full game": 0, "capture pilot": .5, "sequential pilot": .6, "prepared handoff": .75, "unscored native run": .9, "partial pilot": 3.5, "failure": 1, "no-birth diagnostic": 2,
              "excluded": 3, "short pilot": 4, "unsupported": 5}
     rows.sort(key=lambda row: (order[row["kind"]], -row.get("seconds", 0), row["title"]))
     temporary = HERE / f"manifest.{__import__('os').getpid()}.tmp"

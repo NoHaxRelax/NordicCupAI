@@ -4,6 +4,36 @@ Active research, started 2026-09-17 after the user authorized all remaining usag
 
 Current targets: a frozen controller reaching >95% single-encounter delivery reliability; preserve rear access for replacement bait; count boundary-wall gaps. Whole-game retention and sequential delivery of 33 predators remain separate, unproven goals.
 
+## Latest checkpoint — 2026-09-17 22:30 UTC
+
+This section supersedes the older in-progress notes below. **95% reliability has not been established.** The strongest single-guide fresh batch is root v30 wide-route, 7/8 at300s (maps10220–10227). Root v27 emergency reserves passed4/4 fresh maps10208–10211; a frozen16-map extension10320–10335 is now being launched. Keep the separate batch denominators and disclose the cost of native reserve births.
+
+| Controller | Fresh development result | Qualification |
+|---|---:|---|
+| v20 baseline | 11/16 | One unsupported map; original harness12/16 was overcounted |
+| v24 replaceable/short-gap fallback | 11/16 | All11 attributable captures retained |
+| Sol v26 terrain integration | 4/4 | Small batch, not a reliability guarantee |
+| Sol v28 terrain margin | 3/4 | Boundary oscillation remains |
+| Root v30 wide-route | 7/8 | One immediate guide death followed by autonomous arrival is a failure |
+| Root v27 emergency reserves | 4/4 | New16-case extension pending |
+| Original burst reserves | 6/8 | One native movement-contract/process failure and one no-delivery failure remain in denominator |
+| Root conservative viability | 7/8 | Fresh10260–10267; no causal delivery on10263 |
+| Root v32 integration | 6/8 | Fresh10240–10247; separate from known regression failures |
+
+The finalized **v4 causal scorer** reconstructs native chase-qualified guide targets, including sibling guides, then an actual guide→bait handoff within3 predator-active seconds, an unbroken bait/rest chain to physical confirmation, and retention. It accepts a surviving guide. This corrects two older scoring defects: anchoring the handoff at later physical arrival, and using the fluctuating active-guide telemetry to identify which sibling performed the delivery. Autonomous arrivals still fail. Immutable v3 results remain available. The paired53-case audit changes only the intended known Burst10138 case; v20 andv24 stay11/16. The separate reserve fresh batches change v27 from1/4 to4/4 and burst from1/8 to6/8.
+
+Frozen v4 SHA256: `7372e9a88178c4b66dbc0f50e1fec92144728d17ea30554a32da21b5675aae38`. Manifest: `results/reliability_eval/FROZEN_PROTOCOL_V4.json`; runner: `research/reliability_eval/run_frozen_v4.py`; seven contract tests pass. Reserved59 seeds11001–11059 /fixtures21001–21059 **remain unused**. 59/59 would give a one-sided95% exact lower bound0.950492. Fresh development batches and fitted repairs must not be pooled into that claim.
+
+Fresh static geometry: **124/128 maps (96.875%)** have an eligible replaceable site;98/128 have boundary candidates within the selected tier. This is the frozen holdout20000–20127. Two fitted compact-selector extensions recover20056 and20079, and both have successful native300s transport receipts, but those fitted repairs do not revise the frozen124/128 estimate. Two other maps remain unsupported by the tested geometry.
+
+Prepared33-predator crowd replacement passed90s; the same boundary site10144 is currently being tested through3000s. The crowd begins near the intake, so this does not establish33 random deliveries. A newer repeated-arrival pilot600s (84ea8cce) has2/5 strict successes, with3 attributable captures that all stay physically held: one briefly changes target to an arriving guide at81.0s, which the strict target-continuity metric rejects. A fourth final nearby predator arrived autonomously and is not an attributable delivery. Keep physical retention and delivery attribution separate.
+
+Rejected integrations: rootv32/v33 and the wider following-distance experiment regress known cases. Sol wide-lead is0/4 causal successes across two fitted and two fresh completed runs; one guide survives300s without delivery. Do not promote these versions. Root all-action viability fresh8 independently scores7/8; its known10164 repair passes at70.1s. All these sidecars use the finalv4 hash. Independent sequential review confirms the2/5 strict versus3/5 causally delivered and physically retained distinction (`results/reliability_eval/development_scores_v4/sequential_v32_84ea8cce_review.json`).
+
+Next concrete directions are native emergency reserves and multiple predeployed traps selected from the guide's own landmark-localized DTO pose. Multi-site has an explicit cost of several stationary bait agents. Two initial multi-site10138 plumbing runs accidentally ordered bait IDs using hidden setup guide position; they are retained and marked invalid, excluded from reliability. Corrected tests use deterministic static-map bait IDs and score any eligible bait. A bait-born recovery colony is a separate600s experiment, not part of the300s benchmark.
+
+Every completed run keeps every native0.1s frame locally. The browser library and scoring overlays are being rebuilt; original receipts remain immutable. The independent Ask Sol helper reads this handover. Large replay/chunk assets are git-ignored; code, plans, receipts, audits and reproduction instructions are versioned on `survival-simulator/lucas-trap-slopsesh1` (latest pushed checkpoint032922f, newer checkpoint pending).
+
 ## Static geometry
 
 The original selector did include the four native boundary wall rectangles (30 units thick), but its centered axial approach excluded their narrow gaps. The new pure selector in `../replaceable_sites/selector.py` allows a small lateral approach offset and requires a radius-5.01 path through the opposite mouth to the depth-5 bait goal. On the same 128-map census: old short-site geometry 127/128; new replaceable geometry 128/128; eligible boundary sites 88/128. These figures establish geometry availability only.
@@ -62,3 +92,15 @@ Solv26 passed4/4 fresh maps10180–10183 and three separate fitted regressions. 
 Rootv27 emergency reserves fresh4 and originalburst fresh8 are still running. The burst batch has one pass, two delivery failures, and one native move-distance contract error among its first four completions. All remain in the denominator. A root finite three-step conservative escape candidate survived10164 through60s but had not delivered; its reserve variant lost all guides in10138 at1.1s. It is not promoted.
 
 The exact static-obstacle broad phase in integrated_guide/spatial_geometry.py matched14,064 original geometry queries. Native trajectory equivalence is being checked separately; do not assume timing optimization alone establishes controller equivalence.
+
+## Fresh geometry holdout and wider routing
+
+Frozen fresh geometry census on128 new native maps20000–20127 found124/128 supported by the staged selector (96.875%);98/128 had boundary candidates within the selected tier. The older128/128 figure was from the earlier map set and should not be used as the population estimate. No actors or simulation steps were run for this census; complete native rectangles and the predeclared plan are preserved in results/replaceable_sites/fresh128.
+
+Unsupported maps are20027,20029,20056,20079. Experimental compact geometry recovers20056 (gap19.4596) and20079 (boundary, gap11.6328), but does not recover20027/20029. This is a fitted geometry diagnosis, not additional validated availability. Native v31 compact-fallback transport probes are running separately.
+
+Rootv30 wide-route combines v29 single-guide behavior with static terrain-cost A* and35/25-unit route clearance preferences, with11-unit fallback and unchanged final intake. Fitted10212 now has guide death21.4, entry21.6;10175 has entry2.5, release5.6, retreat8.5, and a later guide death192.6. Both retain the predator through300s; independent strict scoring is pending. Frozen fresh8 maps10220–10227 is underway, distinct from reserved59.
+
+The static-obstacle broad phase is now also checked against a full native burst replay:3001/3001 frames have identical actions, dynamics, decisions, and observations after equal-distance Agent observation-list ordering is canonicalized. The original unnormalized comparison and both audit records remain preserved.
+
+Checkpoint032922f has been pushed to survival-simulator/lucas-trap-slopsesh1. Large native replays and viewer chunks remain local; the branch includes their immutable receipts and reproduction sources.

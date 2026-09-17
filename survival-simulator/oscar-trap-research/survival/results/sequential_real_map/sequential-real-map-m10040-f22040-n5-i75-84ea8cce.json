@@ -1,0 +1,6506 @@
+{
+  "schema": "sequential-real-map-encounter-v2",
+  "policy": "integrated_guide.policy_v32_integrated:Guide",
+  "map_seed": 10040,
+  "fixture_seed": 22040,
+  "requested_encounters": 5,
+  "interval": 75.0,
+  "requested_seconds": 600.0,
+  "seconds": 600.0000000000679,
+  "reason": "horizon",
+  "error": null,
+  "site": {
+    "mouth": [
+      174.0649089245209,
+      178.54124356973202
+    ],
+    "inward": [
+      0.0,
+      -1.0
+    ],
+    "cross": [
+      1.0,
+      0.0
+    ],
+    "goal": [
+      174.0649089245209,
+      173.54124356973202
+    ],
+    "far": [
+      174.0649089245209,
+      303.54124356973205
+    ],
+    "hold": [
+      174.0649089245209,
+      253.54124356973202
+    ],
+    "gap": 11.325708151723632,
+    "overlap": 74.1318577339014,
+    "runup": [
+      174.0649089245209,
+      323.54124356973205
+    ],
+    "approach_lane_offset": 0.0,
+    "offset_approach": false,
+    "obstacle_indices": [
+      70,
+      43
+    ],
+    "axis": 0,
+    "other_mouth": [
+      174.0649089245209,
+      104.40938583583062
+    ],
+    "replacement_entry": [
+      174.0649089245209,
+      84.40938583583062
+    ],
+    "second_access_clear": true,
+    "second_access_radius": 5.01,
+    "bait_depth": 5.0,
+    "boundary_indices": [],
+    "geometric_replacement_access_only": true
+  },
+  "bait_id": 0,
+  "bait_alive": true,
+  "guide_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "encounters": [
+    {
+      "slot": 0,
+      "time": 0,
+      "guide_id": 1,
+      "guide_start": [
+        1479.06894713223,
+        652.2039782205168,
+        6.1592163994434355
+      ],
+      "predator_start": [
+        1533.6468601334675,
+        645.4031391230703,
+        3.017623745853642
+      ],
+      "first_guide_target": 0.1,
+      "last_guide_target": 81.0,
+      "last_handoff_guide_id": 2,
+      "handoff_guide_id": 1,
+      "active_since_guide": 379.0000000000177,
+      "candidate_since": 12.9,
+      "capture_time": 12.9,
+      "first_active_bait": 12.9,
+      "handoff_active_seconds": 0.1,
+      "handoff_wall_seconds": 0.1,
+      "first_physical_loss": null,
+      "first_target_loss": 81.0,
+      "guide_dead_at": 12.9,
+      "last_target": 0,
+      "target_switches": [
+        {
+          "time": 0.1,
+          "target": 1
+        },
+        {
+          "time": 12.9,
+          "target": 0
+        },
+        {
+          "time": 26.1,
+          "target": "resting"
+        },
+        {
+          "time": 29.6,
+          "target": 0
+        },
+        {
+          "time": 38.8,
+          "target": "resting"
+        },
+        {
+          "time": 42.3,
+          "target": 0
+        },
+        {
+          "time": 51.2,
+          "target": "resting"
+        },
+        {
+          "time": 54.7,
+          "target": 0
+        },
+        {
+          "time": 64.0,
+          "target": "resting"
+        },
+        {
+          "time": 67.5,
+          "target": 0
+        },
+        {
+          "time": 76.7,
+          "target": "resting"
+        },
+        {
+          "time": 80.2,
+          "target": 0
+        },
+        {
+          "time": 81.0,
+          "target": 2
+        },
+        {
+          "time": 81.1,
+          "target": 0
+        },
+        {
+          "time": 81.5,
+          "target": null
+        },
+        {
+          "time": 81.6,
+          "target": 0
+        },
+        {
+          "time": 94.2,
+          "target": "resting"
+        },
+        {
+          "time": 97.7,
+          "target": 0
+        },
+        {
+          "time": 107.0,
+          "target": "resting"
+        },
+        {
+          "time": 110.5,
+          "target": 0
+        },
+        {
+          "time": 119.7,
+          "target": "resting"
+        },
+        {
+          "time": 123.2,
+          "target": 0
+        },
+        {
+          "time": 132.5,
+          "target": "resting"
+        },
+        {
+          "time": 136.0,
+          "target": 0
+        },
+        {
+          "time": 145.3,
+          "target": "resting"
+        },
+        {
+          "time": 148.8,
+          "target": 0
+        },
+        {
+          "time": 158.0,
+          "target": "resting"
+        },
+        {
+          "time": 161.5,
+          "target": 0
+        },
+        {
+          "time": 170.7,
+          "target": "resting"
+        },
+        {
+          "time": 174.2,
+          "target": 0
+        },
+        {
+          "time": 183.1,
+          "target": "resting"
+        },
+        {
+          "time": 186.6,
+          "target": 0
+        },
+        {
+          "time": 195.6,
+          "target": "resting"
+        },
+        {
+          "time": 199.1,
+          "target": 0
+        },
+        {
+          "time": 208.3,
+          "target": "resting"
+        },
+        {
+          "time": 211.8,
+          "target": 0
+        },
+        {
+          "time": 221.0,
+          "target": "resting"
+        },
+        {
+          "time": 224.5,
+          "target": 0
+        },
+        {
+          "time": 233.5,
+          "target": "resting"
+        },
+        {
+          "time": 237.0,
+          "target": 0
+        },
+        {
+          "time": 246.2,
+          "target": "resting"
+        },
+        {
+          "time": 249.7,
+          "target": 0
+        },
+        {
+          "time": 259.0,
+          "target": "resting"
+        },
+        {
+          "time": 262.5,
+          "target": 0
+        },
+        {
+          "time": 271.7,
+          "target": "resting"
+        },
+        {
+          "time": 275.2,
+          "target": 0
+        },
+        {
+          "time": 284.5,
+          "target": "resting"
+        },
+        {
+          "time": 288.0,
+          "target": 0
+        },
+        {
+          "time": 297.3,
+          "target": "resting"
+        },
+        {
+          "time": 300.8,
+          "target": 0
+        },
+        {
+          "time": 310.0,
+          "target": "resting"
+        },
+        {
+          "time": 313.5,
+          "target": 0
+        },
+        {
+          "time": 322.8,
+          "target": "resting"
+        },
+        {
+          "time": 326.3,
+          "target": 0
+        },
+        {
+          "time": 335.5,
+          "target": "resting"
+        },
+        {
+          "time": 339.0,
+          "target": 0
+        },
+        {
+          "time": 348.3,
+          "target": "resting"
+        },
+        {
+          "time": 351.8,
+          "target": 0
+        },
+        {
+          "time": 361.0,
+          "target": "resting"
+        },
+        {
+          "time": 364.5,
+          "target": 0
+        },
+        {
+          "time": 373.4,
+          "target": "resting"
+        },
+        {
+          "time": 376.9,
+          "target": 0
+        },
+        {
+          "time": 385.9,
+          "target": "resting"
+        },
+        {
+          "time": 389.4,
+          "target": 0
+        },
+        {
+          "time": 398.6,
+          "target": "resting"
+        },
+        {
+          "time": 402.1,
+          "target": 0
+        },
+        {
+          "time": 411.0,
+          "target": "resting"
+        },
+        {
+          "time": 414.5,
+          "target": 0
+        },
+        {
+          "time": 423.8,
+          "target": "resting"
+        },
+        {
+          "time": 427.3,
+          "target": 0
+        },
+        {
+          "time": 436.5,
+          "target": "resting"
+        },
+        {
+          "time": 440.0,
+          "target": 0
+        },
+        {
+          "time": 449.3,
+          "target": "resting"
+        },
+        {
+          "time": 452.8,
+          "target": 0
+        },
+        {
+          "time": 462.0,
+          "target": "resting"
+        },
+        {
+          "time": 465.5,
+          "target": 0
+        },
+        {
+          "time": 474.8,
+          "target": "resting"
+        },
+        {
+          "time": 478.3,
+          "target": 0
+        },
+        {
+          "time": 487.5,
+          "target": "resting"
+        },
+        {
+          "time": 491.0,
+          "target": 0
+        },
+        {
+          "time": 500.3,
+          "target": "resting"
+        },
+        {
+          "time": 503.8,
+          "target": 0
+        },
+        {
+          "time": 513.1,
+          "target": "resting"
+        },
+        {
+          "time": 516.6,
+          "target": 0
+        },
+        {
+          "time": 525.8,
+          "target": "resting"
+        },
+        {
+          "time": 529.3,
+          "target": 0
+        },
+        {
+          "time": 538.6,
+          "target": "resting"
+        },
+        {
+          "time": 542.1,
+          "target": 0
+        },
+        {
+          "time": 551.3,
+          "target": "resting"
+        },
+        {
+          "time": 554.8,
+          "target": 0
+        },
+        {
+          "time": 564.1,
+          "target": "resting"
+        },
+        {
+          "time": 567.6,
+          "target": 0
+        },
+        {
+          "time": 576.8,
+          "target": "resting"
+        },
+        {
+          "time": 580.3,
+          "target": 0
+        },
+        {
+          "time": 589.3,
+          "target": "resting"
+        },
+        {
+          "time": 592.8,
+          "target": 0
+        }
+      ],
+      "guide_alive_final": false,
+      "policy_events": [],
+      "pass": false
+    },
+    {
+      "slot": 1,
+      "time": 75.0,
+      "guide_id": 2,
+      "guide_start": [
+        301.89517846785867,
+        647.9159227837014,
+        3.7139360276116755
+      ],
+      "predator_start": [
+        255.66030269351603,
+        618.1277328062773,
+        0.5723433740218824
+      ],
+      "first_guide_target": 75.1,
+      "last_guide_target": 81.0,
+      "last_handoff_guide_id": 2,
+      "handoff_guide_id": 2,
+      "active_since_guide": 379.0000000000177,
+      "candidate_since": 81.4,
+      "capture_time": 81.4,
+      "first_active_bait": 81.4,
+      "handoff_active_seconds": 0.4,
+      "handoff_wall_seconds": 0.4,
+      "first_physical_loss": null,
+      "first_target_loss": null,
+      "guide_dead_at": 81.1,
+      "last_target": 0,
+      "target_switches": [
+        {
+          "time": 75.1,
+          "target": 2
+        },
+        {
+          "time": 81.1,
+          "target": null
+        },
+        {
+          "time": 81.4,
+          "target": 0
+        },
+        {
+          "time": 88.3,
+          "target": "resting"
+        },
+        {
+          "time": 91.8,
+          "target": 0
+        },
+        {
+          "time": 101.0,
+          "target": "resting"
+        },
+        {
+          "time": 104.5,
+          "target": 0
+        },
+        {
+          "time": 113.8,
+          "target": "resting"
+        },
+        {
+          "time": 117.3,
+          "target": 0
+        },
+        {
+          "time": 126.5,
+          "target": "resting"
+        },
+        {
+          "time": 130.0,
+          "target": 0
+        },
+        {
+          "time": 139.3,
+          "target": "resting"
+        },
+        {
+          "time": 142.8,
+          "target": 0
+        },
+        {
+          "time": 152.0,
+          "target": "resting"
+        },
+        {
+          "time": 155.5,
+          "target": 0
+        },
+        {
+          "time": 174.5,
+          "target": "resting"
+        },
+        {
+          "time": 178.0,
+          "target": 0
+        },
+        {
+          "time": 187.3,
+          "target": "resting"
+        },
+        {
+          "time": 190.8,
+          "target": 0
+        },
+        {
+          "time": 200.0,
+          "target": "resting"
+        },
+        {
+          "time": 203.5,
+          "target": 0
+        },
+        {
+          "time": 212.7,
+          "target": "resting"
+        },
+        {
+          "time": 216.2,
+          "target": 0
+        },
+        {
+          "time": 225.5,
+          "target": "resting"
+        },
+        {
+          "time": 229.0,
+          "target": 0
+        },
+        {
+          "time": 238.2,
+          "target": "resting"
+        },
+        {
+          "time": 241.7,
+          "target": 0
+        },
+        {
+          "time": 251.0,
+          "target": "resting"
+        },
+        {
+          "time": 254.5,
+          "target": 0
+        },
+        {
+          "time": 263.8,
+          "target": "resting"
+        },
+        {
+          "time": 267.3,
+          "target": 0
+        },
+        {
+          "time": 276.5,
+          "target": "resting"
+        },
+        {
+          "time": 280.0,
+          "target": 0
+        },
+        {
+          "time": 289.3,
+          "target": "resting"
+        },
+        {
+          "time": 292.8,
+          "target": 0
+        },
+        {
+          "time": 302.0,
+          "target": "resting"
+        },
+        {
+          "time": 305.5,
+          "target": 0
+        },
+        {
+          "time": 314.8,
+          "target": "resting"
+        },
+        {
+          "time": 318.3,
+          "target": 0
+        },
+        {
+          "time": 327.5,
+          "target": "resting"
+        },
+        {
+          "time": 331.0,
+          "target": 0
+        },
+        {
+          "time": 340.3,
+          "target": "resting"
+        },
+        {
+          "time": 343.8,
+          "target": 0
+        },
+        {
+          "time": 353.0,
+          "target": "resting"
+        },
+        {
+          "time": 356.5,
+          "target": 0
+        },
+        {
+          "time": 365.5,
+          "target": "resting"
+        },
+        {
+          "time": 369.0,
+          "target": 0
+        },
+        {
+          "time": 378.2,
+          "target": "resting"
+        },
+        {
+          "time": 381.7,
+          "target": 0
+        },
+        {
+          "time": 391.0,
+          "target": "resting"
+        },
+        {
+          "time": 394.5,
+          "target": 0
+        },
+        {
+          "time": 403.7,
+          "target": "resting"
+        },
+        {
+          "time": 407.2,
+          "target": 0
+        },
+        {
+          "time": 416.4,
+          "target": "resting"
+        },
+        {
+          "time": 419.9,
+          "target": 0
+        },
+        {
+          "time": 429.2,
+          "target": "resting"
+        },
+        {
+          "time": 432.7,
+          "target": 0
+        },
+        {
+          "time": 441.9,
+          "target": "resting"
+        },
+        {
+          "time": 445.4,
+          "target": 0
+        },
+        {
+          "time": 454.4,
+          "target": "resting"
+        },
+        {
+          "time": 457.9,
+          "target": 0
+        },
+        {
+          "time": 467.1,
+          "target": "resting"
+        },
+        {
+          "time": 470.6,
+          "target": 0
+        },
+        {
+          "time": 479.9,
+          "target": "resting"
+        },
+        {
+          "time": 483.4,
+          "target": 0
+        },
+        {
+          "time": 492.7,
+          "target": "resting"
+        },
+        {
+          "time": 496.2,
+          "target": 0
+        },
+        {
+          "time": 505.4,
+          "target": "resting"
+        },
+        {
+          "time": 508.9,
+          "target": 0
+        },
+        {
+          "time": 518.2,
+          "target": "resting"
+        },
+        {
+          "time": 521.7,
+          "target": 0
+        },
+        {
+          "time": 530.9,
+          "target": "resting"
+        },
+        {
+          "time": 534.4,
+          "target": 0
+        },
+        {
+          "time": 543.3,
+          "target": "resting"
+        },
+        {
+          "time": 546.8,
+          "target": 0
+        },
+        {
+          "time": 556.1,
+          "target": "resting"
+        },
+        {
+          "time": 559.6,
+          "target": 0
+        },
+        {
+          "time": 568.9,
+          "target": "resting"
+        },
+        {
+          "time": 572.4,
+          "target": 0
+        },
+        {
+          "time": 581.7,
+          "target": "resting"
+        },
+        {
+          "time": 585.2,
+          "target": 0
+        },
+        {
+          "time": 594.4,
+          "target": "resting"
+        },
+        {
+          "time": 597.9,
+          "target": 0
+        }
+      ],
+      "guide_alive_final": false,
+      "policy_events": [],
+      "pass": true
+    },
+    {
+      "slot": 2,
+      "time": 150.0,
+      "guide_id": 3,
+      "guide_start": [
+        1146.68935273967,
+        43.38152060686776,
+        0.6774775679827392
+      ],
+      "predator_start": [
+        1189.5429509451983,
+        77.85715143270106,
+        -2.464115085607054
+      ],
+      "first_guide_target": 150.1,
+      "last_guide_target": 161.2,
+      "last_handoff_guide_id": 3,
+      "handoff_guide_id": 3,
+      "active_since_guide": 316.3000000000034,
+      "candidate_since": 161.3,
+      "capture_time": 161.3,
+      "first_active_bait": 161.3,
+      "handoff_active_seconds": 0.1,
+      "handoff_wall_seconds": 0.1,
+      "first_physical_loss": null,
+      "first_target_loss": null,
+      "guide_dead_at": 161.3,
+      "last_target": 0,
+      "target_switches": [
+        {
+          "time": 150.1,
+          "target": 3
+        },
+        {
+          "time": 161.3,
+          "target": 0
+        },
+        {
+          "time": 163.2,
+          "target": "resting"
+        },
+        {
+          "time": 166.7,
+          "target": 0
+        },
+        {
+          "time": 175.9,
+          "target": "resting"
+        },
+        {
+          "time": 179.4,
+          "target": 0
+        },
+        {
+          "time": 188.7,
+          "target": "resting"
+        },
+        {
+          "time": 192.2,
+          "target": 0
+        },
+        {
+          "time": 201.4,
+          "target": "resting"
+        },
+        {
+          "time": 204.9,
+          "target": 0
+        },
+        {
+          "time": 214.1,
+          "target": "resting"
+        },
+        {
+          "time": 217.6,
+          "target": 0
+        },
+        {
+          "time": 226.9,
+          "target": "resting"
+        },
+        {
+          "time": 230.4,
+          "target": 0
+        },
+        {
+          "time": 239.7,
+          "target": "resting"
+        },
+        {
+          "time": 243.2,
+          "target": 0
+        },
+        {
+          "time": 252.4,
+          "target": "resting"
+        },
+        {
+          "time": 255.9,
+          "target": 0
+        },
+        {
+          "time": 265.2,
+          "target": "resting"
+        },
+        {
+          "time": 268.7,
+          "target": 0
+        },
+        {
+          "time": 278.0,
+          "target": "resting"
+        },
+        {
+          "time": 281.5,
+          "target": 0
+        },
+        {
+          "time": 290.7,
+          "target": "resting"
+        },
+        {
+          "time": 294.2,
+          "target": 0
+        },
+        {
+          "time": 303.5,
+          "target": "resting"
+        },
+        {
+          "time": 307.0,
+          "target": 0
+        },
+        {
+          "time": 316.2,
+          "target": "resting"
+        },
+        {
+          "time": 319.7,
+          "target": 0
+        },
+        {
+          "time": 328.6,
+          "target": "resting"
+        },
+        {
+          "time": 332.1,
+          "target": 0
+        },
+        {
+          "time": 341.4,
+          "target": "resting"
+        },
+        {
+          "time": 344.9,
+          "target": 0
+        },
+        {
+          "time": 354.1,
+          "target": "resting"
+        },
+        {
+          "time": 357.6,
+          "target": 0
+        },
+        {
+          "time": 366.9,
+          "target": "resting"
+        },
+        {
+          "time": 370.4,
+          "target": 0
+        },
+        {
+          "time": 379.6,
+          "target": "resting"
+        },
+        {
+          "time": 383.1,
+          "target": 0
+        },
+        {
+          "time": 392.4,
+          "target": "resting"
+        },
+        {
+          "time": 395.9,
+          "target": 0
+        },
+        {
+          "time": 405.1,
+          "target": "resting"
+        },
+        {
+          "time": 408.6,
+          "target": 0
+        },
+        {
+          "time": 417.9,
+          "target": "resting"
+        },
+        {
+          "time": 421.4,
+          "target": 0
+        },
+        {
+          "time": 430.7,
+          "target": "resting"
+        },
+        {
+          "time": 434.2,
+          "target": 0
+        },
+        {
+          "time": 443.4,
+          "target": "resting"
+        },
+        {
+          "time": 446.9,
+          "target": 0
+        },
+        {
+          "time": 456.1,
+          "target": "resting"
+        },
+        {
+          "time": 459.6,
+          "target": 0
+        },
+        {
+          "time": 468.6,
+          "target": "resting"
+        },
+        {
+          "time": 472.1,
+          "target": 0
+        },
+        {
+          "time": 481.3,
+          "target": "resting"
+        },
+        {
+          "time": 484.8,
+          "target": 0
+        },
+        {
+          "time": 494.0,
+          "target": "resting"
+        },
+        {
+          "time": 497.5,
+          "target": 0
+        },
+        {
+          "time": 506.8,
+          "target": "resting"
+        },
+        {
+          "time": 510.3,
+          "target": 0
+        },
+        {
+          "time": 519.5,
+          "target": "resting"
+        },
+        {
+          "time": 523.0,
+          "target": 0
+        },
+        {
+          "time": 532.3,
+          "target": "resting"
+        },
+        {
+          "time": 535.8,
+          "target": 0
+        },
+        {
+          "time": 545.0,
+          "target": "resting"
+        },
+        {
+          "time": 548.5,
+          "target": 0
+        },
+        {
+          "time": 557.8,
+          "target": "resting"
+        },
+        {
+          "time": 561.3,
+          "target": 0
+        },
+        {
+          "time": 570.6,
+          "target": "resting"
+        },
+        {
+          "time": 574.1,
+          "target": 0
+        },
+        {
+          "time": 583.3,
+          "target": "resting"
+        },
+        {
+          "time": 586.8,
+          "target": 0
+        },
+        {
+          "time": 596.1,
+          "target": "resting"
+        },
+        {
+          "time": 599.6,
+          "target": 0
+        }
+      ],
+      "guide_alive_final": false,
+      "policy_events": [],
+      "pass": true
+    },
+    {
+      "slot": 3,
+      "time": 225.0,
+      "guide_id": 4,
+      "guide_start": [
+        266.20204012142136,
+        37.828312302964115,
+        2.848852173724253
+      ],
+      "predator_start": [
+        213.54192536887183,
+        53.700058087480514,
+        -0.29274047986553997
+      ],
+      "first_guide_target": 225.1,
+      "last_guide_target": 300.7,
+      "last_handoff_guide_id": 5,
+      "handoff_guide_id": null,
+      "active_since_guide": 246.79999999999026,
+      "candidate_since": null,
+      "capture_time": null,
+      "first_active_bait": null,
+      "handoff_active_seconds": null,
+      "handoff_wall_seconds": null,
+      "first_physical_loss": null,
+      "first_target_loss": null,
+      "guide_dead_at": 310.4,
+      "last_target": null,
+      "target_switches": [
+        {
+          "time": 225.1,
+          "target": 4
+        },
+        {
+          "time": 228.7,
+          "target": null
+        },
+        {
+          "time": 232.3,
+          "target": 4
+        },
+        {
+          "time": 232.4,
+          "target": null
+        },
+        {
+          "time": 232.6,
+          "target": 4
+        },
+        {
+          "time": 237.5,
+          "target": null
+        },
+        {
+          "time": 240.5,
+          "target": "resting"
+        },
+        {
+          "time": 244.0,
+          "target": null
+        },
+        {
+          "time": 261.9,
+          "target": "resting"
+        },
+        {
+          "time": 265.4,
+          "target": null
+        },
+        {
+          "time": 283.4,
+          "target": "resting"
+        },
+        {
+          "time": 286.9,
+          "target": null
+        },
+        {
+          "time": 300.1,
+          "target": 5
+        },
+        {
+          "time": 300.8,
+          "target": null
+        },
+        {
+          "time": 336.7,
+          "target": "resting"
+        },
+        {
+          "time": 340.2,
+          "target": null
+        },
+        {
+          "time": 358.2,
+          "target": "resting"
+        },
+        {
+          "time": 361.7,
+          "target": null
+        },
+        {
+          "time": 379.7,
+          "target": "resting"
+        },
+        {
+          "time": 383.2,
+          "target": null
+        },
+        {
+          "time": 401.4,
+          "target": "resting"
+        },
+        {
+          "time": 404.9,
+          "target": null
+        },
+        {
+          "time": 422.7,
+          "target": "resting"
+        },
+        {
+          "time": 426.2,
+          "target": null
+        },
+        {
+          "time": 438.8,
+          "target": "resting"
+        },
+        {
+          "time": 442.3,
+          "target": null
+        },
+        {
+          "time": 455.0,
+          "target": "resting"
+        },
+        {
+          "time": 458.5,
+          "target": null
+        },
+        {
+          "time": 471.1,
+          "target": "resting"
+        },
+        {
+          "time": 474.6,
+          "target": null
+        },
+        {
+          "time": 487.3,
+          "target": "resting"
+        },
+        {
+          "time": 490.8,
+          "target": null
+        },
+        {
+          "time": 503.4,
+          "target": "resting"
+        },
+        {
+          "time": 506.9,
+          "target": null
+        },
+        {
+          "time": 519.6,
+          "target": "resting"
+        },
+        {
+          "time": 523.1,
+          "target": null
+        },
+        {
+          "time": 535.7,
+          "target": "resting"
+        },
+        {
+          "time": 539.2,
+          "target": null
+        },
+        {
+          "time": 551.9,
+          "target": "resting"
+        },
+        {
+          "time": 555.4,
+          "target": null
+        },
+        {
+          "time": 568.0,
+          "target": "resting"
+        },
+        {
+          "time": 571.5,
+          "target": null
+        },
+        {
+          "time": 584.2,
+          "target": "resting"
+        },
+        {
+          "time": 587.7,
+          "target": null
+        }
+      ],
+      "guide_alive_final": false,
+      "policy_events": [
+        {
+          "time": 240.9,
+          "kind": "guide_release_observed",
+          "agent_id": 4
+        },
+        {
+          "time": 241.7,
+          "kind": "guide_returned_to_staging",
+          "agent_id": 4
+        }
+      ],
+      "pass": false
+    },
+    {
+      "slot": 4,
+      "time": 300.0,
+      "guide_id": 5,
+      "guide_start": [
+        1267.4924031087298,
+        546.1757710977968,
+        5.998921290375733
+      ],
+      "predator_start": [
+        1320.285160702558,
+        530.7509616779273,
+        2.8573286367859403
+      ],
+      "first_guide_target": 300.1,
+      "last_guide_target": 310.3,
+      "last_handoff_guide_id": 4,
+      "handoff_guide_id": null,
+      "active_since_guide": 219.6999999999918,
+      "candidate_since": null,
+      "capture_time": null,
+      "first_active_bait": null,
+      "handoff_active_seconds": null,
+      "handoff_wall_seconds": null,
+      "first_physical_loss": null,
+      "first_target_loss": null,
+      "guide_dead_at": 300.8,
+      "last_target": 0,
+      "target_switches": [
+        {
+          "time": 300.1,
+          "target": 5
+        },
+        {
+          "time": 300.8,
+          "target": null
+        },
+        {
+          "time": 308.8,
+          "target": 4
+        },
+        {
+          "time": 310.4,
+          "target": null
+        },
+        {
+          "time": 345.7,
+          "target": "resting"
+        },
+        {
+          "time": 349.2,
+          "target": null
+        },
+        {
+          "time": 350.4,
+          "target": 0
+        },
+        {
+          "time": 350.5,
+          "target": null
+        },
+        {
+          "time": 350.7,
+          "target": 0
+        },
+        {
+          "time": 350.8,
+          "target": null
+        },
+        {
+          "time": 351.5,
+          "target": 0
+        },
+        {
+          "time": 351.6,
+          "target": null
+        },
+        {
+          "time": 352.0,
+          "target": 0
+        },
+        {
+          "time": 360.3,
+          "target": "resting"
+        },
+        {
+          "time": 363.8,
+          "target": 0
+        },
+        {
+          "time": 373.0,
+          "target": "resting"
+        },
+        {
+          "time": 376.5,
+          "target": 0
+        },
+        {
+          "time": 385.8,
+          "target": "resting"
+        },
+        {
+          "time": 389.3,
+          "target": 0
+        },
+        {
+          "time": 398.5,
+          "target": "resting"
+        },
+        {
+          "time": 402.0,
+          "target": 0
+        },
+        {
+          "time": 410.9,
+          "target": "resting"
+        },
+        {
+          "time": 414.4,
+          "target": 0
+        },
+        {
+          "time": 423.3,
+          "target": "resting"
+        },
+        {
+          "time": 426.8,
+          "target": 0
+        },
+        {
+          "time": 436.1,
+          "target": "resting"
+        },
+        {
+          "time": 439.6,
+          "target": 0
+        },
+        {
+          "time": 448.9,
+          "target": "resting"
+        },
+        {
+          "time": 452.4,
+          "target": 0
+        },
+        {
+          "time": 461.6,
+          "target": "resting"
+        },
+        {
+          "time": 465.1,
+          "target": 0
+        },
+        {
+          "time": 474.4,
+          "target": "resting"
+        },
+        {
+          "time": 477.9,
+          "target": 0
+        },
+        {
+          "time": 487.1,
+          "target": "resting"
+        },
+        {
+          "time": 490.6,
+          "target": 0
+        },
+        {
+          "time": 499.9,
+          "target": "resting"
+        },
+        {
+          "time": 503.4,
+          "target": 0
+        },
+        {
+          "time": 512.6,
+          "target": "resting"
+        },
+        {
+          "time": 516.1,
+          "target": 0
+        },
+        {
+          "time": 525.4,
+          "target": "resting"
+        },
+        {
+          "time": 528.9,
+          "target": 0
+        },
+        {
+          "time": 538.1,
+          "target": "resting"
+        },
+        {
+          "time": 541.6,
+          "target": 0
+        },
+        {
+          "time": 550.9,
+          "target": "resting"
+        },
+        {
+          "time": 554.4,
+          "target": 0
+        },
+        {
+          "time": 563.6,
+          "target": "resting"
+        },
+        {
+          "time": 567.1,
+          "target": 0
+        },
+        {
+          "time": 576.4,
+          "target": "resting"
+        },
+        {
+          "time": 579.9,
+          "target": 0
+        },
+        {
+          "time": 589.1,
+          "target": "resting"
+        },
+        {
+          "time": 592.6,
+          "target": 0
+        }
+      ],
+      "guide_alive_final": false,
+      "policy_events": [],
+      "pass": false
+    }
+  ],
+  "deaths": [
+    {
+      "time": 12.9,
+      "agent_id": 1
+    },
+    {
+      "time": 81.1,
+      "agent_id": 2
+    },
+    {
+      "time": 161.3,
+      "agent_id": 3
+    },
+    {
+      "time": 300.8,
+      "agent_id": 5
+    },
+    {
+      "time": 310.4,
+      "agent_id": 4
+    }
+  ],
+  "trace": [
+    {
+      "time": 0.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 1.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 2.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 3.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 4.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 5.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 6.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 7.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 8.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 9.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 10.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 11.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 12.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 0,
+      "guides_alive": 1,
+      "predators_total": 1
+    },
+    {
+      "time": 13.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 14.1,
+      "introduced": 1,
+      "captured": 0,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 15.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 16.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 17.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 18.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 19.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 20.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 21.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 22.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 23.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 24.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 25.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 26.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 27.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 28.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 29.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 30.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 31.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 32.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 33.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 34.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 35.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 36.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 37.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 38.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 39.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 40.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 41.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 42.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 43.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 44.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 45.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 46.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 47.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 48.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 49.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 50.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 51.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 52.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 53.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 54.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 55.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 56.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 57.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 58.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 59.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 60.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 61.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 62.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 63.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 64.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 65.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 66.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 67.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 68.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 69.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 70.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 71.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 72.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 73.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 74.1,
+      "introduced": 1,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 1
+    },
+    {
+      "time": 75.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 1,
+      "predators_total": 2
+    },
+    {
+      "time": 76.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 1,
+      "predators_total": 2
+    },
+    {
+      "time": 77.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 1,
+      "predators_total": 2
+    },
+    {
+      "time": 78.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 1,
+      "predators_total": 2
+    },
+    {
+      "time": 79.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 1,
+      "predators_total": 2
+    },
+    {
+      "time": 80.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 1,
+      "predators_total": 2
+    },
+    {
+      "time": 81.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 1,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 82.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 83.1,
+      "introduced": 2,
+      "captured": 1,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 84.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 85.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 86.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 87.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 88.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 89.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 90.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 91.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 92.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 93.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 94.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 95.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 96.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 97.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 98.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 99.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 100.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 101.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 102.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 103.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 104.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 105.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 106.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 107.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 108.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 109.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 110.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 111.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 112.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 113.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 114.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 115.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 116.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 117.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 118.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 119.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 120.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 121.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 122.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 123.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 124.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 125.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 126.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 127.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 128.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 129.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 130.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 131.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 132.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 133.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 134.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 135.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 136.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 137.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 138.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 139.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 140.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 141.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 142.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 143.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 144.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 145.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 146.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 147.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 148.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 149.1,
+      "introduced": 2,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 0,
+      "predators_total": 2
+    },
+    {
+      "time": 150.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 3
+    },
+    {
+      "time": 151.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 3
+    },
+    {
+      "time": 152.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 3
+    },
+    {
+      "time": 153.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 3
+    },
+    {
+      "time": 154.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 3
+    },
+    {
+      "time": 155.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 3
+    },
+    {
+      "time": 156.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 4
+    },
+    {
+      "time": 157.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 4
+    },
+    {
+      "time": 158.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 4
+    },
+    {
+      "time": 159.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 4
+    },
+    {
+      "time": 160.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 4
+    },
+    {
+      "time": 161.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 2,
+      "guides_alive": 1,
+      "predators_total": 4
+    },
+    {
+      "time": 162.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 163.1,
+      "introduced": 3,
+      "captured": 2,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 164.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 165.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 166.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 167.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 168.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 169.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 170.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 171.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 172.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 173.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 174.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 175.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 176.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 177.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 178.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 179.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 180.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 181.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 182.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 183.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 184.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 185.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 186.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 187.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 188.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 189.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 190.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 191.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 192.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 193.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 194.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 195.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 196.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 197.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 198.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 199.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 200.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 201.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 202.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 203.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 204.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 205.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 206.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 207.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 208.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 209.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 210.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 211.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 212.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 213.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 214.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 215.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 216.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 217.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 218.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 219.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 220.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 221.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 222.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 223.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 224.1,
+      "introduced": 3,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 4
+    },
+    {
+      "time": 225.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 226.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 227.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 228.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 229.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 230.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 231.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 232.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 233.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 234.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 235.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 236.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 237.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 238.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 239.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 240.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 241.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 242.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 243.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 244.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 245.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 246.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 247.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 248.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 249.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 250.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 251.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 252.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 253.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 254.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 255.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 256.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 257.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 258.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 259.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 260.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 261.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 262.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 263.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 264.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 265.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 266.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 267.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 268.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 269.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 270.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 271.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 272.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 273.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 274.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 275.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 276.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 277.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 278.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 279.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 280.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 281.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 282.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 283.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 284.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 285.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 286.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 287.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 288.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 289.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 290.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 291.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 292.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 293.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 294.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 295.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 296.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 297.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 298.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 299.1,
+      "introduced": 4,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 5
+    },
+    {
+      "time": 300.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 2,
+      "predators_total": 6
+    },
+    {
+      "time": 301.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 302.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 303.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 304.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 305.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 306.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 307.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 308.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 309.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 310.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 1,
+      "predators_total": 6
+    },
+    {
+      "time": 311.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 312.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 313.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 314.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 315.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 316.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 317.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 318.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 319.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 320.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 6
+    },
+    {
+      "time": 321.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 322.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 323.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 324.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 325.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 326.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 327.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 328.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 329.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 330.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 331.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 332.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 333.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 334.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 335.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 336.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 337.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 338.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 339.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 340.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 341.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 342.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 343.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 344.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 345.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 346.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 347.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 348.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 349.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 350.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 351.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 3,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 352.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 353.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 354.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 355.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 356.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 357.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 358.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 359.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 360.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 361.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 362.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 363.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 364.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 365.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 366.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 367.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 368.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 369.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 370.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 371.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 372.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 373.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 374.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 375.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 376.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 377.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 378.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 379.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 380.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 381.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 382.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 383.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 384.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 385.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 386.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 387.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 388.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 389.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 390.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 391.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 392.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 393.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 394.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 395.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 396.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 397.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 398.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 399.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 400.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 401.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 402.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 403.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 404.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 405.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 406.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 407.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 408.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 409.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 410.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 411.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 412.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 413.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 414.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 415.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 416.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 417.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 418.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 419.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 420.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 421.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 422.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 423.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 424.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 425.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 426.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 427.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 428.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 429.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 430.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 431.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 432.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 433.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 434.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 435.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 436.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 437.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 438.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 439.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 440.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 441.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 442.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 443.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 444.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 445.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 446.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 447.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 448.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 449.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 450.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 451.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 452.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 453.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 454.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 455.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 456.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 457.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 458.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 459.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 460.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 461.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 462.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 463.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 464.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 465.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 466.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 467.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 468.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 469.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 470.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 471.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 472.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 473.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 474.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 475.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 476.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 477.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 478.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 479.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 480.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 481.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 482.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 483.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 484.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 485.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 486.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 487.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 488.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 489.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 490.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 491.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 492.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 493.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 494.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 495.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 496.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 497.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 498.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 499.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 500.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 501.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 502.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 503.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 504.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 7
+    },
+    {
+      "time": 505.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 506.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 507.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 508.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 509.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 510.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 511.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 512.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 513.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 514.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 515.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 516.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 517.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 518.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 519.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 520.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 521.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 522.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 523.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 524.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 525.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 526.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 527.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 528.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 529.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 530.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 531.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 532.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 533.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 534.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 535.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 536.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 537.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 538.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 539.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 540.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 541.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 542.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 543.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 544.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 545.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 546.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 547.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 548.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 549.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 550.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 551.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 552.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 553.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 554.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 555.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 556.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 557.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 558.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 559.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 560.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 561.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 562.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 563.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 564.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 565.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 566.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 567.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 568.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 569.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 570.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 571.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 572.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 573.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 574.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 575.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 576.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 577.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 578.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 579.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 580.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 581.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 582.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 583.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 584.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 585.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 586.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 587.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 588.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 589.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 590.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 591.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 592.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 593.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 594.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 595.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 596.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 597.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 598.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    },
+    {
+      "time": 599.1,
+      "introduced": 5,
+      "captured": 3,
+      "held": 4,
+      "guides_alive": 0,
+      "predators_total": 8
+    }
+  ],
+  "successful_encounters": 2,
+  "success": false,
+  "native_render": true,
+  "record_every_ticks": 1,
+  "replay_frames": 6001,
+  "replay": "results/sequential_real_map/replays/sequential-real-map-m10040-f22040-n5-i75-84ea8cce.json.gz",
+  "limitations": "Prepared stationary bait; random predator plus adjacent awake engaged guide; infinite agent energy; native ambient predators; single native map; not a confidence-bound reliability result.",
+  "attribution": "colony guide-to-bait transfer; any guide may assist; actual handoff guide ID recorded separately from assigned encounter guide",
+  "native_birth_frames": true,
+  "policy_dependencies": {
+    "sha256": "a3acdb5857a00098c83c8c6c9ceae3a33fc5d40989b99e23252c16fd310c47ef",
+    "files": {
+      "backup_guides/__init__.py": "8adcd6036785536a0bbea3d5f0d4d0e104456a3183b174d79a5a36d30239002a",
+      "backup_guides/burst.py": "642725a431ee4778c1adcf100ffb45e7d85faf9c4e086f5923097f43202b7d9d",
+      "backup_guides/emergency.py": "605dc2806650a6de5c74f6ff29bddc6cb677a598a60673627fd36556be34b5f9",
+      "backup_guides/mutation_aware.py": "ad062fdf3cca4a30235eb07cd50def9760bb0ce69904685ef8caeb8370a77b18",
+      "backup_guides/policy.py": "1f345781993a15c66d8441df6644603f31be4822246760e0c912e19cc9a21eae",
+      "integrated_guide/policy_v27.py": "b786cab54310e7e1c2d2fa370f5c59b5697bdddcad4ef2940a9e6b0443aac6dd",
+      "integrated_guide/policy_v32_integrated.py": "b71c4a0717b9e6573e85cd51b6cde8591b56fa88b1ceaea2e9581a0b95eb875c",
+      "integrated_guide/spatial_geometry.py": "31ab9a2e93efbaebe660a39ba8e134a34e6b47d39a26d1a49ab0b4c04b0a74e3",
+      "integrated_guide/wide_route_mixin.py": "642a879d553a7a1be3ada630668f8a8def6873eb103f46bddbfb27927f89735a",
+      "real_map_guide_sol/policy_v15_hearing_reacquisition_frozen.py": "4455972445d877117433907a9fb855a9112520fc0ee86c3d9afd0bbc7a72e8ab",
+      "release_validation/release_mixin_v2.py": "a80c14b49778ce88d18687938682a11186445fb9b30264623178370e7c73c9f7",
+      "replaceable_sites/__init__.py": "e96b8df4cb5c8351a8de01613b6f4aedf9231e678400cd793a33fc66a75edac8",
+      "replaceable_sites/selector.py": "dca2109d46f85d2448b0237b541b4a54fca4d0ec096684402ba684259daf2a02",
+      "replaceable_sites/selector_compact.py": "783225e9bfa8c52beb347a999cc35848340a9bb714540e258cdead675b5dc056",
+      "short_overlap_sol/policy_v26_integrated.py": "72174cbd18059bd7d21deefe392c400ead3eaf97234c0a81ff0f3067563aa424",
+      "short_overlap_sol/policy_v30_viable_terrain_final.py": "82c1fd608132feb50a479249547ad9896bba602b9ef28077d554290ec022093d",
+      "simple_chase/policy_v21_replaceable.py": "3a0ceea54ab350009c0e200eb327fe1a5cda659f4cfbb704f4e86c078665bc28",
+      "simple_chase/policy_v23_narrow_fallback.py": "9395c757df40434a2eb62aba432e3b2dc51d9c80402e665c6194a9cefa5e6e3c",
+      "simple_chase/policy_v24_short_fallback.py": "e53d5e34bb03c027e63a3b8ec55e806ba520961c461e8e4f4fc8a56732ee7c1e"
+    }
+  },
+  "harness_hashes": {
+    "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+    "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+    "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+    "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+  },
+  "dependencies_unchanged": true,
+  "source_hash": "bb1d1eca6885f54be6e1286aeb16b4a598f6f98e590e0738b6ecc4e698c6dddc",
+  "policy_hash": "b71c4a0717b9e6573e85cd51b6cde8591b56fa88b1ceaea2e9581a0b95eb875c"
+}

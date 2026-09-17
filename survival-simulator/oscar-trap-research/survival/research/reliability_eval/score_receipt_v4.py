@@ -46,10 +46,11 @@ class TargetChain:
         self.active_since_guide = None
         self.chain = None
 
-    def update(self, *, time, target, eligible_guide_ids, physical):
+    def update(self, *, time, target, eligible_guide_ids, physical,
+               guide_chase_qualified=True):
         elapsed = 0.0 if self.previous_time is None else time - self.previous_time
         changed = target != self.previous_target
-        if target in eligible_guide_ids:
+        if target in eligible_guide_ids and guide_chase_qualified:
             self.last_guide_time = time
             self.active_since_guide = 0.0
             self.last_guide_id = target
@@ -89,6 +90,27 @@ class TargetChain:
         self.previous_time = time
         self.previous_target = target
         return confirmed
+
+
+def _guide_chase_gate(predator, agents, target, eligible_guide_ids):
+    """Replay the native gate for an already-recorded nearest target.
+
+    ``target_switches`` records the closest visible agent, including the
+    predator's pivot branch.  Only a guide observation satisfying this gate is
+    evidence that the predator was actually chasing that guide.
+    """
+    if target not in eligible_guide_ids or predator is None:
+        return True
+    agent = next((row for row in agents if row["id"] == target), None)
+    if agent is None:
+        return False
+    distance = math.hypot(predator["x"] - agent["x"],
+                          predator["y"] - agent["y"])
+    rel_dir = ((math.atan2(predator["y"] - agent["y"],
+                           predator["x"] - agent["x"])
+                - agent["direction"] + math.pi) % (2 * math.pi)) - math.pi
+    return (abs(rel_dir) > math.pi / 2
+            or distance < predator["hearing_radius"] * 1.5)
 
 
 def score(receipt_path: Path) -> dict:
@@ -161,9 +183,12 @@ def score(receipt_path: Path) -> dict:
                                 for i in range(2)) <= 10.001)
 
         if acquisition is None:
+            guide_chase_qualified = _guide_chase_gate(
+                predator, frame["agents"], target, eligible_guides)
             confirmed = chain.update(time=now, target=target,
                                      eligible_guide_ids=eligible_guides,
-                                     physical=physical)
+                                     physical=physical,
+                                     guide_chase_qualified=guide_chase_qualified)
             if confirmed is not None:
                 acquisition = confirmed["physical_start"]
                 handoff = confirmed
@@ -181,7 +206,6 @@ def score(receipt_path: Path) -> dict:
     pass_value = bool(
         acquisition is not None
         and acquisition <= PROTOCOL["latest_active_acquisition_seconds"] + .001
-        and receipt.get("tracked_followed_active_guide", 0) >= 1
         and hold_ticks >= round(PROTOCOL["hold_seconds"] * 10)
         and loss_after_acquisition is None
     )
@@ -189,8 +213,6 @@ def score(receipt_path: Path) -> dict:
         reason = "no_unbroken_guide_to_bait_chain"
     elif acquisition > PROTOCOL["latest_active_acquisition_seconds"] + .001:
         reason = "active_bait_acquisition_after_270_seconds"
-    elif receipt.get("tracked_followed_active_guide", 0) < 1:
-        reason = "no_native_chase-gate_guide_follow_evidence"
     elif hold_ticks < round(PROTOCOL["hold_seconds"] * 10) or loss_after_acquisition is not None:
         reason = "containment_not_continuous_through_300_second_horizon"
     else:
@@ -217,7 +239,9 @@ def score(receipt_path: Path) -> dict:
                                            if event.get("kind") == "guide_returned_to_staging"), None),
         "replay_check": replay_check,
         "caveat": ("V4 attributes a temporally continuous native guide-target to "
-                   "bait-target chain before physical intake; it does not establish "
+                   "bait-target chain before physical intake. Guide evidence is "
+                   "restricted to the native chase gate, rather than the pivot "
+                   "branch's closest-agent label; it does not establish "
                    "counterfactual causation. Guide survival remains neutral."),
     }
 

@@ -2,12 +2,13 @@
 from score_receipt_v4 import TargetChain
 
 
-def feed(rows, *, guides=(1,), bait=0):
+def feed(rows, *, guides=(1,), bait=0, unqualified=()):
     chain = TargetChain(bait)
     result = None
     for time, target, physical in rows:
         result = chain.update(time=time, target=target,
-                              eligible_guide_ids=set(guides), physical=physical) or result
+                              eligible_guide_ids=set(guides), physical=physical,
+                              guide_chase_qualified=time not in unqualified) or result
     return result
 
 
@@ -53,6 +54,11 @@ def test_identified_reserve_guide_can_handoff():
     rows = [(0., 8, False), (.1, 0, False)] + contained_tail(.2)
     result = feed(rows, guides=(1, 8))
     assert result is not None and result["handoff_guide_id"] == 8
+
+
+def test_pivot_branch_guide_label_is_not_handoff_evidence():
+    rows = [(0., 1, False), (.1, 0, False)] + contained_tail(.2)
+    assert feed(rows, unqualified=(0.,)) is None
 
 
 if __name__ == "__main__":
