@@ -214,3 +214,16 @@ All on the laptop, 39 conversations, oracle-selection ceilings with merges of up
 | hybrid: MMS start -0.06, turbo end raw | | | 0.857 | | | | |
 
 The hygiene variant transcribes faster (per-file max 32.8 s vs 39.1 s on the shared laptop card) and with lower word error (1.2 percent vs 3.0 on the checked references) but its timestamps are worse, so it is rejected for serving. MMS gives the tightest starts of any tool so far (24 percent within one frame, the annotated start sits 60 ms before the aligned onset) but its ends run 100 ms late; combining MMS starts with turbo ends reaches 0.857, exactly what turbo reaches on its own with the first-word-end rule, so the aligner step is not worth its cost. Serving decision: ASR large-v3-turbo, START_RULE first-word-end with START_OFFSET -0.20, END_OFFSET -0.02; encoded per model in `model.py`. Note for the earlier validation runs: distil-large-v3 was served with large-v3's fitted offsets, which were never measured for distil.
+
+### 19. WhisperX does not match the annotation edges either; turbo with the fitted rule is the served ASR
+
+WhisperX (faster-whisper large-v3 plus wav2vec2 forced alignment, digits spelled out for the aligner) on the laptop, 37 of 39 files (samples 20 and 23 failed in alignment). Scripts: `bench/asr/run_whisperx.py --allow-home-cache`, `compare.py`, `fit_edges.py`.
+
+| tag | raw ceiling | best fitted ceiling | starts within 20 ms of a word boundary | ends within 20 ms |
+|---|---|---|---|---|
+| large-v3 | 0.753 | 0.834 | 7% | 4% |
+| large-v3-turbo | 0.812 | 0.857 | 11% | 49% |
+| large-v3-turbo+mms | 0.832 | 0.853 | 24% | 14% |
+| whisperx-large-v3 | 0.821 | 0.847 | 11% | 7% |
+
+No tool reproduces the annotated starts (the best, MMS, hits one frame on a quarter of them); only turbo's decoder reproduces the ends. The annotations were therefore not produced by any of these tools as-is; the ends are consistent with a turbo-family decoder and the starts with a separate rule or a manual pass. Served configuration from here: large-v3-turbo, START_RULE first-word-end, START_OFFSET -0.20, END_OFFSET -0.02, ASR_CLEAN off. Expected sentence-granularity ceiling 0.857; the realised gain depends on the selector, which the validation run after this switch measures.
