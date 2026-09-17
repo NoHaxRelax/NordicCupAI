@@ -425,7 +425,12 @@ class EstimatedWorld:
             elif t == 'Predator':
                 p = po.to_frame((o['distance'] * math.cos(o['angle']), o['distance'] * math.sin(o['angle'])))
                 heading = wrap(heading_of(sub((po.x, po.y), p)) - o['rel_dir'])
-                tr = min((u for u in frame.tracks if dist((u.x, u.y), p) < 45), key=lambda u: dist((u.x, u.y), p), default=None)
+                # associate against where each track would be now (it moves up to 15 per tick)
+                def gap_to(u):
+                    age = self.time - u.last_seen
+                    q = (u.x + u.vx * 10 * age, u.y + u.vy * 10 * age)
+                    return dist(q, p) - min(age, 2.0) * 60.0
+                tr = min((u for u in frame.tracks if gap_to(u) < 45), key=gap_to, default=None)
                 if tr is None:
                     tr = Track(self._next_track, p[0], p[1], heading, last_seen=self.time)
                     self._next_track += 1
@@ -439,7 +444,15 @@ class EstimatedWorld:
                     tr.x, tr.y, tr.heading, tr.last_seen = p[0], p[1], heading, self.time
                     tr.seen += 1
                 tr._seen_now = True
-        frame.tracks = [tr for tr in frame.tracks if self.time - tr.last_seen < 8.0]
+        frame.tracks = [tr for tr in frame.tracks if self.time - tr.last_seen < 3.0]
+        # two tracks on the same predator (two observers, or a re-detection): keep the fresher one
+        frame.tracks.sort(key=lambda u: -u.last_seen)
+        kept = []
+        for tr in frame.tracks:
+            if any(dist((tr.x, tr.y), (k.x, k.y)) < 30.0 for k in kept):
+                continue
+            kept.append(tr)
+        frame.tracks = kept
         # fruit that should be audible but is not: gone
         hearing = s['hearing_radius']
         heard = [po.to_frame((o['distance'] * math.cos(o['angle']), o['distance'] * math.sin(o['angle']))) for o in s['observations'] if o['type'] == 'Fruit']
@@ -483,6 +496,14 @@ class EstimatedWorld:
                                               still_ticks=tr.still, resting=None, energy=None, fresh=getattr(tr, '_seen_now', False)))
             fruits = [FoodView(f[0], f[1]) for f in frame.fruits]
             trees = [FoodView(f[0], f[1]) for f in frame.trees]
+        # the same predator can still appear twice after a frame merge: keep the fresher view
+        predators.sort(key=lambda v: -v.last_seen)
+        uniq = []
+        for v in predators:
+            if any(dist(v.p, u.p) < 30.0 for u in uniq):
+                continue
+            uniq.append(v)
+        predators = uniq
         world = _EstimatedState(time=self.time, width=self.width, height=self.height, agents=agents, predators=predators,
                                 rects=rects, fruits=fruits, trees=trees, complete_map=False)
         world._frame = frame

@@ -567,7 +567,7 @@ class TrapManager:
         if not P['explicit_deliveries'] or len(self.deliveries) >= P['max_deliveries']:
             return
         busy_guides = {d.guide for d in self.deliveries.values()}
-        free = [p for p in world.predators if p.pid not in held_now and p.pid not in self.deliveries]
+        free = [p for p in world.recent_predators() if p.pid not in held_now and p.pid not in self.deliveries]
         if not free or not self.sites:
             return
         agents = list(world.agents.values())
