@@ -1,0 +1,27 @@
+{
+  "schema": "native-short-overlap-interrupted-audit-v1",
+  "incident": "IDE OOM pause on 2026-09-17",
+  "method": "Small receipt JSONs only; replay payloads were not opened.",
+  "requested_seconds": 120,
+  "completed": [
+    {"map_seed": 10000, "seconds": 120.0, "overlap": 31.707619727037127, "gap": 12.317750981095912, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "28171b7efd9be01877f9d9fa3de016ad737002381e5b318b22a034735dcaacf6"},
+    {"map_seed": 10001, "seconds": 120.0, "overlap": 26.575660152283717, "gap": 18.936763135944844, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "3b241bbb70a2605ba1d5491830ffcd1ca657af7f09e689fd380f7b81be19f0f4"},
+    {"map_seed": 10002, "seconds": 120.0, "overlap": 38.79440272630745, "gap": 14.580360043764784, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "f2178b657ebdd3a46916bef42b36c883dad4ae646571dc80fe46ccc712ec51c3"},
+    {"map_seed": 10003, "seconds": 120.0, "overlap": 35.904062752305435, "gap": 16.945418291020374, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "3c2d9278f0333f88e79da9ca5829e3092bff874febd2909b7c249118f565f8dd"},
+    {"map_seed": 10004, "seconds": 120.0, "overlap": 31.138016724987892, "gap": 14.51128340579335, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "d0a6b13e204b3db829a88157c50cb794c77dd05fdbffd38a11e1061bae24b412"},
+    {"map_seed": 10005, "seconds": 120.0, "overlap": 40.862737459745404, "gap": 12.334579590981498, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "2219358a8d4f2df48c6c2fb7d80439002047347e42255cc92e34b961bca95ee6"}
+  ],
+  "crash_stop_partials": [
+    {"map_seed": 10006, "seconds": 84.3, "overlap": 52.58133865206959, "gap": 16.443158311882866, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "4341dac8a1cf12e895a906a77d22cab9e8ef30b1854f7d83c287e2f99cc93afe"},
+    {"map_seed": 10007, "seconds": 70.6, "overlap": 20.262639367130827, "gap": 17.937355674474026, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "be83f12be2d06ddb0a9eef892cc2efb2e0f0b7733f32a7240cfd85d7eff80112"},
+    {"map_seed": 10008, "seconds": 40.4, "overlap": 30.254456659386623, "gap": 16.636752774416338, "acquired": 33, "physical_losses": 0, "joint_losses": 0, "final_joint": 33, "receipt_sha256": "6cd93196cfe8f4b3ce5f46ad70c8a41a44823e12cedf839995b4f61e999b624b"}
+  ],
+  "unstarted": [10009, 10010, 10011],
+  "resume_sequentially": [10006, 10007, 10008, 10009, 10010, 10011],
+  "later_resume_note": {
+    "completed_replays": [10006, 10007],
+    "aborted_unknown": [10008],
+    "reason": "The first streaming resume process retained memory between cases and was terminated after the two published saves. It had begun transitioning into map 10008, but produced neither a receipt nor a published replay; do not count that attempt as a pass, failure, or unstarted case. A fresh-process rerun was scheduled separately."
+  },
+  "interpretation": "Six of the first six maps completed the 120-second prepared-arrival screen with 33/33 held and zero losses. The three partials also held 33 at interruption but are not completed passes. These tests do not validate guiding."
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "terrain-transition-failure-diagnosis-v1",
+  "map_seed": 10139,
+  "fixture_seed": 20139,
+  "guide_death": 7.9,
+  "separation_at_7.6": 33.7,
+  "guide_biome_at_7.6": "forest",
+  "separation_at_7.7": 29.0,
+  "guide_biome_at_7.7": "river",
+  "separation_at_7.8": 17.3,
+  "decision_at_7.7": "observed_velocity_spacing",
+  "decision_at_7.8": "observation_only_escape_lookahead",
+  "diagnosis": "The guide entered slow river terrain during close pursuit and lost its movement advantage within two cached-observation ticks.",
+  "suggested_constraint": "Reject a route step into slower terrain during close active pursuit unless the observation-based predator forecast retains a conservative post-latency separation.",
+  "new_run": false
+}

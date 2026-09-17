@@ -1,0 +1,84 @@
+{
+  "policy": "release_validation.policy_v24_release:ReleaseGuide",
+  "cases": [
+    {
+      "map_seed": 10160,
+      "fixture_seed": 20160
+    },
+    {
+      "map_seed": 10161,
+      "fixture_seed": 20161
+    },
+    {
+      "map_seed": 10162,
+      "fixture_seed": 20162
+    },
+    {
+      "map_seed": 10163,
+      "fixture_seed": 20163
+    },
+    {
+      "map_seed": 10164,
+      "fixture_seed": 20164
+    },
+    {
+      "map_seed": 10165,
+      "fixture_seed": 20165
+    },
+    {
+      "map_seed": 10166,
+      "fixture_seed": 20166
+    },
+    {
+      "map_seed": 10167,
+      "fixture_seed": 20167
+    },
+    {
+      "map_seed": 10168,
+      "fixture_seed": 20168
+    },
+    {
+      "map_seed": 10169,
+      "fixture_seed": 20169
+    },
+    {
+      "map_seed": 10170,
+      "fixture_seed": 20170
+    },
+    {
+      "map_seed": 10171,
+      "fixture_seed": 20171
+    },
+    {
+      "map_seed": 10172,
+      "fixture_seed": 20172
+    },
+    {
+      "map_seed": 10173,
+      "fixture_seed": 20173
+    },
+    {
+      "map_seed": 10174,
+      "fixture_seed": 20174
+    },
+    {
+      "map_seed": 10175,
+      "fixture_seed": 20175
+    }
+  ],
+  "seconds": 300,
+  "policy_dependencies": {
+    "sha256": "c8df85d76cf8a178f2628794cfa86d01efa771fa5c03c298d774c72174db89a3",
+    "files": {
+      "real_map_guide_sol/policy_v15_hearing_reacquisition_frozen.py": "4455972445d877117433907a9fb855a9112520fc0ee86c3d9afd0bbc7a72e8ab",
+      "release_validation/policy_v24_release.py": "a5d7100df0e7eb954d4c41b0d0e44dc45b048249ccaa198cd91ac0a4df96d3b6",
+      "release_validation/release_mixin_v2.py": "a80c14b49778ce88d18687938682a11186445fb9b30264623178370e7c73c9f7",
+      "replaceable_sites/__init__.py": "e96b8df4cb5c8351a8de01613b6f4aedf9231e678400cd793a33fc66a75edac8",
+      "replaceable_sites/selector.py": "dca2109d46f85d2448b0237b541b4a54fca4d0ec096684402ba684259daf2a02",
+      "simple_chase/policy_v21_replaceable.py": "3a0ceea54ab350009c0e200eb327fe1a5cda659f4cfbb704f4e86c078665bc28",
+      "simple_chase/policy_v23_narrow_fallback.py": "9395c757df40434a2eb62aba432e3b2dc51d9c80402e665c6194a9cefa5e6e3c",
+      "simple_chase/policy_v24_short_fallback.py": "e53d5e34bb03c027e63a3b8ec55e806ba520961c461e8e4f4fc8a56732ee7c1e"
+    }
+  },
+  "limitations": "fresh development16; never pooled with fitted repairs or prior policy versions"
+}

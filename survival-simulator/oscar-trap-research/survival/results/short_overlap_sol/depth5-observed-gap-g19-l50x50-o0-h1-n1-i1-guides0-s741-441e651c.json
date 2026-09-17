@@ -1,0 +1,123 @@
+{
+  "policy": "observation-only-gap-intake-v2",
+  "policy_hash": "fdee75ff24c76ab5fcb5e225e69a8eb7d1f6a9859fafefdccf47a000822acebd",
+  "seed": 741,
+  "depth": 5,
+  "gap": 19.0,
+  "length": 50.0,
+  "right_length": 50.0,
+  "face_offset": 0,
+  "horizontal": true,
+  "overlap": 50.0,
+  "predators": 1,
+  "interval": 1,
+  "start_delay": 6.0,
+  "approach": 160.0,
+  "lateral_spread": 0,
+  "heading_jitter": 0,
+  "awake": true,
+  "requested_seconds": 30,
+  "seconds": 7.1,
+  "guides": false,
+  "guide_distance": 80.0,
+  "arrivals": 1,
+  "mapped": 0,
+  "bait_alive": false,
+  "deaths": [
+    {
+      "id": 0,
+      "time": 7.1
+    }
+  ],
+  "acquired": 0,
+  "physical_acquired": 0,
+  "joint_losses": 0,
+  "physical_losses": 0,
+  "final_joint": 0,
+  "final_physical": 0,
+  "tail_joint_min": 0,
+  "tail_physical_min": 0,
+  "joint_success": false,
+  "physical_success": false,
+  "deliveries": [
+    {
+      "scheduled": 6.0,
+      "spawned": 6.0,
+      "x": 340.0,
+      "heading": 0.0,
+      "guide_id": null,
+      "acquired": null,
+      "physical_acquired": null,
+      "first_joint_loss": null,
+      "first_physical_loss": null,
+      "active_target_loss_ticks": 0
+    }
+  ],
+  "trace": [
+    {
+      "time": 0.1,
+      "arrivals": 0,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 1.1,
+      "arrivals": 0,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 2.1,
+      "arrivals": 0,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 3.1,
+      "arrivals": 0,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 4.1,
+      "arrivals": 0,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 5.1,
+      "arrivals": 0,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 6.1,
+      "arrivals": 1,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": true,
+      "mapped": 0
+    },
+    {
+      "time": 7.1,
+      "arrivals": 1,
+      "physical": 0,
+      "joint": 0,
+      "bait_alive": false,
+      "mapped": 0
+    }
+  ],
+  "replay": "results/short_overlap_sol/replays/depth5-observed-gap-g19-l50x50-o0-h1-n1-i1-guides0-s741-441e651c.json.gz"
+}

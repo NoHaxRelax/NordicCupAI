@@ -1,0 +1,103 @@
+{
+  "schema": "map-10138-offline-escape-assessment-v1",
+  "native_simulation_stepped": false,
+  "map_seed": 10138,
+  "fixture_seed": 20138,
+  "guide_start": [
+    1439.8235,
+    46.3841
+  ],
+  "predator_start": [
+    1490.6028,
+    67.5138
+  ],
+  "guide_start_terrain_modifier": 0.3,
+  "predator_start_terrain_modifier": 0.3,
+  "mandatory_initial_blind_tick": true,
+  "separation_after_blind_tick": 50.5,
+  "top_boundary": [
+    0,
+    0,
+    1600,
+    30
+  ],
+  "headings_per_state": 32,
+  "state_cap": 1000,
+  "requested_ticks": 20,
+  "no_survivor_at_tick": 13,
+  "progression": [
+    {
+      "tick": 1,
+      "retained_states": 19,
+      "best_minimum_separation": 49.5769,
+      "best_current_separation": 49.5769
+    },
+    {
+      "tick": 2,
+      "retained_states": 306,
+      "best_minimum_separation": 47.5217,
+      "best_current_separation": 47.9567
+    },
+    {
+      "tick": 3,
+      "retained_states": 1000,
+      "best_minimum_separation": 42.9323,
+      "best_current_separation": 42.9323
+    },
+    {
+      "tick": 4,
+      "retained_states": 1000,
+      "best_minimum_separation": 38.8549,
+      "best_current_separation": 38.8549
+    },
+    {
+      "tick": 5,
+      "retained_states": 1000,
+      "best_minimum_separation": 34.8385,
+      "best_current_separation": 34.8385
+    },
+    {
+      "tick": 6,
+      "retained_states": 1000,
+      "best_minimum_separation": 30.5583,
+      "best_current_separation": 30.5583
+    },
+    {
+      "tick": 7,
+      "retained_states": 1000,
+      "best_minimum_separation": 26.7814,
+      "best_current_separation": 26.7814
+    },
+    {
+      "tick": 8,
+      "retained_states": 1000,
+      "best_minimum_separation": 24.2236,
+      "best_current_separation": 24.2236
+    },
+    {
+      "tick": 9,
+      "retained_states": 407,
+      "best_minimum_separation": 19.2856,
+      "best_current_separation": 19.2856
+    },
+    {
+      "tick": 10,
+      "retained_states": 28,
+      "best_minimum_separation": 16.6083,
+      "best_current_separation": 16.9735
+    },
+    {
+      "tick": 11,
+      "retained_states": 59,
+      "best_minimum_separation": 16.6083,
+      "best_current_separation": 18.0606
+    },
+    {
+      "tick": 12,
+      "retained_states": 27,
+      "best_minimum_separation": 15.5111,
+      "best_current_separation": 15.5111
+    }
+  ],
+  "caveat": "The heading discretization and capped beam make this strong bounded evidence, not a mathematical proof that no continuous control exists."
+}

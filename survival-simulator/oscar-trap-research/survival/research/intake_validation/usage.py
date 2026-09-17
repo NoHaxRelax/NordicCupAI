@@ -5,7 +5,7 @@ import os
 
 SESSIONS=['01a0afb2-b67f-74d3-b2d7-fe4f87193a13','01a0afea-97b6-77b0-b969-7274849a17b5','01a0afea-1d3a-73a1-a78d-c13ab712c26a','01a0afea-5836-7f03-97e8-72b68855e80f','01a0b002-4dab-7311-946b-2c8ebe91d096','01a0b00f-f411-78e0-8fb1-f2bc0df6eb49']
 STOP=Path('/tmp/predator-intake-stop')
-STOP_REMAINING=60
+STOP_REMAINING=0
 
 
 def status():

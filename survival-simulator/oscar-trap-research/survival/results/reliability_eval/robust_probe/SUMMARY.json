@@ -1,0 +1,34 @@
+{
+  "schema": "robust-policy-development-probe-summary-v1",
+  "policy": "reliability_eval.policy_robust:SimpleChase",
+  "policy_sha256": "ad4c976b27c52f0c1e7954852efc8ddf69e2be797eecfcc9f040f5fd0bcdb8ce",
+  "local_dependency_manifest_sha256": "381cb48d0be657b3e82fa0f5f032f9312b357c547773da0ae7ceb9ab77635487",
+  "not_a_frozen_reliability_batch": true,
+  "results": [
+    {
+      "map_seed": 10040,
+      "fixture_seed": 9640,
+      "strict_pass": true,
+      "active_bait_acquisition": 26.3,
+      "guide_alive_final": true,
+      "continuous_containment_seconds": 273.8,
+      "frames": 3001,
+      "receipt": "results/simple_chase/real-map-SimpleChase-m10040-f9640-p1-direct_guide-sitebait1-0a0b5305.json",
+      "score": "results/reliability_eval/robust_probe/m10040-f9640-0a0b5305.score.json"
+    },
+    {
+      "map_seed": 10138,
+      "fixture_seed": 20138,
+      "strict_pass": false,
+      "reason": "no_recent_guide_to_bait_handoff",
+      "guide_death": 1.0,
+      "autonomous_active_bait_acquisition": 176.8,
+      "frames": 3001,
+      "receipt": "results/simple_chase/real-map-SimpleChase-m10138-f20138-p1-direct_guide-sitebait1-166c09bc.json",
+      "score": "results/reliability_eval/robust_probe/m10138-f20138-166c09bc.score.json"
+    }
+  ],
+  "aggregate_warning": "Cases were selected adaptively as development diagnostics and must not be reported as a reliability rate.",
+  "setup_attempts_without_simulation": 2,
+  "setup_attempt_note": "Two preserved 10040 logs failed before simulator import because incorrect Python environments lacked an executable or pygame; neither produced a receipt or replay."
+}

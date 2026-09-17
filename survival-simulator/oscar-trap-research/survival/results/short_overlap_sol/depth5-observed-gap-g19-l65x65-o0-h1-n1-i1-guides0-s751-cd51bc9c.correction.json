@@ -1,0 +1,16 @@
+{
+  "schema": "short-overlap-correction-v1",
+  "receipt": "depth5-observed-gap-g19-l65x65-o0-h1-n1-i1-guides0-s751-cd51bc9c.json",
+  "original_receipt_sha256": "5dc185c7ad49e90fa3572c738d24c609366cad4800ae9e83317190dd70db911a",
+  "replay_unchanged": true,
+  "overrides": {
+    "short_overlap_retention_valid": true,
+    "evidence_class": "valid_long_wall_positive_control",
+    "bait_deployment_expected": true,
+    "exclude_from_short_overlap_success_denominator": false
+  },
+  "reason": "The unchanged controller accepts this long-wall geometry; this is only a control.",
+  "source_hashes": {
+    "research/depth5_test/observed_gap_policy.py": "fdee75ff24c76ab5fcb5e225e69a8eb7d1f6a9859fafefdccf47a000822acebd"
+  }
+}

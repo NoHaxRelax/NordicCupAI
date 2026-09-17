@@ -1,0 +1,35 @@
+{
+  "schema": "guide-delivery-causal-score-v4",
+  "protocol_sha256": "dbc623106c4f7f616737e3f146ea9eb954ccbd4f2c8166525d315fea69df7c13",
+  "receipt": "results/terrain_guide/real-map-ReleaseGuide-m10138-f20138-p1-direct_guide-sitebait1-af08e37f.json",
+  "receipt_sha256": "e4add64f9771e6b4410275a0b62c8646946fe18a91fd9c83c4382b4ddc7206d7",
+  "policy": "terrain_guide.policy_v25_release:ReleaseGuide",
+  "policy_sha256": "c9d9d385a85da2f0cccbf835e5680e69cb5bc6566a4aadba28bd9c8f672b084d",
+  "pass": false,
+  "reason": "no_unbroken_guide_to_bait_chain",
+  "active_bait_acquisition": null,
+  "bait_target_handoff": null,
+  "last_guide_target_before_handoff": null,
+  "handoff_guide_id": null,
+  "eligible_guide_ids": [
+    1
+  ],
+  "attribution_scope": "single_assigned_guide",
+  "guide_to_bait_active_seconds": null,
+  "guide_to_bait_wall_seconds": null,
+  "guide_alive_at_acquisition": null,
+  "guide_death": 1.1,
+  "stable_containment_tail_seconds": 0.0,
+  "loss_after_acquisition": null,
+  "guide_release_observed": null,
+  "guide_returned_to_staging": null,
+  "replay_check": {
+    "title": "real-map-ReleaseGuide-m10138-f20138-p1-direct_guide-sitebait1-af08e37f",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "V4 attributes a temporally continuous native guide-target to bait-target chain before physical intake; it does not establish counterfactual causation. Guide survival remains neutral."
+}

@@ -229,8 +229,17 @@ class ReplayCatalog:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, help='Optional inventory JSON file (not the curated manifest).')
+    parser.add_argument('--verify-stream', type=Path, nargs='+', help='Verify discovered replay paths without loading frames into RAM.')
     args = parser.parse_args()
     catalog = ReplayCatalog()
+    if args.verify_stream:
+        from replay_stream import inspect_stream
+        candidates={p.resolve() for p in catalog.candidates()}
+        for path in args.verify_stream:
+            if path.resolve() not in candidates:
+                raise ValueError(f'Recording not discoverable: {path}')
+            print(json.dumps({'path':str(path),**inspect_stream(path)}),flush=True)
+        raise SystemExit(0)
     manifest = catalog.refresh()
     if args.output:
         args.output.write_text(json.dumps(manifest, indent=2) + '\n')

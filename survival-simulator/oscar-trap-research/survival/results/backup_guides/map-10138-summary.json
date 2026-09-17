@@ -1,0 +1,27 @@
+{
+  "schema": "bounded-backup-guides-summary-v1",
+  "strategy_denominator": "backup-guides-v1-separate-from-single-guide",
+  "map_seed": 10138,
+  "fixture_seed": 20138,
+  "requested_seconds": 300,
+  "recorded_seconds": 300,
+  "maximum_birth_requests": 3,
+  "maximum_total_guides": 4,
+  "birth_requests": 1,
+  "native_children_born": 1,
+  "guide_ids": [1, 2],
+  "deaths": [
+    {"time": 1.0, "agent_id": 1, "role": "parent_guide"},
+    {"time": 1.0, "agent_id": 2, "role": "native_child"}
+  ],
+  "attributable_delivery": false,
+  "harness_delivery_time": 93.9,
+  "posthoc_distant_autonomous_capture": true,
+  "outcome": "failure",
+  "receipt": "results/simple_chase/real-map-BackupGuides-m10138-f20138-p1-direct_guide-sitebait1-bfdda272.json",
+  "capture_audit": "results/simple_chase/active_bait_audits/real-map-BackupGuides-m10138-f20138-p1-direct_guide-sitebait1-bfdda272.audit.json",
+  "replay": "results/simple_chase/replays/real-map-BackupGuides-m10138-f20138-p1-direct_guide-sitebait1-bfdda272.json.gz",
+  "native_frames": 3001,
+  "map_10139_run": false,
+  "limitations": "One arranged adjacent encounter. Native child position and mutations retained. No single-guide or population reliability implication."
+}

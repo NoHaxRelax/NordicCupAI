@@ -1,0 +1,43 @@
+{
+  "schema": "guide-delivery-causal-score-v4",
+  "protocol_sha256": "dbc623106c4f7f616737e3f146ea9eb954ccbd4f2c8166525d315fea69df7c13",
+  "receipt": "results/simple_chase/real-map-BurstGuides-m10138-f20138-p1-direct_guide-sitebait1-9f53c5f9.json",
+  "receipt_sha256": "ac293d108edea79faece935a5517599f2aca6ed037d06743090945aed5d6c4e9",
+  "policy": "backup_guides.burst:BurstGuides",
+  "policy_sha256": "642725a431ee4778c1adcf100ffb45e7d85faf9c4e086f5923097f43202b7d9d",
+  "pass": true,
+  "reason": "pass",
+  "active_bait_acquisition": 39.0,
+  "bait_target_handoff": 37.8,
+  "last_guide_target_before_handoff": 35.2,
+  "handoff_guide_id": 6,
+  "eligible_guide_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "attribution_scope": "native_lineage_any_policy_controlled_guide",
+  "guide_to_bait_active_seconds": 2.5999999999999943,
+  "guide_to_bait_wall_seconds": 2.5999999999999943,
+  "guide_alive_at_acquisition": true,
+  "guide_death": 1.2,
+  "stable_containment_tail_seconds": 261.1,
+  "loss_after_acquisition": null,
+  "guide_release_observed": null,
+  "guide_returned_to_staging": null,
+  "replay_check": {
+    "title": "real-map-BurstGuides-m10138-f20138-p1-direct_guide-sitebait1-9f53c5f9",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "V4 attributes a temporally continuous native guide-target to bait-target chain before physical intake; it does not establish counterfactual causation. Guide survival remains neutral."
+}

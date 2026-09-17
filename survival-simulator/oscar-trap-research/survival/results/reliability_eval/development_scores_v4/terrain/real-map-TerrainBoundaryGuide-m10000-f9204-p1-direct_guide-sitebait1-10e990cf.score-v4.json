@@ -1,0 +1,35 @@
+{
+  "schema": "guide-delivery-causal-score-v4",
+  "protocol_sha256": "dbc623106c4f7f616737e3f146ea9eb954ccbd4f2c8166525d315fea69df7c13",
+  "receipt": "results/terrain_guide/real-map-TerrainBoundaryGuide-m10000-f9204-p1-direct_guide-sitebait1-10e990cf.json",
+  "receipt_sha256": "6d88deec388e4b67c1e27ab0dd645a236c8b86e0b06cf9b88c240f50d994bb69",
+  "policy": "terrain_guide.boundary:TerrainBoundaryGuide",
+  "policy_sha256": "e5c66efa2063cd4db3f1a0b5f51dbcbe9caaa6d758f2f359094616bbfe5140fa",
+  "pass": true,
+  "reason": "pass",
+  "active_bait_acquisition": 48.4,
+  "bait_target_handoff": 48.2,
+  "last_guide_target_before_handoff": 48.1,
+  "handoff_guide_id": 1,
+  "eligible_guide_ids": [
+    1
+  ],
+  "attribution_scope": "single_assigned_guide",
+  "guide_to_bait_active_seconds": 0.10000000000000142,
+  "guide_to_bait_wall_seconds": 0.10000000000000142,
+  "guide_alive_at_acquisition": false,
+  "guide_death": 48.2,
+  "stable_containment_tail_seconds": 251.7,
+  "loss_after_acquisition": null,
+  "guide_release_observed": null,
+  "guide_returned_to_staging": null,
+  "replay_check": {
+    "title": "real-map-TerrainBoundaryGuide-m10000-f9204-p1-direct_guide-sitebait1-10e990cf",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "V4 attributes a temporally continuous native guide-target to bait-target chain before physical intake; it does not establish counterfactual causation. Guide survival remains neutral."
+}

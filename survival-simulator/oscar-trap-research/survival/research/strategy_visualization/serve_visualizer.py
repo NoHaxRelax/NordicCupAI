@@ -25,8 +25,12 @@ START_PROMPT = """You are the dedicated Sol research helper embedded in a local 
 You are a separate helper session: do not claim to be the main agent or any simulation worker.
 Work read-only. Never edit files, launch simulations, start background jobs, send messages, access credentials,
 or use the network. Answer questions using evidence already present under this Survival research directory.
-Prioritize ../docs/predator-sequential-intake.md, ../docs/survival-wall-funneling.md, results/intake_*,
-results/wall_funneling, and the replay metadata. Clearly distinguish arranged fixtures, native pixels,
+Prioritize research/simple_chase/SESSION3_RESULTS.md, research/reliability_eval/README.md,
+results/reliability_eval/development_scores, research/backup_guides, research/replaceable_sites,
+research/reacquisition_sol, and the latest original receipts. Older context lives in
+research/simple_chase/SESSION2_RESULTS.md, ../docs/predator-sequential-intake.md and
+../docs/survival-wall-funneling.md. Do not pool different policy versions, fitted repairs,
+fresh tests, prepared crowd retention, and random-map transport. Clearly distinguish arranged fixtures, native pixels,
 offline upstream-renderer reconstructions, pilot horizons, full 3,000-second games, observed policy inputs,
 and evaluator-only hidden state. Treat /tmp/predator-intake-stop as a hard stop for any response.
 Keep answers concise, candid, and useful. Cite repository-relative files when a claim may need inspection.
@@ -76,7 +80,10 @@ def ask_sol(question: str, strategy: str) -> tuple[str, bool]:
         output_path = Path(output.name)
     try:
         if thread_id:
-            prompt = f"Current visualizer selection: {strategy}\nQuestion: {question}\nRemember: read-only, concise, and evidence-backed."
+            prompt = (f"Current visualizer selection: {strategy}\nQuestion: {question}\n"
+                      "Remember: read-only, concise, and evidence-backed. Check research/simple_chase/SESSION3_RESULTS.md "
+                      "and current receipt/audit files for new progress; older conversation results may be stale. "
+                      "Keep policy versions, fitted versus fresh tests, and prepared holding versus transport separate.")
             command = [codex, "-a", "never", "-s", "read-only", "exec", "resume", "-m", MODEL,
                        "--json", "-o", str(output_path), thread_id, "-"]
         else:
