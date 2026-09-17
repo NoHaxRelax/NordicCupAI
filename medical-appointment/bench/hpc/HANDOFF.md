@@ -32,33 +32,28 @@ nothing:
 - Logs: `/dtu/blackhole/1e/205502/nordic/logs/llm_bench.29427875.{out,err}` and
   `.../medical-appointment/bench/results/logs/llm_bench.29427875.*.serve.log`.
 
-## Already started (check before redoing)
+## Done so far (2026-09-17 18:20)
 
-1. A fresh venv with the current vLLM is installing on the login node:
-   `/dtu/blackhole/1e/205502/venvs/venv-vllm2`, log
-   `/dtu/blackhole/1e/205502/nordic/logs/venv-vllm2.install.log`. When it is done, check
-   `venv-vllm2/bin/vllm --version` and that `torch.cuda` imports (the login node has no GPU,
-   so just `python -c "import vllm, torch; print(vllm.__version__, torch.__version__)"`).
-2. A prefetch of the missing weights may be running: see
-   `/dtu/blackhole/1e/205502/nordic/logs/prefetch2.log`. It uses
-   `LLM_MODELS="..." PREFETCH_SALM=0 bash bench/hpc/env.sh prefetch`.
+1. `venv-vllm` now holds vLLM 0.29.0 (torch 2.13 cu130); the old venv is kept as
+   `venv-vllm-0.11`. Both Qwen flags are accepted by 0.29 (checked with a dummy serve on the
+   login node, which fails later only because the login node has no GPU).
+2. `env.sh prefetch` re-fetched `openai/gpt-oss-20b` (complete now) and fetched
+   `Qwen/Qwen3.6-35B-A3B-FP8`; log `/dtu/blackhole/1e/205502/nordic/logs/prefetch2.log`.
+   Gated models (gemma, mistral) still need `HF_TOKEN`.
+3. The 39 turbo transcripts of the training set were copied to
+   `.../medical-appointment/transcripts/*.large-v3-turbo.json`.
+4. Resubmitted as **job 29429494** (H100 queue, 20 jobs ahead at 18:18):
+   `MODELS="Qwen/Qwen3.8-27B Qwen/Qwen3.6-27B openai/gpt-oss-20b Qwen/Qwen3.6-35B-A3B-FP8"
+   ASR_TAGS="large-v3-turbo large-v3" bsub < bench/hpc/llm_bench.lsf`.
+   Logs: `/dtu/blackhole/1e/205502/nordic/logs/llm_bench.29429494.{out,err}`.
+   The ASR sweep 29428666 (A10) is still pending from 17:37.
 
 ## To do
 
-1. When `venv-vllm2` is good, either swap it in (`mv venv-vllm venv-vllm-0.11 && mv
-   venv-vllm2 venv-vllm`) or point the job at it (`llm_bench.lsf` lines 118-119 build the
-   paths from `$VENVS/venv-vllm`). Swapping keeps every script unchanged.
-2. Make sure each model in `MODELS` has a complete snapshot under HF_HOME (`env.sh
-   prefetch`; a complete snapshot has no `*.incomplete` blobs). Gated models (gemma,
-   mistral) need `HF_TOKEN` in the environment.
-3. Resubmit: `cd /dtu/blackhole/1e/205502/nordic/medical-appointment && MODELS="Qwen/Qwen3.8-27B
-   Qwen/Qwen3.6-27B openai/gpt-oss-20b Qwen/Qwen3.6-35B-A3B-FP8" ASR_TAGS="large-v3-turbo
-   large-v3" bsub < bench/hpc/llm_bench.lsf`. Check the H100 queue first
-   (`bqueues gpuh100`, `bjobs -u all -q gpuh100 | grep -c PEND`); the last wait was two hours.
-   The A100 queue is far longer. The turbo transcripts are what we serve, so `large-v3-turbo`
-   must be in `ASR_TAGS` if those transcripts exist on the cluster (`ls transcripts/*.large-v3-turbo.json`);
-   otherwise sync them from the laptop with `bench/hpc/sync.sh`.
-4. Results land in `bench/results/llm/<model>.<variant>.<asr>.json`. Summarise with
+1. Watch 29429494 (`bjobs -w`). If a model fails at startup, its serve log is under
+   `bench/results/logs/llm_bench.29429494.<short>.serve.log`; fix and resubmit only the
+   failed models (`MODELS="..."`), the job skips models whose results already exist.
+2. Results land in `bench/results/llm/<model>.<variant>.<asr>.json`. Summarise with
    `python bench/llm/bench.py --summary` (see `bench/README.md`) and add a findings-log entry:
    accuracy, mean tIoU under the nulls-on-no policy, yes-rate, and seconds per conversation.
    The decision we need: which model, if any, beats qwen3:4b by more than the 0.006 noise

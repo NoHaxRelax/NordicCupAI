@@ -9,14 +9,22 @@ so one run measures IoU_i = (S - 0.4) * 95 / 0.6 to the portal's precision.
 Per question, with gold [g, h], length L = h - g, and seed [s, e]:
   stage len     guess [A, B] = [s - W, e + W], wide enough to contain the gold:
                 IoU = L / (B - A)  ->  L
-  stage start   guess [A, m] with A <= g and m inside the gold:
-                IoU = (m - g) / (m - A)  ->  g = m - IoU * (m - A), h = g + L.
-                IoU = 0 means m <= g (move m right); IoU * (m - A) == L means
-                m >= h (move m left). Bisect m until it lands inside.
-  stage verify  guess [g, h]: IoU must be ~1 (>= 0.97 allows the 20 ms grid).
-                Otherwise the containment assumption failed: widen W and redo.
-Typically three runs per question. State persists in bench/mine/span_state.json
+  stage start   guess [A, m] with A <= g and g <= m <= h (m inside the gold):
+                IoU = (m - g) / (h - A) = (m - g) / (g + L - A)
+                ->  g = (m - IoU * (L - A)) / (1 + IoU), h = g + L.
+                Special cases, all recognisable from the number:
+                  IoU = 0                      m <= g       move m right
+                  IoU = L / (m - A)            m >= h       move m left
+                  IoU = (m - A) / L            A > g        widen W (the len
+                                                            stage's L was short too)
+  stage verify  guess [g, h]: IoU must be 1 (the portal returns full float
+                precision; 0.995 allows rounding). Otherwise widen W and redo.
+Three runs per question when the seed's midpoint lies inside the gold, which the
+pilot showed for both test questions. State persists in bench/mine/span_state.json
 so the loop can stop and resume; every run also appends to count_runs.jsonl.
+Pilot (2026-09-17): sample 44 q2 gold 60.62-65.34 (seed 62.54-65.36, the gold
+also covers the patient's question before the answer); sample 51 q6 gold
+53.30-55.16 (seed 52.88-55.18: turbo's segment end matched, its start was 0.42 s early).
 
     python bench/mine/span_probe.py --url https://xxx.trycloudflare.com --only 44:2,51:6   # pilot
     python bench/mine/span_probe.py --url https://xxx.trycloudflare.com                    # everything
@@ -46,9 +54,10 @@ TABLE = HERE / 'current_answers.json'
 LOG = HERE / 'count_runs.jsonl'
 N_POS = 95
 BASE = 0.4
-W0 = 1.5          # initial widening in seconds for the len stage
-OK_IOU = 0.97
+W0 = 4.0          # initial widening in seconds for the len stage (gold spans: median 2.9 s, up to ~15 s)
+OK_IOU = 0.995
 GRID = 0.02
+TOL = 0.004       # relative tolerance when recognising the special cases
 
 
 def durations() -> dict[str, float]:
@@ -140,14 +149,22 @@ def absorb(q: dict, guess: list[float], stage: str, iou: float, dur: float) -> N
         q['stage'] = 'start'; q['m_tried'] = False; q['m_lo'] = None; q['m_hi'] = None
     elif stage == 'start':
         m = B
+        L = q['L']
         q['m_tried'] = True
         if iou <= 1e-9:                      # m left of the gold
             q['m_lo'] = m
-        elif abs(iou * (m - A) - q['L']) < 1.5 * GRID:   # m right of the gold: whole gold inside [A, m]
+        elif abs(iou - L / (m - A)) < TOL:   # m right of the gold: whole gold inside [A, m]
             q['m_hi'] = m
+        elif abs(iou - (m - A) / L) < TOL:   # probe inside the gold: A > g, so L was short as well
+            q['W'] = q['W'] * 2
+            q['stage'] = 'len' if q['W'] <= 16 else 'stuck'
+            q['note'] = f'probe start {A} lies inside the gold, widening to W {q["W"]}'
+            if q['stage'] == 'stuck':
+                q['why'] = 'gold starts more than 16 s before the seed'
+            return
         else:
-            g = m - iou * (m - A)
-            q['g'] = round(g, 3); q['h'] = round(g + q['L'], 3); q['stage'] = 'verify'; return
+            g = (m - iou * (L - A)) / (1 + iou)
+            q['g'] = round(g, 3); q['h'] = round(g + L, 3); q['stage'] = 'verify'; return
         if q['m_lo'] is not None and q['m_hi'] is not None and q['m_hi'] - q['m_lo'] < GRID:
             q['stage'] = 'stuck'; q['why'] = 'bisection collapsed'
         elif len([r for r in q['runs'] if r['stage'] == 'start']) > 6:
@@ -157,7 +174,7 @@ def absorb(q: dict, guess: list[float], stage: str, iou: float, dur: float) -> N
             q['stage'] = 'done'
         else:
             q['W'] = q['W'] * 2
-            if q['W'] > 12:
+            if q['W'] > 16:
                 q['stage'] = 'stuck'; q['why'] = f'verify iou {iou:.3f} even with W {q["W"]/2}'
             else:
                 q['stage'] = 'len'; q['note'] = f'verify iou {iou:.3f}, widening to W {q["W"]}'
@@ -181,8 +198,13 @@ def main() -> int:
     ap.add_argument('--max-runs', type=int, default=10_000)
     ap.add_argument('--poll', type=float, default=4.0)
     ap.add_argument('--report', action='store_true')
+    ap.add_argument('--reset', default='', help='comma list of stem:q whose state is discarded first')
     a = ap.parse_args()
-    st = init_state(load_state())
+    st = load_state()
+    for t in a.reset.split(','):
+        if t.strip():
+            st.pop(f'conversation_sample_{t.split(":")[0]}:{t.split(":")[1]}', None)
+    st = init_state(st)
     save_state(st)
     if a.report:
         report(st); return 0
