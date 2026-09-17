@@ -116,3 +116,20 @@ Extracted from the large-v3 transcripts by the local qwen3:4b model with a JSON 
 | conversations flagged general practice | 32 |
 
 Most frequent: diabetes (11), asthma (3), thyroid dysfunction (2), constipation (1), gastroesophageal reflux disease (1), menopausal symptoms (1), cervical disc prolapse (1), chronic pain (1). The set is broad general practice with a diabetes and asthma head and a long tail of one-off conditions, so there is no single illness to specialise on, and any vocabulary list for ASR biasing has to be general medical, not disease-specific.
+
+### 12. Local baseline of the served pipeline, all 39 training conversations
+
+Live endpoint on the laptop (distil-large-v3, qwen3:4b via Ollama, START_RULE first-word-end, ASR_CLEAN, SPAN_ON_NO), scored by `local_evaluator.py` end to end over HTTP.
+
+| quantity | value |
+|---|---|
+| accuracy | 0.956 (373/390) |
+| positive | 0.918 (179/195) |
+| hard_negative | 1.000 (142/142) |
+| off_topic | 0.981 (52/53) |
+| mean tIoU over 195 annotated yes | 0.458 |
+| no span returned | 0 |
+| score | 0.657 |
+| round trip per conversation, mean / worst | 8.2 s / 11.7 s |
+
+The answering half is close to its ceiling on this model already; the missing points are in the spans (0.458 realised against a 0.832 oracle at sentence granularity). This is the reference number for the first deliberate validation run.
