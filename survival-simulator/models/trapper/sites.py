@@ -1,0 +1,178 @@
+"""Trap sites from rectangles: thin walls and narrow gaps.
+
+Wall site: rectangle 30-35.5 thick and >= 70 long. The predator is held against
+the *front* face; the holder stands 5.1 off the midpoint of the *back* face.
+Gap site: two rectangles whose facing sides are 11-19 apart over >= 55 units of
+overlap. An agent (radius 5) fits, a predator (radius 10) does not. The bait
+stands ``depth`` inside one mouth; predators pile up outside that mouth.
+
+All numbers come from the tested ranges in Oscar's and Lucas's research; the
+detector is deliberately conservative.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from .geometry import Rect, add, mul, sub, dot, unit, perp, dist, free_point, path_clear
+from .world import AGENT_RADIUS, PREDATOR_RADIUS
+
+WALL_THIN = (30.0, 35.5)
+WALL_MIN_LONG = 70.0
+GAP_RANGE = (11.0, 19.0)
+GAP_MIN_OVERLAP = 55.0
+HOLDER_OFF = 5.1          # holder center from the back face
+FRONT_OFF = 5.1           # guide sacrifice point from the front face
+CORRIDOR = 150.0          # straight approach distance in front of the trap
+GAP_DEPTH = 5.0           # bait depth inside the mouth (fixed by earlier sweeps)
+
+
+@dataclass
+class Site:
+    kind: str                 # 'wall' or 'gap'
+    key: str
+    rect: Rect | None         # the wall (wall sites)
+    rects: tuple              # the two obstacles (gap sites)
+    axis: tuple               # unit vector along the wall length / passage
+    normal: tuple             # unit vector from the trap toward the predator (front) side
+    front_mid: tuple          # midpoint of the front face / the mouth center line at the mouth
+    holder: tuple             # holder / bait position
+    front: tuple              # guide's final point on the front side
+    corridor_start: tuple     # where the straight approach begins
+    successor: tuple          # staging point for a replacement, behind the holder
+    guard: tuple | None       # guard station, further behind (wall only)
+    thickness: float
+    length: float
+    lateral: float            # half-width of the usable front zone along the axis
+    far_mouth: tuple | None = None    # gap: the other entrance (successor route) or None if closed
+    far_mouth_open: bool = True
+    score: float = 0.0
+    extra: dict = field(default_factory=dict)
+
+    def in_front_zone(self, p, margin=0.0):
+        """Point lies on the predator side within the held zone around the front face."""
+        d = sub(p, self.front_mid)
+        along = abs(dot(d, self.axis))
+        out = dot(d, self.normal)
+        return -5 <= out <= 40 + margin and along <= self.lateral + margin
+
+    def held_center(self):
+        return add(self.front_mid, mul(self.normal, PREDATOR_RADIUS))
+
+
+def _is_boundary(r: Rect, width, height):
+    return r.x <= 0 or r.y <= 0 or r.x2 >= width or r.y2 >= height
+
+
+def _corridor_clear(start, normal, length, others, width, height, radius=PREDATOR_RADIUS, band=25.0):
+    """The strip from ``start`` outward along ``normal`` is free for the predator."""
+    tangent = perp(normal)
+    for lat in (-band, 0.0, band):
+        a = add(start, mul(tangent, lat))
+        b = add(a, mul(normal, length))
+        if not free_point(a, radius, others, width, height) or not free_point(b, radius, others, width, height):
+            return False
+        if not path_clear(a, b, radius, others):
+            return False
+    return True
+
+
+def find_wall_sites(rects, width, height):
+    sites = []
+    for i, r in enumerate(rects):
+        if _is_boundary(r, width, height):
+            continue
+        thin, long = min(r.w, r.h), max(r.w, r.h)
+        if not (WALL_THIN[0] <= thin <= WALL_THIN[1] and long >= WALL_MIN_LONG):
+            continue
+        axis = (1.0, 0.0) if r.w >= r.h else (0.0, 1.0)
+        others = [o for j, o in enumerate(rects) if j != i]
+        for sign in (1.0, -1.0):
+            normal = mul(perp(axis), sign)
+            c = r.center
+            front_mid = add(c, mul(normal, thin / 2))
+            back_mid = sub(c, mul(normal, thin / 2))
+            holder = sub(back_mid, mul(normal, HOLDER_OFF))
+            front = add(front_mid, mul(normal, FRONT_OFF))
+            successor = sub(holder, mul(normal, 12.0))
+            guard = sub(holder, mul(normal, 45.0))
+            corridor_start = add(front_mid, mul(normal, CORRIDOR))
+            ok = (free_point(holder, AGENT_RADIUS + 0.5, others, width, height)
+                  and free_point(successor, AGENT_RADIUS + 0.5, others, width, height)
+                  and free_point(add(front_mid, mul(normal, PREDATOR_RADIUS + 0.5)), PREDATOR_RADIUS, others, width, height)
+                  and _corridor_clear(add(front_mid, mul(normal, PREDATOR_RADIUS + 0.5)), normal, CORRIDOR, others, width, height, band=20.0))
+            if not ok:
+                continue
+            run_in_clear = _corridor_clear(add(front_mid, mul(normal, CORRIDOR)), normal, 250.0, others, width, height, band=20.0)
+            # the predator must be able to slide a little along the front face without hitting neighbours
+            tangent = axis
+            lateral = long / 2 - 20.0
+            slide_ok = all(free_point(add(add(front_mid, mul(normal, PREDATOR_RADIUS + 0.5)), mul(tangent, s)),
+                                      PREDATOR_RADIUS, others, width, height) for s in (-lateral, lateral))
+            if not slide_ok:
+                continue
+            guard_ok = free_point(guard, AGENT_RADIUS + 0.5, others, width, height)
+            sites.append(Site(kind='wall', key=f'wall{i}{"+" if sign > 0 else "-"}', rect=r, rects=(r,), axis=axis,
+                              normal=normal, front_mid=front_mid, holder=holder, front=front,
+                              corridor_start=corridor_start, successor=successor, guard=guard if guard_ok else None,
+                              thickness=thin, length=long, lateral=lateral, score=0.0 if run_in_clear else 80.0,
+                              extra=dict(run_in_clear=run_in_clear)))
+    return sites
+
+
+def find_gap_sites(rects, width, height, depth=GAP_DEPTH, min_overlap=GAP_MIN_OVERLAP):
+    sites = []
+    n = len(rects)
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            a, b = rects[i], rects[j]
+            for orient in ('x', 'y'):
+                if orient == 'x':
+                    gap = b.x - a.x2
+                    lo, hi = max(a.y, b.y), min(a.y2, b.y2)
+                else:
+                    gap = b.y - a.y2
+                    lo, hi = max(a.x, b.x), min(a.x2, b.x2)
+                if not (GAP_RANGE[0] <= gap <= GAP_RANGE[1]) or hi - lo < min_overlap:
+                    continue
+                center_line = (a.x2 + gap / 2) if orient == 'x' else (a.y2 + gap / 2)
+                axis = (0.0, 1.0) if orient == 'x' else (1.0, 0.0)     # along the passage
+                others = [o for k, o in enumerate(rects) if k not in (i, j)]
+                mouths = []
+                for end, sign in ((lo, -1.0), (hi, 1.0)):
+                    normal = mul(axis, sign)                              # outward at this mouth
+                    mouth = (center_line, end) if orient == 'x' else (end, center_line)
+                    bait = sub(mouth, mul(normal, depth))
+                    approach_ok = _corridor_clear(add(mouth, mul(normal, PREDATOR_RADIUS + 0.5)), normal, CORRIDOR,
+                                                  others, width, height, band=0.0)
+                    entry_ok = (free_point(bait, AGENT_RADIUS, rects, width, height)
+                                and path_clear(add(mouth, mul(normal, 40.0)), bait, AGENT_RADIUS, rects))
+                    mouths.append(dict(mouth=mouth, normal=normal, bait=bait, approach_ok=approach_ok, entry_ok=entry_ok))
+                for m, other in ((mouths[0], mouths[1]), (mouths[1], mouths[0])):
+                    if not (m['approach_ok'] and m['entry_ok']):
+                        continue
+                    normal = m['normal']
+                    key = f'gap{i}-{j}{orient}{"+" if normal == mul(axis, 1.0) else "-"}'
+                    sites.append(Site(kind='gap', key=key, rect=None, rects=(a, b), axis=mul(normal, -1.0),
+                                      normal=normal, front_mid=m['mouth'], holder=m['bait'],
+                                      front=add(m['mouth'], mul(normal, 75.0)),
+                                      corridor_start=add(m['mouth'], mul(normal, CORRIDOR)),
+                                      successor=sub(m['bait'], mul(normal, 8.0)), guard=None,
+                                      thickness=gap, length=hi - lo, lateral=gap / 2 + PREDATOR_RADIUS,
+                                      far_mouth=other['mouth'], far_mouth_open=other['entry_ok']))
+    # de-duplicate the (i,j)/(j,i) symmetric hits
+    seen = {}
+    for s in sites:
+        k = (round(s.holder[0], 1), round(s.holder[1], 1))
+        seen.setdefault(k, s)
+    return list(seen.values())
+
+
+def find_sites(rects, width, height, kinds=('wall', 'gap')):
+    out = []
+    if 'wall' in kinds:
+        out += find_wall_sites(rects, width, height)
+    if 'gap' in kinds:
+        out += find_gap_sites(rects, width, height)
+    return out
