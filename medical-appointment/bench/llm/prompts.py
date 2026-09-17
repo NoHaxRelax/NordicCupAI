@@ -1,0 +1,358 @@
+"""Prompt / output variants for the offline answering bench (bench/llm/bench.py).
+
+A variant is a named function
+
+    build(question: str, units: List[model.Unit]) -> Prompt(system, user, schema, postprocess)
+
+where ``postprocess(out, units, words, duration) -> (answer: bool, span | None)``
+maps the JSON the model returned back to seconds. ``VARIANTS`` maps the CLI
+name to the function. The system prompt, JSON schema, unit builder, transcript
+renderer and id-to-seconds rule are imported from model.py (the serving code),
+so the bench measures exactly what serves; a variant only changes what is
+asked and how the answer is read back.
+
+Variants
+  units           the current model.py design: {"quote", "answer", "segments"};
+                  span = model.span_from_ids (contiguous run of cited unit ids,
+                  plus START_OFFSET / END_OFFSET). Tag questions get the same
+                  parenthetical hint model.ask_llm adds.
+  units-claim     same output; tag questions ("..., didn't it?") are rewritten
+                  to a declarative "Claim: ..." and the instruction says
+                  "decide whether the claim is established" (research/04 section 3).
+  words           the model returns the first and last few words of the
+                  evidence passage verbatim (plus the unit id that holds it);
+                  the phrase is located in the word stream with difflib on a
+                  window, preferring the cited unit; span = first-word start /
+                  last-word end + START_OFFSET / END_OFFSET.
+  units-nooffset  'units' with the edge offsets removed (ablation).
+
+Install (Linux venv): nothing beyond model.py's own imports
+    pip install requests
+Example
+    python -c "import sys; sys.path.insert(0,'bench/llm'); import prompts; print(prompts.VARIANTS.keys())"
+Caveats
+  - model.py is imported, so its environment variables apply (START_OFFSET,
+    END_OFFSET, PAUSE_SPLIT). Set them before running the bench if you want
+    other values; the bench records the values in effect.
+  - 'units-nooffset' removes the offsets after model.span_from_ids has applied
+    and clamped them, so a cited unit that touches the very end of the audio
+    can differ from the raw unit end by up to END_OFFSET. Negligible for an
+    ablation; noted so nobody hunts for it.
+"""
+from __future__ import annotations
+
+import bisect
+import difflib
+import re
+import sys
+from pathlib import Path
+from typing import Callable, Dict, List, NamedTuple, Optional, Tuple
+
+HERE = Path(__file__).resolve().parent            # bench/llm
+CASE = HERE.parent.parent                         # medical-appointment
+if str(CASE) not in sys.path:
+    sys.path.insert(0, str(CASE))
+
+from model import (  # noqa: E402  (serving code; see module docstring)
+    END_OFFSET, SCHEMA, START_OFFSET, SYSTEM, Unit, Word, make_units,
+    render_transcript, span_from_ids, _TAG as TAG,
+)
+
+__all__ = ['Prompt', 'VARIANTS', 'make_units', 'render_transcript', 'claim_text',
+           'units_question']
+
+Span = Tuple[float, float]
+Postprocess = Callable[[dict, List[Unit], List[Word], float], Tuple[bool, Optional[Span]]]
+
+
+class Prompt(NamedTuple):
+    system: str
+    user: str
+    schema: dict
+    postprocess: Postprocess
+
+
+# --------------------------------------------------------------------------- #
+# Question rewriting
+# --------------------------------------------------------------------------- #
+
+# First words that are safe to lower-case when a tag question becomes a claim
+# ("The lipid profile ..." -> "the lipid profile ..."); anything else (HbA1c,
+# a drug name, a proper noun) keeps its capital.
+_LOWER_FIRST = {
+    'the', 'a', 'an', 'both', 'this', 'that', 'these', 'those', 'there', 'it',
+    'he', 'she', 'they', 'his', 'her', 'their', 'its', 'no', 'some', 'all',
+    'one', 'only', 'after', 'before', 'during', 'at', 'in', 'on', 'alongside',
+    'according', 'nothing', 'every', 'each', 'another', 'any',
+}
+
+
+def strip_tag(question: str) -> Optional[str]:
+    """'The X came back normal, didn't it?' -> 'The X came back normal', or None
+    if the question carries no tag suffix (same regex as model.ask_llm)."""
+    q = question.strip()
+    m = TAG.search(q)
+    if not m:
+        return None
+    return q[:m.start()].strip().rstrip(',').strip()
+
+
+def claim_text(question: str) -> str:
+    """Declarative form used by 'units-claim': a tag question becomes
+    'CLAIM: the x came back normal.'; any other question stays a question."""
+    stem = strip_tag(question)
+    if stem is None:
+        return f'QUESTION: {question.strip()}'
+    first, _, rest = stem.partition(' ')
+    if first.lower() in _LOWER_FIRST:
+        stem = (first.lower() + ' ' + rest).strip()
+    return f'CLAIM: {stem.rstrip(".")}.'
+
+
+def units_question(question: str) -> str:
+    """The question exactly as model.ask_llm sends it (tag hint included)."""
+    claim = question.strip()
+    tag = TAG.search(claim)
+    if tag:
+        claim = (f'{claim}  (Read this as the plain question: is it established that '
+                 f'{claim[:tag.start()].strip().rstrip(",")}?)')
+    return f'QUESTION: {claim}'
+
+
+def _user(transcript: str, ask: str) -> str:
+    # Transcript first, question last: the shared prefix is what vLLM's prefix
+    # cache reuses across the ten questions of one conversation.
+    return f'TRANSCRIPT:\n{transcript}\n\n{ask}'
+
+
+# --------------------------------------------------------------------------- #
+# System prompts
+# --------------------------------------------------------------------------- #
+
+_TAG_SENTENCE = ('Tag questions ("..., right?", "..., didn\'t it?") are ordinary questions; the phrasing\n'
+                 'does not hint at the answer.')
+_CLAIM_SENTENCE = ('The input is a CLAIM (or a plain QUESTION). Decide whether the transcript establishes\n'
+                   'the claim; for a question, whether it establishes a "yes". The wording of the claim\n'
+                   'carries no hint about the answer.')
+
+if _TAG_SENTENCE in SYSTEM:
+    CLAIM_SYSTEM = SYSTEM.replace(_TAG_SENTENCE, _CLAIM_SENTENCE)
+else:                                   # model.SYSTEM was edited; keep working
+    CLAIM_SYSTEM = SYSTEM.replace('Return JSON only:', _CLAIM_SENTENCE + '\nReturn JSON only:', 1)
+
+_RETURN_MARK = 'Return JSON only:'
+_SYSTEM_HEAD = SYSTEM.split(_RETURN_MARK, 1)[0]
+
+WORDS_SYSTEM = _SYSTEM_HEAD + """Return JSON only:
+{"segment": <id of the single utterance that contains the evidence passage; -1 when the answer is no>,
+ "first_words": "<the first three words of the evidence passage, copied verbatim from the transcript; \\"\\" when no>",
+ "last_words": "<the last three words of the evidence passage, copied verbatim from the transcript; \\"\\" when no>",
+ "answer": "yes" | "no"}
+The evidence passage is the shortest stretch of speech (usually one sentence, at most three)
+that establishes the statement. It may start or end in the middle of an utterance. Copy the
+words exactly as written, without the [id] prefix."""
+
+WORDS_SCHEMA = {
+    'type': 'object',
+    'properties': {
+        'segment': {'type': 'integer'},
+        'first_words': {'type': 'string'},
+        'last_words': {'type': 'string'},
+        'answer': {'type': 'string', 'enum': ['yes', 'no']},
+    },
+    'required': ['segment', 'first_words', 'last_words', 'answer'],
+}
+
+
+# --------------------------------------------------------------------------- #
+# Post-processing helpers
+# --------------------------------------------------------------------------- #
+
+def _is_yes(out: dict) -> bool:
+    return str(out.get('answer', '')).strip().lower() == 'yes'
+
+
+def _int_list(v) -> List[int]:
+    ids: List[int] = []
+    for i in (v or []):
+        if isinstance(i, bool):
+            continue
+        if isinstance(i, (int, float)):
+            ids.append(int(i))
+        elif isinstance(i, str) and i.strip().lstrip('-').isdigit():
+            ids.append(int(i.strip()))
+    return ids
+
+
+def _int_or(v, default: int) -> int:
+    if isinstance(v, bool):
+        return default
+    if isinstance(v, (int, float)):
+        return int(v)
+    if isinstance(v, str) and v.strip().lstrip('-').isdigit():
+        return int(v.strip())
+    return default
+
+
+def _clamp(start: float, end: float, duration: float) -> Span:
+    # Same clamping rule as model.span_from_ids.
+    start = max(0.0, min(start, duration))
+    end = max(start + 0.05, min(end, duration))
+    return round(start, 2), round(end, 2)
+
+
+def _units_post(out: dict, units: List[Unit], words: List[Word], duration: float,
+                offsets: bool = True) -> Tuple[bool, Optional[Span]]:
+    """Mirror of the per-question logic in model.answer_all."""
+    yes = _is_yes(out)
+    ids = _int_list(out.get('segments'))
+    if yes and not ids:
+        # The model said yes but cited nothing: find the quote instead.
+        quote = str(out.get('quote', '')).strip().lower()
+        ids = [u.idx for u in units if quote and quote[:40] in u.text.lower()][:1]
+    span = span_from_ids(ids, units, duration) if yes else None
+    if span is not None and not offsets:
+        span = _clamp(span[0] - START_OFFSET, span[1] - END_OFFSET, duration)
+    return yes, span
+
+
+# --- 'words': locate a verbatim phrase in the word stream ------------------- #
+
+_NONWORD = re.compile(r"[^a-z0-9']+")
+_ID_PREFIX = re.compile(r'^\s*\[\s*\d+\s*\]\s*')
+MATCH_MIN = 0.72          # difflib ratio a window must reach to count as found
+PREFER_BONUS = 0.15       # added to windows inside the cited unit (+-1 unit)
+END_WINDOW = 80           # words searched after the start for the last phrase
+
+
+def _norm(w: str) -> str:
+    return _NONWORD.sub('', w.replace('\x00', '').lower())
+
+
+def _phrase_tokens(s: str) -> List[str]:
+    s = _ID_PREFIX.sub('', str(s or ''))
+    return [t for t in (_norm(x) for x in s.split()) if t]
+
+
+def _unit_ranges(units: List[Unit], words: List[Word]) -> Dict[int, Tuple[int, int]]:
+    """unit idx -> [first word index, last word index + 1). Units are contiguous
+    runs of words, so a word belongs to the last unit starting at or before it."""
+    starts = [u.start for u in units]
+    ranges: Dict[int, Tuple[int, int]] = {}
+    for i, w in enumerate(words):
+        k = max(0, bisect.bisect_right(starts, w.start) - 1) if starts else 0
+        lo, hi = ranges.get(k, (i, i))
+        ranges[k] = (min(lo, i), i + 1)
+    return ranges
+
+
+def _find(phrase: List[str], toks: List[str], lo: int, hi: int,
+          prefer: Optional[Tuple[int, int]]) -> Tuple[int, float]:
+    """Best window start for `phrase` in toks[lo:hi]; returns (index, raw ratio)
+    or (-1, 0). Windows inside `prefer` win ties and near-ties."""
+    n = len(phrase)
+    if n == 0:
+        return -1, 0.0
+    target = ' '.join(phrase)
+    best_i, best_raw, best_score = -1, 0.0, 0.0
+    sm = difflib.SequenceMatcher(None, '', target)
+    for i in range(max(0, lo), min(hi, len(toks) - n + 1)):
+        cand = ' '.join(toks[i:i + n])
+        if not cand.strip():
+            continue
+        sm.set_seq1(cand)
+        if sm.quick_ratio() < MATCH_MIN:
+            continue
+        raw = sm.ratio()
+        score = raw + (PREFER_BONUS if prefer and prefer[0] <= i < prefer[1] else 0.0)
+        if score > best_score:
+            best_i, best_raw, best_score = i, raw, score
+    return best_i, best_raw
+
+
+def _words_post(out: dict, units: List[Unit], words: List[Word], duration: float
+                ) -> Tuple[bool, Optional[Span]]:
+    if not _is_yes(out):
+        return False, None
+    if not words:
+        return True, None
+    seg = _int_or(out.get('segment'), -1)
+    if not (0 <= seg < len(units)):
+        seg = -1
+    toks = [_norm(w.w) for w in words]
+    ranges = _unit_ranges(units, words)
+
+    def rng(a: int, b: int) -> Optional[Tuple[int, int]]:
+        # word-index range covering units a..b (clamped), None if unknown
+        keys = [k for k in range(max(0, a), min(len(units), b + 1)) if k in ranges]
+        if not keys:
+            return None
+        return min(ranges[k][0] for k in keys), max(ranges[k][1] for k in keys)
+
+    first = _phrase_tokens(out.get('first_words'))
+    last = _phrase_tokens(out.get('last_words'))
+    prefer = rng(seg - 1, seg + 1) if seg >= 0 else None
+
+    i, raw = _find(first, toks, 0, len(toks), prefer)
+    if i < 0 or raw < MATCH_MIN:
+        # Phrase not found: fall back to the cited unit, else nothing.
+        return True, (span_from_ids([seg], units, duration) if seg >= 0 else None)
+
+    # unit that holds the start word, for the end fallback and the end preference
+    unit_of_start = max((k for k, (lo, hi) in ranges.items() if lo <= i < hi), default=seg)
+    prefer_end = rng(unit_of_start, unit_of_start + 2) if unit_of_start >= 0 else None
+    j, raw_j = _find(last, toks, i, i + END_WINDOW, prefer_end)
+    if j >= 0 and raw_j >= MATCH_MIN:
+        end_idx = j + len(last) - 1
+    elif unit_of_start >= 0 and unit_of_start in ranges:
+        end_idx = ranges[unit_of_start][1] - 1          # end of the start's unit
+    else:
+        end_idx = i + len(first) - 1
+    end_idx = max(end_idx, i + len(first) - 1)
+    end_idx = min(end_idx, len(words) - 1)
+    return True, _clamp(words[i].start + START_OFFSET, words[end_idx].end + END_OFFSET, duration)
+
+
+# --------------------------------------------------------------------------- #
+# Variants
+# --------------------------------------------------------------------------- #
+
+def units(question: str, units_: List[Unit]) -> Prompt:
+    return Prompt(SYSTEM, _user(render_transcript(units_), units_question(question)),
+                  SCHEMA, lambda out, u, w, d: _units_post(out, u, w, d, offsets=True))
+
+
+def units_claim(question: str, units_: List[Unit]) -> Prompt:
+    return Prompt(CLAIM_SYSTEM, _user(render_transcript(units_), claim_text(question)),
+                  SCHEMA, lambda out, u, w, d: _units_post(out, u, w, d, offsets=True))
+
+
+def units_nooffset(question: str, units_: List[Unit]) -> Prompt:
+    return Prompt(SYSTEM, _user(render_transcript(units_), units_question(question)),
+                  SCHEMA, lambda out, u, w, d: _units_post(out, u, w, d, offsets=False))
+
+
+def words(question: str, units_: List[Unit]) -> Prompt:
+    return Prompt(WORDS_SYSTEM, _user(render_transcript(units_), units_question(question)),
+                  WORDS_SCHEMA, _words_post)
+
+
+VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
+    'units': units,
+    'units-claim': units_claim,
+    'units-nooffset': units_nooffset,
+    'words': words,
+}
+
+
+if __name__ == '__main__':          # tiny CPU self-check of the rewrites and the matcher
+    for q in ('The lipid profile came back normal, didn\'t it?',
+              'Did the HbA1c come out at 43 mmol/mol?',
+              'HbA1c was 47 mmol/mol, right?'):
+        print(claim_text(q), '|', units_question(q))
+    ws = [Word(w, i * 0.5, i * 0.5 + 0.4) for i, w in enumerate(
+        ' Morning, Dr Fabricius. Your HbA1c is 47 mmol/mol. That is fine.'.split(' ')[1:])]
+    us = make_units(ws)
+    print(render_transcript(us))
+    print(_words_post({'segment': 1, 'first_words': 'Your HbA1c', 'last_words': 'mmol/mol',
+                       'answer': 'yes'}, us, ws, 10.0))
