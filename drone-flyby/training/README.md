@@ -2,6 +2,8 @@
 
 This branch contains the first reproducible detector and crop-classifier training run. It starts from `drone-flyby`; exploratory experiments belong on separate `codex/drone-experiment-<name>` branches. Do not merge unreviewed experimental changes into this baseline.
 
+The first detector's independent-scene check failed: it found only 1 of 71 known L1 validation targets at confidence 0.25 and IoU 0.50. See [EVALUATION-2026-09-17.md](EVALUATION-2026-09-17.md) for evidence and limitations. Successful training and fast inference did not establish usable detection quality.
+
 ## Models and data
 
 - Detector: COCO-pretrained YOLO26x, all layers fine-tuned, 960 input, batch 8, AMP, 50 epochs. Its 250 camera views come only from the complete organizer Helsinki labels. Zoom sampling is 70% L1, 20% L2, 10% L0. Every intersecting known object is labeled, including clipped visible boxes. No mosaic or aggressive scale augmentation that would obscure this first comparison.

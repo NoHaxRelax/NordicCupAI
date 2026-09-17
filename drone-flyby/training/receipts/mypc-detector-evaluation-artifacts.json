@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-17",
+  "checkpoint_sha256": "14f34b0b97f228342f0b71c5e8fb2c603d0100abc725aa74b675458c3b7f5897",
+  "evaluation_code_commit": "c4ffb35059c7068f416bded337b669c51a6ed22a",
+  "remote_results": "mypc:C:/Users/oscar/nordic-drone/runs/mypc-yolo26x-20260917-v2/evaluation-20260917",
+  "artifacts": [
+    {
+      "path": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/artifacts/drone-detector-eval-20260917/report.json",
+      "bytes": 53918,
+      "sha256": "6de9df5b4f1d9b4cf57246f60d517ebe8c692910afe090bd7de33f3f73db2c64"
+    },
+    {
+      "path": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/artifacts/drone-detector-eval-20260917/predictions.jsonl",
+      "bytes": 424366,
+      "sha256": "f531929f4b44c5183fadbe70633ba54ab7bae0d489ac092fccc312015e175a35"
+    },
+    {
+      "path": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/artifacts/drone-detector-eval-20260917/zoom-comparison.jpg",
+      "bytes": 525477,
+      "sha256": "9d3d70cf5f1dc8b9ba1b4f198324633e49f56fbbb8eae217855d5437fe216313"
+    },
+    {
+      "path": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/artifacts/drone-detector-eval-20260917/l1-full-views.jpg",
+      "bytes": 1571917,
+      "sha256": "1173f322bd61e900d6add2066c3e098b34ea2001411c947b3eda2be4d41083bc"
+    },
+    {
+      "path": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/artifacts/drone-detector-eval-20260917/representative-cases.json",
+      "bytes": 2420,
+      "sha256": "22ce63531837ddaf2bbb60e721e07019c9f7ed4802eb06fd51d28c2dc125f04b"
+    },
+    {
+      "path": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/data/drone/detector-eval-20260917/manifest.json",
+      "bytes": 160108,
+      "sha256": "f6284e636f3ac0a1febbff147fa7af024127c9499d62a7950cfe899aa291245a"
+    }
+  ],
+  "verification": [
+    "Checkpoint and model class map verified on GPU host",
+    "Input, label, source image and manifest SHA256 verified",
+    "IoU boundary, duplicate matching, wrong-class localization and confidence filtering checks passed",
+    "Positive-only manual metric omits precision/mAP by design",
+    "Median-frame visual panels for six classes and three zooms inspected"
+  ],
+  "wandb": "disabled for original run",
+  "competition_api_called": false
+}
