@@ -377,3 +377,24 @@ Gain 0.010 (noise floor 0.006), the yes-rate lands on the balanced 0.50, harmful
 | units-joint-demo | 0.990 | 0.547 | 0.724 | 2 | 51 | 60 | 3,300 |
 
 The demonstrations lift accuracy to 0.990 (two missed positives in 195, no false positives on hard negatives) and tIoU by another 0.015. The remaining span loss is now mostly "shifted" (60): the model includes neighbours, as the annotators do, but often the wrong neighbour. Wall time on the laptop 9 s per conversation for the 4B (one 380-token answer). Next: the same three variants on the 27B (cluster follow-up job, then RunPod).
+
+### 34. Cluster LLM bench: Qwen3.8-27B with few-shot examples reaches 0.780 on the training set
+
+Jobs 29430781 and 29431586 (H100, vLLM 0.29, 2026-09-17 20:05-22:23). 390 training questions, nulls-on-no policy, ten parallel requests per conversation. Best rows:
+
+| model | prompt variant | transcripts | accuracy | tIoU | score |
+|---|---|---|---:|---:|---:|
+| Qwen3.8-27B | units-fewshot | large-v3-turbo | 0.990 | 0.640 | 0.780 |
+| Qwen3.6-27B | units-fewshot | large-v3-turbo | 0.987 | 0.632 | 0.774 |
+| Qwen3.8-27B | units-claim | large-v3 | 0.985 | 0.618 | 0.765 |
+| Qwen3.6-27B | units | large-v3-turbo | 0.985 | 0.618 | 0.765 |
+| Qwen3.8-27B | units | large-v3-turbo | 0.987 | 0.612 | 0.762 |
+| gpt-oss-20b | units-claim | large-v3 | 0.977 | 0.606 | 0.754 |
+| Qwen3.6-35B-A3B-FP8 | units-claim | large-v3 | 0.982 | 0.587 | 0.745 |
+| gpt-oss-120b | units-claim | large-v3 | 0.982 | 0.583 | 0.742 |
+| qwen3:4b (laptop) | units-joint-demo | large-v3-turbo | 0.990 | 0.547 | 0.724 |
+| qwen3:4b (laptop) | units | large-v3-turbo | 0.967 | 0.522 | 0.700 |
+
+Readings. (1) The 27B lifts the score by 0.06-0.08 over the served 4B, almost all of it span selection (tIoU 0.52 to 0.61-0.64), with accuracy 0.99 and no false yes on hard negatives. (2) Elias's few-shot idea pays on the 27B where it did not on the 4B: +0.018 for Qwen3.8 (0.762 to 0.780) and +0.009 for Qwen3.6, examples being the marked stretches of the twelve nearest questions from other conversations. (3) Bigger is not better here: gpt-oss-120b (0.742) and the 35B MoE (0.745) trail the dense 27Bs, and gpt-oss is slow because its reasoning cannot be switched off. (4) Transcripts matter as the ASR sweep predicted: turbo beats large-v3 by about 0.01 and Parakeet by 0.03-0.04 for the same model and prompt. (5) The words variant loses 0.05 against units on every model. (6) The joint variants on the 27Bs failed on the cluster only because the job kept bench.py's default 200-token budget and cut the ten-answer JSON; rerun queued with 1500 tokens. Latency on the H100: about 2 s of LLM time per conversation with ten parallel requests for the 27B.
+
+Decision so far: serve Qwen3.8-27B (dense, BF16 on one 80 GB card or FP8 on less) on turbo transcripts with the few-shot units prompt; pending the joint results, which on the 4B added another 0.01-0.02 and cut prompt tokens eight-fold.

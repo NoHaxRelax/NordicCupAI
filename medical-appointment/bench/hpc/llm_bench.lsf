@@ -95,6 +95,8 @@ declare -A EXTRA_FOR=(
 declare -A BENCH_FOR=(
   ["openai/gpt-oss-20b"]="--max-tokens 1500"
   ["openai/gpt-oss-120b"]="--max-tokens 1500"
+  ["Qwen/Qwen3.8-27B"]="--max-tokens 1500"
+  ["Qwen/Qwen3.6-27B"]="--max-tokens 1500"
 )
 declare -A TIMEOUT_FOR=(
   ["openai/gpt-oss-20b"]=4800
