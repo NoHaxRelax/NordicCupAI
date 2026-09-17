@@ -6,19 +6,19 @@ luring and bait replenishment are shared. The society keeps foraging and breedin
 
 ## Phase A: full knowledge of the game state (oracle world, development only)
 
-| Step | Goal | Wall | Gap |
+| Step | Goal | Wall (backup) | Gap (primary) |
 | --- | --- | --- | --- |
-| 1 | Bait one predator into the trap while society continues; two agents cooperate (bait behind the wall, a guide that lures) | fixtures 4/4 when the predator is within ±45° of the approach axis, 0/4 otherwise; real games 0 deliveries so far | fixtures 3/3 (guide enters and becomes the bait); real games: chased agents run in on their own |
-| 2 | Replace the bait (agent 1) | implemented (second slot), not validated | implemented (far mouth, rest window), not validated |
-| 3 | Guard (agent 2) protects the bait from other predators; escaped predators are simply lured back by others | implemented (intercept from the protected side), not validated | not needed |
-| 4 | Several predators in the same trap: every new predator is lured in by the first capable agent | not validated | happens naturally at the mouth; max 2 held so far |
+| 1 | Bait one predator into the trap while society continues; two agents cooperate | fixtures 3/4 (guide dies at the front by design); real games not measured since the refocus | fixtures 4/4 (guide enters, becomes bait, survives); flyby past a staffed mouth validated on the arranged passage; real games: 16 of 198 guide-led deliveries delivered (14 guides alive), refuge runs give most holds (112 entries per 32 games), held 5 % of predator-time |
+| 2 | Replace the bait (agent 1) | implemented, not validated | replacement stages outside the far mouth and enters after the old bait walks out (33–38 of 61–77 replacements in place per 32 games); reserve slot behind a dying bait tried, no measurable gain |
+| 3 | Guard (agent 2) protects the bait | implemented, not validated | not needed |
+| 4 | Several predators in the same trap | not validated | up to 3 predators held at one mouth (`max_held_one_station`) |
 
 ## Phase B: no full knowledge
 
 | Step | Goal | Status |
 | --- | --- | --- |
 | 5 | Fuse the agents' observations into a full game-state estimate | estimator exact (positions, headings), predators within one step; manager runs on it; agent server serves it |
-| 6 | Redo steps 1–4 on the estimate | pending steps 1–4 |
+| 6 | Redo steps 1–4 on the estimate | same protocol runs on the estimator: holds 6–12 % on four seeds, refuge margin widened to 45 for estimated tracks; 8-seed batch running (`final-v7est`) |
 
 ## Refocus (Oscar, 18 September ~00:30)
 
@@ -70,3 +70,8 @@ Entries are appended as milestones complete; each names the commit and the evide
 - **03:20** Reserve slot restored for gaps: the replacement enters behind a dying front bait and
   moves up when it dies (no target loss); deliveries limited to turns <= 35-55 degrees and leads
   <= 650 to stop guide deaths (10 per 12 games). Batch gap-v6 running.
+- **04:20** A/B over 16 seeds x 2 (see `docs/trapper.md`): wide-turn deliveries without the
+  reserve slot are best (617.4 vs society 612.1; median -0.6) and are now the defaults; the
+  narrow-turn + reserve variant was worst (608.4). Guides now give up a lead when their sprint
+  reserve is gone. Commit aa8f497 pushed. Final 16x2 oracle batch and an 8-seed estimator batch
+  running on the PC (`final-v7`, `final-v7est`).

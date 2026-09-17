@@ -114,7 +114,34 @@ Narrow gaps are the primary trap; walls stay in the code as a backup (`site_kind
 - **Planner**: biome movement modifiers are path costs (river 3.3x, swamp 2x, desert 1.25x),
   cached per grid cell; grids are keyed on geometry; failed searches are cached for 2 s.
 
-## Results so far (600-second games, seeds 1–8, two repeats, oracle world)
+## Gap-first results (18 September, 600-second games, oracle world unless noted)
+
+A/B over seeds 1–16, two repeats each (`results/trapper/batches/ab-*.json`, compare with
+`scripts/trapper/compare_labels.py results/trapper/remote ab-society ab-v5 ab-v6 ab-noreserve`):
+
+| Variant | Score | vs society (mean / median / wins) | Held | Delivered | Guide deaths |
+| --- | --- | --- | --- | --- | --- |
+| society only | 612.1 | – | – | – | – |
+| wide-turn deliveries, no reserve slot (now the default) | 617.4 | +5.3 / −0.6 / 7 of 16 | 5.3 % | 16 of 198 (14 guides alive) | 21 |
+| narrow turns, reserve slot | 608.4 | −3.8 / −3.2 / 4 of 16 | 5.7 % | 4 of 41 | 8 |
+| narrow turns, no reserve | 615.7 | +3.5 / −4.6 / 5 of 16 | 5.7 % | 7 of 35 | 4 |
+
+The means are moved by single seeds where one colony went extinct (seed 5: +130); the medians
+say "neutral". Fruit gathering (score plus penalty) is identical (627 vs 628); the trapper pays a
+higher eaten-energy penalty (19.7 vs 15.2) because the agents that die in trap roles carry more
+energy. Holds last about 30 s and end when the bait dies or walks out (45 of 89) or the predator
+leaves (25 of 89); up to 3 predators were held at one mouth. Most holds come from refuge runs
+(chased agents entering a passage: 112 entries in 32 games), not from guide-led deliveries.
+
+Estimator world (observations only, seeds 2, 7, 8, 12, one run each): holds 6–12 % of
+predator-time, scores 590–624 against 615–627 for the society on the same seeds; refugee deaths
+dropped from 6–8 per game to 0–1 once the refuge margin was widened to 45 for estimated worlds.
+
+Two defects found on the way that any override policy must respect: overridden agents must keep
+the society's spawn decision (dropping it stopped all breeding by role agents and starved three
+colonies), and the A* grid must be cached on geometry (a per-tick rebuild made games 30x slower).
+
+## Results before the refocus (600-second games, seeds 1–8, two repeats, oracle world)
 
 | Batch | Mode | Runs | Score mean ± sd | Extinct | Predator deaths | Held fraction |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
