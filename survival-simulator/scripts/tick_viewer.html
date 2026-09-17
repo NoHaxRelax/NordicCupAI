@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tick Viewer</title>
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --text: #1b1f24; --muted: #667085; --border: #d9dde3;
+  --accent: #2f6fde; --sel: #e6efff;
+  --fruit: #d64545; --tree: #2e8b57; --agent: #2f6fde; --predator: #8b2fc9; --edge: #444;
+  --cone: rgba(47,111,222,.10); --hear: rgba(214,69,69,.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111418; --panel: #1a1e24; --text: #e6e8eb; --muted: #98a2b3; --border: #2c323b;
+    --accent: #6b9cff; --sel: #22304a;
+    --fruit: #ff6b6b; --tree: #4cc38a; --agent: #6b9cff; --predator: #c084fc; --edge: #bbb;
+    --cone: rgba(107,156,255,.12); --hear: rgba(255,107,107,.08);
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, sans-serif; }
+header { padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--panel);
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+header h1 { font-size: 16px; margin: 0; }
+button, select, input { font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; }
+#slider { flex: 1; min-width: 160px; }
+main { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.2fr); gap: 12px; padding: 12px 16px; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+section { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px; min-width: 0; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 8px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.stat b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 12px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+tbody tr { cursor: pointer; }
+tbody tr.sel { background: var(--sel); }
+.scroll { overflow: auto; max-height: 360px; }
+pre { margin: 0; font: 12px/1.35 ui-monospace, monospace; white-space: pre; overflow: auto; max-height: 520px; }
+canvas { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+.muted { color: var(--muted); }
+.tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tick Viewer</h1>
+  <select id="run"></select>
+  <button id="prev">◀</button>
+  <input id="slider" type="range" min="0" max="0" value="0">
+  <button id="next">▶</button>
+  <input id="tickNum" type="number" min="0" value="0" style="width:90px">
+  <span id="tickCount" class="muted"></span>
+  <button id="play">Play</button>
+  <label><input id="follow" type="checkbox" checked> Follow live</label>
+</header>
+<main>
+  <div class="col">
+    <section>
+      <h2>Request summary</h2>
+      <div class="stats" id="stats"></div>
+    </section>
+    <section>
+      <h2>Agents in this request</h2>
+      <div class="scroll"><table>
+        <thead><tr><th>id</th><th>energy</th><th>biome</th><th>age</th><th>obs</th><th>→ move</th><th>→ turn</th><th>→ spawn</th></tr></thead>
+        <tbody id="agents"></tbody>
+      </table></div>
+    </section>
+    <section>
+      <h2 id="egoTitle">Selected agent: egocentric view</h2>
+      <canvas id="ego" width="600" height="600"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--fruit)"></i>Fruit</span>
+        <span><i style="background:var(--tree)"></i>Tree</span>
+        <span><i style="background:var(--agent)"></i>Agent</span>
+        <span><i style="background:var(--predator)"></i>Predator</span>
+        <span><i style="background:var(--edge);border-radius:0;height:3px"></i>Edge</span>
+        <span>Facing up · positive angle = right (clockwise) · tick marks show rel_dir</span>
+      </div>
+    </section>
+  </div>
+  <div class="col">
+    <section>
+      <div class="tabs" style="display:flex;gap:6px;margin-bottom:8px">
+        <button data-tab="agent" class="on">Selected agent</button>
+        <button data-tab="request">Full request body</button>
+        <button data-tab="response">Our response</button>
+        <button data-tab="meta">Headers / meta</button>
+      </div>
+      <pre id="json"></pre>
+    </section>
+  </div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let runs = [], run = null, tick = 0, data = null, selId = null, tab = "agent", playing = null;
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt = (x, d = 2) => typeof x === "number" ? x.toFixed(d) : String(x);
+
+async function refreshRuns() {
+  try { runs = await (await fetch("api/runs")).json(); } catch { return; }
+  const sel = $("run"), prev = sel.value;
+  sel.innerHTML = runs.map(r => `<option value="${r.name}">${r.name} (${r.ticks})</option>`).join("");
+  if (!runs.length) { $("stats").textContent = "No ticks recorded yet. Waiting for requests…"; return; }
+  const follow = $("follow").checked;
+  run = follow ? runs[runs.length - 1].name : (prev || runs[runs.length - 1].name);
+  sel.value = run;
+  const n = count();
+  $("slider").max = Math.max(0, n - 1);
+  $("tickCount").textContent = `/ ${n - 1}`;
+  if (follow && n - 1 !== tick) load(n - 1);
+  else if (!data) load(Math.min(tick, n - 1));
+}
+const count = () => (runs.find(r => r.name === run) || { ticks: 0 }).ticks;
+
+async function load(t) {
+  if (!count()) return;
+  t = Math.max(0, Math.min(t, count() - 1));
+  tick = t;
+  $("slider").value = t; $("tickNum").value = t;
+  const res = await fetch(`api/runs/${run}/ticks/${t}`);
+  if (!res.ok) return;
+  const d = await res.json();
+  if (tick !== t) return;
+  data = d;
+  render();
+}
+
+function render() {
+  const r = typeof data.request === "object" && data.request ? data.request : {};
+  const acts = new Map(((data.response || {}).actions || []).map(a => [a.agent_id, a]));
+  const agents = r.agent_status || [];
+  $("stats").innerHTML = [
+    ["tick", data.tick], ["game_status", r.game_status], ["score", fmt(r.score)], ["sim_time", fmt(r.sim_time, 1)],
+    ["n_agents", r.n_agents], ["agent_status len", agents.length], ["body size", (data.body_bytes / 1024).toFixed(1) + " KB"],
+    ["our handling", fmt(data.handled_ms, 1) + " ms"], ["from", data.client], ["path", data.path],
+    ["received", new Date(data.received_at * 1000).toLocaleTimeString()],
+    ["top-level keys", Object.keys(r).join(", ")],
+    ...(data.error ? [["ERROR", data.error]] : []),
+  ].map(([k, v]) => `<div class="stat"><b>${v}</b><span>${k}</span></div>`).join("");
+
+  if (!agents.some(a => a.agent_id === selId)) selId = agents.length ? agents[0].agent_id : null;
+  $("agents").innerHTML = agents.map(a => {
+    const c = {}; (a.observations || []).forEach(o => c[o.type] = (c[o.type] || 0) + 1);
+    const obs = Object.entries(c).map(([k, v]) => `${k[0]}${v}`).join(" ") || "–";
+    const act = acts.get(a.agent_id) || {};
+    return `<tr data-id="${a.agent_id}" class="${a.agent_id === selId ? "sel" : ""}">
+      <td>${a.agent_id}</td><td>${fmt(a.energy, 1)}</td><td>${a.biome}</td><td>${fmt(a.age, 1)}</td>
+      <td title="${JSON.stringify(c).replace(/"/g, "")}">${obs}</td>
+      <td>${fmt(act.move_distance)} @ ${fmt(act.move_direction)}</td><td>${fmt(act.turn_angle)}</td><td>${act.spawn_agent}</td></tr>`;
+  }).join("");
+
+  const a = agents.find(x => x.agent_id === selId);
+  a && (a.observations = a.observations || []);
+  drawEgo(a, acts);
+  const shown = { agent: a ? { status: a, action: acts.get(a.agent_id) } : null,
+    request: r, response: data.response,
+    meta: { tick: data.tick, error: data.error, received_at: data.received_at, handled_ms: data.handled_ms, client: data.client,
+      path: data.path, body_bytes: data.body_bytes, headers: data.headers } }[tab];
+  $("json").textContent = JSON.stringify(shown, null, 2);
+}
+
+function drawEgo(a, acts) {
+  const cv = $("ego"), g = cv.getContext("2d"), W = cv.width, cx = W / 2, cy = W / 2;
+  g.clearRect(0, 0, W, W);
+  if (!a) return;
+  $("egoTitle").textContent = `Agent ${a.agent_id}: egocentric view`;
+  // Edge coords are agent-relative: +x forward, +y toward positive angles
+  const edges = a.observations.filter(o => o.type === "Edge").map(o => o.coords);
+  const R = Math.max(a.vision_range, a.hearing_radius,
+    ...a.observations.filter(o => o.distance != null).map(o => o.distance),
+    ...edges.flat().map(p => Math.hypot(p[0], p[1])));
+  const s = (W / 2 - 12) / R;
+  const up = -Math.PI / 2; // canvas angle for "forward"
+  g.fillStyle = css("--hear"); g.beginPath(); g.arc(cx, cy, a.hearing_radius * s, 0, 2 * Math.PI); g.fill();
+  g.fillStyle = css("--cone"); g.beginPath(); g.moveTo(cx, cy);
+  g.arc(cx, cy, a.vision_range * s, up - a.vision_angle / 2, up + a.vision_angle / 2); g.closePath(); g.fill();
+  g.strokeStyle = css("--border"); g.beginPath(); g.arc(cx, cy, R * s, 0, 2 * Math.PI); g.stroke();
+  g.fillStyle = css("--muted"); g.font = "12px system-ui"; g.fillText(`r = ${fmt(R, 0)}`, 6, 16);
+
+  const E = p => [cx + p[1] * s, cy - p[0] * s];
+  g.strokeStyle = css("--edge"); g.lineWidth = 2;
+  for (const [p, q] of edges) { g.beginPath(); g.moveTo(...E(p)); g.lineTo(...E(q)); g.stroke(); }
+  g.lineWidth = 1;
+  g.fillStyle = css("--muted"); g.fillText(`${edges.length} edge obs (${new Set(edges.map(e => JSON.stringify(e))).size} unique)`, 6, 32);
+
+  const colors = { Fruit: "--fruit", Tree: "--tree", Agent: "--agent", Predator: "--predator" };
+  for (const o of a.observations) {
+    if (o.distance == null) continue;
+    const ang = up + o.angle, x = cx + o.distance * s * Math.cos(ang), y = cy + o.distance * s * Math.sin(ang);
+    g.fillStyle = g.strokeStyle = css(colors[o.type] || "--muted");
+    g.beginPath(); g.arc(x, y, o.type === "Tree" ? 7 : 5, 0, 2 * Math.PI); g.fill();
+    if (o.rel_dir != null) {
+      // rel_dir = 0 means the other creature faces this agent
+      const toMe = Math.atan2(cy - y, cx - x), face = toMe - o.rel_dir;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + 14 * Math.cos(face), y + 14 * Math.sin(face)); g.lineWidth = 2; g.stroke(); g.lineWidth = 1;
+    }
+    if (o.id != null) g.fillText(o.id, x + 7, y - 7);
+  }
+  // our action: move_direction is relative, turn_angle shown as arc
+  const act = acts.get(a.agent_id);
+  g.fillStyle = g.strokeStyle = css("--text");
+  g.beginPath(); g.arc(cx, cy, 6, 0, 2 * Math.PI); g.fill();
+  g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx, cy - 18); g.stroke();
+  if (act) {
+    const md = up + act.move_direction, L = act.move_distance * s;
+    g.strokeStyle = css("--accent"); g.lineWidth = 3; g.setLineDash([6, 4]);
+    g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + L * Math.cos(md), cy + L * Math.sin(md)); g.stroke();
+    g.setLineDash([]); g.lineWidth = 2;
+    g.beginPath(); g.arc(cx, cy, 28, Math.min(up, up + act.turn_angle), Math.max(up, up + act.turn_angle)); g.stroke();
+    g.lineWidth = 1;
+    g.fillStyle = css("--accent");
+    g.fillText(`action: move ${fmt(act.move_distance)} @ ${fmt(act.move_direction)}, turn ${fmt(act.turn_angle)}`, 6, W - 8);
+  }
+}
+
+$("run").onchange = e => { $("follow").checked = false; run = e.target.value; data = null; refreshRuns(); load(0); };
+$("slider").oninput = e => { $("follow").checked = false; load(+e.target.value); };
+$("tickNum").onchange = e => { $("follow").checked = false; load(+e.target.value); };
+$("prev").onclick = () => { $("follow").checked = false; load(tick - 1); };
+$("next").onclick = () => { $("follow").checked = false; load(tick + 1); };
+$("play").onclick = () => {
+  if (playing) { clearInterval(playing); playing = null; $("play").textContent = "Play"; return; }
+  $("follow").checked = false; $("play").textContent = "Pause";
+  playing = setInterval(() => tick < count() - 1 ? load(tick + 1) : $("play").click(), 100);
+};
+$("agents").onclick = e => { const tr = e.target.closest("tr"); if (tr) { selId = +tr.dataset.id; render(); } };
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  tab = b.dataset.tab; if (data) render();
+});
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT" && e.target.type !== "range") return;
+  if (e.key === "ArrowLeft") $("prev").click();
+  if (e.key === "ArrowRight") $("next").click();
+});
+refreshRuns();
+setInterval(refreshRuns, 1000);
+</script>
+</body>
+</html>
