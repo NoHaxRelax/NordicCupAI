@@ -142,3 +142,15 @@ The answering half is close to its ceiling on this model already; the missing po
 | 15:45 | server had crashed 2 minutes earlier (python.exe fail-fast 0xc0000409 in ucrtbase.dll during an external request); every request 502 | 0.0000 |
 
 The local baseline on the 39 training conversations with the newer defaults is 0.657 (entry 12). The crash led to a supervisor loop around api.py that restarts it on exit. Portal scores are read with `bench/portal_status.py` (key file gitignored).
+
+### 14. Validation run A: 0.6086 with the new serving defaults
+
+Queued from `bench/portal_status.py --queue` at 16:17, finished 16:21, 19 conversations, no errors. Served by distil-large-v3 + qwen3:4b with START_RULE first-word-end (-0.14), END_OFFSET +0.12, ASR_CLEAN, SPAN_ON_NO=1. Per-conversation time 7 to 13 s. Yes answers 85 of 190 (0.447; the set is balanced at 0.5), so the answerer still leans no on unseen conversations.
+
+| run | policy | validation score |
+|---|---|---|
+| morning (accidental) | old offsets, nulls on no | 0.5869 |
+| A, 16:17 | new offsets, spans on every question | 0.6086 |
+| B | new offsets, nulls on no | pending |
+
+A minus B, divided by 0.6, is the mean tIoU the live scorer credits on spans returned with a no answer. Local estimate of the same difference on three conversations: 0.014 in score.
