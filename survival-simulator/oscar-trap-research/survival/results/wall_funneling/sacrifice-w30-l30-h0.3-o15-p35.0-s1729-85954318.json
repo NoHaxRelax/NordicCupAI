@@ -1,0 +1,62 @@
+{
+  "width": 30,
+  "length": 30,
+  "mode": "sacrifice",
+  "heading": 0.3,
+  "offset": 15,
+  "peel": 35.0,
+  "seed": 1729,
+  "waves": 3,
+  "interval": 12.0,
+  "requested_seconds": 90,
+  "seconds": 3.9,
+  "holder_alive": false,
+  "deaths": [
+    {
+      "agent_id": 1,
+      "time": 1.1,
+      "role": "guide"
+    },
+    {
+      "agent_id": 0,
+      "time": 3.9,
+      "role": "holder"
+    }
+  ],
+  "deliveries": [
+    {
+      "arrival": 0,
+      "acquired": 1.1,
+      "first_loss": 3.5,
+      "guide_alive": false,
+      "tail_hold": 0.6153846153846154,
+      "target_loss_ticks": 1
+    }
+  ],
+  "continuous_success": false,
+  "final_success": false,
+  "injected_energy": 723.77,
+  "trace": [
+    {
+      "time": 0.1,
+      "held": 0,
+      "total": 1
+    },
+    {
+      "time": 1.1,
+      "held": 1,
+      "total": 1
+    },
+    {
+      "time": 2.1,
+      "held": 1,
+      "total": 1
+    },
+    {
+      "time": 3.1,
+      "held": 1,
+      "total": 1
+    }
+  ],
+  "replay": "results/wall_funneling/replays/sacrifice-w30-l30-h0.3-o15-p35.0-s1729-85954318.json.gz"
+}

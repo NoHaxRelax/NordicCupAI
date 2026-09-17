@@ -1,0 +1,43 @@
+{
+  "scope": "Observation-only policy; arranged wall approaches and unlimited agent food. Repeated arbitrary arrivals unresolved.",
+  "unique_recorded_runs": 241,
+  "recommended": {
+    "thickness": 30,
+    "length": 100,
+    "baits": 2,
+    "guide_losses": 1,
+    "predators": 33
+  },
+  "fresh_validation": {
+    "cases": 10,
+    "successes": 10,
+    "seconds": 300
+  },
+  "final_placement_validation": {
+    "cases": 6,
+    "successes": 6,
+    "seconds": 180
+  },
+  "long_run": {
+    "seconds": 3000.0,
+    "predators": 33,
+    "baits": 2,
+    "deaths": [
+      {
+        "id": 2,
+        "time": 4.6,
+        "holder": false
+      }
+    ],
+    "continuous_all": true,
+    "replay": "results/wall_funneling/replays/observed-w30-l100-n33-sites1-s42-spread15.0-waves1-gate1-h0-a0-555a836d.json.gz",
+    "policy_hash": "ab8982b7bacd35fe3aec8eaa889be91d4e605a78a710b6180227154fd5bc1a30"
+  },
+  "native_demo": "results/wall_funneling/replays/observed-w30-l100-n33-sites1-s62-spread15.0-waves1-gate1-h0-a1-2f24d447.json.gz",
+  "limitations": [
+    "Prepared approach group, not full-map discovery",
+    "No reliable repeated-arrival or replacement strategy",
+    "Food provided by fixture refill",
+    "Native random map clutter not included"
+  ]
+}

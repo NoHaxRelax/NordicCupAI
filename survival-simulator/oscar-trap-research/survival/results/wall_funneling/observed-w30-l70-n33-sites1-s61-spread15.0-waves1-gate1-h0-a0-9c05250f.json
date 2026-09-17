@@ -1,0 +1,111 @@
+{
+  "width": 30,
+  "length": 70,
+  "predators": 33,
+  "spread": 15.0,
+  "seconds": 5.5,
+  "seed": 61,
+  "gate": true,
+  "horizontal": false,
+  "awake": false,
+  "stations": 1,
+  "births": 0,
+  "replenish": false,
+  "depth_spread": 40.0,
+  "policy_hash": "ab8982b7bacd35fe3aec8eaa889be91d4e605a78a710b6180227154fd5bc1a30",
+  "waves": 1,
+  "interval": 20.0,
+  "arrivals": 33,
+  "gather": false,
+  "baits": 2,
+  "deaths": [
+    {
+      "id": 2,
+      "time": 4.6,
+      "holder": false
+    },
+    {
+      "id": 0,
+      "time": 5.4,
+      "holder": true
+    },
+    {
+      "id": 1,
+      "time": 5.5,
+      "holder": true
+    }
+  ],
+  "mapped": 1,
+  "acquired": 0,
+  "lost_after_acquisition": 0,
+  "max_held": 30,
+  "final_held": 0,
+  "tail_min": 0,
+  "all_held": false,
+  "continuous_all": false,
+  "holders_alive": 0,
+  "replay": "results/wall_funneling/replays/observed-w30-l70-n33-sites1-s61-spread15.0-waves1-gate1-h0-a0-9c05250f.json.gz",
+  "events": [
+    {
+      "time": 0.1,
+      "kind": "mapped_wall_from_edges",
+      "width": 30.000000000000007,
+      "length": 70.0,
+      "holder": 0
+    }
+  ],
+  "trace": [
+    {
+      "time": 0.1,
+      "held": 0,
+      "alive": 3,
+      "mapped": 0,
+      "observed_counts": []
+    },
+    {
+      "time": 1.1,
+      "held": 0,
+      "alive": 3,
+      "mapped": 1,
+      "observed_counts": [
+        0
+      ]
+    },
+    {
+      "time": 2.1,
+      "held": 0,
+      "alive": 3,
+      "mapped": 1,
+      "observed_counts": [
+        0
+      ]
+    },
+    {
+      "time": 3.1,
+      "held": 0,
+      "alive": 3,
+      "mapped": 1,
+      "observed_counts": [
+        0
+      ]
+    },
+    {
+      "time": 4.1,
+      "held": 0,
+      "alive": 3,
+      "mapped": 1,
+      "observed_counts": [
+        0
+      ]
+    },
+    {
+      "time": 5.1,
+      "held": 26,
+      "alive": 2,
+      "mapped": 1,
+      "observed_counts": [
+        17
+      ]
+    }
+  ]
+}

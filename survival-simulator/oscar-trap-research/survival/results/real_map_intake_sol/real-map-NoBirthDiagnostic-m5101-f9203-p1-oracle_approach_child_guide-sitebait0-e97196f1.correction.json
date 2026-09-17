@@ -1,0 +1,21 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-NoBirthDiagnostic-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-e97196f1.json",
+  "original_receipt_sha256": "431e16e0443353d8297c120e8c7a616df51d8a3a8a2c8798b6ee3d35094623d7",
+  "replay_unchanged": true,
+  "overrides": {
+    "failure_stage": "no_birth_diagnostic_corner_oscillation",
+    "conditional_delivery_denominator": false,
+    "conditional_delivery_status": "diagnostic_without_birth",
+    "guide_role": "parent",
+    "parent_role": "guide",
+    "child_role": "not_spawned_by_design",
+    "parent_died_at": 6.9,
+    "gaze_route_exercised": true
+  },
+  "reason": "Deliberate no-birth diagnostic of frozen v13, not a qualifying parent/child trial. Actual spawn actions are suppressed. Guide oscillated north/south beside walls5/37 while predator closed, died at6.9, and delivered0. Movement continued on scheduled gaze ticks, so this failure is not the earlier stopped-gaze/odometry-freeze case.",
+  "source_hashes": {
+    "research/real_map_guide_sol/policy_v13_safe_moving_gaze_frozen.py": "4eaa7ad3fc2be8ac38fe556e00b9d32debd135e103721a54179a278f512cf33f",
+    "research/real_map_controls/no_birth_v13.py": "9d46b915ae8e6e5735b4370f5fc1d1f3f037c3aedbb53627dc4c8a1faa41c5a0"
+  }
+}

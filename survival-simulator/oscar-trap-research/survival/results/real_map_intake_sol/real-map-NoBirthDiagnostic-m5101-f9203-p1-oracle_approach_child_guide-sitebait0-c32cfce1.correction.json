@@ -1,0 +1,20 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-NoBirthDiagnostic-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-c32cfce1.json",
+  "original_receipt_sha256": "ffceae2c41bc09babe933a9040be4683838b6263888db474415930f98cbca07b",
+  "replay_unchanged": true,
+  "overrides": {
+    "failure_stage": "no_birth_diagnostic_outside_hearing_on_wake",
+    "conditional_delivery_denominator": false,
+    "conditional_delivery_status": "diagnostic_without_birth",
+    "guide_role": "parent",
+    "parent_role": "guide",
+    "child_role": "not_spawned_by_design",
+    "gaze_route_exercised": true
+  },
+  "reason": "Deliberate no-birth diagnostic of frozen v14, not a qualifying parent/child trial. Both bait and guide survived60s,0delivered. At16.0 the guide was about72 units from a stationary predator. The predator woke outside hearing60 and without the guide in its view, then wandered away while the controller orbited its last observed point. No hidden resting flag is used by the controller; rest is only evaluator diagnosis.",
+  "source_hashes": {
+    "research/real_map_guide_sol/policy_v14_rest_reacquisition_frozen.py": "9c19c8be29677b9a54b7bc302145d95ff82cdb17a2f4554da8e4d78ed9aebee3",
+    "research/real_map_controls/no_birth_v14.py": "d2a8466577942d5ead559a362c0f2f2bffa47211af4bbb263d722d6795597c10"
+  }
+}

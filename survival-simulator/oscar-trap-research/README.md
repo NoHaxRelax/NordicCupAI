@@ -1,5 +1,7 @@
 # Survival Simulator research handoff
 
+**Latest Lucas trap session:** [progress, limitations and resumption instructions](LUCAS_TRAP_SLOPSESH1_HANDOVER.md). Includes depth-5 / 33-predator arranged tests and the unfinished real-map delivery experiments.
+
 **Read [HANDOFF.md](HANDOFF.md)** for the detailed wall-bait and narrow-gap findings, interactions, failed approaches, conclusions and recommended next steps.
 
 This folder contains the saved Survival research code, Markdown reports, numerical result summaries, archived controller versions, debugger source and unchanged pinned simulator. **Replay files, large replay chunks and the offline viewer with embedded recordings are excluded.** Historical replay links in copied reports refer to recordings retained locally by Oscar.

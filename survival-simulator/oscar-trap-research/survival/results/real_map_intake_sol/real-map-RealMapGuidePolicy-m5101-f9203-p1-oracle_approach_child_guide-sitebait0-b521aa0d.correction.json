@@ -1,0 +1,14 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-RealMapGuidePolicy-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-b521aa0d.json",
+  "original_receipt_sha256": "8ef22287d5fa44f63ea84081d43e0f1c1630757731925bc3089cf68988f10128",
+  "overrides": {
+    "guide_role": "child",
+    "parent_role": "gather_evade",
+    "child_role": "guide",
+    "first_predator_following_active_guide": 4.7,
+    "failure_stage": "child_guide_reacquisition",
+    "gaze_route_exercised": true
+  },
+  "reason": "The immutable receipt's legacy scorer carried the parent's pre-handoff pursuit time into the child guide epoch. Native policy history verifies pursuit of child guide 2 at 4.7 seconds. The child later lost and failed to reacquire the predator; no site entry or delivery occurred. The replay and original receipt are unchanged."
+}

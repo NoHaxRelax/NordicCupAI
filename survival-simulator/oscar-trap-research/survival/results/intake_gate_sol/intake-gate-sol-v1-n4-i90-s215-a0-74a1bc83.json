@@ -1,0 +1,1908 @@
+{
+  "policy": "intake-gate-sol-v1",
+  "policy_hash": "c499e118597d1bf66b0a9f756b083b5cc3c37bdbfef6409dff76acb369d5bc47",
+  "seed": 215,
+  "predators": 4,
+  "interval": 90.0,
+  "requested_seconds": 420.0,
+  "seconds": 201.4,
+  "awake": false,
+  "spawned": 3,
+  "acquired": 1,
+  "physical_losses": 1,
+  "target_switches_after_acquisition": 1,
+  "max_physical": 1,
+  "final_physical": 0,
+  "tail30_min": 0,
+  "holders_alive": 0,
+  "success": false,
+  "deaths": [
+    {
+      "id": 2,
+      "time": 4.7,
+      "holder": false
+    },
+    {
+      "id": 2,
+      "time": 93.9,
+      "holder": false
+    },
+    {
+      "id": 2,
+      "time": 183.9,
+      "holder": false
+    },
+    {
+      "id": 0,
+      "time": 201.3,
+      "holder": true
+    },
+    {
+      "id": 1,
+      "time": 201.4,
+      "holder": true
+    }
+  ],
+  "events": [
+    {
+      "time": 0.1,
+      "kind": "identify_diagnostic",
+      "live": [
+        0,
+        1
+      ],
+      "poses": {
+        "0": [
+          0.0,
+          0.0
+        ],
+        "1": [
+          2.1128252188474783e-15,
+          -20.0
+        ]
+      },
+      "edges": [
+        [
+          100.0,
+          [
+            [
+              5.100000000000017,
+              40.0
+            ],
+            [
+              5.10000000000003,
+              -60.0
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "time": 4.2,
+      "kind": "sleep_gated_commit",
+      "guide": 2,
+      "observed_old": 0
+    }
+  ],
+  "trace": [
+    {
+      "time": 0.1,
+      "spawned": 1,
+      "physical": 0,
+      "targeted": 0,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 1.1,
+      "spawned": 1,
+      "physical": 0,
+      "targeted": 0,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 2.1,
+      "spawned": 1,
+      "physical": 0,
+      "targeted": 0,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 3.1,
+      "spawned": 1,
+      "physical": 0,
+      "targeted": 0,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 4.1,
+      "spawned": 1,
+      "physical": 0,
+      "targeted": 0,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 5.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 6.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 7.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 8.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 9.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 10.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 11.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 12.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 13.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 14.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 15.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 16.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 17.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 18.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 19.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 20.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 21.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 22.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 23.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 24.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 25.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 26.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 27.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 28.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 29.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 30.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 31.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 32.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 33.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 34.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 35.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 36.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 37.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 38.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 39.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 40.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 41.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 42.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 43.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 44.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 45.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 46.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 47.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 48.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 49.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 50.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 51.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 52.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 53.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 54.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 55.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 56.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 57.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 58.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 59.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 60.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 61.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 62.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 63.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 64.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 65.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 66.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 67.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 68.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 69.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 70.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 71.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 72.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 73.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 74.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 75.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 76.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 77.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 78.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 79.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 80.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 81.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 82.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 83.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 84.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 85.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 86.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 87.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 88.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 89.1,
+      "spawned": 1,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 90.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 91.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 92.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 93.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 94.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 95.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 96.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 97.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 98.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 99.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 100.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 101.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 102.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 103.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 104.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 105.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 106.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 107.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 108.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 109.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 110.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 111.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 112.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 113.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 114.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 115.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 116.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 117.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 118.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 119.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 120.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 121.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 122.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 123.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 124.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 125.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 126.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 127.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 128.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 129.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 130.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 131.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 132.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 133.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 134.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 135.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 136.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 137.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 138.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 139.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 140.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 141.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 142.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 143.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 144.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 145.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 146.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 147.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 148.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 149.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 150.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 151.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 152.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 153.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 154.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 155.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 156.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 157.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 158.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 159.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 160.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 161.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 162.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 163.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 164.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 165.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 166.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 167.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 168.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 169.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 170.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 171.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 172.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 173.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 174.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 175.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 176.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 177.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 178.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 179.1,
+      "spawned": 2,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 180.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 181.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 182.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 183.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 3,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 184.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 185.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 186.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 187.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 188.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 189.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 190.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 191.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 192.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 193.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 194.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 195.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 196.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 197.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 198.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 199.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 200.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    },
+    {
+      "time": 201.1,
+      "spawned": 3,
+      "physical": 1,
+      "targeted": 1,
+      "alive": 2,
+      "observed_old": 0,
+      "sleep_ready": false
+    }
+  ],
+  "replay": "results/intake_gate_sol/replays/intake-gate-sol-v1-n4-i90-s215-a0-74a1bc83.json.gz"
+}
