@@ -271,3 +271,7 @@ Nikolaj's suggestion: `deepset/roberta-base-squad2` given the question and the f
 ### 24. Validation run D: 0.6632, the anchoring gain does not transfer
 
 Queued 17:24, finished 17:29, 19 conversations, no errors. Only change from run C: quote anchoring plus the multi-unit citation prompt (entry 22, +0.023 locally). Score 0.6632 vs 0.6599, a difference of 0.003, inside the 0.006 run-to-run noise. Yes answers 86 of 190. Kept deployed (no harm measured), but not counted as a gain. Runs so far: 0.5869 (old offsets, distil), 0.6086 (A), 0.6062 (B), 0.6599 (C, turbo), 0.6632 (D).
+
+### 25. Yes-threshold sweep with qwen3:4b: no gain, the probabilities are near-binary
+
+The bench now records P(yes) at the answer token from the server's log-probabilities (`bench/llm/bench.py`, `p_yes_from_logprobs`). On the 390 training questions with the turbo transcripts (`bench/llm/threshold_sweep.py`): the score is flat from threshold 0.05 to 0.65 (0.702 to 0.706), the leave-one-conversation-out choice of threshold (median 0.15) scores 0.699 out of sample against 0.702 as answered. The model's probabilities sit at 0.0 or above 0.9 on nearly every question, so there is nothing to re-threshold. The idea stays for the larger models, whose probabilities are expected to be softer; the plumbing is in place.

@@ -54,8 +54,27 @@ def predict(request: ASRQuestionRequestDto) -> ASRQuestionResponseDto:
         logger.exception('%s: whole-conversation fallback', request.audio_filename)
         answers, spans = [True] * n, [None] * n
 
+    _dump_answers(request.audio_filename, request.questions, answers, spans)
     return ASRQuestionResponseDto(
         answers=[bool(a) for a in answers],
         evidence_start=[s[0] if s is not None else None for s in spans],
         evidence_end=[s[1] if s is not None else None for s in spans],
     )
+
+
+def _dump_answers(audio_filename: str, questions, answers, spans) -> None:
+    """With REQUEST_DUMP_DIR set, also append what we answered, so a later
+    offline step can compare or reuse it. Never raises."""
+    import json
+    import os
+    from pathlib import Path
+    d = os.environ.get('REQUEST_DUMP_DIR')
+    if not d:
+        return
+    try:
+        with open(Path(d) / 'answers.jsonl', 'a', encoding='utf-8') as f:
+            f.write(json.dumps({'file': audio_filename, 'questions': list(questions),
+                                'answers': [bool(a) for a in answers],
+                                'spans': [list(s) if s else None for s in spans]}, ensure_ascii=False) + '\n')
+    except Exception:
+        logger.exception('answer dump failed for %s', audio_filename)

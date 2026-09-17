@@ -181,6 +181,10 @@ class Client:
             'temperature': self.temperature,
             'max_tokens': self.max_tokens,
             'stream': False,
+            # per-token log-probabilities, so run_question can read P(yes) at the
+            # answer token (Ollama and vLLM both honour these OpenAI fields)
+            'logprobs': True,
+            'top_logprobs': 6,
         }
         if mode == 'schema':
             # https://docs.vllm.ai/en/latest/features/structured_outputs/  (OpenAI json_schema form)
@@ -220,6 +224,35 @@ class Client:
 # One question
 # --------------------------------------------------------------------------- #
 
+def p_yes_from_logprobs(resp: dict) -> Optional[float]:
+    """P(yes) at the answer token of a JSON reply: find the token that carries
+    the "answer" key, then the first following token that is yes or no, and
+    normalise the probabilities of yes and no among the sampled token and its
+    top alternatives. None when the server sent no log-probabilities."""
+    import math
+    try:
+        toks = ((resp.get('choices') or [{}])[0].get('logprobs') or {}).get('content') or []
+    except AttributeError:
+        return None
+    seen_key = False
+    for t in toks:
+        s = (t.get('token') or '')
+        if not seen_key:
+            if 'answer' in s.lower():
+                seen_key = True
+            continue
+        k = s.strip().strip('"').strip(':').strip().lower()
+        if k in ('yes', 'no'):
+            probs = {k: math.exp(t.get('logprob', -99.0))}
+            for alt in t.get('top_logprobs') or []:
+                a = (alt.get('token') or '').strip().strip('"').lower()
+                if a in ('yes', 'no') and a not in probs:
+                    probs[a] = math.exp(alt.get('logprob', -99.0))
+            py, pn = probs.get('yes', 0.0), probs.get('no', 0.0)
+            return py / (py + pn) if (py + pn) > 0 else None
+    return None
+
+
 def run_question(client: Client, variant, row: dict, units, words, duration: float) -> dict:
     rec: dict = {'question_id': row['question_id'], 'transcript_id': row['transcript_id'],
                  'question': row['question'], 'question_type': row['question_type'],
@@ -238,6 +271,7 @@ def run_question(client: Client, variant, row: dict, units, words, duration: flo
         rec['finish_reason'] = (resp.get('choices') or [{}])[0].get('finish_reason')
         out = parse_json(content)
         rec['raw'] = out
+        rec['p_yes'] = p_yes_from_logprobs(resp)
         yes, span = p.postprocess(out, units, words, duration)
         rec['answer'] = bool(yes)
         rec['span'] = list(span) if span else None
