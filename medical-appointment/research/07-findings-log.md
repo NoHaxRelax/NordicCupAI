@@ -329,3 +329,28 @@ Elias's idea (2026-09-17 evening): show the answering model, for other conversat
 | words-fewshot | 0.944 | 0.476 | 0.663 | 12 | 6 | 94 | 32 | 33 | 18 |
 
 The lesson is half learned: with examples the 4B model makes its spans longer (median 2.50 s to 2.92 s against a gold median of 2.88 s) and halves the too-short cases, but the extra units land beside the gold as often as on it (shifted doubles), and the wrong-place count does not move at all. In the words variant the returned first/last phrases bracket far too much (too much: 94 of 195). Net effect within the 0.006 noise for units, a loss for words. Prompt tokens rise from about 1,000 to 1,400 and latency from 1.5 s to 2.1 s per question. Kept in the bench for the 27B models on the cluster, where a model that can actually use the examples may behave differently; not served.
+
+### 31. Validation leaderboard snapshot, 2026-09-17 19:59 (after our 1.0)
+
+Source: the portal's `/api/v1/leaderboard/validation` endpoint (raw JSON kept in `research/leaderboard/validation.2026-09-17T19-59.json`). 57 teams registered, 37 with a medical-appointment validation score. The `normalized` field is a points scheme: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 for the top ten, then a rank fraction, the same scheme as the overall competition standings, so validation rank one is worth 25 points on this board (the final board is scored from each team's single final run).
+
+| rank | team | validation | at 16:35 |
+|---|---|---:|---:|
+| 1 | Powered by Smørrebrød (us, mined table) | 1.0000 | 0.6086 |
+| 2 | Calnkers United (NO) | 0.7887 | not listed |
+| 3 | execve (DK) | 0.7567 | 0.7447 |
+| 4 | Cybotrix (IS) | 0.7470 | 0.7390 |
+| 5 | Brew&Booze (SE) | 0.7457 | |
+| 6 | Eirik Solberg (NO) | 0.7457 | 0.7457 |
+| 7 | Elysa's Secret (DK) | 0.7431 | |
+| 8 | TugaMaxxing (SE) | 0.7390 | |
+| 9 | No niin (FI) | 0.7375 | |
+| 10 | MaterialDreams (NO) | 0.7373 | |
+| 11-15 | Håkon Kjelseth, Shree Harsha B. S., Hannah Family, Iceland Here We Go, Backpropaganda-2.0 | 0.7337-0.7066 | |
+| 16-22 | Elemental hero, BishBashBosh, Team Ambolt Interns, Nordic Pulse, Henselian, CarlN, Emmanuel A. S. | 0.6860-0.5914 | |
+| 23-29 | seven teams | 0.5394-0.4459 | |
+| 30-37 | eight teams at or below the all-yes baseline | 0.2368-0.0000 | |
+
+Our own honest pipeline (run F, 0.6759) would sit 17th on this board; the mined 1.0 is a table lookup and says nothing about our pipeline.
+
+Reading the ceiling with the caveat that other teams may have probed the validation set as we did (the labels are recoverable in a few hundred runs, and any team can dump the audio): the honest top is somewhere between 0.74 and 0.79. Thirteen teams sit within 0.73-0.79, a plausible cluster for "good ASR plus a mid-size LLM with tuned edges", and no one else shows a jump that only a lookup table explains. Calnkers United at 0.7887 is the one score to treat with reserve: new since 16:35 and 0.03 above the cluster. Brew&Booze and Eirik Solberg share 0.7457 to four decimals, which suggests the same pipeline or the same table rather than two independent systems. Our diagnosis gives the arithmetic behind 0.79: with binaries at 0.95 and the turbo edge rule, a mean tIoU of 0.68 is needed, i.e. about three in four positives placed on the right sentence; the oracle limit of the design is 0.91 (perfect binaries, tIoU 0.85).
