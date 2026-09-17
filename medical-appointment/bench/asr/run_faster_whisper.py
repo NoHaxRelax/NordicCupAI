@@ -98,6 +98,10 @@ DEFAULT_BEAM = 5
 def extra_args(ap) -> None:
     ap.add_argument('--model', default='large-v3', choices=MODELS)
     ap.add_argument('--beam', type=int, default=DEFAULT_BEAM, help='beam size (default 5)')
+    ap.add_argument('--temperature', type=float, default=None,
+                    help='single decode temperature (e.g. 0) instead of the fallback ladder')
+    ap.add_argument('--no-condition', action='store_true',
+                    help='condition_on_previous_text=False (no cross-window prompting)')
     ap.add_argument('--vad', action='store_true',
                     help='faster-whisper Silero VAD filter before decoding (default off)')
     ap.add_argument('--compute', default=None, choices=COMPUTE,
@@ -106,6 +110,12 @@ def extra_args(ap) -> None:
 
 def default_tag(args) -> str:
     tag = args.model
+    if args.temperature is not None and args.no_condition:
+        tag += '+clean'            # research/06 idea 6: no fallback ladder, no conditioning
+    elif args.temperature is not None:
+        tag += f'+t{args.temperature:g}'
+    elif args.no_condition:
+        tag += '+nocond'
     if args.vad:
         tag += '+vad'
     if args.beam != DEFAULT_BEAM:
@@ -198,8 +208,12 @@ def main() -> int:
                 #            word_timestamps=False, vad_filter=False, ...) -> (Iterable[Segment],
                 #            TranscriptionInfo); the segments are a lazy generator.
                 # https://github.com/SYSTRAN/faster-whisper/blob/master/faster_whisper/transcribe.py
-                segs, info = model.transcribe(audio, language='en', beam_size=args.beam,
-                                              word_timestamps=True, vad_filter=args.vad)
+                kw = dict(language='en', beam_size=args.beam, word_timestamps=True, vad_filter=args.vad)
+                if args.temperature is not None:
+                    kw['temperature'] = args.temperature            # a single value disables the fallback ladder
+                if args.no_condition:
+                    kw['condition_on_previous_text'] = False
+                segs, info = model.transcribe(audio, **kw)
                 segs = list(segs)
             segments = [to_segment(s) for s in segs]
             # TranscriptionInfo.duration = audio.shape[0] / sampling_rate (before VAD);
