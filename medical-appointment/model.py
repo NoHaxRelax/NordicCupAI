@@ -82,7 +82,10 @@ _fwe, _us, _end = _FITTED.get(ASR_MODEL, _FITTED['large-v3'])
 START_OFFSET = float(os.environ.get('START_OFFSET', str(_fwe if START_RULE == 'first-word-end' else _us)))
 END_OFFSET = float(os.environ.get('END_OFFSET', str(_end)))
 PAUSE_SPLIT = float(os.environ.get('PAUSE_SPLIT', '0.6'))
-ASR_CLEAN = os.environ.get('ASR_CLEAN', '1') == '1'
+# Off by default: on the 39 training files the no-ladder decode gave cleaner
+# text but worse timestamps (raw ceiling 0.730 vs 0.753 for large-v3), and the
+# fitted offsets above were measured with the default decode.
+ASR_CLEAN = os.environ.get('ASR_CLEAN', '0') == '1'
 SPAN_ON_NO = os.environ.get('SPAN_ON_NO', '1') == '1'
 
 Span = Tuple[float, float]
