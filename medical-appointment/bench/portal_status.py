@@ -60,10 +60,27 @@ def show(d: dict) -> None:
         print(f"  {i:>2} {fmt(a.get('submitted_at')):>9} {fmt(a.get('started_at')):>9} {fmt(a.get('finished_at')):>9} {sc:>7}  {url}{('  ERR ' + err) if err else ''}")
 
 
+VALIDATE_URL = 'https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/validate/queue'
+
+
+def queue_validation(service_url: str) -> dict:
+    """Queue ONE validation attempt (unlimited by the rules). This function
+    knows nothing about the evaluation endpoint and never will."""
+    r = requests.post(VALIDATE_URL, headers={'x-token': key()}, json={'url': service_url}, timeout=30)
+    r.raise_for_status()
+    return r.json()
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument('--watch', action='store_true')
+    ap.add_argument('--queue', metavar='SERVICE_URL', help='queue a validation attempt against this /predict url')
     a = ap.parse_args()
+    if a.queue:
+        q = queue_validation(a.queue)
+        print(f"queued validation {q.get('queued_attempt_uuid')}  status {q.get('status')}  position {q.get('position_in_queue')}")
+        a.watch = True
+        time.sleep(5)
     d = fetch()
     show(d)
     if not a.watch:
