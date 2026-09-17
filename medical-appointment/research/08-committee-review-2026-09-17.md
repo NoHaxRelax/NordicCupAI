@@ -83,6 +83,8 @@ board, cannot be removed by us, and is obvious in their own logs.
 - Measured dead: consensus choosers, pause thresholds, per-question-type offsets, the gap rule, the
   quote tie-break, and every hand-built neighbour rule (one costs 0.070). Forty of the sixty sub-0.5
   spans start earlier than the gold, a systematic bias a prompt line can address.
+- Late addendum from the same reviewer: refitting the turbo offsets is not worth doing (the optimum,
+  start -0.22 and end 0.00, gains 0.0008 over the fitted pair).
 
 ### 4. Rules (report 04, 13 findings)
 
