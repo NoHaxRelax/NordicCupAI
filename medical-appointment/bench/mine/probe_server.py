@@ -40,13 +40,24 @@ def table() -> dict:
 @app.post('/predict')
 def predict(r: Req):
     n = len(r.questions)
-    t = table().get(r.audio_filename)
-    answers = [bool(x) for x in t][:n] if t else []
-    answers += [False] * (n - len(answers))
+    t = table().get(r.audio_filename) or []
+    # entries are either booleans (answer, null span) or objects
+    # {"answer": bool, "start": s, "end": e} as written by the label page
+    answers, starts, ends = [], [], []
+    for x in list(t)[:n]:
+        if isinstance(x, dict):
+            a = bool(x.get('answer'))
+            s, e = x.get('start'), x.get('end')
+            ok = a and s is not None and e is not None and float(e) >= float(s)
+            answers.append(a); starts.append(float(s) if ok else None); ends.append(float(e) if ok else None)
+        else:
+            answers.append(bool(x)); starts.append(None); ends.append(None)
+    while len(answers) < n:
+        answers.append(False); starts.append(None); ends.append(None)
     with open(LOG, 'a', encoding='utf-8') as f:
         f.write(json.dumps({'t': time.time(), 'file': r.audio_filename, 'questions': r.questions,
                             'answers': answers}, ensure_ascii=False) + '\n')
-    return {'answers': answers, 'evidence_start': [None] * n, 'evidence_end': [None] * n}
+    return {'answers': answers, 'evidence_start': starts, 'evidence_end': ends}
 
 
 @app.get('/')
