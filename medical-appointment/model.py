@@ -212,9 +212,11 @@ matching. If the topic never comes up, answer "no".
 Tag questions ("..., right?", "..., didn't it?") are ordinary questions; the phrasing
 does not hint at the answer.
 Return JSON only:
-{"quote": "<the single utterance, copied verbatim, that best supports or refutes the claim>",
+{"quote": "<the utterance, copied verbatim, that most specifically states the detail the question asks about>",
  "answer": "yes" | "no",
- "segments": [<ids of the utterances that make a yes true; usually one, at most three; empty for no>]}"""
+ "segments": [<ids of every consecutive utterance the statement rests on: the one with the detail plus a
+              neighbour when the fact is spread over two (a question and its answer, a statement and its
+              number); usually one or two, at most four; empty for no>]}"""
 
 SCHEMA = {
     'type': 'object',
@@ -274,6 +276,37 @@ def warm_llm() -> None:
 # Spans
 # --------------------------------------------------------------------------- #
 
+_NONALNUM = re.compile(r'[^a-z0-9 ]')
+
+
+def locate_quote(quote: str, units: List[Unit], min_ratio: float = 0.5) -> Optional[int]:
+    """The unit whose text best matches the model's verbatim quote, or None.
+    On the training set the quote lands on a better unit than the cited id
+    (mean tIoU 0.528 vs 0.505 with qwen3:4b), so it is the primary anchor."""
+    import difflib
+    q = ' '.join(_NONALNUM.sub(' ', quote.lower()).split())
+    if len(q) < 8:
+        return None
+    best, best_idx = 0.0, None
+    for u in units:
+        r = difflib.SequenceMatcher(None, q, ' '.join(_NONALNUM.sub(' ', u.text.lower()).split())).ratio()
+        if r > best:
+            best, best_idx = r, u.idx
+    return best_idx if best >= min_ratio else None
+
+
+def anchor_ids(out: dict, units: List[Unit]) -> List[int]:
+    """Unit ids to build the span from: the quote's unit first, plus any cited
+    ids adjacent to it (the model under-merges: 184 of 186 citations were a
+    single unit while a quarter of the gold spans cover two sentences)."""
+    cited = [int(i) for i in out.get('segments', []) if isinstance(i, (int, float)) and 0 <= int(i) < len(units)]
+    qi = locate_quote(str(out.get('quote', '')), units)
+    if qi is None:
+        return cited
+    keep = [qi] + [i for i in cited if abs(i - qi) <= 2 and i != qi]
+    return sorted(set(keep))
+
+
 def span_from_ids(ids: List[int], units: List[Unit], duration: float) -> Optional[Span]:
     ids = sorted({i for i in ids if 0 <= i < len(units)})
     if not ids:
@@ -313,12 +346,7 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
         try:
             out = ask_llm(transcript, q)
             yes = str(out.get('answer', '')).lower() == 'yes'
-            ids = [int(i) for i in out.get('segments', []) if isinstance(i, (int, float))]
-            if not ids:
-                # Nothing cited: locate the quote instead (the model always
-                # returns one, for yes and for no).
-                quote = str(out.get('quote', '')).strip().lower()
-                ids = [u.idx for u in units if quote and quote[:40] in u.text.lower()][:1]
+            ids = anchor_ids(out, units)
             span = span_from_ids(ids, units, duration)
             if not yes and not SPAN_ON_NO:
                 span = None

@@ -238,3 +238,15 @@ Queued 17:06, finished 17:10, 19 conversations, no errors, 7 to 12 s each. Only 
 | C, 17:06 | large-v3-turbo, fitted rule | 0.6599 | 0.51 |
 
 Gain 0.051, above the 0.006 run-to-run noise. The answerer's yes-rate of 0.44 against a balanced 0.5 is now the largest visible loss on the accuracy side and a hidden loss on the span side (every positive answered no scores zero).
+
+### 21. Where the realised spans lose against the ceiling (qwen3:4b, turbo transcripts, training set)
+
+Full 390-question bench on the turbo transcripts (`bench/llm/bench.py --asr large-v3-turbo`), three prompt variants, nulls-on-no policy:
+
+| variant | accuracy | mean tIoU | score |
+|---|---|---|---|
+| units (cite unit ids) | 0.969 | 0.481 | 0.677 |
+| units-claim (tag questions rewritten as claims) | 0.972 | 0.453 | 0.661 |
+| words (cite first and last word) | 0.956 | 0.488 | 0.675 |
+
+Against a 0.857 oracle ceiling the realised 0.48 is a selector problem, not an edge problem. Of the 185 positives answered yes under `units`: 39 percent have both edges within 0.5 s (tIoU 0.94), 27 percent point at a unit with no overlap at all, 22 percent are too short with the gold continuing left or right equally often, 11 percent spill over. The model cited exactly one unit in 184 of 186 cases although a quarter of the gold spans cover two sentences. Locating the model's verbatim quote in the transcript gives a better unit than its cited id (0.528 vs 0.505 mean tIoU) but does not rescue the wrong-place cases (8 of 51), which are the model choosing the wrong sentence outright. Changes made: the span anchors on the quote's unit with cited ids kept when adjacent (`model.anchor_ids`), and the prompt asks for every consecutive utterance the fact rests on. A bigger answering model is the remaining lever for the wrong-place quarter.

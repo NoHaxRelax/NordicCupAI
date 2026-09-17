@@ -205,12 +205,10 @@ def _units_post(out: dict, units: List[Unit], words: List[Word], duration: float
                 offsets: bool = True) -> Tuple[bool, Optional[Span]]:
     """Mirror of the per-question logic in model.answer_all."""
     yes = _is_yes(out)
-    ids = _int_list(out.get('segments'))
-    if not ids:
-        # Nothing cited: find the quote instead (for yes and for no alike, so
-        # the span-on-no policy has something to return).
-        quote = str(out.get('quote', '')).strip().lower()
-        ids = [u.idx for u in units if quote and quote[:40] in u.text.lower()][:1]
+    # Same anchoring as model.answer_all: the quote's unit first, cited ids
+    # only when adjacent to it; falls back to the cited ids when no quote matches.
+    import model as _m
+    ids = _m.anchor_ids(out, units)
     span = span_from_ids(ids, units, duration)
     # The span is kept for no answers too; bench.py scores both policies
     # (spans on every question vs nulls on no) from the same run.
