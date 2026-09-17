@@ -1,0 +1,95 @@
+{
+ "stem": "conversation_sample_8",
+ "items": [
+  {
+   "question": "Did the examination show redness in the oral cavity?",
+   "answer": true,
+   "start": 71.58,
+   "end": 75.8,
+   "segs": "#10",
+   "note": "\"There is redness inside your mouth, and there are coatings.\"",
+   "check": false
+  },
+  {
+   "question": "Has Fluconazole been tried before without effect?",
+   "answer": true,
+   "start": 43.6,
+   "end": 56.3,
+   "segs": "#06-#08",
+   "note": "\"Yes. Tablets called Fluconazole once, and a gel … And did either of those help? No, neither of them made any difference.\" Long; the tight alternative is the \"No, neither …\" answer (53.6-56.3).",
+   "check": false
+  },
+  {
+   "question": "Was Brentan also tried earlier?",
+   "answer": true,
+   "start": 46.52,
+   "end": 50.5,
+   "segs": "#07",
+   "note": "\"and a gel. Brenton, I think it was called.\" model: no. Brentan was tried (and did not help).",
+   "check": false
+  },
+  {
+   "question": "Should an antibiotic be used for this condition?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Fungal infection; Fluconazole, no antibiotic.",
+   "check": false
+  },
+  {
+   "question": "Is the candidiasis considered persistent?",
+   "answer": true,
+   "start": 90.3,
+   "end": 97.16,
+   "segs": "#12-#13",
+   "note": "\"Since it has kept coming back after the earlier treatments, I would call this a persistent fungal infection of the mouth.\"",
+   "check": false
+  },
+  {
+   "question": "Does the patient have a tendency to develop oral thrush?",
+   "answer": true,
+   "start": 29.4,
+   "end": 35.9,
+   "segs": "#04-#05",
+   "note": "\"It is my mouth. I keep getting that white stuff in there, and it keeps coming back.\" model: no. **CHECK**: I read \"tendency to develop oral thrush\" as the note's \"recurrent oral candidiasis\"; the twin negative is q7.",
+   "check": true
+  },
+  {
+   "question": "Has the patient's oral thrush responded well to Brentan in the past?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Opposite: Brentan made no difference (#07-#08).",
+   "check": false
+  },
+  {
+   "question": "Will the patient take Fluconazole for seven days?",
+   "answer": true,
+   "start": 111.1,
+   "end": 116.02,
+   "segs": "#16",
+   "note": "\"I will prescribe Fluconazole 50 milligrams once a day for seven days.\"",
+   "check": false
+  },
+  {
+   "question": "Is the patient talking about their college studies?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic (plants, bicycle).",
+   "check": false
+  },
+  {
+   "question": "Does the treatment plan involve Fluconazole 150 mg daily?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "50 mg, not 150 mg (#16).",
+   "check": false
+  }
+ ]
+}

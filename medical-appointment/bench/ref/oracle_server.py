@@ -58,6 +58,7 @@ class H(SimpleHTTPRequestHandler):
     # ---- validation labelling (audio + questions dumped by the endpoint) ----
     DUMP = CASE / 'request_dump'
     VLABELS = CASE / 'bench' / 'mine' / 'val_labels'
+    AGENT = CASE / 'bench' / 'mine' / 'agent_labels'
 
     def _val_list(self):
         qs = {}
@@ -78,7 +79,9 @@ class H(SimpleHTTPRequestHandler):
             lab = self.VLABELS / f'{stem}.json'
             labels = json.loads(lab.read_text(encoding='utf-8')) if lab.exists() else None
             done = labels is not None and all(x.get('answer') is not None for x in labels.get('items', []))
-            out.append({'stem': stem, 'n': len(qs[stem]['questions']), 'done': done, 'labels': labels, **qs[stem]})
+            ag = self.AGENT / f'{stem}.json'   # the agent's hand answers (bench/mine/agent_answers.md via answers_md.py)
+            agent = json.loads(ag.read_text(encoding='utf-8')).get('items') if ag.exists() else None
+            out.append({'stem': stem, 'n': len(qs[stem]['questions']), 'done': done, 'labels': labels, 'agent': agent, **qs[stem]})
         return out
 
     def do_GET(self):

@@ -46,6 +46,7 @@
     <span class="big" id="clock">0:00.0</span>
     <label>speed <input id="rate" type="range" min="1" max="4" step="0.25" value="1"> <span id="rv">1x</span></label>
     <button id="save">saved</button>
+    <button id="prefill" title="copy the agent's answer and span into every question you have not answered yet">prefill from agent</button>
     <span class="hint" id="msg"></span>
   </div>
   <div class="hint"><kbd>space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 2 s · <kbd>↑</kbd><kbd>↓</kbd> speed · <kbd>1</kbd>..<kbd>0</kbd> select question 1..10 · <kbd>y</kbd> / <kbd>n</kbd> answer the selected question · <kbd>s</kbd> / <kbd>e</kbd> set its span start / end at the current time · <kbd>j</kbd> jump to its start. The model's own answer is shown in grey as a hint. Autosaves.</div>
@@ -72,7 +73,7 @@ async function open(s) {
   if (dirty) await save();
   stem = s; const f = files.find(x => x.stem === s);
   items = (f.labels && f.labels.items) || f.questions.map((q, i) => ({question: q, answer: null, start: null, end: null}));
-  items.forEach((it, i) => { it.question = f.questions[i]; it.model = f.model_answers ? f.model_answers[i] : null; });
+  items.forEach((it, i) => { it.question = f.questions[i]; it.model = f.model_answers ? f.model_answers[i] : null; it.agent = f.agent ? f.agent[i] : null; });
   cur = 0; render(); a.src = '/val-audio/' + s + '.mp3'; document.title = s.replace('conversation_', '') + ' · label';
   lines = (await (await fetch('/api/val/text/' + s)).json()).lines || [];
   const lb = $('lines'); lb.innerHTML = lines.length ? '' : '<div class="hint">no transcript yet (transcription runs in the background; reload in a minute)</div>';
@@ -84,7 +85,9 @@ function render() {
   const box = $('qs'); box.innerHTML = '';
   items.forEach((it, i) => {
     const d = document.createElement('div'); d.className = 'q' + (i === cur ? ' cur' : ''); d.dataset.i = i;
-    d.innerHTML = `<span class="n">${i+1}</span><div><div>${it.question.replace(/</g,'&lt;')}</div><div class="m">model said: ${it.model === null || it.model === undefined ? '?' : (it.model ? 'yes' : 'no')}</div></div>
+    const ag = it.agent ? ` · agent: <b>${it.agent.answer ? 'yes' : 'no'}</b>${it.agent.answer ? ' ' + fmt(it.agent.start) + ' → ' + fmt(it.agent.end) + ' (' + it.agent.segs + ')' : ''}${it.agent.check ? ' <span style="color:var(--warn)">CHECK</span>' : ''}` : '';
+    const note = it.agent && it.agent.note ? `<div class="m" style="white-space:normal">${it.agent.note.replace(/</g,'&lt;')}</div>` : '';
+    d.innerHTML = `<span class="n">${i+1}</span><div><div>${it.question.replace(/</g,'&lt;')}</div><div class="m">model said: ${it.model === null || it.model === undefined ? '?' : (it.model ? 'yes' : 'no')}${ag}</div>${note}</div>
       <button class="y ${it.answer === true ? 'on-yes' : ''}">yes</button><button class="nb ${it.answer === false ? 'on-no' : ''}">no</button>
       <span class="span">${it.start != null ? fmt(it.start) : '–'} → ${it.end != null ? fmt(it.end) : '–'}</span>`;
     d.onclick = () => { cur = i; render(); };
@@ -101,6 +104,8 @@ async function save() {
   if (r.ok) { setDirty(false); $('msg').textContent = 'saved ' + new Date().toLocaleTimeString(); loadList(); } else { $('msg').textContent = 'SAVE FAILED'; }
 }
 $('save').onclick = save;
+$('prefill').onclick = () => { let n = 0; items.forEach(it => { if (it.answer === null && it.agent) { it.answer = it.agent.answer; it.start = it.agent.answer ? it.agent.start : null; it.end = it.agent.answer ? it.agent.end : null; n++; } });
+  if (n) { render(); setDirty(true); } $('msg').textContent = `prefilled ${n} question(s) from the agent`; };
 rate.oninput = () => { a.playbackRate = +rate.value; rv.textContent = rate.value + 'x'; };
 playBtn.onclick = () => a.paused ? a.play() : a.pause();
 document.addEventListener('keydown', e => {

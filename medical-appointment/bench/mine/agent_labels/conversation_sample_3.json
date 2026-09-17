@@ -1,0 +1,95 @@
+{
+ "stem": "conversation_sample_3",
+ "items": [
+  {
+   "question": "Has InfluvacTetra already been given?",
+   "answer": true,
+   "start": 67.3,
+   "end": 72.44,
+   "segs": "#16",
+   "note": "\"The influenza one I am giving you now. That is Influvac Tetra.\" Given at this visit; the pneumococcal one is only prescribed. model: no. **CHECK**: \"already\" could be read as \"before the visit\"; I read it as the note's \"InfluvacTetra given\" against \"prescription for Prevenar/Pneumovax\".",
+   "check": true
+  },
+  {
+   "question": "At the examination, was the patient free of acute signs of illness?",
+   "answer": true,
+   "start": 46.64,
+   "end": 49.38,
+   "segs": "#10-#12",
+   "note": "\"I want to check there are no acute signs of illness today … And are there? None. You are clear to be vaccinated now.\" Seed is #12; the full exchange is 38.08-49.38.",
+   "check": false
+  },
+  {
+   "question": "Was the patient told about possible side effects of the vaccination?",
+   "answer": true,
+   "start": 26.56,
+   "end": 32.44,
+   "segs": "#05-#07",
+   "note": "\"First, the side effects. … I have gone through what you can expect after the injection, so you know what is normal and what is not.\"",
+   "check": false
+  },
+  {
+   "question": "Was a tetanus booster the second vaccine the patient asked about?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Second vaccine asked about was pneumococcal (#13), not a tetanus booster.",
+   "check": false
+  },
+  {
+   "question": "Did the patient ask for a flu vaccine?",
+   "answer": true,
+   "start": 13.94,
+   "end": 19.28,
+   "segs": "#03",
+   "note": "\"I would like the influenza vaccination. I am hoping to get it done before the season really starts.\"",
+   "check": false
+  },
+  {
+   "question": "Does the conversation indicate the patient discussed their recent purchase?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic; bus and holiday small talk only (#20-#23).",
+   "check": false
+  },
+  {
+   "question": "Will a prescription for Prevenar13 or Pneumovax23 be issued?",
+   "answer": true,
+   "start": 74.1,
+   "end": 79.2,
+   "segs": "#18",
+   "note": "\"I am creating a prescription for Previnar 13 and Pneumovax 23.\"",
+   "check": false
+  },
+  {
+   "question": "Does the patient express interest in painting a picture?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic.",
+   "check": false
+  },
+  {
+   "question": "Should the patient avoid vaccination because of a current illness?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Opposite: \"None. You are clear to be vaccinated now.\" (#12).",
+   "check": false
+  },
+  {
+   "question": "Does the assessment include a risk evaluation?",
+   "answer": true,
+   "start": 58.0,
+   "end": 62.18,
+   "segs": "#14",
+   "note": "\"So today is a vaccination request and a risk assessment together.\"",
+   "check": false
+  }
+ ]
+}
