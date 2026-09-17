@@ -365,3 +365,15 @@ Elias noticed the model handing one utterance to several questions of the same c
 | units-joint | 0.977 | 0.532 | 0.710 | 0.50 | 12 (4) | 43k |
 
 Gain 0.010 (noise floor 0.006), the yes-rate lands on the balanced 0.50, harmful reuse drops from 11 pairs to 4, and the transcript is sent once instead of ten times: eight times fewer prompt tokens, which is what makes a 27B affordable to serve. Latency per conversation on the laptop is unchanged (one long answer instead of ten short ones in parallel). `units-joint-demo` (two whole worked conversations as prior chat turns, Elias's point that examples need the surrounding conversation to teach selection) is running next; both go to the 27B on the cluster.
+
+### 33. Whole worked conversations as prior turns help even the 4B: 0.700 to 0.724
+
+`units-joint-demo`: the joint prompt preceded by two complete demonstrations chosen by question overlap (transcript with unit ids, ten questions, the annotators' answers as unit ids derived from the gold spans, as a user/assistant exchange), never the conversation under test. Elias's argument: an example without its surrounding conversation teaches granularity but not selection. qwen3:4b, turbo transcripts, nulls-on-no:
+
+| variant | accuracy | tIoU | score | missed positives | exact | shifted | prompt tokens per conversation |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| units (ten requests) | 0.967 | 0.522 | 0.700 | 12 | 64 | 25 | 10 x 950 |
+| units-joint | 0.977 | 0.532 | 0.710 | 5 | 46 | 56 | 1,100 |
+| units-joint-demo | 0.990 | 0.547 | 0.724 | 2 | 51 | 60 | 3,300 |
+
+The demonstrations lift accuracy to 0.990 (two missed positives in 195, no false positives on hard negatives) and tIoU by another 0.015. The remaining span loss is now mostly "shifted" (60): the model includes neighbours, as the annotators do, but often the wrong neighbour. Wall time on the laptop 9 s per conversation for the 4B (one 380-token answer). Next: the same three variants on the 27B (cluster follow-up job, then RunPod).
