@@ -424,3 +424,17 @@ Elias's probe (not part of the competition pipeline, run through the Claude Code
 | Qwen3.8-27B | 0.995 | 0.628 | 0.775 | 2 | 0 | 63 | 59 | 18 |
 
 Two readings. (1) On the spans, Sonnet and the 27B are the same (0.62-0.63), and the questions they get wrong are the same questions: of the roughly 70 positives each scores below 0.5, 57 are shared between Sonnet and the 27B and 52 by all three models. Their median gold length is 2.67 s, ordinary; these are cases where the unit representation or the annotation convention, not the model, decides the span. (2) The Claude models lose on the binaries: they answer no on 11-12 positives and yes on 9 hard negatives where the Qwen models make 2 and 0 errors; the prompt's "every detail must match" reads stricter to them. So the size-versus-score curve flattens at the 27B for this design, and the remaining tIoU is not bought with a bigger selector. What would buy some of it: the best of the four models per question would score a mean tIoU of 0.719 against 0.640 for the best single model, so the models disagree on a useful fraction of the hard cases; a consensus or self-consistency step over several prompts is the lever to test next, alongside sub-unit trimming.
+
+### 37. Opus 5 on the same prompt, and a contamination caveat on the Claude probe
+
+Claude Opus 5 through the Agent tool, `units-joint-demo`, turbo transcripts: accuracy 1.000, tIoU 0.655, score 0.793 on all 390 questions. Caveat found by one of the Opus agents itself: each agent answered five prompts in one context, and the worked examples inside prompt B carry the gold answers of conversation A when A sits in the same batch; 20 of the 39 held-out conversations were exposed that way (`bench/results/probe/leaked.json`). A served model never sees that. Scores on the 19 uncontaminated conversations (190 questions), which are fair for every model including the Qwen runs:
+
+| model | accuracy | tIoU | score |
+|---|---:|---:|---:|
+| qwen3:4b | 0.995 | 0.532 | 0.717 |
+| Claude Haiku 4.5 | 0.984 | 0.585 | 0.745 |
+| Claude Sonnet 5 | 0.942 | 0.565 | 0.716 |
+| Qwen3.8-27B | 0.995 | 0.613 | 0.766 |
+| Claude Opus 5 | 1.000 | 0.629 | 0.777 |
+
+Opus beats the 27B by 0.011 on the clean subset, about two noise floors, with perfect binaries and a tIoU 0.016 higher; Sonnet and Haiku sit below the 27B. So the curve is flat-to-slightly-rising past the 27B: a frontier model buys about 0.01, and the 50-odd shared hard spans remain. The probe stays outside the pipeline (rules); its use is to show that the next 0.05 of tIoU is not in the selector. If the probe is repeated, use one agent per conversation.
