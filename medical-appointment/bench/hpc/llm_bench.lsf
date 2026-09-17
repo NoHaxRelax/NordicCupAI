@@ -107,6 +107,13 @@ exec > >(tee -a "bench/results/logs/llm_bench.$JOB.log") 2>&1
 
 # --- environment (same reasoning as asr_bench.lsf) ------------------------------
 unset PYTHONHOME PYTHONPATH
+# vLLM 0.29 JIT-compiles some kernels (gpt-oss MXFP4, FP8 MoE) and looks for nvcc under
+# CUDA_HOME; the compute nodes have no /usr/local/cuda, the toolkit comes from a module
+# (job 29429655: "Could not find nvcc and default cuda_home='/usr/local/cuda' doesn't exist").
+type module >/dev/null 2>&1 || source /etc/profile 2>/dev/null
+module load "${CUDA_MODULE:-cuda/13.3.1}" 2>/dev/null || echo "module load ${CUDA_MODULE:-cuda/13.3.1} failed"
+if command -v nvcc >/dev/null 2>&1; then export CUDA_HOME="$(dirname "$(dirname "$(command -v nvcc)")")"; fi
+echo "CUDA_HOME=${CUDA_HOME:-unset}  nvcc=$(command -v nvcc || echo none)"
 export HF_HOME=$BH/hf
 export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
 export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
