@@ -91,6 +91,16 @@ class H(SimpleHTTPRequestHandler):
             return super().do_GET()
         if p == '/api/val/list':
             return self._json(self._val_list())
+        if p.startswith('/api/val/text/'):
+            stem = p[len('/api/val/text/'):]
+            if not STEM.match(stem):
+                return self._json({'error': 'bad name'}, 400)
+            cands = sorted((self.DUMP / 'transcripts').glob(f'{stem}.*.json')) if (self.DUMP / 'transcripts').exists() else []
+            if not cands:
+                return self._json({'stem': stem, 'lines': []})
+            d = json.loads(cands[0].read_text(encoding='utf-8'))
+            return self._json({'stem': stem, 'model': d.get('model'),
+                               'lines': [{'t': s['start'], 'end': s['end'], 'text': s['text'].strip()} for s in d['segments']]})
         if p.startswith('/val-audio/'):
             name = p[len('/val-audio/'):]
             f = self.DUMP / name

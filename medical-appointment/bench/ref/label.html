@@ -31,6 +31,10 @@
   .q .span { font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); min-width:16ch; }
   .hint { color:var(--muted); font-size:13px; margin:8px 2px; }
   kbd { border:1px solid var(--line); border-radius:4px; padding:0 5px; font-size:12px; }
+  .ln { display:flex; gap:12px; padding:3px 10px; cursor:pointer; border-left:3px solid transparent; border-radius:4px; }
+  .ln:hover { background:color-mix(in srgb, var(--accent) 8%, transparent); }
+  .ln.cur { background:var(--hi); border-left-color:var(--accent); }
+  .ln .t { color:var(--muted); font-variant-numeric:tabular-nums; min-width:7ch; }
   @media (max-width: 760px) { body { grid-template-columns:1fr; } aside { position:static; height:auto; max-height:30vh; } }
 </style>
 </head>
@@ -47,11 +51,13 @@
   <div class="hint"><kbd>space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 2 s · <kbd>↑</kbd><kbd>↓</kbd> speed · <kbd>1</kbd>..<kbd>0</kbd> select question 1..10 · <kbd>y</kbd> / <kbd>n</kbd> answer the selected question · <kbd>s</kbd> / <kbd>e</kbd> set its span start / end at the current time · <kbd>j</kbd> jump to its start. The model's own answer is shown in grey as a hint. Autosaves.</div>
   <audio id="a" preload="auto"></audio>
   <div id="qs"></div>
+  <h2 style="font-size:14px;color:var(--muted);margin:18px 2px 6px">transcript (large-v3-turbo, click a line to seek)</h2>
+  <div id="lines"></div>
 </main>
 <script>
 const $ = id => document.getElementById(id);
 const a = $('a'), rate = $('rate'), rv = $('rv'), clock = $('clock'), playBtn = $('play');
-let files = [], stem = null, items = [], cur = 0, dirty = false, timer = null;
+let files = [], stem = null, items = [], cur = 0, dirty = false, timer = null, lines = [];
 const fmt = s => `${Math.floor(s/60)}:${(s%60).toFixed(2).padStart(5,'0')}`;
 async function loadList() {
   files = await (await fetch('/api/val/list')).json();
@@ -68,6 +74,10 @@ async function open(s) {
   items = (f.labels && f.labels.items) || f.questions.map((q, i) => ({question: q, answer: null, start: null, end: null}));
   items.forEach((it, i) => { it.question = f.questions[i]; it.model = f.model_answers ? f.model_answers[i] : null; });
   cur = 0; render(); a.src = '/val-audio/' + s + '.mp3'; document.title = s.replace('conversation_', '') + ' · label';
+  lines = (await (await fetch('/api/val/text/' + s)).json()).lines || [];
+  const lb = $('lines'); lb.innerHTML = lines.length ? '' : '<div class="hint">no transcript yet (transcription runs in the background; reload in a minute)</div>';
+  lines.forEach((l, i) => { const d = document.createElement('div'); d.className = 'ln'; d.dataset.i = i;
+    d.innerHTML = `<span class="t">${fmt(l.t)}</span><span>${l.text.replace(/</g,'&lt;')}</span>`; d.onclick = () => { a.currentTime = l.t; a.play(); }; lb.appendChild(d); });
   localStorage.setItem('label.last', s); setDirty(false); await loadList();
 }
 function render() {
@@ -108,7 +118,10 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'e' && it) { it.end = Math.round(a.currentTime * 100) / 100; if (it.answer === null) it.answer = true; render(); setDirty(true); }
   else if (e.key === 'j' && it && it.start != null) { a.currentTime = it.start; a.play(); }
 });
-setInterval(() => { clock.textContent = fmt(a.currentTime || 0); playBtn.textContent = a.paused ? 'play' : 'pause'; }, 150);
+setInterval(() => { clock.textContent = fmt(a.currentTime || 0); playBtn.textContent = a.paused ? 'play' : 'pause';
+  const t = a.currentTime || 0; let c = -1; for (let i = 0; i < lines.length; i++) if (lines[i].t <= t + 0.05) c = i;
+  document.querySelectorAll('.ln').forEach(d => d.classList.toggle('cur', +d.dataset.i === c));
+  const el = document.querySelector('.ln.cur'); if (el && !a.paused) el.scrollIntoView({block: 'nearest'}); }, 150);
 window.addEventListener('beforeunload', e => { if (dirty) { save(); e.preventDefault(); e.returnValue = ''; } });
 (async () => { await loadList(); const last = localStorage.getItem('label.last'); if (files.length) await open(files.some(f => f.stem === last) ? last : files[0].stem); else $('qs').innerHTML = '<div class="hint">No validation audio dumped yet. Serve one validation run with REQUEST_DUMP_DIR set, then reload.</div>'; })();
 </script>
