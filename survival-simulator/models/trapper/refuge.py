@@ -31,11 +31,12 @@ def inside_slot(site: Site, k: int):
 def mouth_choice(world: WorldState, site: Site, held_pids, a: AgentView):
     """Which mouth to use: the front mouth unless predators sit there, else the far
     mouth if clear. Returns (mouth_point, normal_out, is_front) or None."""
-    front_busy = any(dist(p.p, site.front_mid) < 70 for p in world.predators)
+    recent = world.recent_predators()
+    front_busy = any(dist(p.p, site.front_mid) < 70 for p in recent)
     if not front_busy:
         return site.front_mid, site.normal, True
     if site.far_mouth is not None and site.far_mouth_open:
-        far_busy = any(dist(p.p, site.far_mouth) < 70 for p in world.predators)
+        far_busy = any(dist(p.p, site.far_mouth) < 70 for p in recent)
         if not far_busy:
             return site.far_mouth, mul(site.normal, -1.0), False
     return None

@@ -120,6 +120,11 @@ class WorldState:
         """Cache key for per-cell movement modifiers (None: no caching)."""
         return None
 
+    def recent_predators(self, max_age=1.5):
+        """Predators observed within ``max_age`` seconds (all of them on the oracle). Stale tracks
+        on an estimated world must not abort deliveries or block stations."""
+        return [q for q in self.predators if self.time - q.last_seen <= max_age]
+
 
 def rel_dir_from(observer_p, target_p, target_heading):
     """Engine ``rel_dir``: bearing of the observer in the target's body frame."""

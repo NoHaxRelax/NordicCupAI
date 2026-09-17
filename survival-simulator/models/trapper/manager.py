@@ -536,7 +536,7 @@ class TrapManager:
     def _predator_near(self, world: WorldState, site: Site, held_now=(), rng=None):
         """A loose, awake predator within ``rng`` (default staff_range) of the mouth."""
         rng = self.P['staff_range'] if rng is None else rng
-        for q in world.predators:
+        for q in world.recent_predators():
             if q.pid in held_now or is_resting(q):
                 continue
             if dist(q.p, site.front_mid) < rng:
@@ -575,7 +575,7 @@ class TrapManager:
         def nearest_agent_dist(p):
             return min((dist(a.p, p.p) for a in agents), default=1e9)
         free.sort(key=nearest_agent_dist)
-        loose = [q for q in world.predators if q.pid not in held_now and not is_resting(q)]
+        loose = [q for q in world.recent_predators() if q.pid not in held_now and not is_resting(q)]
         for p in free:
             if len(self.deliveries) >= P['max_deliveries']:
                 break
@@ -897,7 +897,7 @@ class TrapManager:
                 continue
             if mouth is site.far_mouth and not site.far_mouth_open:
                 continue
-            if not any(dist(q.p, mouth) < 80 and not is_resting(q) for q in world.predators):
+            if not any(dist(q.p, mouth) < 80 and not is_resting(q) for q in world.recent_predators()):
                 return point
         return None
 
@@ -919,7 +919,7 @@ class TrapManager:
             dot(sub(a.p, site.front_mid), site.axis) > -1.0
         if inside_passage:
             return step_toward(a, goal, min(a.walk * a.move_modifier, dist(a.p, goal)), face=goal), 'gap: walking the passage'
-        loose = [p for p in world.predators if dist(p.p, far) < 75 and not is_resting(p)]
+        loose = [p for p in world.recent_predators() if dist(p.p, far) < 75 and not is_resting(p)]
         near_far = dist(a.p, far) < 45 and path_clear(a.p, far, AGENT_RADIUS + 0.5, world.rects)
         if loose and (dist(a.p, outside) < 12 or near_far):
             return hold(a), 'gap: waiting for the far-mouth predators to rest'
@@ -930,7 +930,7 @@ class TrapManager:
 
     def _wild_threat(self, world: WorldState, st: Station, a: AgentView, held_now):
         """A predator that is not held and can reach the bait: on the protected side within 45."""
-        for p in world.predators:
+        for p in world.recent_predators():
             if p.pid in held_now or is_resting(p):
                 continue
             if dist(p.p, a.p) < 45 and dot(sub(p.p, st.site.front_mid), st.site.normal) < 0:

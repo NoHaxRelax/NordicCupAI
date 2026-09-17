@@ -135,9 +135,13 @@ energy. Holds last about 30 s and end when the bait dies or walks out (45 of 89)
 leaves (25 of 89); up to 3 predators were held at one mouth. Most holds come from refuge runs
 (chased agents entering a passage: 112 entries in 32 games), not from guide-led deliveries.
 
-Estimator world (observations only, seeds 2, 7, 8, 12, one run each): holds 6–12 % of
-predator-time, scores 590–624 against 615–627 for the society on the same seeds; refugee deaths
-dropped from 6–8 per game to 0–1 once the refuge margin was widened to 45 for estimated worlds.
+Estimator world (observations only). Four early runs held 6–12 % of predator-time; refugee
+deaths dropped from 6–8 per game to 0–1 once the refuge margin was widened to 45 for estimated
+tracks. The 8-seed batch `final-v7est` then scored 620.1 against 612.3 for the society (median
++6, 5 of 8 wins) but held only 1.6 %: 125 of 193 deliveries were aborted for a "second predator"
+that was a stale track (a predator last seen seconds ago, carried at its predicted position).
+Aborts, staffing gates, wild-threat checks and mouth choices now use only predators observed
+within the last 1.5 s (`WorldState.recent_predators`); batch `final-v8est` measures the effect.
 
 Two defects found on the way that any override policy must respect: overridden agents must keep
 the society's spawn decision (dropping it stopped all breeding by role agents and starved three

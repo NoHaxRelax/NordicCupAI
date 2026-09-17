@@ -252,7 +252,7 @@ class Lure:
     def _act(self, d: Delivery, a: AgentView, p: PredatorView | None):
         w = self.world
         # another loose predator close by: let the society's flee logic act for us
-        for q in w.predators:
+        for q in w.recent_predators():
             if p is not None and q.pid == p.pid or q.pid in self.held or is_resting(q):
                 continue
             dq = dist(q.p, a.p)
