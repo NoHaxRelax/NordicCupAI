@@ -168,3 +168,18 @@ Runs A (16:17) and B (16:23) used byte-identical code and models; the only diffe
 If the live scorer credited spans returned with a no answer, A minus B should have been roughly 0.6 x (share of positives answered no, about 0.15 at a 0.447 yes-rate) x (their span tIoU, about 0.4), around 0.03. The observed 0.0024 is within run-to-run noise of a temperature-0 Ollama model with four parallel slots. Conclusion: the README prose holds on the service (a missed positive scores zero on both halves), and `local_evaluator.py` overstates our score by crediting those spans. Consequences: keep SPAN_ON_NO=1 (harmless), read local tIoU from the "nulls on no" policy in `bench/llm/bench.py`, and the yes-threshold idea (research/06, idea 8) is back on the table: at a 0.447 yes-rate every recovered positive is worth its accuracy point plus its whole tIoU.
 
 Noise floor, measured afterwards: the same ten training conversations scored twice with identical settings (qwen3:4b, temperature 0, four Ollama slots) gave identical answers but different spans on some questions, score 0.648 vs 0.654 under spans-on-no and 0.637 vs 0.643 under nulls-on-no. So two identical runs differ by about 0.006 on ten conversations, and the validation A/B gap of 0.0024 is inside that. The local spans-on-no benefit (0.011 on these ten) sits above it, which is why it shows locally and not on the service.
+
+### 16. Validation leaderboard snapshot, 2026-09-17 16:35
+
+25 of 44 teams have a medical-appointment validation score. Top eight sit between 0.720 and 0.746; then 0.661, 0.623, us at 0.609 in 11th, 0.607, and a long tail at or below the 0.454 mark, seven teams at the 0.200 all-yes baseline.
+
+| rank | team | best validation |
+|---|---|---|
+| 1 | Eirik Solberg (NO) | 0.7457 |
+| 2 | execve (DK) | 0.7447 |
+| 3 | Cybotrix (IS) | 0.7390 |
+| 8 | Iceland Here We Go (DK) | 0.7200 |
+| 9 | Team Ambolt Interns - N (DK) | 0.6606 |
+| 11 | Powered by Smørrebrød (us) | 0.6086 |
+
+Reading: with accuracy near 0.9 (worth 0.36 of the score), our validation tIoU is about 0.41. A 0.745 score at similar accuracy needs a mean tIoU near 0.62. The gap to the top is spans, not answers, which is what the ASR sweep and the quote-anchoring work target.
