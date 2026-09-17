@@ -53,6 +53,11 @@ nothing:
 
 ## To do
 
+0. New since the submission: `bench/llm/prompts.py` has `units-fewshot` and `words-fewshot`
+   (findings log 30: no gain for qwen3:4b, untested on bigger models). The cluster copy was
+   synced at 19:55; job 29429655 still runs the default `VARIANTS="units units-claim words"`.
+   Once its results are in, run one more job on the best model only with
+   `VARIANTS="units-fewshot words-fewshot"` (the job skips results that already exist).
 1. Watch 29429655 (`bjobs -w`). If a model fails at startup, its serve log is under
    `bench/results/logs/llm_bench.29429655.<short>.serve.log`; fix and resubmit only the
    failed models (`MODELS="..."`), the job skips models whose results already exist.
