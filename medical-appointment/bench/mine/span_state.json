@@ -1,0 +1,4397 @@
+{
+ "conversation_sample_3:1": {
+  "seed": [
+   67.3,
+   72.44
+  ],
+  "W": 1.5,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     65.8,
+     73.94
+    ],
+    "iou": 0.543
+   },
+   {
+    "stage": "start",
+    "guess": [
+     65.8,
+     69.87
+    ],
+    "iou": 0.27477
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     68.04,
+     72.46
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.41999999999997,
+  "g": 68.04,
+  "h": 72.46,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_3:2": {
+  "seed": [
+   46.64,
+   49.38
+  ],
+  "W": 12.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     45.14,
+     50.88
+    ],
+    "iou": 0.39292
+   },
+   {
+    "stage": "start",
+    "guess": [
+     45.14,
+     48.01
+    ],
+    "iou": 0.31128
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     46.793,
+     49.049
+    ],
+    "iou": 0.24469
+   },
+   {
+    "stage": "len",
+    "guess": [
+     43.64,
+     52.38
+    ],
+    "iou": 0.46732
+   },
+   {
+    "stage": "start",
+    "guess": [
+     43.64,
+     48.01
+    ],
+    "iou": 0.47397
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     45.291,
+     49.376
+    ],
+    "iou": 0.44056
+   },
+   {
+    "stage": "len",
+    "guess": [
+     40.64,
+     55.38
+    ],
+    "iou": 0.57218
+   },
+   {
+    "stage": "start",
+    "guess": [
+     40.64,
+     48.01
+    ],
+    "iou": 0.79935
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     40.989,
+     49.423
+    ],
+    "iou": 0.90176
+   },
+   {
+    "stage": "len",
+    "guess": [
+     34.64,
+     61.38
+    ],
+    "iou": 0.3448
+   },
+   {
+    "stage": "start",
+    "guess": [
+     34.64,
+     48.01
+    ],
+    "iou": 0.53465
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     40.14,
+     49.36
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 9.220000000000116,
+  "g": 40.14,
+  "h": 49.36,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true,
+  "note": "verify iou 0.902, widening to W 12.0"
+ },
+ "conversation_sample_3:3": {
+  "seed": [
+   26.56,
+   32.44
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     20.56,
+     38.44
+    ],
+    "iou": 0.2047
+   },
+   {
+    "stage": "start",
+    "guess": [
+     20.56,
+     29.5
+    ],
+    "iou": 0.4094
+   },
+   {
+    "stage": "start",
+    "guess": [
+     20.56,
+     25.03
+    ],
+    "iou": 0.75216
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     21.54,
+     25.2
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.659999999999997,
+  "g": 21.54,
+  "h": 25.2,
+  "m_lo": null,
+  "m_hi": 29.5,
+  "m_tried": true
+ },
+ "conversation_sample_3:5": {
+  "seed": [
+   13.94,
+   19.28
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     7.9399999999999995,
+     25.28
+    ],
+    "iou": 0.09458
+   },
+   {
+    "stage": "start",
+    "guess": [
+     7.9399999999999995,
+     16.61
+    ],
+    "iou": 0.18916
+   },
+   {
+    "stage": "start",
+    "guess": [
+     7.9399999999999995,
+     12.275
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     7.9399999999999995,
+     14.442
+    ],
+    "iou": 0.0203
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     14.28,
+     15.92
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.640000000000072,
+  "g": 14.28,
+  "h": 15.92,
+  "m_lo": 12.275,
+  "m_hi": 16.61,
+  "m_tried": true
+ },
+ "conversation_sample_3:7": {
+  "seed": [
+   74.1,
+   79.2
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     68.1,
+     85.2
+    ],
+    "iou": 0.27368
+   },
+   {
+    "stage": "start",
+    "guess": [
+     68.1,
+     76.65
+    ],
+    "iou": 0.15043
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     74.92,
+     79.6
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.679999999999986,
+  "g": 74.92,
+  "h": 79.6,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_3:10": {
+  "seed": [
+   58.0,
+   62.18
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     52.0,
+     68.18
+    ],
+    "iou": 0.24475
+   },
+   {
+    "stage": "start",
+    "guess": [
+     52.0,
+     60.09
+    ],
+    "iou": 0.17446
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     58.3,
+     62.26
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.96,
+  "g": 58.3,
+  "h": 62.26,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_7:1": {
+  "seed": [
+   27.78,
+   31.34
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     21.78,
+     37.34
+    ],
+    "iou": 0.26735
+   },
+   {
+    "stage": "start",
+    "guess": [
+     21.78,
+     29.56
+    ],
+    "iou": 0.51523
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     25.5,
+     29.66
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.159999999999964,
+  "g": 25.5,
+  "h": 29.66,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_7:2": {
+  "seed": [
+   154.52,
+   158.3
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     148.52,
+     164.3
+    ],
+    "iou": 0.23194
+   },
+   {
+    "stage": "start",
+    "guess": [
+     148.52,
+     156.41
+    ],
+    "iou": 0.18583
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     154.6,
+     158.26
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.6600000000000072,
+  "g": 154.6,
+  "h": 158.26,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_7:6": {
+  "seed": [
+   35.4,
+   41.02
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     29.4,
+     47.02
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     181.52
+    ],
+    "iou": 0.01179
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     90.76
+    ],
+    "iou": 0.02358
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     45.38
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     45.38,
+     68.07
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     68.07,
+     79.415
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     79.415,
+     85.088
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     85.088,
+     87.924
+    ],
+    "iou": 0.52078
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     86.22,
+     88.36
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.1400000000004002,
+  "g": 86.22,
+  "h": 88.36,
+  "m_lo": null,
+  "m_hi": null,
+  "lo": 85.088,
+  "hi": 90.76
+ },
+ "conversation_sample_8:1": {
+  "seed": [
+   71.58,
+   75.8
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     65.58,
+     81.8
+    ],
+    "iou": 0.22195
+   },
+   {
+    "stage": "start",
+    "guess": [
+     65.58,
+     73.69
+    ],
+    "iou": 0.18283
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     71.88,
+     75.48
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.6000000000000556,
+  "g": 71.88,
+  "h": 75.48,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_8:2": {
+  "seed": [
+   43.6,
+   56.3
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     37.6,
+     62.3
+    ],
+    "iou": 0.54899
+   },
+   {
+    "stage": "start",
+    "guess": [
+     37.6,
+     49.95
+    ],
+    "iou": 0.40054
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     42.54,
+     56.1
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 13.560000000000015,
+  "g": 42.54,
+  "h": 56.1,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_8:3": {
+  "seed": [
+   46.52,
+   50.5
+  ],
+  "W": 12.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     40.52,
+     56.5
+    ],
+    "iou": 0.49939
+   },
+   {
+    "stage": "start",
+    "guess": [
+     40.52,
+     48.51
+    ],
+    "iou": 0.92477
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     40.837,
+     48.817
+    ],
+    "iou": 0.90225
+   },
+   {
+    "stage": "len",
+    "guess": [
+     34.52,
+     62.5
+    ],
+    "iou": 0.30879
+   },
+   {
+    "stage": "start",
+    "guess": [
+     34.52,
+     48.51
+    ],
+    "iou": 0.59366
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     40.08,
+     48.72
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 8.640000000000088,
+  "g": 40.08,
+  "h": 48.72,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true,
+  "note": "verify iou 0.902, widening to W 12.0"
+ },
+ "conversation_sample_8:5": {
+  "seed": [
+   90.3,
+   97.16
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     84.3,
+     103.16
+    ],
+    "iou": 0.1421
+   },
+   {
+    "stage": "start",
+    "guess": [
+     84.3,
+     93.73
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     84.3,
+     98.445
+    ],
+    "iou": 0.18947
+   },
+   {
+    "stage": "start",
+    "guess": [
+     84.3,
+     96.088
+    ],
+    "iou": 0.12855
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     94.44,
+     97.12
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.68,
+  "g": 94.44,
+  "h": 97.12,
+  "m_lo": 93.73,
+  "m_hi": 98.445,
+  "m_tried": true
+ },
+ "conversation_sample_8:6": {
+  "seed": [
+   29.4,
+   35.9
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     23.4,
+     41.9
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     145.68
+    ],
+    "iou": 0.03913
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     72.84
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     72.84,
+     109.26
+    ],
+    "iou": 0.15651
+   },
+   {
+    "stage": "search",
+    "guess": [
+     72.84,
+     91.05
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     91.05,
+     100.155
+    ],
+    "iou": 0.62603
+   },
+   {
+    "stage": "search",
+    "guess": [
+     91.05,
+     95.602
+    ],
+    "iou": 0.68896
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     91.42,
+     97.12
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 5.699999999999647,
+  "g": 91.42,
+  "h": 97.12,
+  "m_lo": null,
+  "m_hi": null,
+  "lo": 91.05,
+  "hi": 100.155
+ },
+ "conversation_sample_8:8": {
+  "seed": [
+   111.1,
+   116.02
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     105.1,
+     122.02
+    ],
+    "iou": 0.26005
+   },
+   {
+    "stage": "start",
+    "guess": [
+     105.1,
+     113.56
+    ],
+    "iou": 0.17982
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     111.6,
+     116.0
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.4000000000000625,
+  "g": 111.6,
+  "h": 116.0,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_11:1": {
+  "seed": [
+   25.66,
+   31.3
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     19.66,
+     37.3
+    ],
+    "iou": 0.31293
+   },
+   {
+    "stage": "start",
+    "guess": [
+     19.66,
+     28.48
+    ],
+    "iou": 0.22774
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     25.82,
+     31.34
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 5.520000000000024,
+  "g": 25.82,
+  "h": 31.34,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_11:2": {
+  "seed": [
+   25.66,
+   31.3
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     19.66,
+     37.3
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     108.52
+    ],
+    "iou": 0.04239
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     54.26
+    ],
+    "iou": 0.08478
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     27.13
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     27.13,
+     40.695
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     40.695,
+     47.477
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     47.477,
+     50.868
+    ],
+    "iou": 0.20292
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     49.52,
+     54.12
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.600000000000225,
+  "g": 49.52,
+  "h": 54.12,
+  "m_lo": null,
+  "m_hi": null,
+  "lo": 47.477,
+  "hi": 54.26
+ },
+ "conversation_sample_11:9": {
+  "seed": [
+   73.14,
+   76.6
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     67.14,
+     82.6
+    ],
+    "iou": 0.21345
+   },
+   {
+    "stage": "start",
+    "guess": [
+     67.14,
+     74.87
+    ],
+    "iou": 0.07505
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     74.1,
+     77.4
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.2999999999999825,
+  "g": 74.1,
+  "h": 77.4,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_14:1": {
+  "seed": [
+   86.16,
+   89.08
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     80.16,
+     95.08
+    ],
+    "iou": 0.19571
+   },
+   {
+    "stage": "start",
+    "guess": [
+     80.16,
+     87.62
+    ],
+    "iou": 0.15848
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     86.2,
+     89.12
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.9200000000000195,
+  "g": 86.2,
+  "h": 89.12,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_14:2": {
+  "seed": [
+   59.1,
+   62.14
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     53.1,
+     68.14
+    ],
+    "iou": 0.13298
+   },
+   {
+    "stage": "start",
+    "guess": [
+     53.1,
+     60.62
+    ],
+    "iou": 0.06726
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     60.02,
+     62.02
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.0000000000000204,
+  "g": 60.02,
+  "h": 62.02,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_14:3": {
+  "seed": [
+   128.22,
+   131.24
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     122.22,
+     137.24
+    ],
+    "iou": 0.18642
+   },
+   {
+    "stage": "start",
+    "guess": [
+     122.22,
+     129.73
+    ],
+    "iou": 0.13797
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     128.48,
+     131.28
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.7999999999999905,
+  "g": 128.48,
+  "h": 131.28,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_14:4": {
+  "seed": [
+   28.78,
+   33.52
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     22.78,
+     39.52
+    ],
+    "iou": 0.28315
+   },
+   {
+    "stage": "start",
+    "guess": [
+     22.78,
+     31.15
+    ],
+    "iou": 0.2184
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     28.8,
+     33.54
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.740000000000057,
+  "g": 28.8,
+  "h": 33.54,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_14:5": {
+  "seed": [
+   37.78,
+   44.8
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     31.78,
+     50.8
+    ],
+    "iou": 0.63617
+   },
+   {
+    "stage": "start",
+    "guess": [
+     31.78,
+     41.29
+    ],
+    "iou": 0.20189
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     37.66,
+     49.76
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 12.100000000000078,
+  "g": 37.66,
+  "h": 49.76,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_14:8": {
+  "seed": [
+   128.22,
+   131.24
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     122.22,
+     137.24
+    ],
+    "iou": 0.18642
+   },
+   {
+    "stage": "start",
+    "guess": [
+     122.22,
+     129.73
+    ],
+    "iou": 0.13797
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     128.48,
+     131.28
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.7999999999999905,
+  "g": 128.48,
+  "h": 131.28,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_16:4": {
+  "seed": [
+   63.74,
+   69.1
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     57.74,
+     75.1
+    ],
+    "iou": 0.2765
+   },
+   {
+    "stage": "start",
+    "guess": [
+     57.74,
+     66.42
+    ],
+    "iou": 0.14044
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     64.76,
+     69.56
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.800000000000061,
+  "g": 64.76,
+  "h": 69.56,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_16:7": {
+  "seed": [
+   44.74,
+   50.64
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     38.74,
+     56.64
+    ],
+    "iou": 0.31397
+   },
+   {
+    "stage": "start",
+    "guess": [
+     38.74,
+     47.69
+    ],
+    "iou": 0.22027
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     45.06,
+     50.68
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 5.620000000000008,
+  "g": 45.06,
+  "h": 50.68,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_16:8": {
+  "seed": [
+   127.2,
+   130.86
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     121.2,
+     136.86
+    ],
+    "iou": 0.1788
+   },
+   {
+    "stage": "start",
+    "guess": [
+     121.2,
+     129.03
+    ],
+    "iou": 0.08691
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     128.18,
+     130.98
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.80000000000005,
+  "g": 128.18,
+  "h": 130.98,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_16:10": {
+  "seed": [
+   81.62,
+   84.3
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     75.62,
+     90.3
+    ],
+    "iou": 0.18529
+   },
+   {
+    "stage": "start",
+    "guess": [
+     75.62,
+     82.96
+    ],
+    "iou": 0.1278
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     81.82,
+     84.54
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.719999999999957,
+  "g": 81.82,
+  "h": 84.54,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_24:2": {
+  "seed": [
+   46.2,
+   49.14
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     40.2,
+     55.14
+    ],
+    "iou": 0.13922
+   },
+   {
+    "stage": "start",
+    "guess": [
+     40.2,
+     47.67
+    ],
+    "iou": 0.07788
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     46.98,
+     49.06
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.0799999999999583,
+  "g": 46.98,
+  "h": 49.06,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_24:4": {
+  "seed": [
+   116.6,
+   123.2
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     110.6,
+     129.2
+    ],
+    "iou": 0.33978
+   },
+   {
+    "stage": "start",
+    "guess": [
+     110.6,
+     119.9
+    ],
+    "iou": 0.23381
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     116.94,
+     123.26
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 6.319999999999943,
+  "g": 116.94,
+  "h": 123.26,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_24:6": {
+  "seed": [
+   86.2,
+   93.94
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     80.2,
+     99.94
+    ],
+    "iou": 0.39108
+   },
+   {
+    "stage": "start",
+    "guess": [
+     80.2,
+     90.07
+    ],
+    "iou": 0.2802
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     86.22,
+     93.94
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 7.719999999999912,
+  "g": 86.22,
+  "h": 93.94,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_24:10": {
+  "seed": [
+   27.8,
+   35.9
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     21.8,
+     41.9
+    ],
+    "iou": 0.36517
+   },
+   {
+    "stage": "start",
+    "guess": [
+     21.8,
+     31.85
+    ],
+    "iou": 0.175
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     29.26,
+     36.6
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 7.340000000000044,
+  "g": 29.26,
+  "h": 36.6,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_26:1": {
+  "seed": [
+   32.3,
+   37.14
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     26.299999999999997,
+     43.14
+    ],
+    "iou": 0.27672
+   },
+   {
+    "stage": "start",
+    "guess": [
+     26.299999999999997,
+     34.72
+    ],
+    "iou": 0.55344
+   },
+   {
+    "stage": "start",
+    "guess": [
+     26.299999999999997,
+     30.51
+    ],
+    "iou": 0.06611
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     29.96,
+     34.62
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.659999999999973,
+  "g": 29.96,
+  "h": 34.62,
+  "m_lo": null,
+  "m_hi": 34.72,
+  "m_tried": true
+ },
+ "conversation_sample_26:2": {
+  "seed": [
+   29.6,
+   32.3
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     23.6,
+     38.3
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     197.96
+    ],
+    "iou": 0.02687
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     98.98
+    ],
+    "iou": 0.05375
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     49.49
+    ],
+    "iou": 0.05648
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     46.56,
+     51.88
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 5.320000000000254,
+  "g": 46.56,
+  "h": 51.88,
+  "m_lo": null,
+  "m_hi": null,
+  "lo": 0.0,
+  "hi": 98.98
+ },
+ "conversation_sample_26:3": {
+  "seed": [
+   11.0,
+   16.24
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     5.0,
+     22.24
+    ],
+    "iou": 0.23434
+   },
+   {
+    "stage": "start",
+    "guess": [
+     5.0,
+     13.62
+    ],
+    "iou": 0.13849
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     12.08,
+     16.12
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.039999999999957,
+  "g": 12.08,
+  "h": 16.12,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_26:6": {
+  "seed": [
+   11.0,
+   16.24
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     5.0,
+     22.24
+    ],
+    "iou": 0.23434
+   },
+   {
+    "stage": "start",
+    "guess": [
+     5.0,
+     13.62
+    ],
+    "iou": 0.13849
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     12.08,
+     16.12
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.039999999999957,
+  "g": 12.08,
+  "h": 16.12,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_26:8": {
+  "seed": [
+   32.3,
+   37.14
+  ],
+  "W": 12.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     26.299999999999997,
+     43.14
+    ],
+    "iou": 0.39059
+   },
+   {
+    "stage": "start",
+    "guess": [
+     26.299999999999997,
+     34.72
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     26.299999999999997,
+     38.93
+    ],
+    "iou": 0.17536
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     36.064,
+     42.642
+    ],
+    "iou": 0.63494
+   },
+   {
+    "stage": "len",
+    "guess": [
+     20.299999999999997,
+     49.14
+    ],
+    "iou": 0.35922
+   },
+   {
+    "stage": "start",
+    "guess": [
+     20.299999999999997,
+     34.72
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     20.299999999999997,
+     41.93
+    ],
+    "iou": 0.25156
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     35.5,
+     45.86
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 10.359999999999964,
+  "g": 35.5,
+  "h": 45.86,
+  "m_lo": 34.72,
+  "m_hi": null,
+  "m_tried": true,
+  "note": "verify iou 0.635, widening to W 12.0"
+ },
+ "conversation_sample_26:9": {
+  "seed": [
+   81.4,
+   89.7
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     75.4,
+     95.7
+    ],
+    "iou": 0.36946
+   },
+   {
+    "stage": "start",
+    "guess": [
+     75.4,
+     85.55
+    ],
+    "iou": 0.23082
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     82.24,
+     89.74
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 7.499999999999962,
+  "g": 82.24,
+  "h": 89.74,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_30:3": {
+  "seed": [
+   93.5,
+   97.38
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     87.5,
+     103.38
+    ],
+    "iou": 0.23048
+   },
+   {
+    "stage": "start",
+    "guess": [
+     87.5,
+     95.44
+    ],
+    "iou": 0.18609
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     93.62,
+     97.28
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.6599999999999495,
+  "g": 93.62,
+  "h": 97.28,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_30:6": {
+  "seed": [
+   43.98,
+   48.4
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     37.98,
+     54.4
+    ],
+    "iou": 0.25091
+   },
+   {
+    "stage": "start",
+    "guess": [
+     37.98,
+     46.19
+    ],
+    "iou": 0.1833
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     44.28,
+     48.4
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.119999999999927,
+  "g": 44.28,
+  "h": 48.4,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_30:7": {
+  "seed": [
+   43.98,
+   46.0
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     37.98,
+     52.0
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     110.66
+    ],
+    "iou": 0.01012
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     55.33
+    ],
+    "iou": 0.02024
+   },
+   {
+    "stage": "search",
+    "guess": [
+     0.0,
+     27.665
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     27.665,
+     41.498
+    ],
+    "iou": 0.08097
+   },
+   {
+    "stage": "search",
+    "guess": [
+     27.665,
+     34.581
+    ],
+    "iou": 0.16194
+   },
+   {
+    "stage": "search",
+    "guess": [
+     27.665,
+     31.123
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     31.123,
+     32.852
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "search",
+    "guess": [
+     32.852,
+     33.716
+    ],
+    "iou": 0.42939
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     33.12,
+     34.24
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.1200000000000498,
+  "g": 33.12,
+  "h": 34.24,
+  "m_lo": null,
+  "m_hi": null,
+  "lo": 32.852,
+  "hi": 34.581
+ },
+ "conversation_sample_30:10": {
+  "seed": [
+   93.5,
+   97.38
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     87.5,
+     103.38
+    ],
+    "iou": 0.23048
+   },
+   {
+    "stage": "start",
+    "guess": [
+     87.5,
+     95.44
+    ],
+    "iou": 0.18609
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     93.62,
+     97.28
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.6599999999999495,
+  "g": 93.62,
+  "h": 97.28,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_31:3": {
+  "seed": [
+   46.42,
+   49.6
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     40.42,
+     55.6
+    ],
+    "iou": 0.21476
+   },
+   {
+    "stage": "start",
+    "guess": [
+     40.42,
+     48.01
+    ],
+    "iou": 0.18969
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     46.28,
+     49.54
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.2599999999999656,
+  "g": 46.28,
+  "h": 49.54,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_31:6": {
+  "seed": [
+   125.6,
+   128.6
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     119.6,
+     134.6
+    ],
+    "iou": 0.168
+   },
+   {
+    "stage": "start",
+    "guess": [
+     119.6,
+     127.1
+    ],
+    "iou": 0.09389
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     126.24,
+     128.76
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.5200000000000364,
+  "g": 126.24,
+  "h": 128.76,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_31:8": {
+  "seed": [
+   55.4,
+   59.64
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     49.4,
+     65.64
+    ],
+    "iou": 0.09236
+   },
+   {
+    "stage": "start",
+    "guess": [
+     49.4,
+     57.52
+    ],
+    "iou": 0.18473
+   },
+   {
+    "stage": "start",
+    "guess": [
+     49.4,
+     53.46
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     49.4,
+     55.49
+    ],
+    "iou": 0.00663
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     55.44,
+     56.94
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.4999999999999571,
+  "g": 55.44,
+  "h": 56.94,
+  "m_lo": 53.46,
+  "m_hi": 57.52,
+  "m_tried": true
+ },
+ "conversation_sample_40:2": {
+  "seed": [
+   44.56,
+   48.8
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     38.56,
+     54.8
+    ],
+    "iou": 0.12069
+   },
+   {
+    "stage": "start",
+    "guess": [
+     38.56,
+     46.68
+    ],
+    "iou": 0.19715
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     45.02,
+     46.98
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.960000000000044,
+  "g": 45.02,
+  "h": 46.98,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_40:3": {
+  "seed": [
+   11.12,
+   15.84
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     5.119999999999999,
+     21.84
+    ],
+    "iou": 0.46172
+   },
+   {
+    "stage": "start",
+    "guess": [
+     5.119999999999999,
+     13.48
+    ],
+    "iou": 0.13881
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     11.52,
+     19.24
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 7.720000000000068,
+  "g": 11.52,
+  "h": 19.24,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_40:6": {
+  "seed": [
+   36.3,
+   39.18
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     30.299999999999997,
+     45.18
+    ],
+    "iou": 0.15323
+   },
+   {
+    "stage": "start",
+    "guess": [
+     30.299999999999997,
+     37.74
+    ],
+    "iou": 0.11982
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     36.7,
+     38.98
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.2800000000000193,
+  "g": 36.7,
+  "h": 38.98,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_44:1": {
+  "seed": [
+   38.26,
+   44.56
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     32.26,
+     50.56
+    ],
+    "iou": 0.31913
+   },
+   {
+    "stage": "start",
+    "guess": [
+     32.26,
+     41.41
+    ],
+    "iou": 0.63825
+   },
+   {
+    "stage": "start",
+    "guess": [
+     32.26,
+     36.835
+    ],
+    "iou": 0.1521
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     35.46,
+     41.3
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 5.840000000000008,
+  "g": 35.46,
+  "h": 41.3,
+  "m_lo": null,
+  "m_hi": 41.41,
+  "m_tried": true
+ },
+ "conversation_sample_44:5": {
+  "seed": [
+   48.7,
+   53.52
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     42.7,
+     59.52
+    ],
+    "iou": 0.50654
+   },
+   {
+    "stage": "start",
+    "guess": [
+     42.7,
+     51.11
+    ],
+    "iou": 0.10798
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     49.46,
+     57.98
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 8.520000000000058,
+  "g": 49.46,
+  "h": 57.98,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_44:6": {
+  "seed": [
+   38.26,
+   44.56
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     32.26,
+     50.56
+    ],
+    "iou": 0.51803
+   },
+   {
+    "stage": "start",
+    "guess": [
+     32.26,
+     41.41
+    ],
+    "iou": 0.18814
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     38.46,
+     47.94
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 9.479999999999936,
+  "g": 38.46,
+  "h": 47.94,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_44:8": {
+  "seed": [
+   40.7,
+   44.56
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     34.7,
+     50.56
+    ],
+    "iou": 0.15385
+   },
+   {
+    "stage": "start",
+    "guess": [
+     34.7,
+     42.63
+    ],
+    "iou": 0.05386
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     42.1,
+     44.54
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.440000000000068,
+  "g": 42.1,
+  "h": 44.54,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_44:9": {
+  "seed": [
+   44.86,
+   47.86
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     38.86,
+     53.86
+    ],
+    "iou": 0.12667
+   },
+   {
+    "stage": "start",
+    "guess": [
+     38.86,
+     46.36
+    ],
+    "iou": 0.03524
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     46.04,
+     47.94
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.9000000000000548,
+  "g": 46.04,
+  "h": 47.94,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_44:10": {
+  "seed": [
+   24.66,
+   29.26
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     18.66,
+     35.260000000000005
+    ],
+    "iou": 0.1988
+   },
+   {
+    "stage": "start",
+    "guess": [
+     18.66,
+     26.96
+    ],
+    "iou": 0.39759
+   },
+   {
+    "stage": "start",
+    "guess": [
+     18.66,
+     22.81
+    ],
+    "iou": 0.07659
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     22.28,
+     25.58
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.2999999999999923,
+  "g": 22.28,
+  "h": 25.58,
+  "m_lo": null,
+  "m_hi": 26.96,
+  "m_tried": true
+ },
+ "conversation_sample_45:1": {
+  "seed": [
+   9.0,
+   11.4
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     3.0,
+     17.4
+    ],
+    "iou": 0.27083
+   },
+   {
+    "stage": "start",
+    "guess": [
+     3.0,
+     10.2
+    ],
+    "iou": 0.06731
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     9.5,
+     13.4
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.9000000000000496,
+  "g": 9.5,
+  "h": 13.4,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_45:2": {
+  "seed": [
+   42.22,
+   44.72
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     36.22,
+     50.72
+    ],
+    "iou": 0.14759
+   },
+   {
+    "stage": "start",
+    "guess": [
+     36.22,
+     43.47
+    ],
+    "iou": 0.09953
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     42.62,
+     44.76
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.1400000000000343,
+  "g": 42.62,
+  "h": 44.76,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_45:5": {
+  "seed": [
+   11.4,
+   13.48
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     5.4,
+     19.48
+    ],
+    "iou": 0.10085
+   },
+   {
+    "stage": "start",
+    "guess": [
+     5.4,
+     12.44
+    ],
+    "iou": 0.0575
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     11.98,
+     13.4
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.4200000000000503,
+  "g": 11.98,
+  "h": 13.4,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_45:6": {
+  "seed": [
+   18.0,
+   19.5
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     12.0,
+     25.5
+    ],
+    "iou": 0.26963
+   },
+   {
+    "stage": "start",
+    "guess": [
+     12.0,
+     18.75
+    ],
+    "iou": 0.41553
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     15.7,
+     19.34
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.640000000000041,
+  "g": 15.7,
+  "h": 19.34,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_45:7": {
+  "seed": [
+   9.0,
+   13.48
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     3.0,
+     19.48
+    ],
+    "iou": 0.23665
+   },
+   {
+    "stage": "start",
+    "guess": [
+     3.0,
+     11.24
+    ],
+    "iou": 0.16731
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     9.5,
+     13.4
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.9000000000000323,
+  "g": 9.5,
+  "h": 13.4,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_45:8": {
+  "seed": [
+   24.1,
+   28.0
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     18.1,
+     34.0
+    ],
+    "iou": 0.2239
+   },
+   {
+    "stage": "start",
+    "guess": [
+     18.1,
+     26.05
+    ],
+    "iou": 0.16263
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     24.44,
+     28.0
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.5599999999999925,
+  "g": 24.44,
+  "h": 28.0,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_45:10": {
+  "seed": [
+   55.78,
+   58.5
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     49.78,
+     64.5
+    ],
+    "iou": 0.1644
+   },
+   {
+    "stage": "start",
+    "guess": [
+     49.78,
+     57.14
+    ],
+    "iou": 0.07473
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     56.46,
+     58.88
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.420000000000045,
+  "g": 56.46,
+  "h": 58.88,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_46:1": {
+  "seed": [
+   23.24,
+   27.44
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     17.24,
+     33.44
+    ],
+    "iou": 0.57284
+   },
+   {
+    "stage": "start",
+    "guess": [
+     17.24,
+     25.34
+    ],
+    "iou": 0.68411
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     18.28,
+     27.56
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 9.27999999999993,
+  "g": 18.28,
+  "h": 27.56,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_46:4": {
+  "seed": [
+   8.08,
+   11.52
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     2.08,
+     17.52
+    ],
+    "iou": 0.42487
+   },
+   {
+    "stage": "start",
+    "guess": [
+     2.08,
+     9.8
+    ],
+    "iou": 0.0099
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     9.66,
+     16.22
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 6.559999999999972,
+  "g": 9.66,
+  "h": 16.22,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_46:8": {
+  "seed": [
+   43.96,
+   47.74
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     37.96,
+     53.74
+    ],
+    "iou": 0.21673
+   },
+   {
+    "stage": "start",
+    "guess": [
+     37.96,
+     45.85
+    ],
+    "iou": 0.15881
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     44.3,
+     47.72
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.4199999999999795,
+  "g": 44.3,
+  "h": 47.72,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_46:9": {
+  "seed": [
+   31.82,
+   33.54
+  ],
+  "W": 12.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     25.82,
+     39.54
+    ],
+    "iou": 0.06766
+   },
+   {
+    "stage": "start",
+    "guess": [
+     25.82,
+     32.68
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     25.82,
+     36.11
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     25.82,
+     37.825
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     25.82,
+     38.683
+    ],
+    "iou": 0.00968
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     38.551,
+     39.479
+    ],
+    "iou": 0.45049
+   },
+   {
+    "stage": "len",
+    "guess": [
+     19.82,
+     45.54
+    ],
+    "iou": 0.08009
+   },
+   {
+    "stage": "start",
+    "guess": [
+     19.82,
+     32.68
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     19.82,
+     39.11
+    ],
+    "iou": 0.02743
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     38.54,
+     40.6
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.0600000000000565,
+  "g": 38.54,
+  "h": 40.6,
+  "m_lo": 32.68,
+  "m_hi": null,
+  "m_tried": true,
+  "note": "verify iou 0.450, widening to W 12.0"
+ },
+ "conversation_sample_46:10": {
+  "seed": [
+   5.32,
+   7.62
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     0.0,
+     13.620000000000001
+    ],
+    "iou": 0.17327
+   },
+   {
+    "stage": "start",
+    "guess": [
+     0.0,
+     6.47
+    ],
+    "iou": 0.14974
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     5.32,
+     7.68
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.3599999999999453,
+  "g": 5.32,
+  "h": 7.68,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_51:1": {
+  "seed": [
+   37.34,
+   41.02
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     31.340000000000003,
+     47.02
+    ],
+    "iou": 0.15816
+   },
+   {
+    "stage": "start",
+    "guess": [
+     31.340000000000003,
+     39.18
+    ],
+    "iou": 0.06173
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     38.58,
+     41.06
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.479999999999972,
+  "g": 38.58,
+  "h": 41.06,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_51:3": {
+  "seed": [
+   52.88,
+   55.18
+  ],
+  "W": 12.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     46.88,
+     61.18
+    ],
+    "iou": 0.4619
+   },
+   {
+    "stage": "start",
+    "guess": [
+     46.88,
+     54.03
+    ],
+    "iou": 0.04279
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     53.466,
+     60.071
+    ],
+    "iou": 0.62077
+   },
+   {
+    "stage": "len",
+    "guess": [
+     40.88,
+     67.18
+    ],
+    "iou": 0.40456
+   },
+   {
+    "stage": "start",
+    "guess": [
+     40.88,
+     54.03
+    ],
+    "iou": 0.03166
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     53.3,
+     63.94
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 10.639999999999937,
+  "g": 53.3,
+  "h": 63.94,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true,
+  "note": "verify iou 0.621, widening to W 12.0"
+ },
+ "conversation_sample_51:4": {
+  "seed": [
+   29.4,
+   33.08
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     23.4,
+     39.08
+    ],
+    "iou": 0.16964
+   },
+   {
+    "stage": "start",
+    "guess": [
+     23.4,
+     31.24
+    ],
+    "iou": 0.08696
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     30.4,
+     33.06
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.6599999999999633,
+  "g": 30.4,
+  "h": 33.06,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_51:8": {
+  "seed": [
+   69.06,
+   72.04
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     63.06,
+     78.04
+    ],
+    "iou": 0.19893
+   },
+   {
+    "stage": "start",
+    "guess": [
+     63.06,
+     70.55
+    ],
+    "iou": 0.18172
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     68.94,
+     71.92
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.9799999999999813,
+  "g": 68.94,
+  "h": 71.92,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_51:9": {
+  "seed": [
+   28.34,
+   33.08
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     22.34,
+     39.08
+    ],
+    "iou": 0.41219
+   },
+   {
+    "stage": "start",
+    "guess": [
+     22.34,
+     30.71
+    ],
+    "iou": 0.42444
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     26.16,
+     33.06
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 6.900000000000036,
+  "g": 26.16,
+  "h": 33.06,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_51:10": {
+  "seed": [
+   69.06,
+   72.04
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     63.06,
+     78.04
+    ],
+    "iou": 0.12684
+   },
+   {
+    "stage": "start",
+    "guess": [
+     63.06,
+     70.55
+    ],
+    "iou": 0.05982
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     70.02,
+     71.92
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.9000000000000232,
+  "g": 70.02,
+  "h": 71.92,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:1": {
+  "seed": [
+   18.16,
+   21.52
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     12.16,
+     27.52
+    ],
+    "iou": 0.46224
+   },
+   {
+    "stage": "start",
+    "guess": [
+     12.16,
+     19.84
+    ],
+    "iou": 0.26109
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     16.78,
+     23.88
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 7.099999999999959,
+  "g": 16.78,
+  "h": 23.88,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:2": {
+  "seed": [
+   47.4,
+   50.76
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     41.4,
+     56.76
+    ],
+    "iou": 0.30599
+   },
+   {
+    "stage": "start",
+    "guess": [
+     41.4,
+     49.08
+    ],
+    "iou": 0.08596
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     48.1,
+     52.8
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.700000000000053,
+  "g": 48.1,
+  "h": 52.8,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:5": {
+  "seed": [
+   40.16,
+   44.36
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     34.16,
+     50.36
+    ],
+    "iou": 0.24815
+   },
+   {
+    "stage": "start",
+    "guess": [
+     34.16,
+     42.26
+    ],
+    "iou": 0.19291
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     40.3,
+     44.32
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.020000000000063,
+  "g": 40.3,
+  "h": 44.32,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:7": {
+  "seed": [
+   35.7,
+   38.1
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     29.700000000000003,
+     44.1
+    ],
+    "iou": 0.12639
+   },
+   {
+    "stage": "start",
+    "guess": [
+     29.700000000000003,
+     36.9
+    ],
+    "iou": 0.07637
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     36.26,
+     38.08
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.8199999999999725,
+  "g": 36.26,
+  "h": 38.08,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:8": {
+  "seed": [
+   28.6,
+   32.84
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     22.6,
+     38.84
+    ],
+    "iou": 0.21305
+   },
+   {
+    "stage": "start",
+    "guess": [
+     22.6,
+     30.72
+    ],
+    "iou": 0.13086
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     29.38,
+     32.84
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.460000000000002,
+  "g": 29.38,
+  "h": 32.84,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:9": {
+  "seed": [
+   40.16,
+   44.36
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     34.16,
+     50.36
+    ],
+    "iou": 0.24815
+   },
+   {
+    "stage": "start",
+    "guess": [
+     34.16,
+     42.26
+    ],
+    "iou": 0.19291
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     40.3,
+     44.32
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.020000000000063,
+  "g": 40.3,
+  "h": 44.32,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_60:10": {
+  "seed": [
+   18.16,
+   21.52
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     12.16,
+     27.52
+    ],
+    "iou": 0.18099
+   },
+   {
+    "stage": "start",
+    "guess": [
+     12.16,
+     19.84
+    ],
+    "iou": 0.36198
+   },
+   {
+    "stage": "start",
+    "guess": [
+     12.16,
+     16.0
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     12.16,
+     17.92
+    ],
+    "iou": 0.15405
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     16.78,
+     19.56
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.7799999999999656,
+  "g": 16.78,
+  "h": 19.56,
+  "m_lo": 16.0,
+  "m_hi": 19.84,
+  "m_tried": true
+ },
+ "conversation_sample_62:1": {
+  "seed": [
+   50.6,
+   53.64
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     44.6,
+     59.64
+    ],
+    "iou": 0.18883
+   },
+   {
+    "stage": "start",
+    "guess": [
+     44.6,
+     52.12
+    ],
+    "iou": 0.14097
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     50.84,
+     53.68
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.839999999999963,
+  "g": 50.84,
+  "h": 53.68,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_62:4": {
+  "seed": [
+   24.02,
+   28.1
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     18.02,
+     34.1
+    ],
+    "iou": 0.24378
+   },
+   {
+    "stage": "start",
+    "guess": [
+     18.02,
+     26.06
+    ],
+    "iou": 0.19124
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     24.14,
+     28.06
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.9200000000000665,
+  "g": 24.14,
+  "h": 28.06,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_62:5": {
+  "seed": [
+   50.6,
+   53.64
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     44.6,
+     59.64
+    ],
+    "iou": 0.06915
+   },
+   {
+    "stage": "start",
+    "guess": [
+     44.6,
+     52.12
+    ],
+    "iou": 0.1383
+   },
+   {
+    "stage": "start",
+    "guess": [
+     44.6,
+     48.36
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     44.6,
+     50.24
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     44.6,
+     51.18
+    ],
+    "iou": 0.0467
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     50.84,
+     51.88
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.0400000000000107,
+  "g": 50.84,
+  "h": 51.88,
+  "m_lo": 50.24,
+  "m_hi": 52.12,
+  "m_tried": true
+ },
+ "conversation_sample_62:6": {
+  "seed": [
+   58.8,
+   61.18
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     52.8,
+     67.18
+    ],
+    "iou": 0.14047
+   },
+   {
+    "stage": "start",
+    "guess": [
+     52.8,
+     59.99
+    ],
+    "iou": 0.08865
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     59.24,
+     61.26
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.0200000000000373,
+  "g": 59.24,
+  "h": 61.26,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_62:8": {
+  "seed": [
+   66.84,
+   68.58
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     60.84,
+     74.58
+    ],
+    "iou": 0.34934
+   },
+   {
+    "stage": "start",
+    "guess": [
+     60.84,
+     67.71
+    ],
+    "iou": 0.04383
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     67.22,
+     72.02
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.7999999999999945,
+  "g": 67.22,
+  "h": 72.02,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_62:10": {
+  "seed": [
+   28.8,
+   31.2
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     22.8,
+     37.2
+    ],
+    "iou": 0.29861
+   },
+   {
+    "stage": "start",
+    "guess": [
+     22.8,
+     30.0
+    ],
+    "iou": 0.06679
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     29.28,
+     33.58
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.300000000000027,
+  "g": 29.28,
+  "h": 33.58,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_73:2": {
+  "seed": [
+   45.0,
+   47.86
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     39.0,
+     53.86
+    ],
+    "iou": 0.17766
+   },
+   {
+    "stage": "start",
+    "guess": [
+     39.0,
+     46.43
+    ],
+    "iou": 0.13657
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     45.22,
+     47.86
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 2.6400000000000468,
+  "g": 45.22,
+  "h": 47.86,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_73:4": {
+  "seed": [
+   52.2,
+   55.94
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     46.2,
+     61.94
+    ],
+    "iou": 0.33418
+   },
+   {
+    "stage": "start",
+    "guess": [
+     46.2,
+     54.07
+    ],
+    "iou": 0.21349
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     51.76,
+     57.02
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 5.259999999999946,
+  "g": 51.76,
+  "h": 57.02,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_73:6": {
+  "seed": [
+   9.0,
+   11.16
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     3.0,
+     17.16
+    ],
+    "iou": 0.12147
+   },
+   {
+    "stage": "start",
+    "guess": [
+     3.0,
+     10.08
+    ],
+    "iou": 0.09453
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     9.32,
+     11.04
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.7199999999999598,
+  "g": 9.32,
+  "h": 11.04,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_73:7": {
+  "seed": [
+   52.2,
+   55.94
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     46.2,
+     61.94
+    ],
+    "iou": 0.24905
+   },
+   {
+    "stage": "start",
+    "guess": [
+     46.2,
+     54.07
+    ],
+    "iou": 0.08965
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     53.1,
+     57.02
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.919999999999967,
+  "g": 53.1,
+  "h": 57.02,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_73:10": {
+  "seed": [
+   28.7,
+   31.26
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     22.7,
+     37.260000000000005
+    ],
+    "iou": 0.29396
+   },
+   {
+    "stage": "start",
+    "guess": [
+     22.7,
+     29.98
+    ],
+    "iou": 0.32874
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     27.12,
+     31.4
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.279999999999966,
+  "g": 27.12,
+  "h": 31.4,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_80:6": {
+  "seed": [
+   0.0,
+   4.76
+  ],
+  "W": 12.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     0.0,
+     10.76
+    ],
+    "iou": 0.19322
+   },
+   {
+    "stage": "start",
+    "guess": [
+     0.0,
+     2.38
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     0.0,
+     6.57
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     0.0,
+     8.665
+    ],
+    "iou": 0.01568
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     8.499,
+     10.578
+    ],
+    "iou": 0.6262
+   },
+   {
+    "stage": "len",
+    "guess": [
+     0.0,
+     16.759999999999998
+    ],
+    "iou": 0.19809
+   },
+   {
+    "stage": "start",
+    "guess": [
+     0.0,
+     2.38
+    ],
+    "iou": 0.0
+   },
+   {
+    "stage": "start",
+    "guess": [
+     0.0,
+     9.57
+    ],
+    "iou": 0.09237
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     8.48,
+     11.8
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 3.320000000000001,
+  "g": 8.48,
+  "h": 11.8,
+  "m_lo": 2.38,
+  "m_hi": null,
+  "m_tried": true,
+  "note": "verify iou 0.626, widening to W 12.0"
+ },
+ "conversation_sample_80:8": {
+  "seed": [
+   51.2,
+   55.9
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     45.2,
+     61.9
+    ],
+    "iou": 0.28263
+   },
+   {
+    "stage": "start",
+    "guess": [
+     45.2,
+     53.55
+    ],
+    "iou": 0.21922
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     51.2,
+     55.92
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.719999999999997,
+  "g": 51.2,
+  "h": 55.92,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_80:10": {
+  "seed": [
+   89.92,
+   94.44
+  ],
+  "W": 6.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     83.92,
+     100.44
+    ],
+    "iou": 0.25182
+   },
+   {
+    "stage": "start",
+    "guess": [
+     83.92,
+     92.18
+    ],
+    "iou": 0.17837
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     90.3,
+     94.46
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.159999999999981,
+  "g": 90.3,
+  "h": 94.46,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_44:2": {
+  "seed": [
+   62.54,
+   65.36
+  ],
+  "W": 4.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     58.54,
+     69.36
+    ],
+    "iou": 0.43623
+   },
+   {
+    "stage": "start",
+    "guess": [
+     58.54,
+     63.95
+    ],
+    "iou": 0.48971
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     60.62,
+     65.34
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 4.720000000000009,
+  "g": 60.62,
+  "h": 65.34,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ },
+ "conversation_sample_51:6": {
+  "seed": [
+   52.88,
+   55.18
+  ],
+  "W": 4.0,
+  "runs": [
+   {
+    "stage": "len",
+    "guess": [
+     48.88,
+     59.18
+    ],
+    "iou": 0.18058
+   },
+   {
+    "stage": "start",
+    "guess": [
+     48.88,
+     54.03
+    ],
+    "iou": 0.11624
+   },
+   {
+    "stage": "verify",
+    "guess": [
+     53.3,
+     55.16
+    ],
+    "iou": 1.0
+   }
+  ],
+  "stage": "done",
+  "L": 1.8600000000000114,
+  "g": 53.3,
+  "h": 55.16,
+  "m_lo": null,
+  "m_hi": null,
+  "m_tried": true
+ }
+}

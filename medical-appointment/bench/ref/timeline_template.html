@@ -71,7 +71,17 @@
     background-image:repeating-linear-gradient(135deg, var(--c) 0 3px, transparent 3px 6px); border:1px solid var(--c); }
   .seed { position:absolute; top:16px; height:9px; border-radius:2px; border:1px dashed var(--c); opacity:0.8; }
   .missmark { position:absolute; top:16px; height:9px; width:9px; border-radius:50%; background:var(--miss); }
-  .lane.cur, .lane-l.cur { background:var(--hi); }
+  .lane.cur, .lane-l.cur, .txt.cur, .txt-l.cur { background:var(--hi); }
+  .txt-l { height:44px; display:flex; align-items:center; gap:6px; padding:0 10px; border-top:1px dashed var(--grid); }
+  .txt { height:44px; position:relative; border-top:1px dashed var(--grid); }
+  .txt .stick { position:sticky; left:0; display:inline-block; max-width:min(100%, calc(100vw - 330px)); padding:4px 10px; }
+  .txt .ln { font-size:12.5px; line-height:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .txt .lab { display:inline-block; width:56px; font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); }
+  .txt .ln.g { color:var(--ink); } .txt .ln.p { color:var(--seg-ink); }
+  .play { font:inherit; font-size:11.5px; padding:2px 8px; border-radius:6px; border:1px solid var(--line); background:var(--panel); color:var(--ink); cursor:pointer; white-space:nowrap; }
+  .play:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+  .play:disabled { opacity:0.45; cursor:default; }
+  .play:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
   #tip { position:fixed; z-index:20; max-width:420px; background:var(--ink); color:var(--bg); font-size:12.5px; line-height:1.4; padding:8px 10px; border-radius:8px; pointer-events:none; display:none; box-shadow:0 6px 24px rgba(0,0,0,0.25); }
   #tip b { display:block; margin-bottom:2px; }
   .playing { outline:2px solid var(--accent); outline-offset:1px; }
@@ -96,6 +106,7 @@
     <label>sort
       <select id="sort"><option value="id">by sample</option><option value="tiou">worst first</option></select></label>
     <label><input type="checkbox" id="hideok"> hide conversations with nothing to show</label>
+    <label><input type="checkbox" id="showtxt" checked> transcript rows</label>
     <span class="note" id="audio-note"></span>
   </div>
 </header>
@@ -107,7 +118,7 @@
   <span><span class="sw" style="border:1px dashed var(--q1)"></span>hand seed (validation only)</span>
   <span><span class="sw" style="background:var(--seg)"></span>turbo sentence units</span>
   <span><span class="sw" style="background:var(--miss); width:10px; border-radius:50%"></span>positive answered no</span>
-  <span>hover for text and times; click a bar to play it when served next to the audio</span>
+  <span>the transcript rows show the turbo words inside each interval; ▶ gold plays the annotated stretch (embedded clip), ▶ pipeline needs the local audio server</span>
 </div>
 <div id="convs"></div>
 <div id="tip"></div>
@@ -115,6 +126,8 @@
 
 <script>
 const SETS = /*DATA*/null;
+const CLIPS = /*CLIPS*/null || {};
+const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 const $ = id => document.getElementById(id);
 const fmt = s => `${Math.floor(s / 60)}:${(s % 60).toFixed(2).padStart(5, '0')}`;
 const iou = (a, b) => { if (!a || !b) return 0; const i = Math.max(0, Math.min(a[1], b[1]) - Math.max(a[0], b[0])); const u = Math.max(a[1], b[1]) - Math.min(a[0], b[0]); return u > 0 ? i / u : 0; };
@@ -168,7 +181,7 @@ function render() {
   const set = SETS[setIdx];
   $('src').textContent = set.source;
   summary(set);
-  const filter = $('filter').value, sortBy = $('sort').value, hideok = $('hideok').checked;
+  const filter = $('filter').value, sortBy = $('sort').value, hideok = $('hideok').checked, showtxt = $('showtxt').checked;
   const convs = [...set.convs];
   const convScore = c => { const v = c.qs.filter(q => q.yes && q.gold).map(q => q.pred && q.span ? iou(q.span, q.gold) : 0); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : 1; };
   if (sortBy === 'tiou') convs.sort((a, b) => convScore(a) - convScore(b));
@@ -205,6 +218,15 @@ function render() {
       else if (q.yes && q.gold) bars += `<div class="missmark" title="answered no" style="left:${q.gold[0] * pxs}px"></div>`;
       if (q.seed && !(q.pred && q.span)) bars += `<div class="seed" data-c="${c.stem}" data-s="${q.seed[0]}" data-e="${q.seed[1]}" data-t="hand seed · q${q.i} · ${fmt(q.seed[0])} → ${fmt(q.seed[1])}|${q.text}" style="left:${q.seed[0] * pxs}px; width:${Math.max(2, (q.seed[1] - q.seed[0]) * pxs)}px; --c:${col}"></div>`;
       lanes += `<div class="lane" data-lane="${c.stem}-${q.i}">${bars}</div>`;
+      if (showtxt && (q.gold || (q.pred && q.span))) {
+        const key = `${c.stem}:${q.i}`, hasClip = !!CLIPS[key];
+        const gbtn = q.gold ? `<button class="play" data-key="${key}" data-c="${c.stem}" data-s="${q.gold[0]}" data-e="${q.gold[1]}" ${hasClip || audioOK ? '' : 'disabled'} title="${hasClip ? 'embedded clip of the gold interval' : audioOK ? 'plays the gold interval from the local audio' : 'no clip embedded and no local audio'}">▶ gold</button>` : '';
+        const pbtn = q.pred && q.span ? `<button class="play" data-c="${c.stem}" data-s="${q.span[0]}" data-e="${q.span[1]}" ${audioOK ? '' : 'disabled'} title="${audioOK ? 'plays the pipeline span from the local audio' : 'needs the local audio server (http://localhost:9060/timeline.html)'}">▶ pipeline</button>` : '';
+        labels += `<div class="txt-l" data-lane="${c.stem}-${q.i}">${gbtn}${pbtn}</div>`;
+        lanes += `<div class="txt" data-lane="${c.stem}-${q.i}"><div class="stick">
+          <div class="ln g" title="${esc(q.gtext)}"><span class="lab">gold</span>${q.gold ? (q.gtext ? '“' + esc(q.gtext) + '”' : '<i>no turbo words inside</i>') : '—'}</div>
+          <div class="ln p" title="${esc(q.ptext)}"><span class="lab">pipeline</span>${q.pred && q.span ? (q.ptext ? '“' + esc(q.ptext) + '”' : '<i>no turbo words inside</i>') : (q.yes ? '<i>answered no</i>' : '—')}</div></div></div>`;
+      }
     }
     el.innerHTML = `<div class="head"><b>${c.stem.replace('conversation_', '')}</b><span class="m mono">${fmt(c.dur)}</span><span class="m">${c.qs.filter(q => q.yes).length} positives · mean tIoU <span class="mono">${sc.toFixed(3)}</span></span></div>
       <div class="labels">${labels}</div>
@@ -224,14 +246,19 @@ document.addEventListener('mousemove', e => {
   const x = Math.min(e.clientX + 14, window.innerWidth - 440), y = e.clientY + 16;
   tip.style.left = x + 'px'; tip.style.top = (y + 120 > window.innerHeight ? e.clientY - 100 : y) + 'px';
 });
+function mark(t) { document.querySelectorAll('.playing').forEach(x => x.classList.remove('playing')); if (t) t.classList.add('playing'); }
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-s]');
-  if (!t || !audioOK) return;
+  if (!t) return;
+  if (t.dataset.key && CLIPS[t.dataset.key] && !(audioOK && e.shiftKey)) {   // embedded clip of the gold interval
+    audio.src = CLIPS[t.dataset.key]; stopAt = null; audio.currentTime = 0; audio.play(); mark(t); return;
+  }
+  if (!audioOK) return;
   const src = `/audio/${t.dataset.c}.mp3`;
   if (!audio.src.endsWith(src)) audio.src = src;
-  audio.currentTime = +t.dataset.s; stopAt = +t.dataset.e; audio.play();
-  document.querySelectorAll('.playing').forEach(x => x.classList.remove('playing')); t.classList.add('playing');
+  audio.currentTime = +t.dataset.s; stopAt = +t.dataset.e; audio.play(); mark(t);
 });
+audio.addEventListener('ended', () => mark(null));
 audio.addEventListener('timeupdate', () => { if (stopAt !== null && audio.currentTime >= stopAt) { audio.pause(); stopAt = null; document.querySelectorAll('.playing').forEach(x => x.classList.remove('playing')); } });
 document.addEventListener('mouseover', e => { const l = e.target.closest('[data-lane]'); document.querySelectorAll('.cur').forEach(x => x.classList.remove('cur')); if (l) document.querySelectorAll(`[data-lane="${l.dataset.lane}"]`).forEach(x => x.classList.add('cur')); });
 
@@ -239,9 +266,9 @@ document.addEventListener('mouseover', e => { const l = e.target.closest('[data-
 const setbtn = $('setbtn');
 SETS.forEach((s, i) => { const b = document.createElement('button'); b.textContent = s.name; b.className = i === 0 ? 'on' : ''; b.onclick = () => { setIdx = i; [...setbtn.children].forEach((x, j) => x.classList.toggle('on', j === i)); render(); }; setbtn.appendChild(b); });
 $('zoom').oninput = () => { pxs = +$('zoom').value; $('zv').textContent = pxs + ' px/s'; render(); };
-$('filter').onchange = $('sort').onchange = $('hideok').onchange = render;
+$('filter').onchange = $('sort').onchange = $('hideok').onchange = $('showtxt').onchange = render;
 try { const z = localStorage.getItem('tl.zoom'); if (z) { pxs = +z; $('zoom').value = z; $('zv').textContent = z + ' px/s'; } } catch (e) {}
 $('zoom').addEventListener('change', () => { try { localStorage.setItem('tl.zoom', String(pxs)); } catch (e) {} });
-fetch('/audio/' + SETS[0].convs[0].stem + '.mp3', { method: 'HEAD' }).then(r => { audioOK = r.ok; $('audio-note').textContent = r.ok ? 'audio available: click a bar to play it' : ''; }).catch(() => {});
+fetch('/audio/' + SETS[0].convs[0].stem + '.mp3', { method: 'HEAD' }).then(r => { audioOK = r.ok; $('audio-note').textContent = r.ok ? 'local audio available: click any bar or ▶ to play it' : (Object.keys(CLIPS).length ? `${Object.keys(CLIPS).length} gold clips embedded` : ''); render(); }).catch(() => {});
 render();
 </script>

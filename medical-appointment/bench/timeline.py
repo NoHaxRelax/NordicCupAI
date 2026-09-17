@@ -31,10 +31,25 @@ TEMPLATE = HERE / 'ref' / 'timeline_template.html'
 OUT = HERE / 'ref' / 'timeline.html'
 
 
-def segments(path: Path) -> tuple[list[dict], float]:
+def segments(path: Path) -> tuple[list[dict], float, list[dict]]:
     d = json.loads(path.read_text(encoding='utf-8'))
     segs = [{'s': round(s['start'], 2), 'e': round(s['end'], 2), 't': s['text'].strip()} for s in d['segments'] if s['text'].strip()]
-    return segs, (segs[-1]['e'] if segs else 0.0)
+    words = [{'s': w['start'], 'e': w['end'], 'w': w['w'].strip()} for s in d['segments'] for w in (s.get('words') or [])]
+    return segs, (segs[-1]['e'] if segs else 0.0), words
+
+
+def text_in(words: list[dict], span) -> str:
+    """The turbo words whose midpoint falls inside the interval."""
+    if not span or not words:
+        return ''
+    a, b = span
+    return ' '.join(w['w'] for w in words if a <= (w['s'] + w['e']) / 2 <= b)
+
+
+def add_texts(qs: list[dict], words: list[dict]) -> None:
+    for q in qs:
+        q['gtext'] = text_in(words, q.get('gold'))
+        q['ptext'] = text_in(words, q.get('span')) if q.get('pred') and q.get('span') else ''
 
 
 def training(result: Path) -> dict:
@@ -50,13 +65,14 @@ def training(result: Path) -> dict:
     for tid in sorted(by, key=lambda t: int(re.sub(r'\D', '', t))):
         stem = f'conversation_{tid}'
         tf = CASE / 'transcripts' / f'{stem}.large-v3-turbo.json'
-        segs, dur = segments(tf) if tf.exists() else ([], 0.0)
+        segs, dur, words = segments(tf) if tf.exists() else ([], 0.0, [])
         qs = []
         pos = {qid: i for i, qid in enumerate(order.get(tid, []))}
         for q in sorted(by[tid], key=lambda x: pos.get(x['question_id'], 99)):
             qs.append({'i': pos.get(q['question_id'], 0) + 1, 'text': q['question'], 'type': q['question_type'],
                        'gold': q.get('gold'), 'yes': bool(q['label']), 'pred': bool(q['answer']) if q.get('answer') is not None else None,
                        'span': q.get('span'), 'quote': (q.get('raw') or {}).get('quote')})
+        add_texts(qs, words)
         convs.append({'stem': stem, 'dur': dur, 'segs': segs, 'qs': qs})
     cfg = res.get('config', {})
     return {'name': 'training', 'source': f"{cfg.get('model')} {cfg.get('variant')} on {cfg.get('asr')} ({cfg.get('date', '')[:16]}), {result.name}",
@@ -75,7 +91,7 @@ def validation() -> dict | None:
     convs = []
     for stem in sorted(rows, key=lambda s: int(re.sub(r'\D', '', s))):
         tf = next((dump / 'transcripts').glob(f'{stem}.*.json'), None)
-        segs, dur = segments(tf) if tf else ([], 0.0)
+        segs, dur, words = segments(tf) if tf else ([], 0.0, [])
         d = served.get(stem, {})
         qs = []
         for r in rows[stem]:
@@ -86,6 +102,7 @@ def validation() -> dict | None:
                        'gold': gold, 'yes': r['answer'], 'pred': bool(d['answers'][i]) if d else None,
                        'span': (d.get('spans') or [None] * 10)[i] if d else None, 'quote': None,
                        'seed': [r['start'], r['end']] if r['answer'] else None})
+        add_texts(qs, words)
         convs.append({'stem': stem, 'dur': dur, 'segs': segs, 'qs': qs})
     n_gold = sum(1 for c in convs for q in c['qs'] if q['gold'])
     return {'name': 'validation', 'source': f'served run F (0.6759) vs recovered gold spans ({n_gold} of 95 recovered so far)', 'convs': convs}
@@ -106,9 +123,13 @@ def main() -> int:
     v = validation()
     if v:
         sets.append(v)
-    html = TEMPLATE.read_text(encoding='utf-8').replace('/*DATA*/null', json.dumps(sets, ensure_ascii=False))
+    clips_file = HERE / 'ref' / 'clips.json'
+    clips = clips_file.read_text(encoding='utf-8') if clips_file.exists() else '{}'
+    html = (TEMPLATE.read_text(encoding='utf-8').replace('/*DATA*/null', json.dumps(sets, ensure_ascii=False))
+            .replace('/*CLIPS*/null', clips))
     OUT.write_text(html, encoding='utf-8')
-    print(f'{result.name}: {len(sets[0]["convs"])} training conversations' + (f', {len(v["convs"])} validation' if v else '') + f' -> {OUT} ({OUT.stat().st_size // 1024} KB)')
+    print(f'{result.name}: {len(sets[0]["convs"])} training conversations' + (f', {len(v["convs"])} validation' if v else '')
+          + f', clips {"embedded" if clips != "{}" else "none (run bench/clips.py)"} -> {OUT} ({OUT.stat().st_size // 1024} KB)')
     return 0
 
 
