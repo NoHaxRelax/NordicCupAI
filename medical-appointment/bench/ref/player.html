@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Transcript player</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#f6f7f9; --fg:#1b1f24; --muted:#5b6470; --card:#fff; --line:#e3e6ea; --accent:#0b5fff; --hi:#fff3bf; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f1216; --fg:#e6e8eb; --muted:#9aa4b2; --card:#171b21; --line:#2a3039; --accent:#6ea0ff; --hi:#3b3410; } }
+  :root[data-theme="dark"] { --bg:#0f1216; --fg:#e6e8eb; --muted:#9aa4b2; --card:#171b21; --line:#2a3039; --accent:#6ea0ff; --hi:#3b3410; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, sans-serif; }
+  .bar { display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 16px; position:sticky; top:8px; }
+  .bar label { color:var(--muted); font-size:13px; }
+  input[type=range] { width:220px; vertical-align:middle; }
+  button { font:inherit; padding:6px 12px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  .big { font-size:22px; font-variant-numeric:tabular-nums; min-width:5ch; display:inline-block; }
+  #lines { margin-top:14px; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:6px 0; }
+  .ln { display:flex; gap:12px; padding:5px 14px; cursor:pointer; border-left:3px solid transparent; }
+  .ln:hover { background:color-mix(in srgb, var(--accent) 8%, transparent); }
+  .ln.cur { background:var(--hi); border-left-color:var(--accent); }
+  .t { color:var(--muted); font-variant-numeric:tabular-nums; min-width:6.5ch; }
+  .sp { min-width:2.2ch; font-weight:600; }
+  .hint { color:var(--muted); font-size:13px; margin:10px 2px; }
+  kbd { border:1px solid var(--line); border-radius:4px; padding:0 5px; font-size:12px; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <label>audio <input id="mp3" type="file" accept="audio/*"></label>
+  <label>transcript (bench/ref .txt, optional) <input id="txt" type="file" accept=".txt"></label>
+  <button id="play">play</button>
+  <span class="big" id="clock">0:00.0</span>
+  <label>speed <input id="rate" type="range" min="1" max="10" step="0.25" value="1"> <span class="big" id="rv">1.0x</span></label>
+  <label><input id="pitch" type="checkbox" checked> keep pitch (works up to 4x)</label>
+</div>
+<div class="hint">Keys: <kbd>space</kbd> play/pause, <kbd>←</kbd> <kbd>→</kbd> 2 s, <kbd>↑</kbd> <kbd>↓</kbd> speed, <kbd>1</kbd>..<kbd>9</kbd> jump to 10..90%. Click a line to seek. Above 4x the browser mutes the normal player, so the page plays the raw buffer instead (pitch rises).</div>
+<audio id="a" preload="auto"></audio>
+<div id="lines"></div>
+<script>
+const a = document.getElementById('a'), rate = document.getElementById('rate'), rv = document.getElementById('rv');
+const clock = document.getElementById('clock'), playBtn = document.getElementById('play'), pitch = document.getElementById('pitch');
+let lines = [], buf = null, ctx = null, src = null, srcStart = 0, srcOffset = 0, mode = 'el';
+const fmt = s => `${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
+
+document.getElementById('mp3').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  a.src = URL.createObjectURL(f);
+  buf = null;
+  try { ctx = ctx || new (window.AudioContext||window.webkitAudioContext)(); buf = await ctx.decodeAudioData(await f.arrayBuffer()); } catch (err) { console.warn('decode failed', err); }
+  document.title = f.name + ' · player';
+};
+document.getElementById('txt').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const text = await f.text();
+  lines = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const m = raw.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(?:\[([DP?])\]\s*)?(.*)$/);
+    if (m) lines.push({t: +m[1]*60 + +m[2], sp: m[3]||'', text: m[4]});
+  }
+  const box = document.getElementById('lines'); box.innerHTML = '';
+  lines.forEach((l, i) => {
+    const d = document.createElement('div'); d.className = 'ln'; d.dataset.i = i;
+    d.innerHTML = `<span class="t">${fmt(l.t)}</span><span class="sp">${l.sp}</span><span>${l.text.replace(/</g,'&lt;')}</span>`;
+    d.onclick = () => seek(l.t);
+    box.appendChild(d);
+  });
+};
+
+function curTime() { return mode === 'el' ? a.currentTime : (src ? srcOffset + (ctx.currentTime - srcStart) * src.playbackRate.value : srcOffset); }
+function duration() { return buf ? buf.duration : (a.duration || 0); }
+function playing() { return mode === 'el' ? !a.paused : !!src; }
+
+function stopBuf() { if (src) { try { src.stop(); } catch (e) {} src.disconnect(); srcOffset = curTime(); src = null; } }
+function startBuf(at) {
+  if (!buf) return;
+  stopBuf(); ctx.resume();
+  src = ctx.createBufferSource(); src.buffer = buf; src.playbackRate.value = +rate.value; src.connect(ctx.destination);
+  srcOffset = Math.max(0, Math.min(at, buf.duration)); srcStart = ctx.currentTime; src.start(0, srcOffset);
+  src.onended = () => { if (src) { srcOffset = buf.duration; src = null; } };
+}
+function wantMode() { return (+rate.value > 4 && buf) ? 'buf' : 'el'; }
+function applyRate() {
+  const r = +rate.value; rv.textContent = r.toFixed(2).replace(/\.?0+$/,'') + 'x';
+  const m = wantMode();
+  if (m !== mode) { const t = curTime(), wasPlaying = playing(); if (mode === 'el') a.pause(); else stopBuf(); mode = m;
+    if (mode === 'el') { a.currentTime = t; if (wasPlaying) a.play(); } else { srcOffset = t; if (wasPlaying) startBuf(t); } }
+  a.playbackRate = Math.min(r, 16); a.preservesPitch = pitch.checked; a.mozPreservesPitch = pitch.checked;
+  if (mode === 'buf' && src) { const t = curTime(); startBuf(t); }
+}
+function seek(t) { if (mode === 'el') { a.currentTime = t; if (a.paused) a.play(); } else { startBuf(t); } }
+function toggle() { if (mode === 'el') { a.paused ? a.play() : a.pause(); } else { src ? stopBuf() : startBuf(srcOffset); } }
+
+rate.oninput = applyRate; pitch.onchange = applyRate; playBtn.onclick = toggle;
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type === 'file') return;
+  if (e.code === 'Space') { e.preventDefault(); toggle(); }
+  else if (e.code === 'ArrowRight') seek(curTime() + 2);
+  else if (e.code === 'ArrowLeft') seek(Math.max(0, curTime() - 2));
+  else if (e.code === 'ArrowUp') { rate.value = Math.min(10, +rate.value + 0.25); applyRate(); }
+  else if (e.code === 'ArrowDown') { rate.value = Math.max(1, +rate.value - 0.25); applyRate(); }
+  else if (/^Digit[1-9]$/.test(e.code)) seek(duration() * (+e.code.slice(5)) / 10);
+});
+setInterval(() => {
+  const t = curTime(); clock.textContent = fmt(t); playBtn.textContent = playing() ? 'pause' : 'play';
+  let cur = -1; for (let i = 0; i < lines.length; i++) if (lines[i].t <= t + 0.05) cur = i;
+  document.querySelectorAll('.ln').forEach(d => d.classList.toggle('cur', +d.dataset.i === cur));
+  const el = document.querySelector('.ln.cur'); if (el && playing()) el.scrollIntoView({block: 'center', behavior: 'smooth'});
+}, 150);
+</script>
+</body>
+</html>
