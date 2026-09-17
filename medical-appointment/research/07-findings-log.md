@@ -133,3 +133,12 @@ Live endpoint on the laptop (distil-large-v3, qwen3:4b via Ollama, START_RULE fi
 | round trip per conversation, mean / worst | 8.2 s / 11.7 s |
 
 The answering half is close to its ceiling on this model already; the missing points are in the spans (0.458 realised against a 0.832 oracle at sentence granularity). This is the reference number for the first deliberate validation run.
+
+### 13. First validation scores
+
+| attempt (2026-09-17) | served by | score |
+|---|---|---|
+| 13:37, queued by accident during a server restart | distil-large-v3 + qwen3:4b, unit-start rule (+0.36 / +0.12), nulls on no | 0.5869 |
+| 15:45 | server had crashed 2 minutes earlier (python.exe fail-fast 0xc0000409 in ucrtbase.dll during an external request); every request 502 | 0.0000 |
+
+The local baseline on the 39 training conversations with the newer defaults is 0.657 (entry 12). The crash led to a supervisor loop around api.py that restarts it on exit. Portal scores are read with `bench/portal_status.py` (key file gitignored).
