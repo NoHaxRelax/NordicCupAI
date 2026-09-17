@@ -266,6 +266,21 @@ def best_merge(units: Sequence, g: Span, k: int, ds: float = 0.0, de: float = 0.
     return best, span
 
 
+def best_merge_served(units: Sequence, g: Span, k: int, ds: float, de: float, rule: str, fwe: dict):
+    """best_merge with the start anchored the way model.span_from_ids anchors
+    it: on the first word's END when START_RULE is 'first-word-end' (fwe maps a
+    unit start to that end), on the unit start otherwise."""
+    best, span = 0.0, None
+    for i in range(len(units)):
+        anchor = fwe.get(units[i][0], 0.0) if rule == 'first-word-end' else 0.0
+        s0 = anchor if anchor > 0 else units[i][0]
+        for j in range(i, min(len(units), i + k)):
+            v = tiou(g, (s0 + ds, units[j][1] + de))
+            if v > best:
+                best, span = v, (units[i][0], units[j][1], j - i + 1)
+    return best, span
+
+
 def serve_units(d: dict) -> List[Tuple[float, float]]:
     """The units model.py serves with (punctuation, segment ends, pauses)."""
     words = []
@@ -274,7 +289,7 @@ def serve_units(d: dict) -> List[Tuple[float, float]]:
             words.append(serving.Word(w['w'], w['start'], w['end']))
         if s['words']:
             words[-1].w += '\x00'          # segment boundary marker, as model._cached_transcript sets it
-    return [(u.start, u.end) for u in serving.make_units(words)]
+    return [(u.start, u.end, getattr(u, 'first_word_end', 0.0)) for u in serving.make_units(words)]
 
 
 def nearest_word(t: float, words: Sequence[Tuple[str, float, float]], later: bool) -> int:
@@ -627,20 +642,24 @@ def analyse(tag: str, files: Dict[str, Path], gold: Dict[str, List[Tuple[dict, S
     fit = (q([o[0] for o in offs], .5), q([o[1] for o in offs], .5)) if offs else None
     su_fit = (q([o[0] for o in su_offs], .5), q([o[1] for o in su_offs], .5)) if su_offs else None
     served = (serving.START_OFFSET, serving.END_OFFSET) if serving is not None else None
+    rule = getattr(serving, 'START_RULE', 'unit-start') if serving is not None else 'unit-start'
     shift_fit, shift_serve, su_shift_fit, su_shift_serve = [], [], [], []
     for stem, items in sorted(gold.items()):
         if stem not in units_cache:
             continue
         sents, su = units_cache[stem]
+        # first-word end per unit start; the served units refine the sentence
+        # units (same terminal punctuation plus pauses), so their starts cover both
+        fwe = {u[0]: u[2] for u in su if len(u) > 2}
         for _, g in items:
             if sents and fit:
                 shift_fit.append(best_merge(sents, g, k, *fit)[0])
             if sents and served:
-                shift_serve.append(best_merge(sents, g, k, *served)[0])
+                shift_serve.append(best_merge_served(sents, g, k, served[0], served[1], rule, fwe)[0])
             if su and su_fit:
                 su_shift_fit.append(best_merge(su, g, k, *su_fit)[0])
             if su and served:
-                su_shift_serve.append(best_merge(su, g, k, *served)[0])
+                su_shift_serve.append(best_merge_served(su, g, k, served[0], served[1], rule, fwe)[0])
 
     R['n_gold_spans'] = len(seg_b)
     R['missing_gold_files'] = missing
