@@ -154,3 +154,15 @@ Queued from `bench/portal_status.py --queue` at 16:17, finished 16:21, 19 conver
 | B | new offsets, nulls on no | pending |
 
 A minus B, divided by 0.6, is the mean tIoU the live scorer credits on spans returned with a no answer. Local estimate of the same difference on three conversations: 0.014 in score.
+
+### 15. Validation A/B: the live scorer does not credit spans on no answers
+
+Runs A (16:17) and B (16:23) used byte-identical code and models; the only difference was SPAN_ON_NO (A returns the located span for every question, B returns null on no).
+
+| run | policy | score |
+|---|---|---|
+| A | spans on every question | 0.6086 |
+| B | nulls on no | 0.6062 |
+| difference | | 0.0024 |
+
+If the live scorer credited spans returned with a no answer, A minus B should have been roughly 0.6 x (share of positives answered no, about 0.15 at a 0.447 yes-rate) x (their span tIoU, about 0.4), around 0.03. The observed 0.0024 is within run-to-run noise of a temperature-0 Ollama model with four parallel slots. Conclusion: the README prose holds on the service (a missed positive scores zero on both halves), and `local_evaluator.py` overstates our score by crediting those spans. Consequences: keep SPAN_ON_NO=1 (harmless), read local tIoU from the "nulls on no" policy in `bench/llm/bench.py`, and the yes-threshold idea (research/06, idea 8) is back on the table: at a 0.447 yes-rate every recovered positive is worth its accuracy point plus its whole tIoU.
