@@ -59,3 +59,14 @@ Entries are appended as milestones complete; each names the commit and the evide
   conditional on a loose predator within 420 of the mouth or the colony. Added the "hearing tap":
   a guide with sprint energy runs into hearing range (60) of a predator that lost it, instead of
   failing "cannot intercept" (the most common loss).
+- **02:20** gap-v3: 3 of 12 colonies extinct. Cause found: overridden agents never spawned (the
+  society's birth requests were dropped: 200-900 requests per game vs ~50 births). Births now pass
+  through except within 35 of a passage. gap-v4: births normal, no trapper-only extinction.
+- **02:50** Hold timelines showed a station fed a new dying (senescent) bait every 30 s without ever
+  holding anything, and "holds" counted while the bait was still walking in. Speculative staffing
+  off; a hold needs the bait at its slot; held stations get young well-fed replacements.
+  gap-v5 (12 seeds): no extinctions, held 8.8% of predator-time (49 holds, 30 s each, up to 3
+  predators at one mouth), score neutral (mean -1.0 vs society, 6/12 wins). Commit f968bd3.
+- **03:20** Reserve slot restored for gaps: the replacement enters behind a dying front bait and
+  moves up when it dies (no target loss); deliveries limited to turns <= 35-55 degrees and leads
+  <= 650 to stop guide deaths (10 per 12 games). Batch gap-v6 running.

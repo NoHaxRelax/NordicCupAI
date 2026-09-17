@@ -60,8 +60,17 @@ if __name__ == '__main__':
     ap.add_argument('--label', default='batch')
     ap.add_argument('--modes', default='both')
     ap.add_argument('--params', default='{}')
+    ap.add_argument('--preset', default=None, help='named parameter set (avoids JSON quoting over ssh)')
     a = ap.parse_args()
     params = json.loads(a.params)
+    PRESETS = {
+        'v5': dict(max_turn=0.8727, turn_bonus=0.8727, lead_max=900.0, gap_reserve=False),
+        'v6': dict(),
+        'noreserve': dict(gap_reserve=False),
+        'wideturn': dict(max_turn=0.8727, turn_bonus=0.8727, lead_max=900.0),
+    }
+    if a.preset:
+        params = dict(PRESETS[a.preset], **params)
     jobs = []
     for seed in range(a.seeds[0], a.seeds[1] + 1):
         for rep in range(a.repeats):

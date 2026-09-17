@@ -37,7 +37,7 @@ DEFAULTS = dict(
     holder_min_energy=180.0,
     standby_radius=170.0,    # a wall station's standby bait forages within this radius
     relevant_range=420.0,    # a free predator this close to an agent is worth trapping
-    max_turn=math.radians(50),   # base steering allowance for a walking guide; sprint energy widens it
+    max_turn=math.radians(35),   # base steering allowance for a walking guide; sprint energy widens it
     attract_wanderers=False,     # only chased agents become guides (attracting wanderers wastes energy)
     bait_eta_slack=40,           # ticks a bait may arrive after the guide reaches the corridor
     prestaff_time=40.0,      # staff the best station from this time on
@@ -54,6 +54,9 @@ DEFAULTS = dict(
     swap_lead_time=25.0,         # call the replacement when the bait's life falls below walk time + this
     swap_force_life=8.0,         # swap even while predators are awake when the bait has this little life left
     staff_range=230.0,           # staff a station in advance only with a loose predator this close to its mouth
+    turn_bonus=math.radians(20), # extra steering allowance for a guide with spare sprint energy
+    lead_max=650.0,              # longest lead (guide to entry + corridor + run-in) worth starting
+    gap_reserve=True,            # gap stations keep a reserve bait 10 behind the front one
     hold_bait_min_life=120.0,    # life on arrival for a bait replacing one at a station that holds predators
 )
 
@@ -129,7 +132,11 @@ class TrapManager:
             # second is where a successor stands before the old bait leaves
             return [add(site.holder, mul(site.axis, -10.0)), add(site.holder, mul(site.axis, 10.0))]
         if site.kind == 'gap':
-            return [site.holder]      # one bait; a replacement stages outside the far mouth
+            # front bait and a reserve 10 deeper: the reserve enters behind a bait that is about to
+            # die and moves up when it does, so the predators never lose a target
+            if not self.P['gap_reserve']:
+                return [site.holder]
+            return [site.holder, sub(site.holder, mul(site.normal, 10.0))]
         return [site.holder]
 
     def _station(self, site: Site) -> Station:
@@ -445,9 +452,10 @@ class TrapManager:
                     # (it waits at the stage for up to swap_lead_time), and only while the station
                     # holds something or a loose predator is near
                     useful = st.held or self._predator_near(world, site, held_now=set(st.held))
+                    has_reserve = any(k == 1 for k in st.baits.values())
                     cands = self._bait_candidates(world, site.successor, exclude={aid}, min_life=P['bait_min_life'] + P['swap_lead_time'],
                                                   long_hold=bool(st.held)) \
-                        if useful and st.baits.get(aid) == 0 and st.successor is None and self._workers(world) > spare else []
+                        if useful and st.baits.get(aid) == 0 and not has_reserve and st.successor is None and self._workers(world) > spare else []
                     walk_s = 1.3 * dist(cands[0].p, site.successor) / 100.0 if cands else 0.0
                     tired = self._life_s(a) < walk_s + P['swap_lead_time']
                 else:
@@ -587,7 +595,7 @@ class TrapManager:
                 away = heading_of(sub(a.p, p.p))
                 gap = dist(a.p, p.p)
                 # steering allowance: base cone, widened by spare sprint energy (sprint-steer)
-                allowance = P['max_turn'] + min(1.0, max(0.0, (a.energy - a.max_energy / 5 - 40.0) / 160.0)) * math.radians(50)
+                allowance = P['max_turn'] + min(1.0, max(0.0, (a.energy - a.max_energy / 5 - 40.0) / 160.0)) * P['turn_bonus']
                 if gap > 200:
                     allowance += math.radians(30)     # a far predator leaves room to swing first
                 for site in self.sites:
@@ -605,7 +613,7 @@ class TrapManager:
                     if turn > allowance:
                         continue
                     lead = dist(a.p, entry) + CORRIDOR + 250.0
-                    if lead > 900:
+                    if lead > P['lead_max']:
                         continue
                     lead_ticks = lead / 8.0
                     bait = None
@@ -687,6 +695,8 @@ class TrapManager:
                 if site.kind == 'gap' and st.baits.get(aid, 0) >= 1 and 0 not in st.baits.values():
                     st.baits[aid] = 0
                     slot = st.slots[0]
+                    st.staffed_since = world.time
+                    self.metrics['handoffs'] += 1
                     self.event('bait_moved_up', key=key, agent=aid)
                 if site.kind == 'gap' and at_slot:
                     exit_point = self._gap_exit(world, site, held_now)
@@ -696,18 +706,28 @@ class TrapManager:
                     near = any(dist(q.p, site.front_mid) < self.P['relevant_range'] for q in world.predators if q.pid not in held_now)
                     idle = not st.held and not near and world.time - max(st.last_held, st.staffed_since) > self.P['bait_idle_time'] \
                         and aid not in self.senescent
-                    succ = world.agents.get(st.successor) if st.successor is not None else None
-                    staged = succ is not None and dist(succ.p, site.successor) < 4.0
-                    window = not st.held or all(is_resting(q) for q in world.predators if q.pid in st.held)
-                    swap = staged and (window or life < self.P['swap_force_life'])
-                    leave = (starving or idle or swap) and world.time - st.opened > 3.0
+                    my_slot = st.baits.get(aid, 0)
+                    reserve = next((b for b, k in st.baits.items() if k == 1 and b != aid), None)
+                    reserve_in = reserve is not None and reserve in world.agents and dist(world.agents[reserve].p, st.slots[1]) < 3.0
+                    front = next((b for b, k in st.baits.items() if k == 0 and b != aid), None)
+                    if my_slot == 0:
+                        # the front bait: with a reserve behind it, it serves until it dies
+                        leave = (starving or idle) and not reserve_in and world.time - st.opened > 3.0
+                        swap = False
+                    else:
+                        # the reserve: leaves when the front bait will outlast the wait
+                        fa = world.agents.get(front) if front is not None else None
+                        swap = False
+                        leave = fa is not None and self._life_s(fa) > 60.0 and world.time - st.staffed_since > 30.0 \
+                            and not (st.held and self._life_s(fa) < 45.0)
+                        leave = leave or starving
                     if exit_point is not None and leave:
                         st.baits.pop(aid, None)
                         self.roles[aid] = ('released', key)
                         self.released[aid] = (exit_point, world.time + 12.0)
                         st.leaving = aid
                         st.left_at = world.time
-                        self.event('bait_left', key=key, agent=aid, why='swap' if swap else ('starving' if starving else 'idle'), energy=round(a.energy))
+                        self.event('bait_left', key=key, agent=aid, slot=my_slot, why='starving' if starving else ('idle' if my_slot == 0 else 'reserve_idle'), energy=round(a.energy))
                         continue
                 if site.kind == 'wall' and at_slot and st.baits.get(aid) == 0 and 1 in st.baits.values():
                     other = next(b for b, k in st.baits.items() if k == 1)
@@ -740,11 +760,11 @@ class TrapManager:
                     continue
                 if site.kind == 'gap':
                     old_bait = world.agents.get(st.leaving) if st.leaving is not None else None
-                    passage_clear = not st.baits and (old_bait is None or dist(old_bait.p, site.holder) > site.length + 6.0
-                                                       or world.time - st.left_at > 15.0)
-                    if passage_clear and st.leaving is not None and (old_bait is None or world.time - st.left_at > 15.0
-                                                                     or dist(old_bait.p, site.holder) > site.length + 6.0):
+                    passage_clear = (old_bait is None or dist(old_bait.p, site.holder) > site.length + 6.0
+                                     or world.time - st.left_at > 15.0)
+                    if passage_clear and st.leaving is not None:
                         st.leaving = None
+                    passage_clear = passage_clear and (slot_i == 1 or not st.baits)
                     if not passage_clear:
                         # wait at the stage outside the far mouth until the old bait has walked out
                         act, why = holder.act(a, site.successor, site, avoid=avoid)
