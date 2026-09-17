@@ -422,6 +422,68 @@ class FewShot:
                       lambda out, u, w, d: _units_post(out, u, w, d, offsets=True))
 
 
+# --------------------------------------------------------------------------- #
+# Joint variant: all ten questions of a conversation in one request
+# --------------------------------------------------------------------------- #
+
+_JOINT_NOTE = ('\nYou receive ALL questions about this consultation at once and answer them in one JSON object.\n'
+               'Different questions usually rest on different utterances: pick, for each question, the utterance\n'
+               'that states that question\'s own detail, and reuse an utterance for two questions only when it\n'
+               'really is the most specific evidence for both. Answer every question; keep their numbering.')
+JOINT_SYSTEM = SYSTEM.replace(_RETURN_MARK, _JOINT_NOTE + '\n' + _RETURN_MARK, 1) \
+    .replace('Return JSON only:\n{', 'Return JSON only:\n{"answers": [ for each question, in order, {"q": <question number>,\n  ', 1) \
+    .replace(']}', ']} ]}', 1)
+
+JOINT_SCHEMA = {
+    'type': 'object',
+    'properties': {
+        'answers': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'q': {'type': 'integer'},
+                    'quote': {'type': 'string'},
+                    'answer': {'type': 'string', 'enum': ['yes', 'no']},
+                    'segments': {'type': 'array', 'items': {'type': 'integer'}},
+                },
+                'required': ['q', 'quote', 'answer', 'segments'],
+            },
+        },
+    },
+    'required': ['answers'],
+}
+
+
+class Joint:
+    """Conversation-level variant: bench.py calls build_all(questions, units) once per
+    conversation and split(out, n) to get the per-question dicts, which go through the
+    ordinary 'units' post-processing."""
+
+    joint = True
+
+    def build_all(self, questions: List[str], units_: List[Unit]) -> Prompt:
+        asks = '\n'.join(f'{i + 1}. {units_question(q)[len("QUESTION: "):]}' for i, q in enumerate(questions))
+        user = f'TRANSCRIPT:\n{render_transcript(units_)}\n\nQUESTIONS:\n{asks}'
+        return Prompt(JOINT_SYSTEM, user, JOINT_SCHEMA,
+                      lambda out, u, w, d: _units_post(out, u, w, d, offsets=True))
+
+    @staticmethod
+    def split(out: dict, n: int) -> List[dict]:
+        per = [{'quote': '', 'answer': 'no', 'segments': []} for _ in range(n)]
+        for item in (out.get('answers') or []):
+            try:
+                k = int(item.get('q', 0)) - 1
+            except (TypeError, ValueError):
+                continue
+            if 0 <= k < n:
+                per[k] = item
+        return per
+
+    def __call__(self, question: str, units_: List[Unit]) -> Prompt:   # --print-prompt uses this
+        return self.build_all([question], units_)
+
+
 VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units': units,
     'units-claim': units_claim,
@@ -429,6 +491,7 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'words': words,
     'units-fewshot': FewShot('units'),
     'words-fewshot': FewShot('words'),
+    'units-joint': Joint(),
 }
 
 

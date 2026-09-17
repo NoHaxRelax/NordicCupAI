@@ -286,6 +286,45 @@ def run_question(client: Client, variant, row: dict, units, words, duration: flo
     return rec
 
 
+def run_conversation_joint(client: Client, variant, rows: List[dict], units, words, duration: float) -> List[dict]:
+    """Joint variants: one request carries all questions of the conversation; the
+    answer is split per question and post-processed like the 'units' variant."""
+    recs = []
+    for row in rows:
+        recs.append({'question_id': row['question_id'], 'transcript_id': row['transcript_id'],
+                     'question': row['question'], 'question_type': row['question_type'],
+                     'label': int(row['label']), 'raw_content': None, 'usage': None,
+                     'finish_reason': None, 'raw': None, 'p_yes': None})
+    t0 = time.time()
+    try:
+        p = variant.build_all([r['question'] for r in rows], units)
+        content, resp = client.chat(p.system, p.user, p.schema)
+        out = parse_json(content)
+        per = variant.split(out, len(rows))
+        for rec, item in zip(recs, per):
+            rec['raw_content'] = content if rec is recs[0] else None
+            rec['usage'] = resp.get('usage') if rec is recs[0] else None
+            rec['finish_reason'] = (resp.get('choices') or [{}])[0].get('finish_reason')
+            rec['raw'] = item
+            yes, span = p.postprocess(item, units, words, duration)
+            rec['answer'] = bool(yes)
+            rec['span'] = list(span) if span else None
+            rec['error'] = None
+    except Exception as exc:
+        for rec in recs:
+            rec.update({'answer': None, 'span': None, 'error': f'{type(exc).__name__}: {exc}'})
+    wall = (time.time() - t0) * 1000
+    for rec, row in zip(recs, rows):
+        gold = gold_evidence(row)
+        rec['gold'] = list(gold) if gold else None
+        rec['latency_ms'] = wall / len(rows)
+        pred = UNANSWERED if rec['answer'] is None else int(rec['answer'])
+        rec['prediction'] = pred
+        rec['correct'] = pred == rec['label']
+        rec['tiou'] = temporal_iou(gold, tuple(rec['span'])) if (gold and rec['span']) else (0.0 if gold else None)
+    return recs
+
+
 def truncation_warning(recs: List[dict], max_tokens: int, no_think: str) -> Optional[str]:
     """Thinking models that were not switched off spend the whole completion
     budget on <think> and return no content. Detect that on the first
@@ -501,11 +540,14 @@ def main() -> int:
             if hasattr(variant, 'set_conversation'):      # few-shot variants: hold this conversation out
                 variant.set_conversation(Path(fn).stem, a.asr)
             t0 = time.time()
-            ex = ThreadPoolExecutor(max_workers=max(1, a.workers))
-            try:
-                recs = list(ex.map(lambda r: run_question(client, variant, r, units, words, duration), rows))
-            finally:
-                ex.shutdown(wait=False, cancel_futures=True)   # on interrupt: do not wait for in-flight requests
+            if getattr(variant, 'joint', False):
+                recs = run_conversation_joint(client, variant, rows, units, words, duration)
+            else:
+                ex = ThreadPoolExecutor(max_workers=max(1, a.workers))
+                try:
+                    recs = list(ex.map(lambda r: run_question(client, variant, r, units, words, duration), rows))
+                finally:
+                    ex.shutdown(wait=False, cancel_futures=True)   # on interrupt: do not wait for in-flight requests
             wall = time.time() - t0
             walls.append(wall)
             failed = any(r['error'] for r in recs)
