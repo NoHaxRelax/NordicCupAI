@@ -81,9 +81,19 @@ def main() -> int:
     ap.add_argument('--spans', action='store_true', help='put the evidence spans in the table (default: null spans)')
     ap.add_argument('--flip', default='', help='comma list: N (whole sample) or N:q (one question) to invert')
     ap.add_argument('--diff', action='store_true', help='print disagreements with the served model and exit')
+    ap.add_argument('--gold', action='store_true', help='with --spans: use the spans recovered by span_probe.py (span_state.json) where available')
     ap.add_argument('--out', default=str(TABLE))
     a = ap.parse_args()
     rows = parse()
+    if a.gold:
+        state = json.loads((HERE / 'span_state.json').read_text(encoding='utf-8'))
+        n_gold = 0
+        for stem, items in rows.items():
+            for r in items:
+                q = state.get(f"{stem}:{r['q']}")
+                if q and q.get('stage') == 'done':
+                    r['start'], r['end'] = q['g'], q['h']; n_gold += 1
+        print(f'{n_gold} spans taken from span_state.json')
     qs = questions()
     missing = set(qs) - set(rows)
     if missing:

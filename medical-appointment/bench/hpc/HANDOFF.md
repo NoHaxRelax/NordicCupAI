@@ -42,16 +42,19 @@ nothing:
    Gated models (gemma, mistral) still need `HF_TOKEN`.
 3. The 39 turbo transcripts of the training set were copied to
    `.../medical-appointment/transcripts/*.large-v3-turbo.json`.
-4. Resubmitted as **job 29429494** (H100 queue, 20 jobs ahead at 18:18):
+4. Job 29429494 (18:18) failed instantly: renaming a venv breaks the absolute shebangs of
+   its `bin/*` launchers (`bin/vllm` pointed at `venv-vllm2/bin/python3.12`). Fixed with
+   sed on the shebang lines of both venvs and on `pyvenv.cfg`. Resubmitted as
+   **job 29429655** at 18:48 (H100 queue; the previous wait was 28 minutes):
    `MODELS="Qwen/Qwen3.8-27B Qwen/Qwen3.6-27B openai/gpt-oss-20b Qwen/Qwen3.6-35B-A3B-FP8"
    ASR_TAGS="large-v3-turbo large-v3" bsub < bench/hpc/llm_bench.lsf`.
-   Logs: `/dtu/blackhole/1e/205502/nordic/logs/llm_bench.29429494.{out,err}`.
-   The ASR sweep 29428666 (A10) is still pending from 17:37.
+   Logs: `/dtu/blackhole/1e/205502/nordic/logs/llm_bench.29429655.{out,err}`.
+   The ASR sweep 29428666 has been running on the A10 since 18:19.
 
 ## To do
 
-1. Watch 29429494 (`bjobs -w`). If a model fails at startup, its serve log is under
-   `bench/results/logs/llm_bench.29429494.<short>.serve.log`; fix and resubmit only the
+1. Watch 29429655 (`bjobs -w`). If a model fails at startup, its serve log is under
+   `bench/results/logs/llm_bench.29429655.<short>.serve.log`; fix and resubmit only the
    failed models (`MODELS="..."`), the job skips models whose results already exist.
 2. Results land in `bench/results/llm/<model>.<variant>.<asr>.json`. Summarise with
    `python bench/llm/bench.py --summary` (see `bench/README.md`) and add a findings-log entry:

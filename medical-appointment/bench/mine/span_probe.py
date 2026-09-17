@@ -54,7 +54,7 @@ TABLE = HERE / 'current_answers.json'
 LOG = HERE / 'count_runs.jsonl'
 N_POS = 95
 BASE = 0.4
-W0 = 4.0          # initial widening in seconds for the len stage (gold spans: median 2.9 s, up to ~15 s)
+W0 = 6.0          # initial widening in seconds for the len stage (gold spans: median 2.9 s, up to ~15 s)
 OK_IOU = 0.995
 GRID = 0.02
 TOL = 0.004       # relative tolerance when recognising the special cases
@@ -136,6 +136,12 @@ def step(key: str, q: dict, dur: float) -> tuple[list[float], str]:
         return [A, round(m, 3)], 'start'
     if q['stage'] == 'verify':
         return [q['g'], q['h']], 'verify'
+    if q['stage'] == 'search':
+        # the seed was in the wrong place: whole-audio probe gives L, then bisect
+        if q['L'] is None:
+            return [0.0, dur], 'search'
+        lo, hi = q['lo'], q['hi']
+        return [lo, round((lo + hi) / 2, 3)], 'search'
     raise ValueError(q['stage'])
 
 
@@ -145,8 +151,29 @@ def absorb(q: dict, guess: list[float], stage: str, iou: float, dur: float) -> N
     if stage == 'len':
         q['L'] = iou * (B - A)
         if q['L'] < GRID:
-            q['stage'] = 'stuck'; q['why'] = 'no overlap with the widened seed'; return
+            q['stage'] = 'search'; q['L'] = None; q['note'] = 'no overlap with the widened seed: searching the whole audio'
+            return
         q['stage'] = 'start'; q['m_tried'] = False; q['m_lo'] = None; q['m_hi'] = None
+    elif stage == 'search':
+        if q['L'] is None:                       # whole-audio probe
+            q['L'] = iou * (B - A)
+            if q['L'] < GRID:
+                q['stage'] = 'stuck'; q['why'] = 'no overlap even with the whole audio'; return
+            q['lo'], q['hi'] = A, B
+            return
+        lo, mid = A, B
+        L = q['L']
+        if iou <= 1e-9:                          # gold entirely right of mid
+            q['lo'] = mid
+        elif abs(iou - L / (mid - lo)) < TOL:    # gold entirely inside [lo, mid]
+            q['hi'] = mid
+        else:                                    # gold straddles mid: same algebra as the start stage
+            g = (mid - iou * (L - lo)) / (1 + iou)
+            q['g'] = round(g, 3); q['h'] = round(g + L, 3); q['stage'] = 'verify'; return
+        if q['hi'] - q['lo'] < L + GRID:          # interval is the gold itself
+            q['g'] = round(q['lo'], 3); q['h'] = round(q['lo'] + L, 3); q['stage'] = 'verify'
+        elif len([r for r in q['runs'] if r['stage'] == 'search']) > 14:
+            q['stage'] = 'stuck'; q['why'] = 'search did not converge'
     elif stage == 'start':
         m = B
         L = q['L']
@@ -172,6 +199,9 @@ def absorb(q: dict, guess: list[float], stage: str, iou: float, dur: float) -> N
     elif stage == 'verify':
         if iou >= OK_IOU:
             q['stage'] = 'done'
+        elif q.get('lo') is not None:            # came through the search: fall back to a local len/start around the estimate
+            q['seed'] = [q['g'], q['h']]; q['W'] = 2.0; q['lo'] = q['hi'] = None
+            q['stage'] = 'len'; q['note'] = f'verify after search gave {iou:.3f}; local refit'
         else:
             q['W'] = q['W'] * 2
             if q['W'] > 16:
@@ -199,12 +229,17 @@ def main() -> int:
     ap.add_argument('--poll', type=float, default=4.0)
     ap.add_argument('--report', action='store_true')
     ap.add_argument('--reset', default='', help='comma list of stem:q whose state is discarded first')
+    ap.add_argument('--search-stuck', action='store_true', help='send every stuck question through the whole-audio search')
     a = ap.parse_args()
     st = load_state()
     for t in a.reset.split(','):
         if t.strip():
             st.pop(f'conversation_sample_{t.split(":")[0]}:{t.split(":")[1]}', None)
     st = init_state(st)
+    if a.search_stuck:
+        for q in st.values():
+            if q['stage'] == 'stuck':
+                q['stage'] = 'search'; q['L'] = None; q.pop('why', None)
     save_state(st)
     if a.report:
         report(st); return 0
