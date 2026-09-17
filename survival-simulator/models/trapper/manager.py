@@ -58,6 +58,7 @@ class Station:
     held: set = field(default_factory=set)         # predator ids currently held
     opened: float = 0.0
     last_held: float = -1e9
+    staffed_since: float = -1e9
     events: list = field(default_factory=list)
     energy_hist: dict = field(default_factory=dict)  # aid -> last energy (senescence detection)
 
@@ -182,6 +183,9 @@ class TrapManager:
                         held_now[p.pid] = st.key
                         break
         self.metrics['held_predator_ticks'] += len(held_now)
+        for st in self.stations.values():
+            if len(st.held) > self.metrics.get('max_held_one_station', 0):
+                self.metrics['max_held_one_station'] = len(st.held)
         return held_now
 
     # ------------------------------------------------------------------ main
@@ -193,6 +197,22 @@ class TrapManager:
             self.sites = find_sites(world.rects, world.width, world.height)
             self._sites_done = True
             self.event('sites', walls=sum(s.kind == 'wall' for s in self.sites), gaps=sum(s.kind == 'gap' for s in self.sites))
+        elif not world.complete_map and len(world.rects) != getattr(self, '_rects_seen', -1) and int(world.time * 10) % 20 == 0:
+            # estimated map: refresh sites every 2 s while rectangles keep appearing; keep stations whose site persists
+            self._rects_seen = len(world.rects)
+            fresh = find_sites(world.rects, world.width, world.height)
+            known = {s.key: s for s in self.sites}
+            self.sites = fresh
+            for key, st in list(self.stations.items()):
+                match = next((s for s in fresh if dist(s.holder, st.site.holder) < 3.0 and s.kind == st.site.kind), None)
+                if match is not None:
+                    st.site = match
+                    self.stations[match.key] = self.stations.pop(key)
+                    for aid, (r, k) in list(self.roles.items()):
+                        if k == key:
+                            self.roles[aid] = (r, match.key)
+            if len(fresh) != len(known):
+                self.event('sites', walls=sum(s.kind == 'wall' for s in fresh), gaps=sum(s.kind == 'gap' for s in fresh))
         # drop roles of dead agents
         for aid in list(self.roles):
             if aid not in world.agents:
@@ -309,6 +329,7 @@ class TrapManager:
                     cands.sort(key=lambda a: dist(a.p, site.holder))
                     if cands:
                         st.baits[cands[0].id] = 0
+                        st.staffed_since = world.time + 30.0   # allow for the walk in
                         self.roles[cands[0].id] = ('bait', st.key)
                         self.event('bait_assigned', key=st.key, agent=cands[0].id, slot=0)
             # successor when a bait weakens or ages
@@ -455,7 +476,7 @@ class TrapManager:
                     is_reserve = st.baits.get(aid, 0) >= 1
                     front = world.agents.get(next((b for b, k in st.baits.items() if k == 0), -1))
                     weak = a.energy < self.P['bait_release_energy'] or (a.id in self.senescent and a.energy < 90)
-                    idle = not st.held and world.time - st.last_held > 12.0
+                    idle = not st.held and world.time - max(st.last_held, st.staffed_since) > 12.0
                     spare_reserve = is_reserve and front is not None and front.energy > self.P['bait_min_energy'] + 20
                     if exit_point is not None and (weak or idle or spare_reserve) and world.time - st.opened > 3.0:
                         st.baits.pop(aid, None)
@@ -484,6 +505,7 @@ class TrapManager:
                     act, why = self._gap_approach(world, holder, a, site, stage, held_now)
                 if dist(a.p, stage) < 1.0 and slot_i not in st.baits.values():
                     st.baits[aid] = slot_i
+                    st.staffed_since = world.time
                     self.roles[aid] = ('bait', key)
                     st.successor = None
                     st.successor_for = None
@@ -502,6 +524,7 @@ class TrapManager:
                 if arrived:
                     st2 = self._station(site)
                     st2.baits[aid] = r['slot']
+                    st2.staffed_since = world.time
                     while len(st2.slots) <= r['slot']:
                         st2.slots.append(inside_slot(site, len(st2.slots)))
                     self.roles[aid] = ('bait', st2.key)

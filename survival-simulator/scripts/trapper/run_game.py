@@ -25,11 +25,11 @@ from models.trapper.recording import make_recorder, save_recorder      # noqa: E
 OUT = ROOT / 'results' / 'trapper'
 
 
-def run(seed, seconds, trap, record=False, native=False, label='', verbose=False, params=None, society_kwargs=None):
+def run(seed, seconds, trap, record=False, native=False, label='', verbose=False, params=None, society_kwargs=None, world='oracle'):
     start = time.perf_counter()
     sim = SimulationCore(seed=seed)
     env = sim.env
-    policy = TrapperPolicy(seed=seed, env=env, trap=trap, society_kwargs=society_kwargs, **(params or {}))
+    policy = TrapperPolicy(seed=seed, env=env, trap=trap, society_kwargs=society_kwargs, world=world, **(params or {}))
     deaths = []
     phase = {'pred': False}
     orig_kill = env.kill_agent
@@ -59,7 +59,7 @@ def run(seed, seconds, trap, record=False, native=False, label='', verbose=False
             phase['pred'] = False
     env.kill_agent, env.non_agent_step = kill_agent, non_agent_step
 
-    mode = 'trapper' if trap else 'society'
+    mode = ('trapper' if world == 'oracle' else 'trapper-est') if trap else 'society'
     rec = make_recorder(env, title=f'{mode} seed {seed} {label}'.strip(), policy=f'trapper policy ({mode}, oracle world)', seed=seed,
                         scenario='generated', notes='society baseline (Oscar v11+) with trap manager overrides; oracle world state',
                         native=native, every=1 if native else 5) if record else None
@@ -123,6 +123,7 @@ if __name__ == '__main__':
     ap.add_argument('--verbose', action='store_true')
     ap.add_argument('--label', default='')
     ap.add_argument('--params', default='{}', help='JSON overrides for the trap manager')
+    ap.add_argument('--world', choices=['oracle', 'estimator'], default='oracle')
     a = ap.parse_args()
     params = json.loads(a.params)
     rows = []
@@ -130,9 +131,9 @@ if __name__ == '__main__':
         if a.mode in ('society', 'both'):
             rows.append(run(seed, a.seconds, False, a.record, a.native, a.label, a.verbose))
         if a.mode in ('trapper', 'both'):
-            rows.append(run(seed, a.seconds, True, a.record, a.native, a.label, a.verbose, params))
+            rows.append(run(seed, a.seconds, True, a.record, a.native, a.label, a.verbose, params, world=a.world))
     if a.mode == 'both':
         soc = [r for r in rows if r['mode'] == 'society']
-        tr = [r for r in rows if r['mode'] == 'trapper']
+        tr = [r for r in rows if r['mode'] != 'society']
         print(f"society mean score {sum(r['score'] for r in soc)/len(soc):.1f}, survival {sum(r['survival'] for r in soc)/len(soc):.1f}")
         print(f"trapper mean score {sum(r['score'] for r in tr)/len(tr):.1f}, survival {sum(r['survival'] for r in tr)/len(tr):.1f}")

@@ -287,96 +287,98 @@ class EstimatedWorld:
         po.theta = wrap(po.theta + float(act.turn_angle))
 
     def _observe_edges(self, aid, s):
+        """Engine edges are ordered +x or +y (top/bottom edges run left to right, left/right
+        edges top to bottom), so an observed edge fixes our heading up to a two-way choice
+        resolved by the prior, and an arena boundary edge (1600 or 1200 long) fixes heading
+        and position exactly."""
         po = self.poses[aid]
         frame = self.frame_of[aid]
         raw = []
+        seen = set()
         for o in s['observations']:
             if o['type'] != 'Edge':
                 continue
             (ax, ay), (bx, by) = o['coords']
             key = (round(ax, 3), round(ay, 3), round(bx, 3), round(by, 3))
-            if key not in {r[0] for r in raw}:
-                raw.append((key, ((ax, ay), (bx, by))))
+            if key in seen:
+                continue
+            seen.add(key)
+            raw.append(((ax, ay), (bx, by)))
         if not raw:
             return
-        # heading: every edge is axis aligned in the world. Local direction -> world direction
-        # is a multiple of 90 degrees; pick the one nearest our prior heading.
-        if frame.absolute or True:
+        W, H = self.width, self.height
+        fixed = False
+        # 1. an arena boundary edge: exact heading and absolute position
+        for a, b in raw:
+            length = dist(a, b)
+            is_w = abs(length - W) < 0.5
+            is_h = abs(length - H) < 0.5
+            if not (is_w or is_h):
+                continue
+            local_dir = heading_of(sub(b, a))
+            true_dir = 0.0 if is_w else math.pi / 2
+            theta = wrap(true_dir - local_dir)
+            ra = rot(a, theta)                      # edge start relative to us, world orientation
+            if is_w:
+                y_edge = BOUNDARY if ra[1] < 0 else H - BOUNDARY
+                new_p = (0.0 - ra[0], y_edge - ra[1])
+            else:
+                x_edge = BOUNDARY if ra[0] < 0 else W - BOUNDARY
+                new_p = (x_edge - ra[0], 0.0 - ra[1])
+            dtheta = wrap(theta - po.theta)
+            shift = sub(new_p, rot((po.x, po.y), dtheta))
+            if not frame.absolute:
+                self._make_absolute(frame, shift, dtheta)
+                self.metrics['absolute_fixes'] += 1
+                if self.absolute_frame is not None and self.absolute_frame is not frame and self.absolute_frame.fid in self.frames:
+                    self._merge(self.absolute_frame, frame, (0.0, 0.0), 0.0)
+                    frame = self.frame_of[aid]
+                else:
+                    self.absolute_frame = frame
+            else:
+                if dist(new_p, (po.x, po.y)) > 0.01 or abs(dtheta) > 1e-6:
+                    self.metrics['edge_fixes'] += 1
+                po.x, po.y, po.theta = new_p[0], new_p[1], theta
+            fixed = True
+            break
+        if not fixed:
+            # 2. heading from any edge: theta is -local_dir (edge runs +x) or pi/2-local_dir (+y)
             corrections = []
-            for _, (a, b) in raw:
+            for a, b in raw:
                 local_dir = heading_of(sub(b, a))
-                # world direction = theta + local_dir must be k*pi/2
-                k = round((po.theta + local_dir) / (math.pi / 2))
-                corrections.append(wrap(k * math.pi / 2 - local_dir - po.theta))
+                cands = (wrap(-local_dir), wrap(math.pi / 2 - local_dir))
+                best = min(cands, key=lambda t: abs(wrap(t - po.theta)))
+                corrections.append(wrap(best - po.theta))
             corr = sorted(corrections)[len(corrections) // 2]
-            if abs(corr) > 1e-9 and abs(corr) < 0.6:
+            if abs(corr) > 1e-9:
                 po.theta = wrap(po.theta + corr)
-        # world-frame edges
-        edges_w = [(po.to_frame(a), po.to_frame(b)) for _, (a, b) in raw]
-        # boundary edges fix us absolutely
-        for (a, b), (la, lb) in zip(edges_w, [e for _, e in raw]):
-            length = dist(a, b)
-            if abs(length - self.width) < 0.5 or abs(length - self.height) < 0.5:
-                target = self._boundary_match(a, b, length)
-                if target is not None:
-                    shift = sub(target[0], a) if dist(target[0], a) < dist(target[0], b) or True else (0, 0)
-                    # align a to whichever target endpoint is nearer in the current estimate
-                    if dist(target[1], a) < dist(target[0], a):
-                        shift = sub(target[1], a)
-                    if not frame.absolute:
-                        self._make_absolute(frame, shift, 0.0)
-                        self.metrics['absolute_fixes'] += 1
-                        if self.absolute_frame is not None and self.absolute_frame is not frame:
-                            self._merge(self.absolute_frame, frame, (0.0, 0.0), 0.0)
-                            frame = self.frame_of[aid]
-                        else:
-                            self.absolute_frame = frame
-                    elif dist(shift, (0, 0)) > 1e-6:
-                        po.x += shift[0]; po.y += shift[1]
-                        self.metrics['edge_fixes'] += 1
-                    edges_w = [(po.to_frame(a2), po.to_frame(b2)) for _, (a2, b2) in raw]
-                    break
-        # known interior edges fix position (match by length, orientation, proximity)
-        best = None
-        for a, b in edges_w:
-            length = dist(a, b)
-            horiz = abs(a[1] - b[1]) < 0.5
-            cands = []
-            for L in (round(length) - 1, round(length), round(length) + 1):
-                cands += frame.edge_index.get((horiz, L), [])
-            for idx in cands:
-                c, d = frame.edges[idx]
-                if abs(dist(c, d) - length) > 0.05:
-                    continue
-                for (p1, p2) in ((c, d), (d, c)):
-                    shift = sub(p1, a)
-                    if dist(add(b, shift), p2) < 0.05 and dist(shift, (0, 0)) < 25.0:
+            # 3. position from a known interior edge (match by orientation, length, proximity)
+            edges_w = [(po.to_frame(a), po.to_frame(b)) for a, b in raw]
+            best = None
+            for a, b in edges_w:
+                length = dist(a, b)
+                horiz = abs(a[1] - b[1]) < 0.5
+                cands = []
+                for L in (round(length) - 1, round(length), round(length) + 1):
+                    cands += frame.edge_index.get((horiz, L), [])
+                for idx in cands:
+                    c, d = frame.edges[idx]
+                    if abs(dist(c, d) - length) > 0.05:
+                        continue
+                    shift = sub(c, a)
+                    if dist(add(b, shift), d) < 0.05 and dist(shift, (0, 0)) < 40.0:
                         if best is None or dist(shift, (0, 0)) < dist(best, (0, 0)):
                             best = shift
-        if best is not None and dist(best, (0, 0)) > 1e-6:
-            po.x += best[0]; po.y += best[1]
-            self.metrics['edge_fixes'] += 1
-            edges_w = [(po.to_frame(a2), po.to_frame(b2)) for _, (a2, b2) in raw]
-        for a, b in edges_w:
-            if frame.absolute and (abs(dist(a, b) - self.width) < 0.5 or abs(dist(a, b) - self.height) < 0.5):
+            if best is not None and dist(best, (0, 0)) > 1e-6:
+                po.x += best[0]; po.y += best[1]
+                self.metrics['edge_fixes'] += 1
+        # 4. remember the edges (skip boundaries in absolute frames: known a priori)
+        for a, b in raw:
+            aw, bw = po.to_frame(a), po.to_frame(b)
+            length = dist(aw, bw)
+            if frame.absolute and (abs(length - W) < 0.5 or abs(length - H) < 0.5):
                 continue
-            self._add_edge(frame, a, b)
-
-    def _boundary_match(self, a, b, length):
-        W, H = self.width, self.height
-        cands = []
-        if abs(length - W) < 0.5:
-            for y in (BOUNDARY, H - BOUNDARY, 0.0, H):
-                cands.append(((0.0, y), (W, y)))
-        else:
-            for x in (BOUNDARY, W - BOUNDARY, 0.0, W):
-                cands.append(((x, 0.0), (x, H)))
-        # the inner faces (30 / W-30) are the ones an agent can see; pick by prior proximity when absolute
-        inner = [c for c in cands if c[0][0] in (BOUNDARY, W - BOUNDARY) or c[0][1] in (BOUNDARY, H - BOUNDARY)]
-        mid = mul(add(a, b), 0.5)
-        best = min(inner, key=lambda c: dist(mul(add(c[0], c[1]), 0.5), mid))
-        # a non-absolute frame cannot tell top from bottom: use the side of the edge relative to us.
-        return best
+            self._add_edge(frame, aw, bw)
 
     def _observe_agents(self, aid, s, by_id):
         po = self.poses[aid]

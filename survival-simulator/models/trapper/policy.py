@@ -15,21 +15,23 @@ from src.utils.DTOs import ActionRequest
 
 from .manager import TrapManager
 from .oracle import OracleWorld
+from .estimator import EstimatedWorld
 from .society_base import SocietyPolicy
 from .world import WorldState
 
 
 class TrapperPolicy:
-    def __init__(self, seed=0, env=None, trap=True, society_kwargs=None, world_source=None, **trap_params):
+    def __init__(self, seed=0, env=None, trap=True, society_kwargs=None, world_source=None, world='oracle', **trap_params):
+        """world: 'oracle' (needs env) or 'estimator' (observations only, as on the server)."""
         self.seed = seed
         self.society = SocietyPolicy(seed=seed, **(society_kwargs or {}))
         self.trap = trap
         if world_source is not None:
             self.source = world_source
-        elif env is not None:
-            self.source = OracleWorld(env)
+        elif world == 'estimator' or env is None:
+            self.source = EstimatedWorld()
         else:
-            self.source = None
+            self.source = OracleWorld(env)
         self.manager = TrapManager(**trap_params)
         self.world: WorldState | None = None
         self.decisions = {}
@@ -70,6 +72,8 @@ class TrapperPolicy:
             out.append((aid, act))
         self.last_decisions = {aid: dict(rule=r) for aid, r in self.decisions.items()}
         self.manager.last_actions = {aid: act for aid, act in out}
+        if hasattr(self.source, 'note_actions'):
+            self.source.note_actions(out)
         return out
 
     def _note(self, aid, act: ActionRequest, s):
