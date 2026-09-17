@@ -141,7 +141,16 @@ tracks. The 8-seed batch `final-v7est` then scored 620.1 against 612.3 for the s
 +6, 5 of 8 wins) but held only 1.6 %: 125 of 193 deliveries were aborted for a "second predator"
 that was a stale track (a predator last seen seconds ago, carried at its predicted position).
 Aborts, staffing gates, wild-threat checks and mouth choices now use only predators observed
-within the last 1.5 s (`WorldState.recent_predators`); batch `final-v8est` measures the effect.
+within the last 1.5 s (`WorldState.recent_predators`). The estimator also carried two or three
+tracks for one predator (observers in different frames, re-detections after a gap); tracks are now
+associated with their predicted position, expire after 3 s and are deduplicated within 30, and a
+frame-merge crash (a frame merged twice in one tick) is fixed. Fresh predator estimates are
+then within 8–15 (median) and 15–44 (p90) of the truth. Batch `final-v9est` (8 seeds x 2):
+619.7 against 612.3 for the society (median +5.8, 7 of 8 wins), held 1.7 %; 181 guide-led
+deliveries with 3 delivered (leads need the gap to ±5, which estimated tracks cannot give), holds
+come from refuge runs. Without the oracle, refuge runs and flybys are the working mechanism;
+`est-nodeliver` and `est-shortlead` test whether guide-led deliveries should be off or short on
+the estimator.
 
 Two defects found on the way that any override policy must respect: overridden agents must keep
 the society's spawn decision (dropping it stopped all breeding by role agents and starved three

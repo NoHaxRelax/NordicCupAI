@@ -69,6 +69,8 @@ if __name__ == '__main__':
         'v6': dict(),
         'noreserve': dict(gap_reserve=False),
         'wideturn': dict(max_turn=0.8727, turn_bonus=0.8727, lead_max=900.0),
+        'nodeliver': dict(explicit_deliveries=False),      # refuge runs and flybys only
+        'shortlead': dict(max_turn=0.5236, turn_bonus=0.35, lead_max=500.0),
     }
     if a.preset:
         params = dict(PRESETS[a.preset], **params)

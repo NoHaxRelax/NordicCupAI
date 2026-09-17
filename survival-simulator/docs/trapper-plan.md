@@ -18,7 +18,7 @@ luring and bait replenishment are shared. The society keeps foraging and breedin
 | Step | Goal | Status |
 | --- | --- | --- |
 | 5 | Fuse the agents' observations into a full game-state estimate | estimator exact (positions, headings), predators within one step; manager runs on it; agent server serves it |
-| 6 | Redo steps 1–4 on the estimate | same protocol runs on the estimator: holds 6–12 % on four seeds, refuge margin widened to 45 for estimated tracks; 8-seed batch running (`final-v7est`) |
+| 6 | Redo steps 1–4 on the estimate | same protocol runs on the estimator (agent server serves it): 8 seeds x 2 give 619.7 vs 612.3 for the society (median +5.8), held 1.7 %; refuge runs work, guide-led leads do not (3 of 181 delivered) because estimated predator positions are 8–15 off (p90 up to 44) |
 
 ## Refocus (Oscar, 18 September ~00:30)
 
@@ -83,3 +83,8 @@ Entries are appended as milestones complete; each names the commit and the evide
   held (holds were being cut at every wake). Estimator batch (8 seeds): score +6 median but holds
   1.6 %; cause: stale predator tracks aborted 125 of 193 deliveries. Fixed with a 1.5 s recency
   filter; `final-v8est` (8 seeds x 2) running.
+- **06:10** Estimator: duplicate predator tracks found (2-3 tracks per predator) and fixed
+  (prediction-gated association, 3 s expiry, dedupe within 30); a frame-merge KeyError fixed.
+  `final-v9est`: 619.7 vs 612.3 (median +5.8, 7/8 wins), held 1.7 %, deliveries 3/181. Guide-led
+  leads do not work on estimated tracks; refuge runs do. Testing deliveries off / short on the
+  estimator (`est-nodeliver`, `est-shortlead`). Commits ed32785, 363bd0a.
