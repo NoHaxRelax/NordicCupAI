@@ -275,3 +275,7 @@ Queued 17:24, finished 17:29, 19 conversations, no errors. Only change from run 
 ### 25. Yes-threshold sweep with qwen3:4b: no gain, the probabilities are near-binary
 
 The bench now records P(yes) at the answer token from the server's log-probabilities (`bench/llm/bench.py`, `p_yes_from_logprobs`). On the 390 training questions with the turbo transcripts (`bench/llm/threshold_sweep.py`): the score is flat from threshold 0.05 to 0.65 (0.702 to 0.706), the leave-one-conversation-out choice of threshold (median 0.15) scores 0.699 out of sample against 0.702 as answered. The model's probabilities sit at 0.0 or above 0.9 on nearly every question, so there is nothing to re-threshold. The idea stays for the larger models, whose probabilities are expected to be softer; the plumbing is in place.
+
+### 26. Validation runs E and F: 0.6649 and 0.6759 on unchanged code
+
+Both runs served the same configuration as run D (turbo, fitted rule, quote anchoring, qwen3:4b). E at 17:38 scored 0.6649, F at 17:47 scored 0.6759; D was 0.6632. The spread of 0.013 across three identical runs is twice the 0.006 measured on ten training conversations, so validation-to-validation noise is about 0.01 and single-run differences below that are not evidence. F also dumped the 19 validation conversations (audio, questions, our answers) to `request_dump/` for hand labelling in the oracle's `/label` page.
