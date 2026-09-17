@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|WebFetch|Agent|Workflow",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/block-evaluation.py\"",
+            "timeout": 15,
+            "statusMessage": "Checking the call does not touch the evaluation endpoint"
+          }
+        ]
+      }
+    ]
+  }
+}
