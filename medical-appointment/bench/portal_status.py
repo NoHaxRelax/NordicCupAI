@@ -25,8 +25,9 @@ STATUS_URL = 'https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/
 
 def key() -> str:
     k = os.environ.get('NORDIC_API_KEY', '').strip()
-    if not k and KEY_FILE.exists():
-        k = KEY_FILE.read_text(encoding='utf-8').strip().splitlines()[0].strip()
+    for cand in (KEY_FILE, KEY_FILE.with_suffix('.txt')):
+        if not k and cand.exists():
+            k = cand.read_text(encoding='utf-8').strip().splitlines()[0].strip()
     if not k:
         sys.exit(f'no key: put it on one line in {KEY_FILE} (gitignored) or set NORDIC_API_KEY')
     return k
