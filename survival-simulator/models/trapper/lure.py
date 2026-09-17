@@ -322,6 +322,18 @@ class Lure:
         else:
             ratio = need / max(walk, 1e-6)
             dev = 0.0 if ratio >= 1.0 else math.acos(ratio)
+        away = heading_of(sub(a.p, p.p))
+        needed = abs(wrap(desired - away))
+        sprint_budget = a.energy - a.max_energy / 5 - 40.0
+        if needed > dev + 0.05 and sprint_budget > 80.0 and a.can_sprint and gap >= LEAD_MIN - 5:
+            # sprint-steer: at 20/tick we can retreat up to ~57 degrees off "away" and still out-pace
+            # its radial closing, which rotates the pair about 0.13 rad/tick
+            sp = a.sprint_speed * a.move_modifier
+            ratio_s = (radial + margin) / max(sp, 1e-6)
+            dev_s = 0.0 if ratio_s >= 1.0 else math.acos(ratio_s)
+            h = steer(a, p, desired, w.rects, max(dev_s, dev))
+            d.decision = f'lead: sprint-steer, gap {gap:.0f}, needed {math.degrees(needed):.0f}, dev {math.degrees(wrap(h - away)):.0f}'
+            return self._facing(d, a, p, self._move_heading(a, h, sp))
         h = steer(a, p, desired, w.rects, dev)
         if gap < LEAD_MIN and a.can_sprint and sprinting_pred:
             d.decision = f'lead: topping up the gap ({gap:.0f})'
@@ -333,7 +345,7 @@ class Lure:
                 speed = max(0.0, walk - (gap - LEAD_DISTANCE - 10) * 0.3)
             if gap > LEAD_DISTANCE + 30 and p.speed < 0.5:
                 speed = 0.0
-            d.decision = f'lead: gap {gap:.0f}, speed {speed:.0f}, dev {math.degrees(wrap(h - desired)):.0f}/{math.degrees(dev):.0f}, {len(d.waypoints)} wps'
+            d.decision = f'lead: gap {gap:.0f}, speed {speed:.0f}, desired {math.degrees(desired):.0f}, away {math.degrees(away):.0f}, h {math.degrees(h):.0f}, cone {math.degrees(dev):.0f}, wp {tuple(round(v) for v in wp) if wp else None}, {len(d.waypoints)} wps'
             act = self._move_heading(a, h, speed) if speed > 0 else hold(a)
         return self._facing(d, a, p, act)
 

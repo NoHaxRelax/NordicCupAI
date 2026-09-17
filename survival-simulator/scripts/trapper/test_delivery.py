@@ -21,7 +21,8 @@ sys.path.insert(0, str(ROOT))
 from src.utils.DTOs import ActionRequest                       # noqa: E402
 from models.trapper.fixture import Arena                       # noqa: E402
 from models.trapper.oracle import OracleWorld                  # noqa: E402
-from models.trapper.geometry import Rect, add, mul, sub, dist, perp   # noqa: E402
+from models.trapper.geometry import Rect, add, mul, sub, dist, perp, unit   # noqa: E402
+from models.trapper.motion import step_toward, speed_for   # noqa: E402
 from models.trapper.sites import find_wall_sites, find_gap_sites      # noqa: E402
 from models.trapper.lure import Lure, Holder, Delivery, predator_target   # noqa: E402
 from models.trapper.recording import make_recorder, save_recorder     # noqa: E402
@@ -78,6 +79,11 @@ def run_case(kind, width, length, guide_offset, pred_angle, pred_distance, awake
                 p = world.predator(delivery.pid)
                 act = lure.act(delivery, a, p)
                 why = delivery.decision
+                if act is None:
+                    # the lure defers to the society's flee; the fixture has none: run straight away at sprint
+                    away = add(a.p, mul(unit(sub(a.p, p.p)), 40)) if p is not None else a.p
+                    act = step_toward(a, away, speed_for(a, True))
+                    why = 'fixture flee (' + why + ')'
             else:
                 act, why = dict(agent_id=aid, move_distance=0., move_direction=0., turn_angle=0., spawn_agent=False), 'idle'
             actions.append((aid, ActionRequest(**act)))

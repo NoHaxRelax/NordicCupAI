@@ -52,7 +52,15 @@ def speed_for(a: AgentView, want_sprint):
 
 
 def next_waypoint(p, waypoints, reach=8.0):
-    """Drop reached waypoints; return the current target or None."""
-    while waypoints and dist(p, waypoints[0]) <= reach and len(waypoints) > 1:
-        waypoints.pop(0)
+    """Drop waypoints that are reached, or already passed along the path direction
+    (the point lies beyond the waypoint when projected on the next leg); return the
+    current target or None. The final waypoint is never dropped."""
+    while len(waypoints) > 1:
+        w0, w1 = waypoints[0], waypoints[1]
+        leg = sub(w1, w0)
+        passed = dist(w0, w1) > 1e-6 and (sub(p, w0)[0] * leg[0] + sub(p, w0)[1] * leg[1]) > 0 and dist(p, w0) < 60.0
+        if dist(p, w0) <= reach or passed:
+            waypoints.pop(0)
+        else:
+            break
     return waypoints[0] if waypoints else None
