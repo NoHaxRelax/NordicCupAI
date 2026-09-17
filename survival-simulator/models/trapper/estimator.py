@@ -133,7 +133,7 @@ class EstimatedWorld:
 
     def _merge(self, dst: Frame, src: Frame, shift, dtheta):
         """Move everything of src into dst: p_dst = shift + rot(p_src, dtheta)."""
-        if dst is src:
+        if dst is src or src.fid not in self.frames or dst.fid not in self.frames:
             return
         T = lambda q: add(shift, rot(q, dtheta))
         for aid in src.members:
@@ -382,11 +382,11 @@ class EstimatedWorld:
 
     def _observe_agents(self, aid, s, by_id):
         po = self.poses[aid]
-        fa = self.frame_of[aid]
         for o in s['observations']:
             if o['type'] != 'Agent' or o.get('id') not in self.poses or o['distance'] < 1e-6:
                 continue
             other = o['id']
+            fa = self.frame_of[aid]          # re-read: a merge earlier in this loop may have moved us
             fb = self.frame_of[other]
             pb = self.poses[other]
             # other's pose in our frame
