@@ -183,3 +183,20 @@ Noise floor, measured afterwards: the same ten training conversations scored twi
 | 11 | Powered by Smørrebrød (us) | 0.6086 |
 
 Reading: with accuracy near 0.9 (worth 0.36 of the score), our validation tIoU is about 0.41. A 0.745 score at similar accuracy needs a mean tIoU near 0.62. The gap to the top is spans, not answers, which is what the ASR sweep and the quote-anchoring work target.
+
+### 17. Whisper large-v3-turbo's word ends coincide with the annotated ends
+
+faster-whisper large-v3-turbo, beam 5, no VAD, 39 conversations on the laptop (RTF 0.043, 2.5x faster than large-v3). Scripts: `bench/asr/compare.py --tags large-v3,large-v3-turbo`, `bench/asr/fit_edges.py --model large-v3-turbo`.
+
+| quantity | large-v3 | large-v3-turbo |
+|---|---|---|
+| oracle ceiling, merges of up to four sentences, raw edges | 0.753 | 0.812 |
+| ceiling with fitted constant shifts | 0.824 | 0.847 |
+| ceiling with the best rule pair | 0.834 (first-word end -0.14, end +0.12) | 0.857 (start + 0.56 x first-word duration, end -0.02) |
+| gold start minus model start, median | +0.36 s | +0.28 s |
+| gold end minus model end, median (p25, p75) | +0.12 (+0.06, +0.20) | -0.02 (-0.06, +0.02) |
+| gold ends within 20 ms of a word end | 4% | 49% |
+| gold ends inside the last word | 16% | 72% |
+| WER on the 4 hand-checked references | 3.0% | 1.8% |
+
+Half of the annotated ends land within one 20 ms frame of a turbo word end, against 4 percent for large-v3. That is a fingerprint: whatever produced the annotations places its ends where turbo's decoder does. Starts are still 0.28 s late relative to turbo's word starts, so the start side of the annotation comes from a different mechanism (or a later shift) and still needs the fitted rule. Serving implication: switch ASR to large-v3-turbo with START_RULE first-word-end and START_OFFSET -0.20, END_OFFSET -0.02 (both from the LOCO fit), pending the WhisperX and MMS comparison on the same files.
