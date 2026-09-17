@@ -36,4 +36,14 @@ From `$HOME/nordic-drone`, create `logs/`, set `DRONE_COMMIT`, `DRONE_CODE_ROOT`
 
 Publish meaningful checkpoints: prepared recipe and data manifest; verified job submission; first successful epochs; final metrics and artifact hashes. Never commit passwords, tokens, raw environment files, or GitHub credentials to the HPC.
 
+## RTX 4080 run on mypc
+
+The personal Windows machine has an RTX 4080 with 16 GB VRAM. Its separate detector run keeps the same 960 input, pretrained weight checksum, data v2, seed, and 50 epochs, using batch 2 and two data-loader workers. Ultralytics nominal batch remains 64 through gradient accumulation. Different batch sizes, warmup behavior, operating systems, and GPU kernels mean this is a practical second run, not a bitwise reproduction of the HPC trajectory.
+
+`setup-windows.ps1` installs a dedicated Python 3.11.11 environment under `C:\Users\oscar\nordic-drone` without changing global PATH. The platform-specific dependency lock is separate. `preflight-mypc.py` verifies every image/label hash and the exact YOLO26x pretrained checksum before launch.
+
+Upload an immutable committed code snapshot, then use `launch-mypc.ps1` with its code directory, full commit, and a unique run ID. Its independent noninteractive Windows process survives SSH disconnection; `run-mypc.ps1` writes its PID/status, logs, and persistent checkpoints. It requests system wakefulness only for the lifetime of training, then releases that request. It never shuts down the PC. Reusing a run ID is rejected. Stop a run by identifying its recorded PID and command first; do not kill unrelated Python processes.
+
+The `receipts/mypc-*` files track the actual launch, versions, speed, and progress. Model binaries remain under the remote `runs/` directory and local `data/drone/mypc-runs/` backups, outside Git.
+
 Sources: [Ultralytics YOLO26](https://docs.ultralytics.com/models/yolo26/), [training options](https://docs.ultralytics.com/modes/train/), [DTU HPC](https://www.hpc.dtu.dk/).

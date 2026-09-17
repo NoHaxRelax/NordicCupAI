@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import random
 import time
 from collections import Counter
@@ -34,7 +35,7 @@ def runtime():
     return dict(gpu=gpu.name, vram_gib=gpu.total_memory/2**30, torch=torch.__version__,
                 cuda=torch.version.cuda, ultralytics=importlib.metadata.version('ultralytics'),
                 job=os.environ.get('LSB_JOBID'), commit=os.environ.get('DRONE_COMMIT'),
-                hostname=os.uname().nodename)
+                hostname=platform.node(), platform=platform.platform())
 
 
 def detector(args):
@@ -49,13 +50,13 @@ def detector(args):
               peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
               warning='Any detector validation metrics are training-fit diagnostics, not holdout performance.'))
     model.add_callback('on_train_epoch_end', progress)
-    model.train(data=str(data), epochs=args.epochs, imgsz=960, batch=8, device=0,
+    model.train(data=str(data), epochs=args.epochs, imgsz=960, batch=args.batch, device=0,
                 project=str(args.output), name='detector', exist_ok=False,
-                pretrained=True, amp=True, workers=4, seed=170926, deterministic=True,
+                pretrained=True, amp=True, workers=args.workers, seed=170926, deterministic=True,
                 optimizer='AdamW', lr0=0.001, lrf=0.05, warmup_epochs=3,
                 mosaic=0.0, mixup=0.0, degrees=5.0, translate=0.05, scale=0.1,
                 fliplr=0.5, flipud=0.0, hsv_h=0.01, hsv_s=0.2, hsv_v=0.2,
-                patience=0, val=False, plots=False, save=True, save_period=5,
+                patience=0, val=False, plots=False, save=True, save_period=5, nbs=64,
                 cache=False, close_mosaic=0)
     checkpoint = args.output/'detector/weights/last.pt'
     write(args.output/'result.json', dict(task='detector', status='completed', epochs=args.epochs,
@@ -114,10 +115,10 @@ def classifier(args):
     weights = [{0:.1,1:.7,2:.2}[r['zoom']]/counts[r['class_name'],r['zoom']] for r in tr]
     gen = torch.Generator().manual_seed(170926)
     sampler = torch.utils.data.WeightedRandomSampler(weights, len(tr), replacement=True, generator=gen)
-    train_loader = torch.utils.data.DataLoader(Crops(args.data,tr,classes,True), batch_size=64,
-                   sampler=sampler, num_workers=4, pin_memory=True, generator=gen)
-    val_loader = torch.utils.data.DataLoader(Crops(args.data,va,classes), batch_size=64,
-                 shuffle=False, num_workers=4, pin_memory=True)
+    train_loader = torch.utils.data.DataLoader(Crops(args.data,tr,classes,True), batch_size=args.batch,
+                   sampler=sampler, num_workers=args.workers, pin_memory=True, generator=gen)
+    val_loader = torch.utils.data.DataLoader(Crops(args.data,va,classes), batch_size=args.batch,
+                 shuffle=False, num_workers=args.workers, pin_memory=True)
     model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
     model.fc = torch.nn.Linear(model.fc.in_features, len(classes))
     model.cuda()
@@ -168,13 +169,19 @@ def main():
     p.add_argument('--weights',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--epochs',type=int,required=True)
+    p.add_argument('--batch',type=int,help='Defaults: detector 8, classifier 64. Detector nominal batch remains 64 via gradient accumulation.')
+    p.add_argument('--workers',type=int,default=4)
     args=p.parse_args()
+    if args.batch is None:
+        args.batch = 8 if args.task == 'detector' else 64
+    if args.batch < 1 or args.workers < 0:
+        p.error('batch must be positive and workers nonnegative')
     args.output.mkdir(parents=True, exist_ok=False)
     args.manifest=json.loads((args.data/'manifest.json').read_text())
     random.seed(170926); np.random.seed(170926); torch.manual_seed(170926); torch.cuda.manual_seed_all(170926)
     torch.set_num_threads(4)
     torch.backends.cudnn.benchmark=False
-    write(args.output/'runtime.json',dict(runtime(), task=args.task, epochs=args.epochs,
+    write(args.output/'runtime.json',dict(runtime(), task=args.task, epochs=args.epochs, batch=args.batch, workers=args.workers,
           data_manifest_sha256=sha(args.data/'manifest.json'), started_at=time.time()))
     {'detector':detector,'classifier':classifier}[args.task](args)
 
