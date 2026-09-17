@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Validation labeller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#f6f7f9; --fg:#1b1f24; --muted:#5b6470; --card:#fff; --line:#e3e6ea; --accent:#0b5fff; --hi:#fff3bf; --ok:#1a7f37; --warn:#b35c00; --no:#b42318; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f1216; --fg:#e6e8eb; --muted:#9aa4b2; --card:#171b21; --line:#2a3039; --accent:#6ea0ff; --hi:#3b3410; --ok:#3fb950; --warn:#e3a54c; --no:#f0616d; } }
+  :root[data-theme="dark"] { --bg:#0f1216; --fg:#e6e8eb; --muted:#9aa4b2; --card:#171b21; --line:#2a3039; --accent:#6ea0ff; --hi:#3b3410; --ok:#3fb950; --warn:#e3a54c; --no:#f0616d; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, sans-serif; display:grid; grid-template-columns:230px 1fr; min-height:100vh; }
+  aside { border-right:1px solid var(--line); background:var(--card); padding:12px 8px; overflow:auto; position:sticky; top:0; height:100vh; }
+  aside h1 { font-size:14px; margin:4px 8px 10px; color:var(--muted); font-weight:600; }
+  .f { display:flex; justify-content:space-between; padding:5px 8px; border-radius:6px; cursor:pointer; font-size:14px; }
+  .f:hover { background:color-mix(in srgb, var(--accent) 8%, transparent); }
+  .f.cur { background:color-mix(in srgb, var(--accent) 16%, transparent); }
+  .f .st { font-size:12px; color:var(--muted); } .f.done .st { color:var(--ok); }
+  main { padding:14px 16px 60px; }
+  .bar { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px; position:sticky; top:8px; z-index:2; }
+  .bar label { color:var(--muted); font-size:13px; }
+  button { font:inherit; padding:5px 11px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.on-yes { background:var(--ok); color:#fff; border-color:var(--ok); }
+  button.on-no { background:var(--no); color:#fff; border-color:var(--no); }
+  .big { font-size:20px; font-variant-numeric:tabular-nums; min-width:5ch; display:inline-block; }
+  .q { display:grid; grid-template-columns:2.2ch 1fr auto auto auto; gap:10px; align-items:center; padding:8px 10px; border:1px solid var(--line); border-radius:10px; margin-top:8px; background:var(--card); }
+  .q.cur { border-color:var(--accent); background:var(--hi); }
+  .q .n { color:var(--muted); font-variant-numeric:tabular-nums; }
+  .q .m { font-size:12px; color:var(--muted); }
+  .q .span { font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); min-width:16ch; }
+  .hint { color:var(--muted); font-size:13px; margin:8px 2px; }
+  kbd { border:1px solid var(--line); border-radius:4px; padding:0 5px; font-size:12px; }
+  @media (max-width: 760px) { body { grid-template-columns:1fr; } aside { position:static; height:auto; max-height:30vh; } }
+</style>
+</head>
+<body>
+<aside><h1>validation <span id="done"></span></h1><div id="files"></div></aside>
+<main>
+  <div class="bar">
+    <button id="play">play</button>
+    <span class="big" id="clock">0:00.0</span>
+    <label>speed <input id="rate" type="range" min="1" max="4" step="0.25" value="1"> <span id="rv">1x</span></label>
+    <button id="save">saved</button>
+    <span class="hint" id="msg"></span>
+  </div>
+  <div class="hint"><kbd>space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 2 s · <kbd>↑</kbd><kbd>↓</kbd> speed · <kbd>1</kbd>..<kbd>0</kbd> select question 1..10 · <kbd>y</kbd> / <kbd>n</kbd> answer the selected question · <kbd>s</kbd> / <kbd>e</kbd> set its span start / end at the current time · <kbd>j</kbd> jump to its start. The model's own answer is shown in grey as a hint. Autosaves.</div>
+  <audio id="a" preload="auto"></audio>
+  <div id="qs"></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const a = $('a'), rate = $('rate'), rv = $('rv'), clock = $('clock'), playBtn = $('play');
+let files = [], stem = null, items = [], cur = 0, dirty = false, timer = null;
+const fmt = s => `${Math.floor(s/60)}:${(s%60).toFixed(2).padStart(5,'0')}`;
+async function loadList() {
+  files = await (await fetch('/api/val/list')).json();
+  const box = $('files'); box.innerHTML = ''; let done = 0;
+  for (const f of files) { if (f.done) done++;
+    const d = document.createElement('div'); d.className = 'f' + (f.done ? ' done' : '') + (f.stem === stem ? ' cur' : '');
+    d.innerHTML = `<span>${f.stem.replace('conversation_','')}</span><span class="st">${f.done ? '✓ done' : (f.labels ? 'partial' : f.n + ' q')}</span>`;
+    d.onclick = () => open(f.stem); box.appendChild(d); }
+  $('done').textContent = `${done}/${files.length}`;
+}
+async function open(s) {
+  if (dirty) await save();
+  stem = s; const f = files.find(x => x.stem === s);
+  items = (f.labels && f.labels.items) || f.questions.map((q, i) => ({question: q, answer: null, start: null, end: null}));
+  items.forEach((it, i) => { it.question = f.questions[i]; it.model = f.model_answers ? f.model_answers[i] : null; });
+  cur = 0; render(); a.src = '/val-audio/' + s + '.mp3'; document.title = s.replace('conversation_', '') + ' · label';
+  localStorage.setItem('label.last', s); setDirty(false); await loadList();
+}
+function render() {
+  const box = $('qs'); box.innerHTML = '';
+  items.forEach((it, i) => {
+    const d = document.createElement('div'); d.className = 'q' + (i === cur ? ' cur' : ''); d.dataset.i = i;
+    d.innerHTML = `<span class="n">${i+1}</span><div><div>${it.question.replace(/</g,'&lt;')}</div><div class="m">model said: ${it.model === null || it.model === undefined ? '?' : (it.model ? 'yes' : 'no')}</div></div>
+      <button class="y ${it.answer === true ? 'on-yes' : ''}">yes</button><button class="nb ${it.answer === false ? 'on-no' : ''}">no</button>
+      <span class="span">${it.start != null ? fmt(it.start) : '–'} → ${it.end != null ? fmt(it.end) : '–'}</span>`;
+    d.onclick = () => { cur = i; render(); };
+    d.querySelector('.y').onclick = e => { e.stopPropagation(); it.answer = true; cur = i; render(); setDirty(true); };
+    d.querySelector('.nb').onclick = e => { e.stopPropagation(); it.answer = false; it.start = it.end = null; cur = i; render(); setDirty(true); };
+    box.appendChild(d);
+  });
+}
+function setDirty(v) { dirty = v; $('save').textContent = v ? 'save' : 'saved'; if (v) { clearTimeout(timer); timer = setTimeout(save, 1500); } }
+async function save() {
+  if (!stem) return;
+  const body = {stem, items: items.map(it => ({question: it.question, answer: it.answer, start: it.start, end: it.end}))};
+  const r = await fetch('/api/val/labels/' + stem, {method: 'POST', body: JSON.stringify(body)});
+  if (r.ok) { setDirty(false); $('msg').textContent = 'saved ' + new Date().toLocaleTimeString(); loadList(); } else { $('msg').textContent = 'SAVE FAILED'; }
+}
+$('save').onclick = save;
+rate.oninput = () => { a.playbackRate = +rate.value; rv.textContent = rate.value + 'x'; };
+playBtn.onclick = () => a.paused ? a.play() : a.pause();
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const it = items[cur];
+  if (e.code === 'Space') { e.preventDefault(); a.paused ? a.play() : a.pause(); }
+  else if (e.code === 'ArrowRight') a.currentTime += 2;
+  else if (e.code === 'ArrowLeft') a.currentTime = Math.max(0, a.currentTime - 2);
+  else if (e.code === 'ArrowUp') { rate.value = Math.min(4, +rate.value + 0.25); rate.oninput(); }
+  else if (e.code === 'ArrowDown') { rate.value = Math.max(1, +rate.value - 0.25); rate.oninput(); }
+  else if (/^Digit[0-9]$/.test(e.code)) { const n = +e.code.slice(5); cur = n === 0 ? 9 : n - 1; render(); }
+  else if (e.key === 'y' && it) { it.answer = true; render(); setDirty(true); }
+  else if (e.key === 'n' && it) { it.answer = false; it.start = it.end = null; render(); setDirty(true); }
+  else if (e.key === 's' && it) { it.start = Math.round(a.currentTime * 100) / 100; if (it.answer === null) it.answer = true; render(); setDirty(true); }
+  else if (e.key === 'e' && it) { it.end = Math.round(a.currentTime * 100) / 100; if (it.answer === null) it.answer = true; render(); setDirty(true); }
+  else if (e.key === 'j' && it && it.start != null) { a.currentTime = it.start; a.play(); }
+});
+setInterval(() => { clock.textContent = fmt(a.currentTime || 0); playBtn.textContent = a.paused ? 'play' : 'pause'; }, 150);
+window.addEventListener('beforeunload', e => { if (dirty) { save(); e.preventDefault(); e.returnValue = ''; } });
+(async () => { await loadList(); const last = localStorage.getItem('label.last'); if (files.length) await open(files.some(f => f.stem === last) ? last : files[0].stem); else $('qs').innerHTML = '<div class="hint">No validation audio dumped yet. Serve one validation run with REQUEST_DUMP_DIR set, then reload.</div>'; })();
+</script>
+</body>
+</html>
