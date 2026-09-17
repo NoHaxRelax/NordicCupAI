@@ -28,10 +28,15 @@ try {
     $arguments = @('-u', "$CodeRoot\train.py", 'detector', '--data', "$Root\datasets\first-run-v2", '--weights', "$Root\weights", '--output', "$Root\runs\$RunId", '--epochs', '50', '--batch', '2', '--workers', '2')
     $quoted = ($arguments | ForEach-Object { '"' + $_ + '"' }) -join ' '
     $process = Start-Process -FilePath "$Root\.venv\Scripts\python.exe" -ArgumentList $quoted -WorkingDirectory $CodeRoot -PassThru -NoNewWindow -RedirectStandardOutput "$Root\logs\$RunId.out" -RedirectStandardError "$Root\logs\$RunId.err"
+    # Open and retain the native process handle before it exits so PowerShell
+    # preserves ExitCode on the returned Process object.
+    $processHandle = $process.Handle
     $status['state']='running'
     $status['training_pid']=$process.Id
     Write-Status
     $process.WaitForExit()
+    $process.Refresh()
+    if ($null -eq $process.ExitCode) { throw 'Child exit code unavailable; inspect the training result and logs.' }
     $status['exit_code']=$process.ExitCode
     $status['state']=if($process.ExitCode -eq 0){'completed'}else{'failed'}
 } catch {

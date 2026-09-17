@@ -1,0 +1,17 @@
+{
+  "workers": 2,
+  "code_commit": "93c2294f4b5936203f209e60679f506c8bff90aa",
+  "started_at": "2026-09-17T15:40:03.7655697Z",
+  "batch": 2,
+  "epochs": 50,
+  "finished_at": "2026-09-17T15:40:34.3479567Z",
+  "state": "failed",
+  "task": "detector",
+  "wrapper_pid": 23336,
+  "run_id": "mypc-yolo26x-20260917-v1",
+  "training_pid": 8488,
+  "exit_code": null,
+  "verified_error": "AttributeError: 'dict' object has no attribute 'detach' in on_train_epoch_end progress logger",
+  "effect": "First epoch optimization ran but the logger stopped training before the epoch checkpoint was saved.",
+  "repair": "Normalize both tensor and nested dictionary loss structures. Regression check passed on the Windows torch 2.6.0 environment."
+}

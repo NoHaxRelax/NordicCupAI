@@ -28,6 +28,17 @@ def sha(path):
     return h.hexdigest()
 
 
+def loss_values(value):
+    """Ultralytics versions expose either a tensor or a dict of loss tensors."""
+    if torch.is_tensor(value):
+        return value.detach().cpu().tolist()
+    if isinstance(value, dict):
+        return {str(k): loss_values(v) for k, v in value.items()}
+    if isinstance(value, (tuple, list)):
+        return [loss_values(v) for v in value]
+    return value
+
+
 def runtime():
     import importlib.metadata
     assert torch.cuda.is_available() and torch.cuda.device_count() == 1
@@ -46,7 +57,7 @@ def detector(args):
     data.write_text(f'path: {args.data.resolve() / "detector"}\ntrain: images/train\nval: images/train\nnames: '+json.dumps(args.manifest['classes'])+'\n')
     def progress(trainer):
         write(args.output/'progress.json', dict(task='detector', epoch=trainer.epoch+1,
-              total_epochs=args.epochs, loss=trainer.tloss.detach().cpu().tolist(),
+              total_epochs=args.epochs, loss=loss_values(trainer.tloss),
               peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
               warning='Any detector validation metrics are training-fit diagnostics, not holdout performance.'))
     model.add_callback('on_train_epoch_end', progress)
