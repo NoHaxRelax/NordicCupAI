@@ -200,3 +200,17 @@ faster-whisper large-v3-turbo, beam 5, no VAD, 39 conversations on the laptop (R
 | WER on the 4 hand-checked references | 3.0% | 1.8% |
 
 Half of the annotated ends land within one 20 ms frame of a turbo word end, against 4 percent for large-v3. That is a fingerprint: whatever produced the annotations places its ends where turbo's decoder does. Starts are still 0.28 s late relative to turbo's word starts, so the start side of the annotation comes from a different mechanism (or a later shift) and still needs the fitted rule. Serving implication: switch ASR to large-v3-turbo with START_RULE first-word-end and START_OFFSET -0.20, END_OFFSET -0.02 (both from the LOCO fit), pending the WhisperX and MMS comparison on the same files.
+
+### 18. MMS re-timing, the hygiene variant, and the hybrid: turbo alone wins
+
+All on the laptop, 39 conversations, oracle-selection ceilings with merges of up to four sentences. Scripts: `bench/asr/align_mms.py --tag large-v3-turbo`, `bench/asr/run_faster_whisper.py --model large-v3 --temperature 0 --no-condition`, `bench/asr/compare.py`, `bench/asr/fit_edges.py`.
+
+| tag | RTF | raw ceiling | best fitted ceiling | gold-start offset median | gold-end offset median | starts within 20 ms | ends within 20 ms |
+|---|---|---|---|---|---|---|---|
+| large-v3 | 0.111 | 0.753 | 0.834 | +0.36 | +0.12 | 7% | 4% |
+| large-v3+clean (temperature 0, no conditioning) | 0.086 | 0.730 | 0.808 | +0.38 | +0.12 | 9% | 3% |
+| large-v3-turbo | 0.043 | 0.812 | 0.857 | +0.28 | -0.02 | 11% | 49% |
+| large-v3-turbo+mms (torchaudio MMS_FA re-timing) | +0.020 | 0.832 | 0.853 | -0.06 | -0.10 | 24% | 14% |
+| hybrid: MMS start -0.06, turbo end raw | | | 0.857 | | | | |
+
+The hygiene variant transcribes faster (per-file max 32.8 s vs 39.1 s on the shared laptop card) and with lower word error (1.2 percent vs 3.0 on the checked references) but its timestamps are worse, so it is rejected for serving. MMS gives the tightest starts of any tool so far (24 percent within one frame, the annotated start sits 60 ms before the aligned onset) but its ends run 100 ms late; combining MMS starts with turbo ends reaches 0.857, exactly what turbo reaches on its own with the first-word-end rule, so the aligner step is not worth its cost. Serving decision: ASR large-v3-turbo, START_RULE first-word-end with START_OFFSET -0.20, END_OFFSET -0.02; encoded per model in `model.py`. Note for the earlier validation runs: distil-large-v3 was served with large-v3's fitted offsets, which were never measured for distil.

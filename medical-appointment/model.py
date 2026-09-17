@@ -70,8 +70,17 @@ LLM_URL = os.environ.get('LLM_URL', 'http://localhost:11434').rstrip('/')
 LLM_MODEL = os.environ.get('LLM_MODEL', 'qwen3.5:4b')
 LLM_TIMEOUT = float(os.environ.get('LLM_TIMEOUT', '25'))
 START_RULE = os.environ.get('START_RULE', 'first-word-end')
-START_OFFSET = float(os.environ.get('START_OFFSET', '-0.14' if START_RULE == 'first-word-end' else '0.36'))
-END_OFFSET = float(os.environ.get('END_OFFSET', '0.12'))
+# Edge offsets fitted leave-one-conversation-out on the 39 training files
+# (bench/asr/fit_edges.py, research/07-findings-log.md entries 5 and 17), keyed
+# by ASR model: (start offset for the first-word-end rule, start offset for the
+# unit-start rule, end offset). Models not listed fall back to large-v3's.
+_FITTED = {
+    'large-v3': (-0.14, 0.36, 0.12),
+    'large-v3-turbo': (-0.20, 0.28, -0.02),
+}
+_fwe, _us, _end = _FITTED.get(ASR_MODEL, _FITTED['large-v3'])
+START_OFFSET = float(os.environ.get('START_OFFSET', str(_fwe if START_RULE == 'first-word-end' else _us)))
+END_OFFSET = float(os.environ.get('END_OFFSET', str(_end)))
 PAUSE_SPLIT = float(os.environ.get('PAUSE_SPLIT', '0.6'))
 ASR_CLEAN = os.environ.get('ASR_CLEAN', '1') == '1'
 SPAN_ON_NO = os.environ.get('SPAN_ON_NO', '1') == '1'
