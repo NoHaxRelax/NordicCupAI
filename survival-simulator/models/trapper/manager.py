@@ -37,7 +37,7 @@ DEFAULTS = dict(
     holder_min_energy=180.0,
     standby_radius=170.0,    # a wall station's standby bait forages within this radius
     relevant_range=420.0,    # a free predator this close to an agent is worth trapping
-    max_turn=math.radians(35),   # base steering allowance for a walking guide; sprint energy widens it
+    max_turn=math.radians(50),   # base steering allowance for a walking guide; sprint energy widens it
     attract_wanderers=False,     # only chased agents become guides (attracting wanderers wastes energy)
     bait_eta_slack=40,           # ticks a bait may arrive after the guide reaches the corridor
     prestaff_time=40.0,      # staff the best station from this time on
@@ -54,9 +54,9 @@ DEFAULTS = dict(
     swap_lead_time=25.0,         # call the replacement when the bait's life falls below walk time + this
     swap_force_life=8.0,         # swap even while predators are awake when the bait has this little life left
     staff_range=230.0,           # staff a station in advance only with a loose predator this close to its mouth
-    turn_bonus=math.radians(20), # extra steering allowance for a guide with spare sprint energy
-    lead_max=650.0,              # longest lead (guide to entry + corridor + run-in) worth starting
-    gap_reserve=True,            # gap stations keep a reserve bait 10 behind the front one
+    turn_bonus=math.radians(50), # extra steering allowance for a guide with spare sprint energy
+    lead_max=900.0,              # longest lead (guide to entry + corridor + run-in) worth starting
+    gap_reserve=False,           # reserve bait 10 behind the front one (A/B over 32 runs: no gain)
     hold_bait_min_life=120.0,    # life on arrival for a bait replacing one at a station that holds predators
 )
 
@@ -114,6 +114,7 @@ class TrapManager:
         self._refuge_tried: dict = {}                   # aid -> last time a refuge plan was attempted
         self._held_prev: dict = {}
         self._last_why: dict = {}
+        self._last_pos: dict = {}
         self._hold_start: dict = {}
         self._energy_seen: dict[int, tuple] = {}        # aid -> (energy, x, y)
         self.last_actions: dict = {}                    # aid -> ActionRequest applied last tick (set by the policy)
@@ -280,7 +281,10 @@ class TrapManager:
                     if st.guard == aid:
                         st.guard = None
                     if role in ('bait', 'standby'):
-                        self.event(f'{role}_died', key=key, agent=aid)
+                        last = self._last_pos.get(aid)
+                        self.event(f'{role}_died', key=key, agent=aid,
+                                   at_slot=(last is not None and st is not None and min(dist(last[0], sl) for sl in st.slots) < 3.0),
+                                   energy=last[1] if last else None, cause=('predator' if last and any(dist(q.p, last[0]) < 40 for q in world.predators) else 'starvation') if last else None)
         for pid in list(self.deliveries):
             d = self.deliveries[pid]
             if d.guide not in world.agents and d.done is None:
@@ -340,6 +344,7 @@ class TrapManager:
         self._staff(world)
         self._assign(world, held_now)
         out = self._actions(world, held_now)
+        self._last_pos = {aid: (world.agents[aid].p, round(world.agents[aid].energy)) for aid in self.roles if aid in world.agents}
         self._last_why = {aid: why for aid, (act, why) in out.items()}
         return out
 

@@ -310,6 +310,12 @@ class Lure:
             else:
                 return self._open(d, a, p, gap)
         if d.phase == 'LEAD':
+            if gap < 130 and a.energy - a.max_energy / 5 < 60.0 and not is_resting(p):
+                # not enough sprint left to reopen the gap if it charges: hand over to the society's
+                # flee while there is still room
+                d.done = 'failed:guide_energy'
+                d.decision = f'lead: sprint reserve gone at gap {gap:.0f}, giving up'
+                return DEFER
             if not following:
                 d.stall_ticks += 1
                 if d.stall_ticks > 40:

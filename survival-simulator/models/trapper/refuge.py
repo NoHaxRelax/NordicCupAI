@@ -75,7 +75,12 @@ def plan_refuge(world: WorldState, a: AgentView, p: PredatorView, sites, held_pi
         else:
             ticks = length / max(walk, 1e-6)
             closing = 15.0 * ticks - length
-        if gap - closing < 22.0 and not (p.resting or p.still_ticks >= 3):
+        # on an estimated world the predator track can be a step or two stale and unseen predators
+        # may sit near the mouth: demand a wider margin and a fresh track
+        margin = 22.0 if world.complete_map else 45.0
+        if not world.complete_map and not getattr(p, 'fresh', True):
+            continue
+        if gap - closing < margin and not (p.resting or p.still_ticks >= 3):
             continue
         cost = length + (0.0 if is_front else 60.0)
         # a long run is only worth it when the predator is close; otherwise let the society flee
