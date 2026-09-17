@@ -60,6 +60,10 @@ class OracleWorld:
 class _OracleState(WorldState):
     _env = None
 
+    @property
+    def slow_key(self):
+        return ('oracle', id(self._env))
+
     def biome_at(self, p):
         env = self._env
         ix = min(max(int(p[0]), 0), env.width - 1)

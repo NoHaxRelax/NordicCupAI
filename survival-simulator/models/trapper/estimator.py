@@ -493,6 +493,11 @@ class EstimatedWorld:
 class _EstimatedState(WorldState):
     _frame = None
 
+    @property
+    def slow_key(self):
+        f = self._frame
+        return None if f is None else ('est', id(f), len(f.biome))
+
     def biome_at(self, p):
         f = self._frame
         if f is None:

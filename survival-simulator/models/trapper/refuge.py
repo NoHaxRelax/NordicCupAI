@@ -60,7 +60,7 @@ def plan_refuge(world: WorldState, a: AgentView, p: PredatorView, sites, held_pi
         # never run through the predator: the approach point must not be much closer to it than we are
         if dist(approach, p.p) < min(gap, 60.0) - 5:
             continue
-        path = plan(world.rects, world.width, world.height, a.p, approach, radius=7.0)
+        path = plan(world.rects, world.width, world.height, a.p, approach, radius=7.0, slow=world.biome_at)
         if path is None:
             continue
         length = sum(dist(path[i], path[i + 1]) for i in range(len(path) - 1)) + MOUTH_OUT + 10.0
@@ -92,9 +92,20 @@ class Refugee:
     def __init__(self, world: WorldState):
         self.world = world
 
-    def act(self, a: AgentView, p: PredatorView | None, site: Site, waypoints, slot_k):
+    def act(self, a: AgentView, p: PredatorView | None, site: Site, waypoints, slot_k, occupied=False, side=None):
+        """``occupied``: a bait already stands at the holder, so we cannot enter from the front:
+        at the flyby point we sprint along ``side`` instead and the predator takes the bait."""
         w = self.world
         goal_inside = inside_slot(site, slot_k)
+        if occupied and side is not None:
+            out = dot(sub(a.p, site.front_mid), site.normal)
+            lateral = abs(dot(sub(a.p, site.front_mid), (-site.normal[1], site.normal[0])))
+            gap = dist(a.p, p.p) if p is not None else 999.0
+            if out <= 16.0 and lateral < 40.0 and (gap <= 45.0 or lateral > 6.0):
+                return step_toward(a, add(a.p, mul(side, 40.0)), speed_for(a, True)), 'refuge: flyby sprint', True
+            if out <= 16.0 and lateral <= 6.0:
+                return action(a.id, 0.0, 0.0, wrap(heading_of(sub(p.p, a.p)) - a.heading)) if p else hold(a), f'refuge: at the flyby point, gap {gap:.0f}', False
+            waypoints[-1] = site.front
         # inside the passage already: walk to our slot and stop
         axis_in = mul(site.normal, -1.0)
         along = dot(sub(a.p, site.front_mid), axis_in)

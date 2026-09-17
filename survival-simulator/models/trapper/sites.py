@@ -18,12 +18,33 @@ from .world import AGENT_RADIUS, PREDATOR_RADIUS
 
 WALL_THIN = (30.0, 35.5)
 WALL_MIN_LONG = 70.0
-GAP_RANGE = (11.0, 19.0)
-GAP_MIN_OVERLAP = 55.0
+GAP_RANGE = (10.5, 19.5)  # strict engine tests: an agent (radius 5) passes above 10, a predator (10) below 20
+GAP_MIN_OVERLAP = 30.0    # passage length; the bait must be > 15 from any point either mouth lets the predator reach
 HOLDER_OFF = 5.1          # holder center from the back face
 FRONT_OFF = 5.1           # guide sacrifice point from the front face
 CORRIDOR = 150.0          # straight approach distance in front of the trap
-GAP_DEPTH = 5.0           # bait depth inside the mouth (fixed by earlier sweeps)
+GAP_CORRIDOR_MIN = 100.0  # gap sites: shortest acceptable straight approach
+GAP_DEPTH = 5.0           # minimum bait depth inside the mouth
+GAP_FLYBY_OUT = 14.0      # where a guide leaves the axis in front of a staffed mouth
+KILL_MARGIN = 1.5         # extra distance beyond the 15 kill radius
+
+
+def gap_reach(width):
+    """How far outside a mouth of this width the predator's center must stay (its radius is 10
+    and the mouth corners block it): sqrt(10^2 - (w/2)^2)."""
+    import math
+    return math.sqrt(max(0.0, 100.0 - (width / 2) ** 2))
+
+
+def gap_depth(width, length):
+    """Bait depth from the near mouth that keeps it out of the kill radius from both mouths,
+    or None if the passage is too short for that."""
+    reach = gap_reach(width)
+    lo = max(GAP_DEPTH, 15.0 + KILL_MARGIN - reach)
+    hi = length + reach - 15.0 - KILL_MARGIN
+    if lo > hi:
+        return None
+    return lo
 
 
 @dataclass
@@ -119,7 +140,10 @@ def find_wall_sites(rects, width, height):
     return sites
 
 
-def find_gap_sites(rects, width, height, depth=GAP_DEPTH, min_overlap=GAP_MIN_OVERLAP):
+def find_gap_sites(rects, width, height, depth=None, min_overlap=GAP_MIN_OVERLAP):
+    """Narrow passages between two rectangles. One site per usable mouth; ``depth`` overrides the
+    width-dependent bait depth. Sites carry a score (lower is better): short passages, closed far
+    mouths, extreme widths and short approaches are penalised."""
     sites = []
     n = len(rects)
     for i in range(n):
@@ -136,6 +160,10 @@ def find_gap_sites(rects, width, height, depth=GAP_DEPTH, min_overlap=GAP_MIN_OV
                     lo, hi = max(a.x, b.x), min(a.x2, b.x2)
                 if not (GAP_RANGE[0] <= gap <= GAP_RANGE[1]) or hi - lo < min_overlap:
                     continue
+                length = hi - lo
+                d = depth if depth is not None else gap_depth(gap, length)
+                if d is None:
+                    continue
                 center_line = (a.x2 + gap / 2) if orient == 'x' else (a.y2 + gap / 2)
                 axis = (0.0, 1.0) if orient == 'x' else (1.0, 0.0)     # along the passage
                 others = [o for k, o in enumerate(rects) if k not in (i, j)]
@@ -143,24 +171,48 @@ def find_gap_sites(rects, width, height, depth=GAP_DEPTH, min_overlap=GAP_MIN_OV
                 for end, sign in ((lo, -1.0), (hi, 1.0)):
                     normal = mul(axis, sign)                              # outward at this mouth
                     mouth = (center_line, end) if orient == 'x' else (end, center_line)
-                    bait = sub(mouth, mul(normal, depth))
-                    approach_ok = _corridor_clear(add(mouth, mul(normal, PREDATOR_RADIUS + 0.5)), normal, CORRIDOR,
-                                                  others, width, height, band=0.0)
+                    bait = sub(mouth, mul(normal, d))
+                    start = add(mouth, mul(normal, PREDATOR_RADIUS + 0.5))
+                    corridor = 0.0
+                    for length_out in (CORRIDOR + 100.0, CORRIDOR + 50.0, CORRIDOR, GAP_CORRIDOR_MIN):
+                        if _corridor_clear(start, normal, length_out, others, width, height, band=0.0):
+                            corridor = length_out
+                            break
                     entry_ok = (free_point(bait, AGENT_RADIUS, rects, width, height)
                                 and path_clear(add(mouth, mul(normal, 40.0)), bait, AGENT_RADIUS, rects))
-                    mouths.append(dict(mouth=mouth, normal=normal, bait=bait, approach_ok=approach_ok, entry_ok=entry_ok))
+                    # the passage itself must be walkable for an agent from this mouth to the bait
+                    mouths.append(dict(mouth=mouth, normal=normal, bait=bait, corridor=corridor, entry_ok=entry_ok))
                 for m, other in ((mouths[0], mouths[1]), (mouths[1], mouths[0])):
-                    if not (m['approach_ok'] and m['entry_ok']):
+                    if not (m['corridor'] > 0 and m['entry_ok']):
                         continue
                     normal = m['normal']
+                    far_open = other['entry_ok']
+                    score = (max(0.0, 60.0 - length) + (0.0 if far_open else 40.0) + abs(gap - 14.0) * 3.0
+                             + (CORRIDOR + 100.0 - m['corridor']) * 0.3)
                     key = f'gap{i}-{j}{orient}{"+" if normal == mul(axis, 1.0) else "-"}'
+                    # replacement baits stage outside the far mouth, off the axis, so the old bait
+                    # can walk out past them to the exit point on the other side
+                    back = mul(normal, -1.0)
+                    tangent = perp(normal)
+                    stage = exit_pt = None
+                    for side in (tangent, mul(tangent, -1.0)):
+                        cand = add(add(other['mouth'], mul(back, 22.0)), mul(side, 16.0))
+                        cand_exit = add(add(other['mouth'], mul(back, 45.0)), mul(side, -16.0))
+                        if free_point(cand, AGENT_RADIUS + 1.0, rects, width, height) and \
+                                free_point(cand_exit, AGENT_RADIUS + 1.0, rects, width, height):
+                            stage, exit_pt = cand, cand_exit
+                            break
+                    if stage is None:
+                        stage = add(other['mouth'], mul(back, 22.0))
+                        exit_pt = add(other['mouth'], mul(back, 60.0))
                     sites.append(Site(kind='gap', key=key, rect=None, rects=(a, b), axis=mul(normal, -1.0),
                                       normal=normal, front_mid=m['mouth'], holder=m['bait'],
-                                      front=add(m['mouth'], mul(normal, 75.0)),
-                                      corridor_start=add(m['mouth'], mul(normal, CORRIDOR + 100.0)),
-                                      successor=sub(m['bait'], mul(normal, 8.0)), guard=None,
-                                      thickness=gap, length=hi - lo, lateral=gap / 2 + PREDATOR_RADIUS,
-                                      far_mouth=other['mouth'], far_mouth_open=other['entry_ok']))
+                                      front=add(m['mouth'], mul(normal, GAP_FLYBY_OUT)),
+                                      corridor_start=add(m['mouth'], mul(normal, m['corridor'])),
+                                      successor=stage, guard=None,
+                                      thickness=gap, length=length, lateral=gap / 2 + PREDATOR_RADIUS,
+                                      far_mouth=other['mouth'], far_mouth_open=far_open, score=score,
+                                      extra=dict(depth=d, corridor=m['corridor'], exit=exit_pt)))
     # de-duplicate the (i,j)/(j,i) symmetric hits
     seen = {}
     for s in sites:

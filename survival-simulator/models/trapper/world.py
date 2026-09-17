@@ -115,6 +115,11 @@ class WorldState:
         """Movement modifier lookup; oracle overrides with the true biome map."""
         return 1.0
 
+    @property
+    def slow_key(self):
+        """Cache key for per-cell movement modifiers (None: no caching)."""
+        return None
+
 
 def rel_dir_from(observer_p, target_p, target_heading):
     """Engine ``rel_dir``: bearing of the observer in the target's body frame."""

@@ -65,7 +65,8 @@ _grids: dict = {}
 
 
 def grid_for(rects, width, height, radius):
-    key = (id(rects), len(rects), width, height, round(radius, 2))
+    # the world rebuilds its rectangle list every tick: key on the geometry, not the list identity
+    key = (tuple((r.x, r.y, r.w, r.h) for r in rects), width, height, round(radius, 2))
     g = _grids.get(key)
     if g is None:
         if len(_grids) > 16:
@@ -74,7 +75,39 @@ def grid_for(rects, width, height, radius):
     return g
 
 
-def astar(grid: Grid, start, goal, avoid=(), max_nodes=40000):
+def segment_slow(a, b, slow, limit=0.6):
+    """True when any point of a-b (sampled every 10) lies in a biome with movement modifier below ``limit``."""
+    if slow is None:
+        return False
+    n = max(1, int(dist(a, b) // 10))
+    for k in range(n + 1):
+        t = k / n
+        if slow((a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)) < limit:
+            return True
+    return False
+
+
+_slow_cells: dict = {}
+
+
+def slow_cells_for(grid: Grid, slow):
+    """Movement modifier per grid cell, cached when ``slow`` is a bound method of a world state
+    that exposes ``slow_key`` (the oracle's map never changes; the estimator's key grows)."""
+    owner = getattr(slow, '__self__', None)
+    key = getattr(owner, 'slow_key', None)
+    if key is None:
+        return None
+    ck = (key, id(grid))
+    cells = _slow_cells.get(ck)
+    if cells is None:
+        if len(_slow_cells) > 8:
+            _slow_cells.clear()
+        cells = [slow(grid.point_of((ix, iy))) for iy in range(grid.ny) for ix in range(grid.nx)]
+        _slow_cells[ck] = cells
+    return cells
+
+
+def astar(grid: Grid, start, goal, avoid=(), max_nodes=40000, slow=None):
     """Cells to avoid: list of (center, radius) circles (soft-blocked, high cost)."""
     s = grid.nearest_free(grid.cell_of(start))
     g = grid.nearest_free(grid.cell_of(goal))
@@ -94,6 +127,9 @@ def astar(grid: Grid, start, goal, avoid=(), max_nodes=40000):
             if d < r:
                 pen += 50.0 * (1 - d / r)
         return pen
+
+    cells = slow_cells_for(grid, slow) if slow is not None else None
+    nx = grid.nx
 
     def h(c):
         return math.hypot(c[0] - g[0], c[1] - g[1]) * grid.cell
@@ -120,6 +156,9 @@ def astar(grid: Grid, start, goal, avoid=(), max_nodes=40000):
                 if dx and dy and (grid.is_blocked((cur[0] + dx, cur[1])) or grid.is_blocked((cur[0], cur[1] + dy))):
                     continue   # no corner cutting through blocked cells
                 step = grid.cell * (1.41421356 if dx and dy else 1.0)
+                if slow is not None:
+                    m = cells[nb[1] * nx + nb[0]] if cells is not None else slow(grid.point_of(nb))
+                    step /= max(m, 0.1)          # rivers (0.3) cost 3.3x: crossed only when there is no way round
                 nc = c0 + step + penalty(nb)
                 if nc < cost.get(nb, 1e18):
                     cost[nb] = nc
@@ -137,12 +176,14 @@ def astar(grid: Grid, start, goal, avoid=(), max_nodes=40000):
     return pts
 
 
-def shortcut(pts, rects, radius, avoid=()):
-    """Greedy line-of-sight smoothing that respects clearance and avoid circles."""
+def shortcut(pts, rects, radius, avoid=(), slow=None):
+    """Greedy line-of-sight smoothing that respects clearance, avoid circles and slow biomes."""
     if not pts or len(pts) < 3:
         return pts
     def ok(a, b):
         if not path_clear(a, b, radius, rects):
+            return False
+        if segment_slow(a, b, slow):
             return False
         for c, r in avoid:
             # sample the segment against the circle
@@ -164,16 +205,17 @@ def shortcut(pts, rects, radius, avoid=()):
     return out
 
 
-def plan(rects, width, height, start, goal, radius=6.0, avoid=()):
-    """Waypoints from start to goal (both included). Straight line when clear."""
-    if path_clear(start, goal, radius, rects) and not any(
-            dist(p, c) < r for c, r in avoid for p in (start, goal)) and not avoid:
+def plan(rects, width, height, start, goal, radius=6.0, avoid=(), slow=None):
+    """Waypoints from start to goal (both included). Straight line when clear.
+    ``slow(point)`` gives the biome movement modifier: rivers (0.3) are blocked, swamps
+    (0.5) and desert (0.8) cost more."""
+    if path_clear(start, goal, radius, rects) and not avoid and not segment_slow(start, goal, slow):
         return [start, goal]
     grid = grid_for(rects, width, height, radius)
-    pts = astar(grid, start, goal, avoid)
+    pts = astar(grid, start, goal, avoid, slow=slow)
     if pts is None:
         return None
-    return shortcut(pts, rects, radius, avoid)
+    return shortcut(pts, rects, radius, avoid, slow)
 
 
 def path_length(pts):
