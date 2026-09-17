@@ -250,3 +250,16 @@ Full 390-question bench on the turbo transcripts (`bench/llm/bench.py --asr larg
 | words (cite first and last word) | 0.956 | 0.488 | 0.675 |
 
 Against a 0.857 oracle ceiling the realised 0.48 is a selector problem, not an edge problem. Of the 185 positives answered yes under `units`: 39 percent have both edges within 0.5 s (tIoU 0.94), 27 percent point at a unit with no overlap at all, 22 percent are too short with the gold continuing left or right equally often, 11 percent spill over. The model cited exactly one unit in 184 of 186 cases although a quarter of the gold spans cover two sentences. Locating the model's verbatim quote in the transcript gives a better unit than its cited id (0.528 vs 0.505 mean tIoU) but does not rescue the wrong-place cases (8 of 51), which are the model choosing the wrong sentence outright. Changes made: the span anchors on the quote's unit with cited ids kept when adjacent (`model.anchor_ids`), and the prompt asks for every consecutive utterance the fact rests on. A bigger answering model is the remaining lever for the wrong-place quarter.
+
+### 22. Quote anchoring plus multi-unit citations: local tIoU 0.481 to 0.524
+
+Same bench as entry 21 (`units` variant, turbo transcripts, qwen3:4b), after `model.anchor_ids` (span built from the unit where the verbatim quote lands, cited ids kept when within two units of it) and the prompt asking for every consecutive utterance the fact rests on.
+
+| | before | after |
+|---|---|---|
+| accuracy | 0.969 | 0.964 |
+| mean tIoU, nulls on no | 0.481 | 0.524 |
+| tIoU when answered yes | 0.505 | 0.556 |
+| score, nulls on no | 0.677 | 0.700 |
+
+Gain 0.023 in score, above the 0.006 noise floor. Deployed to the laptop endpoint for validation run D.
