@@ -263,3 +263,7 @@ Same bench as entry 21 (`units` variant, turbo transcripts, qwen3:4b), after `mo
 | score, nulls on no | 0.677 | 0.700 |
 
 Gain 0.023 in score, above the 0.006 noise floor. Deployed to the laptop endpoint for validation run D.
+
+### 23. Extractive QA as a span locator: 0.450, below the small LLM's citations
+
+Nikolaj's suggestion: `deepset/roberta-base-squad2` given the question and the full turbo transcript, its predicted answer characters mapped to the containing unit(s), served edge rule applied (`bench/llm/qa_locate.py`). Over the 195 annotated yes questions: mean tIoU 0.450, 108 below 0.5, against 0.556 for qwen3:4b's cited unit on the positives it answered yes and 0.857 for the oracle unit. The squad2 model points at a few answer tokens and often at the topic mention rather than the utterance that establishes the fact, so it does not replace the LLM as a selector. It runs in milliseconds, so it stays a candidate for a tie-break when the LLM's quote and cited id disagree.
