@@ -53,6 +53,17 @@ nothing:
 
 ## To do
 
+-1. Job 29429655 started 19:52. Qwen3.8-27B and Qwen3.6-27B failed at engine start: hybrid
+   Mamba models need `--max-num-seqs` below their Mamba cache size (409 blocks; vLLM's default
+   is 1024). `bench/llm/serve_vllm.sh` now passes `--max-num-seqs 64` (patched on the cluster
+   at 20:03 while the job ran, so the later models in the job get it). Resubmit the two 27B
+   models once the job ends: `MODELS="Qwen/Qwen3.8-27B Qwen/Qwen3.6-27B" ASR_TAGS="large-v3-turbo
+   large-v3" bsub < bench/hpc/llm_bench.lsf`. `openai/gpt-oss-120b` is being prefetched
+   (`logs/prefetch3.log`); it fits one H100 and belongs in that job too if the download finished.
+   Serving plan (Elias, 2026-09-17 20:05): Oscar is setting up cloud A100s for the predict
+   endpoint; the README allows a cloud VM, it forbids only hosted ASR/LLM APIs in the request
+   path. So the cluster is for benchmarking only; the winning model will be served from Oscar's
+   machines.
 0. New since the submission: `bench/llm/prompts.py` has `units-fewshot` and `words-fewshot`
    (findings log 30: no gain for qwen3:4b, untested on bigger models). The cluster copy was
    synced at 19:55; job 29429655 still runs the default `VARIANTS="units units-claim words"`.
