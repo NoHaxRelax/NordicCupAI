@@ -398,3 +398,16 @@ Jobs 29430781 and 29431586 (H100, vLLM 0.29, 2026-09-17 20:05-22:23). 390 traini
 Readings. (1) The 27B lifts the score by 0.06-0.08 over the served 4B, almost all of it span selection (tIoU 0.52 to 0.61-0.64), with accuracy 0.99 and no false yes on hard negatives. (2) Elias's few-shot idea pays on the 27B where it did not on the 4B: +0.018 for Qwen3.8 (0.762 to 0.780) and +0.009 for Qwen3.6, examples being the marked stretches of the twelve nearest questions from other conversations. (3) Bigger is not better here: gpt-oss-120b (0.742) and the 35B MoE (0.745) trail the dense 27Bs, and gpt-oss is slow because its reasoning cannot be switched off. (4) Transcripts matter as the ASR sweep predicted: turbo beats large-v3 by about 0.01 and Parakeet by 0.03-0.04 for the same model and prompt. (5) The words variant loses 0.05 against units on every model. (6) The joint variants on the 27Bs failed on the cluster only because the job kept bench.py's default 200-token budget and cut the ten-answer JSON; rerun queued with 1500 tokens. Latency on the H100: about 2 s of LLM time per conversation with ten parallel requests for the 27B.
 
 Decision so far: serve Qwen3.8-27B (dense, BF16 on one 80 GB card or FP8 on less) on turbo transcripts with the few-shot units prompt; pending the joint results, which on the 4B added another 0.01-0.02 and cut prompt tokens eight-fold.
+
+### 35. Joint prompting on the 27B: no gain alone, +0.014 with worked conversations, four to eight times fewer tokens
+
+Job 29433720 (H100, Qwen3.8-27B, turbo transcripts, 1500-token budget), nulls-on-no:
+
+| variant | accuracy | tIoU | score | prompt tokens, 390 questions | exact | shifted | wrong place | missed |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| units (ten requests) | 0.987 | 0.612 | 0.762 | 375k | 61 | 51 | 19 | 5 |
+| units-fewshot | 0.990 | 0.640 | 0.780 | 574k | 64 | 52 | 16 | 3 |
+| units-joint | 0.990 | 0.609 | 0.761 | 46k | 58 | 63 | 19 | 4 |
+| units-joint-demo | 0.995 | 0.628 | 0.775 | 137k | 63 | 59 | 18 | 2 |
+
+Unlike the 4B, the 27B gains nothing from seeing the ten questions together (its passage reuse was already at the annotators' rate), but the two worked conversations add 0.014 on top, and the joint form costs a quarter of the few-shot prompt's tokens. Few-shot at 0.780 and joint-demo at 0.775 are within the noise floor of each other. The remaining loss is the same on every 27B row: about 55 "shifted" spans (the neighbouring utterance chosen on the wrong side, or one too many) and 16-19 in the wrong place; accuracy is essentially solved (2-3 misses in 195, no false yes on hard negatives). Next: combine the demonstrations with the nearest-question examples in one joint prompt, to be tested on the RunPod H100 rather than the cluster queue.
