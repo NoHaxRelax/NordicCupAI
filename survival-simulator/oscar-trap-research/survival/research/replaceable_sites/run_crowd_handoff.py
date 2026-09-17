@@ -62,6 +62,10 @@ def main(seed=10000, seconds=60., boundary=False, expanded_narrowest=False):
         predators.append(predator)
     env.agents=[old,new];env.agents_dict={0:old,1:new};env._next_agent_id=2
     env.predators=predators;env._update_spatial_grid()
+    # Native spawning appends to env.predators. Freeze the original cohort;
+    # counting the aliased list and requiring ==33 incorrectly rejects a trap
+    # that retains the original33 and also catches later native predators.
+    tracked_predators = tuple(predators)
     label="expanded-narrow-" if expanded_narrowest else "boundary-" if boundary else ""
     tag=f"native-map-{seed}-{label}crowd33-continuous-replacement-{uuid4().hex[:8]}"
     replay=OUT/"replays"/f"{tag}.json.gz"
@@ -88,7 +92,7 @@ def main(seed=10000, seconds=60., boundary=False, expanded_narrowest=False):
         replacement_goal |= new_alive and math.dist((env.agents_dict[1].x,env.agents_dict[1].y),site["goal"])<3
         old_exit |= old_alive and math.dist((env.agents_dict[0].x,env.agents_dict[0].y),site["replacement_entry"])<5
         held_count=0
-        for predator in predators:
+        for predator in tracked_predators:
             along=(predator.x-mouth[0])*inward[0]+(predator.y-mouth[1])*inward[1]
             held_count+=int(math.dist((predator.x,predator.y),mouth)<75 and along<=10)
         held=held_count==33
@@ -106,8 +110,9 @@ def main(seed=10000, seconds=60., boundary=False, expanded_narrowest=False):
       "starts":points[:33],"replay":str(replay.relative_to(ROOT)),"frames_expected":round(env.time*10)+1,
       "policy_sha256":hashlib.sha256((HERE/"handoff_policy.py").read_bytes()).hexdigest(),
       "requested_seconds":seconds,"reason":"horizon" if env.time>=seconds-.05 else "stop sentinel","success":bool(env.time>=seconds-.05 and replacement_goal and old_exit and 1 in env.agents_dict and len(contained)>=300 and all(contained[-300:]) and all(coverage)),
-      "setup_label":"prepared boundary refuge continuous handoff" if boundary else "prepared interior refuge continuous handoff",
-      "limitations":"Prepared33 near-mouth positions, including overlaps; native predators do not collide with each other. One continuous replacement with infinite agent energy. Not random-map delivery or whole-game reliability."}
+      "setup_label":"prepared boundary refuge continuous handoff" if site["boundary_indices"] else "prepared interior refuge continuous handoff",
+      "tracking_rule":"fixed original33 cohort; later native spawns excluded from denominator",
+      "limitations":"Prepared33 near-mouth positions, including overlaps; native predators do not collide with each other. One continuous replacement with infinite agent energy. Not random-map delivery or population reliability."}
     OUT.mkdir(parents=True,exist_ok=True);receipt=OUT/f"{tag}.json";receipt.write_text(json.dumps(json_value(result),indent=2)+"\n")
     assert summary['frames']==result['frames_expected']
     print(json.dumps({k:result[k] for k in ("replacement_reached_goal","old_exited_opposite_mouth","replacement_alive","old_bait_alive","predator_held_final_30s","replay")},indent=2))

@@ -213,6 +213,11 @@ def main():
         if (score.get("receipt") and score.get("schema") == "guide-delivery-causal-score-v4"
                 and score.get("protocol_sha256") == current_v4_hash):
             v4_scores["/" + score["receipt"].lstrip("/")] = (score_path, score)
+    any_bait_scores = {}
+    for score_path in sorted((ROOT / "results/multi_site").rglob("*.strict-any-bait.score.json"), key=lambda p:p.stat().st_mtime_ns):
+        score = json.loads(score_path.read_text())
+        if score.get('schema') == 'multi-site-any-bait-causal-score-v1':
+            any_bait_scores['/' + score['receipt'].lstrip('/')] = (score_path, score)
     # Apply evaluator sidecars to presentation only, including cached rows.
     # Immutable original success stays visible separately.
     for row in rows:
@@ -232,6 +237,9 @@ def main():
             policy_label = original.get('policy', 'policy').split(':')[0].split('.')[-1]
             row['title'] = (f"[{policy_label}] unscored · map {row.get('map_seed')} · "
                             f"{row.get('seconds',0):g}s · {Path(row['receipt']).stem[-8:]}")
+        if original.get('multi_site_baits'):
+            row['setup_label'] = (f"adjacent awake start; {len(original['multi_site_baits'])} static bait sites; "
+                                  "site chosen from guide observations")
         if original.get('child_births'):
             row['guide_role'], row['parent_role'], row['child_role'] = 'guide lineage', 'parent guide', 'native reserve guides'
             row['guide_births'] = len(original['child_births'])
@@ -281,8 +289,30 @@ def main():
             row["title"] = (f"[{row.get('policy_label', 'policy')}] v4 {'PASS' if score['pass'] else 'FAIL'} · "
                 f"map {row.get('map_seed')} · fixture {row.get('fixture_seed')} · {row.get('seconds', 0):g}s · "
                 f"{Path(row['receipt']).stem[-8:]}")
+        if row['receipt'] in any_bait_scores:
+            score_path, score = any_bait_scores[row['receipt']]
+            row['capture_audit'] = '/' + str(score_path.relative_to(ROOT))
+            row['strict_any_bait_score'] = score['pass']
+            row['success'] = score['pass']
+            row['guided_delivered'] = int(score['pass'])
+            row['failure_stage'] = None if score['pass'] else score['reason']
+            row['kind'] = 'capture pilot' if score['pass'] else 'failure'
+            row['title'] = (f"[multi-site] any-bait {'PASS' if score['pass'] else 'FAIL'} · "
+                            f"map {row.get('map_seed')} · {row.get('seconds', 0):g}s · "
+                            f"{Path(row['receipt']).stem[-8:]}")
+        retention_path = (ROOT / row['receipt'].lstrip('/')).with_suffix('.retention-audit.json')
+        if row.get('kind') == 'prepared handoff' and retention_path.exists():
+            audit = json.loads(retention_path.read_text())
+            row['capture_audit'] = '/' + str(retention_path.relative_to(ROOT))
+            row['success'] = audit['pass_value']
+            row['prepared_retention_score'] = audit['pass_value']
+            row['setup_label'] = ('prepared boundary refuge; rear bait replacement' if original.get('boundary_fixture')
+                                  else 'prepared interior refuge; rear bait replacement')
+            row['title'] = (f"prepared33 retention {'PASS' if audit['pass_value'] else 'FAIL'} · "
+                            f"map {row.get('map_seed')} · {row.get('seconds', 0):g}s · "
+                            f"{Path(row['receipt']).stem[-8:]}")
     order = {"full game": 0, "capture pilot": .5, "sequential pilot": .6, "prepared handoff": .75, "unscored native run": .9, "partial pilot": 3.5, "failure": 1, "no-birth diagnostic": 2,
-             "excluded": 3, "short pilot": 4, "unsupported": 5}
+             "excluded": 3, "short pilot": 4, "unsupported": 5, "invalid setup": 6}
     rows.sort(key=lambda row: (order[row["kind"]], -row.get("seconds", 0), row["title"]))
     temporary = HERE / f"manifest.{__import__('os').getpid()}.tmp"
     temporary.write_text(json.dumps(rows, indent=2) + "\n")
