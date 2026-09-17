@@ -206,11 +206,14 @@ def _units_post(out: dict, units: List[Unit], words: List[Word], duration: float
     """Mirror of the per-question logic in model.answer_all."""
     yes = _is_yes(out)
     ids = _int_list(out.get('segments'))
-    if yes and not ids:
-        # The model said yes but cited nothing: find the quote instead.
+    if not ids:
+        # Nothing cited: find the quote instead (for yes and for no alike, so
+        # the span-on-no policy has something to return).
         quote = str(out.get('quote', '')).strip().lower()
         ids = [u.idx for u in units if quote and quote[:40] in u.text.lower()][:1]
-    span = span_from_ids(ids, units, duration) if yes else None
+    span = span_from_ids(ids, units, duration)
+    # The span is kept for no answers too; bench.py scores both policies
+    # (spans on every question vs nulls on no) from the same run.
     if span is not None and not offsets:
         span = _clamp(span[0] - START_OFFSET, span[1] - END_OFFSET, duration)
     return yes, span

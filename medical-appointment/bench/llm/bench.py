@@ -314,6 +314,9 @@ def write_results(a: argparse.Namespace, client: Client, stats: Statistics, reco
     extra = ['', 'Bench' + ('  (PARTIAL: the run did not finish)' if partial else ''),
              f'  {"model":<24} {a.model}  variant {a.variant}  asr {a.asr}',
              f'  {"yes-rate":<24} {yes_rate:.3f}  by type {yes_by_type}',
+             f'  {"span policy":<24} spans on every question: mean tIoU {stats.mean_tiou:.3f}, score {stats.final_score:.3f}'
+             + (f'  |  nulls on no: mean tIoU {stats.nulls_on_no.mean_tiou:.3f}, score {stats.nulls_on_no.final_score:.3f}'
+                if hasattr(stats, 'nulls_on_no') else ''),
              f'  {"request errors":<24} {sum(1 for r in records if r["error"])}',
              f'  {"json mode":<24} {a.json_mode}' + ('  (fell back to json_object)' if client.fell_back else ''),
              f'  {"no-think":<24} {a.no_think}',
@@ -346,6 +349,9 @@ def write_results(a: argparse.Namespace, client: Client, stats: Statistics, reco
         'accuracy_by_type': by_type, 'mean_tiou': stats.mean_tiou, 'n_annotated': len(stats.tious),
         'missing_spans': stats.missing_spans, 'tiou_answered_yes': stats.mean_tiou_answered_yes,
         'n_answered_yes_annotated': len(stats.tious_answered_yes), 'score': stats.final_score,
+        'nulls_on_no': ({'mean_tiou': stats.nulls_on_no.mean_tiou, 'score': stats.nulls_on_no.final_score,
+                         'missing_spans': stats.nulls_on_no.missing_spans}
+                        if hasattr(stats, 'nulls_on_no') else None),
         'yes_rate': yes_rate, 'yes_rate_by_type': {k: float(v) for k, v in yes_by_type.items()},
         'latency_ms': {'mean': st.mean(lat) if lat else None, 'p50': pct(lat, .5), 'p95': pct(lat, .95)},
         'conversation_wall_s': {'mean': st.mean(walls) if walls else None, 'p50': pct(walls, .5),
@@ -418,6 +424,11 @@ def main() -> int:
     client = Client(a.url, a.model, a.timeout, a.no_think, a.json_mode, a.max_tokens,
                     a.temperature, a.workers)
     stats = Statistics()
+    # Second scoring of the same run under the other span policy: a question
+    # answered no returns no span. The primary `stats` keeps every located span
+    # (model.SPAN_ON_NO=1 behaviour); the difference is what a paired
+    # validation run would show if the live scorer credits spans on no.
+    stats.nulls_on_no = Statistics()
     records: List[dict] = []
     walls: List[float] = []
     skipped: List[str] = []
@@ -465,6 +476,8 @@ def main() -> int:
                 gold = tuple(r['gold']) if r['gold'] else None
                 span = tuple(r['span']) if r['span'] else None
                 stats.record(r['question_type'], r['label'], r['prediction'], gold, span)
+                stats.nulls_on_no.record(r['question_type'], r['label'], r['prediction'], gold,
+                                         span if r['prediction'] == 1 else None)
                 records.append(r)
                 if a.verbose:
                     mark = 'ok  ' if r['correct'] else 'WRONG'
