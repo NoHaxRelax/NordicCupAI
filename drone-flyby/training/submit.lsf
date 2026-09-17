@@ -1,0 +1,32 @@
+#!/bin/bash
+#BSUB -J drone-first-run
+#BSUB -q gpul40s
+#BSUB -n 4
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=8GB]"
+#BSUB -W 01:00
+#BSUB -o logs/%J.out
+#BSUB -e logs/%J.err
+set -eo pipefail
+module load python3/3.11.11
+source "$HOME/nordic-drone/.venv/bin/activate"
+set -u
+: "${LSB_JOBID:?Submit using bsub}"
+: "${DRONE_COMMIT:?Set the exact pushed code commit}"
+: "${DRONE_CODE_ROOT:?Set the immutable uploaded code directory}"
+: "${DRONE_TASK:?Set classifier or detector}"
+export PYTHONUNBUFFERED=1 OMP_NUM_THREADS=4 WANDB_MODE=disabled YOLO_AUTOINSTALL=false
+export TORCH_HOME="$HOME/nordic-drone/weights/torch"
+export YOLO_CONFIG_DIR="$HOME/nordic-drone/ultralytics-settings"
+cd "$DRONE_CODE_ROOT"
+case "$DRONE_TASK" in
+    detector) epochs=50 ;;
+    classifier) epochs=40 ;;
+    *) echo "Unknown task: $DRONE_TASK" >&2; exit 2 ;;
+esac
+exec python train.py "$DRONE_TASK" \
+    --data "$HOME/nordic-drone/datasets/first-run-v2" \
+    --weights "$HOME/nordic-drone/weights" \
+    --output "$HOME/nordic-drone/runs/${DRONE_TASK}-${LSB_JOBID}" \
+    --epochs "$epochs"

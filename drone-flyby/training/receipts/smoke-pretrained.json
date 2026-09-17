@@ -1,0 +1,24 @@
+{
+  "gpu": "NVIDIA A100-PCIE-40GB",
+  "vram_gib": 39.51531982421875,
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "ultralytics": "8.4.155",
+  "job": "29428480",
+  "commit": null,
+  "hostname": "n-62-12-19",
+  "samples": 50,
+  "batch": 1,
+  "delivered_size": [
+    960,
+    540
+  ],
+  "p50_ms": 30.940293101593852,
+  "p95_ms": 31.36696603614837,
+  "p99_ms": 34.51220792019738,
+  "max_ms": 37.2652739752084,
+  "peak_allocated_gib": 0.22264480590820312,
+  "scope": "Pretrained COCO checkpoint: PNG decode, preprocessing, GPU inference, postprocessing, CPU boxes and JSON; no HTTP, network, camera or tracker.",
+  "shared_gpu": true,
+  "limits": "Shared GPU smoke only; repeat on final fine-tuned artifact and actual endpoint before claiming the 333 ms serving target."
+}
