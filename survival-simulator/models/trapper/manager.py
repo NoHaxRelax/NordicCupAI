@@ -207,7 +207,8 @@ class TrapManager:
                     in_place = {b for b, k in st.baits.items() if b in world.agents and k < len(st.slots)
                                 and dist(world.agents[b].p, st.slots[k]) < 3.0}
                     # a predator resting at the mouth (including the tick it wakes on) still holds
-                    if target in in_place or (target is None and bool(p.resting) and in_place):
+                    resting = bool(p.resting) if p.resting is not None else is_resting(p)
+                    if target in in_place or (target is None and resting and in_place):
                         st.held.add(p.pid)
                         st.last_held = world.time
                         held_now[p.pid] = st.key
@@ -237,7 +238,7 @@ class TrapManager:
                     self.event('bait_moving_detail', key=key, agent=b, why=self._last_why.get(b), fleeing=b in self.fleeing,
                                off=round(dist(ba.p, st.site.holder), 1) if ba else None, energy=round(ba.energy) if ba else None,
                                pred=(round(p.x), round(p.y)), target=predator_target(world, p))
-                elif bool(p.resting):
+                elif (bool(p.resting) if p.resting is not None else is_resting(p)):
                     why = 'resting_elsewhere'
                 else:
                     why = 'predator_left'

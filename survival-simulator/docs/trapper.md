@@ -149,8 +149,10 @@ then within 8–15 (median) and 15–44 (p90) of the truth. Batch `final-v9est` 
 619.7 against 612.3 for the society (median +5.8, 7 of 8 wins), held 1.7 %; 181 guide-led
 deliveries with 3 delivered (leads need the gap to ±5, which estimated tracks cannot give), holds
 come from refuge runs. Without the oracle, refuge runs and flybys are the working mechanism;
-`est-nodeliver` and `est-shortlead` test whether guide-led deliveries should be off or short on
-the estimator.
+With guide-led deliveries off (`est-nodeliver`) the estimator scored 612.8 (median −2.3, one
+extinction) and with short leads (`est-shortlead`) 610.6 (median +0.5, two extinctions), against
+619.7 with the defaults: a chased agent that becomes a guide is steered better than by the plain
+flee, even when the lead never ends at a mouth, so deliveries stay on.
 
 Two defects found on the way that any override policy must respect: overridden agents must keep
 the society's spawn decision (dropping it stopped all breeding by role agents and starved three

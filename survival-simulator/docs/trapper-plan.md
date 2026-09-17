@@ -88,3 +88,22 @@ Entries are appended as milestones complete; each names the commit and the evide
   `final-v9est`: 619.7 vs 612.3 (median +5.8, 7/8 wins), held 1.7 %, deliveries 3/181. Guide-led
   leads do not work on estimated tracks; refuge runs do. Testing deliveries off / short on the
   estimator (`est-nodeliver`, `est-shortlead`). Commits ed32785, 363bd0a.
+- **06:50** Estimator A/B: defaults 619.7 (median +5.8) beat deliveries-off 612.8 (median -2.3)
+  and short leads 610.6 (median +0.5): the lure keeps chased agents alive even when the lead
+  fails, so deliveries stay on. Resting predators at a mouth now count as held on the estimator
+  too (still-track based). Final state pushed; see the summary at the top of `docs/trapper.md`.
+
+### Where to pick up
+
+1. Holds are the value: on the oracle 8.7 % of predator-time, on the estimator 2 %. Both end
+   mostly with the predator walking off the mouth (`hold_ended:predator_left`); logging its
+   position at that moment (`out`, `lateral`, `target`) is in place, so the next step is to read
+   those and keep it engaged (a bait that steps to the mouth line when the predator drifts, or a
+   second bait at the far mouth for predators that circle round).
+2. Estimated predator positions are 8–15 off; the LEAD gap regulation needs ±5. Either
+   tighten the estimator (fuse the predator's own heading/speed model over several ticks) or make
+   LEAD tolerate the error (regulate to 140 instead of 125 on estimated worlds).
+3. Score effect is neutral within noise on 24 oracle seeds; judge changes with
+   `scripts/trapper/remote_batch.sh` over 16 seeds x 2 and `compare_labels.py`, never single runs.
+4. Wall traps (backup): `test_delivery.py --kind wall` still passes 3/4; real-game use is
+   switched off (`site_kinds=('gap',)`).
