@@ -411,3 +411,16 @@ Job 29433720 (H100, Qwen3.8-27B, turbo transcripts, 1500-token budget), nulls-on
 | units-joint-demo | 0.995 | 0.628 | 0.775 | 137k | 63 | 59 | 18 | 2 |
 
 Unlike the 4B, the 27B gains nothing from seeing the ten questions together (its passage reuse was already at the annotators' rate), but the two worked conversations add 0.014 on top, and the joint form costs a quarter of the few-shot prompt's tokens. Few-shot at 0.780 and joint-demo at 0.775 are within the noise floor of each other. The remaining loss is the same on every 27B row: about 55 "shifted" spans (the neighbouring utterance chosen on the wrong side, or one too many) and 16-19 in the wrong place; accuracy is essentially solved (2-3 misses in 195, no false yes on hard negatives). Next: combine the demonstrations with the nearest-question examples in one joint prompt, to be tested on the RunPod H100 rather than the cluster queue.
+
+### 36. Claude Haiku 4.5 and Sonnet 5 on the same prompt: capability beyond the 27B does not move the spans
+
+Elias's probe (not part of the competition pipeline, run through the Claude Code Agent tool with `bench/llm/dump_prompts.py`, the `units-joint-demo` prompt on turbo transcripts, scored identically):
+
+| model | accuracy | tIoU | score | missed positives | false yes | exact | shifted | wrong place |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| qwen3:4b | 0.990 | 0.547 | 0.724 | 2 | 2 | 51 | 60 | 38 |
+| Claude Haiku 4.5 | 0.949 | 0.599 | 0.739 | 11 | 9 | 59 | 64 | 18 |
+| Claude Sonnet 5 | 0.946 | 0.621 | 0.751 | 12 | 9 | 64 | 50 | 17 |
+| Qwen3.8-27B | 0.995 | 0.628 | 0.775 | 2 | 0 | 63 | 59 | 18 |
+
+Two readings. (1) On the spans, Sonnet and the 27B are the same (0.62-0.63), and the questions they get wrong are the same questions: of the roughly 70 positives each scores below 0.5, 57 are shared between Sonnet and the 27B and 52 by all three models. Their median gold length is 2.67 s, ordinary; these are cases where the unit representation or the annotation convention, not the model, decides the span. (2) The Claude models lose on the binaries: they answer no on 11-12 positives and yes on 9 hard negatives where the Qwen models make 2 and 0 errors; the prompt's "every detail must match" reads stricter to them. So the size-versus-score curve flattens at the 27B for this design, and the remaining tIoU is not bought with a bigger selector. What would buy some of it: the best of the four models per question would score a mean tIoU of 0.719 against 0.640 for the best single model, so the models disagree on a useful fraction of the hard cases; a consensus or self-consistency step over several prompts is the lever to test next, alongside sub-unit trimming.
