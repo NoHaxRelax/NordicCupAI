@@ -157,7 +157,7 @@ def find_gap_sites(rects, width, height, depth=GAP_DEPTH, min_overlap=GAP_MIN_OV
                     sites.append(Site(kind='gap', key=key, rect=None, rects=(a, b), axis=mul(normal, -1.0),
                                       normal=normal, front_mid=m['mouth'], holder=m['bait'],
                                       front=add(m['mouth'], mul(normal, 75.0)),
-                                      corridor_start=add(m['mouth'], mul(normal, CORRIDOR)),
+                                      corridor_start=add(m['mouth'], mul(normal, CORRIDOR + 100.0)),
                                       successor=sub(m['bait'], mul(normal, 8.0)), guard=None,
                                       thickness=gap, length=hi - lo, lateral=gap / 2 + PREDATOR_RADIUS,
                                       far_mouth=other['mouth'], far_mouth_open=other['entry_ok']))

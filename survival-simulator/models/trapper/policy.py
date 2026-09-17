@@ -58,7 +58,7 @@ class TrapperPolicy:
             if over is None:
                 a = world.agents.get(aid)
                 if a is not None:
-                    o = self.manager.society_override(world, a)
+                    o = self.manager.society_override(world, a, fleeing=aid in fleeing)
                     if o is not None:
                         over = o
             if over is not None:

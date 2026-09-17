@@ -28,7 +28,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 
-from .geometry import add, sub, mul, dot, dist, unit, wrap, heading_of, polar, path_clear
+from .geometry import add, sub, mul, dot, dist, unit, wrap, heading_of, polar, path_clear, los_clear
 from .motion import action, step_toward, hold, speed_for, next_waypoint
 from .paths import plan
 from .predator_model import PredState, observed_agents
@@ -61,6 +61,7 @@ class Delivery:
     lost_ticks: int = 0
     stall_ticks: int = 0
     flee_heading: float | None = None
+    defer_ticks: int = 0
     done: str | None = None       # 'delivered' | 'guide_captured' | 'failed:<reason>'
     decision: str = ''
 
@@ -92,20 +93,23 @@ def is_resting(p: PredatorView):
     return bool(p.resting) if p.resting is not None else p.still_ticks >= 3
 
 
-def steer(a: AgentView, p: PredatorView, desired, rects, max_dev, probe=70.0):
+def steer(a: AgentView, p: PredatorView, desired, rects, max_dev, probe=70.0, keep_los=True):
     """Heading closest to ``desired`` within ``max_dev`` of directly-away-from-p that
-    does not run into an obstacle within ``probe`` units. Falls back to the clear
-    heading with the largest away component."""
+    does not run into an obstacle within ``probe`` units and, when ``keep_los``,
+    keeps the predator's line of sight to us after both move. Falls back to the
+    clear heading with the largest away component."""
     away = heading_of(sub(a.p, p.p))
     best = None
     fallback = None
+    p_next = add(p.p, mul(unit(sub(a.p, p.p)), 10.0))
     for k in range(-12, 13):
         h = away + max_dev * k / 12
         end = add(a.p, polar(h, probe))
-        clear = path_clear(a.p, end, 6.0, rects)
-        if not clear:
+        if not path_clear(a.p, end, 6.0, rects):
             continue
         cost = abs(wrap(h - desired))
+        if keep_los and not los_clear(p_next, add(a.p, polar(h, 12.0)), rects):
+            cost += 1.5
         if best is None or cost < best[0]:
             best = (cost, h)
         comp = math.cos(h - away)
@@ -118,6 +122,9 @@ def steer(a: AgentView, p: PredatorView, desired, rects, max_dev, probe=70.0):
     return desired
 
 
+DEFER = None   # returned by Lure.act when the society's own action should be used this tick
+
+
 class Lure:
     """Per-tick action for the guide of one delivery."""
 
@@ -127,14 +134,16 @@ class Lure:
 
     def act(self, d: Delivery, a: AgentView, p: PredatorView | None):
         w = self.world
-        # another loose predator close by: abort, the society's flee logic takes over
+        # another loose predator close by: let the society's flee logic act for us
         for q in w.predators:
             if p is not None and q.pid == p.pid or q.pid in self.held or is_resting(q):
                 continue
-            if dist(q.p, a.p) < 95 and d.phase != 'FRONT':
-                d.done = 'failed:other_predator'
-                d.decision = f'abort: predator {q.pid} at {dist(q.p, a.p):.0f}'
-                return hold(a)
+            if dist(q.p, a.p) < 95 and d.phase not in ('FRONT', 'ENTER'):
+                d.defer_ticks += 1
+                if d.defer_ticks > 80:
+                    d.done = 'failed:other_predator'
+                d.decision = f'deferring: predator {q.pid} at {dist(q.p, a.p):.0f}'
+                return DEFER
         if p is None:
             d.lost_ticks += 1
             if d.lost_ticks > 30:
@@ -161,6 +170,7 @@ class Lure:
         if d.phase == 'OPEN':
             if gap >= ATTRACT_MIN:
                 d.phase = 'LEAD'
+                d.defer_ticks = 0
                 d.waypoints = self._lead_path(a, d.site)
                 d.event(w.time, 'opened', gap=round(gap, 1))
             else:
@@ -232,9 +242,9 @@ class Lure:
             d.decision = f'{label}: in its cone at {gap:.0f}, waiting'
             return self._facing(d, a, p, hold(a))
         goal, k = self._intercept_point(a, p, 140.0)
-        if goal is None:
+        if goal is None or (d.phase == 'ATTRACT' and k > 15):
             d.stall_ticks += 1
-            if d.phase == 'ATTRACT' and d.stall_ticks > 30:
+            if d.phase == 'ATTRACT' and d.stall_ticks > 10:
                 d.done = 'failed:cannot_intercept'
                 d.decision = 'attract: cannot intercept'
             else:
@@ -263,14 +273,12 @@ class Lure:
         return self._approach_front(d, a, p, gap, ATTRACT_MIN, 'attract')
 
     def _open(self, d: Delivery, a: AgentView, p: PredatorView, gap):
-        w = self.world
-        desired = d.flee_heading if d.flee_heading is not None else heading_of(sub(a.p, p.p))
-        h = steer(a, p, desired, w.rects, math.radians(70))
-        d.flee_heading = h
-        d.decision = f'open: fleeing ({gap:.0f})'
-        act = self._move_heading(a, h, speed_for(a, True))
-        # inside 90 it charges regardless of our facing; outside, facing it slows it
-        return self._facing(d, a, p, act) if gap >= PRED_CHARGE_RANGE else act
+        # the society's joint-threat retreat is better tuned than anything here
+        d.decision = f'open: society flees ({gap:.0f})'
+        d.defer_ticks += 1
+        if d.defer_ticks > 150:
+            d.done = 'failed:cannot_open'
+        return DEFER
 
     def _lead_path(self, a: AgentView, site: Site):
         """Waypoints to the corridor entry: join the approach axis at about our own
@@ -281,9 +289,9 @@ class Lure:
         from .sites import CORRIDOR
         entry_out = max(CORRIDOR + 30.0, min(CORRIDOR + RUN_IN, out - 40.0))
         entry = add(site.front_mid, mul(site.normal, entry_out))
-        path = plan(w.rects, w.width, w.height, a.p, entry, radius=12.0)
+        path = plan(w.rects, w.width, w.height, a.p, entry, radius=22.0)
         if path is None:
-            path = [a.p, entry]
+            path = plan(w.rects, w.width, w.height, a.p, entry, radius=12.0) or [a.p, entry]
         return path[1:] + [site.corridor_start]
 
     def _lead(self, d: Delivery, a: AgentView, p: PredatorView, gap):
