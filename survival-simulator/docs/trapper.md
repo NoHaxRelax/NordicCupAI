@@ -72,8 +72,13 @@ predator-time were reached on some seeds with no guide losses.
 none held, 26 guides lost. The failure classes were (a) chasing wandering predators that cannot be
 intercepted (131), (b) the trap lying outside the retreat cone so the pair drifts away from it, and
 (c) obstacles cutting the predator's line of sight mid-lead. Fixes for (a) and (c) are in the code;
-(b) is structural and would need either relays between agents or a rest-window reversal
-manoeuvre (walk round the sleeping predator and re-attract it from the other side).
+(b) is structural. A rest-window reversal (walk round the sleeping predator and wait 50–59 behind
+it) was checked with the exact model and does not work: on waking it moves 15 units along its old
+heading before its capped turn can bring it round, the guide drops out of hearing after one tick
+and it wanders off. The remaining option is a **relay**: a second agent with sprint energy waits
+about 59 units beside the predator's path outside its cone; the predator hears it, charges, the
+relay sprints ~12 ticks in the wanted direction (about 60 energy), then faces it and leads. Each
+relay can turn the pair by any angle; the manager already has the roles to host this.
 
 ## Results so far (600-second games, seeds 1–8, two repeats, oracle world)
 
@@ -94,11 +99,18 @@ matters; read its summary before drawing conclusions.
 Same-seed runs are not reproducible on this engine (object sets iterate in memory order), so
 compare means over repeats, never single runs.
 
-**Estimator (observation-only world).** `check_estimator.py` on seeds 1–2 over 200 s: absolute
-localization at t = 0.1 s (an agent sees an arena boundary), median and 95th-percentile position
-error 0.0, heading error 0.0, 70–85 rectangles recovered of 80 (a handful are spurious).
-A 600-second game on seed 2 with `--world estimator` found three gap sites from the estimated map,
-tracked predators, and ran refuge flights end to end, so the manager works without the oracle.
+**Estimator (observation-only world).** `check_estimator.py` on seeds 1 and 3 over 450 s:
+absolute localization at t = 0.1 s (an agent sees an arena boundary), median and 95th-percentile
+agent position error 0.0 (transient maxima 11–71 before an edge fix), heading error 0.0,
+75–82 rectangles recovered of 80 (a few spurious), predator track error median 4–10 units and
+95th percentile 15 (one predator step: the one-step prediction assumes 100 energy and flat
+terrain). A 600-second game on seed 2 with `--world estimator` found three gap sites from the
+estimated map, tracked predators and ran refuge flights end to end, so the manager works without
+the oracle.
+
+**Server.** `scripts/trapper/agent_server.py` serves the policy on the estimator at `/predict`
+(handles the lowercase types and missing `sim_time` of the platform's test sample, and detects
+new games). Smoke test: 400 ticks over HTTP at 7 ms per tick, worst 47 ms.
 
 ## Honest assessment and next steps
 
@@ -111,8 +123,8 @@ tracked predators, and ran refuge flights end to end, so the manager works witho
 3. Walls need a sacrifice (an old or senescent agent is free) and a guard on the back side; the
    controllers exist (`lure.py`, `manager` guard role) but are switched off until deliveries are
    reliable. Turn them on with `--params '{"explicit_deliveries": true}'`.
-4. The estimator is the path to the real server: the same manager runs on `EstimatedWorld`
-   instead of `OracleWorld`. Check `scripts/trapper/check_estimator.py` output (localization
-   time, position error, rectangles recovered) and then switch `TrapperPolicy(world_source=...)`.
+4. The estimator is the path to the real server and already carries the full policy:
+   `agent_server.py` runs `TrapperPolicy(world='estimator')`. Validate on the platform's
+   validation queue before trusting local results (Linux vs macOS set ordering differs).
 5. The society itself loses ~40 agents per 600 s to starvation (newborns); that is Oscar's
    open problem in the society line and dominates the score more than predators do at this stage.
