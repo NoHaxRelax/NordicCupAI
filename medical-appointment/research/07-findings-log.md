@@ -267,3 +267,7 @@ Gain 0.023 in score, above the 0.006 noise floor. Deployed to the laptop endpoin
 ### 23. Extractive QA as a span locator: 0.450, below the small LLM's citations
 
 Nikolaj's suggestion: `deepset/roberta-base-squad2` given the question and the full turbo transcript, its predicted answer characters mapped to the containing unit(s), served edge rule applied (`bench/llm/qa_locate.py`). Over the 195 annotated yes questions: mean tIoU 0.450, 108 below 0.5, against 0.556 for qwen3:4b's cited unit on the positives it answered yes and 0.857 for the oracle unit. The squad2 model points at a few answer tokens and often at the topic mention rather than the utterance that establishes the fact, so it does not replace the LLM as a selector. It runs in milliseconds, so it stays a candidate for a tie-break when the LLM's quote and cited id disagree.
+
+### 24. Validation run D: 0.6632, the anchoring gain does not transfer
+
+Queued 17:24, finished 17:29, 19 conversations, no errors. Only change from run C: quote anchoring plus the multi-unit citation prompt (entry 22, +0.023 locally). Score 0.6632 vs 0.6599, a difference of 0.003, inside the 0.006 run-to-run noise. Yes answers 86 of 190. Kept deployed (no harm measured), but not counted as a gain. Runs so far: 0.5869 (old offsets, distil), 0.6086 (A), 0.6062 (B), 0.6599 (C, turbo), 0.6632 (D).
