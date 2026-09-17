@@ -171,13 +171,17 @@ class Client:
         self.session.mount('http://', HTTPAdapter(pool_maxsize=max(10, workers), pool_connections=4))
         self.session.mount('https://', HTTPAdapter(pool_maxsize=max(10, workers), pool_connections=4))
 
-    def body(self, system: str, user: str, schema: dict, mode: str) -> dict:
+    def body(self, system: str, user: str, schema: dict, mode: str, demos=None) -> dict:
         if mode == 'object':
             system = system + '\nThe JSON must match this schema exactly:\n' + json.dumps(schema)
+        messages = [{'role': 'system', 'content': system}]
+        for du, da in (demos or []):            # worked examples as prior turns (prefix-cacheable)
+            messages.append({'role': 'user', 'content': du})
+            messages.append({'role': 'assistant', 'content': da})
+        messages.append({'role': 'user', 'content': user})
         b: dict = {
             'model': self.model,
-            'messages': [{'role': 'system', 'content': system},
-                         {'role': 'user', 'content': user}],
+            'messages': messages,
             'temperature': self.temperature,
             'max_tokens': self.max_tokens,
             'stream': False,
@@ -200,12 +204,12 @@ class Client:
             b['reasoning_effort'] = 'none'
         return b
 
-    def chat(self, system: str, user: str, schema: dict) -> Tuple[str, dict]:
+    def chat(self, system: str, user: str, schema: dict, demos=None) -> Tuple[str, dict]:
         """Returns (content, full response JSON). Falls back from json_schema to
         json_object once, for the whole run, if the server rejects the schema."""
         mode = self.json_mode
         r = self.session.post(f'{self.url}/chat/completions',
-                              json=self.body(system, user, schema, mode), timeout=self.timeout)
+                              json=self.body(system, user, schema, mode, demos), timeout=self.timeout)
         if r.status_code == 400 and mode == 'schema':
             with self._lock:
                 if not self.fell_back:
@@ -214,7 +218,7 @@ class Client:
                     print(f'  server rejected response_format json_schema ({r.text[:160]!r}); '
                           'falling back to json_object + schema in the prompt', file=sys.stderr)
             r = self.session.post(f'{self.url}/chat/completions',
-                                  json=self.body(system, user, schema, 'object'), timeout=self.timeout)
+                                  json=self.body(system, user, schema, 'object', demos), timeout=self.timeout)
         r.raise_for_status()
         resp = r.json()
         return resp['choices'][0]['message'].get('content') or '', resp
@@ -298,7 +302,7 @@ def run_conversation_joint(client: Client, variant, rows: List[dict], units, wor
     t0 = time.time()
     try:
         p = variant.build_all([r['question'] for r in rows], units)
-        content, resp = client.chat(p.system, p.user, p.schema)
+        content, resp = client.chat(p.system, p.user, p.schema, getattr(p, 'demos', None))
         out = parse_json(content)
         per = variant.split(out, len(rows))
         for rec, item in zip(recs, per):

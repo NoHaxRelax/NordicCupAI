@@ -70,6 +70,7 @@ class Prompt(NamedTuple):
     user: str
     schema: dict
     postprocess: Postprocess
+    demos: Optional[List[Tuple[str, str]]] = None   # (user, assistant) turns sent before the real user turn
 
 
 # --------------------------------------------------------------------------- #
@@ -484,6 +485,88 @@ class Joint:
         return self.build_all([question], units_)
 
 
+class JointDemo(Joint):
+    """Joint variant with K whole worked conversations as prior chat turns: each demo is
+    the transcript plus its ten questions (user turn) and the annotators' answers in the
+    same JSON shape, unit ids derived from the gold spans (assistant turn). Demos come
+    from the training conversations whose questions overlap the current ones most, never
+    from the conversation under test (bench.py calls set_conversation first)."""
+
+    def __init__(self, k: int = 2):
+        self.k = k
+        self.exclude: Optional[str] = None
+        self.asr = 'large-v3-turbo'
+        self._pool: Optional[List[dict]] = None
+        self._pool_asr: Optional[str] = None
+
+    def set_conversation(self, stem: str, asr: str) -> None:
+        self.exclude, self.asr = stem, asr
+
+    def pool(self) -> List[dict]:
+        if self._pool is not None and self._pool_asr == self.asr:
+            return self._pool
+        import csv
+        import json
+        rows_by: Dict[str, List[dict]] = {}
+        for r in csv.DictReader(open(CASE / 'data' / 'question_train.csv', encoding='utf-8')):
+            rows_by.setdefault(f"conversation_{r['transcript_id']}", []).append(r)
+        pool: List[dict] = []
+        for stem, rows in rows_by.items():
+            tf = CASE / 'transcripts' / f'{stem}.{self.asr}.json'
+            if not tf.exists():
+                continue
+            words: List[Word] = []
+            for s in json.loads(tf.read_text(encoding='utf-8'))['segments']:
+                for w in s.get('words', []):
+                    words.append(Word(w['w'], float(w['start']), float(w['end'])))
+                if s.get('words'):
+                    words[-1].w += '\x00'
+            units_ = make_units(words)
+            answers = []
+            for i, r in enumerate(rows):
+                if r['answer'] == 'yes' and r['evidence_start']:
+                    g0, g1 = float(r['evidence_start']), float(r['evidence_end'])
+                    ids = [k for k, u in enumerate(units_)
+                           if min(u.end, g1) - max(u.start, g0) > 0.3 * max(0.05, u.end - u.start)]
+                    if not ids:
+                        mid = (g0 + g1) / 2
+                        ids = [min(range(len(units_)), key=lambda k: abs((units_[k].start + units_[k].end) / 2 - mid))]
+                    answers.append({'q': i + 1, 'quote': units_[ids[0]].text.strip(), 'answer': 'yes', 'segments': ids})
+                else:
+                    answers.append({'q': i + 1, 'quote': '', 'answer': 'no', 'segments': []})
+            qs = [r['question'].strip() for r in rows]
+            asks = '\n'.join(f'{i + 1}. {units_question(q)[len("QUESTION: "):]}' for i, q in enumerate(qs))
+            pool.append({'stem': stem, 'toks': [_qtokens(q) for q in qs],
+                         'user': f'TRANSCRIPT:\n{render_transcript(units_)}\n\nQUESTIONS:\n{asks}',
+                         'assistant': json.dumps({'answers': answers}, ensure_ascii=False)})
+        self._pool, self._pool_asr = pool, self.asr
+        return pool
+
+    def demos_for(self, questions: List[str]) -> List[Tuple[str, str]]:
+        qt = [_qtokens(q) for q in questions]
+
+        def sim(e):
+            s = 0.0
+            for a in qt:
+                best = 0.0
+                for b in e['toks']:
+                    u = len(a | b)
+                    best = max(best, len(a & b) / u if u else 0.0)
+                s += best
+            return s
+        cands = [e for e in self.pool() if e['stem'] != self.exclude]
+        cands.sort(key=lambda e: (-sim(e), e['stem']))
+        return [(e['user'], e['assistant']) for e in cands[:self.k]]
+
+    def build_all(self, questions: List[str], units_: List[Unit]) -> Prompt:
+        p = super().build_all(questions, units_)
+        system = p.system.replace(_JOINT_NOTE, _JOINT_NOTE +
+                                  '\nThe earlier exchanges in this chat are worked examples from other consultations,\n'
+                                  'answered exactly the way the annotators did: copy their choice of utterances and\n'
+                                  'their granularity (a question plus its answer, a statement plus its number).', 1)
+        return Prompt(system, p.user, p.schema, p.postprocess, self.demos_for(questions))
+
+
 VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units': units,
     'units-claim': units_claim,
@@ -492,6 +575,7 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units-fewshot': FewShot('units'),
     'words-fewshot': FewShot('words'),
     'units-joint': Joint(),
+    'units-joint-demo': JointDemo(2),
 }
 
 
