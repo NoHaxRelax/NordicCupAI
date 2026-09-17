@@ -31,8 +31,11 @@ class Environment:
         self.obstacles: List[Obstacle] = []
         self.edges: List[Tuple[Tuple[float, float], Tuple[float, float]]] = []
         self.predators: List[Predator] = []
+        self.predators_enabled = True
         self.score: float = 0
         self.time: float = 0
+        # Optional local diagnostics callback; never used as a policy input.
+        self.event_sink = None
 
         # Set up biomes
         map_generator = Map_generator(self.width, self.height, self.rng, num_biomes=10, num_rivers=1)
@@ -67,6 +70,10 @@ class Environment:
         self.vision_screen = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.leaf_screen = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
+
+    def _emit_event(self, event_type, **data):
+        if self.event_sink is not None:
+            self.event_sink(event_type, **data)
 
     def _render_biome_surface(self):
         for x in range(self.width):
@@ -390,13 +397,15 @@ class Environment:
         self.agents.append(agent)
         self.agents_dict[agent.agent_id] = agent
         self._update_agent_grid()
+        self._emit_event("birth", agent=agent, parent=parent)
         return agent
     
-    def kill_agent(self, agent: Agent):
+    def kill_agent(self, agent: Agent, cause="unknown", predator=None):
         """
         Remove an agent from the environment.
         """
         if agent in self.agents:
+            self._emit_event("death", agent=agent, cause=cause, predator=predator)
             self.agents.remove(agent)
             self.agents_dict.pop(agent.agent_id, None)  # removes if exists, does nothing if not
             self._update_agent_grid()
@@ -424,6 +433,7 @@ class Environment:
             self.fruits.append(fruit)
             self.fruits_dict[fruit.fruit_id] = fruit
             self._update_fruit_grid()
+            self._emit_event("fruit_spawn", fruit=fruit)
             return fruit
         else:
             return None
@@ -479,6 +489,8 @@ class Environment:
         """
         Spawn a predator in the environment.
         """
+        if not self.predators_enabled:
+            return None
         if x is None:
             x = self.rng.uniform(20, self.width-20)
         if y is None:
@@ -640,7 +652,7 @@ class Environment:
             agent.energy -= dt * biome_energy_modifier # cost one energy per second to be alive
 
             if agent.energy <= 0: # Agent is dead
-                self.kill_agent(agent)
+                self.kill_agent(agent, cause="energy_depletion")
                 continue
 
             if agent.age > agent.max_age:
@@ -669,6 +681,7 @@ class Environment:
                     if distance < agent.size + fruit.radius:  # touching
                         agent.energy = min(agent.max_energy, agent.energy + fruit.energy) # Eat fruit
                         self.score += fruit.energy / 1000 # Increase score based on fruit energy
+                        self._emit_event("fruit_eaten", agent=agent, fruit=fruit)
                         self.remove_fruit(fruit) # Remove fruit
 
         # Step all predators
@@ -721,7 +734,7 @@ class Environment:
                     agent = local_agents[index]
                     predator.energy = min(predator.max_energy, predator.energy + agent.energy)
                     self.score -= agent.energy / 100 # Penalize agent for being eaten
-                    self.kill_agent(agent)
+                    self.kill_agent(agent, cause="predation", predator=predator)
 
             if predator.energy <= 0: # Go to sleep if energy is 0
                 predator.resting = True
@@ -730,6 +743,7 @@ class Environment:
         # Grow fruits
         for fruit in self.fruits:
             if fruit.age > 100: # Fruit rots over time
+                self._emit_event("fruit_rot", fruit=fruit)
                 self.remove_fruit(fruit)
                 continue
             fruit.grow(amount=2 * dt) # Grow by 2 energy per second
