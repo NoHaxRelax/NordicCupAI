@@ -354,3 +354,14 @@ Source: the portal's `/api/v1/leaderboard/validation` endpoint (raw JSON kept in
 Our own honest pipeline (run F, 0.6759) would sit 17th on this board; the mined 1.0 is a table lookup and says nothing about our pipeline.
 
 Reading the ceiling with the caveat that other teams may have probed the validation set as we did (the labels are recoverable in a few hundred runs, and any team can dump the audio): the honest top is somewhere between 0.74 and 0.79. Thirteen teams sit within 0.73-0.79, a plausible cluster for "good ASR plus a mid-size LLM with tuned edges", and no one else shows a jump that only a lookup table explains. Calnkers United at 0.7887 is the one score to treat with reserve: new since 16:35 and 0.03 above the cluster. Brew&Booze and Eirik Solberg share 0.7457 to four decimals, which suggests the same pipeline or the same table rather than two independent systems. Our diagnosis gives the arithmetic behind 0.79: with binaries at 0.95 and the turbo edge rule, a mean tIoU of 0.68 is needed, i.e. about three in four positives placed on the right sentence; the oracle limit of the design is 0.91 (perfect binaries, tIoU 0.85).
+
+### 32. One request per conversation ("joint" prompting) helps the 4B on every axis
+
+Elias noticed the model handing one utterance to several questions of the same conversation (sample 4: "Your chest and heart both sound normal" for four questions, three scoring zero). Measured on the 4B training run: identical spans for two positives of the same conversation in 4.4 percent of the 430 pairs against 2.1 percent in the gold, 11 pairs where the gold spans are apart, 16 positives involved with mean tIoU 0.34. Remedy: `units-joint` in `bench/llm/prompts.py` sends all ten questions in one request and asks for a ten-entry JSON (`bench.py run_conversation_joint`); the system prompt says to reuse an utterance only when it is the most specific evidence for both questions. qwen3:4b, turbo transcripts, nulls-on-no:
+
+| variant | accuracy | tIoU | score | yes-rate | identical-span pairs (gold apart) | prompt tokens, whole run |
+|---|---:|---:|---:|---:|---:|---:|
+| units, one question per request | 0.967 | 0.522 | 0.700 | 0.47 | 19 (11) | 349k |
+| units-joint | 0.977 | 0.532 | 0.710 | 0.50 | 12 (4) | 43k |
+
+Gain 0.010 (noise floor 0.006), the yes-rate lands on the balanced 0.50, harmful reuse drops from 11 pairs to 4, and the transcript is sent once instead of ten times: eight times fewer prompt tokens, which is what makes a 27B affordable to serve. Latency per conversation on the laptop is unchanged (one long answer instead of ten short ones in parallel). `units-joint-demo` (two whole worked conversations as prior chat turns, Elias's point that examples need the surrounding conversation to teach selection) is running next; both go to the 27B on the cluster.
