@@ -102,3 +102,17 @@ By ear (Elias, samples 4 and 5): two clear synthetic voices, no overlap, no nois
 | Ollama with ten slots at 8192 context | 11.5 GB cache, 7 GB spilled to CPU, every question over 25 s |
 
 The 8 GB card cannot hold large-v3 and a 4B LLM together without one of them slowing down. The validation run of 2026-09-17 served all 19 conversations in 7 to 18 s each on distil-large-v3 plus qwen3:4b.
+
+### 11. What the 39 consultations are about
+
+Extracted from the large-v3 transcripts by the local qwen3:4b model with a JSON schema (`bench/describe_topics.py`, output in `bench/results/topics.json`), so counts are approximate; conversations where it extracted nothing are counted as zero.
+
+| quantity | value |
+|---|---|
+| conversations | 39 |
+| distinct conditions after folding diabetes variants | 38 |
+| conditions seen in exactly one conversation | 35 |
+| conditions per conversation, mean / min / max | 1.3 / 0 / 8 |
+| conversations flagged general practice | 32 |
+
+Most frequent: diabetes (11), asthma (3), thyroid dysfunction (2), constipation (1), gastroesophageal reflux disease (1), menopausal symptoms (1), cervical disc prolapse (1), chronic pain (1). The set is broad general practice with a diabetes and asthma head and a long tail of one-off conditions, so there is no single illness to specialise on, and any vocabulary list for ASR biasing has to be general medical, not disease-specific.

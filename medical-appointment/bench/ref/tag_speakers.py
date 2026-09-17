@@ -124,7 +124,7 @@ def llm_roles(lines):
                                                     'required': ['line', 'speaker']}}},
               'required': ['speakers']}
     body = {'model': model, 'stream': False, 'think': False, 'format': schema,
-            'options': {'temperature': 0.0, 'num_ctx': 4096, 'num_predict': 4 * len(lines) + 40},
+            'options': {'temperature': 0.0, 'num_ctx': 6144, 'num_predict': 30 * len(lines) + 60},
             'keep_alive': -1,
             'messages': [
                 {'role': 'system', 'content':
