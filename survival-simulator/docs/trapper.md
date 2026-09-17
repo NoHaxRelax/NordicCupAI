@@ -90,11 +90,21 @@ relay can turn the pair by any angle; the manager already has the roles to host 
 | refuge-v2 | society + traps | 16 | 615.8 ± 10.7 | 0 | 9.0 | 2.4 % |
 
 refuge-v1 harmed the colony through constant pushes near gaps that sit next to its food and
-through refugees idling inside empty traps; refuge-v2 is neutral at 600 s. refuge-v2 still had a
-bug that made a fresh bait leave as "idle" immediately (fixed afterwards), so its held fraction
-understates the mechanism. The 2000-second batch `long-v3` (seeds 1–6, two repeats) in
-`results/trapper/batches/` is the first run with the fix and a horizon where predator pressure
-matters; read its summary before drawing conclusions.
+through refugees idling inside empty traps; refuge-v2 is neutral at 600 s (it still had a bug that
+made a fresh bait leave as "idle" at once, fixed afterwards).
+
+**2000-second games (`long-v3`, seeds 1–6, two repeats, idle bug fixed):**
+
+| Mode | Runs | Score mean ± sd | Survival mean | Extinct before 2000 s | Predator deaths | Starvation deaths | Held fraction | Max held at one station |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Society | 12 | 1048 ± 219 | 1039 s | 12/12 | 23.0 | 69.0 | – | – |
+| Society + refuge traps | 12 | 967 ± 245 | 967 s | 12/12 | 26.2 | 61.1 | 3.5 % | 0 |
+
+Every colony, with or without traps, went extinct between roughly 700 and 1500 s. The refuge
+version scores about 80 points lower on average (within one standard deviation, but consistent
+with the 600 s neutrality: it does not help). Predators were held for only 3.5 % of predator-time
+and never more than 0 at one station, so the mechanism is not engaging often enough to matter,
+while its costs (agents inside traps not foraging, energy spent running) are real.
 
 Same-seed runs are not reproducible on this engine (object sets iterate in memory order), so
 compare means over repeats, never single runs.
@@ -114,9 +124,12 @@ new games). Smoke test: 400 ticks over HTTP at 7 ms per tick, worst 47 ms.
 
 ## Honest assessment and next steps
 
-1. The 600-second window is where the society already copes (4–8 predators). Trapping should
-   pay off at 900–3000 s with 8–26 predators. Run `batch.py --seconds 2000` on seeds 1–8 with two
-   repeats (about an hour with four workers) before judging the strategy.
+1. At 2000 s the trap version does not beat the society (see the table). Colonies die around
+   1000 s from a mix of starvation and predation. To make traps pay, the number of predators held
+   must rise from ~3 % to a large share of the population, which means (a) keeping a bait in a gap
+   permanently near the colony's food so every arriving predator ends up at that mouth, and
+   (b) feeding that bait by rotation through the far mouth. Measure `max_held_one_station` and
+   `held_fraction` first; score only follows once holds are common.
 2. Gap crowds are the cheapest containment: one bait can hold many predators and needs no guard.
    Bait rotation needs a free mouth; when both mouths get predators, wait for a rest window
    (implemented in `manager._gap_approach`) or accept that the bait stays until it dies.
