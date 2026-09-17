@@ -177,6 +177,7 @@ nohup "$VLLM" serve "$MODEL" \
     --port "$PORT" \
     --max-model-len "$MAX_LEN" \
     --enable-prefix-caching \
+    --max-num-seqs 64 
     --gpu-memory-utilization "$GPU_UTIL" \
     ${ARGS[@]+"${ARGS[@]}"} > "$LOG" 2>&1 &
 PID=$!
