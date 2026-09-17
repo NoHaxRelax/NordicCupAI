@@ -295,3 +295,24 @@ What the gold spans look like on validation: the hand seeds (one turbo sentence 
 Held-out diagnosis of the served pipeline (`bench/mine/val_diag.py`, spans from the request dump of the last real validation run): binaries 181/190, mean tIoU 0.463 with nulls on no, reconstructed score 0.659 (the portal said 0.6759 for run F; the dump may hold the run before it, and the noise floor is 0.01). Span outcomes on the 95 positives: exact 27, edge errors 41, wrong place 18, missed 9. Edges are unbiased (start median +0.05 s, end -0.02 s). Same conclusion as entry 21 on the training set: the answering model's sentence selection (27 of 95 scoring zero) is the loss, not the timestamp rule. The timeline page (bench/ref/timeline.html, published as an artifact) shows the training breakdown too: exact 64, too little 31, too much 28, shifted 25, wrong place 35, missed 12 of 195.
 
 Rule kept: the validation labels are a held-out measurement only; the served pipeline is never tuned on them.
+
+### 29. Cluster ASR sweep: large-v3-turbo keeps the best timestamp ceiling; the aligner and CTC models do not beat it
+
+Job 29428666 (A10, 68 min, 2026-09-17 18:20-19:29) transcribed the 39 training conversations with twelve configurations and ran `bench/asr/compare.py` (full table in `bench/results/asr/summary.cluster.md`). Oracle sentence-merge ceiling with per-model fitted edge offsets (in-sample fit, so slightly optimistic for every row alike):
+
+| tag | ceiling | RTF on A10 | start offset | end offset |
+|---|---:|---:|---:|---:|
+| faster-whisper large-v3-turbo (served) | 0.848 | 0.043 | +0.28 | -0.02 |
+| whisperx large-v3 | 0.838 | 0.027 | -0.08 | -0.10 |
+| large-v3 + MMS alignment | 0.834 | 0.007 (+ASR) | -0.06 | -0.10 |
+| faster-whisper large-v3 | 0.824 | 0.111 | +0.36 | +0.12 |
+| parakeet-tdt-0.6b-v3 | 0.818 | 0.004 | +0.12 | -0.36 |
+| qwen3-asr-1.7b + forced aligner | 0.816 | 0.084 | -0.02 | -0.18 |
+| large-v3 + qwen forced aligner | 0.814 | 0.002 (+ASR) | -0.02 | -0.18 |
+| parakeet-tdt-0.6b-v2 + MMS | 0.811 | 0.007 | -0.06 | -0.10 |
+| HF whisper-large-v3 | 0.796 | 0.123 | +0.26 | -0.16 |
+| parakeet-tdt-0.6b-v2 | 0.794 | 0.004 | +0.06 | -0.36 |
+| HF whisper + distil speculative | 0.751 | 0.079 | +0.16 | -0.40 |
+| granite-speech 4.1 2b-plus | 0.421 | 0.466 | +1.30 | -1.70 |
+
+Turbo's end fingerprint holds on the cluster run too: 49 percent of annotated ends within 20 ms of a turbo word end, against at most 15 percent for any other model. Parakeet v3 and the two forced aligners are far faster but their ceilings sit 0.03 below turbo. Granite's timestamps are unusable. faster-whisper large-v3 and distil failed on the A10 node (libcublas.so.12 missing from venv-asr there; the large-v3 transcripts already existed) and canary-qwen failed on a torchao import; neither matters for the decision. Decision: the ASR stays large-v3-turbo; the remaining lever is the answering model (job 29429655, pending on the H100 queue).
