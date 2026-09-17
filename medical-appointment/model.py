@@ -251,6 +251,8 @@ def ask_llm(transcript: str, question: str) -> dict:
         'stream': False,
         'think': False,
         'format': SCHEMA,
+        'logprobs': True,          # P(yes) at the answer token, see p_yes_from_native
+        'top_logprobs': 6,
         # num_ctx sizes Ollama's per-slot KV cache. A 3.5-minute consultation is
         # ~1k tokens; 3072 leaves room for the system prompt and the reply
         # without spilling the cache to CPU on an 8 GB card.
