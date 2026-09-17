@@ -39,6 +39,10 @@ Multi-site uses multiple predeployed traps selected from the guide's own landmar
 
 The bait-born recovery colony fails its separate600s10138 experiment: three native spawn requests; one child reacquires at135s but dies around391s; a later child survives without delivery. This does not count as a300s benchmark. Rootv34 combines unchanged wide routes with emergency reserves, fresh10340–10347. Rootv35 permits several informed guides to request children in one tick, capped at16 extra guides, fresh10360–10367. Both are frozen distinct development batches, not pooled with prior outcomes.
 
+Late single-leader reserve candidate (`research/multi_site/leader_reserves.py`) passes both fitted300s regressions:10138/20138 delivery71.4s,10224/20224 delivery138.6s; both3001 native frames verified and each uses8 births. One guide leads while reserves evade; this reduces competing routes. It remains a fitted result. The unchanged policy is frozen for a final fresh8, maps10380–10387 /fixtures+10000. See `research/multi_site/LEADER_RESERVES_RESULTS.md`. No reserved59 run has started.
+
+At the late quota checkpoint, v34 has6/8 completed and5 passes; v35 has3/8 completed and1 pass. These are **provisional**, not final reliability rates; subsequent authoritative per-batch summaries live in `results/reliability_eval/development_scores_v4/`. The v27 extension also remains in progress. Preserve unfinished cases explicitly when the usage stop is reached.
+
 Every completed run keeps every native0.1s frame locally. The browser library and scoring overlays are being rebuilt; original receipts remain immutable. The independent Ask Sol helper reads this handover. Large replay/chunk assets are git-ignored; code, plans, receipts, audits and reproduction instructions are versioned on `survival-simulator/lucas-trap-slopsesh1` (latest pushed checkpoint56f1c77, newer results pending).
 
 ## Static geometry
