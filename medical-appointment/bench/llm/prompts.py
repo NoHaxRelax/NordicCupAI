@@ -338,11 +338,97 @@ def words(question: str, units_: List[Unit]) -> Prompt:
                   WORDS_SCHEMA, _words_post)
 
 
+# --------------------------------------------------------------------------- #
+# Few-shot variants: show the annotators' own granularity
+# --------------------------------------------------------------------------- #
+
+_STOP = set('the a an is was were are did does do has have had be been being of to for in on at by with '
+            'and or any this that it its there they them their he she his her you your we our i me my not no '
+            'yes patient doctor conversation mention mentioned discuss discussed correct right isn t didn wasn '
+            'about as from into than then which who whom what when where while also still ever any some'.split())
+_FEWSHOT_NOTE = ('\nEXAMPLES below show, for other consultations, the exact stretch of speech the annotators marked\n'
+                 'as the evidence for a question. Match their granularity: when the fact is completed by the\n'
+                 'question that prompted it or by the confirming reply, the marked stretch includes those\n'
+                 'utterances too; otherwise it is the single utterance that states the fact.')
+
+
+def _qtokens(q: str) -> set:
+    return {t for t in _NONWORD.split(q.lower()) if t and t not in _STOP}
+
+
+class FewShot:
+    """Callable variant: examples from OTHER training conversations (leave-one-out),
+    chosen by question-word overlap, each with the transcript words inside the gold
+    span. bench.py calls set_conversation(stem, asr) before each conversation."""
+
+    def __init__(self, base: str, k: int = 12, k_neg: int = 2):
+        assert base in ('units', 'words')
+        self.base, self.k, self.k_neg = base, k, k_neg
+        self.exclude: Optional[str] = None
+        self.asr = 'large-v3-turbo'
+        self._pool: Optional[List[dict]] = None
+        self._pool_asr: Optional[str] = None
+
+    def set_conversation(self, stem: str, asr: str) -> None:
+        self.exclude, self.asr = stem, asr
+
+    def pool(self) -> List[dict]:
+        if self._pool is not None and self._pool_asr == self.asr:
+            return self._pool
+        import csv
+        import json
+        rows = list(csv.DictReader(open(CASE / 'data' / 'question_train.csv', encoding='utf-8')))
+        words_by: Dict[str, List[dict]] = {}
+        pool: List[dict] = []
+        for r in rows:
+            stem = f"conversation_{r['transcript_id']}"
+            if stem not in words_by:
+                tf = CASE / 'transcripts' / f'{stem}.{self.asr}.json'
+                ws: List[dict] = []
+                if tf.exists():
+                    for s in json.loads(tf.read_text(encoding='utf-8'))['segments']:
+                        ws.extend(s.get('words') or [])
+                words_by[stem] = ws
+            ex = {'stem': stem, 'q': r['question'].strip(), 'yes': r['answer'] == 'yes', 'text': '',
+                  'toks': _qtokens(r['question'])}
+            if ex['yes'] and r['evidence_start']:
+                a, b = float(r['evidence_start']), float(r['evidence_end'])
+                ex['text'] = ' '.join(w['w'].strip() for w in words_by[stem] if a <= (w['start'] + w['end']) / 2 <= b)
+            if ex['yes'] and not ex['text']:
+                continue
+            pool.append(ex)
+        self._pool, self._pool_asr = pool, self.asr
+        return pool
+
+    def examples(self, question: str) -> str:
+        qt = _qtokens(question)
+        cands = [e for e in self.pool() if e['stem'] != self.exclude]
+
+        def sim(e):
+            u = len(qt | e['toks'])
+            return len(qt & e['toks']) / u if u else 0.0
+        pos = sorted((e for e in cands if e['yes']), key=lambda e: (-sim(e), e['q']))[:self.k]
+        neg = sorted((e for e in cands if not e['yes']), key=lambda e: (-sim(e), e['q']))[:self.k_neg]
+        lines = [f'- Q: {e["q"]}  ->  "{e["text"]}"' for e in pos]
+        lines += [f'- Q: {e["q"]}  ->  no evidence (answer no)' for e in neg]
+        return 'EXAMPLES (other consultations, question -> the stretch marked as evidence):\n' + '\n'.join(lines)
+
+    def __call__(self, question: str, units_: List[Unit]) -> Prompt:
+        block = self.examples(question)
+        user = f'TRANSCRIPT:\n{render_transcript(units_)}\n\n{block}\n\n{units_question(question)}'
+        if self.base == 'words':
+            return Prompt(WORDS_SYSTEM + _FEWSHOT_NOTE, user, WORDS_SCHEMA, _words_post)
+        return Prompt(SYSTEM + _FEWSHOT_NOTE, user, SCHEMA,
+                      lambda out, u, w, d: _units_post(out, u, w, d, offsets=True))
+
+
 VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units': units,
     'units-claim': units_claim,
     'units-nooffset': units_nooffset,
     'words': words,
+    'units-fewshot': FewShot('units'),
+    'words-fewshot': FewShot('words'),
 }
 
 

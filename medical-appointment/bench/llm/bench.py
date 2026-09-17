@@ -443,6 +443,8 @@ def main() -> int:
     if a.print_prompt:
         fn, rows = conversations[0]
         words, duration, _ = load_words(TRANSCRIPTS / f'{Path(fn).stem}.{a.asr}.json')
+        if hasattr(variant, 'set_conversation'):
+            variant.set_conversation(Path(fn).stem, a.asr)
         p = variant(rows[0]['question'], make_units(words))
         print('--- SYSTEM ---\n' + p.system + '\n--- USER ---\n' + p.user +
               '\n--- SCHEMA ---\n' + json.dumps(p.schema, indent=1))
@@ -496,6 +498,8 @@ def main() -> int:
             if not words:
                 skipped.append(f'{fn}: transcript has no word timestamps')
                 continue
+            if hasattr(variant, 'set_conversation'):      # few-shot variants: hold this conversation out
+                variant.set_conversation(Path(fn).stem, a.asr)
             t0 = time.time()
             ex = ThreadPoolExecutor(max_workers=max(1, a.workers))
             try:
