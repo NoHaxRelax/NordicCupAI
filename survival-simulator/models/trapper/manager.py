@@ -37,13 +37,15 @@ DEFAULTS = dict(
     holder_min_energy=110.0,
     standby_radius=170.0,    # a wall station's standby bait forages within this radius
     relevant_range=420.0,    # a free predator this close to an agent is worth trapping
-    max_turn=math.radians(95),   # reject deliveries needing a bigger direction change
+    max_turn=math.radians(50),   # base steering allowance for a walking guide; sprint energy widens it
+    attract_wanderers=False,     # only chased agents become guides (attracting wanderers wastes energy)
+    bait_eta_slack=40,           # ticks a bait may arrive after the guide reaches the corridor
     prestaff_time=40.0,      # staff the best station from this time on
     min_workers=3,           # never take the last workers away from foraging
     zone_radius=95.0,        # society agents keep this far from held predators
     guard=True,
-    two_baits=True,
-    explicit_deliveries=False,   # guide-led deliveries (lure.py); off while refuge flight is evaluated
+    two_baits=False,
+    explicit_deliveries=True,    # guide-led deliveries (lure.py)
     refuge=True,                 # chased agents run into the nearest gap
 )
 
@@ -107,7 +109,9 @@ class TrapManager:
         return self.roles.get(aid, (None, None))[0]
 
     def _slots(self, site: Site):
-        if site.kind == 'wall' and self.P['two_baits']:
+        if site.kind == 'wall':
+            # two bait slots 10 either side of the face midpoint (Lucas's funnel layout); the
+            # second is where a successor stands before the old bait leaves
             return [add(site.holder, mul(site.axis, -10.0)), add(site.holder, mul(site.axis, 10.0))]
         if site.kind == 'gap':
             return [site.holder, sub(site.holder, mul(site.normal, 8.0))]
@@ -301,26 +305,14 @@ class TrapManager:
         for st in self.stations.values():
             site = st.site
             need_live = bool(st.held) or any(d.site.key == st.key and not d.become_bait for d in self.deliveries.values())
-            # standby bait for wall stations: forages near the station, steps onto the slot when needed
+            # wall: baits are assigned when a delivery starts (see _assign); release an idle one
             if site.kind == 'wall':
-                standby = [aid for aid, (r, k) in self.roles.items() if r == 'standby' and k == st.key]
-                if not st.baits and not standby and self._workers(world) > P['min_workers']:
-                    cands = self._eligible(world, min_energy=P['holder_min_energy'], max_age=45.0)
-                    cands.sort(key=lambda a: (abs(a.energy - 160.0) / 60.0 + a.age / 40.0 + dist(a.p, site.holder) / 200.0))
-                    if cands:
-                        self.roles[cands[0].id] = ('standby', st.key)
-                        self.event('standby_assigned', key=st.key, agent=cands[0].id)
-                        standby = [cands[0].id]
-                if need_live and standby and not st.baits:
-                    aid = standby[0]
-                    st.baits[aid] = 0
-                    self.roles[aid] = ('bait', st.key)
-                    self.event('bait_activated', key=st.key, agent=aid)
-                elif not need_live and st.baits and world.time - st.last_held > 25.0 and not st.held:
+                if st.baits and not st.held and not need_live and world.time - max(st.last_held, st.staffed_since) > 25.0:
                     for aid in list(st.baits):
                         st.baits.pop(aid)
-                        self.roles[aid] = ('standby', st.key)
-                        self.event('bait_standby', key=st.key, agent=aid)
+                        self.roles.pop(aid, None)
+                        self.agent_cooldown[aid] = world.time + 20.0
+                        self.event('bait_released', key=st.key, agent=aid, why='idle')
             else:
                 # gap: the first guide becomes the bait; re-staff through the far mouth only if
                 # predators are held there and the bait is gone
@@ -342,10 +334,11 @@ class TrapManager:
                 drain = (last - a.energy) if last is not None else 0.0
                 senescent = aid in self.senescent
                 far_clear = site.kind != 'gap' or self._gap_exit(world, site, self.stations and {}) is not None
+                spare = P['min_workers'] + (2 if site.kind == 'gap' else 0)
                 if st.held and st.baits.get(aid) == 0 and len(st.baits) < len(st.slots) and far_clear and \
                         (a.energy < P['bait_min_energy'] or senescent or a.age > 95) and st.successor is None and \
-                        self._workers(world) > P['min_workers'] + 2:
-                    cands = self._eligible(world, min_energy=150.0, max_age=45.0)
+                        self._workers(world) > spare:
+                    cands = self._eligible(world, min_energy=P['successor_min_energy'], max_age=45.0)
                     cands.sort(key=lambda c: dist(c.p, site.successor))
                     if cands:
                         st.successor = cands[0].id
@@ -365,13 +358,24 @@ class TrapManager:
                     self.event('guard_assigned', key=st.key, agent=cands[0].id)
 
     # ------------------------------------------------------------------ assignment
+    def _bait_eta(self, world: WorldState, a: AgentView, slot):
+        path = plan(world.rects, world.width, world.height, a.p, slot, radius=6.0)
+        if path is None:
+            return None
+        return path_length(path) / max(a.walk * a.move_modifier, 1e-6)
+
     def _assign(self, world: WorldState, held_now):
+        """Start deliveries. A predator chasing one of our agents is delivered by that agent
+        (it is already fleeing); wanderers are only attracted when ``attract_wanderers`` is on.
+        Sites are ranked by the steering the guide needs (a walking guide can only retreat within
+        a cone around "directly away") plus the lead length; a wall site also needs a bait that
+        can reach the slot before the guide reaches the corridor."""
         P = self.P
         if not P['explicit_deliveries'] or len(self.deliveries) >= P['max_deliveries']:
             return
         busy_guides = {d.guide for d in self.deliveries.values()}
         free = [p for p in world.predators if p.pid not in held_now and p.pid not in self.deliveries]
-        if not free:
+        if not free or not self.sites:
             return
         agents = list(world.agents.values())
 
@@ -384,57 +388,85 @@ class TrapManager:
             if nearest_agent_dist(p) > P['relevant_range'] or self.pred_cooldown.get(p.pid, -1.0) > world.time:
                 continue
             target = predator_target(world, p)
-            best = None
-            for st in self.stations.values():
-                site = st.site
-                if site.kind == 'wall':
-                    # needs a bait or a standby that can step onto the slot in time
-                    if not st.staffed() and not any(r == ('standby', st.key) for r in self.roles.values()):
-                        continue
-                else:
-                    # a gap with a bait gone but predators held is re-staffed first
-                    if st.held and not st.staffed():
-                        continue
-                entry = run_in_point(site)
-                # guide candidate: the chased agent if eligible, else the nearest eligible agent
-                cands = []
-                if target is not None and target in world.agents and self.role_of(target) in (None, 'guard', 'standby') and \
-                        world.agents[target].energy >= P['guide_min_energy'] * 0.6:
-                    cands.append((world.agents[target], 0.0))
+            # guide candidates
+            cands = []
+            if target is not None and target in world.agents and self.role_of(target) in (None, 'guard') and \
+                    world.agents[target].energy >= P['guide_min_energy'] * 0.6 and target not in busy_guides:
+                cands.append((world.agents[target], 0.0))
+            if P['attract_wanderers'] and target is None:
                 for a in self._eligible(world, exclude=busy_guides, min_energy=P['guide_min_energy'], allow_senescent=True):
-                    if a.id == target or self.role_of(a.id) == 'standby':
-                        continue
-                    # only guides that can reach its forward ray before it wanders off
                     goal, k = Lure(world)._intercept_point(a, p, 140.0)
                     if (goal is None or k > 15) and not is_resting(p):
                         continue
                     cands.append((a, (k or 0) / 1.0 + dist(a.p, p.p) / 20.0))
-                for a, attract_cost in cands:
-                    if a.id in st.baits or a.id == st.successor:
+            if not cands:
+                continue
+            best = None
+            for a, attract_cost in cands:
+                away = heading_of(sub(a.p, p.p))
+                gap = dist(a.p, p.p)
+                # steering allowance: base cone, widened by spare sprint energy (sprint-steer)
+                allowance = P['max_turn'] + min(1.0, max(0.0, (a.energy - a.max_energy / 5 - 40.0) / 160.0)) * math.radians(50)
+                if gap > 200:
+                    allowance += math.radians(30)     # a far predator leaves room to swing first
+                for site in self.sites:
+                    st = self.stations.get(site.key)
+                    if st is not None and (a.id in st.baits or a.id == st.successor):
                         continue
-                    away = heading_of(sub(a.p, p.p))
+                    if site.kind == 'gap' and st is not None and st.held and not st.staffed():
+                        continue
+                    entry = run_in_point(site)
                     to_entry = heading_of(sub(entry, a.p))
-                    turn = abs(wrap(to_entry - away))
-                    if turn > P['max_turn'] and dist(a.p, p.p) < 200:
+                    axis_dir = heading_of(mul(site.normal, -1.0))
+                    turn = abs(wrap(to_entry - away)) + 0.5 * abs(wrap(axis_dir - to_entry))
+                    if turn > allowance:
                         continue
-                    lead = dist(a.p, entry) + CORRIDOR
-                    cost = attract_cost + lead / 10.0 + 60.0 * (turn / math.pi) ** 2
-                    if a.id in self.senescent:
-                        cost -= 40.0    # a senescent agent dies soon anyway: the cheapest guide
-                    elif a.age > 60:
-                        cost -= 10.0
+                    lead = dist(a.p, entry) + CORRIDOR + 250.0
+                    if lead > 900:
+                        continue
+                    lead_ticks = lead / 8.0
+                    bait = None
+                    if site.kind == 'wall':
+                        if st is not None and st.staffed():
+                            bait_cost = 0.0
+                        else:
+                            if self._workers(world) <= P['min_workers']:
+                                continue
+                            slot = self._slots(site)[0]
+                            options = []
+                            for b in self._eligible(world, exclude=busy_guides | {a.id}, min_energy=P['holder_min_energy'], max_age=45.0):
+                                if dist(b.p, slot) > lead_ticks * 10.0 + 200:
+                                    continue
+                                eta = self._bait_eta(world, b, slot)
+                                if eta is None or eta > lead_ticks + P['bait_eta_slack']:
+                                    continue
+                                options.append((eta, b))
+                            if not options:
+                                continue
+                            eta, bait = min(options, key=lambda o: o[0])
+                            bait_cost = eta / 10.0
+                    else:
+                        bait_cost = 0.0
+                    cost = attract_cost + lead / 10.0 + 60.0 * (turn / math.pi) ** 2 + bait_cost
                     if best is None or cost < best[0]:
-                        best = (cost, st, a)
+                        best = (cost, site, a, bait, round(math.degrees(turn)))
             if best is None:
                 continue
-            cost, st, a = best
-            become_bait = st.site.kind == 'gap' and not st.staffed() and not st.held
-            d = Delivery(site=st.site, guide=a.id, pid=p.pid, become_bait=become_bait, created=world.time)
+            cost, site, a, bait, turn_deg = best
+            st = self._station(site)
+            if bait is not None:
+                st.baits[bait.id] = 0
+                st.staffed_since = world.time + 30.0
+                self.roles[bait.id] = ('bait', st.key)
+                self.event('bait_assigned', key=st.key, agent=bait.id, slot=0, eta=round(self._bait_eta(world, bait, st.slots[0]) or 0))
+            become_bait = site.kind == 'gap' and not st.staffed() and not st.held
+            d = Delivery(site=site, guide=a.id, pid=p.pid, become_bait=become_bait, created=world.time)
             self.deliveries[p.pid] = d
             self.roles[a.id] = ('guide', st.key)
             busy_guides.add(a.id)
             self.metrics['deliveries'] += 1
-            self.event('delivery_started', pid=p.pid, key=st.key, guide=a.id, cost=round(cost, 1), chased=target == a.id)
+            self.event('delivery_started', pid=p.pid, key=st.key, guide=a.id, cost=round(cost, 1), chased=target == a.id, turn=turn_deg,
+                       gap=round(dist(a.p, p.p)))
 
     # ------------------------------------------------------------------ actions
     def _actions(self, world: WorldState, held_now):
@@ -484,6 +516,21 @@ class TrapManager:
                         self.released[aid] = (exit_point, world.time + 12.0)
                         self.event('bait_left', key=key, agent=aid, why='weak' if weak else ('idle' if idle else 'reserve'), energy=round(a.energy))
                         continue
+                if site.kind == 'wall' and at_slot and st.baits.get(aid) == 0 and 1 in st.baits.values():
+                    other = next(b for b, k in st.baits.items() if k == 1)
+                    ob = world.agents.get(other)
+                    if ob is not None and dist(ob.p, st.slots[1]) < 1.5 and (a.energy < self.P['bait_min_energy'] or aid in self.senescent or a.age > 95):
+                        # the successor is standing next to us: hand over and go eat
+                        st.baits.pop(aid, None)
+                        self.roles[aid] = ('released', key)
+                        self.released[aid] = (self._exit_point(site, slot), world.time + 12.0)
+                        self.metrics['handoffs'] += 1
+                        self.event('handoff', key=key, old=aid, new=other)
+                        continue
+                if site.kind == 'wall' and at_slot and st.baits.get(aid) == 1 and 0 not in st.baits.values():
+                    st.baits[aid] = 0
+                    slot = st.slots[0]
+                    self.event('bait_moved_up', key=key, agent=aid)
                 if site.kind == 'wall' and at_slot and a.energy < self.P['bait_release_energy'] and st.successor is None and not st.held:
                     # nobody is coming and nothing is held: leave before starving                if site.kind == 'gap' and not at_slot:
                     act, why = self._gap_approach(world, holder, a, site, slot, held_now)
@@ -538,18 +585,6 @@ class TrapManager:
                     self.event('refuge_abandoned', agent=aid)
                     continue
                 out[aid] = (act, why)
-            elif role == 'standby' and st is not None:
-                # society forages; only pull the agent back when it strays too far
-                if aid in self.fleeing:
-                    continue
-                if a.energy < 45.0:
-                    self.roles.pop(aid, None)
-                    self.agent_cooldown[aid] = world.time + 40.0
-                    self.event('standby_released', key=key, agent=aid, energy=round(a.energy, 1))
-                    continue
-                if dist(a.p, st.site.holder) > self.P['standby_radius']:
-                    act, why = holder.act(a, st.site.holder, st.site, avoid=avoid)
-                    out[aid] = (act, 'standby: returning toward the station')
             elif role == 'released':
                 if aid in self.fleeing:
                     self.roles.pop(aid, None); self.released.pop(aid, None)
@@ -648,7 +683,7 @@ class TrapManager:
 
     def society_override(self, world: WorldState, a: AgentView, fleeing=False):
         """Refuge flight for chased agents; keep ordinary agents out of the held zones."""
-        if fleeing and self.P['refuge'] and self.role_of(a.id) in (None, 'standby') and self.sites and \
+        if fleeing and self.P['refuge'] and self.role_of(a.id) is None and self.sites and \
                 self.agent_cooldown.get(a.id, -1.0) <= world.time:
             p = min(world.predators, key=lambda q: dist(q.p, a.p), default=None)
             danger = p is not None and (dist(p.p, a.p) < 100 or (p.speed > 13 and not a.can_sprint and dist(p.p, a.p) < 160))

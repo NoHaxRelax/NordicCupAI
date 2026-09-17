@@ -178,11 +178,24 @@ class Lure:
         if d.phase == 'LEAD':
             if not following:
                 d.stall_ticks += 1
-                if d.stall_ticks > 20:
+                if d.stall_ticks > 40:
                     d.phase = 'ATTRACT'
                     d.stall_ticks = 0
                     d.event(w.time, 'lost_attention', target=target)
                     return self._attract(d, a, p, target, gap)
+                if target is None and gap >= PRED_CHARGE_RANGE:
+                    # it lost us, usually behind an obstacle corner we just rounded: stay put and
+                    # visible instead of walking on, it comes round within a few ticks
+                    if not los_clear(p.p, a.p, w.rects):
+                        d.decision = f'lead: waiting for it to come round the corner ({d.stall_ticks})'
+                        return self._facing(d, a, p, hold(a))
+                    # clear line but outside its cone: step toward its forward ray, keeping distance
+                    goal, k = self._intercept_point(a, p, max(110.0, min(gap, 160.0)))
+                    if goal is not None and dist(goal, p.p) >= 100:
+                        d.decision = f'lead: re-entering its cone ({d.stall_ticks})'
+                        return self._facing(d, a, p, step_toward(a, goal, speed_for(a, a.energy > 180)))
+                    d.decision = f'lead: out of its sight, holding ({d.stall_ticks})'
+                    return self._facing(d, a, p, hold(a))
             else:
                 d.stall_ticks = 0
             if gap < PRED_CHARGE_RANGE:
@@ -289,9 +302,9 @@ class Lure:
         from .sites import CORRIDOR
         entry_out = max(CORRIDOR + 30.0, min(CORRIDOR + RUN_IN, out - 40.0))
         entry = add(site.front_mid, mul(site.normal, entry_out))
-        path = plan(w.rects, w.width, w.height, a.p, entry, radius=22.0)
+        path = plan(w.rects, w.width, w.height, a.p, entry, radius=32.0)
         if path is None:
-            path = plan(w.rects, w.width, w.height, a.p, entry, radius=12.0) or [a.p, entry]
+            path = plan(w.rects, w.width, w.height, a.p, entry, radius=16.0) or [a.p, entry]
         return path[1:] + [site.corridor_start]
 
     def _lead(self, d: Delivery, a: AgentView, p: PredatorView, gap):
