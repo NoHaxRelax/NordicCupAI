@@ -1,0 +1,26 @@
+{
+  "gpu": "NVIDIA GeForce RTX 4080",
+  "vram_gib": 15.99169921875,
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "ultralytics": "8.4.155",
+  "job": null,
+  "commit": "4d1445a3b9bc47d2947ecefa2dacacd48dfcaa91",
+  "hostname": "BumblebeeV3",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "samples": 50,
+  "batch": 1,
+  "delivered_size": [
+    960,
+    540
+  ],
+  "checkpoint": "C:\\Users\\oscar\\nordic-drone\\runs\\mypc-yolo26x-20260917-v2\\detector\\weights\\last.pt",
+  "p50_ms": 20.728449999296572,
+  "p95_ms": 21.115670001745457,
+  "p99_ms": 21.21536200029368,
+  "max_ms": 21.28209999864339,
+  "peak_allocated_gib": 0.23580551147460938,
+  "scope": "PNG decode, preprocessing, GPU inference, postprocessing, CPU boxes and JSON; no HTTP, network, camera or tracker.",
+  "shared_gpu": false,
+  "limits": "GPU smoke only; repeat on final fine-tuned artifact and actual endpoint before claiming the 333 ms serving target."
+}

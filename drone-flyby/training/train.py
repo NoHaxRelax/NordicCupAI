@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from tracking import Tracker
 
 
 def write(path, value):
@@ -50,18 +51,31 @@ def runtime():
 
 
 def detector(args):
-    from ultralytics import YOLO
+    from ultralytics import YOLO, settings
+    # Our explicit logger names training-fit diagnostics correctly and avoids
+    # creating a second run through Ultralytics' automatic W&B integration.
+    settings.update({'wandb': False})
     model = YOLO(str(args.weights / 'yolo26x.pt'))
     # Absolute dataset root avoids Ultralytics global datasets_dir surprises.
     data = args.output / 'detector-data.yaml'
     data.write_text(f'path: {args.data.resolve() / "detector"}\ntrain: images/train\nval: images/train\nnames: '+json.dumps(args.manifest['classes'])+'\n')
+    epoch_started = [time.perf_counter()]
+    def start_epoch(trainer):
+        epoch_started[0] = time.perf_counter()
     def progress(trainer):
-        write(args.output/'progress.json', dict(task='detector', epoch=trainer.epoch+1,
+        now = time.perf_counter()
+        row = dict(task='detector', epoch=trainer.epoch+1,
               total_epochs=args.epochs, loss=loss_values(trainer.tloss),
               peak_allocated_gib=torch.cuda.max_memory_allocated()/2**30,
-              warning='Any detector validation metrics are training-fit diagnostics, not holdout performance.'))
+              seconds=now-epoch_started[0],
+              warning='Any detector validation metrics are training-fit diagnostics, not holdout performance.')
+        write(args.output/'progress.json', row)
+        args.tracker.log({'train': row['loss'], 'time': {'epoch_seconds': row['seconds']},
+                          'gpu': {'peak_allocated_gib': row['peak_allocated_gib']},
+                          'lr': {f'group_{i}': g['lr'] for i,g in enumerate(trainer.optimizer.param_groups)}}, row['epoch'])
+    model.add_callback('on_train_epoch_start', start_epoch)
     model.add_callback('on_train_epoch_end', progress)
-    model.train(data=str(data), epochs=args.epochs, imgsz=960, batch=args.batch, device=0,
+    options = dict(data=str(data), epochs=args.epochs, imgsz=960, batch=args.batch, device=0,
                 project=str(args.output), name='detector', exist_ok=False,
                 pretrained=True, amp=True, workers=args.workers, seed=170926, deterministic=True,
                 optimizer='AdamW', lr0=0.001, lrf=0.05, warmup_epochs=3,
@@ -69,6 +83,9 @@ def detector(args):
                 fliplr=0.5, flipud=0.0, hsv_h=0.01, hsv_s=0.2, hsv_v=0.2,
                 patience=0, val=False, plots=False, save=True, save_period=5, nbs=64,
                 cache=False, close_mosaic=0)
+    args.tracker.config({'training': {k:v for k,v in options.items() if k not in ('data','project')}})
+    model.train(**options)
+    args.tracker.log({'train_fit': loss_values(model.trainer.metrics)}, args.epochs)
     checkpoint = args.output/'detector/weights/last.pt'
     write(args.output/'result.json', dict(task='detector', status='completed', epochs=args.epochs,
           checkpoint=str(checkpoint), checkpoint_sha256=sha(checkpoint),
@@ -135,6 +152,9 @@ def classifier(args):
     model.cuda()
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003, weight_decay=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
+    args.tracker.config({'training': dict(optimizer='AdamW', lr=0.0003, weight_decay=0.01,
+                         scheduler='CosineAnnealingLR', label_smoothing=0.05, input_size=224,
+                         sampling='class-balanced, L0=.1 L1=.7 L2=.2', train_crops=len(tr), holdout_crops=len(va))})
     scaler = torch.amp.GradScaler('cuda')
     history = []
     for epoch in range(args.epochs):
@@ -157,6 +177,10 @@ def classifier(args):
         history.append(row)
         write(args.output/'progress.json', row)
         write(args.output/'history.json', history)
+        args.tracker.log({'train': {'loss': row['train_loss']}, 'holdout': metrics,
+                          'time': {'epoch_seconds': row['seconds']},
+                          'gpu': {'peak_allocated_gib': row['peak_allocated_gib']},
+                          'lr': {'group_0': optimizer.param_groups[0]['lr']}}, epoch+1)
         payload = dict(model=model.state_dict(), optimizer=optimizer.state_dict(), scheduler=scheduler.state_dict(),
                        scaler=scaler.state_dict(), epoch=epoch+1, classes=classes, architecture='resnet50',
                        manifest_sha256=sha(args.data/'manifest.json'), seed=170926,
@@ -182,19 +206,42 @@ def main():
     p.add_argument('--epochs',type=int,required=True)
     p.add_argument('--batch',type=int,help='Defaults: detector 8, classifier 64. Detector nominal batch remains 64 via gradient accumulation.')
     p.add_argument('--workers',type=int,default=4)
+    p.add_argument('--tracking', choices=['disabled','offline','online'], default=os.environ.get('WANDB_MODE','offline'))
+    p.add_argument('--wandb-project', default=os.environ.get('WANDB_PROJECT','nordic-ai-cup-drone'))
+    p.add_argument('--wandb-entity', default=os.environ.get('WANDB_ENTITY'))
+    p.add_argument('--wandb-group', default=os.environ.get('WANDB_RUN_GROUP'))
+    p.add_argument('--wandb-upload-checkpoints', action='store_true')
     args=p.parse_args()
     if args.batch is None:
         args.batch = 8 if args.task == 'detector' else 64
     if args.batch < 1 or args.workers < 0:
         p.error('batch must be positive and workers nonnegative')
+    if args.tracking == 'online' and not args.wandb_entity:
+        p.error('Online tracking requires --wandb-entity or WANDB_ENTITY')
     args.output.mkdir(parents=True, exist_ok=False)
     args.manifest=json.loads((args.data/'manifest.json').read_text())
     random.seed(170926); np.random.seed(170926); torch.manual_seed(170926); torch.cuda.manual_seed_all(170926)
     torch.set_num_threads(4)
     torch.backends.cudnn.benchmark=False
-    write(args.output/'runtime.json',dict(runtime(), task=args.task, epochs=args.epochs, batch=args.batch, workers=args.workers,
-          data_manifest_sha256=sha(args.data/'manifest.json'), started_at=time.time()))
-    {'detector':detector,'classifier':classifier}[args.task](args)
+    run_config=dict(runtime(), task=args.task, epochs=args.epochs, batch=args.batch, workers=args.workers,
+                    model='yolo26x' if args.task=='detector' else 'resnet50', seed=170926,
+                    data_manifest_sha256=sha(args.data/'manifest.json'), data_counts=args.manifest['counts'],
+                    evaluation_limits=args.manifest['limits'], started_at=time.time(),
+                    source_sha256={name:sha(Path(__file__).parent/name) for name in ('train.py','tracking.py')},
+                    pretrained=('COCO yolo26x.pt' if args.task=='detector' else 'torchvision ResNet50 IMAGENET1K_V2'))
+    if args.task == 'detector':
+        run_config['pretrained_sha256'] = sha(args.weights/'yolo26x.pt')
+    write(args.output/'runtime.json',run_config)
+    args.tracker=Tracker(output=args.output, mode=args.tracking, project=args.wandb_project,
+                         entity=args.wandb_entity, group=args.wandb_group, config=run_config,
+                         manifest=args.data/'manifest.json', upload_checkpoints=args.wandb_upload_checkpoints)
+    try:
+        {'detector':detector,'classifier':classifier}[args.task](args)
+    except BaseException as exc:
+        args.tracker.finish(error_type=type(exc).__name__)
+        raise
+    else:
+        args.tracker.finish(json.loads((args.output/'result.json').read_text()))
 
 
 if __name__=='__main__':

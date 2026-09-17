@@ -2,12 +2,20 @@ param(
     [string]$Root = (Join-Path $env:USERPROFILE 'nordic-drone'),
     [Parameter(Mandatory=$true)][string]$CodeRoot,
     [Parameter(Mandatory=$true)][string]$RunId,
-    [Parameter(Mandatory=$true)][string]$Commit
+    [Parameter(Mandatory=$true)][string]$Commit,
+    [ValidateSet('disabled','offline','online')][string]$TrackingMode = 'offline',
+    [ValidatePattern('^[a-zA-Z0-9_.-]+$')][string]$WandbProject = 'nordic-ai-cup-drone',
+    [ValidatePattern('^[a-zA-Z0-9_.-]*$')][string]$WandbEntity = '',
+    [ValidatePattern('^[a-zA-Z0-9_.-]*$')][string]$WandbGroup = ''
 )
 $ErrorActionPreference = 'Stop'
 $env:PYTHONUNBUFFERED = '1'
 $env:OMP_NUM_THREADS = '4'
-$env:WANDB_MODE = 'disabled'
+$env:WANDB_MODE = $TrackingMode
+$env:WANDB_PROJECT = $WandbProject
+$env:WANDB_ENTITY = $WandbEntity
+$env:WANDB_RUN_GROUP = $WandbGroup
+if ($TrackingMode -eq 'online' -and !$WandbEntity) { throw 'Online tracking requires -WandbEntity.' }
 $env:YOLO_AUTOINSTALL = 'false'
 $env:YOLO_CONFIG_DIR = "$Root\ultralytics-settings"
 $env:TORCH_HOME = "$Root\weights\torch"
@@ -16,7 +24,7 @@ $statusPath = "$Root\runs\$RunId-status.json"
 if ((Test-Path "$Root\runs\$RunId") -or (Test-Path $statusPath)) {
     throw 'Run already exists. Refusing to start a duplicate.'
 }
-$status = @{run_id=$RunId; code_commit=$Commit; state='starting'; wrapper_pid=$PID; started_at=(Get-Date).ToUniversalTime().ToString('o'); task='detector'; epochs=50; batch=2; workers=2}
+$status = @{run_id=$RunId; code_commit=$Commit; state='starting'; wrapper_pid=$PID; started_at=(Get-Date).ToUniversalTime().ToString('o'); task='detector'; epochs=50; batch=2; workers=2; tracking_mode=$TrackingMode; wandb_project=$WandbProject; wandb_entity=$WandbEntity}
 function Write-Status {
     $status | ConvertTo-Json | Set-Content -Encoding UTF8 "$statusPath.tmp"
     Move-Item -Force "$statusPath.tmp" $statusPath

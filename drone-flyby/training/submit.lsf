@@ -16,7 +16,9 @@ set -u
 : "${DRONE_COMMIT:?Set the exact pushed code commit}"
 : "${DRONE_CODE_ROOT:?Set the immutable uploaded code directory}"
 : "${DRONE_TASK:?Set classifier or detector}"
-export PYTHONUNBUFFERED=1 OMP_NUM_THREADS=4 WANDB_MODE=disabled YOLO_AUTOINSTALL=false
+export PYTHONUNBUFFERED=1 OMP_NUM_THREADS=4 YOLO_AUTOINSTALL=false
+export WANDB_MODE="${WANDB_MODE:-offline}"
+export WANDB_PROJECT="${WANDB_PROJECT:-nordic-ai-cup-drone}"
 export TORCH_HOME="$HOME/nordic-drone/weights/torch"
 export YOLO_CONFIG_DIR="$HOME/nordic-drone/ultralytics-settings"
 cd "$DRONE_CODE_ROOT"

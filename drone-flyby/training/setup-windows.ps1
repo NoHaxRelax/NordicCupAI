@@ -17,5 +17,6 @@ function Invoke-Logged([string]$Stage, [string[]]$Arguments) {
 Invoke-Logged 'python' @('venv', '--python', '3.11.11', '--managed-python', "$Root\.venv")
 Invoke-Logged 'torch' @('pip', 'install', '--python', "$Root\.venv\Scripts\python.exe", 'torch==2.6.0', 'torchvision==0.21.0', '--index-url', 'https://download.pytorch.org/whl/cu124')
 Invoke-Logged 'vision' @('pip', 'install', '--python', "$Root\.venv\Scripts\python.exe", '-r', "$Root\requirements-windows-input.txt")
+Invoke-Logged 'tracking' @('pip', 'install', '--python', "$Root\.venv\Scripts\python.exe", '-r', "$PSScriptRoot\requirements-tracking.txt")
 & $uv pip freeze --python "$Root\.venv\Scripts\python.exe" | Set-Content -Encoding UTF8 "$Root\requirements-windows.lock.txt"
 Write-Output 'SETUP_COMPLETE'

@@ -36,6 +36,10 @@ From `$HOME/nordic-drone`, create `logs/`, set `DRONE_COMMIT`, `DRONE_CODE_ROOT`
 
 Publish meaningful checkpoints: prepared recipe and data manifest; verified job submission; first successful epochs; final metrics and artifact hashes. Never commit passwords, tokens, raw environment files, or GitHub credentials to the HPC.
 
+## Tracking future runs
+
+Future code snapshots default to local W&B offline tracking in the `nordic-ai-cup-drone` project. Install `requirements-tracking.txt` before those runs. Online logging needs an explicit personal workspace/entity and authentication. The original runs stay unchanged with tracking disabled. See [TRACKING.md](TRACKING.md) for metrics, launch flags, offline sync and verification.
+
 ## RTX 4080 run on mypc
 
 The personal Windows machine has an RTX 4080 with 16 GB VRAM. Its separate detector run keeps the same 960 input, pretrained weight checksum, data v2, seed, and 50 epochs, using batch 2 and two data-loader workers. Ultralytics nominal batch remains 64 through gradient accumulation. Different batch sizes, warmup behavior, operating systems, and GPU kernels mean this is a practical second run, not a bitwise reproduction of the HPC trajectory.
