@@ -346,6 +346,7 @@ _THOUSANDS = re.compile(r'\d{1,3}(?:,\d{3})+')
 _PUNCT = re.compile(r"[^\w' ]+")
 _SPEAKER = re.compile(r'^\s*(?:doctor|patient|dr|pt|gp|d|p)\s*:\s*', re.I)   # colon only: "D-dimer", "P-value", "GP-led" are words, not labels
 _LINE_TS = re.compile(r'^\s*[\[(]?\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d+)?[\])]?\s*')   # [0:05.2]  (00:05)  1:02:03.450
+_TAG = re.compile(r'^\s*\[[DP?]\]\s*')
 
 
 def _num_words(s: str) -> str:
@@ -376,6 +377,9 @@ def norm_chunk(text: str) -> List[str]:
     """Normalise one chunk of text (a word, a line, a whole file) to tokens:
     lowercase, numbers spelled out, symbols to words, punctuation gone."""
     t = text.lower().translate(_APOS)
+    # Danish and other accented letters fold to their plain spelling, so the
+    # synthetic English voice's "Soren" and a script's "Søren" score equal.
+    t = t.translate(str.maketrans({'ø': 'o', 'æ': 'ae', 'å': 'aa', 'ö': 'o', 'ä': 'a', 'ü': 'u', 'é': 'e', 'è': 'e', 'ó': 'o', 'á': 'a'}))
     for rx, rep in _SYMS:
         t = rx.sub(rep, t)
     if num2words is not None:
@@ -404,6 +408,7 @@ def read_ref_txt(path: Path) -> str:
         if line.strip().startswith('#'):
             continue
         line = _LINE_TS.sub('', line)
+        line = _TAG.sub('', line)                   # [D] / [P] / [?] speaker tags from tag_speakers.py
         lines.append(_SPEAKER.sub('', line))
     return ' '.join(lines)
 
