@@ -316,3 +316,16 @@ Job 29428666 (A10, 68 min, 2026-09-17 18:20-19:29) transcribed the 39 training c
 | granite-speech 4.1 2b-plus | 0.421 | 0.466 | +1.30 | -1.70 |
 
 Turbo's end fingerprint holds on the cluster run too: 49 percent of annotated ends within 20 ms of a turbo word end, against at most 15 percent for any other model. Parakeet v3 and the two forced aligners are far faster but their ceilings sit 0.03 below turbo. Granite's timestamps are unusable. faster-whisper large-v3 and distil failed on the A10 node (libcublas.so.12 missing from venv-asr there; the large-v3 transcripts already existed) and canary-qwen failed on a torchao import; neither matters for the decision. Decision: the ASR stays large-v3-turbo; the remaining lever is the answering model (job 29429655, pending on the H100 queue).
+
+### 30. Few-shot examples of the annotators' spans do not help qwen3:4b
+
+Elias's idea (2026-09-17 evening): show the answering model, for other conversations, the exact transcript words inside the annotated span, so it can copy the annotators' granularity; leave the tested conversation out. Implemented as `units-fewshot` and `words-fewshot` in `bench/llm/prompts.py` (12 nearest positives by question-word overlap plus 2 negatives, never from the conversation under test; the block sits between the transcript and the question). qwen3:4b on the turbo transcripts, 390 questions, nulls-on-no policy:
+
+| variant | accuracy | mean tIoU | score | exact | too little | too much | shifted | wrong place | missed |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| units (baseline) | 0.967 | 0.522 | 0.700 | 64 | 31 | 28 | 25 | 35 | 12 |
+| units-fewshot | 0.959 | 0.526 | 0.699 | 51 | 16 | 29 | 51 | 36 | 12 |
+| words (baseline) | 0.956 | 0.488 | 0.675 | | | | | | |
+| words-fewshot | 0.944 | 0.476 | 0.663 | 12 | 6 | 94 | 32 | 33 | 18 |
+
+The lesson is half learned: with examples the 4B model makes its spans longer (median 2.50 s to 2.92 s against a gold median of 2.88 s) and halves the too-short cases, but the extra units land beside the gold as often as on it (shifted doubles), and the wrong-place count does not move at all. In the words variant the returned first/last phrases bracket far too much (too much: 94 of 195). Net effect within the 0.006 noise for units, a loss for words. Prompt tokens rise from about 1,000 to 1,400 and latency from 1.5 s to 2.1 s per question. Kept in the bench for the 27B models on the cluster, where a model that can actually use the examples may behave differently; not served.
