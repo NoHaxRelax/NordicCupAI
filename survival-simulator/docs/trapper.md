@@ -80,6 +80,40 @@ about 59 units beside the predator's path outside its cone; the predator hears i
 relay sprints ~12 ticks in the wanted direction (about 60 energy), then faces it and leads. Each
 relay can turn the pair by any angle; the manager already has the roles to host this.
 
+## Gap-first protocol (18 September, Oscar's refocus)
+
+Narrow gaps are the primary trap; walls stay in the code as a backup (`site_kinds`). The pieces:
+
+- **Sites** (`sites.py`): width 10.5–19.5 (the engine's strict tests let an agent of radius 5 through
+  above 10 and stop a predator of radius 10 below 20), passage length >= 30, bait depth chosen so
+  the bait stays > 16.5 from any point the predator can reach from either mouth
+  (`gap_depth`: for width w the predator's center stays sqrt(100 - (w/2)^2) outside a mouth),
+  straight approach >= 100 clear. Each site carries a score (short passages, closed far mouths,
+  extreme widths and short approaches are penalised) and staging/exit points outside the far mouth,
+  off the axis on opposite sides. 59 of 60 generated maps have at least one site (mean 6.1).
+- **Staffing** (`manager.py`): the best open station is kept staffed from `prestaff_time` on.
+  Baits are chosen by remaining life (`_life_s`: energy over 1 + 0.1 x age once senescent):
+  senescent agents first because the colony loses them anyway, then the oldest; a senescent
+  bait needs 30 s of life on arrival, a healthy one 60 s. Baits walk in through the far mouth.
+- **Replacement from behind**: a successor is called when the bait's life would not cover the
+  replacement's walk plus 25 s; it stages outside the far mouth. The old bait walks out to the
+  exit point when every held predator rests (or its life is under 8 s), then the successor walks
+  in. A senescent bait never leaves to eat; it serves until it dies.
+- **Delivery to a staffed mouth** (`lure.py`): LEAD as before, then CORRIDOR facing the predator
+  (it pivots and closes 0.6 per tick) to the flyby point 14 out from the mouth; when the predator
+  is within 45 the guide sprints along the obstacle face ("flyby") and the predator, now nearer
+  the bait than the guide, takes the bait within a few ticks. If the guide dies at the mouth the
+  predator takes the bait anyway. An unstaffed mouth is entered by the guide, which becomes the
+  bait. Chased agents running for refuge do the same flyby when the holder is occupied.
+- **Guide safety**: predator speed predicted from its energy (15 above 40, else 11; it wakes in
+  the step its energy passes 100); inside 90 the guide sprints directly away with an
+  obstacle-aware heading; `steer` tests clearance from the next position and falls back to the
+  clear heading with the largest away component anywhere on the circle (running along a wall
+  instead of into it); a second loose predator within 150 aborts the delivery; a transfer to an
+  agent without sprint energy ends it.
+- **Planner**: biome movement modifiers are path costs (river 3.3x, swamp 2x, desert 1.25x),
+  cached per grid cell; grids are keyed on geometry; failed searches are cached for 2 s.
+
 ## Results so far (600-second games, seeds 1–8, two repeats, oracle world)
 
 | Batch | Mode | Runs | Score mean ± sd | Extinct | Predator deaths | Held fraction |

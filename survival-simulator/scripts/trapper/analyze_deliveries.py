@@ -46,6 +46,29 @@ for f in sys.argv[1:]:
                 why['lost in the open (out of cone/range)'] += 1
             else:
                 why['other'] += 1
+station = collections.Counter()
+for f in sys.argv[1:]:
+    r = json.load(open(f))
+    for e in r['events']:
+        k = e['kind']
+        if k in ('bait_assigned', 'successor_assigned', 'successor_in_place', 'bait_died', 'refuge_run', 'refuge_entered', 'refuge_flyby', 'flyby', 'handoff'):
+            station[k] += 1
+        elif k == 'bait_left':
+            station[f"bait_left:{e.get('why')}"] += 1
+        elif k == 'hold_ended':
+            station[f"hold_ended:{e.get('why')}"] += 1
+            station['hold_seconds'] += e.get('held_s', 0)
+        elif k == 'hold_started':
+            station['hold_started'] += 1
+        elif k == 'delivered':
+            station['delivered:guide_alive' if e.get('guide_alive') else 'delivered:guide_dead'] += 1
+    for role, cnt in (r.get('role_deaths') or {}).items():
+        if cnt and role != 'null':
+            station[f'death:{role}'] += cnt
+    m = r.get('metrics') or (r.get('trap') or {})
+    station['max_held_one_station'] = max(station['max_held_one_station'], m.get('trap_max_held_one_station', m.get('max_held_one_station', 0)))
+    station['extinct_runs'] += int((r.get('alive') or 0) == 0)
+print('station events:', dict(sorted(station.items())))
 print(f'runs {n}, score mean {sum(s for s in scores if s is not None) / max(1, len(scores)):.1f}, deliveries started {starts}, '
       f'mean held fraction {held / max(n, 1):.3f}, transfers {transfers}, handoffs {handoffs}, guard interceptions {guards}')
 print('outcomes:', dict(outcomes.most_common()))

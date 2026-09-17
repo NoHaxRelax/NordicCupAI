@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from src.utils.DTOs import ActionRequest
 
+from .geometry import dist
 from .manager import TrapManager
 from .oracle import OracleWorld
 from .estimator import EstimatedWorld
@@ -65,8 +66,12 @@ class TrapperPolicy:
                         over = o
             if over is not None:
                 d, why = over
+                # keep the society's birth decision: an overridden agent that never spawns starves
+                # the colony of newborns (the engine places a newborn 10-30 from the parent, so not
+                # inside or at the mouths of a passage)
+                spawn = bool(d.get('spawn_agent', False)) or (bool(act.spawn_agent) and self._spawn_ok(world, aid))
                 act = ActionRequest(agent_id=aid, move_distance=float(d['move_distance']), move_direction=float(d['move_direction']),
-                                    turn_angle=float(d['turn_angle']), spawn_agent=bool(d.get('spawn_agent', False)))
+                                    turn_angle=float(d['turn_angle']), spawn_agent=spawn)
                 self._note(aid, act, by_id.get(aid))
                 self.decisions[aid] = why
             out.append((aid, act))
@@ -75,6 +80,17 @@ class TrapperPolicy:
         if hasattr(self.source, 'note_actions'):
             self.source.note_actions(out)
         return out
+
+    def _spawn_ok(self, world, aid):
+        a = world.agents.get(aid)
+        if a is None:
+            return False
+        for st in self.manager.stations.values():
+            site = st.site
+            pts = [site.holder, site.front_mid] + ([site.far_mouth] if site.far_mouth is not None else [])
+            if any(dist(a.p, q) < 35.0 for q in pts):
+                return False
+        return True
 
     def _note(self, aid, act: ActionRequest, s):
         """Write the override into the society's odometry (engine order: move then turn)."""

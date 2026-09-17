@@ -107,6 +107,8 @@ class TrapManager:
         self.refugees: dict[int, dict] = {}             # aid -> dict(site, waypoints, slot)
         self.senescent: set = set()                     # agents seen draining fast while idle
         self._refuge_tried: dict = {}                   # aid -> last time a refuge plan was attempted
+        self._held_prev: dict = {}
+        self._hold_start: dict = {}
         self._energy_seen: dict[int, tuple] = {}        # aid -> (energy, x, y)
         self.last_actions: dict = {}                    # aid -> ActionRequest applied last tick (set by the policy)
         self.fleeing: set = set()                       # agents the society wants to flee this tick
@@ -200,6 +202,28 @@ class TrapManager:
         for st in self.stations.values():
             if len(st.held) > self.metrics.get('max_held_one_station', 0):
                 self.metrics['max_held_one_station'] = len(st.held)
+        # hold episodes: start/end events with the reason the hold ended
+        prev = self._held_prev
+        for pid, key in held_now.items():
+            if pid not in prev:
+                self._hold_start[pid] = world.time
+                self.event('hold_started', pid=pid, key=key)
+        for pid, key in prev.items():
+            if pid not in held_now:
+                st = self.stations.get(key)
+                p = world.predator(pid)
+                if p is None:
+                    why = 'predator_gone'
+                elif st is None or not st.staffed():
+                    why = 'bait_gone'
+                elif not any(b in world.agents and dist(world.agents[b].p, st.site.holder) < 3.0 for b in st.baits):
+                    why = 'bait_moving'
+                elif is_resting(p):
+                    why = 'resting_elsewhere'
+                else:
+                    why = 'predator_left'
+                self.event('hold_ended', pid=pid, key=key, why=why, held_s=round(world.time - self._hold_start.get(pid, world.time), 1))
+        self._held_prev = dict(held_now)
         return held_now
 
     # ------------------------------------------------------------------ main
@@ -381,7 +405,10 @@ class TrapManager:
             else:
                 # gap: keep the station staffed (through the far mouth) so a guide can fly past the
                 # mouth and leave the predator to the bait; also re-staff when the bait is gone
-                want = (st.held or (P['prestaff'] and world.time >= P['prestaff_time'] and st is self._primary_station())) \
+                # staff only while a loose predator is near enough to matter: an idle bait costs the
+                # colony a forager for nothing
+                near = self._predator_near(world, site, held_now=set(st.held))
+                want = (st.held or (P['prestaff'] and world.time >= P['prestaff_time'] and near and st is self._primary_station())) \
                     and st.leaving is None
                 if want and not st.baits and st.successor is None and self._workers(world) > P['min_workers']:
                     cands = self._bait_candidates(world, site.successor, min_life=P['bait_min_life'])
@@ -403,9 +430,11 @@ class TrapManager:
                 room = site.kind == 'gap' or len(st.baits) < len(st.slots)
                 if site.kind == 'gap':
                     # a replacement is called when the bait's remaining life would not cover the walk in
-                    # the replacement waits at the stage for up to swap_lead_time before entering
+                    # (it waits at the stage for up to swap_lead_time), and only while the station
+                    # holds something or a loose predator is near
+                    useful = st.held or self._predator_near(world, site, held_now=set(st.held))
                     cands = self._bait_candidates(world, site.successor, exclude={aid}, min_life=P['bait_min_life'] + P['swap_lead_time']) \
-                        if st.baits.get(aid) == 0 and st.successor is None and self._workers(world) > spare else []
+                        if useful and st.baits.get(aid) == 0 and st.successor is None and self._workers(world) > spare else []
                     walk_s = 1.3 * dist(cands[0].p, site.successor) / 100.0 if cands else 0.0
                     tired = self._life_s(a) < walk_s + P['swap_lead_time']
                 else:
@@ -455,6 +484,21 @@ class TrapManager:
             out.append(((0 if a.id in self.senescent else 1), -a.age, dist(a.p, point) / 100.0, a))
         out.sort(key=lambda t: t[:3])
         return [t[3] for t in out]
+
+    def _predator_near(self, world: WorldState, site: Site, held_now=()):
+        """A loose, awake predator within relevant_range of the mouth or of the colony's centre."""
+        agents = list(world.agents.values())
+        if not agents:
+            return False
+        cx = sum(a.x for a in agents) / len(agents)
+        cy = sum(a.y for a in agents) / len(agents)
+        rng = self.P['relevant_range']
+        for q in world.predators:
+            if q.pid in held_now or is_resting(q):
+                continue
+            if dist(q.p, site.front_mid) < rng or dist(q.p, (cx, cy)) < rng:
+                return True
+        return False
 
     def _primary_station(self):
         """The station kept staffed in advance: the open one with the best (lowest) site score."""

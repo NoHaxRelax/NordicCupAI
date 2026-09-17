@@ -40,3 +40,22 @@ stands at 25 out) also hands it over, guide dead. Bait depth 5 or 9.4 both survi
 ## Overnight work log (18 September 2026)
 
 Entries are appended as milestones complete; each names the commit and the evidence file.
+
+- **23:00** Wall deliveries in real games diagnosed with per-tick capture traces: guides died in the
+  OPEN phase (society flee at low energy), after rest/wake transitions (predator speed assumed
+  walking), in rivers (3 per tick) and to second predators while deferring. Fixes: energy-based
+  speed prediction, own sprint flee, biome-aware planning, early abort on a second predator,
+  transfers only to agents with sprint energy. walls-v3 -> v4: captures 38/59 -> 6/31, score 613.7 -> 617.2
+  (`results/trapper/batches/v4-*.json`).
+- **00:30** Oscar: gap traps first, walls as backup. Relaxed gap detector (59/60 maps), flyby
+  endgame validated on the arranged passage (`scripts/trapper/gap_endgame.py`: predator held within
+  3 ticks, guide alive), far-mouth staging and swaps, lifetime-based bait choice. Commit e4883be,
+  pushed to `survival-simulator/oscar-trapper`.
+- **01:10** gap-v1 (seeds 1-8, oracle): trapper 621.4 vs society ~615, held 5.6%, deliveries 36
+  (1 delivered, 12 aborted for a second predator, 10 lost, 7 captured). Two speed bugs fixed
+  (grid rebuilt every tick, failed A* every tick): 600 s games now ~60-140 s wall.
+- **01:40** gap-v2 (seeds 1-8, both modes): trapper beats society on 6/8 seeds (+2 to +18) but
+  seed 1 went extinct (-178): prestaffed baits and successors starved 15 agents. Staffing is now
+  conditional on a loose predator within 420 of the mouth or the colony. Added the "hearing tap":
+  a guide with sprint energy runs into hearing range (60) of a predator that lost it, instead of
+  failing "cannot intercept" (the most common loss).

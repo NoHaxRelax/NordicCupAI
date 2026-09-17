@@ -179,6 +179,25 @@ class Lure:
         self.held = set(held)
         self.baits = set(baits)      # agents standing as baits: a predator that targets one is delivered
 
+    # ------------------------------------------------------------------ hearing tap
+    @staticmethod
+    def _tap_budget(a: AgentView):
+        """Enough sprint energy for a tap (approach to hearing range and the run back out)."""
+        return a.can_sprint and a.energy - a.max_energy / 5 > 120.0
+
+    def _tap(self, d: Delivery, a: AgentView, p: PredatorView, gap):
+        """It has lost us and we cannot get in front of it: run straight at it until it hears us
+        (60 through walls), then the ordinary flee/lead takes over. Costs about a second of sprint."""
+        w = self.world
+        h = heading_of(sub(p.p, a.p))
+        if heading_clear(a.p, h, min(gap, 40.0), w.rects):
+            goal = p.p
+        else:
+            path = plan(w.rects, w.width, w.height, a.p, p.p, radius=6.0, slow=w.biome_at)
+            goal = path[1] if path and len(path) > 1 else p.p
+        d.decision = f'tap: closing to hearing range ({gap:.0f})'
+        return step_toward(a, goal, speed_for(a, True))
+
     # ------------------------------------------------------------------ flyby (gap sites)
     def flyby_side(self, site: Site, a: AgentView):
         """Unit vector along the obstacle face with the longer clear sprint from the flyby point,
@@ -299,8 +318,14 @@ class Lure:
                     d.event(w.time, 'lost_attention', target=target)
                     return self._attract(d, a, p, target, gap)
                 if target is None and gap >= PRED_CHARGE_RANGE:
-                    # it lost us, usually behind an obstacle corner we just rounded: stay put and
-                    # visible instead of walking on, it comes round within a few ticks
+                    # it lost us. Facing away or walking off, it will not find us again by itself:
+                    # tap it (run into hearing range) when we can afford the sprint
+                    off = abs(wrap(heading_of(sub(a.p, p.p)) - p.heading))
+                    receding = off > math.radians(75) or (d.stall_ticks > 6 and p.speed > 0.5)
+                    if receding and gap <= 260 and self._tap_budget(a):
+                        return self._tap(d, a, p, gap)
+                    # usually behind an obstacle corner we just rounded: stay put and visible
+                    # instead of walking on, it comes round within a few ticks
                     if not los_clear(p.p, a.p, w.rects):
                         d.decision = f'lead: waiting for it to come round the corner ({d.stall_ticks})'
                         return self._facing(d, a, p, hold(a))
@@ -316,10 +341,13 @@ class Lure:
                     return self._facing(d, a, p, hold(a))
             else:
                 d.stall_ticks = 0
-            if gap < PRED_CHARGE_RANGE:
+            if gap < PRED_CHARGE_RANGE and (following or target is not None or gap < 62):
+                # inside its charge range while it chases us (or is about to hear us): reopen the gap
                 d.phase = 'OPEN'
                 d.event(w.time, 'too_close', gap=round(gap, 1))
                 return self._open(d, a, p, gap)
+            if gap < PRED_CHARGE_RANGE:
+                return self._tap(d, a, p, gap) if self._tap_budget(a) else self._facing(d, a, p, hold(a))
             return self._lead(d, a, p, gap)
         if d.phase == 'CORRIDOR':
             return self._corridor(d, a, p, gap, following)
@@ -353,7 +381,7 @@ class Lure:
         if p.speed < 0.5:
             v = 0.0
         h = (math.cos(p.heading), math.sin(p.heading))
-        speed = a.walk * a.move_modifier
+        speed = (a.sprint_speed if self._tap_budget(a) else a.walk) * a.move_modifier
         for k in range(0, 36, 3):
             q = add(p.p, mul(h, ahead + v * k))
             if dist(a.p, q) <= speed * k + 1e-6:
@@ -377,6 +405,8 @@ class Lure:
         goal, k = self._intercept_point(a, p, 140.0)
         if goal is None or (d.phase == 'ATTRACT' and k > 15):
             d.stall_ticks += 1
+            if d.phase == 'ATTRACT' and gap <= 260 and self._tap_budget(a) and not is_resting(p):
+                return self._tap(d, a, p, gap)
             if d.phase == 'ATTRACT' and d.stall_ticks > 10:
                 d.done = 'failed:cannot_intercept'
                 d.decision = 'attract: cannot intercept'
