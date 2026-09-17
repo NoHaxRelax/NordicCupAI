@@ -206,7 +206,8 @@ class TrapManager:
                     target = predator_target(world, p)
                     in_place = {b for b, k in st.baits.items() if b in world.agents and k < len(st.slots)
                                 and dist(world.agents[b].p, st.slots[k]) < 3.0}
-                    if target in in_place or (target is None and is_resting(p) and in_place):
+                    # a predator resting at the mouth (including the tick it wakes on) still holds
+                    if target in in_place or (target is None and bool(p.resting) and in_place):
                         st.held.add(p.pid)
                         st.last_held = world.time
                         held_now[p.pid] = st.key
@@ -236,11 +237,17 @@ class TrapManager:
                     self.event('bait_moving_detail', key=key, agent=b, why=self._last_why.get(b), fleeing=b in self.fleeing,
                                off=round(dist(ba.p, st.site.holder), 1) if ba else None, energy=round(ba.energy) if ba else None,
                                pred=(round(p.x), round(p.y)), target=predator_target(world, p))
-                elif is_resting(p):
+                elif bool(p.resting):
                     why = 'resting_elsewhere'
                 else:
                     why = 'predator_left'
-                self.event('hold_ended', pid=pid, key=key, why=why, held_s=round(world.time - self._hold_start.get(pid, world.time), 1))
+                extra = {}
+                if p is not None and st is not None:
+                    dvec = sub(p.p, st.site.front_mid)
+                    tangent = (-st.site.normal[1], st.site.normal[0])
+                    extra = dict(out=round(dot(dvec, st.site.normal)), lateral=round(abs(dot(dvec, tangent))),
+                                 target=predator_target(world, p), penergy=None if p.energy is None else round(p.energy))
+                self.event('hold_ended', pid=pid, key=key, why=why, held_s=round(world.time - self._hold_start.get(pid, world.time), 1), **extra)
         self._held_prev = dict(held_now)
         return held_now
 
@@ -771,10 +778,16 @@ class TrapManager:
                         st.leaving = None
                     passage_clear = passage_clear and (slot_i == 1 or not st.baits)
                     if not passage_clear:
-                        # wait at the stage outside the far mouth until the old bait has walked out
-                        act, why = holder.act(a, site.successor, site, avoid=avoid)
-                        if dist(a.p, site.successor) < 2.0:
-                            act, why = hold(a), 'successor: staged at the far mouth'
+                        # wait at the stage outside the far mouth until the old bait has walked out;
+                        # with a loose predator near the far mouth wait further back instead
+                        loose_far = [q for q in world.predators if q.pid not in held_now and not is_resting(q)
+                                     and site.far_mouth is not None and dist(q.p, site.far_mouth) < 130]
+                        stage_pt = site.successor
+                        if loose_far:
+                            stage_pt = add(site.successor, mul(site.normal, -90.0))
+                        act, why = holder.act(a, stage_pt, site, avoid=avoid)
+                        if dist(a.p, stage_pt) < 2.0:
+                            act, why = hold(a), ('successor: staged at the far mouth' if not loose_far else 'successor: waiting back, predator at the far mouth')
                         out[aid] = (act, why)
                         if int(world.time * 10) % 30 == 0:
                             self.event('successor_trace', key=key, agent=aid, why=why, d=round(dist(a.p, site.successor)), energy=round(a.energy))

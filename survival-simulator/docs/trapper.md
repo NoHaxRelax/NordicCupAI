@@ -125,9 +125,11 @@ A/B over seeds 1–16, two repeats each (`results/trapper/batches/ab-*.json`, co
 | wide-turn deliveries, no reserve slot (now the default) | 617.4 | +5.3 / −0.6 / 7 of 16 | 5.3 % | 16 of 198 (14 guides alive) | 21 |
 | narrow turns, reserve slot | 608.4 | −3.8 / −3.2 / 4 of 16 | 5.7 % | 4 of 41 | 8 |
 | narrow turns, no reserve | 615.7 | +3.5 / −4.6 / 5 of 16 | 5.7 % | 7 of 35 | 4 |
+| **final-v7**: wide turns, no reserve, guides give up without sprint reserve (current defaults) | **619.6** | **+7.5 / +0.8 / 9 of 16** | 8.7 % | 19 of 189 (16 guides alive) | 4 |
 
 The means are moved by single seeds where one colony went extinct (seed 5: +130); the medians
-say "neutral". Fruit gathering (score plus penalty) is identical (627 vs 628); the trapper pays a
+say "neutral" for the A/B variants and slightly positive for the current defaults (no extinction in
+32 games, 160 holds of ~20 s, 91 of them ended by the predator leaving the mouth). Fruit gathering (score plus penalty) is identical (627 vs 628); the trapper pays a
 higher eaten-energy penalty (19.7 vs 15.2) because the agents that die in trap roles carry more
 energy. Holds last about 30 s and end when the bait dies or walks out (45 of 89) or the predator
 leaves (25 of 89); up to 3 predators were held at one mouth. Most holds come from refuge runs

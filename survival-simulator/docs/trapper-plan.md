@@ -75,3 +75,6 @@ Entries are appended as milestones complete; each names the commit and the evide
   narrow-turn + reserve variant was worst (608.4). Guides now give up a lead when their sprint
   reserve is gone. Commit aa8f497 pushed. Final 16x2 oracle batch and an 8-seed estimator batch
   running on the PC (`final-v7`, `final-v7est`).
+- **04:50** final-v7 (16 seeds x 2, oracle): 619.6 vs society 612.1 (+7.5 mean, +0.8 median,
+  9/16 wins), held 8.7 %, no extinction, 19 delivered (16 guides alive), guide deaths 4 (was 21).
+  First configuration with a positive median. Commit dd7933e + docs.
