@@ -553,12 +553,20 @@ def main() -> int:
     tokenizer = processor.tokenizer
     eos_id = int(tokenizer.eos_token_id)
     want_words = args.timestamps == 'word'
+
+    split_model_outputs_patched = None
+    if assistant is not None:
+        split_model_outputs_patched = patch_split_model_outputs()
+        print(f'_split_model_outputs patch {"applied (bug present)" if split_model_outputs_patched else "not needed"}',
+             flush=True)
+
     runner_info = {
         'hf_model': args.model, 'assistant': args.assistant,
         'assistant_arch': args.assistant_arch if args.assistant else None,
         'num_beams': args.beam, 'fallback': args.fallback, 'condition_on_prev_tokens': args.condition_on_prev,
         'long_form': 'sequential', 'dtype': str(dtype).replace('torch.', ''), 'device': str(device),
         'transformers': transformers.__version__, 'torch': torch.__version__,
+        'split_model_outputs': split_model_outputs_patched,
     }
 
     if not args.no_warmup:
@@ -606,13 +614,37 @@ def main() -> int:
                 continue
             mode, fallback_from_word, n_fallback = 'segment', True, n_fallback + 1
 
-        segments = to_segments(gen, tokenizer, eos_id, want_words=(mode == 'word'))
-        n_words = sum(len(s['words']) for s in segments)
-        info = dict(runner_info, timestamps=mode, fallback_from_word=fallback_from_word,
-                    n_segments=len(segments), n_words=n_words,
-                    words_non_monotonic=non_monotonic_words(segments) if mode == 'word' else None)
-        write_transcript(out, f, args.tag, duration, dt, segments,
-                         word_timestamps=(mode == 'word'), extra={'runner': info})
+        # Post-processing is guarded like generate() itself (module docstring): one odd
+        # file is reported as FAILED and the tag continues, and a write that fails
+        # midway is unlinked so skip-if-exists cannot keep a truncated JSON.
+        try:
+            segments = to_segments(gen, tokenizer, eos_id, want_words=(mode == 'word'))
+            n_words = sum(len(s['words']) for s in segments)
+            total_chars = sum(len(s['text']) for s in segments)
+            chars_per_sec = total_chars / duration if duration else 0.0
+            words_per_sec = (n_words / duration) if (mode == 'word' and duration) else None
+            if chars_per_sec < MIN_CHARS_PER_SEC or (words_per_sec is not None and words_per_sec < MIN_WORDS_PER_SEC):
+                rate_note = f'{chars_per_sec:.1f} chars/s'
+                if words_per_sec is not None:
+                    rate_note += f', {words_per_sec:.1f} words/s'
+                raise ValueError(f'implausible transcript ({rate_note}, below '
+                                 f'MIN_CHARS_PER_SEC={MIN_CHARS_PER_SEC}/MIN_WORDS_PER_SEC={MIN_WORDS_PER_SEC})')
+            info = dict(runner_info, timestamps=mode, fallback_from_word=fallback_from_word,
+                        n_segments=len(segments), n_words=n_words,
+                        words_non_monotonic=non_monotonic_words(segments) if mode == 'word' else None)
+            write_transcript(out, f, args.tag, duration, dt, segments,
+                             word_timestamps=(mode == 'word'), extra={'runner': info})
+        except Exception:
+            traceback.print_exc()
+            if out.exists():
+                try:
+                    out.unlink()
+                except OSError:
+                    pass
+            failed.append(f.name)
+            print(f'FAILED {f.name}', flush=True)
+            continue
+
         total_audio += duration
         total_dt += dt
         n_done += 1
