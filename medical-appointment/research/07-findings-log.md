@@ -227,3 +227,14 @@ WhisperX (faster-whisper large-v3 plus wav2vec2 forced alignment, digits spelled
 | whisperx-large-v3 | 0.821 | 0.847 | 11% | 7% |
 
 No tool reproduces the annotated starts (the best, MMS, hits one frame on a quarter of them); only turbo's decoder reproduces the ends. The annotations were therefore not produced by any of these tools as-is; the ends are consistent with a turbo-family decoder and the starts with a separate rule or a manual pass. Served configuration from here: large-v3-turbo, START_RULE first-word-end, START_OFFSET -0.20, END_OFFSET -0.02, ASR_CLEAN off. Expected sentence-granularity ceiling 0.857; the realised gain depends on the selector, which the validation run after this switch measures.
+
+### 20. Validation run C: 0.6599 after switching the served ASR to large-v3-turbo
+
+Queued 17:06, finished 17:10, 19 conversations, no errors, 7 to 12 s each. Only change from run A: ASR distil-large-v3 with large-v3's offsets replaced by large-v3-turbo with its own fitted rule (first-word end -0.20, end -0.02). Yes answers 84 of 190, the same as run A, so the answering half did not move and the gain is entirely spans.
+
+| run | served ASR | score | implied validation tIoU at ~0.89 accuracy |
+|---|---|---|---|
+| A, 16:17 | distil-large-v3, offsets fitted for large-v3 | 0.6086 | 0.42 |
+| C, 17:06 | large-v3-turbo, fitted rule | 0.6599 | 0.51 |
+
+Gain 0.051, above the 0.006 run-to-run noise. The answerer's yes-rate of 0.44 against a balanced 0.5 is now the largest visible loss on the accuracy side and a hidden loss on the span side (every positive answered no scores zero).
