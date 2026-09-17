@@ -25,7 +25,7 @@ from .motion import action, step_toward, hold, speed_for
 from .paths import plan, path_length
 from .sites import find_sites, Site, CORRIDOR
 from .refuge import Refugee, plan_refuge, inside_slot
-from .world import WorldState, AgentView, PredatorView, PRED_CHARGE_RANGE
+from .world import AGENT_RADIUS, WorldState, AgentView, PredatorView, PRED_CHARGE_RANGE
 
 DEFAULTS = dict(
     max_stations=2,          # stations kept staffed at once
@@ -48,11 +48,13 @@ DEFAULTS = dict(
     explicit_deliveries=True,    # guide-led deliveries (lure.py)
     refuge=True,                 # chased agents run into the nearest gap
     site_kinds=('gap',),         # narrow gaps first; walls are the backup ('wall', 'gap')
-    prestaff=True,               # keep the best gap station staffed from prestaff_time on
+    prestaff=False,              # speculative staffing (senescent baits walking in) cost more than it held
     bait_idle_time=40.0,         # an unheld gap bait leaves after this long without any predator near
     bait_min_life=30.0,          # seconds of life a bait must have left when it arrives
     swap_lead_time=25.0,         # call the replacement when the bait's life falls below walk time + this
     swap_force_life=8.0,         # swap even while predators are awake when the bait has this little life left
+    staff_range=230.0,           # staff a station in advance only with a loose predator this close to its mouth
+    hold_bait_min_life=120.0,    # life on arrival for a bait replacing one at a station that holds predators
 )
 
 
@@ -108,6 +110,7 @@ class TrapManager:
         self.senescent: set = set()                     # agents seen draining fast while idle
         self._refuge_tried: dict = {}                   # aid -> last time a refuge plan was attempted
         self._held_prev: dict = {}
+        self._last_why: dict = {}
         self._hold_start: dict = {}
         self._energy_seen: dict[int, tuple] = {}        # aid -> (energy, x, y)
         self.last_actions: dict = {}                    # aid -> ActionRequest applied last tick (set by the policy)
@@ -193,7 +196,9 @@ class TrapManager:
                     continue
                 if st.site.in_front_zone(p.p, margin=15.0):
                     target = predator_target(world, p)
-                    if target in st.baits or (target is None and is_resting(p)):
+                    in_place = {b for b, k in st.baits.items() if b in world.agents and k < len(st.slots)
+                                and dist(world.agents[b].p, st.slots[k]) < 3.0}
+                    if target in in_place or (target is None and is_resting(p) and in_place):
                         st.held.add(p.pid)
                         st.last_held = world.time
                         held_now[p.pid] = st.key
@@ -218,6 +223,11 @@ class TrapManager:
                     why = 'bait_gone'
                 elif not any(b in world.agents and dist(world.agents[b].p, st.site.holder) < 3.0 for b in st.baits):
                     why = 'bait_moving'
+                    b = next(iter(st.baits))
+                    ba = world.agents.get(b)
+                    self.event('bait_moving_detail', key=key, agent=b, why=self._last_why.get(b), fleeing=b in self.fleeing,
+                               off=round(dist(ba.p, st.site.holder), 1) if ba else None, energy=round(ba.energy) if ba else None,
+                               pred=(round(p.x), round(p.y)), target=predator_target(world, p))
                 elif is_resting(p):
                     why = 'resting_elsewhere'
                 else:
@@ -322,7 +332,9 @@ class TrapManager:
         self._transfer_guides(world, held_now)
         self._staff(world)
         self._assign(world, held_now)
-        return self._actions(world, held_now)
+        out = self._actions(world, held_now)
+        self._last_why = {aid: why for aid, (act, why) in out.items()}
+        return out
 
     @staticmethod
     def _usable_sites(world: WorldState, sites):
@@ -411,7 +423,7 @@ class TrapManager:
                 want = (st.held or (P['prestaff'] and world.time >= P['prestaff_time'] and near and st is self._primary_station())) \
                     and st.leaving is None
                 if want and not st.baits and st.successor is None and self._workers(world) > P['min_workers']:
-                    cands = self._bait_candidates(world, site.successor, min_life=P['bait_min_life'])
+                    cands = self._bait_candidates(world, site.successor, min_life=P['bait_min_life'], long_hold=bool(st.held))
                     if cands:
                         st.baits[cands[0].id] = 0
                         st.staffed_since = world.time + 30.0   # allow for the walk in
@@ -433,7 +445,8 @@ class TrapManager:
                     # (it waits at the stage for up to swap_lead_time), and only while the station
                     # holds something or a loose predator is near
                     useful = st.held or self._predator_near(world, site, held_now=set(st.held))
-                    cands = self._bait_candidates(world, site.successor, exclude={aid}, min_life=P['bait_min_life'] + P['swap_lead_time']) \
+                    cands = self._bait_candidates(world, site.successor, exclude={aid}, min_life=P['bait_min_life'] + P['swap_lead_time'],
+                                                  long_hold=bool(st.held)) \
                         if useful and st.baits.get(aid) == 0 and st.successor is None and self._workers(world) > spare else []
                     walk_s = 1.3 * dist(cands[0].p, site.successor) / 100.0 if cands else 0.0
                     tired = self._life_s(a) < walk_s + P['swap_lead_time']
@@ -461,8 +474,13 @@ class TrapManager:
                     self.event('guard_assigned', key=st.key, agent=cands[0].id)
 
     def _drain(self, a: AgentView):
-        """Energy per second while standing: 1 plus the engine's 0.1 x age once past the hidden max age."""
-        return 1.0 + (0.1 * a.age if a.id in self.senescent else 0.0)
+        """Energy per second while standing: 1 plus the engine's 0.1 x age once past the hidden max
+        age (60-120 s). An agent past 60 that is not yet senescent may turn any second: half rate."""
+        if a.id in self.senescent:
+            return 1.0 + 0.1 * a.age
+        if a.age >= 60.0:
+            return 1.0 + 0.05 * a.age
+        return 1.0
 
     def _life_s(self, a: AgentView):
         return a.energy / self._drain(a)
@@ -472,31 +490,36 @@ class TrapManager:
         walk_s = 1.5 * dist(a.p, point) / 100.0
         return (a.energy - walk_s * (self._drain(a) + 5.0)) / self._drain(a)
 
-    def _bait_candidates(self, world: WorldState, point, exclude=(), min_life=30.0):
-        """Agents to send as bait to ``point``: senescent ones first (the colony loses them anyway),
-        then the oldest. A senescent agent needs ``min_life`` seconds left after the walk; a healthy
-        one needs twice that, so it can still walk back to food afterwards."""
+    def _bait_candidates(self, world: WorldState, point, exclude=(), min_life=30.0, long_hold=False):
+        """Agents to send as bait to ``point``. Speculative staffing (nothing held yet) takes senescent
+        agents first (the colony loses them anyway), then the oldest, each with ``min_life`` seconds
+        left after the walk (a healthy one twice that, so it can walk back to food). Once predators
+        are held (``long_hold``) the bait should last: the healthiest agent with the most life is sent."""
         out = []
         for a in self._eligible(world, exclude=exclude, min_energy=60.0, allow_senescent=True):
             life = self._arrival_life(a, point)
-            if life < (min_life if a.id in self.senescent else max(2 * min_life, 60.0)):
-                continue
-            out.append(((0 if a.id in self.senescent else 1), -a.age, dist(a.p, point) / 100.0, a))
-        out.sort(key=lambda t: t[:3])
-        return [t[3] for t in out]
+            senescent = a.id in self.senescent
+            if long_hold:
+                # a bait that should last: young (its hidden max age is at least 60) and well fed;
+                # a senescent one only as a stopgap
+                young = a.age <= 45.0 and a.energy >= 200.0
+                if not young and not (senescent and life >= min_life):
+                    continue
+                out.append(((0 if young else 1), -a.energy, a))
+            else:
+                if life < (min_life if senescent else max(2 * min_life, 60.0)):
+                    continue
+                out.append(((0 if senescent else 1), -a.age, dist(a.p, point) / 100.0, a))
+        out.sort(key=lambda t: t[:-1])
+        return [t[-1] for t in out]
 
-    def _predator_near(self, world: WorldState, site: Site, held_now=()):
-        """A loose, awake predator within relevant_range of the mouth or of the colony's centre."""
-        agents = list(world.agents.values())
-        if not agents:
-            return False
-        cx = sum(a.x for a in agents) / len(agents)
-        cy = sum(a.y for a in agents) / len(agents)
-        rng = self.P['relevant_range']
+    def _predator_near(self, world: WorldState, site: Site, held_now=(), rng=None):
+        """A loose, awake predator within ``rng`` (default staff_range) of the mouth."""
+        rng = self.P['staff_range'] if rng is None else rng
         for q in world.predators:
             if q.pid in held_now or is_resting(q):
                 continue
-            if dist(q.p, site.front_mid) < rng or dist(q.p, (cx, cy)) < rng:
+            if dist(q.p, site.front_mid) < rng:
                 return True
         return False
 
@@ -728,8 +751,12 @@ class TrapManager:
                         if dist(a.p, site.successor) < 2.0:
                             act, why = hold(a), 'successor: staged at the far mouth'
                         out[aid] = (act, why)
+                        if int(world.time * 10) % 30 == 0:
+                            self.event('successor_trace', key=key, agent=aid, why=why, d=round(dist(a.p, site.successor)), energy=round(a.energy))
                         continue
                     act, why = self._gap_approach(world, holder, a, site, stage, held_now)
+                    if int(world.time * 10) % 30 == 0:
+                        self.event('successor_trace', key=key, agent=aid, why=why, d=round(dist(a.p, stage)), energy=round(a.energy))
                 else:
                     act, why = holder.act(a, stage, site, avoid=avoid)
                 if dist(a.p, stage) < 1.0 and slot_i not in st.baits.values():
@@ -768,6 +795,12 @@ class TrapManager:
                     st2 = self._station(site)
                     st2.baits[aid] = r['slot']
                     st2.staffed_since = world.time
+                    if st2.successor is not None and self._life_s(a) >= 60.0:
+                        self.roles.pop(st2.successor, None)
+                        self.agent_cooldown[st2.successor] = world.time + 10.0
+                        self.event('successor_released', key=st2.key, agent=st2.successor, why='refugee is the bait')
+                        st2.successor = None
+                        st2.successor_for = None
                     while len(st2.slots) <= r['slot']:
                         st2.slots.append(inside_slot(site, len(st2.slots)))
                     self.roles[aid] = ('bait', st2.key)
@@ -849,9 +882,10 @@ class TrapManager:
         if inside_passage:
             return step_toward(a, goal, min(a.walk * a.move_modifier, dist(a.p, goal)), face=goal), 'gap: walking the passage'
         loose = [p for p in world.predators if dist(p.p, far) < 75 and not is_resting(p)]
-        if loose and dist(a.p, outside) < 12:
+        near_far = dist(a.p, far) < 45 and path_clear(a.p, far, AGENT_RADIUS + 0.5, world.rects)
+        if loose and (dist(a.p, outside) < 12 or near_far):
             return hold(a), 'gap: waiting for the far-mouth predators to rest'
-        if dist(a.p, outside) < 6:
+        if dist(a.p, outside) < 6 or near_far:
             return step_toward(a, far, a.walk * a.move_modifier, face=far), 'gap: entering the far mouth'
         act, why = holder.act(a, outside, site, avoid=[(site.held_center(), self.P['zone_radius'])])
         return act, why.replace('holder', 'gap route')
