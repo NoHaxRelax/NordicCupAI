@@ -567,6 +567,32 @@ class JointDemo(Joint):
         return Prompt(system, p.user, p.schema, p.postprocess, self.demos_for(questions))
 
 
+class JointDemoFewShot(JointDemo):
+    """JointDemo plus the nearest-question example lines (FewShot) inside the user turn:
+    whole conversations show selection, the example lines show granularity for the
+    specific question types at hand."""
+
+    def __init__(self, k: int = 2, k_lines: int = 12):
+        super().__init__(k)
+        self.lines = FewShot('units', k=k_lines, k_neg=2)
+
+    def set_conversation(self, stem: str, asr: str) -> None:
+        super().set_conversation(stem, asr)
+        self.lines.set_conversation(stem, asr)
+
+    def build_all(self, questions: List[str], units_: List[Unit]) -> Prompt:
+        p = super().build_all(questions, units_)
+        # one example block for the whole set: the union of each question's nearest examples, deduplicated
+        seen, lines = set(), []
+        for q in questions:
+            for ln in self.lines.examples(q).split('\n')[1:]:
+                if ln not in seen:
+                    seen.add(ln); lines.append(ln)
+        block = 'EXAMPLES (other consultations, question -> the stretch marked as evidence):\n' + '\n'.join(lines[:40])
+        user = p.user.replace('\n\nQUESTIONS:\n', f'\n\n{block}\n\nQUESTIONS:\n', 1)
+        return Prompt(p.system + _FEWSHOT_NOTE, user, p.schema, p.postprocess, p.demos)
+
+
 VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units': units,
     'units-claim': units_claim,
@@ -576,6 +602,8 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'words-fewshot': FewShot('words'),
     'units-joint': Joint(),
     'units-joint-demo': JointDemo(2),
+    'units-joint-demo-fewshot': JointDemoFewShot(2, 12),
+    'units-joint-demo-all': JointDemo(38),     # every other training conversation as a demonstration (~60k tokens)
 }
 
 
