@@ -19,9 +19,19 @@ laptop (small model) and on a big GPU (large model) without edits.
   LLM_URL            Ollama base URL                     (default http://localhost:11434)
   LLM_MODEL          Ollama model tag                    (default qwen3.5:4b)
   LLM_TIMEOUT        seconds per question               (default 25)
-  START_OFFSET       seconds added to unit starts        (default 0.36)
+  START_RULE         first-word-end | unit-start         (default first-word-end)
+  START_OFFSET       seconds added to the start anchor   (default -0.14 for
+                     first-word-end, +0.36 for unit-start; fitted on the 39
+                     training conversations, see research/07-findings-log.md)
   END_OFFSET         seconds added to unit ends          (default 0.12)
   PAUSE_SPLIT        split a sentence at a pause >= this (default 0.6)
+  ASR_CLEAN          1 = temperature 0, no conditioning on previous text, no
+                     fallback ladder (removes the slow-file tail)  (default 1)
+  SPAN_ON_NO         1 = return the best span for every question, including
+                     those answered no (the scorer credits spans on annotated
+                     yes questions whatever we answered)        (default 1)
+  REQUEST_DUMP_DIR   if set, example.py writes each incoming audio + questions
+                     there (off by default)
 """
 
 from __future__ import annotations
@@ -59,9 +69,12 @@ TRANSCRIPT_CACHE = os.environ.get('TRANSCRIPT_CACHE', '0') == '1'
 LLM_URL = os.environ.get('LLM_URL', 'http://localhost:11434').rstrip('/')
 LLM_MODEL = os.environ.get('LLM_MODEL', 'qwen3.5:4b')
 LLM_TIMEOUT = float(os.environ.get('LLM_TIMEOUT', '25'))
-START_OFFSET = float(os.environ.get('START_OFFSET', '0.36'))
+START_RULE = os.environ.get('START_RULE', 'first-word-end')
+START_OFFSET = float(os.environ.get('START_OFFSET', '-0.14' if START_RULE == 'first-word-end' else '0.36'))
 END_OFFSET = float(os.environ.get('END_OFFSET', '0.12'))
 PAUSE_SPLIT = float(os.environ.get('PAUSE_SPLIT', '0.6'))
+ASR_CLEAN = os.environ.get('ASR_CLEAN', '1') == '1'
+SPAN_ON_NO = os.environ.get('SPAN_ON_NO', '1') == '1'
 
 Span = Tuple[float, float]
 
@@ -91,6 +104,16 @@ def _load_asr():
     return _asr
 
 
+def asr_kwargs() -> dict:
+    kw = dict(language='en', word_timestamps=True, beam_size=5, vad_filter=False)
+    if ASR_CLEAN:
+        # No temperature fallback ladder and no conditioning on the previous
+        # window: the slow files in the training set were the ones where the
+        # ladder looped on low-probability words (research/06, idea 6).
+        kw.update(temperature=0.0, condition_on_previous_text=False)
+    return kw
+
+
 def _cached_transcript(audio_filename: str) -> Optional[Tuple[List[Word], float]]:
     if not TRANSCRIPT_CACHE:
         return None
@@ -114,10 +137,7 @@ def transcribe(audio_bytes: bytes, audio_filename: str) -> Tuple[List[Word], flo
         logger.info('%s: transcript from cache', audio_filename)
         return cached
     model = _load_asr()
-    segments, info = model.transcribe(
-        io.BytesIO(audio_bytes), language='en', word_timestamps=True,
-        beam_size=5, vad_filter=False,
-    )
+    segments, info = model.transcribe(io.BytesIO(audio_bytes), **asr_kwargs())
     words: List[Word] = []
     for s in segments:
         for w in (s.words or []):
@@ -138,6 +158,7 @@ class Unit:
     start: float
     end: float
     text: str
+    first_word_end: float = 0.0
 
 
 _TERMINAL = re.compile(r'[.!?]["\')\]]*\x00?$')
@@ -152,7 +173,7 @@ def make_units(words: List[Word]) -> List[Unit]:
         if cur:
             text = ''.join(w.w for w in cur).replace('\x00', '').strip()
             if text:
-                units.append(Unit(len(units), cur[0].start, cur[-1].end, text))
+                units.append(Unit(len(units), cur[0].start, cur[-1].end, text, cur[0].end))
             cur.clear()
 
     for i, w in enumerate(words):
@@ -254,7 +275,9 @@ def span_from_ids(ids: List[int], units: List[Unit], duration: float) -> Optiona
             run.append(i)
         else:
             break
-    start = units[run[0]].start + START_OFFSET
+    first = units[run[0]]
+    anchor = first.first_word_end if (START_RULE == 'first-word-end' and first.first_word_end > 0) else first.start
+    start = anchor + START_OFFSET
     end = units[run[-1]].end + END_OFFSET
     start = max(0.0, min(start, duration))
     end = max(start + 0.05, min(end, duration))
@@ -279,11 +302,14 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
             out = ask_llm(transcript, q)
             yes = str(out.get('answer', '')).lower() == 'yes'
             ids = [int(i) for i in out.get('segments', []) if isinstance(i, (int, float))]
-            if yes and not ids:
-                # The model said yes but cited nothing: find the quote instead.
+            if not ids:
+                # Nothing cited: locate the quote instead (the model always
+                # returns one, for yes and for no).
                 quote = str(out.get('quote', '')).strip().lower()
                 ids = [u.idx for u in units if quote and quote[:40] in u.text.lower()][:1]
-            span = span_from_ids(ids, units, duration) if yes else None
+            span = span_from_ids(ids, units, duration)
+            if not yes and not SPAN_ON_NO:
+                span = None
             return yes, span
         except Exception:
             logger.exception('question failed, guessing: %s', q)
@@ -310,7 +336,7 @@ def warm_up() -> None:
         t0 = time.time()
         sample = HERE / 'data' / 'audio' / 'conversation_sample_4.mp3'
         audio = str(sample) if sample.exists() else np.zeros(16000 * 20, dtype=np.float32)
-        segs, _ = model.transcribe(audio, language='en', word_timestamps=True, beam_size=5)
+        segs, _ = model.transcribe(audio, **asr_kwargs())
         n = sum(1 for _ in segs)
         logger.info('ASR warm: %d segments in %.1fs', n, time.time() - t0)
     warm_llm()
