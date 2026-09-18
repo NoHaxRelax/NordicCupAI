@@ -636,10 +636,14 @@ def warm_llm() -> None:
     except Exception:
         logger.exception('LLM warm-up failed (is the server at %s running with %s?)', LLM_URL, LLM_MODEL or 'the model')
     if LLM_BACKEND == 'vllm' and LLM_FALLBACK_MODEL:
+        # Cold-loading the fallback into VRAM takes about 50 s on the pod; the request carries
+        # keep_alive -1, so it then stays resident (across api.py restarts too) and answers in ~2 s.
+        # A short timeout here only 'fails' the warm-up and leaves the first REAL fallback call to
+        # pay that 50 s, which no deadline can absorb (measured 2026-09-18).
         try:
             t0 = time.time()
             _chat_ollama(LLM_FALLBACK_URL, LLM_FALLBACK_MODEL, SYSTEM, 'TRANSCRIPT:\n[0] Hello.\n\nQUESTION: Did anyone say hello?',
-                         SCHEMA, 30.0)
+                         SCHEMA, float(os.environ.get('LLM_FALLBACK_WARM_TIMEOUT', '150')))
             logger.info('fallback %s warm in %.1fs', LLM_FALLBACK_MODEL, time.time() - t0)
         except Exception:
             logger.exception('fallback warm-up failed (is Ollama at %s running with %s?)', LLM_FALLBACK_URL, LLM_FALLBACK_MODEL)
