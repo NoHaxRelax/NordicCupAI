@@ -23,6 +23,19 @@ class OracleWorld:
             self._next += 1
         return self._ids[predator]
 
+    def __getstate__(self):
+        d = dict(self.__dict__)
+        d['_ids'] = [(i, self._ids[p]) for i, p in enumerate(self.env.predators) if p in self._ids]
+        return d
+
+    def __setstate__(self, d):
+        ids = d.pop('_ids')
+        self.__dict__.update(d)
+        self._ids = weakref.WeakKeyDictionary()
+        for i, pid in ids:
+            if i < len(self.env.predators):
+                self._ids[self.env.predators[i]] = pid
+
     def update(self, states=None, sim_time=None) -> WorldState:
         env = self.env
         by_id = {s['agent_id']: s for s in (states or [])}

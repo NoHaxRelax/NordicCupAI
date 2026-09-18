@@ -21,11 +21,11 @@ sys.path.insert(0, str(ROOT / 'scripts' / 'trapper'))
 
 
 def one(args):
-    seed, trap, seconds, label, params, world = args
+    seed, trap, seconds, label, params, world, scen = args
     os.environ.setdefault('PYGAME_HIDE_SUPPORT_PROMPT', '1')
     os.environ.setdefault('SDL_VIDEODRIVER', 'dummy')
     import run_game
-    r = run_game.run(seed, seconds, trap, record=False, native=False, label=label, verbose=False, params=params, world=world)
+    r = run_game.run(seed, seconds, trap, record=False, native=False, label=label, verbose=False, params=params, world=world, scenarios=scen)
     keep = {k: r[k] for k in ('mode', 'seed', 'survival', 'score', 'alive', 'peak', 'predators', 'predator_deaths',
                                'starvation_deaths', 'predator_penalty', 'held_fraction', 'wall_seconds')}
     if trap:
@@ -62,6 +62,7 @@ if __name__ == '__main__':
     ap.add_argument('--params', default='{}')
     ap.add_argument('--preset', default=None, help='named parameter set (avoids JSON quoting over ssh)')
     ap.add_argument('--world', default='oracle', help="'oracle' (full knowledge) or 'estimator' (observations only)")
+    ap.add_argument('--scenarios', default=None, help='directory for leash-start snapshots')
     a = ap.parse_args()
     params = json.loads(a.params)
     PRESETS = {
@@ -78,9 +79,9 @@ if __name__ == '__main__':
     for seed in range(a.seeds[0], a.seeds[1] + 1):
         for rep in range(a.repeats):
             if a.modes in ('both', 'society'):
-                jobs.append((seed, False, a.seconds, f'{a.label}-r{rep}', params, a.world))
+                jobs.append((seed, False, a.seconds, f'{a.label}-r{rep}', params, a.world, a.scenarios))
             if a.modes in ('both', 'trapper'):
-                jobs.append((seed, True, a.seconds, f'{a.label}-r{rep}', params, a.world))
+                jobs.append((seed, True, a.seconds, f'{a.label}-r{rep}', params, a.world, a.scenarios))
     t0 = time.time()
     with ProcessPoolExecutor(max_workers=a.workers) as ex:
         rows = list(ex.map(one, jobs))

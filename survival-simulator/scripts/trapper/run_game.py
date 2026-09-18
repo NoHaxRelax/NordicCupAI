@@ -25,7 +25,7 @@ from models.trapper.recording import make_recorder, save_recorder      # noqa: E
 OUT = ROOT / 'results' / 'trapper'
 
 
-def run(seed, seconds, trap, record=False, native=False, label='', verbose=False, params=None, society_kwargs=None, world='oracle'):
+def run(seed, seconds, trap, record=False, native=False, label='', verbose=False, params=None, society_kwargs=None, world='oracle', scenarios=None, max_scenarios=6):
     start = time.perf_counter()
     sim = SimulationCore(seed=seed)
     env = sim.env
@@ -68,9 +68,20 @@ def run(seed, seconds, trap, record=False, native=False, label='', verbose=False
     next_sample = 30.0
     peak = state['num_agents']
     held_hist = []
+    seen_events = 0; saved = 0
     while state['num_agents'] and state['sim_time'] < seconds:
         obs = state['observations']
         t0 = state['sim_time']
+        if scenarios and trap and saved < max_scenarios:
+            # snapshot the state the policy is about to act on whenever a leash started last tick
+            new_ev = policy.manager.events[seen_events:]
+            for e in new_ev:
+                if e['kind'] == 'delivery_started' and e.get('leash') and saved < max_scenarios:
+                    from models.trapper.scenario import snapshot
+                    meta = dict(seed=seed, label=label, t=round(t0, 1), pid=e['pid'], guide=e['guide'], key=e['key'], energy=e.get('energy'), gap=e.get('gap'))
+                    snapshot(env, policy, meta, Path(scenarios) / f'{label or "game"}-seed{seed}-t{int(t0)}-pid{e["pid"]}.pkl.gz')
+                    saved += 1
+            seen_events = len(policy.manager.events)
         actions = policy(obs, t0)
         state = sim.step(actions)
         if rec:
@@ -124,6 +135,7 @@ if __name__ == '__main__':
     ap.add_argument('--label', default='')
     ap.add_argument('--params', default='{}', help='JSON overrides for the trap manager')
     ap.add_argument('--world', choices=['oracle', 'estimator'], default='oracle')
+    ap.add_argument('--scenarios', default=None, help='directory: snapshot the game whenever a leash starts (max 6 per game)')
     a = ap.parse_args()
     params = json.loads(a.params)
     rows = []
@@ -131,7 +143,7 @@ if __name__ == '__main__':
         if a.mode in ('society', 'both'):
             rows.append(run(seed, a.seconds, False, a.record, a.native, a.label, a.verbose))
         if a.mode in ('trapper', 'both'):
-            rows.append(run(seed, a.seconds, True, a.record, a.native, a.label, a.verbose, params, world=a.world))
+            rows.append(run(seed, a.seconds, True, a.record, a.native, a.label, a.verbose, params, world=a.world, scenarios=a.scenarios))
     if a.mode == 'both':
         soc = [r for r in rows if r['mode'] == 'society']
         tr = [r for r in rows if r['mode'] != 'society']
