@@ -747,3 +747,32 @@ reasoning lifts hard benchmarks does not transfer: this task's answer is a looku
 judgement, the binaries are already at 0.99, and the residual is the annotators' convention, which
 no amount of deliberation reveals (entries 43, 45). Scoped, as always, to this model and setup: a
 bigger model, or a short reasoning budget with a repair pass for the truncations, is untested.
+
+### 55. Doctor or patient: no exploitable bias, and the speaker tags are already complete (2026-09-18 15:45)
+
+Elias asked whether to carry on hand-tagging speakers so the doctor/patient question could be
+settled. It is already settled, and the tagging needed for it is already there: all 39 reference
+transcripts in `bench/ref` carry `[D]`/`[P]` markers (17 of them human-checked, the rest
+machine-assigned and being corrected), which covers all 195 training positives.
+
+Speaker of the gold span against the speaker of the served span (27B, `units-fewshot`, clause-and):
+
+| | we picked doctor | we picked patient |
+|---|---:|---:|
+| gold is doctor | 125 | 10 |
+| gold is patient | 13 | 47 |
+
+The gold is the doctor's utterance in 135 of 195 (69 %), and the model already reproduces that
+distribution almost exactly (138 doctor, 57 patient); it agrees with the gold's speaker on 172 of
+195 (88 %). The 32 spans we get badly wrong (tIoU < 0.3) split into **21 where we picked the wrong
+utterance from the right speaker** and 11 cross-speaker ones, and those 11 are symmetric: 6 where
+the gold is the doctor and we took the patient, 5 the other way. A "prefer the doctor" tiebreak
+would therefore fix at most 6 and break at most 5, which is the same coin flip as the neighbour
+rules (entry 45) and the two-statement cases (entry 43). Consistent with proposer 5's independent
+finding that question wording does not predict the speaker ("the patient" questions: doctor-gold 33,
+patient-gold 29).
+
+Caveat: 22 of the 39 files' tags are machine-assigned, not human-verified. Tag noise would have to
+be large and one-sided to turn a 6-against-5 split into a usable rule, so the conclusion stands
+without further hand-checking. Recommendation: stop oracling for this purpose; the errors are
+within-speaker sentence choice, which no speaker signal can fix.
