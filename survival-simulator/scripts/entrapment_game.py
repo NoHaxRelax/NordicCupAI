@@ -149,7 +149,8 @@ def main():
                 atom(folder/'summary.json', summary)
             if tick % 500 == 0:
                 print(json.dumps(dict(tick=tick, time=round(now, 1), agents=len(states), predators=len(env.predators),
-                      phase=debug['phase'], bait=policy.bait, guides=policy.metrics['guide_assignments'],
+                      phase=debug['phase'], bait=policy.bait,
+                      active_guides=len(debug['guides']), guide_assignments=policy.metrics['guide_assignments'],
                       near_bait=near, elapsed=round(time.monotonic()-start, 1))), flush=True)
             if terminal: break
             state = core.step(actions)

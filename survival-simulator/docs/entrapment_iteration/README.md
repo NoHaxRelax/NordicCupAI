@@ -85,6 +85,11 @@ alive status are retained in the tick trace.
   was exercised without errors but no guide met its release condition in this
   game, so successful release is not demonstrated by this run.
 
+- Selected default, seed 3, 300 seconds: 17 agents alive, 3 predators, all three
+  continuously near bait for at least 30 seconds, 6 overlapping replacements,
+  zero estimated bait gaps after first arrival. Six cumulative guide assignments,
+  four guide deaths, zero successful guide releases. Replay: http://localhost:9065.
+
 These are short integration games, not whole-game guarantees or matched-policy
 score comparisons. Proximity is a proxy for capture, and bait occupancy is based
 on the policy's estimated localization. Every native tick is recorded. Replay:
@@ -130,7 +135,12 @@ its 17/20 control. Bounded waiting regressed to 63/100 and is not enabled.
 The waiting variant passed 72/100 on fresh maps (batch seed 19092026). The
 selected default is being evaluated on the same fresh cases. Central-site
 ranking regressed to 5/12 and is not enabled. Native-game coordination checks
-and a near-distance sight guard remain in progress. Smaller stopping distances
+and a near-distance sight guard remain in progress.
+
+The native console formerly labeled cumulative guide assignments as `guides`.
+It now reports `active_guides` and `guide_assignments` separately. A speculative
+reassociation experiment motivated by misreading that label was cancelled and
+its core change removed; it supplies no evidence of a duplicate-guide bug. Smaller stopping distances
 and front-lane restrictions regressed and should not be promoted from intuition.
 Do not read 96.5% map-site availability as a delivery success rate.
 
