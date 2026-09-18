@@ -26,9 +26,9 @@ ZOOM_FOR_SCALE = {.25: 0, .5: 1, 1.: 2}
 class CondorSettings:
     heading_step: int = 15
     proposer_threshold: float = .2
-    max_candidates: int = 40
+    max_candidates: int = 24
     duplicate_fraction: float = .33         # same object only if fitted centres are this close, in fuselage lengths
-    heading_sweep: int = 10                  # the part model resolves heading itself over 360 degrees
+    heading_sweep: int = 15                  # the part model resolves heading itself over 360 degrees
     heading_refine: tuple = (-5., -2.5, 2.5, 5.)
     scales: tuple = (.9, 1., 1.1)
     stretches: tuple = (.87, 1., 1.15)      # one-axis scale, covers foreshortening
@@ -47,7 +47,7 @@ class CondorSettings:
     pixel_threshold: float = .35
     score_threshold: float = 0.
     nms_iou: float = .35
-    sift: bool = True
+    sift: bool = False                       # comparison branch: 1/42 on training tiles, and the slowest stage
 
     def __post_init__(self):
         if not all(0 <= v <= 1 for v in (self.proposer_threshold, self.min_pattern, self.min_spot, self.min_proposer, self.min_visible, self.pixel_threshold, self.score_threshold, self.nms_iou)):

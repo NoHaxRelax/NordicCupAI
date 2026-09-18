@@ -16,6 +16,7 @@ import cv2
 import numpy as np
 
 from .common import iou, sha
+from .exclusions import Exclusions
 from .registry import make_expert, families as class_families, CLASSES, load_gates
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -87,7 +88,8 @@ def main():
     families = class_families(a.class_name)
     a.output.mkdir(parents=True, exist_ok=False)
     (a.output / 'overlays').mkdir()
-    positives = [r for r in manifest['records'] if r['split'] == a.split and r['zoom'] in a.zooms
+    exclusions = Exclusions()
+    positives = [r for r in manifest['records'] if r['split'] == a.split and r['zoom'] in a.zooms and not exclusions.tile_has_excluded(r)
                  and any(x['class_name'] == a.class_name and (not a.tracks or x['track_id'] in a.tracks) for x in r['annotations'])]
     if a.limit:
         positives = positives[:a.limit]
@@ -149,7 +151,8 @@ def main():
                   bank_sha256=sha(a.bank / 'manifest.json'), grid_manifest_sha256=sha(a.grid / 'manifest.json'),
                   settings={k: str(v) for k, v in vars(getattr(expert, 'settings', None) or getattr(expert, 'spec')).items()}, positives=len(positives), seconds=time.time() - started,
                   summary=summary, crops=rows, empty=empty_rows,
-                  note='Targets are participant/organiser boxes; unmatched proposals on positive crops are not false alarms because labels are partial.')
+                  excluded_rules=exclusions.rules,
+                  note='Targets are participant/organiser boxes; unmatched proposals on positive crops are not false alarms because labels are partial. Tiles with reviewed-excluded labels are skipped.')
     (a.output / 'report.json').write_text(json.dumps(report, indent=1, default=lambda v: float(v) if isinstance(v, (np.floating, np.integer)) else str(v)))
     print(json.dumps(dict(positives=len(positives), seconds=round(report['seconds'], 1), summary=summary), indent=1))
 

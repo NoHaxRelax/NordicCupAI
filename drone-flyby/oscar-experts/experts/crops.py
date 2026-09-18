@@ -16,6 +16,7 @@ import cv2
 import numpy as np
 
 from .common import iou, sha
+from .exclusions import Exclusions
 
 
 def crop(image, box, size=96, context=.25):
@@ -41,6 +42,7 @@ def main():
     p.add_argument('--size', type=int, default=96)
     a = p.parse_args()
     manifest = json.loads((a.grid / 'manifest.json').read_text())
+    exclusions = Exclusions()
     records = {r['id']: r for r in manifest['records']}
     a.output.mkdir(parents=True, exist_ok=False)
     images, labels, meta = [], [], []
@@ -50,7 +52,7 @@ def main():
         expert_class = report['class_name']
         for row in report['crops'] + [dict(id=e['id'], zoom=e['zoom'], candidates=e.get('candidates', []), empty=True) for e in report.get('empty', [])]:
             rec = records.get(row['id'])
-            if rec is None or rec['split'] != 'train':
+            if rec is None or rec['split'] != 'train' or exclusions.tile_has_excluded(rec):
                 continue
             image = None
             all_labels = [(x['class_name'], x['bbox_xyxy']) for x in rec['annotations']] if rec['kind'] == 'positive' else []

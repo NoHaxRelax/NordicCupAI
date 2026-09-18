@@ -26,12 +26,13 @@ class ClassSpec:
     heading_step: int = 15
     proposer_threshold: float = .2
     proposer_downscale: float = 1.     # full resolution: half resolution lost 40-50 px objects among ground peaks
+    proposer_single_template: bool = True  # sweep one template per zoom; every template still competes in the fine pose
     proposer_blur: float = .8
     max_candidates: int = 24
     max_colour_candidates: int = 16
     size_window: tuple = (.6, 1.6)         # accepted long side relative to the sprite, native px
     fine_offsets: tuple = (-8., 0., 8.)
-    scales: tuple = (.94, 1., 1.06)
+    scales: tuple = (1.,)                  # altitude fixes the object's size; the gate sees any residual mismatch
     min_visible: float = .35
     colour_blob: dict | None = None        # dict(chroma_threshold, min_area_fraction) to enable the colour proposer
     signatures: tuple = ()                 # callables (ctx, candidate) -> dict of scores
@@ -83,6 +84,11 @@ class GenericExpert:
     def templates_for(self, zoom):
         matching = [t for t in self.templates if t.zoom == zoom]
         return matching or self.templates
+
+    def proposer_templates_for(self, zoom):
+        """One template per zoom for the heading sweep (the largest mask); the fine pose still tries all."""
+        matching = self.templates_for(zoom)
+        return [max(matching, key=lambda t: t.mask.sum())] if self.spec.proposer_single_template else matching
 
     def posed(self, template, angle, scale):
         key = (template.id, round(angle, 1), round(scale, 4))
@@ -168,7 +174,8 @@ class GenericExpert:
                         best = (peak, x1, y1, visible, template, angle, scale, tmask)
         return best
 
-    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False):
+    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False, proposals=None):
+        """proposals: optional precomputed correlation proposals (SharedProposer), skipping this expert's own sweep."""
         if image is None or image.ndim != 3 or image.shape[2] != 3 or image.dtype != np.uint8:
             raise ValueError('Expected uint8 BGR image')
         s = float(pixels_per_source_pixel)
@@ -185,7 +192,8 @@ class GenericExpert:
         # Correlation peaks and colour blobs have different score scales: cap each source on its own so
         # colour proposals are never crowded out by a wall of weak correlation peaks.
         radius = spec.dedup_fraction * self.long_side * s
-        proposals = self.proposer.merge([dict(p, source='correlation') for p in self.proposer.propose(image, s, templates)], radius=radius)[:spec.max_candidates]
+        raw = proposals if proposals is not None else [dict(p, source='correlation') for p in self.proposer.propose(image, s, self.proposer_templates_for(zoom))]
+        proposals = self.proposer.merge(raw, radius=radius)[:spec.max_candidates]
         if spec.colour_blob:
             colour = self.proposer.merge(sorted(self.colour_proposals(lab, s, zoom), key=lambda p: -p['proposer_score']), radius=radius)[:spec.max_colour_candidates]
             proposals = self.proposer.merge(proposals + colour, radius=radius)
@@ -196,7 +204,7 @@ class GenericExpert:
             half = .5 * self.long_side * s
             partial = cx < half or cy < half or cx > W - half or cy > H - half
             candidate = dict(cx=cx, cy=cy, proposer_score=prop['proposer_score'], proposer_source=prop['source'], proposer_heading=prop['heading'], partial=bool(partial))
-            headings = sorted({prop['heading'] % 360., (prop['heading'] + 180.) % 360.} | {h % 360. for h in prop.get('alternative_headings', [])[:2]})
+            headings = sorted({prop['heading'] % 360., (prop['heading'] + 180.) % 360.} | {h % 360. for h in prop.get('alternative_headings', [])[:1]})
             best = None
             for template in templates:
                 hit = self.fine_pose(padded, (H, W), template, cx, cy, s, [h - self.angles[template.id] for h in headings] + [h - self.angles[template.id] + 180. for h in headings], partial)

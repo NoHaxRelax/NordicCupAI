@@ -23,13 +23,14 @@ def main():
     p.add_argument('--size', type=int, default=96)
     p.add_argument('--negatives-per-image', type=int, default=2)
     p.add_argument('--seed', type=int, default=1731)
+    p.add_argument('--allow-dev-backgrounds', action='store_true', help='for evaluate-only sets whose backgrounds are dev tiles')
     a = p.parse_args()
     rng = np.random.default_rng(a.seed)
     m = json.loads((a.synthetic / 'manifest.json').read_text())
     a.output.mkdir(parents=True, exist_ok=False)
     images, labels, meta = [], [], []
     for rec in m['records']:
-        if rec.get('background_split', 'train') != 'train':
+        if rec.get('background_split', 'train') != 'train' and not a.allow_dev_backgrounds:
             continue
         image = cv2.imread(str(a.synthetic / rec['file']))
         if image is None:
@@ -54,7 +55,7 @@ def main():
                     break
     np.savez_compressed(a.output / 'crops.npz', images=np.stack(images), labels=np.array(labels))
     doc = dict(format='expert-crops-v1', size=a.size, classes=sorted(set(labels)), count=len(labels), by_label=dict(Counter(labels)),
-               synthetic_manifest_sha256=sha(a.synthetic / 'manifest.json'), crops_sha256=sha(a.output / 'crops.npz'), records=meta, policy='training-split synthetic only')
+               synthetic_manifest_sha256=sha(a.synthetic / 'manifest.json'), crops_sha256=sha(a.output / 'crops.npz'), records=meta, policy='evaluate-only (dev backgrounds)' if a.allow_dev_backgrounds else 'training-split synthetic only')
     (a.output / 'manifest.json').write_text(json.dumps(doc, indent=1))
     print(json.dumps(dict(count=len(labels), by_label=doc['by_label'])))
 

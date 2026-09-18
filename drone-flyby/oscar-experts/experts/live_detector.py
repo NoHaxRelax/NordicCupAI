@@ -10,11 +10,16 @@ extents, edge boxes kept. Configure through environment variables:
   DRONE_EXPERT_WORKERS   thread pool size for the experts (default 8)
   DRONE_EXPERT_MIN_CONF  drop rows below this confidence before handing them to the tracker (default 0)
   DRONE_EXPERT_GATES     fitted per-class logistic gates (fit_gates.py); confidence = gate probability
+  DRONE_EXPERT_NATIVE    1 (default): upsample the delivered view to native pixel scale before the experts
+  DRONE_EXPERT_SIFT      0 (default): drop the SIFT comparison branch in live mode (slow, never fused)
+  DRONE_EXPERT_GPU       cuda device for the shared FFT proposer (one scene transform per view for all classes); unset = CPU proposers
 """
 import json
 import os
 import sys
 import time
+
+import cv2
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -26,7 +31,7 @@ SCALE_FOR_LEVEL = {0: .25, 1: .5, 2: 1.}
 class ExpertDetector:
     name = 'experts'
 
-    def __init__(self, project, bank=None, classes=None, verifier=None, device='cpu', workers=8, min_confidence=0., log=None, gates=None):
+    def __init__(self, project, bank=None, classes=None, verifier=None, device='cpu', workers=8, min_confidence=0., log=None, gates=None, native=True, gpu=None):
         project = Path(project)
         if str(project) not in sys.path:
             sys.path.insert(0, str(project))
@@ -44,15 +49,24 @@ class ExpertDetector:
         if verifier:
             from drone.experts.verifier import Verifier
             self.verifier = Verifier(verifier, device)
+        if os.environ.get('DRONE_EXPERT_SIFT', '0') != '1':
+            for expert, _ in self.experts.values():
+                if hasattr(expert, 'sift'):
+                    expert.sift = None
+        self.shared = None
+        if gpu:
+            from drone.experts.gpu_proposer import SharedProposer
+            self.shared = SharedProposer({n: e for n, (e, _) in self.experts.items()}, device=gpu)
         self.pool = ThreadPoolExecutor(max_workers=int(workers))
         self.min_confidence = float(min_confidence)
+        self.native = bool(native)
         self.log = Path(log) if log else None
         self(np.zeros((540, 960, 3), np.uint8), {'view': {'resolution_level': 1}})  # warm-up
 
-    def _run(self, name, image, scale, zoom):
+    def _run(self, name, image, scale, zoom, proposals=None):
         expert, family = self.experts[name]
         try:
-            out = expert.detect(image, scale, zoom, explain=False)
+            out = expert.detect(image, scale, zoom, explain=False, proposals=proposals) if proposals is not None else expert.detect(image, scale, zoom, explain=False)
             rows = out[family] if isinstance(out, dict) else out[0]
             return [dict(r, expert=name) for r in rows]
         except Exception as error:
@@ -63,8 +77,16 @@ class ExpertDetector:
         started = time.perf_counter()
         level = int((request.get('view') or {}).get('resolution_level', 1))
         scale = SCALE_FOR_LEVEL.get(level, .5)
-        futures = [self.pool.submit(self._run, name, image, scale, level) for name in self.experts]
+        # The experts and their gates were fitted on tiles at native pixel scale with zoom-specific blur.
+        # Upsample the delivered view to that scale (x2 at L1, x4 at L0) so every feature transfers as fitted.
+        factor = 1. / scale if self.native else 1.
+        work = image if factor == 1. else cv2.resize(image, None, fx=factor, fy=factor, interpolation=cv2.INTER_LINEAR)
+        shared = self.shared.propose_all(work, 1. if self.native else scale, level) if self.shared is not None else {}
+        futures = [self.pool.submit(self._run, name, work, 1. if self.native else scale, level, shared.get(name)) for name in self.experts]
         rows = [r for f in futures for r in f.result()]
+        if factor != 1.:
+            for r in rows:
+                r['bbox'] = [float(v) / factor for v in r['bbox']]
         if self.verifier is not None and rows:
             rows = self.verifier.annotate(image, rows)
             for r in rows:
@@ -85,4 +107,4 @@ def factory():
     return ExpertDetector(env.get('DRONE_PROJECT', '/workspace/experts/project'), env.get('DRONE_EXPERT_BANK'),
                           [c for c in env.get('DRONE_EXPERT_CLASSES', '').split(',') if c] or None,
                           env.get('DRONE_EXPERT_VERIFIER'), env.get('DRONE_EXPERT_DEVICE', 'cpu'),
-                          int(env.get('DRONE_EXPERT_WORKERS', '8')), float(env.get('DRONE_EXPERT_MIN_CONF', '0')), env.get('DRONE_EXPERT_LOG'), env.get('DRONE_EXPERT_GATES'))
+                          int(env.get('DRONE_EXPERT_WORKERS', '8')), float(env.get('DRONE_EXPERT_MIN_CONF', '0')), env.get('DRONE_EXPERT_LOG'), env.get('DRONE_EXPERT_GATES'), env.get('DRONE_EXPERT_NATIVE', '1') == '1', env.get('DRONE_EXPERT_GPU'))

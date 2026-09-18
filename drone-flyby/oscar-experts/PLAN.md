@@ -27,6 +27,9 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
   candidates). Currently OpenCV matchTemplate carries the load (already C++); a full 16-class wave takes
   ~15 min eight-wide, so not yet.
 
+- Local tests (Oscar 03:00): run a rotating stratified SAMPLE of tiles, not everything, and change the sample
+  each iteration so nothing tunes to fixed frames. `evaluate_all.py --sample N --seed K` + proposal cache.
+
 ## Stages, in Oscar's order
 | # | Stage | Status | Where |
 |---|---|---|---|
@@ -34,10 +37,10 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 | 1 | Experts for all 16 classes, tested on training tiles | run `train-2231` (00:31): 11 classes done; launchers re-run with the new blob expert; tank/jet/condor/large_launcher finishing. `finish_stage1.sh` chains summary -> gates -> verifier | `/workspace/experts/runs/train-2213` |
 | 1b | Iterate on weak classes | done for launchers (blob expert: 6/6 at L1/L2 vs 2/69 before). Key finding 01:05: per-class logistic gate over recorded features (`fit_gates.py`) gives out-of-fold recall 98-100% while keeping <1% of background for jammer, small plane, small tower, spacecraft, large tower (helicopter 14%) | `fit_gates.py`, `gates-v1.json` |
 | 2 | Verifier: harvest crops from expert runs + synthetic composites, fine-tune ResNet-18, presence+class; evaluate on the evaluate-only synthetic-validation set | chained after stage 1 (`run_verifier.sh`) | `crops.py`, `train_verifier.py` |
-| 3 | Boxes: expert pose + organizer offset; tall objects via tracker placement | mostly built into experts | `live_detector.py` |
-| 4 | Camera strategies: local replays on the validation scene with `run_local_eval.py` (l1 sweep vs l2_top vs revisit), then real validation attempts | pending | pod `/workspace/live/drone-flyby`, `validate_endpoint.sh` |
+| 3 | Boxes: expert pose + organizer offset rotated with the pose; tall objects via tracker placement | measured 02:20: median IoU .81-.94 for 11 classes, ta-ta .64 (see RESULTS.md) | `live_detector.py` |
+| 4 | Camera strategies: local replays on the validation scene with `run_local_eval.py` (l1 sweep vs l2_top vs revisit), then real validation attempts | `stage4_replays.sh` staged; runs after gates v2 (+verifier) exist | pod `/workspace/live/drone-flyby`, `validate_endpoint.sh` |
 | 5 | Use API-verified validation labels and Higgsfield synthetic data to tailor experts/verifier; watch overfitting | pending | |
-| 6 | Push branch, write handoff, update memory | at milestones | |
+| 6 | Push branch, write handoff, update memory | milestone 1 pushed 01:45 (`508ae5f` on `drone/oscar-experts`) | `push_branch.sh` |
 
 ## Pod and paths
 - Pod 1 `ypuawkayl3px8t` A100, `root@157.157.221.29:17494`, helper `pod.sh`. Code+data `/workspace/experts/project`,
