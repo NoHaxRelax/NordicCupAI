@@ -19,6 +19,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 CASE = HERE.parent.parent
 sys.path.insert(0, str(HERE)); sys.path.insert(0, str(CASE))
+# bench.py reads --asr from sys.argv and sets ASR_MODEL before importing model.py,
+# so the edge offsets match the transcripts here as well.
 from bench import load_words, parse_json, TRANSCRIPTS  # noqa: E402
 from model import make_units  # noqa: E402
 from prompts import VARIANTS  # noqa: E402
@@ -60,6 +62,9 @@ def dump(a):
 
 
 def score(a):
+    import model
+    if model.ASR_MODEL != a.asr:
+        raise SystemExit(f'model.ASR_MODEL={model.ASR_MODEL} but --asr {a.asr}: the edge offsets would be wrong')
     v = VARIANTS[a.variant]
     stats = Statistics(); stats.nulls_on_no = Statistics()
     records = []

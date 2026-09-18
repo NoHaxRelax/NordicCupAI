@@ -319,6 +319,8 @@ Turbo's end fingerprint holds on the cluster run too: 49 percent of annotated en
 
 ### 30. Few-shot examples of the annotators' spans do not help qwen3:4b
 
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
+
 Elias's idea (2026-09-17 evening): show the answering model, for other conversations, the exact transcript words inside the annotated span, so it can copy the annotators' granularity; leave the tested conversation out. Implemented as `units-fewshot` and `words-fewshot` in `bench/llm/prompts.py` (12 nearest positives by question-word overlap plus 2 negatives, never from the conversation under test; the block sits between the transcript and the question). qwen3:4b on the turbo transcripts, 390 questions, nulls-on-no policy:
 
 | variant | accuracy | mean tIoU | score | exact | too little | too much | shifted | wrong place | missed |
@@ -357,6 +359,8 @@ Reading the ceiling with the caveat that other teams may have probed the validat
 
 ### 32. One request per conversation ("joint" prompting) helps the 4B on every axis
 
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
+
 Elias noticed the model handing one utterance to several questions of the same conversation (sample 4: "Your chest and heart both sound normal" for four questions, three scoring zero). Measured on the 4B training run: identical spans for two positives of the same conversation in 4.4 percent of the 430 pairs against 2.1 percent in the gold, 11 pairs where the gold spans are apart, 16 positives involved with mean tIoU 0.34. Remedy: `units-joint` in `bench/llm/prompts.py` sends all ten questions in one request and asks for a ten-entry JSON (`bench.py run_conversation_joint`); the system prompt says to reuse an utterance only when it is the most specific evidence for both questions. qwen3:4b, turbo transcripts, nulls-on-no:
 
 | variant | accuracy | tIoU | score | yes-rate | identical-span pairs (gold apart) | prompt tokens, whole run |
@@ -367,6 +371,8 @@ Elias noticed the model handing one utterance to several questions of the same c
 Gain 0.010 (noise floor 0.006), the yes-rate lands on the balanced 0.50, harmful reuse drops from 11 pairs to 4, and the transcript is sent once instead of ten times: eight times fewer prompt tokens, which is what makes a 27B affordable to serve. Latency per conversation on the laptop is unchanged (one long answer instead of ten short ones in parallel). `units-joint-demo` (two whole worked conversations as prior chat turns, Elias's point that examples need the surrounding conversation to teach selection) is running next; both go to the 27B on the cluster.
 
 ### 33. Whole worked conversations as prior turns help even the 4B: 0.700 to 0.724
+
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
 
 `units-joint-demo`: the joint prompt preceded by two complete demonstrations chosen by question overlap (transcript with unit ids, ten questions, the annotators' answers as unit ids derived from the gold spans, as a user/assistant exchange), never the conversation under test. Elias's argument: an example without its surrounding conversation teaches granularity but not selection. qwen3:4b, turbo transcripts, nulls-on-no:
 
@@ -379,6 +385,8 @@ Gain 0.010 (noise floor 0.006), the yes-rate lands on the balanced 0.50, harmful
 The demonstrations lift accuracy to 0.990 (two missed positives in 195, no false positives on hard negatives) and tIoU by another 0.015. The remaining span loss is now mostly "shifted" (60): the model includes neighbours, as the annotators do, but often the wrong neighbour. Wall time on the laptop 9 s per conversation for the 4B (one 380-token answer). Next: the same three variants on the 27B (cluster follow-up job, then RunPod).
 
 ### 34. Cluster LLM bench: Qwen3.8-27B with few-shot examples reaches 0.780 on the training set
+
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
 
 Jobs 29430781 and 29431586 (H100, vLLM 0.29, 2026-09-17 20:05-22:23). 390 training questions, nulls-on-no policy, ten parallel requests per conversation. Best rows:
 
@@ -401,6 +409,8 @@ Decision so far: serve Qwen3.8-27B (dense, BF16 on one 80 GB card or FP8 on less
 
 ### 35. Joint prompting on the 27B: no gain alone, +0.014 with worked conversations, four to eight times fewer tokens
 
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
+
 Job 29433720 (H100, Qwen3.8-27B, turbo transcripts, 1500-token budget), nulls-on-no:
 
 | variant | accuracy | tIoU | score | prompt tokens, 390 questions | exact | shifted | wrong place | missed |
@@ -414,6 +424,8 @@ Unlike the 4B, the 27B gains nothing from seeing the ten questions together (its
 
 ### 36. Claude Haiku 4.5 and Sonnet 5 on the same prompt: capability beyond the 27B does not move the spans
 
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
+
 Elias's probe (not part of the competition pipeline, run through the Claude Code Agent tool with `bench/llm/dump_prompts.py`, the `units-joint-demo` prompt on turbo transcripts, scored identically):
 
 | model | accuracy | tIoU | score | missed positives | false yes | exact | shifted | wrong place |
@@ -426,6 +438,8 @@ Elias's probe (not part of the competition pipeline, run through the Claude Code
 Two readings. (1) On the spans, Sonnet and the 27B are the same (0.62-0.63), and the questions they get wrong are the same questions: of the roughly 70 positives each scores below 0.5, 57 are shared between Sonnet and the 27B and 52 by all three models. Their median gold length is 2.67 s, ordinary; these are cases where the unit representation or the annotation convention, not the model, decides the span. (2) The Claude models lose on the binaries: they answer no on 11-12 positives and yes on 9 hard negatives where the Qwen models make 2 and 0 errors; the prompt's "every detail must match" reads stricter to them. So the size-versus-score curve flattens at the 27B for this design, and the remaining tIoU is not bought with a bigger selector. What would buy some of it: the best of the four models per question would score a mean tIoU of 0.719 against 0.640 for the best single model, so the models disagree on a useful fraction of the hard cases; a consensus or self-consistency step over several prompts is the lever to test next, alongside sub-unit trimming.
 
 ### 37. Opus 5 on the same prompt, and a contamination caveat on the Claude probe
+
+*Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
 
 Claude Opus 5 through the Agent tool, `units-joint-demo`, turbo transcripts: accuracy 1.000, tIoU 0.655, score 0.793 on all 390 questions. Caveat found by one of the Opus agents itself: each agent answered five prompts in one context, and the worked examples inside prompt B carry the gold answers of conversation A when A sits in the same batch; 20 of the 39 held-out conversations were exposed that way (`bench/results/probe/leaked.json`). A served model never sees that. Scores on the 19 uncontaminated conversations (190 questions), which are fair for every model including the Qwen runs:
 
@@ -442,3 +456,42 @@ Opus beats the 27B by 0.011 on the clean subset, about two noise floors, with pe
 ### 38. Corrections from the committee review (2026-09-18 00:40): two measurement errors in entries 15 and 30-37
 
 Five independent reviews (`research/committee-2026-09-17/`, synthesis `research/08-committee-review-2026-09-17.md`) established: (1) **Entry 15 is wrong.** The live scorer credits a span returned next to a "no" answer: run F's dumped answers (`request_dump/answers.jsonl`) scored against the hand binaries and the recovered gold spans give 0.67591704 under spans-on-every-question, matching the portal's 0.6759170394 exactly, and 0.65902734 under nulls-on-no. Verified independently. Keep `SPAN_ON_NO=1`; quote bench results under the spans-on-no policy; a missed positive with a good span keeps its span credit. (2) **Every bench run on turbo transcripts used large-v3's edge offsets** (`model.py` keys the offsets on `ASR_MODEL`, which no bench or job script sets; `bench.py --asr` only picks the transcript files). Re-scoring the stored outputs with turbo's rule adds 0.011 to 0.023 to every turbo row: Qwen3.8-27B few-shot 0.793 (nulls) / 0.797 (spans-on-no), joint-demo 0.789, Opus 0.807, and the 4B few-shot result of entry 30 becomes +0.010. Serving was never affected (the supervisor sets `ASR_MODEL`). (3) The 0.006 figure is same-code reproducibility, not a standard error; clustered standard errors are 0.014 to 0.021 for a training score, 0.008 to 0.011 paired, 0.022 to 0.030 for one validation run. Entries 30 to 37 are to be re-read with those bars; the coarse rankings hold (27B over 4B, dense 27B over the big MoEs, turbo over other transcripts, words below units), the fine ones do not.
+
+### 39. Corrected ranking: every stored run re-scored with its own offsets under the policy the portal uses (2026-09-18 09:40)
+
+`bench/llm/replay.py` re-scores a stored result file from its raw model answers, with the edge offsets fitted for the transcripts' ASR model and under both span policies, without inference. `bench/llm/bench.py` now sets `ASR_MODEL` from `--asr` before importing `model.py` and refuses a contradicting environment (`dump_prompts.py` inherits this), so the bug of entry 38 cannot recur. Proof that the replay is the same scorer: every large-v3 run reproduces its stored score to four decimals, and replaying a turbo run with the large-v3 pair reproduces its stored score exactly (Qwen3.8-27B few-shot 0.7849, Opus 0.7927). The stored `summary` blocks of the turbo files are left as written; read them through the replay (`python bench/llm/replay.py`, table on stdout, `--md` for markdown). Not every local run was affected: the laptop `units` runs had `ASR_MODEL` exported and replay exactly, while the joint, joint-demo and few-shot runs of entries 30, 32 and 33 were scored with the large-v3 pair too.
+
+Training set, 390 questions, turbo transcripts unless stated, offsets start -0.20 s / end -0.02 s, score = 0.4 accuracy + 0.6 mean tIoU. "Spans on no" is what the portal credits (entry 38); "stored" is the number the file's summary and entries 30-37 quoted.
+
+| model | variant | transcripts | accuracy | tIoU | score (spans on no) | score (nulls on no) | stored |
+|---|---|---|---:|---:|---:|---:|---:|
+| Claude Opus 5 (probe, entry 37 caveat) | units-joint-demo | large-v3-turbo | 1.000 | 0.677 | **0.8065** | 0.8065 | 0.793 |
+| Qwen3.8-27B | units-fewshot | large-v3-turbo | 0.990 | 0.669 | **0.7974** | 0.7927 | 0.780 |
+| Qwen3.6-27B | units-fewshot | large-v3-turbo | 0.987 | 0.670 | **0.7970** | 0.7854 | 0.774 |
+| Qwen3.8-27B | units-joint-demo | large-v3-turbo | 0.995 | 0.659 | **0.7936** | 0.7888 | 0.775 |
+| Qwen3.6-35B-A3B-FP8 | units-fewshot | large-v3-turbo | 0.977 | 0.665 | **0.7897** | 0.7766 | 0.764 |
+| Qwen3.8-27B | units-joint | large-v3-turbo | 0.990 | 0.648 | **0.7849** | 0.7753 | 0.761 |
+| Qwen3.6-27B | units | large-v3-turbo | 0.985 | 0.649 | **0.7831** | 0.7754 | 0.765 |
+| Qwen3.8-27B | units | large-v3-turbo | 0.987 | 0.647 | **0.7828** | 0.7732 | 0.762 |
+| Qwen3.6-27B | units-joint-demo | large-v3-turbo | 0.990 | 0.642 | **0.7814** | 0.7795 | 0.765 |
+| Qwen3.8-27B | units-claim | large-v3 | 0.985 | 0.631 | **0.7723** | 0.7648 | exact |
+| gpt-oss-20b | units | large-v3-turbo | 0.982 | 0.623 | **0.7667** | 0.7581 | 0.746 |
+| gpt-oss-120b | units | large-v3-turbo | 0.982 | 0.619 | **0.7643** | 0.7588 | 0.746 |
+| Claude Sonnet 5 (probe) | units-joint-demo | large-v3-turbo | 0.946 | 0.641 | **0.7631** | 0.7631 | 0.751 |
+| gpt-oss-120b | units-fewshot | large-v3-turbo | 0.977 | 0.616 | **0.7602** | 0.7572 | 0.744 |
+| Claude Haiku 4.5 (probe) | units-joint-demo | large-v3-turbo | 0.949 | 0.623 | **0.7531** | 0.7531 | 0.739 |
+| gpt-oss-20b | units-fewshot | large-v3-turbo | 0.979 | 0.599 | **0.7511** | 0.7482 | 0.736 |
+| qwen3:4b (laptop, served) | units-joint-demo | large-v3-turbo | 0.990 | 0.566 | **0.7356** | 0.7356 | 0.724 |
+| qwen3:4b (laptop, served) | units-joint | large-v3-turbo | 0.977 | 0.559 | **0.7263** | 0.7212 | 0.710 |
+| qwen3:4b (laptop, served) | units-fewshot | large-v3-turbo | 0.959 | 0.554 | **0.7159** | 0.7096 | 0.699 |
+| qwen3:4b (laptop, served) | units | large-v3-turbo | 0.964 | 0.535 | **0.7064** | 0.7002 | 0.700 |
+
+Readings, against the error bars of entry 38 (single score ±0.014-0.021, paired ±0.008-0.011).
+
+1. The coarse ranking of entries 34-37 survives; every turbo number moves up by 0.010 to 0.023, and the live-scorer policy adds another 0.003 to 0.012 on top for the models that answer no to positives they nonetheless locate.
+2. Under the portal's policy Qwen3.6-27B few-shot ties Qwen3.8-27B few-shot (0.797 both). The 3.6 loses 0.012 more under nulls-on-no because it says no to more positives that it locates correctly. The choice between them is a coin flip on the score; the 3.8 stays because it misses fewer positives.
+3. Few-shot against joint-demo on the 27B: 0.797 against 0.794, inside the paired error. Few-shot stays the serving choice on latency and blast radius (committee report 02), not on score.
+4. On the 4B the picture of entries 30, 32 and 33 gets sharper: few-shot is +0.010 (entry 30's "does not help" was the offset bug), joint +0.020, joint-demo +0.029.
+5. The MoE models trail as before: the 35B-A3B few-shot is 0.008 behind the 27B (one paired error), gpt-oss-120b and 20b are 0.03 behind. Few-shot examples hurt both gpt-oss models (-0.004 and -0.016), the only models where they do.
+6. The Claude probe (contaminated batches, entry 37): Opus 0.807, Sonnet 0.763, Haiku 0.753. Opus is +0.009 over the 27B few-shot on all 390 questions, one paired error.
+7. `bench/results/llm/replay.summary.json` is not kept; rerun the replay when new result files arrive (it takes about a minute for the whole directory, the many-shot demos dominate).

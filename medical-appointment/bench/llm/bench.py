@@ -74,6 +74,11 @@ Caveats:
     bench switches to object mode once and says so in the report.
   - A request that fails (transport, non-2xx, unparsable JSON) is recorded as
     unanswered (counted wrong, span missing), unlike model.py which guesses yes.
+  - The edge offsets come from model.py, keyed by ASR_MODEL at import time. The bench
+    sets ASR_MODEL from --asr before importing model.py and refuses a contradicting
+    environment, so the offsets always match the transcripts. Stored runs made before
+    2026-09-18 on turbo transcripts were scored with large-v3's pair; bench/llm/replay.py
+    re-scores any stored run from its raw answers with the right offsets.
 """
 from __future__ import annotations
 
@@ -98,6 +103,29 @@ CASE = HERE.parent.parent                         # medical-appointment
 for p in (str(CASE), str(HERE)):
     if p not in sys.path:
         sys.path.insert(0, p)
+
+
+
+def _asr_from_argv(argv: List[str]) -> Optional[str]:
+    """The --asr value, read before model.py is imported: model.py keys its
+    fitted edge offsets on the ASR_MODEL variable at import time, so a bench run
+    on turbo transcripts without ASR_MODEL=large-v3-turbo in the environment
+    would score with large-v3's offsets (this happened to every cluster run on
+    2026-09-17, findings log entry 38)."""
+    for i, s in enumerate(argv):
+        if s == '--asr' and i + 1 < len(argv):
+            return argv[i + 1]
+        if s.startswith('--asr='):
+            return s.split('=', 1)[1]
+    return None
+
+
+_ASR_ARG = _asr_from_argv(sys.argv[1:])
+if _ASR_ARG:
+    if os.environ.get('ASR_MODEL', _ASR_ARG) != _ASR_ARG:
+        raise SystemExit(f'ASR_MODEL={os.environ["ASR_MODEL"]} in the environment contradicts '
+                         f'--asr {_ASR_ARG}: unset one of them')
+    os.environ['ASR_MODEL'] = _ASR_ARG
 
 import model                                      # noqa: E402  serving code
 from model import Word, make_units                # noqa: E402
@@ -478,6 +506,11 @@ def main() -> int:
         a.no_think = 'ollama' if ':11434' in a.url else 'vllm'
         no_think_note = ' (auto, from --url)'
 
+    if model.ASR_MODEL != a.asr:                  # cannot happen through the command line; guards imports
+        raise SystemExit(f'model.ASR_MODEL={model.ASR_MODEL} but --asr {a.asr}: the edge offsets would be wrong')
+    if a.asr not in model._FITTED and not ({'START_OFFSET', 'END_OFFSET'} <= os.environ.keys()):
+        print(f'note: no fitted offsets for {a.asr}; model.py falls back to the large-v3 pair '
+              f'(start {model.START_OFFSET:+.2f}, end {model.END_OFFSET:+.2f})', file=sys.stderr)
     variant = VARIANTS[a.variant]
     conversations = group_questions_by_conversation()
     if a.limit:
