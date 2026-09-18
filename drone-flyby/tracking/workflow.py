@@ -198,6 +198,7 @@ class DroneTrackingWorkflow:
         self.last_request_id = None
         self.last_response = None
         self.diagnostics = {}
+        self.frame_views = {}  # frame_index -> (motion tick, ViewGeometry), for late detections
 
     def process(self, request, detections, *, image=None, tick=None, detector_ran=True, focus_box=None):
         import copy
@@ -261,6 +262,9 @@ class DroneTrackingWorkflow:
             response = self.tracker.response(request, tick=motion,
                 requested_view=self.camera.next_view(request, focus_box=focus_box))
             events = self.tracker.events
+        self.frame_views[frame] = (motion, view)
+        for old_frame in [f for f in self.frame_views if f < frame-60]:
+            del self.frame_views[old_frame]
         self.motion_tick = motion; self.last_frame = frame; self.last_request_id = request['request_id']
         self.previous = (image.copy(), view) if image is not None else None
         self.last_response = copy.deepcopy(response)
@@ -269,6 +273,20 @@ class DroneTrackingWorkflow:
                             'camera_feedback': request.get('camera_command_feedback'),
                             'tracks': self.tracker.predictions(motion) if self.tracker else []}
         return response
+
+    def late_detections(self, frame_index, detections):
+        """Feed detections that were computed for an already answered frame.
+
+        Returns (births, refreshes), or None when that frame is unknown or the
+        tracker is not calibrated yet. Detections for the warm-up frames are
+        applied once calibration exists, at their own tick.
+        """
+        frame_index = int(frame_index)
+        if self.tracker is None or frame_index not in self.frame_views:
+            return None
+        tick, view = self.frame_views[frame_index]
+        detections = [d if isinstance(d, Detection) else Detection(**d) for d in detections]
+        return self.tracker.observe_late(detections, view, tick, frame_index)
 
     def stale_track(self, request, tick):
         """Box of the oldest-anchored track a one-step L2 move can reach, or None."""

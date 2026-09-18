@@ -88,7 +88,8 @@ class FixedAssetDetector:
     """
     name = 'fixed_assets'
 
-    def __init__(self, bundle, project, *, device='cpu', min_confidence=0., family_min=None, family_levels=None):
+    def __init__(self, bundle, project, *, device='cpu', min_confidence=0., family_min=None, family_levels=None, fast=False, workers=8):
+        self.workers = int(workers)
         project = Path(project)
         if not (project/'drone').is_dir():
             raise ValueError(f'DRONE_PROJECT must contain the drone package, got {project}')
@@ -102,11 +103,24 @@ class FixedAssetDetector:
                 self.detector = load_bundle(bundle, device=device)
         finally:
             cv2.setNumThreads(threads)
+        if fast:
+            self.enable_fast_mode(device)
         self.min_confidence = float(min_confidence)
         self.family_min = dict(family_min or {})
         # Recognition families that are only trustworthy at native or near-native
         # zoom can be restricted to those levels: {"pose_pixels": [2], ...}.
         self.family_levels = {k: set(int(v) for v in vals) for k, vals in (family_levels or {}).items()}
+
+    def enable_fast_mode(self, device):
+        """Same recognizers, faster: exact neighbours on the GPU, threaded template fits, concurrent branches."""
+        from dataclasses import replace
+        torch_device = 'cuda:'+device if str(device).isdigit() else str(device)
+        ensemble = self.detector.features
+        if ensemble is not None:
+            for matcher in list(ensemble.matchers)+list(ensemble.calibrated_matchers):
+                matcher.settings = replace(matcher.settings, index='torch', device=torch_device, workers=self.workers)
+                matcher._index = None
+        self.detector.settings = replace(self.detector.settings, parallel_branches=True)
 
     def __call__(self, image, request):
         x1, y1, x2, y2 = request['view']['source_region_xyxy']
@@ -176,7 +190,8 @@ def build_detector(environ=os.environ):
         family_levels = json.loads(environ.get('DRONE_FAMILY_LEVELS', '{}'))
         return FixedAssetDetector(bundle, project, device=environ.get('DRONE_DEVICE', 'cpu'),
                                   min_confidence=float(environ.get('DRONE_CONF', '0')), family_min=family_min,
-                                  family_levels=family_levels)
+                                  family_levels=family_levels, fast=environ.get('DRONE_BUNDLE_FAST', '0') == '1',
+                                  workers=int(environ.get('DRONE_BUNDLE_WORKERS', '8')))
     if kind == 'oracle':
         return OracleDetector(environ.get('DRONE_ORACLE_SCENE', str(Path(__file__).resolve().parent/'src/helsinki')))
     if ':' in kind:

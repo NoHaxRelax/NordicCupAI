@@ -41,10 +41,11 @@ def load_recording(directory):
     return rows
 
 
-def build_app(recording):
+def build_app(recording, route=''):
     app = FastAPI()
+    prefix = ('/'+route.strip('/')) if route else ''
 
-    @app.post('/predict', response_model=DroneFlybyPredictResponseDto)
+    @app.post(prefix+'/predict', response_model=DroneFlybyPredictResponseDto)
     def predict(request: DroneFlybyPredictRequestDto):
         row = recording.get(request.frame)
         annotations, requested = [], None
@@ -72,10 +73,12 @@ def main():
     parser.add_argument('recording', help='Directory with the run diagnostics JSONL (DRONE_LOG_DIR of that run)')
     parser.add_argument('--host', default='0.0.0.0')
     parser.add_argument('--port', type=int, default=9310)
+    parser.add_argument('--route-file', help='File with a secret path segment; the endpoint is served at /<route>/predict')
     args = parser.parse_args()
+    route = Path(args.route_file).read_text().strip() if args.route_file else ''
     recording = load_recording(args.recording)
     logger.info('Loaded %d recorded frames from %s', len(recording), args.recording)
-    uvicorn.run(build_app(recording), host=args.host, port=args.port)
+    uvicorn.run(build_app(recording, route), host=args.host, port=args.port)
 
 
 if __name__ == '__main__':

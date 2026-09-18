@@ -169,6 +169,33 @@ class TrackerPlacementTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             RevisitConfig(class_extent={'tank': 'nonsense'})
 
+    def test_late_observations_birth_and_refresh_at_their_own_tick(self):
+        tracker = RevisitTracker(self.model, 's')
+        # Frames 1..4 answered without detections (detector still busy).
+        for tick in range(1, 5):
+            tracker.update([], self.full, tick, tick, detector_ran=False)
+        # The detection for frame 2 arrives now: a track anchored at tick 2, forecast to tick 4.
+        births, refreshes = tracker.observe_late([self.detection([100, 100, 140, 140], self.full)], self.full, 2, 2)
+        self.assertEqual((births, refreshes), (1, 0))
+        rows = tracker.predictions(4)
+        np.testing.assert_allclose(rows[0]['bbox_source_xyxy'], [100, 120, 140, 160])
+        # A later observation for frame 3 refreshes it; an older one for frame 1 does not move the anchor.
+        births, refreshes = tracker.observe_late([self.detection([100, 111, 140, 151], self.full)], self.full, 3, 3)
+        self.assertEqual((births, refreshes), (0, 1)); self.assertEqual(tracker.tracks['track-00001'].history[-1][0], 3)
+        births, refreshes = tracker.observe_late([self.detection([100, 90, 140, 130], self.full)], self.full, 1, 1)
+        self.assertEqual((births, refreshes), (0, 0)); self.assertEqual(tracker.tracks['track-00001'].history[-1][0], 3)
+        np.testing.assert_allclose(tracker.predictions(4)[0]['bbox_source_xyxy'], [100, 121, 140, 161])
+
+    def test_workflow_late_detections_use_the_frame_view(self):
+        from .workflow import DroneTrackingWorkflow
+        workflow = DroneTrackingWorkflow(camera_mode='l2_top')
+        workflow.tracker = RevisitTracker(self.model, 's')
+        workflow.frame_views = {7: (7., self.left)}
+        self.assertIsNone(workflow.late_detections(3, []))  # unknown frame
+        result = workflow.late_detections(7, [Detection('tank', tuple(self.left.box_from_source([100, 100, 140, 140])), .9)])
+        self.assertEqual(result, (1, 0))
+        np.testing.assert_allclose(workflow.tracker.predictions(8)[0]['bbox_source_xyxy'], [100, 110, 140, 150])
+
     def test_state_round_trip_keeps_placement_config(self):
         config = RevisitConfig(extent_policy='blend', emit_partials=True, clip_last_index=True)
         tracker = RevisitTracker(self.model, 's', config)

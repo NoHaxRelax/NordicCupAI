@@ -372,6 +372,77 @@ class RevisitTracker:
         self.last_frame, self.last_tick = int(frame_index), tick
         return self.predictions(tick)
 
+    def observe_late(self, detections, view, tick, frame_index):
+        """Take in detections computed for an earlier frame after later frames were answered.
+
+        Tracks are predicted back to that tick for association. A match newer
+        than the track's latest observation refreshes it; an unmatched complete
+        detection starts a track anchored at that tick, so its forecasts cover
+        the frames since. Nothing here counts as a miss and no track is retired.
+        Returns the number of births and refreshes.
+        """
+        tick = float(finite(tick, 'tick'))
+        if view.source_size != self.model.source_size:
+            raise ValueError('Wrong source dimensions')
+        if tick < self.model.origin_tick:
+            raise ValueError('Late observation predates the calibration origin')
+        incoming = []
+        for detection in detections:
+            d = detection if isinstance(detection, Detection) else Detection(**detection)
+            source = view.box_to_source(d.box)
+            margin = self.config.crop_margin_pixels
+            complete = (d.complete and np.all(np.array(d.box[:2]) > margin) and
+                        np.all(np.array(d.box[2:]) < np.array(view.image_size)-margin))
+            if complete:
+                source = normalize_extent(d.label, source, self.prior, *self.config.policy_for(d.label))
+            if d.confidence >= self.config.update_confidence:
+                incoming.append((d, source, complete))
+        kept = []
+        for row in sorted(incoming, key=lambda r: -r[0].confidence):
+            if not any(row[0].label == other[0].label and overlap(row[1], other[1]) >= self.config.duplicate_iou for other in kept):
+                kept.append(row)
+        predicted = {}
+        for identity, track in self.tracks.items():
+            anchor, box = track.history[-1]
+            try:
+                predicted[identity] = self.model.box(box, anchor, tick)
+            except ProjectionError:
+                continue
+        region = np.array(view.region)
+        births = refreshes = 0
+        matched_tracks = set()
+        for d, box, complete in kept:
+            best = None
+            for identity, pbox in predicted.items():
+                track = self.tracks[identity]
+                if track.label != d.label or identity in matched_tracks:
+                    continue
+                visible = np.r_[np.maximum(pbox[:2], region[:2]), np.minimum(pbox[2:], region[2:])]
+                if np.any(visible[2:] <= visible[:2]):
+                    continue
+                intersection = overlap(visible, box)
+                distance = np.linalg.norm((visible[:2]+visible[2:]-box[:2]-box[2:])/2)
+                scale = max(8., np.linalg.norm(visible[2:]-visible[:2]))
+                if intersection >= self.config.association_iou or distance/scale <= self.config.association_distance:
+                    score = intersection+.5*max(0., 1-distance/scale)
+                    if best is None or score > best[0]:
+                        best = (score, identity)
+            if best is not None:
+                identity = best[1]; track = self.tracks[identity]; matched_tracks.add(identity)
+                if complete and tick > track.history[-1][0]:
+                    self._accept(track, box, tick, frame_index, d.confidence); refreshes += 1
+                    self.events.append({'event': 'late_refresh', 'track_id': identity, 'lag': self.last_tick-tick if self.last_tick is not None else None})
+                continue
+            if any(overlap(box, p) > .5 for p in predicted.values()):
+                continue
+            if complete and d.confidence >= self.config.birth_confidence:
+                identity = f'track-{self.next_id:05d}'; self.next_id += 1
+                self.tracks[identity] = RevisitedTrack(identity, d.label, [[tick, box.tolist()]], d.confidence, tick, frame_index)
+                births += 1
+                self.events.append({'event': 'late_birth', 'track_id': identity, 'label': d.label,
+                                    'lag': self.last_tick-tick if self.last_tick is not None else None})
+        return births, refreshes
+
     def predictions(self, tick):
         tick = float(finite(tick, 'tick'))
         if self.last_tick is not None and tick < self.last_tick:
