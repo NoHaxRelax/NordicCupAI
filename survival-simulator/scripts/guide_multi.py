@@ -51,7 +51,7 @@ def run(args):
     shutil.copy2(__file__,folder/'multi_runner.py')
     for name in ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py'):
         shutil.copy2(lab.ROOT/'models/entrapment'/name,folder/('policy.py' if name=='my_guide.py' else name))
-    core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,0)
+    core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,0,corner_only=getattr(args, 'corner_only', False))
     env=core.env
     geometry=lab._Geometry(env.width,env.height,[(o.x,o.y,o.width,o.height) for o in env.obstacles])
     env.agents=[bait]; env.agents_dict={0:bait}; env.predators=[]
@@ -87,6 +87,8 @@ def run(args):
     phase='settle';phase_start=0.;delivery=None;active=None;memory={};held_since=None;dead_since=None
     guides=[];events=[];departed=set();outside_hearing=set();min_initial=30;final_min=None;all_since=None
     stage_prior=set();stage_min=0;capture_events={};rear_final=set();rear_ever=set()
+    replacement = None
+    replacement_arrived = False
     native_kill=env.kill_agent
     def kill(agent):
         if agent in guides:
@@ -159,6 +161,15 @@ def run(args):
                     if len(summary['deliveries'])<args.deliveries and bait_alive:spawn_delivery(now)
                     else:
                         phase='final_hold';phase_start=now;active=None;final_min=len(held);all_since=None
+                        if getattr(args, 'replace_bait', False):
+                            replacement=lab.Agent(*site['replacement_entry'],rng=env.rng,color=(190,100,255))
+                            replacement.agent_id=10000
+                            replacement.energy=replacement.max_energy
+                            env.agents.append(replacement)
+                            env.agents_dict[replacement.agent_id]=replacement
+                            env._update_agent_grid()
+                            summary['replacement']=dict(start_time=now,start=list(site['replacement_entry']),arrived=False)
+                            events.append(dict(time=now,event='Replacement bait enters from rear'))
             if phase=='final_hold':
                 final_min=min(final_min,len(held))
                 rear_final.update(rear)
@@ -168,11 +179,15 @@ def run(args):
             if active is not None and active in env.agents and not terminal:
                 inputs=dict(bait=lab.local(site['goal'],active),edges=[[lab.local(a,active),lab.local(b,active)] for a,b in env.edges],
                             agent=copy.deepcopy(env.get_agent_state(active.agent_id)),
-                            context=dict(tick=tick,dt=core.dt,time=now,handoff=lab.local(site['handoff'],active),mouth=lab.local(site['mouth'],active)))
+                            context=dict(tick=tick,dt=core.dt,time=now,vision_delivery=getattr(args,'vision_delivery',False),handoff=lab.local(site['handoff'],active),mouth=lab.local(site['mouth'],active)))
                 action=lab.validate_action(policy(**copy.deepcopy(inputs),memory=memory),active)
             evaluation=dict(phase=phase,total_predators=len(tracked),held_count=len(held),held_ids=held,
                             replacement_side_ids=sorted(rear),
                             initial_held=len(held_set&set(range(1,31))),bait_alive=bait_alive,
+                            bait_id=bait.agent_id,
+                            replacement_agent=None if replacement is None else dict(
+                                x=replacement.x,y=replacement.y,energy=replacement.energy,
+                                alive=replacement in env.agents,arrived=replacement_arrived),
                             initial_ever_left_hold_zone=sorted(departed),initial_ever_beyond_60=sorted(outside_hearing),
                             active_guide_alive=active in env.agents if active else None,
                             all_33_continuous_seconds=0 if all_since is None else round(now-all_since,3),
@@ -200,7 +215,26 @@ def run(args):
             summary.update(frames=tick+1,seconds=now,final=evaluation,events=events)
             if terminal:break
             bait.energy=bait.max_energy;bait.age=0.
-            core.step([(active.agent_id,action)] if action else [])
+            actions=[(active.agent_id,action)] if action else []
+            if replacement is not None and not replacement_arrived and replacement in env.agents:
+                delta=(site['goal'][0]-replacement.x,site['goal'][1]-replacement.y)
+                distance=math.hypot(*delta)
+                if distance <= 1.:
+                    replacement_arrived=True
+                    summary['replacement'].update(arrived=True,arrival_time=now)
+                    # Explicit handoff fixture: retire old bait through native
+                    # energy death, then measure retention on the replacement.
+                    bait.energy=0.
+                    bait=replacement
+                    events.append(dict(time=now,event='Replacement arrived; old bait energy exhausted'))
+                else:
+                    state=env.get_agent_state(replacement.agent_id)
+                    modifier={'forest':1.,'grassland':1.,'desert':.8,'swamp':.5,'river':.3}[state['biome']]
+                    direction=math.atan2(delta[1],delta[0])-replacement.direction
+                    command=lab.ActionRequest(agent_id=replacement.agent_id,spawn_agent=False,move_distance=min(replacement.speed,distance/modifier),
+                                              move_direction=direction,turn_angle=direction)
+                    actions.append((replacement.agent_id,command))
+            core.step(actions)
             bait.energy=bait.max_energy;bait.age=0.
             if tick and tick%200==0:print(f'{now:.1f}s {phase}: held {len(held)}/{len(tracked)}',flush=True)
     count=30+args.deliveries
@@ -210,6 +244,12 @@ def run(args):
              'initial_predators_escaped' if min_initial<30 else
              'delivery_pass' if len(held)==count and final_min==count and phase=='final_hold' and now-phase_start>=30.-1e-8 else
              'delivery_or_retention_failed')
+    if getattr(args, 'replace_bait', False):
+        summary.setdefault('replacement',dict(arrived=False))
+        summary['replacement']['alive_at_end']=replacement is not None and replacement in env.agents
+        summary['assumptions'].append('Replacement fixture starts at rear staging; after arrival old bait is exhausted; replacement then becomes full-energy fixture bait')
+        if outcome == 'delivery_pass' and not (replacement_arrived and replacement in env.agents):
+            outcome='replacement_failed'
     summary.update(outcome=outcome,replacement_side_final_period=sorted(rear_final),replacement_side_ever=sorted(rear_ever),
                    initial_min_held=min_initial,final_hold_min=final_min,
                    elapsed_seconds=round(time.monotonic()-started,3))
@@ -226,5 +266,8 @@ if __name__=='__main__':
     parser.add_argument('--encounter-seed',type=int,default=1335789813)
     parser.add_argument('--deliveries',type=int,default=3,choices=(1,3))
     parser.add_argument('--bulk',action='store_true')
+    parser.add_argument('--vision-delivery',action='store_true',help='Experimental distant handoff with observed bait sight alignment')
+    parser.add_argument('--corner-only',action='store_true',help='Opt-in short staggered corner pockets with static contact exclusion')
+    parser.add_argument('--replace-bait',action='store_true',help='During final hold, walk a replacement from rear entry to bait and exhaust old bait after arrival')
     parser.add_argument('--output',type=Path,default=lab.ROOT/'logs/guide_lab')
     run(parser.parse_args())
