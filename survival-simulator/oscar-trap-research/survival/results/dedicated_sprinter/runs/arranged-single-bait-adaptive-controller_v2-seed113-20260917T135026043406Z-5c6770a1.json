@@ -1,0 +1,387 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter heldout.json row 36 (controller_v2)",
+    "policy": "adaptive / controller_v2",
+    "seed": 113,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 0.5,
+    "scenario": "arranged-single-bait",
+    "notes": "Privileged arranged geometry and initial energy; finite prepared food/trees if configured. No new tree or predator spawns. Actions use only cached observations. Stationary workers when present. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "e1205d19e9a101a2b4c15d8b1cb7b144e0dd70da216ac611acc30deeb222b8f4",
+    "created_at": "2026-09-17T13:50:26.044294+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "arranged-single-bait-adaptive-controller_v2-seed113-20260917T135026043406Z-5c6770a1",
+    "parameters": {
+      "seed": 113,
+      "position": [
+        1126.6344068746307,
+        750.8439671835608
+      ],
+      "rotation": 3.0177336117137914,
+      "heading": 0.2538286743340685,
+      "gap": 48.05477516134437,
+      "pred_energy": 84.10387811253275,
+      "energy": 250,
+      "food": "orchard",
+      "workers": 2,
+      "max_age": 114.83923946222818,
+      "terrain": "forest",
+      "obstacle": true
+    },
+    "requested_horizon": 120,
+    "reproduction": {
+      "original_id": "heldout:036",
+      "source": "heldout.json",
+      "row": 36,
+      "original_metrics_sha256": "eeb742b4d3bfcbfa08397670ea3672e48bdd61b65dd8a5207aa537718e99f5cb",
+      "controller": "controller_v2",
+      "original_outcome": {
+        "duration": 14.7,
+        "score": 13.8424,
+        "target_fraction": 1.0,
+        "death": "capture"
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 14.7,
+    "score": 13.8424,
+    "frames": 33,
+    "reason": "capture"
+  },
+  "result": {
+    "scenario": {
+      "seed": 113,
+      "position": [
+        1126.6344068746307,
+        750.8439671835608
+      ],
+      "rotation": 3.0177336117137914,
+      "heading": 0.2538286743340685,
+      "gap": 48.05477516134437,
+      "pred_energy": 84.10387811253275,
+      "energy": 250,
+      "food": "orchard",
+      "workers": 2,
+      "max_age": 114.83923946222818,
+      "terrain": "forest",
+      "obstacle": true
+    },
+    "policy": "adaptive",
+    "horizon": 120,
+    "food_eaten": 1,
+    "food_received": 60.0,
+    "nutrition": 60.0,
+    "movement_energy": 203.0557,
+    "turn_energy": 0.4875,
+    "passive_energy": 14.7,
+    "target_ticks": 113,
+    "active_ticks": 113,
+    "longest_active_loss_s": 0.0,
+    "longest_retained_s": 11.3,
+    "first_loss_s": null,
+    "first_cutoff_s": 14.2,
+    "rest_cycles": 1,
+    "worker_deaths": {},
+    "min_gap": 14.7751,
+    "trace": [
+      {
+        "t": 0.1,
+        "bait": [
+          1111.65,
+          752.71,
+          246.85
+        ],
+        "predator": [
+          1159.32,
+          744.86,
+          81.53
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 1.1,
+        "bait": [
+          978.65,
+          780.55,
+          278.39
+        ],
+        "predator": [
+          1012.17,
+          773.17,
+          56.01
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 5,
+        "workers": 2
+      },
+      {
+        "t": 2.1,
+        "bait": [
+          835.09,
+          812.14,
+          248.89
+        ],
+        "predator": [
+          877.4,
+          802.83,
+          36.51
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 3.1,
+        "bait": [
+          726.68,
+          835.99,
+          237.39
+        ],
+        "predator": [
+          769.97,
+          826.47,
+          31.01
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 4.1,
+        "bait": [
+          618.28,
+          859.85,
+          225.89
+        ],
+        "predator": [
+          662.54,
+          850.11,
+          25.51
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 5.1,
+        "bait": [
+          509.87,
+          883.7,
+          214.39
+        ],
+        "predator": [
+          555.11,
+          873.75,
+          20.01
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 6.1,
+        "bait": [
+          401.46,
+          907.56,
+          202.89
+        ],
+        "predator": [
+          447.68,
+          897.39,
+          14.51
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 7.1,
+        "bait": [
+          293.06,
+          931.41,
+          191.39
+        ],
+        "predator": [
+          340.25,
+          921.03,
+          9.01
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 8.1,
+        "bait": [
+          195.49,
+          952.88,
+          180.94
+        ],
+        "predator": [
+          232.82,
+          944.66,
+          3.51
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 9.1,
+        "bait": [
+          97.92,
+          974.35,
+          170.49
+        ],
+        "predator": [
+          157.62,
+          961.21,
+          8.66
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 6,
+        "workers": 2
+      },
+      {
+        "t": 10.1,
+        "bait": [
+          97.92,
+          974.35,
+          169.49
+        ],
+        "predator": [
+          157.62,
+          961.21,
+          38.66
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 7,
+        "workers": 2
+      },
+      {
+        "t": 11.1,
+        "bait": [
+          97.92,
+          974.35,
+          168.49
+        ],
+        "predator": [
+          157.62,
+          961.21,
+          68.66
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 8,
+        "workers": 2
+      },
+      {
+        "t": 12.1,
+        "bait": [
+          97.92,
+          974.35,
+          167.49
+        ],
+        "predator": [
+          157.62,
+          961.21,
+          98.66
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 8,
+        "workers": 2
+      },
+      {
+        "t": 13.1,
+        "bait": [
+          36.11,
+          1042.15,
+          140.09
+        ],
+        "predator": [
+          40.47,
+          1010.05,
+          78.58
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 10,
+        "workers": 2
+      },
+      {
+        "t": 14.1,
+        "bait": [
+          87.22,
+          1161.57,
+          100.49
+        ],
+        "predator": [
+          53.56,
+          1156.46,
+          52.89
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 11,
+        "workers": 2
+      }
+    ],
+    "accounting_version": "source-order-v2",
+    "acquisition_time": 0.0,
+    "longest_occupation_s": 14.7,
+    "rest_inference": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0
+    },
+    "duration": 14.7,
+    "alive": false,
+    "death": "capture",
+    "remaining_energy": 91.7567,
+    "score": 13.8424,
+    "workers_alive": 2,
+    "target_fraction": 1.0,
+    "controller_stats": {},
+    "max_pose_error": 0.0,
+    "mean_pose_error": 0.0,
+    "continuous_retention_s": 14.7,
+    "replacement_windows_per_minute": 4.0816,
+    "run_id": "arranged-single-bait-adaptive-controller_v2-seed113-20260917T135026043406Z-5c6770a1",
+    "replay": "results/dedicated_sprinter/replays/arranged-single-bait-adaptive-controller_v2-seed113-20260917T135026043406Z-5c6770a1.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "heldout:036",
+      "source": "heldout.json",
+      "row": 36,
+      "original_metrics_sha256": "eeb742b4d3bfcbfa08397670ea3672e48bdd61b65dd8a5207aa537718e99f5cb",
+      "controller": "controller_v2",
+      "original_outcome": {
+        "duration": 14.7,
+        "score": 13.8424,
+        "target_fraction": 1.0,
+        "death": "capture"
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

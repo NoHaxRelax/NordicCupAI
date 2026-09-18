@@ -1,0 +1,311 @@
+{
+  "schema": "short-overlap-audit-v1",
+  "conclusion": "No run below overlap 54.9 tested retention because the unchanged controller refused to map the fixture and did not deploy the bait.",
+  "controller_constraints": {
+    "minimum_edge_length": 54.9,
+    "minimum_overlap": 54.9,
+    "source": "research/depth5_test/observed_gap_policy.py",
+    "sha256": "fdee75ff24c76ab5fcb5e225e69a8eb7d1f6a9859fafefdccf47a000822acebd"
+  },
+  "counts": {
+    "invalid_short_overlap_retention_test": 33,
+    "valid_long_wall_positive_control": 6,
+    "quota_stopped_partial_control": 3
+  },
+  "runs": [
+    {
+      "receipt": "depth5-observed-gap-g11-l10.3x10.3-o0-h1-n33-i0.1-guides0-s731-e5147f0a.json",
+      "overlap": 10.3,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l10.3x10.3-o0-h1-n33-i0.1-guides0-s731-e5147f0a.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l10.3x10.3-o0-h1-n33-i0.1-guides0-s732-dc971f3f.json",
+      "overlap": 10.3,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l10.3x10.3-o0-h1-n33-i0.1-guides0-s732-dc971f3f.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l10.3x10.3-o0-h1-n33-i0.1-guides0-s731-9e784319.json",
+      "overlap": 10.3,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l10.3x10.3-o0-h1-n33-i0.1-guides0-s731-9e784319.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l10.3x10.3-o0-h1-n33-i0.1-guides0-s732-6b3e4afe.json",
+      "overlap": 10.3,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l10.3x10.3-o0-h1-n33-i0.1-guides0-s732-6b3e4afe.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l10.3x10.3-o0-h1-n33-i0.1-guides0-s731-6ee83961.json",
+      "overlap": 10.3,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l10.3x10.3-o0-h1-n33-i0.1-guides0-s731-6ee83961.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l10.3x10.3-o0-h1-n33-i0.1-guides0-s732-e1918da4.json",
+      "overlap": 10.3,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l10.3x10.3-o0-h1-n33-i0.1-guides0-s732-e1918da4.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l20x20-o0-h1-n33-i0.1-guides0-s731-c31d9326.json",
+      "overlap": 20.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l20x20-o0-h1-n33-i0.1-guides0-s731-c31d9326.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l20x20-o0-h1-n33-i0.1-guides0-s732-da6cdd77.json",
+      "overlap": 20.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l20x20-o0-h1-n33-i0.1-guides0-s732-da6cdd77.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l20x20-o0-h1-n33-i0.1-guides0-s731-6ae97715.json",
+      "overlap": 20.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l20x20-o0-h1-n33-i0.1-guides0-s731-6ae97715.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l20x20-o0-h1-n33-i0.1-guides0-s732-6182b081.json",
+      "overlap": 20.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l20x20-o0-h1-n33-i0.1-guides0-s732-6182b081.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l20x20-o0-h1-n33-i0.1-guides0-s731-f6dfcba9.json",
+      "overlap": 20.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l20x20-o0-h1-n33-i0.1-guides0-s731-f6dfcba9.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l20x20-o0-h1-n33-i0.1-guides0-s732-49e513a0.json",
+      "overlap": 20.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l20x20-o0-h1-n33-i0.1-guides0-s732-49e513a0.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l30x30-o0-h1-n33-i0.1-guides0-s731-bf58f53f.json",
+      "overlap": 30.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l30x30-o0-h1-n33-i0.1-guides0-s731-bf58f53f.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l30x30-o0-h1-n33-i0.1-guides0-s732-1a1c8e25.json",
+      "overlap": 30.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l30x30-o0-h1-n33-i0.1-guides0-s732-1a1c8e25.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l30x30-o0-h1-n33-i0.1-guides0-s731-9e8d6eff.json",
+      "overlap": 30.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l30x30-o0-h1-n33-i0.1-guides0-s731-9e8d6eff.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l30x30-o0-h1-n33-i0.1-guides0-s732-36d6aaf7.json",
+      "overlap": 30.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l30x30-o0-h1-n33-i0.1-guides0-s732-36d6aaf7.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l30x30-o0-h1-n33-i0.1-guides0-s731-9880a961.json",
+      "overlap": 30.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l30x30-o0-h1-n33-i0.1-guides0-s731-9880a961.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l30x30-o0-h1-n33-i0.1-guides0-s732-44ff0de1.json",
+      "overlap": 30.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l30x30-o0-h1-n33-i0.1-guides0-s732-44ff0de1.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l35x35-o0-h1-n1-i1-guides0-s741-324fc5fd.json",
+      "overlap": 35.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l35x35-o0-h1-n1-i1-guides0-s741-324fc5fd.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l35x35-o0-h1-n1-i1-guides0-s741-28832031.json",
+      "overlap": 35.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l35x35-o0-h1-n1-i1-guides0-s741-28832031.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l35x35-o0-h1-n1-i1-guides0-s741-3bb0d773.json",
+      "overlap": 35.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l35x35-o0-h1-n1-i1-guides0-s741-3bb0d773.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l40x40-o0-h1-n1-i1-guides0-s741-6bf095b2.json",
+      "overlap": 40.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l40x40-o0-h1-n1-i1-guides0-s741-6bf095b2.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l40x40-o0-h1-n1-i1-guides0-s741-4481fc12.json",
+      "overlap": 40.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l40x40-o0-h1-n1-i1-guides0-s741-4481fc12.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l40x40-o0-h1-n1-i1-guides0-s741-945004b2.json",
+      "overlap": 40.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l40x40-o0-h1-n1-i1-guides0-s741-945004b2.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l45x45-o0-h1-n1-i1-guides0-s741-5a2384c4.json",
+      "overlap": 45.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l45x45-o0-h1-n1-i1-guides0-s741-5a2384c4.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l45x45-o0-h1-n1-i1-guides0-s741-b1e9e5e9.json",
+      "overlap": 45.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l45x45-o0-h1-n1-i1-guides0-s741-b1e9e5e9.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l45x45-o0-h1-n1-i1-guides0-s741-a67a7b5f.json",
+      "overlap": 45.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l45x45-o0-h1-n1-i1-guides0-s741-a67a7b5f.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l50x50-o0-h1-n1-i1-guides0-s741-3fcdb194.json",
+      "overlap": 50.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l50x50-o0-h1-n1-i1-guides0-s741-3fcdb194.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l50x50-o0-h1-n1-i1-guides0-s741-c60b88a1.json",
+      "overlap": 50.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l50x50-o0-h1-n1-i1-guides0-s741-c60b88a1.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l50x50-o0-h1-n1-i1-guides0-s741-441e651c.json",
+      "overlap": 50.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l50x50-o0-h1-n1-i1-guides0-s741-441e651c.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l54x54-o0-h1-n1-i1-guides0-s741-d9c1f3c7.json",
+      "overlap": 54.0,
+      "gap": 11.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g11-l54x54-o0-h1-n1-i1-guides0-s741-d9c1f3c7.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l54x54-o0-h1-n1-i1-guides0-s741-3f530919.json",
+      "overlap": 54.0,
+      "gap": 15.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g15-l54x54-o0-h1-n1-i1-guides0-s741-3f530919.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l54x54-o0-h1-n1-i1-guides0-s741-63ffa7bf.json",
+      "overlap": 54.0,
+      "gap": 19.0,
+      "evidence_class": "invalid_short_overlap_retention_test",
+      "correction": "depth5-observed-gap-g19-l54x54-o0-h1-n1-i1-guides0-s741-63ffa7bf.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l55x55-o0-h1-n1-i1-guides0-s751-12e4e7a2.json",
+      "overlap": 55.0,
+      "gap": 11.0,
+      "evidence_class": "valid_long_wall_positive_control",
+      "correction": "depth5-observed-gap-g11-l55x55-o0-h1-n1-i1-guides0-s751-12e4e7a2.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l55x55-o0-h1-n1-i1-guides0-s751-346e7a00.json",
+      "overlap": 55.0,
+      "gap": 15.0,
+      "evidence_class": "valid_long_wall_positive_control",
+      "correction": "depth5-observed-gap-g15-l55x55-o0-h1-n1-i1-guides0-s751-346e7a00.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l55x55-o0-h1-n1-i1-guides0-s751-b740d5d3.json",
+      "overlap": 55.0,
+      "gap": 19.0,
+      "evidence_class": "valid_long_wall_positive_control",
+      "correction": "depth5-observed-gap-g19-l55x55-o0-h1-n1-i1-guides0-s751-b740d5d3.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l65x65-o0-h1-n1-i1-guides0-s751-7323b801.json",
+      "overlap": 65.0,
+      "gap": 11.0,
+      "evidence_class": "valid_long_wall_positive_control",
+      "correction": "depth5-observed-gap-g11-l65x65-o0-h1-n1-i1-guides0-s751-7323b801.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l65x65-o0-h1-n1-i1-guides0-s751-1e761dc0.json",
+      "overlap": 65.0,
+      "gap": 15.0,
+      "evidence_class": "valid_long_wall_positive_control",
+      "correction": "depth5-observed-gap-g15-l65x65-o0-h1-n1-i1-guides0-s751-1e761dc0.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l65x65-o0-h1-n1-i1-guides0-s751-cd51bc9c.json",
+      "overlap": 65.0,
+      "gap": 19.0,
+      "evidence_class": "valid_long_wall_positive_control",
+      "correction": "depth5-observed-gap-g19-l65x65-o0-h1-n1-i1-guides0-s751-cd51bc9c.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g11-l70x70-o0-h1-n1-i1-guides0-s751-e9b89eca.json",
+      "overlap": 70.0,
+      "gap": 11.0,
+      "evidence_class": "quota_stopped_partial_control",
+      "correction": "depth5-observed-gap-g11-l70x70-o0-h1-n1-i1-guides0-s751-e9b89eca.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g15-l70x70-o0-h1-n1-i1-guides0-s751-c1469130.json",
+      "overlap": 70.0,
+      "gap": 15.0,
+      "evidence_class": "quota_stopped_partial_control",
+      "correction": "depth5-observed-gap-g15-l70x70-o0-h1-n1-i1-guides0-s751-c1469130.correction.json"
+    },
+    {
+      "receipt": "depth5-observed-gap-g19-l70x70-o0-h1-n1-i1-guides0-s751-6f4be07e.json",
+      "overlap": 70.0,
+      "gap": 19.0,
+      "evidence_class": "quota_stopped_partial_control",
+      "correction": "depth5-observed-gap-g19-l70x70-o0-h1-n1-i1-guides0-s751-6f4be07e.correction.json"
+    }
+  ]
+}

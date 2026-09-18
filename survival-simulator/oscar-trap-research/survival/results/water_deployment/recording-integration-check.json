@@ -1,0 +1,74 @@
+{
+  "purpose": "New native-rendering integration check of automatic unique-path recording and exact terminal failure frame.",
+  "result": {
+    "case": {
+      "gap": 22,
+      "length": 60,
+      "heading_offset": 0.3,
+      "seconds": 2,
+      "seed": 173
+    },
+    "site": {
+      "goal": [
+        800,
+        530
+      ],
+      "start": [
+        800,
+        485
+      ],
+      "predator": [
+        800,
+        450
+      ],
+      "mouth": [
+        800,
+        500
+      ],
+      "heading": 1.5707963267948966,
+      "gap": 22,
+      "length": 60
+    },
+    "elapsed_s": 0.5,
+    "acquired_s": null,
+    "capture_s": 0.5,
+    "alive": false,
+    "energy_remaining": 147.25000000000003,
+    "movement_energy": 2.25,
+    "food_energy": 2.8449465006019636e-14,
+    "first_escape_s": null,
+    "after_acquisition_s": 0.0,
+    "containment_fraction": 0.0,
+    "attention_fraction": 0.0,
+    "joint_fraction": 0.0,
+    "active_joint_fraction": 0.0,
+    "maximum_odometry_error": 0,
+    "trace": [
+      {
+        "t": 0.1,
+        "bait": [
+          800.0,
+          495.0,
+          149.4
+        ],
+        "predators": [
+          [
+            797.758428012896,
+            464.8315661690406,
+            99.42612675853621,
+            false
+          ]
+        ],
+        "confined": true,
+        "attention": true
+      }
+    ],
+    "recording": {
+      "path": "results/water_deployment/replays/native-recording-integration-check-v949d6d0a-seed173-8b8f1a9e893d.json.gz",
+      "duration": 0.5,
+      "score": -0.9725,
+      "frames": 2,
+      "reason": "bait captured or depleted"
+    }
+  }
+}

@@ -1,0 +1,6989 @@
+{
+  "scope": "Bounded native-physics trap protocols with explicitly privileged fixture control.\n\nControllers know exact geometry and creature positions in this experiment.\nThis tests feasibility, not observation-only deployment or native game scores.\nAll agents start with 150 energy; flat forest, fixed walls, no food or new spawns.\nEvery living agent receives exactly one legal action per tick; every run records.\n",
+  "runs": [
+    {
+      "kind": "first",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.1,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 1.0,
+      "old_targeted_guide_ticks": 0,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-first-w30-h70-gap60-side-1-d160-rest0-5d10e7fb29.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            614.9578322716831,
+            598.8760543909088
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            764.938674649067,
+            599.9229888265164
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.5301387194471,
+            603.3179378590346
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.0701825651284,
+            602.9401032538204
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.518908998165,
+            602.5930074911914
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.9893524866097,
+            602.5860400560289
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.4141199787001,
+            602.4963228684663
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.564211854385,
+            602.3822228529651
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.6750598055254,
+            598.3506429910115
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.3720304204053,
+            598.203517516317
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.689473031588,
+            598.11292433172
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.9141199253796,
+            597.9928308002288
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1889409090314,
+            597.8937898392857
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.4540769889271,
+            597.7783475928874
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.7053978048348,
+            597.6904262708489
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6873555953489,
+            608.6432154160715
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6873555953489,
+            608.6432154160715
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6873555953489,
+            608.6432154160715
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.84862733326,
+            593.6477853069198
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.8287022648339,
+            593.4935598936506
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.438692573926,
+            593.482775796569
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1499090797502,
+            593.3285569042065
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1383321655344,
+            593.2249535518374
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.129166202456,
+            593.121372705171
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.8952952787121,
+            592.9399971038824
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.8730850713528,
+            592.8382370578278
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.8482161054094,
+            592.7353399258252
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6321435657106,
+            603.6781905000923
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6321435657106,
+            603.6781905000923
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6321435657106,
+            603.6781905000923
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6321435657106,
+            603.6781905000923
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.6900781836356,
+            618.2508283947323
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.4339338546557,
+            618.1300716173117
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.3959330201243,
+            595.981770953201
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.5316588631466,
+            595.7677068293042
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "first",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.1,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 1.0,
+      "old_targeted_guide_ticks": 0,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-first-w30-h70-gap60-side1-d160-rest0-5dcdb3f5d6.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            614.9578322716831,
+            601.1239456090912
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            764.938674649067,
+            600.0770111734836
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.5144171498188,
+            603.4422178931868
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.0583623416818,
+            603.0655691888263
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.5103864195297,
+            602.7224656490132
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.9851796191825,
+            602.7116633345834
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.4120924145428,
+            602.6259763924047
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.563868582796,
+            602.5114136364923
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.6656585434652,
+            598.4743770210818
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.362951350521,
+            598.3306586669127
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.6807838212717,
+            598.2392106491467
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.9056689932182,
+            598.1185312449022
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1806976241651,
+            598.0187781061917
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.445936058614,
+            597.902646798812
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.6973750762039,
+            597.8140583918068
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.7080103067145,
+            608.7694751959679
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.7080103067145,
+            608.7694751959679
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.7080103067145,
+            608.7694751959679
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.8303218598599,
+            593.7762936180474
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.8103893033465,
+            593.6195060179937
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.4206951998416,
+            593.6097535283936
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1316165345359,
+            593.4536744330777
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1198813811507,
+            593.350102807873
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.1105446064661,
+            593.2465474735269
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.8762755633775,
+            593.0631690131737
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.8538799010739,
+            592.9614688384394
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.8288134858692,
+            592.8586385541947
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.641410110672,
+            603.8046334333584
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.641410110672,
+            603.8046334333584
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.641410110672,
+            603.8046334333584
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.641410110672,
+            603.8046334333584
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.7375077574012,
+            618.3744575660148
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.4811348886,
+            618.2543686122158
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            773.3853137236588,
+            596.108856453268
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            774.5205110367108,
+            595.8918235493676
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "second_straight",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.0,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.8,
+      "old_tail": 1.0,
+      "new_tail": 1.0,
+      "old_targeted_guide_ticks": 5,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-second_straight-w30-h70-gap60-side-1-d160-rest0-4574e869dd.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            614.9578322716831,
+            598.8760543909088
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.1138236939054,
+            585.1540567744391
+          ],
+          "new_position": [
+            756.7105683266396,
+            596.8138628489868
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.0599451448138,
+            615.0828898765722
+          ],
+          "new_position": [
+            774.537343323843,
+            579.1638595088142
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.6206294975507,
+            615.0948480940053
+          ],
+          "new_position": [
+            773.4906352558241,
+            587.0875204013458
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.1989673275348,
+            585.1458025580296
+          ],
+          "new_position": [
+            774.2948457410043,
+            586.8837898867621
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.4577534591083,
+            585.1449577588071
+          ],
+          "new_position": [
+            773.5988986091811,
+            608.7499412815963
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.8956223734888,
+            585.1452003914274
+          ],
+          "new_position": [
+            774.9169610381957,
+            586.7641133082376
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.4298592119849,
+            615.0959622032395
+          ],
+          "new_position": [
+            774.110787521025,
+            608.534088990963
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7256339752852,
+            607.0738909560224
+          ],
+          "new_position": [
+            773.5387467353997,
+            586.4616642050122
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7878222208086,
+            584.996170711451
+          ],
+          "new_position": [
+            774.5973877613926,
+            608.3405293274267
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.5909550643104,
+            606.6356095308245
+          ],
+          "new_position": [
+            773.1330936680221,
+            597.2956483665762
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.6594394370934,
+            606.6318024643765
+          ],
+          "new_position": [
+            773.1330936680221,
+            597.2956483665762
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.3354912510399,
+            606.5330774041603
+          ],
+          "new_position": [
+            773.1330936680221,
+            597.2956483665762
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.3811785757606,
+            584.2861584376224
+          ],
+          "new_position": [
+            773.2869332642186,
+            582.2964372747007
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            773.857288524834,
+            612.2827466533814
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            772.5064486205318,
+            582.3303851646298
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            773.836421340832,
+            582.1916688952231
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            774.6261868831925,
+            582.0903902402832
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.1731354189506,
+            606.104491722067
+          ],
+          "new_position": [
+            774.6368382271874,
+            581.9876544944099
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.3796188363654,
+            605.9306416363904
+          ],
+          "new_position": [
+            774.9856786421979,
+            603.798731226952
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.2095153877298,
+            609.6683566209531
+          ],
+          "new_position": [
+            774.8988517250864,
+            603.6969403762682
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.9332559814669,
+            609.570367549012
+          ],
+          "new_position": [
+            774.8480937142419,
+            603.5938538497935
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.8355558743818,
+            587.5942435087238
+          ],
+          "new_position": [
+            774.802392121154,
+            603.4907911835141
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.4484557230918,
+            609.4590231951021
+          ],
+          "new_position": [
+            774.8654858289033,
+            592.4909721311823
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.9047795301448,
+            609.2510323098414
+          ],
+          "new_position": [
+            774.8654858289033,
+            592.4909721311823
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.1783269103086,
+            587.1846070578625
+          ],
+          "new_position": [
+            774.8654858289033,
+            592.4909721311823
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.5346903222068,
+            609.121890961328
+          ],
+          "new_position": [
+            774.9475417825307,
+            577.3899273422966
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.8354720601887,
+            577.2198495573801
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.7724142252375,
+            577.0507403547158
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.5029695496042,
+            599.0086784859438
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.7546450135528,
+            598.9624953305309
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.8381443901983,
+            587.1350560575338
+          ],
+          "new_position": [
+            773.4459205114642,
+            598.7030451587356
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0012610523568,
+            617.028386697403
+          ],
+          "new_position": [
+            774.1492400815514,
+            598.6267672346203
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.9269179397072,
+            590.8610908021723
+          ],
+          "new_position": [
+            774.3890463219578,
+            598.6102514202672
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.270406170499,
+            612.7102688206536
+          ],
+          "new_position": [
+            774.6595554803392,
+            598.5668170230468
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "second_straight",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.0,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.8,
+      "old_tail": 1.0,
+      "new_tail": 1.0,
+      "old_targeted_guide_ticks": 5,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-second_straight-w30-h70-gap60-side1-d160-rest0-adfde254c7.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            614.9578322716831,
+            601.1239456090912
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.1138236939054,
+            585.1540567744391
+          ],
+          "new_position": [
+            756.7105683266396,
+            603.1861371510132
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.0599451448138,
+            615.0828898765722
+          ],
+          "new_position": [
+            774.9974727488003,
+            590.6976259151498
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.6206294975507,
+            615.0948480940053
+          ],
+          "new_position": [
+            774.2778842432182,
+            598.54226659809
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.1989673275348,
+            585.1458025580296
+          ],
+          "new_position": [
+            773.3050181453103,
+            598.3758138790165
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.4577534591083,
+            585.1449577588071
+          ],
+          "new_position": [
+            773.5884685490707,
+            598.3603960160577
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.8956223734888,
+            585.1452003914274
+          ],
+          "new_position": [
+            773.8157556008672,
+            598.2411103743474
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.4298592119849,
+            615.0959622032395
+          ],
+          "new_position": [
+            774.1023575556641,
+            598.1407749739105
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7256339752852,
+            607.0738909560224
+          ],
+          "new_position": [
+            774.3686827687911,
+            598.1090461861731
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7878222208086,
+            584.996170711451
+          ],
+          "new_position": [
+            774.6294230115753,
+            598.0190388967062
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.5909550643104,
+            606.6356095308245
+          ],
+          "new_position": [
+            774.601824553265,
+            608.9359741265165
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.6594394370934,
+            606.6318024643765
+          ],
+          "new_position": [
+            774.601824553265,
+            608.9359741265165
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.3354912510399,
+            606.5330774041603
+          ],
+          "new_position": [
+            774.601824553265,
+            608.9359741265165
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.3811785757606,
+            584.2861584376224
+          ],
+          "new_position": [
+            773.841088060874,
+            593.955277213851
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            773.3557528505941,
+            593.9396795302861
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            773.6124183833451,
+            593.8576116617776
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            774.1058362899643,
+            593.8964098743146
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0621989166034,
+            606.2547515130087
+          ],
+          "new_position": [
+            773.7810639114936,
+            593.8388897163085
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.1731354189506,
+            606.104491722067
+          ],
+          "new_position": [
+            773.786457758335,
+            593.7381449893346
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.3796188363654,
+            605.9306416363904
+          ],
+          "new_position": [
+            773.7727006916506,
+            593.6339929096943
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.2095153877298,
+            609.6683566209531
+          ],
+          "new_position": [
+            773.7621871416353,
+            593.5298253057922
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.9332559814669,
+            609.570367549012
+          ],
+          "new_position": [
+            773.7546006433085,
+            593.4256564800538
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.8355558743818,
+            587.5942435087238
+          ],
+          "new_position": [
+            773.7496385446764,
+            593.3214953992723
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.4484557230918,
+            609.4590231951021
+          ],
+          "new_position": [
+            774.9818121512947,
+            604.2522661041747
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.9047795301448,
+            609.2510323098414
+          ],
+          "new_position": [
+            774.9818121512947,
+            604.2522661041747
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.1783269103086,
+            587.1846070578625
+          ],
+          "new_position": [
+            774.9818121512947,
+            604.2522661041747
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.5346903222068,
+            609.121890961328
+          ],
+          "new_position": [
+            774.4591644515374,
+            589.1463520117243
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.1581119240875,
+            589.0018625820356
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.0805883385818,
+            588.8798128801499
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            774.5768932183923,
+            588.9645425472427
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.7677698862936,
+            587.1713290118076
+          ],
+          "new_position": [
+            773.2922232475835,
+            588.7272286628134
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.8381443901983,
+            587.1350560575338
+          ],
+          "new_position": [
+            774.0090339599527,
+            610.5227895939247
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.0012610523568,
+            617.028386697403
+          ],
+          "new_position": [
+            774.7964656301746,
+            610.5157591798289
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.9269179397072,
+            590.8610908021723
+          ],
+          "new_position": [
+            774.7516373858982,
+            588.3957316653147
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            774.270406170499,
+            612.7102688206536
+          ],
+          "new_position": [
+            774.875383723792,
+            588.352013841311
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": false,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.7,
+          "cause": "capture"
+        },
+        {
+          "agent": 1,
+          "time": 1.4,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.7,
+      "old_tail": 0.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner-w30-h70-gap60-side-1-d160-rest0-e47382f06b.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            779.1239456090912,
+            429.9578322716831
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            829.1881748290831,
+            562.1806529196491
+          ],
+          "new_position": [
+            765.0079734386259,
+            557.6773723496451
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            840.4904349515378,
+            684.8477727700954
+          ],
+          "new_position": [
+            694.5915909243699,
+            641.593729929133
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            802.4062781055778,
+            787.8881736740651
+          ],
+          "new_position": [
+            623.1618756997123,
+            724.9916646429402
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            743.0934051486364,
+            878.5995897490059
+          ],
+          "new_position": [
+            542.0742019847472,
+            797.3891447202074
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            649.6926842649308,
+            936.1295434880097
+          ],
+          "new_position": [
+            440.4406199697768,
+            839.2202113278977
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            552.6073149236678,
+            987.5968038868211
+          ],
+          "new_position": [
+            333.18345445868385,
+            858.955682134762
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            447.9484256269887,
+            1020.8323745511564
+          ],
+          "new_position": [
+            224.2024728897408,
+            844.6649852282856
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            338.60510198931695,
+            1030.3917571167249
+          ],
+          "new_position": [
+            118.40777327535542,
+            815.5939375249907
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            229.16127360625813,
+            1025.203705003803
+          ],
+          "new_position": [
+            50.8340041318594,
+            739.38959238829
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            123.94321312081323,
+            994.0282494270374
+          ],
+          "new_position": [
+            109.36903160906525,
+            646.6312235822821
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            50.66790400541017,
+            919.3486984639976
+          ],
+          "new_position": [
+            156.1560642613889,
+            547.2891469054769
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            103.55679577596558,
+            823.9602438444964
+          ],
+          "new_position": [
+            199.91573595398717,
+            446.75040780795825
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            175.36919571231073,
+            740.7954182237652
+          ],
+          "new_position": [
+            261.4026896763354,
+            355.6487792179789
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            237.76363734590592,
+            650.8676014216388
+          ],
+          "new_position": [
+            322.5932519045914,
+            264.4140258254241
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            262.6235530938404,
+            545.045905678064
+          ],
+          "new_position": [
+            390.1863229852273,
+            177.81176244895207
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            264.0475628242369,
+            435.16270284360115
+          ],
+          "new_position": [
+            476.0800728888931,
+            109.83447528734887
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            290.9045043735825,
+            328.7173370536366
+          ],
+          "new_position": [
+            485.9003466053594,
+            104.87844621825732
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            331.9213442368053,
+            226.73389869543192
+          ],
+          "new_position": [
+            485.9003466053594,
+            104.87844621825732
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            386.5852585275094,
+            131.56486056268972
+          ],
+          "new_position": [
+            485.9003466053594,
+            104.87844621825732
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            472.30545717744053,
+            65.7638766880288
+          ],
+          "new_position": [
+            538.1428552125967,
+            88.26936103058212
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            574.1974499162714,
+            96.71011229163551
+          ],
+          "new_position": [
+            646.0711400489079,
+            102.78882386319191
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            660.5273726436399,
+            163.91387189041032
+          ],
+          "new_position": [
+            750.6542556198152,
+            136.5855715732118
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            734.2476954407255,
+            244.99466889659294
+          ],
+          "new_position": [
+            854.222974288384,
+            172.327125622874
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            830.0189084987514,
+            298.7842782116132
+          ],
+          "new_position": [
+            962.4725124781874,
+            191.80177700103383
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            930.603945739939,
+            342.95469077475366
+          ],
+          "new_position": [
+            1071.043281735638,
+            204.71723530289856
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1035.7734511790316,
+            374.20716549638234
+          ],
+          "new_position": [
+            1180.342688365193,
+            195.4964824987876
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1137.5622195028666,
+            415.463680544871
+          ],
+          "new_position": [
+            1289.6919874936268,
+            185.36081613551272
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1239.2277035644,
+            457.03698877706796
+          ],
+          "new_position": [
+            1399.008179559626,
+            174.12538250739036
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1344.8203729743727,
+            487.2662629039813
+          ],
+          "new_position": [
+            1504.0840695436268,
+            143.0854707301498
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1444.9609392197228,
+            532.3636574409747
+          ],
+          "new_position": [
+            1539.1502145175525,
+            57.286993698230965
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1526.1963274695931,
+            604.9663851052552
+          ],
+          "new_position": [
+            1445.7717420702643,
+            85.24980433207176
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1520.0413994665469,
+            708.7690006310398
+          ],
+          "new_position": [
+            1341.377326902112,
+            119.65083193454358
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1458.8805274218375,
+            799.459563923757
+          ],
+          "new_position": [
+            1237.6184795090808,
+            155.49630968262338
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1376.7678984902604,
+            872.0856394375729
+          ],
+          "new_position": [
+            1136.288136583573,
+            197.84337070868276
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": false,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.8,
+          "cause": "capture"
+        },
+        {
+          "agent": 1,
+          "time": 1.6,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.9,
+      "old_tail": 0.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner-w30-h70-gap60-side1-d160-rest0-e5ec05e4b3.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            779.1239456090912,
+            770.0421677283169
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            797.8310882145187,
+            648.2150218248652
+          ],
+          "new_position": [
+            766.2585847740081,
+            638.2445258151624
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            842.6341666556928,
+            540.64263613709
+          ],
+          "new_position": [
+            741.5584388730542,
+            531.3555374418313
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            760.9666945323789,
+            467.0374036966682
+          ],
+          "new_position": [
+            733.0202471513869,
+            421.7712713528218
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            672.6291551095825,
+            401.8774111140297
+          ],
+          "new_position": [
+            743.0758023165737,
+            312.89377234592064
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            578.9344540225279,
+            344.34826438361637
+          ],
+          "new_position": [
+            760.2988800762344,
+            204.38420083407013
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            501.79207497757886,
+            266.61692044814936
+          ],
+          "new_position": [
+            795.7465518279588,
+            100.67482447931648
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            429.3924417079424,
+            183.98183399692337
+          ],
+          "new_position": [
+            881.3617866765495,
+            59.897284986318894
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            340.5208988050113,
+            119.82397049832977
+          ],
+          "new_position": [
+            981.5579930293964,
+            104.66399640314039
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            234.48771562319538,
+            95.35197965325249
+          ],
+          "new_position": [
+            1081.1841631799489,
+            150.5843385248671
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            127.70859762479286,
+            120.1343309698466
+          ],
+          "new_position": [
+            1189.9910998600985,
+            164.98346147500754
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            49.29650119799545,
+            189.80099164033118
+          ],
+          "new_position": [
+            1297.9045549384466,
+            185.4655847512684
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            94.62129463656034,
+            289.4689737719298
+          ],
+          "new_position": [
+            1402.5884134092785,
+            218.76656120815161
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            131.90717462944338,
+            392.84857359254505
+          ],
+          "new_position": [
+            1497.387501107651,
+            273.7335870988525
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            173.72400678695251,
+            494.35001670795975
+          ],
+          "new_position": [
+            1538.955704585107,
+            368.66580700404444
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            221.2818415708074,
+            593.3446469467015
+          ],
+          "new_position": [
+            1493.3362724001468,
+            468.57170790451136
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            254.6150385381554,
+            698.108903103553
+          ],
+          "new_position": [
+            1472.161189915615,
+            542.530501427367
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            294.6799225400882,
+            800.4021917129272
+          ],
+          "new_position": [
+            1472.161189915615,
+            542.530501427367
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            337.32290786213866,
+            901.7170502953767
+          ],
+          "new_position": [
+            1472.161189915615,
+            542.530501427367
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            380.93763913286034,
+            1002.6028889296964
+          ],
+          "new_position": [
+            1472.161189915615,
+            542.530501427367
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            443.7561479911879,
+            1092.4194300326726
+          ],
+          "new_position": [
+            1460.8432614960232,
+            640.8519614199299
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            540.8053223281312,
+            1135.3431849858734
+          ],
+          "new_position": [
+            1454.6766814210323,
+            750.6490490669146
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            641.5416272165229,
+            1092.154157341536
+          ],
+          "new_position": [
+            1444.1564192902083,
+            859.8780517020127
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            742.4212444245724,
+            1048.873396938998
+          ],
+          "new_position": [
+            1416.232927225926,
+            966.0094445865283
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            825.9344801247483,
+            977.866282551713
+          ],
+          "new_position": [
+            1367.479034715985,
+            1064.359612300664
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            902.8328215758772,
+            899.5551574638322
+          ],
+          "new_position": [
+            1286.780511446561,
+            1136.2887487552478
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            974.9365371024647,
+            816.5631616748935
+          ],
+          "new_position": [
+            1183.9534620308743,
+            1108.4999495847562
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1052.0672535853275,
+            738.6145962926319
+          ],
+          "new_position": [
+            1081.1603583967944,
+            1070.1473760622057
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1133.3701405553297,
+            665.0648655994951
+          ],
+          "new_position": [
+            982.4224248488374,
+            1022.0446332141233
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1201.1835748734347,
+            578.577504353171
+          ],
+          "new_position": [
+            887.2679013189673,
+            967.2942239298008
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1268.9698105115713,
+            492.07507750264466
+          ],
+          "new_position": [
+            791.7050538354516,
+            913.0821728629554
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1335.4139323697887,
+            404.55696748718503
+          ],
+          "new_position": [
+            698.0686314930666,
+            855.7514135204037
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1403.0453549632005,
+            317.9652544163434
+          ],
+          "new_position": [
+            608.396033659792,
+            792.4622776124481
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1451.7816789714668,
+            219.65041332291605
+          ],
+          "new_position": [
+            523.8536302710498,
+            722.271639636932
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1477.5204702946305,
+            112.8360745391139
+          ],
+          "new_position": [
+            445.79165644411745,
+            645.3142158424571
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner_track",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.7,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.6,
+      "old_tail": 0.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner_track-w30-h70-gap60-side-1-d160-rest0-9fc564878b.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            779.1239456090912,
+            429.9578322716831
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            828.8378521145689,
+            561.5372446581995
+          ],
+          "new_position": [
+            765.0079734386259,
+            557.6773723496451
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            926.9287424749222,
+            631.8567033333776
+          ],
+          "new_position": [
+            695.7549217231044,
+            642.6710311417261
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1030.2666181713128,
+            594.3255204026719
+          ],
+          "new_position": [
+            621.0398074136392,
+            723.2890426891859
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1129.28123279299,
+            546.9393241429553
+          ],
+          "new_position": [
+            534.229365609008,
+            789.7673938522724
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1226.3722313943765,
+            496.44865427131305
+          ],
+          "new_position": [
+            443.8815076366559,
+            852.2065866466445
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1335.0484787051932,
+            496.4706624222716
+          ],
+          "new_position": [
+            353.12623274970645,
+            913.8250938489642
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1440.6066335760725,
+            526.8442961384166
+          ],
+          "new_position": [
+            259.1668380266077,
+            970.475181009202
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1531.5997332271106,
+            586.6687306225938
+          ],
+          "new_position": [
+            162.89416679279913,
+            1023.4923419930705
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1519.536422769577,
+            686.6325088525846
+          ],
+          "new_position": [
+            78.11645246794004,
+            1092.2185704320145
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1484.5103103616618,
+            790.7288952730728
+          ],
+          "new_position": [
+            55.873524701192636,
+            1133.8799015554807
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1450.6310032605904,
+            894.6253127507854
+          ],
+          "new_position": [
+            137.95713655098837,
+            1060.7602484454542
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1401.5550019065483,
+            992.8140378299088
+          ],
+          "new_position": [
+            231.97958360872627,
+            1004.1134088953488
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1332.785972146402,
+            1078.2636892324913
+          ],
+          "new_position": [
+            327.89412475907767,
+            950.845735616302
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1236.4005326202584,
+            1127.1543670745518
+          ],
+          "new_position": [
+            418.3864858988967,
+            888.8788894248163
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1130.4625922893485,
+            1101.3244866943467
+          ],
+          "new_position": [
+            503.4010449191694,
+            819.1586962188638
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1023.2040367504353,
+            1077.1856043534385
+          ],
+          "new_position": [
+            579.7995683595049,
+            740.165010847623
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            915.0133032740665,
+            1057.9050367724697
+          ],
+          "new_position": [
+            579.7995683595049,
+            740.165010847623
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            808.2483819369071,
+            1032.769730968474
+          ],
+          "new_position": [
+            579.7995683595049,
+            740.165010847623
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            698.9173753281962,
+            1022.5582411522641
+          ],
+          "new_position": [
+            579.7995683595049,
+            740.165010847623
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            592.059479129114,
+            997.8248718811216
+          ],
+          "new_position": [
+            620.7829475103862,
+            688.4650481929359
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            482.5842518151859,
+            988.3469997617124
+          ],
+          "new_position": [
+            679.3491220865335,
+            595.3970784674087
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            375.40733064849417,
+            964.9504756668003
+          ],
+          "new_position": [
+            743.8240320928647,
+            506.54552653164063
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            266.1002414254218,
+            970.5542908964519
+          ],
+          "new_position": [
+            792.5167346652463,
+            407.9787927730362
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            160.87734633454338,
+            1002.0785581270985
+          ],
+          "new_position": [
+            834.1984451109041,
+            306.2790453207358
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            70.15800242148663,
+            1062.4331050124658
+          ],
+          "new_position": [
+            876.019014783121,
+            204.58185639847957
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            80.46086605951356,
+            1158.7337292644804
+          ],
+          "new_position": [
+            935.1194272895383,
+            112.2266397459139
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            131.48601196332746,
+            1061.5108794356065
+          ],
+          "new_position": [
+            1029.1839643865208,
+            62.62907258154029
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            174.48607974653663,
+            960.3401200200506
+          ],
+          "new_position": [
+            1131.0276439868248,
+            102.5802582119749
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            209.91206333865728,
+            856.462467168796
+          ],
+          "new_position": [
+            1233.2091181776339,
+            142.50087153931676
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            269.38937675669155,
+            764.7869189751493
+          ],
+          "new_position": [
+            1338.8091220126778,
+            172.58309303893932
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            350.2850565397288,
+            691.0830476282389
+          ],
+          "new_position": [
+            1442.5341595281247,
+            208.7073488773473
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            414.27853742001724,
+            648.4051746487937
+          ],
+          "new_position": [
+            1529.9254298826604,
+            273.6929501657976
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            414.27853742001724,
+            648.4051746487937
+          ],
+          "new_position": [
+            1518.9213558291842,
+            374.7100217214449
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            414.27853742001724,
+            648.4051746487937
+          ],
+          "new_position": [
+            1464.8679153144537,
+            470.450894810439
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner_track",
+      "width": 30,
+      "height": 70,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 1.5,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.9,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 1.5,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.6,
+      "old_tail": 0.6,
+      "new_tail": 0.3333333333333333,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner_track-w30-h70-gap60-side1-d160-rest0-97488fea2a.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            779.1239456090912,
+            770.0421677283169
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            773.5048942705158,
+            644.6477490539288
+          ],
+          "new_position": [
+            769.9775200592521,
+            629.3633744043765
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "first",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.1,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 1.0,
+      "old_targeted_guide_ticks": 0,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-first-w35-h100-gap60-side-1-d160-rest0-1321e6a4e0.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            612.4578322716831,
+            598.8760543909088
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            762.438674649067,
+            599.9229888265164
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.9112812895391,
+            609.8157683520959
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.8422099006997,
+            579.8372382757678
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2908907969019,
+            609.8337857383802
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.1901047818228,
+            609.8566543506839
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.1112077628039,
+            579.8774540789085
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.5114332849395,
+            579.9006587324083
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.1311619778592,
+            601.8010039396736
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.459460030268,
+            601.7913180168439
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.7119497227638,
+            601.839167491575
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.0715113992129,
+            601.7135980259864
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.6516322062976,
+            601.6904214058907
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.8104321981956,
+            601.6273317690215
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.1733196497415,
+            601.3999074625697
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.7333881933716,
+            612.391106683478
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.7333881933716,
+            612.391106683478
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.7333881933716,
+            612.391106683478
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.5850010967537,
+            597.443405080968
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.3722679456729,
+            597.4175971883467
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.1339689123005,
+            597.4429520128243
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.5236330355887,
+            597.4106094901824
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.3981384618529,
+            597.3067179930339
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.4316345589542,
+            597.1961121550002
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.8202482730185,
+            596.9720781793015
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.7715398206473,
+            596.7969058988253
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.6033606840574,
+            596.7214503693413
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2245264657159,
+            596.543080986526
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2245264657159,
+            596.543080986526
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2245264657159,
+            596.543080986526
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2245264657159,
+            596.543080986526
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.043430955464,
+            596.3457872234336
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.7477725582654,
+            596.3374462785752
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.4061154596891,
+            596.2450533894706
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.8051656460618,
+            596.0100324929012
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "first",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.1,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 1.0,
+      "old_targeted_guide_ticks": 0,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-first-w35-h100-gap60-side1-d160-rest0-429d01bc4a.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            612.4578322716831,
+            601.1239456090912
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            762.438674649067,
+            600.0770111734836
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.47834340331,
+            590.1152907132409
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.4528525180298,
+            589.8381016849476
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.7340557508675,
+            589.5312508227495
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.677143546554,
+            589.2574576693842
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.3906067901763,
+            589.2177831535292
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.9245505970408,
+            588.8796678076477
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.1675148467913,
+            588.611335698732
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.4459400648927,
+            588.769782313394
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.8661835900087,
+            610.5463750625523
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.4916399152075,
+            588.3978083925191
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.8600936773341,
+            588.3234965205437
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.6924218487843,
+            588.37834247969
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.884020596186,
+            610.0503765532783
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.067409782302,
+            588.0691911850687
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.067409782302,
+            588.0691911850687
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.067409782302,
+            588.0691911850687
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.1686031701267,
+            587.9257540696639
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.1709863616546,
+            617.762776419587
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.1027490246375,
+            587.6624670357528
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2674415987059,
+            609.4458383755276
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.4746851262095,
+            609.3839885013459
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.9691340409911,
+            609.19275294547
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.7239550436869,
+            587.1284648341455
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.8771843250192,
+            608.8993454317682
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.749067702927,
+            586.8332705935845
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            770.7961818236029,
+            608.682134098207
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2851121600575,
+            597.7833687344979
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2851121600575,
+            597.7833687344979
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.2851121600575,
+            597.7833687344979
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            769.8937324321266,
+            582.5835474717394
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.0895805824078,
+            612.5074520891081
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            771.5786492637914,
+            582.5486000788555
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": null,
+          "old_position": null,
+          "new_position": [
+            772.4884004567606,
+            604.6440426981105
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "second_straight",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.0,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 5,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-second_straight-w35-h100-gap60-side-1-d160-rest0-43e5f0771c.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5,
+            585.0
+          ],
+          "new_position": [
+            612.4578322716831,
+            598.8760543909088
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            770.2923961623623,
+            615.0479236151629
+          ],
+          "new_position": [
+            754.2105683266396,
+            596.8138628489868
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            769.9452643414804,
+            585.096510618185
+          ],
+          "new_position": [
+            737.9399827341421,
+            500.2928962316676
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.406116764971,
+            585.096397298201
+          ],
+          "new_position": [
+            704.9325936864129,
+            395.4478599851996
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.1475883156494,
+            615.0395687020766
+          ],
+          "new_position": [
+            664.2187710778603,
+            293.47610671017407
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5568164937455,
+            615.1206672893443
+          ],
+          "new_position": [
+            639.1380699974807,
+            186.45654022079384
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.5133486768547,
+            585.1857672517147
+          ],
+          "new_position": [
+            592.1901378255109,
+            87.59994424509647
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.2513791110955,
+            614.9873495956567
+          ],
+          "new_position": [
+            498.2417317105312,
+            67.46011943558476
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.6970159808487,
+            584.9240618667694
+          ],
+          "new_position": [
+            397.3718409843117,
+            109.72637898637569
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.2551398738016,
+            606.83095214104
+          ],
+          "new_position": [
+            289.2483675246192,
+            129.78829144708254
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.0571001832635,
+            606.6006147275311
+          ],
+          "new_position": [
+            182.57133438511065,
+            156.22884996242564
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.364459619023,
+            606.5747785887378
+          ],
+          "new_position": [
+            85.54720425872367,
+            206.76502603428287
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.7881561052525,
+            584.666672545446
+          ],
+          "new_position": [
+            68.97225621823232,
+            302.45812865796665
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.342240342284,
+            606.3242830829963
+          ],
+          "new_position": [
+            108.46048267761819,
+            404.9604513542061
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            142.99462256974329,
+            509.1932226978407
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            156.42257955961165,
+            573.7297565133379
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            156.42257955961165,
+            573.7297565133379
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            156.42257955961165,
+            573.7297565133379
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.4536347973473,
+            606.0391674038443
+          ],
+          "new_position": [
+            156.42257955961165,
+            573.7297565133379
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.6371281451034,
+            605.7731716002735
+          ],
+          "new_position": [
+            175.73909997924318,
+            681.9758659869835
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.1564930371186,
+            601.495647812714
+          ],
+          "new_position": [
+            222.37575570297884,
+            780.1864912373843
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.9216012812793,
+            601.5820469838002
+          ],
+          "new_position": [
+            278.324141633031,
+            874.6272719686815
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.7510347216315,
+            601.5275946299494
+          ],
+          "new_position": [
+            316.0433985351068,
+            977.6602091537565
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.9281969149753,
+            601.3636964816417
+          ],
+          "new_position": [
+            374.2047644401416,
+            1070.7176148430472
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.2865786821188,
+            601.3561893138408
+          ],
+          "new_position": [
+            462.7128705681071,
+            1132.7161284247377
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.5535480534019,
+            601.516883366965
+          ],
+          "new_position": [
+            566.1100785706241,
+            1103.6403265446875
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.2389052773702,
+            601.3587698798575
+          ],
+          "new_position": [
+            662.2009792870138,
+            1050.8527979564158
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            753.5760122765881,
+            990.1030706583066
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            850.464207481354,
+            938.497709853204
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            935.8014735952986,
+            869.693481473548
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            1014.7166460989295,
+            793.4151570347776
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.8975337385056,
+            605.0056313023904
+          ],
+          "new_position": [
+            1088.4788088149191,
+            711.9109066865774
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.132937784847,
+            604.7056897977379
+          ],
+          "new_position": [
+            1166.9451495105188,
+            634.9870166532587
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.786508643406,
+            604.4529736509735
+          ],
+          "new_position": [
+            1250.0665842805904,
+            563.2930151998466
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.1285295952304,
+            582.4340087367007
+          ],
+          "new_position": [
+            1328.078462161894,
+            485.89037271928635
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "second_straight",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 1.0,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 5,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-second_straight-w35-h100-gap60-side1-d160-rest0-3094d7e2b1.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5,
+            585.0
+          ],
+          "new_position": [
+            612.4578322716831,
+            601.1239456090912
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": true,
+          "old_target": 0,
+          "old_position": [
+            770.2923961623623,
+            615.0479236151629
+          ],
+          "new_position": [
+            754.2105683266396,
+            603.1861371510132
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            769.9452643414804,
+            585.096510618185
+          ],
+          "new_position": [
+            739.1154381220475,
+            700.2787908006355
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.406116764971,
+            585.096397298201
+          ],
+          "new_position": [
+            677.0198191050956,
+            790.9766598835025
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.1475883156494,
+            615.0395687020766
+          ],
+          "new_position": [
+            621.9425083172282,
+            885.9626780849203
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5568164937455,
+            615.1206672893443
+          ],
+          "new_position": [
+            547.392218797285,
+            966.5088667237977
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.5133486768547,
+            585.1857672517147
+          ],
+          "new_position": [
+            459.0304137703695,
+            1031.7206323678422
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.2513791110955,
+            614.9873495956567
+          ],
+          "new_position": [
+            357.5684807277932,
+            1073.1192863882882
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.6970159808487,
+            584.9240618667694
+          ],
+          "new_position": [
+            248.31973060125893,
+            1076.869288917529
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.2551398738016,
+            606.83095214104
+          ],
+          "new_position": [
+            141.71439713683014,
+            1050.569008996755
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.0571001832635,
+            606.6006147275311
+          ],
+          "new_position": [
+            54.31142032786318,
+            987.6891031053713
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.364459619023,
+            606.5747785887378
+          ],
+          "new_position": [
+            93.43015913049065,
+            889.7440554808604
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.7881561052525,
+            584.666672545446
+          ],
+          "new_position": [
+            131.592621486142,
+            787.8675361541758
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.342240342284,
+            606.3242830829963
+          ],
+          "new_position": [
+            143.25386982176934,
+            678.566790163975
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            154.11581124213916,
+            569.2377282251535
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            166.17732847253163,
+            504.41291883295503
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            166.17732847253163,
+            504.41291883295503
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.134955941489,
+            606.0159006541081
+          ],
+          "new_position": [
+            166.17732847253163,
+            504.41291883295503
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.4536347973473,
+            606.0391674038443
+          ],
+          "new_position": [
+            166.17732847253163,
+            504.41291883295503
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.6371281451034,
+            605.7731716002735
+          ],
+          "new_position": [
+            172.01596743313593,
+            394.9115682544096
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.1564930371186,
+            601.495647812714
+          ],
+          "new_position": [
+            167.61652636537755,
+            285.1505520967912
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.9216012812793,
+            601.5820469838002
+          ],
+          "new_position": [
+            158.8337547090702,
+            175.58858491822403
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.7510347216315,
+            601.5275946299494
+          ],
+          "new_position": [
+            123.08512024860607,
+            72.41258222960204
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.9281969149753,
+            601.3636964816417
+          ],
+          "new_position": [
+            50.567243164070376,
+            77.0855978548305
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.2865786821188,
+            601.3561893138408
+          ],
+          "new_position": [
+            134.20399982605633,
+            148.04632615615182
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.5535480534019,
+            601.516883366965
+          ],
+          "new_position": [
+            226.91615733218111,
+            206.88508362858715
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.2389052773702,
+            601.3587698798575
+          ],
+          "new_position": [
+            310.8185881123944,
+            277.53019417962275
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            400.95997738639954,
+            339.8678787534895
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            471.8530563869984,
+            423.7257906179626
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            533.6764630599944,
+            514.550282626222
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.69077998158,
+            590.3247615715732
+          ],
+          "new_position": [
+            580.2309384018298,
+            614.0520156969677
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.8975337385056,
+            605.0056313023904
+          ],
+          "new_position": [
+            606.299449278016,
+            720.6842820953234
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.132937784847,
+            604.7056897977379
+          ],
+          "new_position": [
+            635.067306633241,
+            826.7663642981629
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            771.786508643406,
+            604.4529736509735
+          ],
+          "new_position": [
+            658.1106148472193,
+            934.0622611755468
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.1285295952304,
+            582.4340087367007
+          ],
+          "new_position": [
+            683.6624396772542,
+            1040.890792920721
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.8,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 1.0,
+      "old_tail": 0.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner-w35-h100-gap60-side-1-d160-rest0-316593e3c7.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5,
+            585.0
+          ],
+          "new_position": [
+            776.6239456090912,
+            414.9578322716831
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            751.1745105981895,
+            544.0536163889999
+          ],
+          "new_position": [
+            763.7585847740077,
+            546.7554741848378
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            698.2133536597379,
+            447.7367783166689
+          ],
+          "new_position": [
+            708.2846864565443,
+            641.5232765448624
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            642.0863704826365,
+            353.3964925788792
+          ],
+          "new_position": [
+            650.2610581607682,
+            734.7717938518967
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            610.1721101630351,
+            249.6202849600791
+          ],
+          "new_position": [
+            602.2894093551974,
+            833.3472899338988
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            588.3846835569793,
+            141.99970921630418
+          ],
+          "new_position": [
+            550.4166631804892,
+            929.5964307578241
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            528.9414759957542,
+            52.43746067873853
+          ],
+          "new_position": [
+            475.68911388506126,
+            1010.1421990530584
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            428.9868985786133,
+            88.96147999611011
+          ],
+          "new_position": [
+            385.61125951429284,
+            1072.6768596599925
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            329.1364858979034,
+            134.66136860102816
+          ],
+          "new_position": [
+            279.7722369737503,
+            1098.9588942979253
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            228.15417788035353,
+            177.8203287254728
+          ],
+          "new_position": [
+            171.93280459909087,
+            1079.142906190535
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            137.34087156605375,
+            239.47489185218805
+          ],
+          "new_position": [
+            74.65204978909858,
+            1029.568582196925
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            74.46261962176945,
+            328.059833029541
+          ],
+          "new_position": [
+            72.80499635168762,
+            931.5489421158923
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            91.27662298333483,
+            434.0359737931297
+          ],
+          "new_position": [
+            125.25494319980649,
+            835.2598693257004
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            149.22992967032246,
+            526.8821171265819
+          ],
+          "new_position": [
+            198.92831050637085,
+            754.3717274023797
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            228.7840167482076,
+            602.5753931167793
+          ],
+          "new_position": [
+            281.25188877170103,
+            681.567425306913
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            312.6699661824699,
+            673.5206547461345
+          ],
+          "new_position": [
+            350.86040485339595,
+            597.3528993796376
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            407.96189172135144,
+            728.1476235062032
+          ],
+          "new_position": [
+            379.1211963103858,
+            526.0576906412061
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            501.5751316144261,
+            784.2441671757296
+          ],
+          "new_position": [
+            379.1211963103858,
+            526.0576906412061
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            582.5549994523844,
+            858.1504470357522
+          ],
+          "new_position": [
+            379.1211963103858,
+            526.0576906412061
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            669.4150816150808,
+            925.5138805894226
+          ],
+          "new_position": [
+            379.1211963103858,
+            526.0576906412061
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            768.1453192426728,
+            973.6549665665854
+          ],
+          "new_position": [
+            410.3797869474428,
+            432.4241910664735
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            871.7986070502363,
+            1009.9891733018172
+          ],
+          "new_position": [
+            419.88134176177863,
+            323.1652070032629
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            980.4335794195935,
+            1026.6192636961741
+          ],
+          "new_position": [
+            459.494096078022,
+            220.9667379824266
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1090.03404670536,
+            1025.7062536923142
+          ],
+          "new_position": [
+            520.405239704384,
+            129.68759927473548
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1195.9978741729926,
+            996.7253373186817
+          ],
+          "new_position": [
+            610.4407510001821,
+            69.66030638406464
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1298.7969122911143,
+            957.7932306245299
+          ],
+          "new_position": [
+            715.5917271094589,
+            94.07472929956629
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1389.898934350857,
+            896.5178879042297
+          ],
+          "new_position": [
+            802.044210799097,
+            161.33043375631388
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1466.5931007520091,
+            818.0497789536075
+          ],
+          "new_position": [
+            881.2706159919732,
+            237.21771939479328
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1511.1156652452635,
+            718.6371122949492
+          ],
+          "new_position": [
+            963.8793233038309,
+            309.684092200649
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1495.5547537220236,
+            610.9511469947975
+          ],
+          "new_position": [
+            1044.0862463504698,
+            384.69009001732576
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1462.97279776227,
+            505.992994721872
+          ],
+          "new_position": [
+            1119.1697618111498,
+            464.8264348765248
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1428.2187887510997,
+            401.7907906985957
+          ],
+          "new_position": [
+            1193.9744939187037,
+            545.3646777831792
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1392.4312038147725,
+            298.06543461891243
+          ],
+          "new_position": [
+            1257.7258948974616,
+            634.7186530990429
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1352.7213026108382,
+            195.57792808202134
+          ],
+          "new_position": [
+            1318.6166436634364,
+            726.1657910944551
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1292.6066344408057,
+            103.9574186987678
+          ],
+          "new_position": [
+            1361.2092644634488,
+            827.2837663231962
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.7,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.8,
+      "old_tail": 0.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner-w35-h100-gap60-side1-d160-rest0-f2f62d81c6.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5,
+            585.0
+          ],
+          "new_position": [
+            776.6239456090912,
+            785.0421677283169
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            741.8652639787471,
+            678.2604499508755
+          ],
+          "new_position": [
+            762.5079734386261,
+            657.3226276503551
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            651.1448453916853,
+            740.1425852656178
+          ],
+          "new_position": [
+            701.6366884155595,
+            565.8690897845772
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            561.8413375682545,
+            803.9799665095319
+          ],
+          "new_position": [
+            642.4399074838976,
+            473.3608817817441
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            461.10576362320677,
+            844.4607170127289
+          ],
+          "new_position": [
+            574.443139366359,
+            387.32024154289985
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            351.96758317093867,
+            856.8940186465419
+          ],
+          "new_position": [
+            516.0807947742431,
+            295.5631816109228
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            242.84762526970374,
+            868.8737652787727
+          ],
+          "new_position": [
+            489.0626434881237,
+            189.02453067323012
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            136.81343670917502,
+            897.3319607541589
+          ],
+          "new_position": [
+            440.15215525134926,
+            91.07952357301632
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            52.864761227358535,
+            963.9486248657261
+          ],
+          "new_position": [
+            346.0535225126981,
+            65.77120678179826
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            101.28776310245819,
+            1058.0284411781438
+          ],
+          "new_position": [
+            265.06582661772535,
+            138.24320686627127
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            189.05688022620103,
+            1122.3597443224808
+          ],
+          "new_position": [
+            209.26274594352802,
+            232.96157596554974
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            295.435788174096,
+            1110.4667681677224
+          ],
+          "new_position": [
+            169.8351620522801,
+            335.42999869445845
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            400.21724968985785,
+            1077.2505402903075
+          ],
+          "new_position": [
+            155.88411503640413,
+            444.2278264713961
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            508.1892036908207,
+            1056.9851744298792
+          ],
+          "new_position": [
+            162.4514468502822,
+            553.9023508103674
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            612.4522251489324,
+            1022.2361427657416
+          ],
+          "new_position": [
+            166.8783732985599,
+            663.7247612273101
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            714.115369724241,
+            980.8491238867771
+          ],
+          "new_position": [
+            196.0517356998891,
+            769.09003462271
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            808.3573888010575,
+            924.3374324746889
+          ],
+          "new_position": [
+            253.81342368211403,
+            862.5517570409737
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            906.8838246714747,
+            875.9434241251145
+          ],
+          "new_position": [
+            260.22852247648353,
+            871.487444337342
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1009.0119457272888,
+            835.8896261423519
+          ],
+          "new_position": [
+            260.22852247648353,
+            871.487444337342
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1104.2165052734088,
+            781.1422997046883
+          ],
+          "new_position": [
+            260.22852247648353,
+            871.487444337342
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1208.1470557104076,
+            746.4725895505222
+          ],
+          "new_position": [
+            289.76133830427034,
+            917.8216002885354
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1314.740746181579,
+            720.7552987092982
+          ],
+          "new_position": [
+            364.94235379617606,
+            998.0228451729016
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1423.8216965981496,
+            707.477551577143
+          ],
+          "new_position": [
+            453.5972184831261,
+            1062.6598783621669
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1525.2874622745276,
+            667.0318089055027
+          ],
+          "new_position": [
+            557.8737531403266,
+            1095.1632883654247
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1521.9538512896854,
+            575.136831603844
+          ],
+          "new_position": [
+            666.4857384433668,
+            1081.5225551066949
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1454.11484269807,
+            488.815835991635
+          ],
+          "new_position": [
+            774.700556374171,
+            1062.3327757273148
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1376.6214333483213,
+            411.1744216879111
+          ],
+          "new_position": [
+            877.0640183736723,
+            1022.6691467624897
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1298.2524155585866,
+            334.4109470921234
+          ],
+          "new_position": [
+            972.9169915278802,
+            968.8676069019468
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1227.2381824550591,
+            250.51298482129403
+          ],
+          "new_position": [
+            1072.2040960092718,
+            921.9211680444064
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1145.3944736685582,
+            177.2477666097825
+          ],
+          "new_position": [
+            1173.942358360123,
+            880.5631304667899
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            1048.9857647545039,
+            125.10021506506247
+          ],
+          "new_position": [
+            1273.5029598125393,
+            834.0868658270833
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            940.7528119475762,
+            110.87512219058627
+          ],
+          "new_position": [
+            1379.298828157624,
+            804.5379450316777
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            832.1547505514575,
+            128.1094461028575
+          ],
+          "new_position": [
+            1480.2288204626195,
+            761.5290466681295
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            722.9048468300233,
+            140.40412861474073
+          ],
+          "new_position": [
+            1545.1550464281668,
+            678.3405168934008
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": null,
+          "old_position": [
+            613.1105652144391,
+            146.6710738557538
+          ],
+          "new_position": [
+            1502.8945109939814,
+            577.4685159558511
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner_track",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": -1,
+      "heading": -0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 1.5,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.8,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 1.5,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 0.9,
+      "old_tail": 0.5333333333333333,
+      "new_tail": 0.26666666666666666,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner_track-w35-h100-gap60-side-1-d160-rest0-8a3db12939.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5,
+            585.0
+          ],
+          "new_position": [
+            776.6239456090912,
+            414.9578322716831
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            787.0499687964211,
+            538.0887449601663
+          ],
+          "new_position": [
+            763.7585847740077,
+            546.7554741848378
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "corner_track",
+      "width": 35,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.15,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 1.5,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": false,
+      "deaths": [
+        {
+          "agent": 2,
+          "time": 0.8,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 1.5,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": 1.0,
+      "old_tail": 0.6,
+      "new_tail": 0.26666666666666666,
+      "old_targeted_guide_ticks": 2,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v1-corner_track-w35-h100-gap60-side1-d160-rest0-2b140b5e44.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            770.5,
+            585.0
+          ],
+          "new_position": [
+            776.6239456090912,
+            785.0421677283169
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": false,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            787.2057476569062,
+            661.7974213496318
+          ],
+          "new_position": [
+            763.7585847740081,
+            653.2445258151624
+          ],
+          "holder_alive": true
+        }
+      ]
+    }
+  ]
+}

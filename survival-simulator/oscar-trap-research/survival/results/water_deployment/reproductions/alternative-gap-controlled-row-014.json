@@ -1,0 +1,99 @@
+{
+  "status": "new_reproduction",
+  "provenance": {
+    "source_name": "alternative-gap-controlled.json",
+    "source_sha256": "26749f48d4addb582804f17bcad549a6e5a8c34fbcd557a126172f4f10d4ddfa",
+    "row_index": 13,
+    "fidelity_note": "Saved configuration rerun with the current recording-enabled harness and unchanged mechanism; original historical frames are unavailable.",
+    "configuration_changes": [],
+    "historical_experiment_sha256": {
+      "advance.py": "f7ae07966ac42ca77b413314ab37c397c5f702a79fb8d060c7c4a71bbd85bb7b",
+      "alternative_traps.py": "0a807c9ef34facede9001e21ad7ba7f8ff5290c65dc71efef0fcd1ed57f59328",
+      "approach.py": "6834fc6fa540475ec5feda6dc293a165a682d03706d9625215ab5b547a67f7b1",
+      "association.py": "411a72452b516293dbc7eba56e084a123030c08eec9c311b3948f0512fcdcd45",
+      "base_snapshot.py": "aff00b9ce228e3beb8ccdf17f21f67f2e9fe315fc153a9ca923d1d3c740cd2ca",
+      "base_snapshot_v1.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "d047ed18dd5a4554803cda321a5267f7b038084c008cc19d420d3d262de04aa4",
+      "comparison.py": "0dd70c7a654e99c6b40433ec8f97191981682015a3d2cadae3bbfbe25717dec0",
+      "controller.py": "252a1618ce126c0e07143cc0c4acf01386dadeda8337c7e91a80af3c8dc1fc4c",
+      "controller_v2.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "corridor.py": "db1a9bdfa51eaf3f2c55627d73e87a7632aedc7dae9f7c03e0e963e993c3a8dd",
+      "probe.py": "27a4f5c4fe86abbc1bfa31e86a5a9f029c1f54b9a5f2d1d289aa0c6032eb5976",
+      "run.py": "8c90c04ef526e07719670d5ac73a9ba7f9080723e79b9c2d3edc3116c42d3c59",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505",
+      "summarize.py": "35408e558ea6f3da4ee10e1081da630780874118db2934a0a4876b3a902c691c",
+      "twins.py": "b7d9b100f716e53e9c866f8063d4e3ac0a26d1861970e84818000cf09fb4f494"
+    }
+  },
+  "metric_differences": {},
+  "result": {
+    "case": {
+      "gap": 22,
+      "length": 60,
+      "heading_offset": 0.3,
+      "seconds": 60
+    },
+    "site": {
+      "goal": [
+        800,
+        530
+      ],
+      "start": [
+        800,
+        485
+      ],
+      "predator": [
+        800,
+        450
+      ],
+      "mouth": [
+        800,
+        500
+      ],
+      "heading": 1.5707963267948966,
+      "gap": 22,
+      "length": 60
+    },
+    "elapsed_s": 0.5,
+    "acquired_s": null,
+    "capture_s": 0.5,
+    "alive": false,
+    "energy_remaining": 147.25000000000003,
+    "movement_energy": 2.25,
+    "food_energy": 2.8449465006019636e-14,
+    "first_escape_s": null,
+    "after_acquisition_s": 0.0,
+    "containment_fraction": 0.0,
+    "attention_fraction": 0.0,
+    "joint_fraction": 0.0,
+    "active_joint_fraction": 0.0,
+    "maximum_odometry_error": 0,
+    "trace": [
+      {
+        "t": 0.1,
+        "bait": [
+          800.0,
+          495.0,
+          149.4
+        ],
+        "predators": [
+          [
+            797.758428012896,
+            464.8315661690406,
+            99.42612675853621,
+            false
+          ]
+        ],
+        "confined": true,
+        "attention": true
+      }
+    ],
+    "recording": {
+      "path": "results/water_deployment/replays/Size-selective-gap-refuge-v52ed8cdb-seed173-46116c2b11aa.json.gz",
+      "duration": 0.5,
+      "score": -0.9725,
+      "frames": 2,
+      "reason": "bait captured or depleted"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-RealMapGuidePolicy-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-c23deeee.json",
+  "original_receipt_sha256": "a11e239a266682c939e661445e108cf1f90bb563bab2ba6c5559b468048fd0e3",
+  "overrides": {
+    "guide_role_ids": [1, 2],
+    "failure_stage": "lineage_role_thrashing_and_lost_reacquisition",
+    "gaze_route_exercised": true
+  },
+  "reason": "The immutable receipt contains repeated IDs in guide_role_ids because the policy exposes its role history as a list; the corrected set is [1,2]. Fresh pursuit was verified after each role epoch, but five early reassignments were followed by repeated pursuit loss and no physical site entry. The replay and original receipt are unchanged."
+}

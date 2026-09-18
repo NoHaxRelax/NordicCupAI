@@ -1,0 +1,625 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "scope": "local exact engine; isolated fixtures plus optional generated maps",
+  "contract": "all strategy probes use at most one action per living observed agent",
+  "order_and_scoring": {
+    "contested_fruit_uses_agent_list_order": [
+      {
+        "request_order": "low_id_first",
+        "energies": {
+          "0": 118.9,
+          "1": 98.9
+        },
+        "fruit_remaining": false,
+        "winner_id": 0,
+        "score": 0.12000000000000001
+      },
+      {
+        "request_order": "high_id_first",
+        "energies": {
+          "0": 118.9,
+          "1": 98.9
+        },
+        "fruit_remaining": false,
+        "winner_id": 0,
+        "score": 0.12000000000000001
+      }
+    ],
+    "compliant_birth_order_maps_rng_and_ids_to_lineage": [
+      {
+        "request_order": "left_first",
+        "children": [
+          {
+            "id": 2,
+            "x": 101.60855851945301,
+            "y": 190.34682420635426,
+            "nearest_parent": "left",
+            "age_after_birth_tick": 0.1,
+            "energy_after_birth_tick": 74.9
+          },
+          {
+            "id": 3,
+            "x": 393.3783818414664,
+            "y": 192.91037650321317,
+            "nearest_parent": "right",
+            "age_after_birth_tick": 0.1,
+            "energy_after_birth_tick": 74.9
+          }
+        ]
+      },
+      {
+        "request_order": "right_first",
+        "children": [
+          {
+            "id": 2,
+            "x": 361.608558519453,
+            "y": 190.34682420635426,
+            "nearest_parent": "right",
+            "age_after_birth_tick": 0.1,
+            "energy_after_birth_tick": 74.9
+          },
+          {
+            "id": 3,
+            "x": 133.37838184146645,
+            "y": 192.91037650321317,
+            "nearest_parent": "left",
+            "age_after_birth_tick": 0.1,
+            "energy_after_birth_tick": 74.9
+          }
+        ]
+      }
+    ],
+    "nonspawn_movement_request_order_negative_control": [
+      [
+        [
+          0,
+          100.0,
+          160.0,
+          149.4
+        ],
+        [
+          1,
+          300.0,
+          240.0,
+          149.4
+        ]
+      ],
+      [
+        [
+          0,
+          100.0,
+          160.0,
+          149.4
+        ],
+        [
+          1,
+          300.0,
+          240.0,
+          149.4
+        ]
+      ]
+    ],
+    "last_gasp_fruit_requires_action_plus_passive_reserve": [
+      {
+        "starting_energy": 0.59,
+        "alive": false,
+        "remaining_energy": -0.010000000000000037,
+        "fruit_count": 1,
+        "score": 0.1
+      },
+      {
+        "starting_energy": 0.61,
+        "alive": true,
+        "remaining_energy": 20.01,
+        "fruit_count": 0,
+        "score": 0.12000000000000001
+      }
+    ],
+    "food_cannot_fund_same_tick_birth": [
+      {
+        "starting_energy": 99.9,
+        "population": 1,
+        "parent_energy": 119.80000000000001,
+        "fruit_count": 0
+      },
+      {
+        "starting_energy": 100.3,
+        "population": 2,
+        "parent_energy": 20.199999999999996,
+        "fruit_count": 0
+      }
+    ],
+    "pre_predator_energy_burn_avoids_tiny_death_penalty": [
+      {
+        "burn_energy": false,
+        "alive": false,
+        "score": 0.0955,
+        "predator_energy": 100.40225351707244,
+        "agent_energy_at_removal": 0.45000000000000007
+      },
+      {
+        "burn_energy": true,
+        "alive": false,
+        "score": 0.1,
+        "predator_energy": 99.446875,
+        "agent_energy_at_removal": -0.04999999999999996
+      }
+    ],
+    "cluster_contact_cumulative_loss": {
+      "agents_before": 5,
+      "agents_after": 0,
+      "score": -4.895000000000001,
+      "survival_tick_score": 0.1,
+      "predator_energy": 200.0,
+      "score_penalty": 4.995
+    },
+    "official_loop_horizon_boundary": [
+      {
+        "time": 2999.9,
+        "score": 2999.9,
+        "status": "ok"
+      },
+      {
+        "time": 3000.0,
+        "score": 3000.0,
+        "status": "ok"
+      },
+      {
+        "time": 3000.1,
+        "score": 3000.1,
+        "status": "game_over"
+      }
+    ]
+  },
+  "coordinate_frames": {
+    "direct_frame_alignment": {
+      "inferred_fruit_in_a_frame": [
+        151.79902661017874,
+        -38.17139662367951
+      ],
+      "actual_fruit_in_a_frame_diagnostic": [
+        151.79902661017871,
+        -38.17139662367955
+      ],
+      "absolute_error": 4.5496934130773415e-14,
+      "ordinary_inputs": [
+        "Agent distance",
+        "Agent angle",
+        "Agent rel_dir",
+        "peer Fruit distance",
+        "peer Fruit angle"
+      ]
+    },
+    "wall_relay": {
+      "a_direct_fruit_count": 0,
+      "a_relayed_candidates": [
+        {
+          "source_id": 1,
+          "x": 110.0,
+          "y": -1.7145055188062946e-14,
+          "distance": 110.0
+        }
+      ],
+      "actual_distance_diagnostic": 110.0,
+      "a_observes_b_through_hearing": true
+    },
+    "multi_hop_range_extension": {
+      "root_direct_fruit_count": 0,
+      "connected_agent_ids": [
+        0,
+        1,
+        2
+      ],
+      "relayed_distance": 260.0,
+      "actual_distance_diagnostic": 260.0,
+      "root_vision_range": 200
+    }
+  },
+  "generated_maps": {
+    "seeds": [
+      1,
+      7,
+      42
+    ],
+    "horizon": 600.0,
+    "modes": [
+      "nursery",
+      "one_birth",
+      "relay"
+    ],
+    "runs": [
+      {
+        "mode": "nursery",
+        "seed": 1,
+        "horizon": 600.0,
+        "survival_seconds": 600.0,
+        "score": 591.784128,
+        "alive": 6,
+        "peak_agents": 6,
+        "total_agents_created": 43,
+        "predators": 6,
+        "total_actions": 35843,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 6885,
+        "relayed_opportunities": 430,
+        "wall_seconds": 42.408
+      },
+      {
+        "mode": "nursery",
+        "seed": 7,
+        "horizon": 600.0,
+        "survival_seconds": 600.0,
+        "score": 605.865808,
+        "alive": 5,
+        "peak_agents": 6,
+        "total_agents_created": 43,
+        "predators": 6,
+        "total_actions": 35346,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 4846,
+        "relayed_opportunities": 311,
+        "wall_seconds": 44.831
+      },
+      {
+        "mode": "nursery",
+        "seed": 42,
+        "horizon": 600.0,
+        "survival_seconds": 93.6,
+        "score": 94.5472,
+        "alive": 0,
+        "peak_agents": 5,
+        "total_agents_created": 9,
+        "predators": 0,
+        "total_actions": 3114,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 1349,
+        "relayed_opportunities": 88,
+        "wall_seconds": 3.048
+      },
+      {
+        "mode": "one_birth",
+        "seed": 1,
+        "horizon": 600.0,
+        "survival_seconds": 600.0,
+        "score": 591.784128,
+        "alive": 6,
+        "peak_agents": 6,
+        "total_agents_created": 43,
+        "predators": 6,
+        "total_actions": 35843,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 6885,
+        "relayed_opportunities": 430,
+        "wall_seconds": 45.257
+      },
+      {
+        "mode": "one_birth",
+        "seed": 7,
+        "horizon": 600.0,
+        "survival_seconds": 600.0,
+        "score": 605.865808,
+        "alive": 5,
+        "peak_agents": 6,
+        "total_agents_created": 43,
+        "predators": 6,
+        "total_actions": 35346,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 4846,
+        "relayed_opportunities": 311,
+        "wall_seconds": 40.252
+      },
+      {
+        "mode": "one_birth",
+        "seed": 42,
+        "horizon": 600.0,
+        "survival_seconds": 93.6,
+        "score": 94.5472,
+        "alive": 0,
+        "peak_agents": 5,
+        "total_agents_created": 9,
+        "predators": 0,
+        "total_actions": 3114,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 1349,
+        "relayed_opportunities": 88,
+        "wall_seconds": 2.933
+      },
+      {
+        "mode": "relay",
+        "seed": 1,
+        "horizon": 600.0,
+        "survival_seconds": 536.1,
+        "score": 510.533981,
+        "alive": 0,
+        "peak_agents": 6,
+        "total_agents_created": 59,
+        "predators": 6,
+        "total_actions": 29336,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 13094,
+        "relayed_opportunities": 609,
+        "wall_seconds": 35.369
+      },
+      {
+        "mode": "relay",
+        "seed": 7,
+        "horizon": 600.0,
+        "survival_seconds": 403.6,
+        "score": 412.150948,
+        "alive": 0,
+        "peak_agents": 6,
+        "total_agents_created": 28,
+        "predators": 4,
+        "total_actions": 22315,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 8632,
+        "relayed_opportunities": 265,
+        "wall_seconds": 18.273
+      },
+      {
+        "mode": "relay",
+        "seed": 42,
+        "horizon": 600.0,
+        "survival_seconds": 76.2,
+        "score": 76.699864,
+        "alive": 0,
+        "peak_agents": 5,
+        "total_agents_created": 9,
+        "predators": 2,
+        "total_actions": 2726,
+        "duplicate_action_ticks": 0,
+        "connected_agent_ticks": 1104,
+        "relayed_opportunities": 97,
+        "wall_seconds": 1.394
+      }
+    ],
+    "summaries": {
+      "nursery": {
+        "runs": 3,
+        "mean_score": 430.73237866666665,
+        "median_score": 591.784128,
+        "mean_survival": 431.2,
+        "full_horizon_runs": 2,
+        "mean_agents_created": 31.666666666666668,
+        "total_relayed_opportunities": 829,
+        "duplicate_action_ticks": 0
+      },
+      "one_birth": {
+        "runs": 3,
+        "mean_score": 430.73237866666665,
+        "median_score": 591.784128,
+        "mean_survival": 431.2,
+        "full_horizon_runs": 2,
+        "mean_agents_created": 31.666666666666668,
+        "total_relayed_opportunities": 829,
+        "duplicate_action_ticks": 0
+      },
+      "relay": {
+        "runs": 3,
+        "mean_score": 333.12826433333333,
+        "median_score": 412.150948,
+        "mean_survival": 338.6333333333334,
+        "full_horizon_runs": 0,
+        "mean_agents_created": 32.0,
+        "total_relayed_opportunities": 971,
+        "duplicate_action_ticks": 0
+      }
+    }
+  },
+  "generated_map_followups": {
+    "relay_orient_pilot": {
+      "seeds": [
+        1,
+        7,
+        42
+      ],
+      "horizon": 600.0,
+      "modes": [
+        "relay_orient"
+      ],
+      "runs": [
+        {
+          "mode": "relay_orient",
+          "seed": 1,
+          "horizon": 600.0,
+          "survival_seconds": 600.0,
+          "score": 596.967002,
+          "alive": 6,
+          "peak_agents": 6,
+          "total_agents_created": 46,
+          "predators": 5,
+          "total_actions": 35669,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 10517,
+          "relayed_opportunities": 812,
+          "wall_seconds": 46.727
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 7,
+          "horizon": 600.0,
+          "survival_seconds": 600.0,
+          "score": 611.611373,
+          "alive": 6,
+          "peak_agents": 6,
+          "total_agents_created": 41,
+          "predators": 5,
+          "total_actions": 35730,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 13519,
+          "relayed_opportunities": 883,
+          "wall_seconds": 57.242
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 42,
+          "horizon": 600.0,
+          "survival_seconds": 86.2,
+          "score": 87.0198,
+          "alive": 0,
+          "peak_agents": 5,
+          "total_agents_created": 6,
+          "predators": 0,
+          "total_actions": 3093,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 830,
+          "relayed_opportunities": 23,
+          "wall_seconds": 2.467
+        }
+      ],
+      "summaries": {
+        "relay_orient": {
+          "runs": 3,
+          "mean_score": 431.8660583333333,
+          "median_score": 596.967002,
+          "mean_survival": 428.73333333333335,
+          "full_horizon_runs": 2,
+          "mean_agents_created": 31.0,
+          "total_relayed_opportunities": 1718,
+          "duplicate_action_ticks": 0
+        }
+      }
+    },
+    "relay_orient_heldout": {
+      "seeds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9
+      ],
+      "horizon": 600.0,
+      "modes": [
+        "relay_orient"
+      ],
+      "runs": [
+        {
+          "mode": "relay_orient",
+          "seed": 2,
+          "horizon": 600.0,
+          "survival_seconds": 600.0,
+          "score": 611.787262,
+          "alive": 6,
+          "peak_agents": 6,
+          "total_agents_created": 53,
+          "predators": 3,
+          "total_actions": 34843,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 11082,
+          "relayed_opportunities": 935,
+          "wall_seconds": 58.894
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 3,
+          "horizon": 600.0,
+          "survival_seconds": 465.4,
+          "score": 441.788898,
+          "alive": 0,
+          "peak_agents": 6,
+          "total_agents_created": 50,
+          "predators": 5,
+          "total_actions": 24776,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 8091,
+          "relayed_opportunities": 806,
+          "wall_seconds": 32.293
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 4,
+          "horizon": 600.0,
+          "survival_seconds": 513.1,
+          "score": 514.75361,
+          "alive": 0,
+          "peak_agents": 6,
+          "total_agents_created": 55,
+          "predators": 5,
+          "total_actions": 28984,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 10717,
+          "relayed_opportunities": 1212,
+          "wall_seconds": 30.857
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 5,
+          "horizon": 600.0,
+          "survival_seconds": 600.0,
+          "score": 608.035774,
+          "alive": 6,
+          "peak_agents": 6,
+          "total_agents_created": 51,
+          "predators": 3,
+          "total_actions": 35563,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 15671,
+          "relayed_opportunities": 1370,
+          "wall_seconds": 30.123
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 6,
+          "horizon": 600.0,
+          "survival_seconds": 600.0,
+          "score": 578.270586,
+          "alive": 4,
+          "peak_agents": 6,
+          "total_agents_created": 57,
+          "predators": 4,
+          "total_actions": 33854,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 12216,
+          "relayed_opportunities": 1047,
+          "wall_seconds": 14.631
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 8,
+          "horizon": 600.0,
+          "survival_seconds": 351.8,
+          "score": 343.926291,
+          "alive": 0,
+          "peak_agents": 6,
+          "total_agents_created": 28,
+          "predators": 3,
+          "total_actions": 18541,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 6501,
+          "relayed_opportunities": 565,
+          "wall_seconds": 7.493
+        },
+        {
+          "mode": "relay_orient",
+          "seed": 9,
+          "horizon": 600.0,
+          "survival_seconds": 600.0,
+          "score": 609.3381,
+          "alive": 5,
+          "peak_agents": 6,
+          "total_agents_created": 44,
+          "predators": 4,
+          "total_actions": 34505,
+          "duplicate_action_ticks": 0,
+          "connected_agent_ticks": 11586,
+          "relayed_opportunities": 433,
+          "wall_seconds": 26.857
+        }
+      ],
+      "summaries": {
+        "relay_orient": {
+          "runs": 7,
+          "mean_score": 529.7000744285714,
+          "median_score": 578.270586,
+          "mean_survival": 532.9,
+          "full_horizon_runs": 4,
+          "mean_agents_created": 48.285714285714285,
+          "total_relayed_opportunities": 6368,
+          "duplicate_action_ticks": 0
+        }
+      }
+    }
+  }
+}

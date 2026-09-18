@@ -1,0 +1,463 @@
+{
+  "status": "new_reproduction",
+  "provenance": {
+    "source_name": "corridor.json",
+    "source_sha256": "d59a4b3d8abb5c555e088e76363c496e88bcaa1674c655ac708934c07fdd66d9",
+    "row_index": 13,
+    "fidelity_note": "Exact historical controller revision is unavailable; this is a current-controller rerun of the saved configuration, not an exact historical replay.",
+    "configuration_changes": [],
+    "historical_experiment_sha256": {
+      "advance.py": "9017e75deb2d3e6acd0ddd2fad5e1fad5c69e192f9125af2e1fd89b534296173",
+      "base_snapshot.py": "a32d3af46b116fc42e9fb0ff9e61aee8639924d2b8aa52b68c0e45728b456d1f",
+      "base_snapshot_v1.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "d047ed18dd5a4554803cda321a5267f7b038084c008cc19d420d3d262de04aa4",
+      "controller.py": "d26a852200f80715471c924293584bfd8954412d0d7d7abfacccc5151908d30e",
+      "controller_v2.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "corridor.py": "db1a9bdfa51eaf3f2c55627d73e87a7632aedc7dae9f7c03e0e963e993c3a8dd",
+      "probe.py": "27a4f5c4fe86abbc1bfa31e86a5a9f029c1f54b9a5f2d1d289aa0c6032eb5976",
+      "run.py": "6cd8ce865beb39e9cb3cac2c1f0f0da4d2c1c3d3ee6ac9215b5901a34c7438cb",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505",
+      "twins.py": "b7d9b100f716e53e9c866f8063d4e3ac0a26d1861970e84818000cf09fb4f494"
+    }
+  },
+  "metric_differences": {},
+  "result": {
+    "case": {
+      "native": true,
+      "seed": 37,
+      "site": {
+        "center": [
+          286.93969262078593,
+          211.34202014332567
+        ],
+        "angle": 0.3490658503988659,
+        "width": 53.0,
+        "common_water_width": 44.0,
+        "obstructed_samples": 0,
+        "nearby_native_trees": [
+          [],
+          [
+            {
+              "position": [
+                337.3607459499203,
+                243.01445647190152
+              ],
+              "age": 79.30818821542626
+            },
+            {
+              "position": [
+                369.40859580054394,
+                264.77784082554126
+              ],
+              "age": 40.61995368951918
+            }
+          ]
+        ],
+        "nearby_native_fruits": [
+          [
+            {
+              "position": [
+                89.10592055295122,
+                172.56597780255137
+              ],
+              "energy": 20
+            },
+            {
+              "position": [
+                193.3238947181906,
+                250.6939273046769
+              ],
+              "energy": 20
+            }
+          ],
+          [
+            {
+              "position": [
+                496.908901225157,
+                266.64192459325744
+              ],
+              "energy": 20
+            }
+          ]
+        ]
+      },
+      "second_station": {
+        "center": [
+          237.0,
+          362.0
+        ],
+        "angle": 0.5235987755982988,
+        "width": 51.0,
+        "common_water_width": 46.0,
+        "obstructed_samples": 3,
+        "nearby_native_trees": [
+          [
+            {
+              "position": [
+                184.86296520868402,
+                294.62895742668815
+              ],
+              "age": 41.84007565051165
+            }
+          ],
+          [
+            {
+              "position": [
+                318.2183128583936,
+                432.76189366289964
+              ],
+              "age": 22.867457350465152
+            },
+            {
+              "position": [
+                383.4452119739118,
+                402.55948074344013
+              ],
+              "age": 37.1115657134585
+            }
+          ]
+        ],
+        "nearby_native_fruits": [
+          [
+            {
+              "position": [
+                193.3238947181906,
+                250.6939273046769
+              ],
+              "energy": 20
+            }
+          ],
+          []
+        ]
+      },
+      "predators": 2,
+      "crew": 4,
+      "heading": 0.35,
+      "seconds": 90,
+      "collision_model": true,
+      "anchor_window": 15
+    },
+    "elapsed_s": 3.900000000000002,
+    "alive": 3,
+    "score": 2.588576789583168,
+    "acquired_s": 0,
+    "water_fraction": 0.3333333333333333,
+    "bait_attention_fraction": 0.5384615384615384,
+    "joint_fraction": 0.3333333333333333,
+    "active_joint_fraction": 0.3333333333333333,
+    "after_acquisition_s": 3.9,
+    "after_acquisition_joint_fraction": 0.3333333333333333,
+    "after_acquisition_water_fraction": 0.3333333333333333,
+    "after_acquisition_attention_fraction": 0.5384615384615384,
+    "first_capture_s": 3.900000000000002,
+    "first_depletion_s": null,
+    "deaths": [
+      {
+        "t": 3.900000000000002,
+        "id": 3,
+        "cause": "capture",
+        "energy": 131.14232104168343,
+        "age": 3.900000000000002,
+        "max_age": 97.8869153791997
+      }
+    ],
+    "handoffs": [],
+    "births": [],
+    "newborn_localization": [],
+    "movement_turn_energy": {
+      "0": 8.451307139755272,
+      "1": 13.240655276499723,
+      "2": 5.272590546889177,
+      "3": 14.95767895831679
+    },
+    "absorbed_native_fruit_energy": {},
+    "birth_energy_cost": 0,
+    "energy_remaining": {
+      "0": 137.64869286024495,
+      "1": 132.8593447235005,
+      "2": 140.82740945311104
+    },
+    "maximum_pose_error": 2.5421149729252077e-13,
+    "worker_living_seconds": 0.0,
+    "worker_captures": 0,
+    "maximum_predators": 2,
+    "trace": [
+      {
+        "t": 0.1,
+        "active": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "agents": [
+          {
+            "id": 0,
+            "uv": [
+              -28.500000000000007,
+              1.4845785113048365e-14
+            ],
+            "energy": 149.9,
+            "age": 0.1
+          },
+          {
+            "id": 1,
+            "uv": [
+              37.500000000000014,
+              -9.60404708760914e-15
+            ],
+            "energy": 149.45000000000002,
+            "age": 0.1
+          },
+          {
+            "id": 2,
+            "uv": [
+              -22.48210998416928,
+              153.87724787578935
+            ],
+            "energy": 149.9,
+            "age": 0.1
+          },
+          {
+            "id": 3,
+            "uv": [
+              40.54558620861202,
+              164.9907312464729
+            ],
+            "energy": 149.45000000000002,
+            "age": 0.1
+          }
+        ],
+        "predators": [
+          {
+            "uv": [
+              3.5823770934707357,
+              2.723338825812199
+            ],
+            "water": true,
+            "target": 0
+          },
+          {
+            "uv": [
+              7.655153135257881,
+              161.95661120536587
+            ],
+            "water": true,
+            "target": 2
+          }
+        ],
+        "pose_error": 0,
+        "score": 0.1
+      },
+      {
+        "t": 1.1,
+        "active": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "agents": [
+          {
+            "id": 0,
+            "uv": [
+              -55.500000000000036,
+              14.999999999999984
+            ],
+            "energy": 146.8000000000001,
+            "age": 1.0999999999999999
+          },
+          {
+            "id": 1,
+            "uv": [
+              46.31844677401224,
+              15.000000000000007
+            ],
+            "energy": 144.65026706220073,
+            "age": 1.0999999999999999
+          },
+          {
+            "id": 2,
+            "uv": [
+              -60.53991175761273,
+              162.398029774963
+            ],
+            "energy": 146.35000000000008,
+            "age": 1.0999999999999999
+          },
+          {
+            "id": 3,
+            "uv": [
+              29.077593766498143,
+              178.20001394265367
+            ],
+            "energy": 145.22712257241835,
+            "age": 1.0999999999999999
+          }
+        ],
+        "predators": [
+          {
+            "uv": [
+              -16.971546443821815,
+              26.792618693189358
+            ],
+            "water": true,
+            "target": 0
+          },
+          {
+            "uv": [
+              -12.758058591672437,
+              194.98441090405558
+            ],
+            "water": true,
+            "target": 3
+          }
+        ],
+        "pose_error": 1.6077746776921858e-13,
+        "score": 1.0999999999999999
+      },
+      {
+        "t": 2.1,
+        "active": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "agents": [
+          {
+            "id": 0,
+            "uv": [
+              -105.5130713975548,
+              14.999999999999973
+            ],
+            "energy": 143.29934643012248,
+            "age": 2.1000000000000005
+          },
+          {
+            "id": 1,
+            "uv": [
+              28.49999999999995,
+              15.00000000000002
+            ],
+            "energy": 142.7593447235002,
+            "age": 2.1000000000000005
+          },
+          {
+            "id": 2,
+            "uv": [
+              -25.086832649173225,
+              168.6493641709725
+            ],
+            "energy": 142.92004597965368,
+            "age": 2.1000000000000005
+          },
+          {
+            "id": 3,
+            "uv": [
+              56.44634961841052,
+              183.02586402776853
+            ],
+            "energy": 142.83757442110667,
+            "age": 2.1000000000000005
+          }
+        ],
+        "predators": [
+          {
+            "uv": [
+              -57.45661609214314,
+              -55.09021380737179
+            ],
+            "water": false,
+            "target": null
+          },
+          {
+            "uv": [
+              16.358440574685446,
+              207.11610438107314
+            ],
+            "water": true,
+            "target": 3
+          }
+        ],
+        "pose_error": 1.6077746776921858e-13,
+        "score": 2.1000000000000005
+      },
+      {
+        "t": 3.1,
+        "active": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "agents": [
+          {
+            "id": 0,
+            "uv": [
+              -28.50000000000002,
+              15.0
+            ],
+            "energy": 138.4486928602449,
+            "age": 3.1000000000000014
+          },
+          {
+            "id": 1,
+            "uv": [
+              118.49999999999997,
+              15.00000000000004
+            ],
+            "energy": 137.25934472350036,
+            "age": 3.1000000000000014
+          },
+          {
+            "id": 2,
+            "uv": [
+              -24.29504307883787,
+              164.15890237576662
+            ],
+            "energy": 141.6920592593283,
+            "age": 3.1000000000000014
+          },
+          {
+            "id": 3,
+            "uv": [
+              136.36802802984795,
+              196.1507750376936
+            ],
+            "energy": 137.78757442110683,
+            "age": 3.1000000000000014
+          }
+        ],
+        "predators": [
+          {
+            "uv": [
+              -49.93401900952691,
+              -160.0014803091915
+            ],
+            "water": false,
+            "target": null
+          },
+          {
+            "uv": [
+              113.97769456668256,
+              192.4374695303643
+            ],
+            "water": false,
+            "target": 3
+          }
+        ],
+        "pose_error": 1.6077746776921858e-13,
+        "score": 3.1000000000000014
+      }
+    ],
+    "fallback_s": null,
+    "recording": {
+      "path": "results/water_deployment/replays/Mapped-water-deployment-v9f0b3cc3-seed37-4ad5a424ebdf.json.gz",
+      "duration": 3.9,
+      "score": 2.5886,
+      "frames": 5,
+      "reason": "loss or extinction stopped the run"
+    }
+  }
+}

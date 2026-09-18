@@ -1,0 +1,16 @@
+{
+  "schema": "short-overlap-correction-v1",
+  "receipt": "depth5-observed-gap-g15-l30x30-o0-h1-n33-i0.1-guides0-s731-9e8d6eff.json",
+  "original_receipt_sha256": "599b2a4259742715c4f64423b670916a0bc411533dd9be68a41d5d14f11b4444",
+  "replay_unchanged": true,
+  "overrides": {
+    "short_overlap_retention_valid": false,
+    "evidence_class": "invalid_short_overlap_retention_test",
+    "bait_deployment_expected": false,
+    "exclude_from_short_overlap_success_denominator": true
+  },
+  "reason": "Unchanged ObservedGapPolicy requires each observed edge and their overlap to be at least 54.9. It did not identify this short fixture, so the bait never deployed into the refuge.",
+  "source_hashes": {
+    "research/depth5_test/observed_gap_policy.py": "fdee75ff24c76ab5fcb5e225e69a8eb7d1f6a9859fafefdccf47a000822acebd"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-RealMapGuidePolicy-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-c2d95064.json",
+  "original_receipt_sha256": "ae0e3d4195cfbbd9b1b983ce6045ec6b8316f250f6ff1cf105bfc375ec23449e",
+  "replay_unchanged": true,
+  "overrides": {
+    "failure_stage": "bait_ready_recognition",
+    "bait_physically_at_goal_at": 1.2,
+    "post_encounter_wait_evade_ticks": 380,
+    "gaze_route_exercised": false
+  },
+  "reason": "The evaluator measured the bait continuously at the depth-5 goal from 1.2 seconds, but the policy never set its internal bait_ready flag. All 380 parent decisions after the 9.1-second encounter were hold_encounter_until_bait_deployed or evade_until_bait_deployed. The gaze verification and refuge routing stages were never exercised, so this run must not be classified as their failure."
+}

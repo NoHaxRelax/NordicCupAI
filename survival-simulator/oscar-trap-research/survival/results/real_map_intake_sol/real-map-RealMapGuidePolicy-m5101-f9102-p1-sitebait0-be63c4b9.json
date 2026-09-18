@@ -1,0 +1,115 @@
+{
+  "schema": "real-map-intake-result-v1",
+  "policy": "real_map_guide_sol.policy:RealMapGuidePolicy",
+  "policy_hash": "54edb193672ebdbc79c4bbc87b79f71de546e2df51bc7fe3b59f123d0a5c0ac3",
+  "map_seed": 5101,
+  "fixture_seed": 9102,
+  "static_map_hash": "6d9919ad98986ad950fff54a5c5c881be8b3419762a407d2fd7db6f0acbd8a9a",
+  "site": {
+    "mouth": [
+      294.799,
+      306.9973
+    ],
+    "inward": [
+      0.0,
+      -1.0
+    ],
+    "cross": [
+      1.0,
+      0.0
+    ],
+    "goal": [
+      294.799,
+      276.9973
+    ],
+    "far": [
+      294.799,
+      431.9973
+    ],
+    "hold": [
+      294.799,
+      381.9973
+    ],
+    "gap": 17.6811,
+    "overlap": 64.8634,
+    "obstacle_indices": [
+      4,
+      42
+    ],
+    "axis": 0
+  },
+  "station_bait": false,
+  "requested_seconds": 0.1,
+  "seconds": 0.1,
+  "reason": "horizon",
+  "native_render": true,
+  "record_every_ticks": 1,
+  "replay_frames": 2,
+  "initial_predators": 1,
+  "final_predators_total": 1,
+  "ambient_predators_spawned": 0,
+  "agent_energy_refilled": true,
+  "predator_state_native": true,
+  "starts": {
+    "agents": [
+      {
+        "slot": 0,
+        "x": 646.0672,
+        "y": 188.0398,
+        "heading": -1.1202,
+        "agent_id": 0
+      },
+      {
+        "slot": 1,
+        "x": 1131.4206,
+        "y": 220.954,
+        "heading": -0.9456,
+        "agent_id": 1
+      }
+    ],
+    "predators": [
+      {
+        "slot": 0,
+        "x": 319.8501,
+        "y": 812.5744,
+        "heading": -0.8936
+      }
+    ]
+  },
+  "bait_id": 0,
+  "guide_id": 1,
+  "bait_alive": true,
+  "guide_alive": true,
+  "bait_deployed_at": null,
+  "bait_left_after_deployment": null,
+  "final_bait_distance_to_goal": 375.5329,
+  "first_guide_predator_observation": null,
+  "first_predator_following_guide": null,
+  "delivered": 0,
+  "physical_losses_after_delivery": 0,
+  "delivery_times": [
+    null
+  ],
+  "loss_times": [
+    null
+  ],
+  "final_distance_from_mouth": [
+    506.1974
+  ],
+  "max_distance_after_delivery": [
+    0.0
+  ],
+  "success": false,
+  "trace": [
+    {
+      "time": 0.1,
+      "agents_alive": 2,
+      "predators_total": 1,
+      "bait_distance_to_goal": 375.533,
+      "bait_deployed": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0
+    }
+  ],
+  "replay": "results/real_map_intake_sol/replays/real-map-RealMapGuidePolicy-m5101-f9102-p1-sitebait0-be63c4b9.json.gz"
+}

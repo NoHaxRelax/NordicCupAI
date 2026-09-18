@@ -1,0 +1,29 @@
+{
+  "schema": "guide-delivery-causal-score-v2",
+  "protocol_sha256": "429cc7b2d0439ac1756acea3f0fe521e68fced933f95bb7ebabe175a257f8016",
+  "receipt": "results/simple_chase/real-map-SimpleChase-m10138-f20138-p1-direct_guide-sitebait1-166c09bc.json",
+  "receipt_sha256": "81a06ee526243fde0b6b09c8df070eae3a531cb947795368a46e6bfb61b5fb7b",
+  "policy": "reliability_eval.policy_robust:SimpleChase",
+  "policy_sha256": "ad4c976b27c52f0c1e7954852efc8ddf69e2be797eecfcc9f040f5fd0bcdb8ce",
+  "pass": false,
+  "reason": "no_recent_guide_to_bait_handoff",
+  "active_bait_acquisition": 176.8,
+  "last_guide_target_before_acquisition": null,
+  "guide_to_bait_active_seconds": null,
+  "guide_to_bait_wall_seconds": null,
+  "guide_alive_at_acquisition": false,
+  "guide_death": 1.0,
+  "stable_containment_tail_seconds": 123.3,
+  "loss_after_acquisition": null,
+  "guide_release_observed": null,
+  "guide_returned_to_staging": null,
+  "replay_check": {
+    "title": "real-map-SimpleChase-m10138-f20138-p1-direct_guide-sitebait1-166c09bc",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "This establishes a temporally continuous native guide-target to active-bait handoff, not counterfactual causation. Guide survival is explicitly neutral. Release/return events are ordinary-observation policy evidence reported separately from delivery success."
+}

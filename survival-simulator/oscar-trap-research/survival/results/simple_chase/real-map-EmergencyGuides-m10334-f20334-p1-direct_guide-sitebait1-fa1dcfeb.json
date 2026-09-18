@@ -1,0 +1,2188 @@
+{
+  "schema": "real-map-intake-result-v2",
+  "policy": "integrated_guide.policy_v27:EmergencyGuides",
+  "policy_hash": "b786cab54310e7e1c2d2fa370f5c59b5697bdddcad4ef2940a9e6b0443aac6dd",
+  "harness_hashes": {
+    "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+    "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+    "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+    "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+  },
+  "mode": "direct_guide",
+  "map_seed": 10334,
+  "fixture_seed": 20334,
+  "static_map_hash": "9e120eeea20de55caafe6553c88337c3eac43933dce8ea77bbc4cdcab2af778c",
+  "site": {
+    "mouth": [
+      241.3757,
+      547.6263
+    ],
+    "inward": [
+      0.0,
+      1.0
+    ],
+    "cross": [
+      -1.0,
+      0.0
+    ],
+    "goal": [
+      241.3757,
+      552.6263
+    ],
+    "far": [
+      241.3757,
+      422.6263
+    ],
+    "hold": [
+      241.3757,
+      472.6263
+    ],
+    "gap": 18.8643,
+    "overlap": 49.4429,
+    "runup": [
+      241.3757,
+      297.6263
+    ],
+    "approach_lane_offset": 0.0,
+    "offset_approach": false,
+    "obstacle_indices": [
+      39,
+      25
+    ],
+    "axis": 0,
+    "other_mouth": [
+      241.3757,
+      597.0692
+    ],
+    "replacement_entry": [
+      241.3757,
+      617.0692
+    ],
+    "second_access_clear": true,
+    "second_access_radius": 5.01,
+    "bait_depth": 5.0,
+    "boundary_indices": [],
+    "geometric_replacement_access_only": true
+  },
+  "station_bait": true,
+  "requested_seconds": 300.0,
+  "seconds": 31.2,
+  "reason": "stop sentinel",
+  "native_render": true,
+  "reproduction_of": null,
+  "record_every_ticks": 1,
+  "replay_frames": 313,
+  "initial_predators": 1,
+  "final_predators_total": 1,
+  "tracked_predators_present_final": 1,
+  "ambient_predators_spawned": 0,
+  "ambient_predators_present_final": 0,
+  "agent_energy_refilled": true,
+  "predator_state_native": false,
+  "predator_dynamics_native_after_setup": true,
+  "arranged_adjacent_awake_start": true,
+  "starts": {
+    "agents": [
+      {
+        "slot": 0,
+        "x": 241.3757,
+        "y": 552.6263,
+        "heading": -2.1747,
+        "arranged_at_site": true,
+        "setup_repositioned": true,
+        "agent_id": 0
+      },
+      {
+        "slot": 1,
+        "x": 977.6131,
+        "y": 319.9488,
+        "heading": 0.1113,
+        "arranged_next_to_predator": true,
+        "agent_id": 1
+      }
+    ],
+    "predators": [
+      {
+        "slot": 0,
+        "x": 1032.2731,
+        "y": 326.0553,
+        "heading": -3.0303
+      }
+    ]
+  },
+  "bait_id": 0,
+  "guide_id": 1,
+  "bait_alive": true,
+  "guide_alive": true,
+  "deaths": [],
+  "spawn_requests": [
+    {
+      "time": 3.4,
+      "parent_id": 1
+    },
+    {
+      "time": 3.5,
+      "parent_id": 1
+    },
+    {
+      "time": 3.6,
+      "parent_id": 1
+    },
+    {
+      "time": 3.7,
+      "parent_id": 1
+    },
+    {
+      "time": 3.8,
+      "parent_id": 2
+    },
+    {
+      "time": 3.9,
+      "parent_id": 2
+    },
+    {
+      "time": 4.0,
+      "parent_id": 4
+    },
+    {
+      "time": 4.1,
+      "parent_id": 2
+    }
+  ],
+  "child_births": [
+    {
+      "time": 3.4,
+      "child_id": 2,
+      "x": 859.9509,
+      "y": 99.2635,
+      "requesting_parent_ids": [
+        1
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 3.5,
+      "child_id": 3,
+      "x": 854.0453,
+      "y": 84.8685,
+      "requesting_parent_ids": [
+        1
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 3.6,
+      "child_id": 4,
+      "x": 881.7402,
+      "y": 72.4508,
+      "requesting_parent_ids": [
+        1
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 3.7,
+      "child_id": 5,
+      "x": 911.5892,
+      "y": 50.955,
+      "requesting_parent_ids": [
+        1
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 3.8,
+      "child_id": 6,
+      "x": 936.2767,
+      "y": 61.7306,
+      "requesting_parent_ids": [
+        2
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 3.9,
+      "child_id": 7,
+      "x": 908.6854,
+      "y": 86.854,
+      "requesting_parent_ids": [
+        2
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 4.0,
+      "child_id": 8,
+      "x": 899.255,
+      "y": 43.0602,
+      "requesting_parent_ids": [
+        4
+      ],
+      "native_parent_proximity_spawn": true
+    },
+    {
+      "time": 4.1,
+      "child_id": 9,
+      "x": 879.5011,
+      "y": 64.2585,
+      "requesting_parent_ids": [
+        2
+      ],
+      "native_parent_proximity_spawn": true
+    }
+  ],
+  "fruit_consumptions": [
+    {
+      "time": 31.0,
+      "agent_id": 7,
+      "x": 903.2703,
+      "y": 63.1613
+    }
+  ],
+  "parent_fruit_consumed_before_tracked_encounter": 0,
+  "tracked_encounter_times": [
+    0.1
+  ],
+  "conditional_delivery_denominator": true,
+  "conditional_delivery_status": "not_applicable",
+  "setup_oracle": false,
+  "setup_oracle_target": null,
+  "setup_oracle_ticks": 0,
+  "setup_oracle_routing": null,
+  "setup_oracle_route_resets": 0,
+  "setup_oracle_policy_reset_before_handoff_act": false,
+  "setup_oracle_handoff_time": null,
+  "dynamic_action_privilege_ended_at": null,
+  "target_switches": [
+    {
+      "time": 0.1,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 2.6,
+      "tracked_predator_slot": 0,
+      "target": null
+    },
+    {
+      "time": 3.4,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 3.5,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 3.6,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 4.2,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 4.3,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 4.6,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 5.0,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 5.1,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 5.2,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 5.3,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 5.5,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 6.0,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 6.1,
+      "tracked_predator_slot": 0,
+      "target": null
+    },
+    {
+      "time": 6.2,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 6.4,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 6.5,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 6.6,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 6.9,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 7.0,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 7.4,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 7.5,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 7.6,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 7.7,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 7.8,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 8.1,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 8.4,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 8.6,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 8.7,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 9.0,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 9.2,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 9.3,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 9.4,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 9.5,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 9.6,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 9.8,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 9.9,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 10.0,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 10.3,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 10.9,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 11.0,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 11.1,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 11.2,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 11.6,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 11.7,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 11.8,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 12.1,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 12.3,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 12.7,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 12.8,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 12.9,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 13.1,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 13.2,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 13.3,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 13.4,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 13.5,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 13.6,
+      "tracked_predator_slot": 0,
+      "target": "resting"
+    },
+    {
+      "time": 17.1,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 17.4,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 18.0,
+      "tracked_predator_slot": 0,
+      "target": null
+    },
+    {
+      "time": 18.8,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 19.0,
+      "tracked_predator_slot": 0,
+      "target": null
+    },
+    {
+      "time": 19.2,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 19.5,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 19.6,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 19.8,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 19.9,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 20.1,
+      "tracked_predator_slot": 0,
+      "target": 8
+    },
+    {
+      "time": 20.2,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 20.4,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 21.7,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 21.8,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 21.9,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 22.0,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 22.1,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 22.2,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 22.3,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 22.4,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 22.6,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 22.7,
+      "tracked_predator_slot": 0,
+      "target": 3
+    },
+    {
+      "time": 22.8,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 22.9,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 23.1,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 23.2,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 23.3,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 23.5,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 23.7,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 23.8,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 23.9,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 24.0,
+      "tracked_predator_slot": 0,
+      "target": 6
+    },
+    {
+      "time": 24.1,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 24.2,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 24.3,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 24.4,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 24.5,
+      "tracked_predator_slot": 0,
+      "target": 4
+    },
+    {
+      "time": 24.6,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 24.9,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 25.0,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 25.8,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 25.9,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 26.1,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 26.3,
+      "tracked_predator_slot": 0,
+      "target": 5
+    },
+    {
+      "time": 26.4,
+      "tracked_predator_slot": 0,
+      "target": 1
+    },
+    {
+      "time": 26.5,
+      "tracked_predator_slot": 0,
+      "target": "resting"
+    },
+    {
+      "time": 30.0,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 30.4,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 30.5,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 30.6,
+      "tracked_predator_slot": 0,
+      "target": 9
+    },
+    {
+      "time": 30.7,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 30.8,
+      "tracked_predator_slot": 0,
+      "target": null
+    },
+    {
+      "time": 30.9,
+      "tracked_predator_slot": 0,
+      "target": 2
+    },
+    {
+      "time": 31.0,
+      "tracked_predator_slot": 0,
+      "target": 7
+    },
+    {
+      "time": 31.2,
+      "tracked_predator_slot": 0,
+      "target": 2
+    }
+  ],
+  "guide_role_trace": [
+    {
+      "time": 0,
+      "active_guide_id": 1
+    },
+    {
+      "time": 3.5,
+      "active_guide_id": 2
+    },
+    {
+      "time": 3.7,
+      "active_guide_id": 3
+    },
+    {
+      "time": 4.7,
+      "active_guide_id": 5
+    },
+    {
+      "time": 5.0,
+      "active_guide_id": 1
+    },
+    {
+      "time": 5.3,
+      "active_guide_id": 2
+    },
+    {
+      "time": 5.4,
+      "active_guide_id": 3
+    },
+    {
+      "time": 5.6,
+      "active_guide_id": 4
+    },
+    {
+      "time": 6.0,
+      "active_guide_id": 8
+    },
+    {
+      "time": 6.1,
+      "active_guide_id": 4
+    },
+    {
+      "time": 6.2,
+      "active_guide_id": 6
+    },
+    {
+      "time": 6.4,
+      "active_guide_id": 4
+    },
+    {
+      "time": 6.6,
+      "active_guide_id": 8
+    },
+    {
+      "time": 6.7,
+      "active_guide_id": 7
+    },
+    {
+      "time": 6.8,
+      "active_guide_id": 8
+    },
+    {
+      "time": 7.0,
+      "active_guide_id": 2
+    },
+    {
+      "time": 7.4,
+      "active_guide_id": 6
+    },
+    {
+      "time": 7.5,
+      "active_guide_id": 4
+    },
+    {
+      "time": 7.6,
+      "active_guide_id": 2
+    },
+    {
+      "time": 7.7,
+      "active_guide_id": 1
+    },
+    {
+      "time": 7.8,
+      "active_guide_id": 5
+    },
+    {
+      "time": 8.6,
+      "active_guide_id": 8
+    },
+    {
+      "time": 8.7,
+      "active_guide_id": 6
+    },
+    {
+      "time": 9.0,
+      "active_guide_id": 9
+    },
+    {
+      "time": 9.1,
+      "active_guide_id": 2
+    },
+    {
+      "time": 9.8,
+      "active_guide_id": 6
+    },
+    {
+      "time": 10.0,
+      "active_guide_id": 8
+    },
+    {
+      "time": 10.9,
+      "active_guide_id": 6
+    },
+    {
+      "time": 11.1,
+      "active_guide_id": 2
+    },
+    {
+      "time": 11.2,
+      "active_guide_id": 9
+    },
+    {
+      "time": 11.7,
+      "active_guide_id": 2
+    },
+    {
+      "time": 12.0,
+      "active_guide_id": 9
+    },
+    {
+      "time": 12.1,
+      "active_guide_id": 4
+    },
+    {
+      "time": 12.7,
+      "active_guide_id": 2
+    },
+    {
+      "time": 12.9,
+      "active_guide_id": 5
+    },
+    {
+      "time": 13.2,
+      "active_guide_id": 6
+    },
+    {
+      "time": 13.6,
+      "active_guide_id": 4
+    },
+    {
+      "time": 13.7,
+      "active_guide_id": 9
+    },
+    {
+      "time": 17.6,
+      "active_guide_id": 2
+    },
+    {
+      "time": 18.1,
+      "active_guide_id": 4
+    },
+    {
+      "time": 18.5,
+      "active_guide_id": 6
+    },
+    {
+      "time": 18.9,
+      "active_guide_id": 2
+    },
+    {
+      "time": 19.0,
+      "active_guide_id": 4
+    },
+    {
+      "time": 19.2,
+      "active_guide_id": 2
+    },
+    {
+      "time": 19.5,
+      "active_guide_id": 8
+    },
+    {
+      "time": 19.6,
+      "active_guide_id": 4
+    },
+    {
+      "time": 20.0,
+      "active_guide_id": 6
+    },
+    {
+      "time": 20.3,
+      "active_guide_id": 3
+    },
+    {
+      "time": 20.4,
+      "active_guide_id": 4
+    },
+    {
+      "time": 21.7,
+      "active_guide_id": 1
+    },
+    {
+      "time": 21.8,
+      "active_guide_id": 7
+    },
+    {
+      "time": 21.9,
+      "active_guide_id": 4
+    },
+    {
+      "time": 22.0,
+      "active_guide_id": 5
+    },
+    {
+      "time": 22.1,
+      "active_guide_id": 4
+    },
+    {
+      "time": 22.3,
+      "active_guide_id": 1
+    },
+    {
+      "time": 22.4,
+      "active_guide_id": 2
+    },
+    {
+      "time": 23.6,
+      "active_guide_id": 7
+    },
+    {
+      "time": 23.8,
+      "active_guide_id": 6
+    },
+    {
+      "time": 24.3,
+      "active_guide_id": 4
+    },
+    {
+      "time": 24.4,
+      "active_guide_id": 8
+    },
+    {
+      "time": 24.5,
+      "active_guide_id": 4
+    },
+    {
+      "time": 24.6,
+      "active_guide_id": 9
+    },
+    {
+      "time": 24.9,
+      "active_guide_id": 6
+    },
+    {
+      "time": 25.4,
+      "active_guide_id": 5
+    },
+    {
+      "time": 25.7,
+      "active_guide_id": 7
+    },
+    {
+      "time": 25.9,
+      "active_guide_id": 5
+    },
+    {
+      "time": 26.9,
+      "active_guide_id": 2
+    },
+    {
+      "time": 27.0,
+      "active_guide_id": 7
+    },
+    {
+      "time": 30.6,
+      "active_guide_id": 9
+    },
+    {
+      "time": 30.9,
+      "active_guide_id": 2
+    },
+    {
+      "time": 31.0,
+      "active_guide_id": 7
+    }
+  ],
+  "guide_follow_trace": [
+    {
+      "time": 0.1,
+      "active_guide_id": 1,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 3.8,
+      "active_guide_id": 3,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 4.8,
+      "active_guide_id": 5,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 5.7,
+      "active_guide_id": 4,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 6.3,
+      "active_guide_id": 6,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 6.7,
+      "active_guide_id": 8,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 7.1,
+      "active_guide_id": 2,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 7.9,
+      "active_guide_id": 5,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 8.8,
+      "active_guide_id": 6,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 9.3,
+      "active_guide_id": 2,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 10.1,
+      "active_guide_id": 8,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 11.3,
+      "active_guide_id": 9,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 12.2,
+      "active_guide_id": 4,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 13.0,
+      "active_guide_id": 5,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 13.3,
+      "active_guide_id": 6,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 17.1,
+      "active_guide_id": 9,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 17.7,
+      "active_guide_id": 2,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 18.8,
+      "active_guide_id": 6,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 19.3,
+      "active_guide_id": 2,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 19.7,
+      "active_guide_id": 4,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 20.5,
+      "active_guide_id": 4,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 22.5,
+      "active_guide_id": 2,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 24.0,
+      "active_guide_id": 6,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 24.7,
+      "active_guide_id": 9,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 25.5,
+      "active_guide_id": 5,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 26.0,
+      "active_guide_id": 5,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 30.0,
+      "active_guide_id": 7,
+      "tracked_predator_slot": 0
+    },
+    {
+      "time": 31.1,
+      "active_guide_id": 7,
+      "tracked_predator_slot": 0
+    }
+  ],
+  "guide_role": "child",
+  "parent_role": "gather_evade",
+  "child_role": "guide",
+  "active_guide_id_final": 7,
+  "active_guide_alive_final": true,
+  "guide_role_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "bait_deployed_at": 0.1,
+  "policy_bait_ready_final": false,
+  "bait_left_after_deployment": null,
+  "final_bait_distance_to_goal": 0.0,
+  "first_guide_predator_observation": 0.1,
+  "first_predator_following_guide": 0.1,
+  "first_predator_following_active_guide": 31.1,
+  "tracked_seen_by_guide": 1,
+  "tracked_followed_active_guide": 1,
+  "physical_entered": 0,
+  "guided_delivered": 0,
+  "physical_losses_after_delivery": 0,
+  "target_losses_after_delivery": 0,
+  "physical_entry_times": [
+    null
+  ],
+  "guided_delivery_times": [
+    null
+  ],
+  "loss_times": [
+    null
+  ],
+  "target_loss_times": [
+    null
+  ],
+  "tail_seconds": 30.0,
+  "tail_physical_min": 0,
+  "tail_contained_min": 0,
+  "final_distance_from_mouth": [
+    803.5437
+  ],
+  "max_distance_after_delivery": [
+    0.0
+  ],
+  "policy_events": [
+    {
+      "time": 3.4,
+      "kind": "emergency_reserve_budget_enabled",
+      "observed_distance": 57.2882,
+      "blocked_escape_cone": true,
+      "close_wall": false,
+      "agent_id": 1
+    },
+    {
+      "time": 3.4,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 1,
+      "request_number": 1,
+      "observed_distance": 57.2882
+    },
+    {
+      "time": 3.5,
+      "kind": "native_backup_registered",
+      "agent_id": 2
+    },
+    {
+      "time": 3.5,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 3.5,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 1,
+      "request_number": 2,
+      "observed_distance": 55.7145
+    },
+    {
+      "time": 3.6,
+      "kind": "native_backup_registered",
+      "agent_id": 3
+    },
+    {
+      "time": 3.6,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 1,
+      "request_number": 3,
+      "observed_distance": 56.572
+    },
+    {
+      "time": 3.7,
+      "kind": "native_backup_registered",
+      "agent_id": 4
+    },
+    {
+      "time": 3.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 3,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 3.7,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 1,
+      "request_number": 4,
+      "observed_distance": 68.6679
+    },
+    {
+      "time": 3.8,
+      "kind": "native_backup_registered",
+      "agent_id": 5
+    },
+    {
+      "time": 3.8,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 2,
+      "request_number": 5,
+      "observed_distance": 67.7052
+    },
+    {
+      "time": 3.9,
+      "kind": "native_backup_registered",
+      "agent_id": 6
+    },
+    {
+      "time": 3.9,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 2,
+      "request_number": 6,
+      "observed_distance": 74.19
+    },
+    {
+      "time": 4.0,
+      "kind": "native_backup_registered",
+      "agent_id": 7
+    },
+    {
+      "time": 4.0,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 4,
+      "request_number": 7,
+      "observed_distance": 68.3741
+    },
+    {
+      "time": 4.1,
+      "kind": "native_backup_registered",
+      "agent_id": 8
+    },
+    {
+      "time": 4.1,
+      "kind": "bounded_emergency_reserve_birth",
+      "parent_id": 2,
+      "request_number": 8,
+      "observed_distance": 64.9609
+    },
+    {
+      "time": 4.2,
+      "kind": "native_backup_registered",
+      "agent_id": 9
+    },
+    {
+      "time": 4.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 5,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 5.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 1,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 5.3,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 5.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 3,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 5.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.1,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.2,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 7,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 6.8,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 7.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 7.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 7.5,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 7.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 7.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 1,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 7.8,
+      "kind": "public_dto_active_guide",
+      "agent_id": 5,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 8.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 8.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 9.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 9,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 9.1,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 9.8,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 10.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 10.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 11.1,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 11.2,
+      "kind": "public_dto_active_guide",
+      "agent_id": 9,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 11.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 12.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 9,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 12.1,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 12.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 12.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 5,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 13.2,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 13.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 13.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 9,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 17.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 18.1,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 18.5,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 18.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 19.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 19.2,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 19.5,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 19.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 20.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 20.3,
+      "kind": "public_dto_active_guide",
+      "agent_id": 3,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 20.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 21.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 1,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 21.8,
+      "kind": "public_dto_active_guide",
+      "agent_id": 7,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 21.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 22.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 5,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 22.1,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 22.3,
+      "kind": "public_dto_active_guide",
+      "agent_id": 1,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 22.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 23.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 7,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 23.8,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 24.3,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 24.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 8,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 24.5,
+      "kind": "public_dto_active_guide",
+      "agent_id": 4,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 24.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 9,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 24.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 6,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 25.4,
+      "kind": "public_dto_active_guide",
+      "agent_id": 5,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 25.7,
+      "kind": "public_dto_active_guide",
+      "agent_id": 7,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 25.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 5,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 26.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 27.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 7,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 30.6,
+      "kind": "public_dto_active_guide",
+      "agent_id": 9,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 30.9,
+      "kind": "public_dto_active_guide",
+      "agent_id": 2,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    },
+    {
+      "time": 31.0,
+      "kind": "public_dto_active_guide",
+      "agent_id": 7,
+      "reason": "minimum_observed_predator_distance_hysteresis"
+    }
+  ],
+  "success": false,
+  "trace": [
+    {
+      "time": 0.1,
+      "agents_alive": 2,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": false,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 1.1,
+      "agents_alive": 2,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 2.1,
+      "agents_alive": 2,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 3.1,
+      "agents_alive": 2,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 4.1,
+      "agents_alive": 9,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 5.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 6.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 7.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 8.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 9.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 10.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 11.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 12.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 13.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 14.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 15.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 16.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 17.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 18.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 19.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 20.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 21.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 22.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 23.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 24.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 25.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 26.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 27.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 28.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 29.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 0,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 30.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    },
+    {
+      "time": 31.1,
+      "agents_alive": 10,
+      "predators_total": 1,
+      "bait_distance_to_goal": 0.0,
+      "bait_deployed": true,
+      "policy_bait_ready": false,
+      "tracked_following_guide": 1,
+      "tracked_at_site": 0,
+      "tracked_contained_by_bait": 0
+    }
+  ],
+  "replay": "results/simple_chase/replays/real-map-EmergencyGuides-m10334-f20334-p1-direct_guide-sitebait1-fa1dcfeb.json.gz"
+}

@@ -1,0 +1,683 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "scope": "Local only; no competition API, validation, submission, deployment or push.",
+  "pairing_note": "Matched initial seeds. Engine RNG consumption diverges with behavior. Pairing is not common-random-number coupling.",
+  "runs": [
+    {
+      "scenario": "forest",
+      "seed": 1,
+      "mode": "control",
+      "horizon": 100.0,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 537.702013572769,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 560.820785695674,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 100.0,
+      "score": 103.64145,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 399.6,
+        "worker_seconds": 399.6,
+        "worker_exposure_100": 11.6,
+        "worker_exposure_50": 2.4,
+        "guide_seconds": 0.0,
+        "guide_move_energy": 0.0,
+        "worker_move_energy": 702.5191,
+        "guide_target_seconds": 0.0,
+        "predator_active_seconds": 80.6,
+        "colony_intrusion_seconds": 12.5,
+        "harvest_energy": 3595.3287,
+        "fruit_count": 85,
+        "captures": 0,
+        "guide_captures": 0,
+        "worker_captures": 0,
+        "starvation_deaths": 0,
+        "births": 0,
+        "peak_agents": 4,
+        "predators_spawned": 2,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 0.0
+      },
+      "events": [],
+      "releases": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.289,
+          "agents": 4,
+          "predators": 0,
+          "energy": 686.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.601,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1785.36,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.789,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1901.03,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.875,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1787.12,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 40.2,
+          "score": 42.518,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1968.21,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 50.2,
+          "score": 52.518,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1921.08,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 60.2,
+          "score": 62.518,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1853.8,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.773,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1924.87,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 83.045,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1902.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.385,
+          "agents": 4,
+          "predators": 2,
+          "energy": 1864.03,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 3.889,
+      "localization_pair_error_p95": 21.217,
+      "wall_seconds": 5.2,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "2107a0889fed868770319380b28d35b83e535e9e713aac907397d4a7e452dced",
+      "policy_sha256": "abe3d202f7d2c5ae21043639a0b474148132c03d7513f2dfd1901de048983e6c",
+      "harness_sha256": "37d8c9bdc05616de09d1a5ea002b47adcfb37c26ba94dd5683d4d9028ad1e6ee",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "ordinary cached observations and simulation time only",
+      "replay": "survival/results/colony_banishment/iteration1-smoke-forest-1-control.json.gz"
+    },
+    {
+      "scenario": "forest",
+      "seed": 1,
+      "mode": "banish",
+      "horizon": 100.0,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 537.702013572769,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 560.820785695674,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 100.0,
+      "score": 103.88965,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 399.6,
+        "worker_seconds": 361.9,
+        "worker_exposure_100": 13.2,
+        "worker_exposure_50": 2.8,
+        "guide_seconds": 37.7,
+        "guide_move_energy": 264.6528,
+        "worker_move_energy": 711.4824,
+        "guide_target_seconds": 10.5,
+        "predator_active_seconds": 62.5,
+        "colony_intrusion_seconds": 8.8,
+        "harvest_energy": 3843.5287,
+        "fruit_count": 89,
+        "captures": 0,
+        "guide_captures": 0,
+        "worker_captures": 0,
+        "starvation_deaths": 0,
+        "births": 0,
+        "peak_agents": 4,
+        "predators_spawned": 1,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 135.8549
+      },
+      "events": [
+        {
+          "t": 20.6,
+          "kind": "guide_selected",
+          "aid": 0,
+          "energy": 488.1,
+          "home": [
+            79.50469202845069,
+            8.468720916486054
+          ]
+        },
+        {
+          "t": 26.9,
+          "kind": "lost_contact",
+          "aid": 0,
+          "remote": false
+        },
+        {
+          "t": 27.5,
+          "kind": "guide_finished",
+          "aid": 0,
+          "energy": 485.86
+        },
+        {
+          "t": 27.6,
+          "kind": "guide_selected",
+          "aid": 2,
+          "energy": 461.71,
+          "home": [
+            79.50469202845069,
+            8.468720916486054
+          ]
+        },
+        {
+          "t": 33.1,
+          "kind": "release_attempt",
+          "aid": 2,
+          "point": [
+            123.42658861950858,
+            -724.2126149065563
+          ],
+          "home": [
+            79.50469202845069,
+            8.468720916486054
+          ],
+          "inferred_still": 2,
+          "energy": 376.42
+        },
+        {
+          "t": 35.4,
+          "kind": "separated",
+          "aid": 2,
+          "energy": 362.61
+        },
+        {
+          "t": 42.4,
+          "kind": "guide_finished",
+          "aid": 2,
+          "energy": 312.15
+        },
+        {
+          "t": 44.2,
+          "kind": "guide_selected",
+          "aid": 1,
+          "energy": 496.72,
+          "home": [
+            79.50469202845069,
+            8.468720916486054
+          ]
+        },
+        {
+          "t": 47.4,
+          "kind": "lost_contact",
+          "aid": 1,
+          "remote": false
+        },
+        {
+          "t": 59.9,
+          "kind": "guide_finished",
+          "aid": 1,
+          "energy": 426.87
+        }
+      ],
+      "releases": [
+        {
+          "t": 33.1,
+          "aid": 2,
+          "predator": 0,
+          "home": [
+            454.8532678476574,
+            495.1988673343878
+          ],
+          "return_t": 42.0,
+          "actual_predator": [
+            743.1984608123124,
+            1157.3508081522923
+          ],
+          "guide_energy": 376.42
+        }
+      ],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.289,
+          "agents": 4,
+          "predators": 0,
+          "energy": 686.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.601,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1785.36,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.789,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1901.03,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 32.01,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1823.68,
+          "guide": 2,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 42.222,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1781.27,
+          "guide": 2,
+          "phase": "return"
+        },
+        {
+          "t": 50.2,
+          "score": 52.66,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1899.48,
+          "guide": 1,
+          "phase": "return"
+        },
+        {
+          "t": 60.2,
+          "score": 62.803,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1920.27,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 72.974,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1894.89,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 83.243,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1858.98,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 93.629,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1866.42,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 19.859,
+      "localization_pair_error_p95": 102.682,
+      "wall_seconds": 4.29,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "2107a0889fed868770319380b28d35b83e535e9e713aac907397d4a7e452dced",
+      "policy_sha256": "abe3d202f7d2c5ae21043639a0b474148132c03d7513f2dfd1901de048983e6c",
+      "harness_sha256": "37d8c9bdc05616de09d1a5ea002b47adcfb37c26ba94dd5683d4d9028ad1e6ee",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "ordinary cached observations and simulation time only",
+      "replay": "survival/results/colony_banishment/iteration1-smoke-forest-1-banish.json.gz"
+    },
+    {
+      "scenario": "forest",
+      "seed": 1,
+      "mode": "oracle",
+      "horizon": 100.0,
+      "settings": {
+        "variant": "rest",
+        "min_fuel": 300,
+        "population": 4,
+        "release_radius": 450,
+        "guide_limit": 18
+      },
+      "scenario_parameters": {
+        "setup": "arranged finite orchard; original replenishment, aging, births and stochastic predators enabled",
+        "starting_agents": 4,
+        "starting_energy": 150,
+        "starting_trees": 12,
+        "starting_fruits": 28,
+        "initial_fruit_growth": "uniform 0..40",
+        "initial_tree_growth": "uniform 20..35",
+        "encounters": [
+          {
+            "t": 20.0,
+            "x": 620.0,
+            "y": 537.702013572769,
+            "heading": 3.141592653589793
+          },
+          {
+            "t": 100.0,
+            "x": 650.0,
+            "y": 560.820785695674,
+            "heading": 3.141592653589793
+          }
+        ]
+      },
+      "duration": 100.0,
+      "score": 93.38312,
+      "alive": 4,
+      "metrics": {
+        "agent_seconds": 399.2,
+        "worker_seconds": 378.7,
+        "worker_exposure_100": 16.3,
+        "worker_exposure_50": 5.9,
+        "guide_seconds": 20.5,
+        "guide_move_energy": 390.6528,
+        "worker_move_energy": 875.4975,
+        "guide_target_seconds": 15.4,
+        "predator_active_seconds": 86.3,
+        "colony_intrusion_seconds": 14.5,
+        "harvest_energy": 4587.7175,
+        "fruit_count": 118,
+        "captures": 4,
+        "guide_captures": 3,
+        "worker_captures": 1,
+        "starvation_deaths": 0,
+        "births": 4,
+        "peak_agents": 4,
+        "predators_spawned": 2,
+        "physical_boundary_violations": 0,
+        "guide_harvest_energy": 190.2
+      },
+      "events": [
+        {
+          "t": 26.1,
+          "kind": "guide_selected",
+          "aid": 1,
+          "energy": 475.05,
+          "home": [
+            364.93172466853656,
+            567.522160657545
+          ]
+        },
+        {
+          "t": 31.7,
+          "kind": "capture",
+          "aid": 1,
+          "role": "guide",
+          "energy": 406.569
+        },
+        {
+          "t": 31.7,
+          "kind": "guide_lost",
+          "aid": 1,
+          "phase": "lead"
+        },
+        {
+          "t": 33.8,
+          "kind": "capture",
+          "aid": 4,
+          "role": "worker",
+          "energy": 96.965
+        },
+        {
+          "t": 37.2,
+          "kind": "guide_selected",
+          "aid": 0,
+          "energy": 448.22,
+          "home": [
+            364.93172466853656,
+            567.522160657545
+          ]
+        },
+        {
+          "t": 41.2,
+          "kind": "capture",
+          "aid": 0,
+          "role": "guide",
+          "energy": 403.517
+        },
+        {
+          "t": 41.2,
+          "kind": "guide_lost",
+          "aid": 0,
+          "phase": "lead"
+        },
+        {
+          "t": 45.6,
+          "kind": "guide_selected",
+          "aid": 2,
+          "energy": 325.79,
+          "home": [
+            364.93172466853656,
+            567.522160657545
+          ]
+        },
+        {
+          "t": 56.5,
+          "kind": "capture",
+          "aid": 2,
+          "role": "guide",
+          "energy": 218.022
+        },
+        {
+          "t": 56.5,
+          "kind": "guide_lost",
+          "aid": 2,
+          "phase": "lead"
+        }
+      ],
+      "releases": [],
+      "trace": [
+        {
+          "t": 0.2,
+          "score": 0.289,
+          "agents": 4,
+          "predators": 0,
+          "energy": 686.05,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 10.2,
+          "score": 11.505,
+          "agents": 4,
+          "predators": 0,
+          "energy": 1746.37,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 20.2,
+          "score": 21.753,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1889.54,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 30.2,
+          "score": 31.811,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1751.8,
+          "guide": 1,
+          "phase": "lead"
+        },
+        {
+          "t": 40.2,
+          "score": 37.144,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1209.66,
+          "guide": 0,
+          "phase": "lead"
+        },
+        {
+          "t": 50.2,
+          "score": 44.068,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1423.4,
+          "guide": 2,
+          "phase": "lead"
+        },
+        {
+          "t": 60.2,
+          "score": 52.702,
+          "agents": 4,
+          "predators": 1,
+          "energy": 1805.29,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 70.2,
+          "score": 63.165,
+          "agents": 4,
+          "predators": 1,
+          "energy": 2157.1,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 80.2,
+          "score": 73.325,
+          "agents": 4,
+          "predators": 1,
+          "energy": 2242.33,
+          "guide": null,
+          "phase": "forage"
+        },
+        {
+          "t": 90.2,
+          "score": 83.419,
+          "agents": 4,
+          "predators": 2,
+          "energy": 2264.48,
+          "guide": null,
+          "phase": "forage"
+        }
+      ],
+      "localization_pair_error_mean": 0.141,
+      "localization_pair_error_p95": 0.0,
+      "wall_seconds": 4.52,
+      "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+      "initial_rng_sha256": "2107a0889fed868770319380b28d35b83e535e9e713aac907397d4a7e452dced",
+      "policy_sha256": "abe3d202f7d2c5ae21043639a0b474148132c03d7513f2dfd1901de048983e6c",
+      "harness_sha256": "37d8c9bdc05616de09d1a5ea002b47adcfb37c26ba94dd5683d4d9028ad1e6ee",
+      "platform": "macOS-26.6.2-arm64-arm-64bit",
+      "python": "3.12.7",
+      "policy_privilege": "true agent poses plus ordinary cached observations",
+      "replay": "survival/results/colony_banishment/iteration1-smoke-forest-1-oracle.json.gz"
+    }
+  ]
+}

@@ -1,0 +1,332 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter validation-final.log row 12 (controller_v4)",
+    "policy": "adaptive / controller_v4",
+    "seed": 405,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 0.5,
+    "scenario": "arranged-single-bait",
+    "notes": "Privileged arranged geometry and initial energy; finite prepared food/trees if configured. No new tree or predator spawns. Actions use only cached observations. Stationary workers when present. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "e1205d19e9a101a2b4c15d8b1cb7b144e0dd70da216ac611acc30deeb222b8f4",
+    "created_at": "2026-09-17T13:53:00.841969+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "arranged-single-bait-adaptive-controller_v4-seed405-20260917T135300790814Z-4ad5f604",
+    "parameters": {
+      "seed": 405,
+      "position": [
+        683.0503310341027,
+        364.0169096233084
+      ],
+      "rotation": 3.0429858791227886,
+      "heading": -0.4619117373754671,
+      "gap": 73.76418846041388,
+      "pred_energy": 167.3572110023494,
+      "energy": 250,
+      "food": "orchard",
+      "max_age": 96.18545927721871,
+      "terrain": "split",
+      "obstacle": false
+    },
+    "requested_horizon": 140,
+    "reproduction": {
+      "original_id": "validation-final-log:012",
+      "source": "validation-final.log",
+      "row": 12,
+      "original_metrics_sha256": "3055b8e3b94bcab68722b7f88d046c193421b75fd2a5190ac907227a55771a56",
+      "controller": "controller_v4",
+      "original_outcome": {
+        "duration": 11.8,
+        "target_fraction": 1.0,
+        "death": "capture"
+      },
+      "limitations": "New reproduction from a completed-case log. Original full metrics aggregate failed serialization."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 11.8,
+    "score": 11.0068,
+    "frames": 25,
+    "reason": "capture"
+  },
+  "result": {
+    "scenario": {
+      "seed": 405,
+      "position": [
+        683.0503310341027,
+        364.0169096233084
+      ],
+      "rotation": 3.0429858791227886,
+      "heading": -0.4619117373754671,
+      "gap": 73.76418846041388,
+      "pred_energy": 167.3572110023494,
+      "energy": 250,
+      "food": "orchard",
+      "max_age": 96.18545927721871,
+      "terrain": "split",
+      "obstacle": false
+    },
+    "policy": "adaptive",
+    "horizon": 140,
+    "food_eaten": 1,
+    "food_received": 60.0,
+    "nutrition": 60.0,
+    "movement_energy": 212.443,
+    "turn_energy": 0.4359,
+    "passive_energy": 11.8,
+    "target_ticks": 118,
+    "active_ticks": 118,
+    "longest_active_loss_s": 0.0,
+    "longest_retained_s": 11.8,
+    "first_loss_s": null,
+    "first_cutoff_s": 9.5,
+    "rest_cycles": 0,
+    "worker_deaths": {},
+    "min_gap": 14.2186,
+    "trace": [
+      {
+        "t": 0.1,
+        "bait": [
+          683.05,
+          364.02,
+          249.9
+        ],
+        "predator": [
+          749.36,
+          359.18,
+          164.77
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 0
+      },
+      {
+        "t": 1.1,
+        "bait": [
+          567.39,
+          366.67,
+          287.04
+        ],
+        "predator": [
+          607.22,
+          366.05,
+          139.23
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 5,
+        "workers": 0
+      },
+      {
+        "t": 2.1,
+        "bait": [
+          416.41,
+          369.02,
+          255.54
+        ],
+        "predator": [
+          457.24,
+          368.38,
+          113.73
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 6,
+        "workers": 0
+      },
+      {
+        "t": 3.1,
+        "bait": [
+          265.43,
+          371.37,
+          224.04
+        ],
+        "predator": [
+          307.26,
+          370.72,
+          88.23
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 7,
+        "workers": 0
+      },
+      {
+        "t": 4.1,
+        "bait": [
+          114.44,
+          373.72,
+          192.54
+        ],
+        "predator": [
+          157.27,
+          373.06,
+          62.73
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 11,
+        "workers": 0
+      },
+      {
+        "t": 5.1,
+        "bait": [
+          35.33,
+          466.55,
+          152.45
+        ],
+        "predator": [
+          40.48,
+          420.59,
+          39.03
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 12,
+        "workers": 0
+      },
+      {
+        "t": 6.1,
+        "bait": [
+          35.88,
+          571.3,
+          139.39
+        ],
+        "predator": [
+          41.9,
+          530.23,
+          33.5
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 13,
+        "workers": 0
+      },
+      {
+        "t": 7.1,
+        "bait": [
+          35.03,
+          682.25,
+          127.71
+        ],
+        "predator": [
+          41.1,
+          639.76,
+          28.0
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 13,
+        "workers": 0
+      },
+      {
+        "t": 8.1,
+        "bait": [
+          35.2,
+          793.92,
+          115.67
+        ],
+        "predator": [
+          41.35,
+          749.23,
+          22.5
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 14,
+        "workers": 0
+      },
+      {
+        "t": 9.1,
+        "bait": [
+          35.24,
+          905.22,
+          103.81
+        ],
+        "predator": [
+          41.45,
+          858.73,
+          17.0
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 16,
+        "workers": 0
+      },
+      {
+        "t": 10.1,
+        "bait": [
+          36.55,
+          1009.27,
+          95.6
+        ],
+        "predator": [
+          41.26,
+          968.25,
+          11.5
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 18,
+        "workers": 0
+      },
+      {
+        "t": 11.1,
+        "bait": [
+          35.06,
+          1108.95,
+          89.56
+        ],
+        "predator": [
+          40.92,
+          1077.77,
+          6.0
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 18,
+        "workers": 0
+      }
+    ],
+    "accounting_version": "source-order-v2",
+    "acquisition_time": 0.0,
+    "longest_occupation_s": 11.8,
+    "rest_inference": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0
+    },
+    "duration": 11.8,
+    "alive": false,
+    "death": "capture",
+    "remaining_energy": 85.3212,
+    "score": 11.0068,
+    "workers_alive": 0,
+    "target_fraction": 1.0,
+    "controller_stats": {},
+    "max_pose_error": 0.0,
+    "mean_pose_error": 0.0,
+    "continuous_retention_s": 11.8,
+    "replacement_windows_per_minute": 5.0847,
+    "run_id": "arranged-single-bait-adaptive-controller_v4-seed405-20260917T135300790814Z-4ad5f604",
+    "replay": "results/dedicated_sprinter/replays/arranged-single-bait-adaptive-controller_v4-seed405-20260917T135300790814Z-4ad5f604.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "validation-final-log:012",
+      "source": "validation-final.log",
+      "row": 12,
+      "original_metrics_sha256": "3055b8e3b94bcab68722b7f88d046c193421b75fd2a5190ac907227a55771a56",
+      "controller": "controller_v4",
+      "original_outcome": {
+        "duration": 11.8,
+        "target_fraction": 1.0,
+        "death": "capture"
+      },
+      "limitations": "New reproduction from a completed-case log. Original full metrics aggregate failed serialization."
+    }
+  }
+}

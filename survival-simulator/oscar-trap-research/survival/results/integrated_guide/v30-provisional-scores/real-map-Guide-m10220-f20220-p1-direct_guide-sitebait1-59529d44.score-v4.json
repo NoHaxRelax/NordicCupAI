@@ -1,0 +1,35 @@
+{
+  "schema": "guide-delivery-causal-score-v4",
+  "protocol_sha256": "0230856390204d9791f59362ca7373c80e0bc557de541abef2a20082c02b569a",
+  "receipt": "results/simple_chase/real-map-Guide-m10220-f20220-p1-direct_guide-sitebait1-59529d44.json",
+  "receipt_sha256": "b082bcdf8ceb1d85e65756a19d6dfd7eba30c8f65327a263f910f2f8ddcce338",
+  "policy": "integrated_guide.policy_v30_wide_route:Guide",
+  "policy_sha256": "fd56a3bdfb35bf92c443a79f6cd954aa2dc6aa9c4fbe5d90ec309647771f9b0c",
+  "pass": true,
+  "reason": "pass",
+  "active_bait_acquisition": 23.4,
+  "bait_target_handoff": 23.1,
+  "last_guide_target_before_handoff": 23.0,
+  "handoff_guide_id": 1,
+  "eligible_guide_ids": [
+    1
+  ],
+  "attribution_scope": "single_assigned_guide",
+  "guide_to_bait_active_seconds": 0.10000000000000142,
+  "guide_to_bait_wall_seconds": 0.10000000000000142,
+  "guide_alive_at_acquisition": false,
+  "guide_death": 23.1,
+  "stable_containment_tail_seconds": 276.7,
+  "loss_after_acquisition": null,
+  "guide_release_observed": null,
+  "guide_returned_to_staging": null,
+  "replay_check": {
+    "title": "real-map-Guide-m10220-f20220-p1-direct_guide-sitebait1-59529d44",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "V4 attributes a temporally continuous native guide-target to bait-target chain before physical intake. Guide evidence is restricted to the native chase gate, rather than the pivot branch's closest-agent label; it does not establish counterfactual causation. Guide survival remains neutral."
+}

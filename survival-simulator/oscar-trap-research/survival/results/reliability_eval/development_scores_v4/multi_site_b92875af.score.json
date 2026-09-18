@@ -1,0 +1,100 @@
+{
+  "schema": "multi-site-any-bait-causal-score-v1",
+  "protocol_sha256": "8e332b8ae966b95ca09e3b58ad5b205c54ff540a0315b58186428e9f90024e1c",
+  "single_bait_semantics": "equivalent to frozen v4 target-chain semantics",
+  "receipt": "results/simple_chase/real-map-NativeMultiSite-m10224-f20224-p1-direct_guide-sitebait1-b92875af.json",
+  "receipt_sha256": "8fdcdd03ce8a685a8baa93cad03810df3e160f9264d79b292c88032410650a76",
+  "policy": "multi_site.run_multi_site:NativeMultiSite",
+  "policy_sha256": "bac8c6cdb77954c0ecf84a01cac18077f64980d06242c589d2a499e5e0c39097",
+  "pass": true,
+  "reason": "pass",
+  "bait_count": 5,
+  "passing_bait_ids": [
+    2
+  ],
+  "eligible_guide_ids": [
+    1
+  ],
+  "attribution_scope": "single_assigned_guide",
+  "site_results": [
+    {
+      "bait_id": 0,
+      "pass": false,
+      "reason": "no_unbroken_guide_to_this_bait_physical_chain",
+      "physical_acquisition": null,
+      "bait_target_handoff": null,
+      "handoff_guide_id": null,
+      "guide_to_bait_active_seconds": null,
+      "guide_to_bait_wall_seconds": null,
+      "loss_after_acquisition": null,
+      "bait_left_static_goal": null,
+      "final_inside_same_site": false,
+      "final_target": 2
+    },
+    {
+      "bait_id": 2,
+      "pass": true,
+      "reason": "pass",
+      "physical_acquisition": 10.0,
+      "bait_target_handoff": 10.0,
+      "handoff_guide_id": 1,
+      "guide_to_bait_active_seconds": 0.09999999999999964,
+      "guide_to_bait_wall_seconds": 0.09999999999999964,
+      "loss_after_acquisition": null,
+      "bait_left_static_goal": null,
+      "final_inside_same_site": true,
+      "final_target": 2
+    },
+    {
+      "bait_id": 3,
+      "pass": false,
+      "reason": "no_unbroken_guide_to_this_bait_physical_chain",
+      "physical_acquisition": null,
+      "bait_target_handoff": null,
+      "handoff_guide_id": null,
+      "guide_to_bait_active_seconds": null,
+      "guide_to_bait_wall_seconds": null,
+      "loss_after_acquisition": null,
+      "bait_left_static_goal": null,
+      "final_inside_same_site": false,
+      "final_target": 2
+    },
+    {
+      "bait_id": 4,
+      "pass": false,
+      "reason": "no_unbroken_guide_to_this_bait_physical_chain",
+      "physical_acquisition": null,
+      "bait_target_handoff": null,
+      "handoff_guide_id": null,
+      "guide_to_bait_active_seconds": null,
+      "guide_to_bait_wall_seconds": null,
+      "loss_after_acquisition": null,
+      "bait_left_static_goal": null,
+      "final_inside_same_site": false,
+      "final_target": 2
+    },
+    {
+      "bait_id": 5,
+      "pass": false,
+      "reason": "no_unbroken_guide_to_this_bait_physical_chain",
+      "physical_acquisition": null,
+      "bait_target_handoff": null,
+      "handoff_guide_id": null,
+      "guide_to_bait_active_seconds": null,
+      "guide_to_bait_wall_seconds": null,
+      "loss_after_acquisition": null,
+      "bait_left_static_goal": null,
+      "final_inside_same_site": true,
+      "final_target": 2
+    }
+  ],
+  "replay_check": {
+    "title": "real-map-NativeMultiSite-m10224-f20224-p1-direct_guide-sitebait1-b92875af",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "Any declared static bait may pass, but each candidate is evaluated independently. Targeting another bait breaks the current site's chain; physical retention without a qualifying guide handoff remains unsupported rather than causal success."
+}

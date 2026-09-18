@@ -1,0 +1,54 @@
+{
+  "recordings": [
+    {
+      "title": "Wall bait · controlled hold (native)",
+      "file": "recordings/wall-bait.json.gz",
+      "description": "Original simulator rendering via Environment.draw. Controlled 70-second wall trap, one stationary bait and one predator. Every 0.1-second tick recorded; artificial flat terrain."
+    },
+    {
+      "title": "Wall handoff · guide sacrificed (native)",
+      "file": "recordings/wall-handoff.json.gz",
+      "description": "Original simulator rendering. Controlled 60-second wall hold after the guide is captured at 0.9 seconds. Both baits start with 150 energy. Uses privileged exact geometry; no food or new predators. Shows a costly handoff, not safe acquisition in a generated map."
+    },
+    {
+      "title": "Water bait · acquire from land (native)",
+      "file": "recordings/water-acquire-land.json.gz",
+      "description": "Original simulator rendering. Controlled 40.9-second acquisition attempt: both agents begin on the predator's land side; a dry-shore launch and timed second bait draw it into the river. First bait depletes at 38.9 seconds; the other is captured later. Uses known synthetic straight-river geometry and initial poses, with no food or replacements. Shows acquisition followed by failure, not sustainable control on a generated map."
+    },
+    {
+      "title": "Water bait · prepared fruit banks (native)",
+      "file": "recordings/water-fed-native.json.gz",
+      "description": "Original simulator rendering. Controlled 120-second hold with two baits, a 50-unit-wide straight river and rich prepared mature-fruit banks. Baits use cached public observations plus known initial poses and river geometry; max_age is fixed at 120. Both remain alive at the horizon. This does not establish reliable food supply or trap acquisition on generated maps."
+    },
+    {
+      "title": "Water bait · unfed narrow river (state)",
+      "file": "recordings/water-unfed-narrow.json.gz",
+      "description": "Lightweight state rendering. Controlled 64-second, 50-unit-wide straight river: first bait starves at 63.5 seconds. Cached public observations plus known initial poses and river geometry. Two 150-energy baits; no food. Demonstrates maintenance limits."
+    },
+    {
+      "title": "Water bait · wide river failure (state)",
+      "file": "recordings/water-wide-failure.json.gz",
+      "description": "Lightweight state rendering. Controlled 100-unit-wide straight river, arranged starting positions; one bait dies at 2.1 seconds. Uses cached public observations with known fixture geometry. Included as a failure comparison, not a general result."
+    },
+    {
+      "title": "Sprinter decoy · adaptive (state)",
+      "file": "recordings/sprinter-decoy-adaptive.json.gz",
+      "description": "Lightweight state rendering. Controlled 39.1-second finite-food decoy run ending in capture. Uses cached public observations and clear-ground odometry in an arranged arena; initial energy 500. Not a generated-map policy validation."
+    },
+    {
+      "title": "Predator displacement · controlled (state)",
+      "file": "recordings/sprinter-decoy-banishment.json.gz",
+      "description": "Lightweight state rendering. Controlled 60-second attempt to lead a predator away, then leave. Assigned waypoint and privileged exact bait position; arranged forest arena and finite prepared fruit. Not an observation-only competition policy."
+    },
+    {
+      "title": "Small colony · seed 1 (state)",
+      "file": "recordings/nursery-seed1.json.gz",
+      "description": "Lightweight state rendering. Complete 1,023.7-second local game. Tree-oriented foraging, age-aware births, six-agent population cap. Frames every 0.5 seconds; events every tick."
+    },
+    {
+      "title": "Greedy forager · seed 1 (state)",
+      "file": "recordings/greedy-seed1.json.gz",
+      "description": "Lightweight state rendering. Complete 68.4-second comparison run on seed 1. Immediate fruit collection and unrestricted reproduction when reserves permit."
+    }
+  ]
+}

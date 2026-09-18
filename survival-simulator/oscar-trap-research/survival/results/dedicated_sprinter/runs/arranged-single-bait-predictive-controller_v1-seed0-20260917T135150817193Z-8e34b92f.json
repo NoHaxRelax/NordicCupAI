@@ -1,0 +1,1136 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter screen.json row 7 (controller_v1)",
+    "policy": "predictive / controller_v1",
+    "seed": 0,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 0.5,
+    "scenario": "arranged-single-bait",
+    "notes": "Privileged arranged geometry and initial energy; finite prepared food/trees if configured. No new tree or predator spawns. Actions use only cached observations. Stationary workers when present. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "9eff8389121163d97037f9eafe1f7e52f7c0cba4f1f9f31be5e6dc1a3bde4ce3",
+    "created_at": "2026-09-17T13:51:50.817884+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "arranged-single-bait-predictive-controller_v1-seed0-20260917T135150817193Z-8e34b92f",
+    "parameters": {
+      "energy": 500,
+      "controller": {
+        "margin": 28,
+        "orbit_weight": 3
+      }
+    },
+    "requested_horizon": 60,
+    "reproduction": {
+      "original_id": "screen:007",
+      "source": "screen.json",
+      "row": 7,
+      "original_metrics_sha256": "24a305f2001ee61378a5572a6a474827d09c7f319744cd98a7aa075a790998f2",
+      "controller": "controller_v1",
+      "original_outcome": {
+        "duration": 60.0,
+        "score": 60.0,
+        "target_fraction": 1.0,
+        "death": null
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 60.0,
+    "score": 60.0,
+    "frames": 129,
+    "reason": "horizon reached"
+  },
+  "result": {
+    "scenario": {
+      "energy": 500,
+      "controller": {
+        "margin": 28,
+        "orbit_weight": 3
+      }
+    },
+    "policy": "predictive",
+    "horizon": 60,
+    "food_eaten": 0,
+    "food_received": 0.0,
+    "nutrition": 0.0,
+    "movement_energy": 222.0,
+    "turn_energy": 49.1733,
+    "passive_energy": 60.0,
+    "target_ticks": 454,
+    "active_ticks": 454,
+    "longest_active_loss_s": 0.0,
+    "longest_retained_s": 45.4,
+    "first_loss_s": null,
+    "first_cutoff_s": null,
+    "rest_cycles": 5,
+    "worker_deaths": {},
+    "min_gap": 28.0,
+    "trace": [
+      {
+        "t": 0.1,
+        "bait": [
+          810.0,
+          600.0,
+          499.4
+        ],
+        "predator": [
+          755.0,
+          600.0,
+          99.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 1.1,
+        "bait": [
+          933.0,
+          600.0,
+          471.9
+        ],
+        "predator": [
+          905.0,
+          600.0,
+          73.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 2.1,
+        "bait": [
+          1083.0,
+          600.0,
+          439.9
+        ],
+        "predator": [
+          1055.0,
+          600.0,
+          48.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 3.1,
+        "bait": [
+          1217.0,
+          600.0,
+          416.9
+        ],
+        "predator": [
+          1181.0,
+          600.0,
+          34.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 4.1,
+        "bait": [
+          1327.0,
+          600.0,
+          404.9
+        ],
+        "predator": [
+          1291.0,
+          600.0,
+          29.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 5.1,
+        "bait": [
+          1437.0,
+          600.0,
+          392.9
+        ],
+        "predator": [
+          1401.0,
+          600.0,
+          23.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 6.1,
+        "bait": [
+          1547.0,
+          600.0,
+          381.9
+        ],
+        "predator": [
+          1511.0,
+          600.0,
+          18.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 7.1,
+        "bait": [
+          1507.85,
+          534.87,
+          364.28
+        ],
+        "predator": [
+          1539.48,
+          530.32,
+          12.55
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 8.1,
+        "bait": [
+          1519.87,
+          548.79,
+          359.63
+        ],
+        "predator": [
+          1500.18,
+          592.34,
+          6.58
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 9.1,
+        "bait": [
+          1516.65,
+          564.76,
+          357.2
+        ],
+        "predator": [
+          1547.84,
+          536.49,
+          0.6
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 10.1,
+        "bait": [
+          1545.0,
+          571.8,
+          353.47
+        ],
+        "predator": [
+          1538.93,
+          530.03,
+          27.0
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 11.1,
+        "bait": [
+          1545.0,
+          571.8,
+          352.47
+        ],
+        "predator": [
+          1538.93,
+          530.03,
+          57.0
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 12.1,
+        "bait": [
+          1545.0,
+          571.8,
+          350.47
+        ],
+        "predator": [
+          1538.93,
+          530.03,
+          87.0
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 13.1,
+        "bait": [
+          1525.08,
+          549.83,
+          347.84
+        ],
+        "predator": [
+          1473.04,
+          548.47,
+          89.01
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 14.1,
+        "bait": [
+          1501.04,
+          606.02,
+          341.32
+        ],
+        "predator": [
+          1554.6,
+          606.54,
+          63.03
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 15.1,
+        "bait": [
+          1526.73,
+          546.13,
+          334.08
+        ],
+        "predator": [
+          1477.83,
+          533.83,
+          39.06
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 16.1,
+        "bait": [
+          1481.13,
+          568.61,
+          328.73
+        ],
+        "predator": [
+          1523.35,
+          591.44,
+          33.08
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 17.1,
+        "bait": [
+          1519.37,
+          567.72,
+          324.36
+        ],
+        "predator": [
+          1486.41,
+          527.98,
+          27.1
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 18.1,
+        "bait": [
+          1495.64,
+          549.45,
+          320.06
+        ],
+        "predator": [
+          1514.03,
+          596.02,
+          21.12
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 19.1,
+        "bait": [
+          1500.29,
+          568.45,
+          317.62
+        ],
+        "predator": [
+          1496.29,
+          524.77,
+          15.15
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 20.1,
+        "bait": [
+          1505.24,
+          553.09,
+          314.37
+        ],
+        "predator": [
+          1503.8,
+          597.81,
+          9.17
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 21.1,
+        "bait": [
+          1498.23,
+          567.8,
+          311.06
+        ],
+        "predator": [
+          1506.67,
+          524.44,
+          3.19
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 22.1,
+        "bait": [
+          1497.58,
+          536.96,
+          307.58
+        ],
+        "predator": [
+          1466.09,
+          565.4,
+          11.6
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 23.1,
+        "bait": [
+          1497.58,
+          536.96,
+          305.58
+        ],
+        "predator": [
+          1466.09,
+          565.4,
+          41.6
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 24.1,
+        "bait": [
+          1497.58,
+          536.96,
+          304.08
+        ],
+        "predator": [
+          1466.09,
+          565.4,
+          71.6
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 25.1,
+        "bait": [
+          1497.58,
+          536.96,
+          302.58
+        ],
+        "predator": [
+          1466.09,
+          565.4,
+          101.6
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 26.1,
+        "bait": [
+          1525.8,
+          592.31,
+          296.4
+        ],
+        "predator": [
+          1558.51,
+          558.8,
+          75.63
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 27.1,
+        "bait": [
+          1505.72,
+          524.77,
+          289.93
+        ],
+        "predator": [
+          1458.82,
+          549.49,
+          49.65
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 28.1,
+        "bait": [
+          1483.49,
+          586.41,
+          283.66
+        ],
+        "predator": [
+          1536.62,
+          580.26,
+          35.67
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 29.1,
+        "bait": [
+          1516.8,
+          555.25,
+          277.88
+        ],
+        "predator": [
+          1468.33,
+          553.28,
+          29.7
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 30.1,
+        "bait": [
+          1487.29,
+          576.33,
+          273.92
+        ],
+        "predator": [
+          1532.13,
+          589.63,
+          23.72
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 31.1,
+        "bait": [
+          1495.81,
+          581.56,
+          271.19
+        ],
+        "predator": [
+          1474.1,
+          544.64,
+          17.74
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 32.1,
+        "bait": [
+          1496.49,
+          562.56,
+          267.75
+        ],
+        "predator": [
+          1525.2,
+          597.37,
+          11.76
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 33.1,
+        "bait": [
+          1504.62,
+          576.68,
+          264.86
+        ],
+        "predator": [
+          1482.05,
+          537.96,
+          5.79
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 34.1,
+        "bait": [
+          1498.77,
+          561.58,
+          261.61
+        ],
+        "predator": [
+          1516.38,
+          602.86,
+          -0.19
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 35.1,
+        "bait": [
+          1498.77,
+          561.58,
+          260.54
+        ],
+        "predator": [
+          1516.38,
+          602.86,
+          29.81
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 36.1,
+        "bait": [
+          1498.77,
+          561.58,
+          258.54
+        ],
+        "predator": [
+          1516.38,
+          602.86,
+          59.81
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 37.1,
+        "bait": [
+          1498.77,
+          561.58,
+          256.54
+        ],
+        "predator": [
+          1516.38,
+          602.86,
+          89.81
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 38.1,
+        "bait": [
+          1498.77,
+          561.58,
+          255.33
+        ],
+        "predator": [
+          1536.22,
+          526.78,
+          86.22
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 39.1,
+        "bait": [
+          1469.92,
+          531.93,
+          248.51
+        ],
+        "predator": [
+          1452.15,
+          581.16,
+          60.24
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 40.1,
+        "bait": [
+          1514.84,
+          584.67,
+          241.64
+        ],
+        "predator": [
+          1543.54,
+          547.08,
+          38.27
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 41.1,
+        "bait": [
+          1516.82,
+          538.89,
+          236.76
+        ],
+        "predator": [
+          1473.2,
+          568.15,
+          32.29
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 42.1,
+        "bait": [
+          1497.99,
+          571.6,
+          231.99
+        ],
+        "predator": [
+          1545.81,
+          557.22,
+          26.31
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 43.1,
+        "bait": [
+          1516.27,
+          571.62,
+          229.59
+        ],
+        "predator": [
+          1472.39,
+          557.79,
+          20.33
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 44.1,
+        "bait": [
+          1500.9,
+          560.31,
+          225.87
+        ],
+        "predator": [
+          1545.15,
+          567.59,
+          14.36
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 45.1,
+        "bait": [
+          1517.12,
+          561.64,
+          222.63
+        ],
+        "predator": [
+          1474.5,
+          547.62,
+          8.38
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 46.1,
+        "bait": [
+          1501.34,
+          557.92,
+          220.15
+        ],
+        "predator": [
+          1541.63,
+          577.36,
+          2.4
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 47.1,
+        "bait": [
+          1526.05,
+          571.81,
+          216.49
+        ],
+        "predator": [
+          1528.62,
+          528.9,
+          14.41
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 48.1,
+        "bait": [
+          1526.05,
+          571.81,
+          214.99
+        ],
+        "predator": [
+          1528.62,
+          528.9,
+          44.41
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 49.1,
+        "bait": [
+          1526.05,
+          571.81,
+          213.49
+        ],
+        "predator": [
+          1528.62,
+          528.9,
+          74.41
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 50.1,
+        "bait": [
+          1526.05,
+          571.81,
+          211.49
+        ],
+        "predator": [
+          1514.86,
+          522.94,
+          98.82
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 51.1,
+        "bait": [
+          1466.89,
+          567.86,
+          205.52
+        ],
+        "predator": [
+          1482.47,
+          617.68,
+          72.84
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 52.1,
+        "bait": [
+          1534.08,
+          581.5,
+          198.24
+        ],
+        "predator": [
+          1527.9,
+          528.46,
+          46.86
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 53.1,
+        "bait": [
+          1486.5,
+          538.84,
+          191.96
+        ],
+        "predator": [
+          1474.09,
+          587.46,
+          34.88
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 54.1,
+        "bait": [
+          1500.65,
+          576.28,
+          187.51
+        ],
+        "predator": [
+          1524.37,
+          533.95,
+          28.91
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 55.1,
+        "bait": [
+          1502.83,
+          546.54,
+          183.25
+        ],
+        "predator": [
+          1467.04,
+          579.83,
+          22.93
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 56.1,
+        "bait": [
+          1492.53,
+          562.72,
+          180.38
+        ],
+        "predator": [
+          1530.27,
+          542.5,
+          16.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 57.1,
+        "bait": [
+          1503.16,
+          555.67,
+          177.49
+        ],
+        "predator": [
+          1462.41,
+          570.54,
+          10.97
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 58.1,
+        "bait": [
+          1491.52,
+          561.11,
+          174.17
+        ],
+        "predator": [
+          1533.54,
+          552.35,
+          5.0
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 59.1,
+        "bait": [
+          1503.71,
+          557.35,
+          171.69
+        ],
+        "predator": [
+          1461.78,
+          549.39,
+          2.62
+        ],
+        "resting": true,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      }
+    ],
+    "accounting_version": "source-order-v2",
+    "acquisition_time": 0.0,
+    "longest_occupation_s": 60.0,
+    "rest_inference": {
+      "true_positive": 131,
+      "false_positive": 8,
+      "false_negative": 15
+    },
+    "duration": 60.0,
+    "alive": true,
+    "death": null,
+    "remaining_energy": 168.8267,
+    "score": 60.0,
+    "workers_alive": 0,
+    "target_fraction": 1.0,
+    "controller_stats": {
+      "inferred_rest_ticks": 139,
+      "food_target_ticks": 0,
+      "missing_ticks": 0
+    },
+    "max_pose_error": 28.5667,
+    "mean_pose_error": 25.5856,
+    "continuous_retention_s": 60.0,
+    "replacement_windows_per_minute": null,
+    "run_id": "arranged-single-bait-predictive-controller_v1-seed0-20260917T135150817193Z-8e34b92f",
+    "replay": "results/dedicated_sprinter/replays/arranged-single-bait-predictive-controller_v1-seed0-20260917T135150817193Z-8e34b92f.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "screen:007",
+      "source": "screen.json",
+      "row": 7,
+      "original_metrics_sha256": "24a305f2001ee61378a5572a6a474827d09c7f319744cd98a7aa075a790998f2",
+      "controller": "controller_v1",
+      "original_outcome": {
+        "duration": 60.0,
+        "score": 60.0,
+        "target_fraction": 1.0,
+        "death": null
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

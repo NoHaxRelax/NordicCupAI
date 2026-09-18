@@ -1,0 +1,325 @@
+{
+  "schema": "development-batch-score-summary-v1",
+  "protocol": "v3-immutable",
+  "protocol_sha256": "429cc7b2d0439ac1756acea3f0fe521e68fced933f95bb7ebabe175a257f8016",
+  "plan": "results/release_validation/v24_fresh16/PLAN.json",
+  "plan_sha256": "6d619878c16c6d6a68f8be4bea99b7f74eec7b884b9c58746460f9b43222ea45",
+  "fixed_denominator": 16,
+  "completed_receipts": 16,
+  "missing_receipts": 0,
+  "successes": 11,
+  "failures": 5,
+  "success_rate": 0.6875,
+  "exact_one_sided_95pct_lower_bound": 0.4516529191512526,
+  "failure_types": {
+    "no_recent_guide_to_bait_handoff": 3,
+    "no_active_bait_acquisition": 2
+  },
+  "headline_scope": "fresh development16 only; never pooled with prior versions or reserved benchmark",
+  "rows": [
+    {
+      "map_seed": 10160,
+      "fixture_seed": 20160,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10160-f20160-p1-direct_guide-sitebait1-114f5124.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10160-f20160-114f5124.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 33.1,
+      "guide_death": 32.9,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10160-f20160-p1-direct_guide-sitebait1-114f5124",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10161,
+      "fixture_seed": 20161,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10161-f20161-p1-direct_guide-sitebait1-ed08e408.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10161-f20161-ed08e408.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 59.0,
+      "guide_death": 58.7,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10161-f20161-p1-direct_guide-sitebait1-ed08e408",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10162,
+      "fixture_seed": 20162,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10162-f20162-p1-direct_guide-sitebait1-b0ff1013.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10162-f20162-b0ff1013.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 26.6,
+      "guide_death": 26.4,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10162-f20162-p1-direct_guide-sitebait1-b0ff1013",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10163,
+      "fixture_seed": 20163,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10163-f20163-p1-direct_guide-sitebait1-68d5c1da.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10163-f20163-68d5c1da.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 20.6,
+      "guide_death": 20.5,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10163-f20163-p1-direct_guide-sitebait1-68d5c1da",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10164,
+      "fixture_seed": 20164,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10164-f20164-p1-direct_guide-sitebait1-934caf94.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10164-f20164-934caf94.score.json",
+      "pass": false,
+      "reason": "no_recent_guide_to_bait_handoff",
+      "active_bait_acquisition": 141.6,
+      "guide_death": 2.3,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10164-f20164-p1-direct_guide-sitebait1-934caf94",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10165,
+      "fixture_seed": 20165,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10165-f20165-p1-direct_guide-sitebait1-4e367d0f.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10165-f20165-4e367d0f.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 44.7,
+      "guide_death": null,
+      "guide_alive_at_acquisition": true,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10165-f20165-p1-direct_guide-sitebait1-4e367d0f",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10166,
+      "fixture_seed": 20166,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10166-f20166-p1-direct_guide-sitebait1-45e0041a.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10166-f20166-45e0041a.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 25.8,
+      "guide_death": 25.6,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10166-f20166-p1-direct_guide-sitebait1-45e0041a",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10167,
+      "fixture_seed": 20167,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10167-f20167-p1-direct_guide-sitebait1-66bc4035.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10167-f20167-66bc4035.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 39.6,
+      "guide_death": 39.4,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10167-f20167-p1-direct_guide-sitebait1-66bc4035",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10168,
+      "fixture_seed": 20168,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10168-f20168-p1-direct_guide-sitebait1-adcd411a.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10168-f20168-adcd411a.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 95.6,
+      "guide_death": 95.4,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10168-f20168-p1-direct_guide-sitebait1-adcd411a",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10169,
+      "fixture_seed": 20169,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10169-f20169-p1-direct_guide-sitebait1-3373af4b.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10169-f20169-3373af4b.score.json",
+      "pass": false,
+      "reason": "no_recent_guide_to_bait_handoff",
+      "active_bait_acquisition": 185.1,
+      "guide_death": 30.9,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10169-f20169-p1-direct_guide-sitebait1-3373af4b",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10170,
+      "fixture_seed": 20170,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10170-f20170-p1-direct_guide-sitebait1-625a7b5b.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10170-f20170-625a7b5b.score.json",
+      "pass": false,
+      "reason": "no_active_bait_acquisition",
+      "active_bait_acquisition": null,
+      "guide_death": 47.3,
+      "guide_alive_at_acquisition": null,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10170-f20170-p1-direct_guide-sitebait1-625a7b5b",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10171,
+      "fixture_seed": 20171,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10171-f20171-p1-direct_guide-sitebait1-bca2fd55.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10171-f20171-bca2fd55.score.json",
+      "pass": false,
+      "reason": "no_active_bait_acquisition",
+      "active_bait_acquisition": null,
+      "guide_death": 4.5,
+      "guide_alive_at_acquisition": null,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10171-f20171-p1-direct_guide-sitebait1-bca2fd55",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10172,
+      "fixture_seed": 20172,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10172-f20172-p1-direct_guide-sitebait1-9d286ccd.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10172-f20172-9d286ccd.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 33.8,
+      "guide_death": 33.0,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10172-f20172-p1-direct_guide-sitebait1-9d286ccd",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10173,
+      "fixture_seed": 20173,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10173-f20173-p1-direct_guide-sitebait1-b40e7a68.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10173-f20173-b40e7a68.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 10.2,
+      "guide_death": 10.1,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10173-f20173-p1-direct_guide-sitebait1-b40e7a68",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10174,
+      "fixture_seed": 20174,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10174-f20174-p1-direct_guide-sitebait1-5c25d1f2.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10174-f20174-5c25d1f2.score.json",
+      "pass": true,
+      "reason": "pass",
+      "active_bait_acquisition": 21.0,
+      "guide_death": 20.9,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10174-f20174-p1-direct_guide-sitebait1-5c25d1f2",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    },
+    {
+      "map_seed": 10175,
+      "fixture_seed": 20175,
+      "receipt": "results/release_validation/real-map-ReleaseGuide-m10175-f20175-p1-direct_guide-sitebait1-db399e5c.json",
+      "score_sidecar": "results/reliability_eval/development_scores/v24_fresh16/m10175-f20175-db399e5c.score.json",
+      "pass": false,
+      "reason": "no_recent_guide_to_bait_handoff",
+      "active_bait_acquisition": 125.1,
+      "guide_death": 5.8,
+      "guide_alive_at_acquisition": false,
+      "replay_check": {
+        "title": "real-map-ReleaseGuide-m10175-f20175-p1-direct_guide-sitebait1-db399e5c",
+        "frames": 3001,
+        "native_frames": 3001,
+        "duration": 300.0,
+        "reason": "horizon",
+        "valid": true
+      }
+    }
+  ]
+}

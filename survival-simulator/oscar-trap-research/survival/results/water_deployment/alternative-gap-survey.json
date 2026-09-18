@@ -1,0 +1,537 @@
+{
+  "metadata": {
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "engine_sha256": {
+      "survival-simulator/agent_server.py": "d07f12843febd435720ffc5382df9690ec07c59481ac12d4548b71d83e648f6d",
+      "survival-simulator/local_playground.py": "8bffe588b4c52dfc645e63cae8701cf78cacb4c709c04ae3ca33daafcaace5de",
+      "survival-simulator/simulation_server.py": "9da83bf39c0d62058ddf629da49005002212ddaec117be28bbc616f67f894349",
+      "survival-simulator/src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+      "survival-simulator/src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+      "survival-simulator/src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+      "survival-simulator/src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+      "survival-simulator/src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+      "survival-simulator/src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+      "survival-simulator/src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+      "survival-simulator/src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+      "survival-simulator/src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+      "survival-simulator/src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+      "survival-simulator/src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+      "survival-simulator/src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+      "survival-simulator/src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1"
+    },
+    "experiment_sha256": {
+      "advance.py": "f7ae07966ac42ca77b413314ab37c397c5f702a79fb8d060c7c4a71bbd85bb7b",
+      "alternative_traps.py": "0a807c9ef34facede9001e21ad7ba7f8ff5290c65dc71efef0fcd1ed57f59328",
+      "approach.py": "6834fc6fa540475ec5feda6dc293a165a682d03706d9625215ab5b547a67f7b1",
+      "association.py": "411a72452b516293dbc7eba56e084a123030c08eec9c311b3948f0512fcdcd45",
+      "base_snapshot.py": "aff00b9ce228e3beb8ccdf17f21f67f2e9fe315fc153a9ca923d1d3c740cd2ca",
+      "base_snapshot_v1.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "d047ed18dd5a4554803cda321a5267f7b038084c008cc19d420d3d262de04aa4",
+      "comparison.py": "0dd70c7a654e99c6b40433ec8f97191981682015a3d2cadae3bbfbe25717dec0",
+      "controller.py": "252a1618ce126c0e07143cc0c4acf01386dadeda8337c7e91a80af3c8dc1fc4c",
+      "controller_v2.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "corridor.py": "db1a9bdfa51eaf3f2c55627d73e87a7632aedc7dae9f7c03e0e963e993c3a8dd",
+      "probe.py": "27a4f5c4fe86abbc1bfa31e86a5a9f029c1f54b9a5f2d1d289aa0c6032eb5976",
+      "run.py": "8c90c04ef526e07719670d5ac73a9ba7f9080723e79b9c2d3edc3116c42d3c59",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505",
+      "summarize.py": "35408e558ea6f3da4ee10e1081da630780874118db2934a0a4876b3a902c691c",
+      "twins.py": "b7d9b100f716e53e9c866f8063d4e3ac0a26d1861970e84818000cf09fb4f494"
+    }
+  },
+  "data": [
+    {
+      "seed": 1,
+      "sites": [
+        {
+          "obstacles": [
+            60,
+            30
+          ],
+          "axis": 1,
+          "gap": 11.598594768836904,
+          "length": 70.86806126506269,
+          "goal": [
+            801.6400458052843,
+            431.9981540075387
+          ],
+          "start": [
+            846.6400458052843,
+            431.9981540075387
+          ],
+          "predator": [
+            881.6400458052843,
+            431.9981540075387
+          ],
+          "heading": 3.141592653589793,
+          "fullspeed_route": true,
+          "mouth": [
+            831.6400458052843,
+            431.9981540075387
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "sites": [
+        {
+          "obstacles": [
+            58,
+            37
+          ],
+          "axis": 1,
+          "gap": 11.010881563962528,
+          "length": 77.9884477615139,
+          "goal": [
+            417.4158250137963,
+            502.8896591482968
+          ],
+          "start": [
+            462.4158250137963,
+            502.8896591482968
+          ],
+          "predator": [
+            497.4158250137963,
+            502.8896591482968
+          ],
+          "heading": 3.141592653589793,
+          "fullspeed_route": false,
+          "mouth": [
+            447.4158250137963,
+            502.8896591482968
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "sites": []
+    },
+    {
+      "seed": 4,
+      "sites": []
+    },
+    {
+      "seed": 5,
+      "sites": []
+    },
+    {
+      "seed": 6,
+      "sites": []
+    },
+    {
+      "seed": 7,
+      "sites": [
+        {
+          "obstacles": [
+            35,
+            49
+          ],
+          "axis": 1,
+          "gap": 14.165282722752693,
+          "length": 66.78472734527645,
+          "goal": [
+            360.03573667958136,
+            452.9264450143546
+          ],
+          "start": [
+            315.03573667958136,
+            452.9264450143546
+          ],
+          "predator": [
+            280.03573667958136,
+            452.9264450143546
+          ],
+          "heading": 0.0,
+          "fullspeed_route": true,
+          "mouth": [
+            330.03573667958136,
+            452.9264450143546
+          ]
+        },
+        {
+          "obstacles": [
+            35,
+            49
+          ],
+          "axis": 1,
+          "gap": 14.165282722752693,
+          "length": 66.78472734527645,
+          "goal": [
+            366.8204640248578,
+            452.9264450143546
+          ],
+          "start": [
+            411.8204640248578,
+            452.9264450143546
+          ],
+          "predator": [
+            446.8204640248578,
+            452.9264450143546
+          ],
+          "heading": 3.141592653589793,
+          "fullspeed_route": true,
+          "mouth": [
+            396.8204640248578,
+            452.9264450143546
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 8,
+      "sites": [
+        {
+          "obstacles": [
+            16,
+            46
+          ],
+          "axis": 1,
+          "gap": 18.562114423280264,
+          "length": 71.20204354580233,
+          "goal": [
+            1151.5416507337422,
+            564.0964101304064
+          ],
+          "start": [
+            1106.5416507337422,
+            564.0964101304064
+          ],
+          "predator": [
+            1071.5416507337422,
+            564.0964101304064
+          ],
+          "heading": 0.0,
+          "fullspeed_route": true,
+          "mouth": [
+            1121.5416507337422,
+            564.0964101304064
+          ]
+        },
+        {
+          "obstacles": [
+            16,
+            46
+          ],
+          "axis": 1,
+          "gap": 18.562114423280264,
+          "length": 71.20204354580233,
+          "goal": [
+            1162.7436942795446,
+            564.0964101304064
+          ],
+          "start": [
+            1207.7436942795446,
+            564.0964101304064
+          ],
+          "predator": [
+            1242.7436942795446,
+            564.0964101304064
+          ],
+          "heading": 3.141592653589793,
+          "fullspeed_route": true,
+          "mouth": [
+            1192.7436942795446,
+            564.0964101304064
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 9,
+      "sites": [
+        {
+          "obstacles": [
+            58,
+            11
+          ],
+          "axis": 1,
+          "gap": 14.045644774460413,
+          "length": 72.78812497532886,
+          "goal": [
+            1283.5749503711263,
+            457.7583959982802
+          ],
+          "start": [
+            1238.5749503711263,
+            457.7583959982802
+          ],
+          "predator": [
+            1203.5749503711263,
+            457.7583959982802
+          ],
+          "heading": 0.0,
+          "fullspeed_route": true,
+          "mouth": [
+            1253.5749503711263,
+            457.7583959982802
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 10,
+      "sites": []
+    },
+    {
+      "seed": 11,
+      "sites": [
+        {
+          "obstacles": [
+            21,
+            30
+          ],
+          "axis": 0,
+          "gap": 14.966920902528898,
+          "length": 80.7573283518426,
+          "goal": [
+            396.16979696854673,
+            411.3686092793386
+          ],
+          "start": [
+            396.16979696854673,
+            366.3686092793386
+          ],
+          "predator": [
+            396.16979696854673,
+            331.3686092793386
+          ],
+          "heading": 1.5707963267948966,
+          "fullspeed_route": false,
+          "mouth": [
+            396.16979696854673,
+            381.3686092793386
+          ]
+        },
+        {
+          "obstacles": [
+            21,
+            30
+          ],
+          "axis": 0,
+          "gap": 14.966920902528898,
+          "length": 80.7573283518426,
+          "goal": [
+            396.16979696854673,
+            432.1259376311812
+          ],
+          "start": [
+            396.16979696854673,
+            477.1259376311812
+          ],
+          "predator": [
+            396.16979696854673,
+            512.1259376311812
+          ],
+          "heading": -1.5707963267948966,
+          "fullspeed_route": false,
+          "mouth": [
+            396.16979696854673,
+            462.1259376311812
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "sites": []
+    },
+    {
+      "seed": 13,
+      "sites": [
+        {
+          "obstacles": [
+            67,
+            38
+          ],
+          "axis": 1,
+          "gap": 15.02350905823748,
+          "length": 80.76640413060045,
+          "goal": [
+            803.7168254930268,
+            113.62390467577066
+          ],
+          "start": [
+            848.7168254930268,
+            113.62390467577066
+          ],
+          "predator": [
+            883.7168254930268,
+            113.62390467577066
+          ],
+          "heading": 3.141592653589793,
+          "fullspeed_route": false,
+          "mouth": [
+            833.7168254930268,
+            113.62390467577066
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 14,
+      "sites": []
+    },
+    {
+      "seed": 15,
+      "sites": []
+    },
+    {
+      "seed": 16,
+      "sites": [
+        {
+          "obstacles": [
+            56,
+            34
+          ],
+          "axis": 0,
+          "gap": 12.03021461883668,
+          "length": 56.97973870047258,
+          "goal": [
+            1376.601790068376,
+            898.6082920230309
+          ],
+          "start": [
+            1376.601790068376,
+            853.6082920230309
+          ],
+          "predator": [
+            1376.601790068376,
+            818.6082920230309
+          ],
+          "heading": 1.5707963267948966,
+          "fullspeed_route": false,
+          "mouth": [
+            1376.601790068376,
+            868.6082920230309
+          ]
+        },
+        {
+          "obstacles": [
+            56,
+            34
+          ],
+          "axis": 0,
+          "gap": 12.03021461883668,
+          "length": 56.97973870047258,
+          "goal": [
+            1376.601790068376,
+            895.5880307235035
+          ],
+          "start": [
+            1376.601790068376,
+            940.5880307235035
+          ],
+          "predator": [
+            1376.601790068376,
+            975.5880307235035
+          ],
+          "heading": -1.5707963267948966,
+          "fullspeed_route": false,
+          "mouth": [
+            1376.601790068376,
+            925.5880307235035
+          ]
+        },
+        {
+          "obstacles": [
+            60,
+            66
+          ],
+          "axis": 1,
+          "gap": 15.614106217426013,
+          "length": 59.00035526135571,
+          "goal": [
+            1016.1815412586445,
+            267.06255419493243
+          ],
+          "start": [
+            971.1815412586445,
+            267.06255419493243
+          ],
+          "predator": [
+            936.1815412586445,
+            267.06255419493243
+          ],
+          "heading": 0.0,
+          "fullspeed_route": false,
+          "mouth": [
+            986.1815412586445,
+            267.06255419493243
+          ]
+        },
+        {
+          "obstacles": [
+            60,
+            66
+          ],
+          "axis": 1,
+          "gap": 15.614106217426013,
+          "length": 59.00035526135571,
+          "goal": [
+            1015.1818965200002,
+            267.06255419493243
+          ],
+          "start": [
+            1060.1818965200002,
+            267.06255419493243
+          ],
+          "predator": [
+            1095.1818965200002,
+            267.06255419493243
+          ],
+          "heading": 3.141592653589793,
+          "fullspeed_route": false,
+          "mouth": [
+            1045.1818965200002,
+            267.06255419493243
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "sites": []
+    },
+    {
+      "seed": 18,
+      "sites": [
+        {
+          "obstacles": [
+            59,
+            75
+          ],
+          "axis": 1,
+          "gap": 17.983124341705206,
+          "length": 75.65310200301542,
+          "goal": [
+            1489.60307152149,
+            654.5665515321316
+          ],
+          "start": [
+            1444.60307152149,
+            654.5665515321316
+          ],
+          "predator": [
+            1409.60307152149,
+            654.5665515321316
+          ],
+          "heading": 0.0,
+          "fullspeed_route": false,
+          "mouth": [
+            1459.60307152149,
+            654.5665515321316
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 19,
+      "sites": []
+    },
+    {
+      "seed": 20,
+      "sites": []
+    }
+  ]
+}

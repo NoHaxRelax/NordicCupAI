@@ -1,0 +1,235 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "meta": {
+    "title": "New reproduction | Sprinter screen.json row 1 (controller_v1)",
+    "policy": "predictive / controller_v1",
+    "seed": 0,
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "dt": 0.1,
+    "record_interval": 0.5,
+    "scenario": "arranged-single-bait",
+    "notes": "Privileged arranged geometry and initial energy; finite prepared food/trees if configured. No new tree or predator spawns. Actions use only cached observations. Stationary workers when present. New local reproduction of saved parameters; original missing frames are not recovered. Outcomes may differ.",
+    "policy_sha256": "9eff8389121163d97037f9eafe1f7e52f7c0cba4f1f9f31be5e6dc1a3bde4ce3",
+    "created_at": "2026-09-17T13:50:34.622778+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "observation_note": "Engine observations precede predator movement. Last actions use the prior decision input. Hidden debug fields are not policy inputs.",
+    "run_id": "arranged-single-bait-predictive-controller_v1-seed0-20260917T135034621900Z-5d2025c6",
+    "parameters": {
+      "energy": 500,
+      "controller": {
+        "margin": 20,
+        "orbit_weight": 3
+      }
+    },
+    "requested_horizon": 60,
+    "reproduction": {
+      "original_id": "screen:001",
+      "source": "screen.json",
+      "row": 1,
+      "original_metrics_sha256": "24a305f2001ee61378a5572a6a474827d09c7f319744cd98a7aa075a790998f2",
+      "controller": "controller_v1",
+      "original_outcome": {
+        "duration": 6.7,
+        "score": 2.9361,
+        "target_fraction": 1.0,
+        "death": "capture"
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    },
+    "recording_kind": "new reproduction"
+  },
+  "replay_summary": {
+    "duration": 6.7,
+    "score": 2.9361,
+    "frames": 15,
+    "reason": "capture"
+  },
+  "result": {
+    "scenario": {
+      "energy": 500,
+      "controller": {
+        "margin": 20,
+        "orbit_weight": 3
+      }
+    },
+    "policy": "predictive",
+    "horizon": 60,
+    "food_eaten": 0,
+    "food_received": 0.0,
+    "nutrition": 0.0,
+    "movement_energy": 113.0,
+    "turn_energy": 3.911,
+    "passive_energy": 6.7,
+    "target_ticks": 67,
+    "active_ticks": 67,
+    "longest_active_loss_s": 0.0,
+    "longest_retained_s": 6.7,
+    "first_loss_s": null,
+    "first_cutoff_s": null,
+    "rest_cycles": 0,
+    "worker_deaths": {},
+    "min_gap": 13.7116,
+    "trace": [
+      {
+        "t": 0.1,
+        "bait": [
+          810.0,
+          600.0,
+          499.4
+        ],
+        "predator": [
+          755.0,
+          600.0,
+          99.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 1.1,
+        "bait": [
+          925.0,
+          600.0,
+          475.9
+        ],
+        "predator": [
+          905.0,
+          600.0,
+          73.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 2.1,
+        "bait": [
+          1075.0,
+          600.0,
+          443.9
+        ],
+        "predator": [
+          1055.0,
+          600.0,
+          48.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 3.1,
+        "bait": [
+          1209.0,
+          600.0,
+          420.9
+        ],
+        "predator": [
+          1181.0,
+          600.0,
+          34.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 4.1,
+        "bait": [
+          1319.0,
+          600.0,
+          408.9
+        ],
+        "predator": [
+          1291.0,
+          600.0,
+          29.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 5.1,
+        "bait": [
+          1429.0,
+          600.0,
+          396.9
+        ],
+        "predator": [
+          1401.0,
+          600.0,
+          23.95
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      },
+      {
+        "t": 6.1,
+        "bait": [
+          1539.0,
+          600.0,
+          385.9
+        ],
+        "predator": [
+          1511.0,
+          600.0,
+          18.45
+        ],
+        "resting": false,
+        "target": 0,
+        "food": 0,
+        "workers": 0
+      }
+    ],
+    "accounting_version": "source-order-v2",
+    "acquisition_time": 0.0,
+    "longest_occupation_s": 6.7,
+    "rest_inference": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0
+    },
+    "duration": 6.7,
+    "alive": false,
+    "death": "capture",
+    "remaining_energy": 376.389,
+    "score": 2.9361,
+    "workers_alive": 0,
+    "target_fraction": 1.0,
+    "controller_stats": {
+      "inferred_rest_ticks": 0,
+      "food_target_ticks": 0,
+      "missing_ticks": 0
+    },
+    "max_pose_error": 27.4916,
+    "mean_pose_error": 1.4193,
+    "continuous_retention_s": 6.7,
+    "replacement_windows_per_minute": 8.9552,
+    "run_id": "arranged-single-bait-predictive-controller_v1-seed0-20260917T135034621900Z-5d2025c6",
+    "replay": "results/dedicated_sprinter/replays/arranged-single-bait-predictive-controller_v1-seed0-20260917T135034621900Z-5d2025c6.json.gz",
+    "replay_kind": "new reproduction",
+    "reproduction_of": {
+      "original_id": "screen:001",
+      "source": "screen.json",
+      "row": 1,
+      "original_metrics_sha256": "24a305f2001ee61378a5572a6a474827d09c7f319744cd98a7aa075a790998f2",
+      "controller": "controller_v1",
+      "original_outcome": {
+        "duration": 6.7,
+        "score": 2.9361,
+        "target_fraction": 1.0,
+        "death": "capture"
+      },
+      "limitations": "Saved configuration and controller version rerun locally; new footage, not the original missing recording."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-RealMapGuidePolicy-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-3155d613.json",
+  "original_receipt_sha256": "13491e3d209afdd949da190afb8f25f3068019f08508ad63df9a03091a6e1dab",
+  "overrides": {
+    "failure_stage": "role_switch_without_fresh_pursuit",
+    "gaze_route_exercised": true
+  },
+  "reason": "The parent lost verified pursuit at 14.4 seconds. The policy reassigned the guide role to the child at 20.0 seconds, but the tracked predator never freshly pursued that child, so the role epoch could not satisfy the delivery chain. No site entry occurred. The replay and original receipt are unchanged."
+}

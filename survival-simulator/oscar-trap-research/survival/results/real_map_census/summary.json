@@ -1,0 +1,102 @@
+{
+  "seed_range": [
+    10000,
+    10127
+  ],
+  "depth": 5,
+  "gap": [
+    10.9,
+    19.1
+  ],
+  "conservative_overlap": 54.9,
+  "expanded_overlap": 10.1,
+  "notes": "Static geometric availability only; short overlaps unvalidated; no delivery/retention success implied. No simulation was stepped.",
+  "metrics": {
+    "conservative_refuge": {
+      "maps": 118,
+      "total": 128,
+      "percent": 92.2,
+      "wilson95_percent": [
+        86.2,
+        95.7
+      ]
+    },
+    "conservative_interior_refuge": {
+      "maps": 74,
+      "total": 128,
+      "percent": 57.8,
+      "wilson95_percent": [
+        49.2,
+        66.0
+      ]
+    },
+    "conservative_policy_site": {
+      "maps": 58,
+      "total": 128,
+      "percent": 45.3,
+      "wilson95_percent": [
+        37.0,
+        53.9
+      ]
+    },
+    "conservative_clear_approach": {
+      "maps": 53,
+      "total": 128,
+      "percent": 41.4,
+      "wilson95_percent": [
+        33.2,
+        50.1
+      ]
+    },
+    "expanded_refuge": {
+      "maps": 128,
+      "total": 128,
+      "percent": 100.0,
+      "wilson95_percent": [
+        97.1,
+        100.0
+      ]
+    },
+    "expanded_clear_approach": {
+      "maps": 127,
+      "total": 128,
+      "percent": 99.2,
+      "wilson95_percent": [
+        95.7,
+        99.9
+      ]
+    }
+  },
+  "overlap_sensitivity_clear_approach": {
+    "10.1": {
+      "maps": 127,
+      "total": 128,
+      "within_previously_tested_overlap_range": false
+    },
+    "15": {
+      "maps": 127,
+      "total": 128,
+      "within_previously_tested_overlap_range": false
+    },
+    "20": {
+      "maps": 127,
+      "total": 128,
+      "within_previously_tested_overlap_range": false
+    },
+    "30": {
+      "maps": 121,
+      "total": 128,
+      "within_previously_tested_overlap_range": false
+    },
+    "40": {
+      "maps": 109,
+      "total": 128,
+      "within_previously_tested_overlap_range": false
+    },
+    "54.9": {
+      "maps": 53,
+      "total": 128,
+      "within_previously_tested_overlap_range": true
+    }
+  }
+}

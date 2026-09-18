@@ -1,0 +1,20 @@
+{
+  "schema": "posthoc-active-bait-audit-v1",
+  "receipt": "results/simple_chase/real-map-SimpleChase-m10039-f9639-p1-direct_guide-sitebait1-e7b15b1e.json",
+  "receipt_sha256": "886e70a95716007dde3e33f44995618d536b29fef055e9fb281819c137b83de2",
+  "original_harness_success": true,
+  "first_active_bait_target": 18.9,
+  "confirmed_capture_start": 19.4,
+  "first_loss_after_confirmed_capture": [],
+  "recorded_seconds": 180.0,
+  "seconds_after_capture": 160.6,
+  "guide_death": 19.2,
+  "last_alive_snapshot": {
+    "time": 19.1,
+    "guide_distance_to_mouth": 75.0,
+    "predator_distance_to_mouth": 112.88947364542011
+  },
+  "distant_autonomous_capture": false,
+  "active_bait_30s_hold": true,
+  "caveat": "Post-hoc rounded replay audit. Removes rest-only provisional acquisition; flags clear distant post-death captures, but does not prove causal attribution for every survivor. Original receipts remain unchanged."
+}

@@ -1,0 +1,636 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "controller_module": "controller",
+  "hashes": {
+    "fullgame.py": "47b41b1f2f5a0c93a2415905d03341be46239ab977c23a37a04c3864c7bd9b3e",
+    "controller.py": "7b24bb76439679778a46acc0fa609be0c4d6648f868e48c1117e74e3c52e3afe",
+    "controller_v1.py": "9eff8389121163d97037f9eafe1f7e52f7c0cba4f1f9f31be5e6dc1a3bde4ce3",
+    "colony.py": "0ea24b8d3a590683ae3ae5ea2f88d6866f300f3111a895b5d9a179720df3a33a",
+    "controller_v4.py": "d7ace7c1da248cb452bf869b967cb590f5c6667479d67bddc0830e832be2f84c",
+    "controller_v3.py": "5fd29be205c2ffbe0a96147c4484ef17931d4c55c2f7f0a6012c51b2cb89e5cb",
+    "experiment.py": "6769152fa8d4696a1f3001446310c7f2cd13ffda90773ba0142e46820ce018fe",
+    "controller_v2.py": "a9dff22ea2c1e3fded941d8c959bca892151e767238364e057f1c21ffbe13485",
+    "genetics.py": "c62bc581f244a2f604f133526f27eced7ecfb6df50da8c171cea1891d20e3223",
+    "verify.py": "b7c25977b01ec59a4f1d2336202ff41ab3f3ae96462d914b1e98ad094c3a87e9",
+    "protection.py": "f6b5f9a8c0f9ceb6531ba84f095fd33fa9b0420d1976d77171dda1511244eff9",
+    "validation.py": "e31f21086733db026c52debec0b040b724a5df637fff5da1152ef4190efc6d7c"
+  },
+  "runs": [
+    {
+      "scenario": {
+        "seed": 301,
+        "heading": 0,
+        "position": [
+          800,
+          600
+        ],
+        "rotation": 0,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "none",
+      "horizon": 90,
+      "workers_alive": 1,
+      "worker_captures": 1,
+      "worker_starvations": 0,
+      "worker_seconds": 126.8,
+      "first_worker_capture": 36.80000000000025,
+      "first_worker_target": 34.60000000000022,
+      "bait_death": null,
+      "deaths": {
+        "1": {
+          "t": 36.8,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.0,
+      "score": 88.86799999999923
+    },
+    {
+      "scenario": {
+        "seed": 301,
+        "heading": 0,
+        "position": [
+          800,
+          600
+        ],
+        "rotation": 0,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "adaptive",
+      "horizon": 90,
+      "workers_alive": 1,
+      "worker_captures": 1,
+      "worker_starvations": 0,
+      "worker_seconds": 166.6,
+      "first_worker_capture": 76.59999999999992,
+      "first_worker_target": 74.60000000000004,
+      "bait_death": 6.999999999999991,
+      "deaths": {
+        "0": {
+          "t": 7.0,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 76.6,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.08771929824561403,
+      "score": 88.42440523650521
+    },
+    {
+      "scenario": {
+        "seed": 301,
+        "heading": 0,
+        "position": [
+          800,
+          600
+        ],
+        "rotation": 0,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "predictive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": null,
+      "deaths": {},
+      "bait_target_fraction_over_whole_horizon": 1.0,
+      "score": 90.55919999999914
+    },
+    {
+      "scenario": {
+        "seed": 302,
+        "heading": 0.8,
+        "position": [
+          600,
+          400
+        ],
+        "rotation": 0.8,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "none",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 175.9,
+      "first_worker_capture": 87.79999999999929,
+      "first_worker_target": 82.69999999999958,
+      "bait_death": null,
+      "deaths": {
+        "2": {
+          "t": 87.8,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 88.1,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.0,
+      "score": 88.75899999999908
+    },
+    {
+      "scenario": {
+        "seed": 302,
+        "heading": 0.8,
+        "position": [
+          600,
+          400
+        ],
+        "rotation": 0.8,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "adaptive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": 2.500000000000001,
+      "deaths": {
+        "0": {
+          "t": 2.5,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.03007518796992481,
+      "score": 89.05449437470637
+    },
+    {
+      "scenario": {
+        "seed": 302,
+        "heading": 0.8,
+        "position": [
+          600,
+          400
+        ],
+        "rotation": 0.8,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "predictive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": null,
+      "deaths": {},
+      "bait_target_fraction_over_whole_horizon": 0.9773413897280967,
+      "score": 90.50239999999913
+    },
+    {
+      "scenario": {
+        "seed": 303,
+        "heading": -0.8,
+        "position": [
+          1000,
+          700
+        ],
+        "rotation": -0.4,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "none",
+      "horizon": 90,
+      "workers_alive": 1,
+      "worker_captures": 1,
+      "worker_starvations": 0,
+      "worker_seconds": 119.2,
+      "first_worker_capture": 29.200000000000145,
+      "first_worker_target": 26.900000000000112,
+      "bait_death": null,
+      "deaths": {
+        "1": {
+          "t": 29.2,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.0,
+      "score": 88.79199999999923
+    },
+    {
+      "scenario": {
+        "seed": 303,
+        "heading": -0.8,
+        "position": [
+          1000,
+          700
+        ],
+        "rotation": -0.4,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "adaptive",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 151.5,
+      "first_worker_capture": 75.59999999999998,
+      "first_worker_target": 73.70000000000009,
+      "bait_death": 65.90000000000053,
+      "deaths": {
+        "0": {
+          "t": 65.9,
+          "cause": "capture"
+        },
+        "2": {
+          "t": 75.6,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 75.9,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.20175438596491227,
+      "score": 87.91558771879724
+    },
+    {
+      "scenario": {
+        "seed": 303,
+        "heading": -0.8,
+        "position": [
+          1000,
+          700
+        ],
+        "rotation": -0.4,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "predictive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": null,
+      "deaths": {},
+      "bait_target_fraction_over_whole_horizon": 0.9879154078549849,
+      "score": 90.47339999999915
+    },
+    {
+      "scenario": {
+        "seed": 304,
+        "heading": 3.141592653589793,
+        "position": [
+          850,
+          500
+        ],
+        "rotation": 1.4,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "none",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 4.4,
+      "first_worker_capture": 2.1000000000000005,
+      "first_worker_target": 0.5,
+      "bait_death": null,
+      "deaths": {
+        "2": {
+          "t": 2.1,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 2.3,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.0,
+      "score": 87.04399999999933
+    },
+    {
+      "scenario": {
+        "seed": 304,
+        "heading": 3.141592653589793,
+        "position": [
+          850,
+          500
+        ],
+        "rotation": 1.4,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "adaptive",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 4.4,
+      "first_worker_capture": 2.1000000000000005,
+      "first_worker_target": 0.5,
+      "bait_death": 29.200000000000145,
+      "deaths": {
+        "2": {
+          "t": 2.1,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 2.3,
+          "cause": "capture"
+        },
+        "0": {
+          "t": 29.2,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.07932692307692307,
+      "score": 86.1944509915469
+    },
+    {
+      "scenario": {
+        "seed": 304,
+        "heading": 3.141592653589793,
+        "position": [
+          850,
+          500
+        ],
+        "rotation": 1.4,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "predictive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": null,
+      "deaths": {},
+      "bait_target_fraction_over_whole_horizon": 0.9939577039274925,
+      "score": 90.49079999999914
+    },
+    {
+      "scenario": {
+        "seed": 305,
+        "heading": 0,
+        "position": [
+          500,
+          600
+        ],
+        "rotation": 0,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "none",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 62.9,
+      "first_worker_capture": 31.300000000000175,
+      "first_worker_target": 29.50000000000015,
+      "bait_death": null,
+      "deaths": {
+        "2": {
+          "t": 31.3,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 31.6,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.0,
+      "score": 87.6289999999993
+    },
+    {
+      "scenario": {
+        "seed": 305,
+        "heading": 0,
+        "position": [
+          500,
+          600
+        ],
+        "rotation": 0,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "adaptive",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 59.2,
+      "first_worker_capture": 29.50000000000015,
+      "first_worker_target": 27.900000000000126,
+      "bait_death": 8.299999999999986,
+      "deaths": {
+        "0": {
+          "t": 8.3,
+          "cause": "capture"
+        },
+        "2": {
+          "t": 29.5,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 29.7,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.10323383084577115,
+      "score": 86.82599999999934
+    },
+    {
+      "scenario": {
+        "seed": 305,
+        "heading": 0,
+        "position": [
+          500,
+          600
+        ],
+        "rotation": 0,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "predictive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": null,
+      "deaths": {},
+      "bait_target_fraction_over_whole_horizon": 1.0,
+      "score": 90.51799999999915
+    },
+    {
+      "scenario": {
+        "seed": 306,
+        "heading": -0.3,
+        "position": [
+          1100,
+          700
+        ],
+        "rotation": 2.3,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "none",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 63.9,
+      "first_worker_capture": 31.800000000000182,
+      "first_worker_target": 29.300000000000146,
+      "bait_death": null,
+      "deaths": {
+        "1": {
+          "t": 31.8,
+          "cause": "capture"
+        },
+        "2": {
+          "t": 32.1,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.0,
+      "score": 87.63899999999929
+    },
+    {
+      "scenario": {
+        "seed": 306,
+        "heading": -0.3,
+        "position": [
+          1100,
+          700
+        ],
+        "rotation": 2.3,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "adaptive",
+      "horizon": 90,
+      "workers_alive": 0,
+      "worker_captures": 2,
+      "worker_starvations": 0,
+      "worker_seconds": 119.6,
+      "first_worker_capture": 51.50000000000046,
+      "first_worker_target": 49.90000000000044,
+      "bait_death": 7.999999999999988,
+      "deaths": {
+        "0": {
+          "t": 8.0,
+          "cause": "capture"
+        },
+        "1": {
+          "t": 51.5,
+          "cause": "capture"
+        },
+        "2": {
+          "t": 68.1,
+          "cause": "capture"
+        }
+      },
+      "bait_target_fraction_over_whole_horizon": 0.097799511002445,
+      "score": 87.41383790773492
+    },
+    {
+      "scenario": {
+        "seed": 306,
+        "heading": -0.3,
+        "position": [
+          1100,
+          700
+        ],
+        "rotation": 2.3,
+        "energy": 150,
+        "food": "orchard",
+        "controller": {
+          "center": "auto"
+        }
+      },
+      "mode": "predictive",
+      "horizon": 90,
+      "workers_alive": 2,
+      "worker_captures": 0,
+      "worker_starvations": 0,
+      "worker_seconds": 180.0,
+      "first_worker_capture": null,
+      "first_worker_target": null,
+      "bait_death": null,
+      "deaths": {},
+      "bait_target_fraction_over_whole_horizon": 1.0,
+      "score": 90.46079999999914
+    }
+  ]
+}

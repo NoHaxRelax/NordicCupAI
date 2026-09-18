@@ -1,0 +1,37 @@
+{
+  "schema": "guide-delivery-causal-score-v2",
+  "protocol_sha256": "429cc7b2d0439ac1756acea3f0fe521e68fced933f95bb7ebabe175a257f8016",
+  "receipt": "results/release_validation/real-map-ReleaseGuide-m10144-f20144-p1-direct_guide-sitebait1-0b619ba0.json",
+  "receipt_sha256": "5730f689358df33c4c2d75977ac5654d362ba0cd5e4f7492e61ce0c808ca94e6",
+  "policy": "release_validation.policy_v23_release:ReleaseGuide",
+  "policy_sha256": "4f2157d80bac5b50cf70e83209e6d985369cdd34aed94c3f925a71688f2611f3",
+  "pass": true,
+  "reason": "pass",
+  "active_bait_acquisition": 23.8,
+  "last_guide_target_before_acquisition": 23.7,
+  "guide_to_bait_active_seconds": 0.10000000000000142,
+  "guide_to_bait_wall_seconds": 0.10000000000000142,
+  "guide_alive_at_acquisition": true,
+  "guide_death": 105.2,
+  "stable_containment_tail_seconds": 276.3,
+  "loss_after_acquisition": null,
+  "guide_release_observed": {
+    "time": 28.7,
+    "kind": "guide_release_observed",
+    "agent_id": 1
+  },
+  "guide_returned_to_staging": {
+    "time": 32.7,
+    "kind": "guide_returned_to_staging",
+    "agent_id": 1
+  },
+  "replay_check": {
+    "title": "real-map-ReleaseGuide-m10144-f20144-p1-direct_guide-sitebait1-0b619ba0",
+    "frames": 3001,
+    "native_frames": 3001,
+    "duration": 300.0,
+    "reason": "horizon",
+    "valid": true
+  },
+  "caveat": "This establishes a temporally continuous native guide-target to active-bait handoff, not counterfactual causation. Guide survival is explicitly neutral. Release/return events are ordinary-observation policy evidence reported separately from delivery success."
+}

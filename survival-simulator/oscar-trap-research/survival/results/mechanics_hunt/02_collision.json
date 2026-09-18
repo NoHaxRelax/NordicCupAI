@@ -1,0 +1,644 @@
+{
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "scope": "local unmodified engine; no remote calls",
+  "contract": "every executed case uses at most one action per agent per tick",
+  "synthetic_fixtures": {
+    "wall_tunnel_exact_threshold": {
+      "founder_width_10_positive": {
+        "x": 215.0,
+        "y": 200.0,
+        "energy": 148.9,
+        "wall_width": 10.0,
+        "requested": 20.0,
+        "endpoint_inside_any_obstacle": false
+      },
+      "founder_width_10_001_control": {
+        "x": 195.0,
+        "y": 180.0,
+        "energy": 148.9,
+        "wall_width": 10.001,
+        "requested": 20.0,
+        "endpoint_inside_any_obstacle": false
+      },
+      "cap_width_30_positive": {
+        "x": 235.0,
+        "y": 200.0,
+        "energy": 138.9,
+        "wall_width": 30.0,
+        "requested": 40.0,
+        "endpoint_inside_any_obstacle": false
+      },
+      "cap_width_30_001_control": {
+        "x": 195.0,
+        "y": 160.0,
+        "energy": 138.9,
+        "wall_width": 30.001,
+        "requested": 40.0,
+        "endpoint_inside_any_obstacle": false
+      }
+    },
+    "boundary_tunnel_then_clamp": {
+      "cap_40_positive": {
+        "x": 5.0,
+        "y": 200.0,
+        "energy": 138.9,
+        "inside_boundary_after_move": true
+      },
+      "39_999_control": {
+        "x": 35.0,
+        "y": 239.999,
+        "energy": 138.9005,
+        "inside_boundary_after_move": false
+      }
+    },
+    "strict_tangency": {
+      "left_tangent": false,
+      "left_inward_1e_9": true,
+      "right_tangent": false,
+      "right_inward_1e_9": true,
+      "move_along_exact_tangent": {
+        "x": 195.0,
+        "y": 170.0,
+        "energy": 144.4
+      }
+    },
+    "corner_cut": {
+      "corner_cut_positive": {
+        "x": 209.0,
+        "y": 195.0,
+        "energy": 144.50050506338835,
+        "requested": 19.79898987322333,
+        "intended_x": 209.0,
+        "intended_y": 195.0,
+        "segment_crosses_physical_rectangle": true,
+        "reached_intended_endpoint": true
+      },
+      "short_endpoint_blocked_control": {
+        "x": 205.89795229066988,
+        "y": 193.43611115850916,
+        "energy": 144.9,
+        "requested": 19.0,
+        "intended_x": 208.4350288425444,
+        "intended_y": 195.5649711574556,
+        "segment_crosses_physical_rectangle": true,
+        "reached_intended_endpoint": false
+      },
+      "symmetric_max_physical_penetration_by_distance": {
+        "founder_20": 2.0710678118654746,
+        "cap_40": 9.14213562373095
+      }
+    },
+    "square_corner_false_positive": {
+      "point": [
+        195.1,
+        95.1
+      ],
+      "engine_blocked": true,
+      "distance_to_physical_corner": 6.929646455628173,
+      "circular_radius": 5,
+      "outside_true_circle_contact": true,
+      "maximum_extra_corner_reach": 2.0710678118654755
+    },
+    "blocked_endpoint_direction_search": {
+      "deep_block_redirect": {
+        "x": 193.47296355333862,
+        "y": 180.30384493975583,
+        "energy": 144.4,
+        "actual_heading_degrees": -79.99999999999999
+      },
+      "near_edge_redirect": {
+        "x": 194.79385241571816,
+        "y": 193.1595971334866,
+        "energy": 144.4,
+        "actual_heading_degrees": -20.00000000000004
+      },
+      "no_obstacle_control": {
+        "x": 210.0,
+        "y": 200.0,
+        "energy": 144.4,
+        "actual_heading_degrees": 0.0
+      }
+    },
+    "non_solid_entities": {
+      "tree_center_endpoint": {
+        "x": 120.0,
+        "y": 200.0,
+        "energy": 144.4
+      },
+      "two_agents_same_endpoint": {
+        "first": {
+          "x": 120.0,
+          "y": 200.0,
+          "energy": 144.4
+        },
+        "second": {
+          "x": 120.0,
+          "y": 200.0,
+          "energy": 149.9
+        },
+        "distance": 0.0
+      }
+    },
+    "fruit_endpoint_contact": {
+      "cross_and_end_tangent": {
+        "x": 120.0,
+        "y": 200.0,
+        "energy": 144.4,
+        "fruit_remaining": true,
+        "final_center_distance": 10.0
+      },
+      "end_just_inside": {
+        "x": 119.999,
+        "y": 200.0,
+        "energy": 164.4005,
+        "fruit_remaining": false,
+        "final_center_distance": 9.998999999999995
+      }
+    },
+    "predator_strict_endpoint_contact": {
+      "first_tick_exact_tangent": {
+        "agent_alive": true,
+        "predator": {
+          "x": 115.0,
+          "y": 200.0,
+          "energy": 97.45
+        },
+        "distance": 15.0
+      },
+      "next_tick_control": {
+        "agent_alive": false,
+        "predator": {
+          "x": 100.0,
+          "y": 200.0,
+          "energy": 200.0
+        }
+      }
+    },
+    "energy_gate_on_cap_tunnel": {
+      "above_threshold": {
+        "x": 235.0,
+        "y": 200.0,
+        "energy": 89.9
+      },
+      "below_threshold": {
+        "x": 195.0,
+        "y": 180.0,
+        "energy": 97.9
+      }
+    }
+  },
+  "generated_maps": {
+    "method": "Privileged uniform start/direction Monte Carlo on generated maps. Start and endpoint must be engine-clear; segment intersections are then measured analytically and examples replayed through the original update_entity_position method. This is not controller incidence.",
+    "samples_per_seed_per_request": 50000,
+    "maps": [
+      {
+        "seed": 1,
+        "internal_obstacles": 80,
+        "minimum_dimension": 30.05240309892197,
+        "maximum_dimension": 99.31386385611668,
+        "requests": {
+          "20.0": {
+            "sampled": 50000,
+            "free_starts": 39155,
+            "valid_clear_endpoint_moves": 36324,
+            "swept_expanded_aabb_misses": 162,
+            "physical_rectangle_crossings": 10
+          },
+          "40.0": {
+            "sampled": 50000,
+            "free_starts": 39300,
+            "valid_clear_endpoint_moves": 34136,
+            "swept_expanded_aabb_misses": 542,
+            "physical_rectangle_crossings": 168
+          }
+        }
+      },
+      {
+        "seed": 7,
+        "internal_obstacles": 80,
+        "minimum_dimension": 30.02626866139883,
+        "maximum_dimension": 98.81195953555238,
+        "requests": {
+          "20.0": {
+            "sampled": 50000,
+            "free_starts": 38908,
+            "valid_clear_endpoint_moves": 36303,
+            "swept_expanded_aabb_misses": 110,
+            "physical_rectangle_crossings": 1
+          },
+          "40.0": {
+            "sampled": 50000,
+            "free_starts": 38983,
+            "valid_clear_endpoint_moves": 34150,
+            "swept_expanded_aabb_misses": 382,
+            "physical_rectangle_crossings": 103
+          }
+        }
+      },
+      {
+        "seed": 42,
+        "internal_obstacles": 80,
+        "minimum_dimension": 30.36322961471956,
+        "maximum_dimension": 99.81581193040313,
+        "requests": {
+          "20.0": {
+            "sampled": 50000,
+            "free_starts": 38788,
+            "valid_clear_endpoint_moves": 36145,
+            "swept_expanded_aabb_misses": 117,
+            "physical_rectangle_crossings": 2
+          },
+          "40.0": {
+            "sampled": 50000,
+            "free_starts": 38859,
+            "valid_clear_endpoint_moves": 33926,
+            "swept_expanded_aabb_misses": 366,
+            "physical_rectangle_crossings": 65
+          }
+        }
+      }
+    ],
+    "aggregate": {
+      "20.0": {
+        "valid_clear_endpoint_moves": 108772,
+        "swept_expanded_aabb_misses": 389,
+        "physical_rectangle_crossings": 13,
+        "expanded_miss_rate_per_clear_move": 0.0035762880152980544,
+        "physical_crossing_rate_per_clear_move": 0.00011951605192512778
+      },
+      "40.0": {
+        "valid_clear_endpoint_moves": 102212,
+        "swept_expanded_aabb_misses": 1290,
+        "physical_rectangle_crossings": 336,
+        "expanded_miss_rate_per_clear_move": 0.012620827300121316,
+        "physical_crossing_rate_per_clear_move": 0.0032872852502641567
+      }
+    },
+    "verified_physical_crossing_examples": [
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          1159.4060719833637,
+          671.826600975749
+        ],
+        "intended_endpoint": [
+          1143.1539384408763,
+          660.1703513508845
+        ],
+        "engine_endpoint": [
+          1143.1539384408763,
+          660.1703513508845
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 47,
+        "obstacle": {
+          "x": 1148.2805647668195,
+          "y": 598.733332648918,
+          "width": 54.16855619464157,
+          "height": 66.8478494032228
+        },
+        "physical_intersection_t_interval": [
+          0.5358000321377665,
+          0.6845567191199394
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          760.7715121040626,
+          743.6982326452444
+        ],
+        "intended_endpoint": [
+          750.4146601915609,
+          726.5887142866666
+        ],
+        "engine_endpoint": [
+          750.4146601915609,
+          726.5887142866666
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 45,
+        "obstacle": {
+          "x": 707.3780792123506,
+          "y": 731.7972141288066,
+          "width": 47.33166103645748,
+          "height": 93.59983482267552
+        },
+        "physical_intersection_t_interval": [
+          0.585290965485116,
+          0.6955788156638134
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          747.517621120073,
+          285.70679566634607
+        ],
+        "intended_endpoint": [
+          732.2715483905632,
+          298.6511869740321
+        ],
+        "engine_endpoint": [
+          732.2715483905632,
+          298.6511869740321
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 28,
+        "obstacle": {
+          "x": 740.5752515345708,
+          "y": 291.295852967565,
+          "width": 30.852336799596646,
+          "height": 40.98384100222945
+        },
+        "physical_intersection_t_interval": [
+          0.43177443947482463,
+          0.45535461549155365
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          813.5720537999383,
+          1149.2273809515236
+        ],
+        "intended_endpoint": [
+          796.7931072295952,
+          1138.3431284742255
+        ],
+        "engine_endpoint": [
+          796.7931072295952,
+          1138.3431284742255
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 50,
+        "obstacle": {
+          "x": 803.8217377959453,
+          "y": 1085.382873185937,
+          "width": 90.543137891448,
+          "height": 58.34262263876777
+        },
+        "physical_intersection_t_interval": [
+          0.5054903989313482,
+          0.5811041809517861
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          100.75947897284478,
+          602.021628793569
+        ],
+        "intended_endpoint": [
+          112.7738977898428,
+          586.0324530646653
+        ],
+        "engine_endpoint": [
+          112.7738977898428,
+          586.0324530646653
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 10,
+        "obstacle": {
+          "x": 32.21695899107972,
+          "y": 503.7860258731751,
+          "width": 75.16738429413988,
+          "height": 90.67834756896532
+        },
+        "physical_intersection_t_interval": [
+          0.4726482139893751,
+          0.5514094700113126
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          146.1550537987269,
+          214.70876767830345
+        ],
+        "intended_endpoint": [
+          155.21941461389127,
+          196.88077387606893
+        ],
+        "engine_endpoint": [
+          155.21941461389127,
+          196.88077387606893
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 51,
+        "obstacle": {
+          "x": 100.45070280096265,
+          "y": 150.0915201409161,
+          "width": 49.38898329051626,
+          "height": 59.17522542177261
+        },
+        "physical_intersection_t_interval": [
+          0.30525151489185837,
+          0.4064966485654173
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "grassland",
+        "start": [
+          1330.4779967661875,
+          140.80509086134316
+        ],
+        "intended_endpoint": [
+          1319.6028204923653,
+          124.02026017964448
+        ],
+        "engine_endpoint": [
+          1319.6028204923653,
+          124.02026017964448
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 48,
+        "obstacle": {
+          "x": 1325.996675163074,
+          "y": 68.49218069224796,
+          "width": 50.31917353450076,
+          "height": 65.96051314017859
+        },
+        "physical_intersection_t_interval": [
+          0.37846059631944584,
+          0.4120688704513654
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          541.0962453440881,
+          140.39805696965368
+        ],
+        "intended_endpoint": [
+          555.2197081254607,
+          126.23727312612361
+        ],
+        "engine_endpoint": [
+          555.2197081254607,
+          126.23727312612361
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 60,
+        "obstacle": {
+          "x": 453.4953602283688,
+          "y": 41.42712522472003,
+          "width": 95.12509554995577,
+          "height": 92.86174521660054
+        },
+        "physical_intersection_t_interval": [
+          0.43141584504337604,
+          0.5327454428640632
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          501.45170994375655,
+          561.6748602785577
+        ],
+        "intended_endpoint": [
+          510.784582172392,
+          543.9859514381582
+        ],
+        "engine_endpoint": [
+          510.784582172392,
+          543.9859514381582
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 49,
+        "obstacle": {
+          "x": 507.2313985862086,
+          "y": 550.1986604411676,
+          "width": 99.1141746867042,
+          "height": 71.00040603838673
+        },
+        "physical_intersection_t_interval": [
+          0.6192829496495874,
+          0.6487794097948957
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 20.0,
+        "effective_distance": 20.0,
+        "biome": "forest",
+        "start": [
+          757.8210932397914,
+          722.0389652971646
+        ],
+        "intended_endpoint": [
+          739.3689791337787,
+          714.3240780641139
+        ],
+        "engine_endpoint": [
+          739.3689791337787,
+          714.3240780641139
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 40,
+        "obstacle": {
+          "x": 744.4283925361714,
+          "y": 660.2197689400492,
+          "width": 32.53296835760634,
+          "height": 56.61144624173011
+        },
+        "physical_intersection_t_interval": [
+          0.6750260837352561,
+          0.7258084697869897
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 40.0,
+        "effective_distance": 40.0,
+        "biome": "forest",
+        "start": [
+          834.7750849543189,
+          328.67750002009205
+        ],
+        "intended_endpoint": [
+          806.0554192354994,
+          356.5195689266813
+        ],
+        "engine_endpoint": [
+          806.0554192354994,
+          356.5195689266813
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 38,
+        "obstacle": {
+          "x": 758.0834446520438,
+          "y": 271.826635760343,
+          "width": 66.42356877213382,
+          "height": 78.76152163487833
+        },
+        "physical_intersection_t_interval": [
+          0.35752754334507614,
+          0.7869622565995353
+        ]
+      },
+      {
+        "seed": 1,
+        "request": 40.0,
+        "effective_distance": 32.0,
+        "biome": "desert",
+        "start": [
+          213.0721017764464,
+          1115.6527861033073
+        ],
+        "intended_endpoint": [
+          185.73214135918403,
+          1099.0236982034096
+        ],
+        "engine_endpoint": [
+          185.73214135918403,
+          1099.0236982034096
+        ],
+        "engine_reached_intended": true,
+        "obstacle_index_internal": 34,
+        "obstacle": {
+          "x": 149.30427063619845,
+          "y": 1109.3458733235168,
+          "width": 54.295360337885825,
+          "height": 61.676225582562495
+        },
+        "physical_intersection_t_interval": [
+          0.34646980675148425,
+          0.3792699165315808
+        ]
+      }
+    ],
+    "opposite_side_wall_tunnel_at_cap": {
+      "possible_on_scanned_internal_obstacles": false,
+      "reason": "An agent needs obstacle dimension + 2*radius displacement. Every scanned internal dimension is >30, so required displacement is >40 while the trait cap is 40 before terrain slowdown."
+    }
+  }
+}

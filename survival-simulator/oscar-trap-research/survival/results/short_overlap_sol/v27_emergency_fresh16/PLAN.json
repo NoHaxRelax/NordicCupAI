@@ -1,0 +1,92 @@
+{
+  "policy": "integrated_guide.policy_v27:EmergencyGuides",
+  "cases": [
+    {
+      "map_seed": 10320,
+      "fixture_seed": 20320
+    },
+    {
+      "map_seed": 10321,
+      "fixture_seed": 20321
+    },
+    {
+      "map_seed": 10322,
+      "fixture_seed": 20322
+    },
+    {
+      "map_seed": 10323,
+      "fixture_seed": 20323
+    },
+    {
+      "map_seed": 10324,
+      "fixture_seed": 20324
+    },
+    {
+      "map_seed": 10325,
+      "fixture_seed": 20325
+    },
+    {
+      "map_seed": 10326,
+      "fixture_seed": 20326
+    },
+    {
+      "map_seed": 10327,
+      "fixture_seed": 20327
+    },
+    {
+      "map_seed": 10328,
+      "fixture_seed": 20328
+    },
+    {
+      "map_seed": 10329,
+      "fixture_seed": 20329
+    },
+    {
+      "map_seed": 10330,
+      "fixture_seed": 20330
+    },
+    {
+      "map_seed": 10331,
+      "fixture_seed": 20331
+    },
+    {
+      "map_seed": 10332,
+      "fixture_seed": 20332
+    },
+    {
+      "map_seed": 10333,
+      "fixture_seed": 20333
+    },
+    {
+      "map_seed": 10334,
+      "fixture_seed": 20334
+    },
+    {
+      "map_seed": 10335,
+      "fixture_seed": 20335
+    }
+  ],
+  "seconds": 300,
+  "workers": 2,
+  "dependencies": {
+    "sha256": "dba2955285bc09dbaa04aef58687ed3bd4985e4f585f5a5f0f44e5436435fb02",
+    "files": {
+      "backup_guides/__init__.py": "8adcd6036785536a0bbea3d5f0d4d0e104456a3183b174d79a5a36d30239002a",
+      "backup_guides/burst.py": "642725a431ee4778c1adcf100ffb45e7d85faf9c4e086f5923097f43202b7d9d",
+      "backup_guides/emergency.py": "605dc2806650a6de5c74f6ff29bddc6cb677a598a60673627fd36556be34b5f9",
+      "backup_guides/mutation_aware.py": "ad062fdf3cca4a30235eb07cd50def9760bb0ce69904685ef8caeb8370a77b18",
+      "backup_guides/policy.py": "1f345781993a15c66d8441df6644603f31be4822246760e0c912e19cc9a21eae",
+      "integrated_guide/policy_v27.py": "b786cab54310e7e1c2d2fa370f5c59b5697bdddcad4ef2940a9e6b0443aac6dd",
+      "real_map_guide_sol/policy_v15_hearing_reacquisition_frozen.py": "4455972445d877117433907a9fb855a9112520fc0ee86c3d9afd0bbc7a72e8ab",
+      "release_validation/release_mixin_v2.py": "a80c14b49778ce88d18687938682a11186445fb9b30264623178370e7c73c9f7",
+      "replaceable_sites/__init__.py": "e96b8df4cb5c8351a8de01613b6f4aedf9231e678400cd793a33fc66a75edac8",
+      "replaceable_sites/selector.py": "dca2109d46f85d2448b0237b541b4a54fca4d0ec096684402ba684259daf2a02",
+      "short_overlap_sol/policy_v26_integrated.py": "72174cbd18059bd7d21deefe392c400ead3eaf97234c0a81ff0f3067563aa424",
+      "simple_chase/policy_v21_replaceable.py": "3a0ceea54ab350009c0e200eb327fe1a5cda659f4cfbb704f4e86c078665bc28",
+      "simple_chase/policy_v23_narrow_fallback.py": "9395c757df40434a2eb62aba432e3b2dc51d9c80402e665c6194a9cefa5e6e3c",
+      "simple_chase/policy_v24_short_fallback.py": "e53d5e34bb03c027e63a3b8ec55e806ba520961c461e8e4f4fc8a56732ee7c1e"
+    }
+  },
+  "scope": "predeclared fresh validation; all unsupported/errors count",
+  "runner_sha256": "27151907ab73461cd0b6aa57e692ca5dc4113df1223408c9d912ed6221c68200"
+}

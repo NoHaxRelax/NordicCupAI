@@ -1,0 +1,48 @@
+{
+  "schema": "sequential-v32-independent-review-v1",
+  "receipt": "results/sequential_real_map/sequential-real-map-m10040-f22040-n5-i75-84ea8cce.json",
+  "receipt_sha256": "b8b88fa891740e42f96b90c85cf2771bd719a459e007dee200f3be44b78b77bf",
+  "requested_encounters": 5,
+  "horizon_seconds": 600.0000000000679,
+  "strict_original_schema_passes": 2,
+  "causally_delivered_and_physically_held_through_horizon": 3,
+  "physically_held_at_horizon": 4,
+  "autonomous_or_unattributed_physically_held_at_horizon": 1,
+  "interpretation": {
+    "strict_2_of_5": "Slots 1 and 2 satisfy the harness target-continuity rule.",
+    "causal_3_of_5": "Slots 0, 1, and 2 have guide-to-bait captures and no physical loss through 600 seconds.",
+    "physical_4_of_5": "Four predators are physically held at the horizon; one lacks a qualifying causal handoff and is not counted as delivery."
+  },
+  "slot0_review": {
+    "original_capture": 12.9,
+    "original_handoff_guide_id": 1,
+    "guide_dead_at": 12.9,
+    "first_physical_loss": null,
+    "strict_target_loss": 81.0,
+    "target_switch_excerpt": [
+      {
+        "time": 80.2,
+        "target": 0
+      },
+      {
+        "time": 81.0,
+        "target": 2
+      },
+      {
+        "time": 81.1,
+        "target": 0
+      },
+      {
+        "time": 81.5,
+        "target": null
+      },
+      {
+        "time": 81.6,
+        "target": 0
+      }
+    ],
+    "last_target": 0,
+    "finding": "Causal original capture at 12.9 remained physically trapped for the full horizon. A later arriving guide briefly became selected at 81.0, bait resumed at 81.1, None appeared at 81.5, and bait resumed at 81.6. This breaks strict uninterrupted target retention but is not physical escape or loss of the original causal delivery."
+  },
+  "scope": "Development throughput pilot on one map; no confidence-bound reliability claim."
+}

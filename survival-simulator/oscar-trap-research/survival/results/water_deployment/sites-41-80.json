@@ -1,0 +1,850 @@
+{
+  "metadata": {
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "engine_sha256": {
+      "survival-simulator/agent_server.py": "d07f12843febd435720ffc5382df9690ec07c59481ac12d4548b71d83e648f6d",
+      "survival-simulator/local_playground.py": "8bffe588b4c52dfc645e63cae8701cf78cacb4c709c04ae3ca33daafcaace5de",
+      "survival-simulator/simulation_server.py": "9da83bf39c0d62058ddf629da49005002212ddaec117be28bbc616f67f894349",
+      "survival-simulator/src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+      "survival-simulator/src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+      "survival-simulator/src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+      "survival-simulator/src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+      "survival-simulator/src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+      "survival-simulator/src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+      "survival-simulator/src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+      "survival-simulator/src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+      "survival-simulator/src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+      "survival-simulator/src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+      "survival-simulator/src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+      "survival-simulator/src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+      "survival-simulator/src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1"
+    },
+    "experiment_sha256": {
+      "base_snapshot.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "4fb645622eb2bfde6cf6e6eaeefa78f4474b14874f0d557bca5c24dd82d7ada5",
+      "controller.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "run.py": "3a2aa126ebde5de1428a0bc1e1bf9fb74cf923271247daf20d32fd131b433f0d",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505"
+    }
+  },
+  "data": [
+    {
+      "seed": 41,
+      "sites": []
+    },
+    {
+      "seed": 42,
+      "sites": []
+    },
+    {
+      "seed": 43,
+      "sites": []
+    },
+    {
+      "seed": 44,
+      "sites": []
+    },
+    {
+      "seed": 45,
+      "sites": []
+    },
+    {
+      "seed": 46,
+      "sites": []
+    },
+    {
+      "seed": 47,
+      "sites": []
+    },
+    {
+      "seed": 48,
+      "sites": []
+    },
+    {
+      "seed": 49,
+      "sites": []
+    },
+    {
+      "seed": 50,
+      "sites": []
+    },
+    {
+      "seed": 51,
+      "sites": []
+    },
+    {
+      "seed": 52,
+      "sites": []
+    },
+    {
+      "seed": 53,
+      "sites": []
+    },
+    {
+      "seed": 54,
+      "sites": []
+    },
+    {
+      "seed": 55,
+      "sites": []
+    },
+    {
+      "seed": 56,
+      "sites": []
+    },
+    {
+      "seed": 57,
+      "sites": []
+    },
+    {
+      "seed": 58,
+      "sites": [
+        {
+          "center": [
+            433.6786061951567,
+            604.3830222215595
+          ],
+          "angle": 2.2689280275926285,
+          "width": 62.0,
+          "common_water_width": 59.0,
+          "obstructed_samples": 28,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  429.20580495553753,
+                  429.55387441696735
+                ],
+                "age": 36.016281885695
+              }
+            ],
+            [
+              {
+                "position": [
+                  266.15991526307465,
+                  745.9927821403858
+                ],
+                "age": 60.13650603808462
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  408.5387458654746,
+                  467.34324387611406
+                ],
+                "energy": 20
+              }
+            ],
+            [
+              {
+                "position": [
+                  410.44298689570246,
+                  697.0471083488407
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  330.259785987695,
+                  804.1089542384057
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  254.20719903631525,
+                  644.0629443705785
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 59,
+      "sites": []
+    },
+    {
+      "seed": 60,
+      "sites": []
+    },
+    {
+      "seed": 61,
+      "sites": []
+    },
+    {
+      "seed": 62,
+      "sites": []
+    },
+    {
+      "seed": 63,
+      "sites": [
+        {
+          "center": [
+            444.0,
+            335.5
+          ],
+          "angle": 1.5707963267948966,
+          "width": 56.0,
+          "common_water_width": 42.0,
+          "obstructed_samples": 129,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  496.99760838239104,
+                  213.83162465248728
+                ],
+                "age": 55.85981882997591
+              }
+            ],
+            []
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  427.2209011398184,
+                  229.1939399596046
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  406.9999372048635,
+                  198.3709670170982
+                ],
+                "energy": 20
+              }
+            ],
+            [
+              {
+                "position": [
+                  485.36235576160715,
+                  494.8189137203344
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 64,
+      "sites": []
+    },
+    {
+      "seed": 65,
+      "sites": []
+    },
+    {
+      "seed": 66,
+      "sites": []
+    },
+    {
+      "seed": 67,
+      "sites": [
+        {
+          "center": [
+            1408.9873872766802,
+            200.0928287817318
+          ],
+          "angle": 2.792526803190927,
+          "width": 58.0,
+          "common_water_width": 35.0,
+          "obstructed_samples": 135,
+          "nearby_native_trees": [
+            [],
+            [
+              {
+                "position": [
+                  1333.5983156123768,
+                  253.1631090909049
+                ],
+                "age": 29.996485931787205
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [],
+            [
+              {
+                "position": [
+                  1326.3268367712806,
+                  292.7811180414153
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1284.8078972557348,
+                  168.00127441388167
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        },
+        {
+          "center": [
+            1419.5980762113534,
+            124.5
+          ],
+          "angle": 0.5235987755982988,
+          "width": 49.0,
+          "common_water_width": 34.0,
+          "obstructed_samples": 64,
+          "nearby_native_trees": [
+            [],
+            []
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  1215.5236836329736,
+                  58.605748160451896
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1284.8078972557348,
+                  168.00127441388167
+                ],
+                "energy": 20
+              }
+            ],
+            []
+          ]
+        },
+        {
+          "center": [
+            1447.3830222215595,
+            277.6786061951567
+          ],
+          "angle": 2.443460952792061,
+          "width": 46.0,
+          "common_water_width": 39.0,
+          "obstructed_samples": 96,
+          "nearby_native_trees": [
+            [],
+            [
+              {
+                "position": [
+                  1333.5983156123768,
+                  253.1631090909049
+                ],
+                "age": 29.996485931787205
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [],
+            [
+              {
+                "position": [
+                  1326.3268367712806,
+                  292.7811180414153
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 68,
+      "sites": []
+    },
+    {
+      "seed": 69,
+      "sites": []
+    },
+    {
+      "seed": 70,
+      "sites": [
+        {
+          "center": [
+            136.026060429977,
+            379.18092213764226
+          ],
+          "angle": 1.9198621771937625,
+          "width": 59.0,
+          "common_water_width": 43.0,
+          "obstructed_samples": 217,
+          "nearby_native_trees": [
+            [],
+            [
+              {
+                "position": [
+                  83.29317797938762,
+                  587.79046826325
+                ],
+                "age": 61.78070136967792
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [],
+            [
+              {
+                "position": [
+                  39.27249224318732,
+                  524.4422781521606
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  87.39035416075677,
+                  590.5032601321208
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        },
+        {
+          "center": [
+            261.10288568297005,
+            449.25
+          ],
+          "angle": 2.6179938779914944,
+          "width": 60.0,
+          "common_water_width": 44.0,
+          "obstructed_samples": 83,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  339.8717285758175,
+                  456.3098069216339
+                ],
+                "age": 59.27493783709878
+              }
+            ],
+            [
+              {
+                "position": [
+                  83.29317797938762,
+                  587.79046826325
+                ],
+                "age": 61.78070136967792
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [],
+            [
+              {
+                "position": [
+                  39.27249224318732,
+                  524.4422781521606
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  87.39035416075677,
+                  590.5032601321208
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        },
+        {
+          "center": [
+            379.2185832004988,
+            552.431634888555
+          ],
+          "angle": 1.7453292519943295,
+          "width": 62.0,
+          "common_water_width": 40.0,
+          "obstructed_samples": 83,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  339.8717285758175,
+                  456.3098069216339
+                ],
+                "age": 59.27493783709878
+              },
+              {
+                "position": [
+                  301.67876703181395,
+                  457.99254661328433
+                ],
+                "age": 65.80773978348512
+              }
+            ],
+            []
+          ],
+          "nearby_native_fruits": [
+            [],
+            []
+          ]
+        },
+        {
+          "center": [
+            1234.2185832004989,
+            951.431634888555
+          ],
+          "angle": 1.7453292519943295,
+          "width": 60.0,
+          "common_water_width": 41.0,
+          "obstructed_samples": 46,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  1354.5777724658283,
+                  859.5966081721832
+                ],
+                "age": 64.12316250909998
+              },
+              {
+                "position": [
+                  1271.4962880752619,
+                  883.7412160022164
+                ],
+                "age": 47.52658677561254
+              }
+            ],
+            [
+              {
+                "position": [
+                  1263.200712928973,
+                  1071.2112674971809
+                ],
+                "age": 76.456742036009
+              },
+              {
+                "position": [
+                  1311.5754555397796,
+                  1022.1504974074845
+                ],
+                "age": 76.77317357125278
+              },
+              {
+                "position": [
+                  1257.071919089751,
+                  1091.7509882046245
+                ],
+                "age": 63.58584543141891
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  1290.0581837097084,
+                  867.9774939339603
+                ],
+                "energy": 20
+              }
+            ],
+            [
+              {
+                "position": [
+                  1319.6468328348235,
+                  1056.844832796164
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        },
+        {
+          "center": [
+            1321.826351822333,
+            973.9848077530122
+          ],
+          "angle": 1.7453292519943295,
+          "width": 53.0,
+          "common_water_width": 48.0,
+          "obstructed_samples": 110,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  1354.5777724658283,
+                  859.5966081721832
+                ],
+                "age": 64.12316250909998
+              },
+              {
+                "position": [
+                  1271.4962880752619,
+                  883.7412160022164
+                ],
+                "age": 47.52658677561254
+              }
+            ],
+            [
+              {
+                "position": [
+                  1263.200712928973,
+                  1071.2112674971809
+                ],
+                "age": 76.456742036009
+              },
+              {
+                "position": [
+                  1311.5754555397796,
+                  1022.1504974074845
+                ],
+                "age": 76.77317357125278
+              },
+              {
+                "position": [
+                  1257.071919089751,
+                  1091.7509882046245
+                ],
+                "age": 63.58584543141891
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  1440.4821141855555,
+                  790.0880278570979
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1387.7906052502758,
+                  904.5529362619394
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1443.5270769333715,
+                  869.8726343931573
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1290.0581837097084,
+                  867.9774939339603
+                ],
+                "energy": 20
+              }
+            ],
+            [
+              {
+                "position": [
+                  1319.6468328348235,
+                  1056.844832796164
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        },
+        {
+          "center": [
+            1407.2898992833716,
+            999.6984631039295
+          ],
+          "angle": 1.9198621771937625,
+          "width": 61.0,
+          "common_water_width": 40.0,
+          "obstructed_samples": 2,
+          "nearby_native_trees": [
+            [
+              {
+                "position": [
+                  1354.5777724658283,
+                  859.5966081721832
+                ],
+                "age": 64.12316250909998
+              }
+            ],
+            [
+              {
+                "position": [
+                  1263.200712928973,
+                  1071.2112674971809
+                ],
+                "age": 76.456742036009
+              },
+              {
+                "position": [
+                  1311.5754555397796,
+                  1022.1504974074845
+                ],
+                "age": 76.77317357125278
+              },
+              {
+                "position": [
+                  1257.071919089751,
+                  1091.7509882046245
+                ],
+                "age": 63.58584543141891
+              }
+            ]
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  1479.7970158681726,
+                  966.4151074664311
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1485.6861899147757,
+                  866.8285387094169
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1440.4821141855555,
+                  790.0880278570979
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1387.7906052502758,
+                  904.5529362619394
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1443.5270769333715,
+                  869.8726343931573
+                ],
+                "energy": 20
+              }
+            ],
+            [
+              {
+                "position": [
+                  1436.560292603793,
+                  1124.8577473136563
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1319.6468328348235,
+                  1056.844832796164
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        },
+        {
+          "center": [
+            1485.9550649771681,
+            1030.583557358433
+          ],
+          "angle": 1.7453292519943295,
+          "width": 62.0,
+          "common_water_width": 42.0,
+          "obstructed_samples": 37,
+          "nearby_native_trees": [
+            [],
+            []
+          ],
+          "nearby_native_fruits": [
+            [
+              {
+                "position": [
+                  1479.7970158681726,
+                  966.4151074664311
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1485.6861899147757,
+                  866.8285387094169
+                ],
+                "energy": 20
+              },
+              {
+                "position": [
+                  1443.5270769333715,
+                  869.8726343931573
+                ],
+                "energy": 20
+              }
+            ],
+            [
+              {
+                "position": [
+                  1436.560292603793,
+                  1124.8577473136563
+                ],
+                "energy": 20
+              }
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 71,
+      "sites": []
+    },
+    {
+      "seed": 72,
+      "sites": []
+    },
+    {
+      "seed": 73,
+      "sites": []
+    },
+    {
+      "seed": 74,
+      "sites": []
+    },
+    {
+      "seed": 75,
+      "sites": []
+    },
+    {
+      "seed": 76,
+      "sites": []
+    },
+    {
+      "seed": 77,
+      "sites": []
+    },
+    {
+      "seed": 78,
+      "sites": []
+    },
+    {
+      "seed": 79,
+      "sites": []
+    },
+    {
+      "seed": 80,
+      "sites": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "robust-policy-development-probe-plan-v1",
+  "policy_sha256": "ad4c976b27c52f0c1e7954852efc8ddf69e2be797eecfcc9f040f5fd0bcdb8ce",
+  "not_a_frozen_reliability_batch": true,
+  "cases": [
+    {
+      "map_seed": 10040,
+      "fixture_seed": 9640,
+      "selection": "known historical wall failure"
+    },
+    {
+      "map_seed": 10138,
+      "fixture_seed": 20138,
+      "selection": "adaptive replacement before launch for planned 10048/9748; current hard fresh boundary/river failure where v20 and terrain-v25 guides die near one second"
+    }
+  ],
+  "adaptive_change": "10048/9748 was not launched under robust policy and was replaced after 10040 completed; these diagnostic cases must not be presented as a frozen or fresh reliability rate."
+}

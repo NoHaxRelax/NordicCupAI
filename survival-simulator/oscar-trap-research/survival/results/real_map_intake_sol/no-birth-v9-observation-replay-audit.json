@@ -1,0 +1,893 @@
+{
+  "kind": "policy_replay_audit_not_simulation",
+  "rows": [
+    {
+      "t": 4.4,
+      "prior_pose": null,
+      "pose_after": [
+        1392.4655769354774,
+        625.0394125716315
+      ],
+      "actual_before": [
+        1396.2924,
+        634.2782
+      ],
+      "actual_after": [
+        1392.4656,
+        625.0394
+      ],
+      "rule": {
+        "rule": "safe_spacing_while_verifying_following"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": -0.825801575028847,
+        "turn_angle": -2.3362889803846896,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": -0.8258,
+        "turn_angle": -2.3362,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 4.5,
+      "prior_pose": [
+        1392.4655769354774,
+        625.0394125716315
+      ],
+      "pose_after": [
+        1388.6387426118265,
+        615.8006172465186
+      ],
+      "actual_before": [
+        1392.4656,
+        625.0394
+      ],
+      "actual_after": [
+        1388.6388,
+        615.8006
+      ],
+      "rule": {
+        "rule": "safe_spacing_while_verifying_following"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": 1.5104874053558426,
+        "turn_angle": 0.012396326794896773,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.5104,
+        "turn_angle": 0.0124,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 4.6,
+      "prior_pose": [
+        1388.6387426118265,
+        615.8006172465186
+      ],
+      "pose_after": [
+        1384.8119082881756,
+        606.5618219214058
+      ],
+      "actual_before": [
+        1388.6388,
+        615.8006
+      ],
+      "actual_after": [
+        1384.8119,
+        606.5618
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": 1.4980910785609458,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.4981,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 4.7,
+      "prior_pose": [
+        1384.8119082881756,
+        606.5618219214058
+      ],
+      "pose_after": [
+        1384.8119082881756,
+        606.5618219214058
+      ],
+      "actual_before": [
+        1384.8119,
+        606.5618
+      ],
+      "actual_after": [
+        1384.8119,
+        606.5618
+      ],
+      "rule": {
+        "rule": "scheduled_gaze_to_last_observed_predator"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.7969296498848575,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.7969,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 4.8,
+      "prior_pose": [
+        1384.8119082881756,
+        606.5618219214058
+      ],
+      "pose_after": [
+        1380.9850739645246,
+        597.323026596293
+      ],
+      "actual_before": [
+        1384.8119,
+        606.5618
+      ],
+      "actual_after": [
+        1380.9851,
+        597.3231
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": -3.108164578733783,
+        "turn_angle": 1.6933963267948968,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": -3.1082,
+        "turn_angle": 1.6934,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 4.9,
+      "prior_pose": [
+        1380.9850739645246,
+        597.323026596293
+      ],
+      "pose_after": [
+        1377.1582396408737,
+        588.0842312711801
+      ],
+      "actual_before": [
+        1380.9851,
+        597.3231
+      ],
+      "actual_after": [
+        1377.1582,
+        588.0843
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": 1.4816244016509064,
+        "turn_angle": 0.006396326794896545,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.4816,
+        "turn_angle": 0.0064,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.0,
+      "prior_pose": [
+        1377.1582396408737,
+        588.0842312711801
+      ],
+      "pose_after": [
+        1373.3314053172228,
+        578.8454359460673
+      ],
+      "actual_before": [
+        1377.1582,
+        588.0843
+      ],
+      "actual_after": [
+        1373.3314,
+        578.8455
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": 1.4752280748560098,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.4752,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.1,
+      "prior_pose": [
+        1373.3314053172228,
+        578.8454359460673
+      ],
+      "pose_after": [
+        1373.3314053172228,
+        578.8454359460673
+      ],
+      "actual_before": [
+        1373.3314,
+        578.8455
+      ],
+      "actual_after": [
+        1373.3314,
+        578.8455
+      ],
+      "rule": {
+        "rule": "scheduled_gaze_to_last_observed_predator"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.8036304861432677,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.8036,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.2,
+      "prior_pose": [
+        1373.3314053172228,
+        578.8454359460673
+      ],
+      "pose_after": [
+        1369.5045709935719,
+        569.6066406209544
+      ],
+      "actual_before": [
+        1373.3314,
+        578.8455
+      ],
+      "actual_after": [
+        1369.5046,
+        569.6067
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": -3.1243267461803086,
+        "turn_angle": 1.6920963267948963,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": -3.1243,
+        "turn_angle": 1.6921,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.3,
+      "prior_pose": [
+        1369.5045709935719,
+        569.6066406209544
+      ],
+      "pose_after": [
+        1365.677736669921,
+        560.3678452958416
+      ],
+      "actual_before": [
+        1369.5046,
+        569.6067
+      ],
+      "actual_after": [
+        1365.6777,
+        560.3679
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": 1.4667622342043813,
+        "turn_angle": 0.0032963267948966646,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.4667,
+        "turn_angle": 0.0033,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.4,
+      "prior_pose": [
+        1365.677736669921,
+        560.3678452958416
+      ],
+      "pose_after": [
+        1356.438941344808,
+        556.5410109721906
+      ],
+      "actual_before": [
+        1365.6777,
+        560.3679
+      ],
+      "actual_after": [
+        1356.439,
+        556.541
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 0.67806774401204,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 0.678,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.5,
+      "prior_pose": [
+        1356.438941344808,
+        556.5410109721906
+      ],
+      "pose_after": [
+        1356.438941344808,
+        556.5410109721906
+      ],
+      "actual_before": [
+        1356.439,
+        556.541
+      ],
+      "actual_after": [
+        1356.439,
+        556.541
+      ],
+      "rule": {
+        "rule": "scheduled_gaze_to_last_observed_predator"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.91531210302012,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.9153,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.6,
+      "prior_pose": [
+        1356.438941344808,
+        556.5410109721906
+      ],
+      "pose_after": [
+        1352.612107021157,
+        547.3022156470778
+      ],
+      "actual_before": [
+        1356.439,
+        556.541
+      ],
+      "actual_after": [
+        1352.6121,
+        547.3022
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": -3.024407296749982,
+        "turn_angle": 1.648396326794897,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": -3.0244,
+        "turn_angle": 1.6484,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.7,
+      "prior_pose": [
+        1352.612107021157,
+        547.3022156470778
+      ],
+      "pose_after": [
+        1348.7852726975061,
+        538.0634203219649
+      ],
+      "actual_before": [
+        1352.6121,
+        547.3022
+      ],
+      "actual_after": [
+        1348.7853,
+        538.0634
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999986,
+        "move_direction": 1.6103816836347074,
+        "turn_angle": 0.028496326794896554,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.6103,
+        "turn_angle": 0.0285,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.8,
+      "prior_pose": [
+        1348.7852726975061,
+        538.0634203219649
+      ],
+      "pose_after": [
+        1342.6623377796648,
+        523.2813478017844
+      ],
+      "actual_before": [
+        1348.7853,
+        538.0634
+      ],
+      "actual_after": [
+        1342.6623,
+        523.2814
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 19.999999999999943,
+        "move_direction": 1.5818853568398197,
+        "turn_angle": 0.027096326794896708,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.5818,
+        "turn_angle": 0.0271,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 5.9,
+      "prior_pose": [
+        1342.6623377796648,
+        523.2813478017844
+      ],
+      "pose_after": [
+        1342.6623377796648,
+        523.2813478017844
+      ],
+      "actual_before": [
+        1342.6623,
+        523.2814
+      ],
+      "actual_after": [
+        1342.6623,
+        523.2814
+      ],
+      "rule": {
+        "rule": "scheduled_gaze_to_last_observed_predator"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.6648790061770182,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -1.6649,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.0,
+      "prior_pose": [
+        1342.6623377796648,
+        523.2813478017844
+      ],
+      "pose_after": [
+        1331.34862928068,
+        511.9676393027997
+      ],
+      "actual_before": [
+        1342.6623,
+        523.2814
+      ],
+      "actual_after": [
+        1331.3486,
+        511.9677
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 2.826968954523206,
+        "turn_angle": 1.6941963267948967,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 2.8269,
+        "turn_angle": 1.6942,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.1,
+      "prior_pose": [
+        1331.34862928068,
+        511.9676393027997
+      ],
+      "pose_after": [
+        1315.3486010037375,
+        511.96768304437217
+      ],
+      "actual_before": [
+        1331.3486,
+        511.9677
+      ],
+      "actual_after": [
+        1315.3486,
+        511.9677
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 0.34727732421005086,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 0.3473,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.2,
+      "prior_pose": [
+        1315.3486010037375,
+        511.96768304437217
+      ],
+      "pose_after": [
+        1299.3486149536143,
+        511.96758311188825
+      ],
+      "actual_before": [
+        1315.3486,
+        511.9677
+      ],
+      "actual_after": [
+        1299.3486,
+        511.9677
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 0.22727734649760478,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 0.2273,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.3,
+      "prior_pose": [
+        1299.3486149536143,
+        511.96758311188825
+      ],
+      "pose_after": [
+        1299.3486149536143,
+        511.96758311188825
+      ],
+      "actual_before": [
+        1299.3486,
+        511.9677
+      ],
+      "actual_after": [
+        1299.3486,
+        511.9677
+      ],
+      "rule": {
+        "rule": "scheduled_gaze_to_last_observed_predator"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -2.334051425437091,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -2.334,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.4,
+      "prior_pose": [
+        1299.3486149536143,
+        511.96758311188825
+      ],
+      "pose_after": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "actual_before": [
+        1299.3486,
+        511.9677
+      ],
+      "actual_after": [
+        1295.1582,
+        518.7824
+      ],
+      "rule": {
+        "rule": "obstacle_aware_follower_route"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 10.0,
+        "move_direction": 1.9453884624161697,
+        "turn_angle": 1.7080963267948963,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 10.0,
+        "move_direction": 1.9454,
+        "turn_angle": 1.7081,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.5,
+      "prior_pose": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "pose_after": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "actual_before": [
+        1295.1582,
+        518.7824
+      ],
+      "actual_after": [
+        1295.1582,
+        518.7824
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.6,
+      "prior_pose": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "pose_after": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "actual_before": [
+        1295.1582,
+        518.7824
+      ],
+      "actual_after": [
+        1295.1582,
+        518.7824
+      ],
+      "rule": {
+        "rule": "cadence_blind_safe_tangent"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": 0.12,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.7,
+      "prior_pose": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "pose_after": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "actual_before": [
+        1295.1582,
+        518.7824
+      ],
+      "actual_after": [
+        1295.1582,
+        518.7824
+      ],
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -2.101,
+        "spawn_agent": false
+      },
+      "recorded_action": {
+        "agent_id": 1,
+        "move_distance": 0.0,
+        "move_direction": 0.0,
+        "turn_angle": -2.101,
+        "spawn_agent": false
+      }
+    },
+    {
+      "t": 6.8,
+      "prior_pose": [
+        1292.3123548041076,
+        515.7741559307984
+      ],
+      "pose_after": [
+        1295.158277294464,
+        534.7822786324772
+      ],
+      "actual_before": [
+        1295.1582,
+        518.7824
+      ],
+      "actual_after": null,
+      "rule": {
+        "rule": "restore_safe_follower_spacing"
+      },
+      "action": {
+        "agent_id": 1,
+        "move_distance": 20.0,
+        "move_direction": 1.0234065043079443,
+        "turn_angle": 1.681096326794897,
+        "spawn_agent": false
+      },
+      "recorded_action": null
+    }
+  ]
+}

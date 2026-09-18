@@ -1,0 +1,1954 @@
+{
+  "metadata": {
+    "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+    "engine_sha256": {
+      "survival-simulator/agent_server.py": "d07f12843febd435720ffc5382df9690ec07c59481ac12d4548b71d83e648f6d",
+      "survival-simulator/local_playground.py": "8bffe588b4c52dfc645e63cae8701cf78cacb4c709c04ae3ca33daafcaace5de",
+      "survival-simulator/simulation_server.py": "9da83bf39c0d62058ddf629da49005002212ddaec117be28bbc616f67f894349",
+      "survival-simulator/src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+      "survival-simulator/src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+      "survival-simulator/src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+      "survival-simulator/src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+      "survival-simulator/src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+      "survival-simulator/src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+      "survival-simulator/src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+      "survival-simulator/src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+      "survival-simulator/src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+      "survival-simulator/src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+      "survival-simulator/src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+      "survival-simulator/src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+      "survival-simulator/src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1"
+    },
+    "experiment_sha256": {
+      "advance.py": "f7ae07966ac42ca77b413314ab37c397c5f702a79fb8d060c7c4a71bbd85bb7b",
+      "alternative_traps.py": "0dcb7490af2a5fd780ce00101c900ef7721f2a7bc6b8e4b8a5ec06f4c93a8aed",
+      "approach.py": "6834fc6fa540475ec5feda6dc293a165a682d03706d9625215ab5b547a67f7b1",
+      "association.py": "411a72452b516293dbc7eba56e084a123030c08eec9c311b3948f0512fcdcd45",
+      "base_snapshot.py": "aff00b9ce228e3beb8ccdf17f21f67f2e9fe315fc153a9ca923d1d3c740cd2ca",
+      "base_snapshot_v1.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "d047ed18dd5a4554803cda321a5267f7b038084c008cc19d420d3d262de04aa4",
+      "comparison.py": "0dd70c7a654e99c6b40433ec8f97191981682015a3d2cadae3bbfbe25717dec0",
+      "controller.py": "252a1618ce126c0e07143cc0c4acf01386dadeda8337c7e91a80af3c8dc1fc4c",
+      "controller_v2.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "corridor.py": "db1a9bdfa51eaf3f2c55627d73e87a7632aedc7dae9f7c03e0e963e993c3a8dd",
+      "pocket_survey.py": "c15ae2a2200e6efbd5cfbcb961312a2bd60b8b027bc80a40a2b59dd3675cd411",
+      "probe.py": "27a4f5c4fe86abbc1bfa31e86a5a9f029c1f54b9a5f2d1d289aa0c6032eb5976",
+      "run.py": "8c90c04ef526e07719670d5ac73a9ba7f9080723e79b9c2d3edc3116c42d3c59",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505",
+      "summarize.py": "35408e558ea6f3da4ee10e1081da630780874118db2934a0a4876b3a902c691c",
+      "twins.py": "b7d9b100f716e53e9c866f8063d4e3ac0a26d1861970e84818000cf09fb4f494"
+    }
+  },
+  "data": [
+    {
+      "case": {
+        "gap": 15,
+        "length": 90,
+        "heading_offset": -0.3,
+        "seconds": 60,
+        "release_s": 10
+      },
+      "site": {
+        "goal": [
+          800,
+          530
+        ],
+        "start": [
+          800,
+          485
+        ],
+        "predator": [
+          800,
+          450
+        ],
+        "mouth": [
+          800,
+          500
+        ],
+        "heading": 1.5707963267948966,
+        "gap": 15,
+        "length": 90
+      },
+      "elapsed_s": 40.3000000000003,
+      "acquired_s": 0.5,
+      "capture_s": 40.3000000000003,
+      "alive": false,
+      "energy_remaining": 97.45000000000229,
+      "movement_energy": 12.25,
+      "food_energy": 2.2930268794851827e-12,
+      "first_escape_s": 13.399999999999968,
+      "after_acquisition_s": 39.8,
+      "containment_fraction": 0.32160804020100503,
+      "attention_fraction": 0.36180904522613067,
+      "joint_fraction": 0.3065326633165829,
+      "active_joint_fraction": 0.2652439024390244,
+      "maximum_odometry_error": 0,
+      "trace": [
+        {
+          "t": 0.1,
+          "bait": [
+            800.0,
+            495.0,
+            149.4
+          ],
+          "predators": [
+            [
+              802.241571987104,
+              464.8315661690406,
+              99.42612675853621,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 1.1,
+          "bait": [
+            800.0,
+            530.0,
+            146.65000000000006
+          ],
+          "predators": [
+            [
+              814.1580698909919,
+              488.8838274161968,
+              73.72006521476246,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 2.1,
+          "bait": [
+            800.0,
+            530.0,
+            145.65000000000012
+          ],
+          "predators": [
+            [
+              814.1205837913991,
+              489.8881528219557,
+              48.002835510266436,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 3.1,
+          "bait": [
+            800.0,
+            530.0,
+            144.65000000000018
+          ],
+          "predators": [
+            [
+              814.1950062470138,
+              488.72749229927484,
+              34.316467879511684,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 4.1,
+          "bait": [
+            800.0,
+            530.0,
+            143.65000000000023
+          ],
+          "predators": [
+            [
+              792.2988185674469,
+              488.166194743868,
+              28.64899119497851,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 5.1,
+          "bait": [
+            800.0,
+            530.0,
+            142.6500000000003
+          ],
+          "predators": [
+            [
+              792.1649693680367,
+              489.63307231033775,
+              22.986189573180127,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 6.1,
+          "bait": [
+            800.0,
+            530.0,
+            141.65000000000035
+          ],
+          "predators": [
+            [
+              792.1365312790925,
+              489.71178383289674,
+              17.317923222582703,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 7.1,
+          "bait": [
+            800.0,
+            530.0,
+            140.6500000000004
+          ],
+          "predators": [
+            [
+              814.1103425639477,
+              489.6752596977884,
+              11.653502525864738,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 8.1,
+          "bait": [
+            800.0,
+            530.0,
+            139.65000000000046
+          ],
+          "predators": [
+            [
+              814.0561810479398,
+              489.1376758437613,
+              5.990240452724719,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 9.1,
+          "bait": [
+            800.0,
+            530.0,
+            138.65000000000052
+          ],
+          "predators": [
+            [
+              792.119894300573,
+              488.48851856489074,
+              0.32370553877399366,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 10.1,
+          "bait": [
+            800.0,
+            530.0,
+            137.65000000000057
+          ],
+          "predators": [
+            [
+              803.1149525708423,
+              488.15883138985663,
+              26.748619317559918,
+              true
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 11.1,
+          "bait": [
+            800.0,
+            630.0,
+            131.65000000000063
+          ],
+          "predators": [
+            [
+              803.1149525708423,
+              488.15883138985663,
+              56.748619317559914,
+              true
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 12.1,
+          "bait": [
+            800.0,
+            730.0,
+            125.65000000000069
+          ],
+          "predators": [
+            [
+              803.1149525708423,
+              488.15883138985663,
+              86.74861931755991,
+              true
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 13.1,
+          "bait": [
+            800.0,
+            730.0,
+            124.65000000000074
+          ],
+          "predators": [
+            [
+              827.4263835857515,
+              455.0798876553482,
+              96.48206665387768,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": false
+        },
+        {
+          "t": 14.1,
+          "bait": [
+            800.0,
+            730.0,
+            123.6500000000008
+          ],
+          "predators": [
+            [
+              803.8239374789962,
+              348.0950961201503,
+              90.91641986045911,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 15.1,
+          "bait": [
+            800.0,
+            730.0,
+            122.65000000000086
+          ],
+          "predators": [
+            [
+              765.1318999707181,
+              245.24264776753904,
+              85.36388559832976,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 16.1,
+          "bait": [
+            800.0,
+            730.0,
+            121.65000000000092
+          ],
+          "predators": [
+            [
+              714.2868045353825,
+              147.91737293121628,
+              79.8317405334411,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 17.1,
+          "bait": [
+            800.0,
+            730.0,
+            120.65000000000097
+          ],
+          "predators": [
+            [
+              635.642410115742,
+              72.72923964689075,
+              74.25275077214673,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 18.1,
+          "bait": [
+            800.0,
+            730.0,
+            119.65000000000103
+          ],
+          "predators": [
+            [
+              531.2126870666156,
+              84.72958732471054,
+              68.59149266295722,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 19.1,
+          "bait": [
+            800.0,
+            730.0,
+            118.65000000000109
+          ],
+          "predators": [
+            [
+              428.38801223292023,
+              123.22810286467198,
+              63.00138094701292,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 20.1,
+          "bait": [
+            800.0,
+            730.0,
+            117.65000000000114
+          ],
+          "predators": [
+            [
+              324.2338183779546,
+              157.7659044477847,
+              57.39837982173082,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 21.1,
+          "bait": [
+            800.0,
+            730.0,
+            116.6500000000012
+          ],
+          "predators": [
+            [
+              225.8890803863155,
+              206.7884703826658,
+              51.84617429074749,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 22.1,
+          "bait": [
+            800.0,
+            730.0,
+            115.65000000000126
+          ],
+          "predators": [
+            [
+              136.7385473881634,
+              270.8154176469573,
+              46.310418975874775,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 23.1,
+          "bait": [
+            800.0,
+            730.0,
+            114.65000000000131
+          ],
+          "predators": [
+            [
+              76.16535306940897,
+              361.04062321589976,
+              40.727384646066916,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 24.1,
+          "bait": [
+            800.0,
+            730.0,
+            113.65000000000137
+          ],
+          "predators": [
+            [
+              91.3791375469712,
+              467.73047879941913,
+              35.10975814313779,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 25.1,
+          "bait": [
+            800.0,
+            730.0,
+            112.65000000000143
+          ],
+          "predators": [
+            [
+              123.01860895535478,
+              572.9994801508685,
+              29.528853848423804,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 26.1,
+          "bait": [
+            800.0,
+            730.0,
+            111.65000000000148
+          ],
+          "predators": [
+            [
+              152.83408967595514,
+              678.7048002822703,
+              23.931975204960032,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 27.1,
+          "bait": [
+            800.0,
+            730.0,
+            110.65000000000154
+          ],
+          "predators": [
+            [
+              169.68867558892322,
+              787.2318547342663,
+              18.34960084492374,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 28.1,
+          "bait": [
+            800.0,
+            730.0,
+            109.6500000000016
+          ],
+          "predators": [
+            [
+              190.6283329362263,
+              894.9952859273741,
+              12.751786246934234,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 29.1,
+          "bait": [
+            800.0,
+            730.0,
+            108.65000000000165
+          ],
+          "predators": [
+            [
+              222.7635395364198,
+              1000.0155528352543,
+              7.204756349360996,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 30.1,
+          "bait": [
+            800.0,
+            730.0,
+            107.65000000000171
+          ],
+          "predators": [
+            [
+              276.8280035346584,
+              1095.3539933835707,
+              1.6588317612007688,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 31.1,
+          "bait": [
+            800.0,
+            730.0,
+            106.65000000000177
+          ],
+          "predators": [
+            [
+              299.86115028410273,
+              1118.9300725324579,
+              20.981902305174124,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 32.1,
+          "bait": [
+            800.0,
+            730.0,
+            105.65000000000182
+          ],
+          "predators": [
+            [
+              299.86115028410273,
+              1118.9300725324579,
+              50.981902305174124,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 33.1,
+          "bait": [
+            800.0,
+            730.0,
+            104.65000000000188
+          ],
+          "predators": [
+            [
+              299.86115028410273,
+              1118.9300725324579,
+              80.98190230517412,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 34.1,
+          "bait": [
+            800.0,
+            730.0,
+            103.65000000000194
+          ],
+          "predators": [
+            [
+              327.7093831537161,
+              1136.4248224427017,
+              100.28757688897235,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 35.1,
+          "bait": [
+            800.0,
+            730.0,
+            102.650000000002
+          ],
+          "predators": [
+            [
+              431.2735078068247,
+              1113.4556237538548,
+              94.60050108701932,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 36.1,
+          "bait": [
+            800.0,
+            730.0,
+            101.65000000000205
+          ],
+          "predators": [
+            [
+              530.9492105357334,
+              1067.511886349209,
+              89.00483169981506,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 37.1,
+          "bait": [
+            800.0,
+            730.0,
+            100.65000000000211
+          ],
+          "predators": [
+            [
+              624.8138614598071,
+              1010.6925903981108,
+              83.43532269543158,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 38.1,
+          "bait": [
+            800.0,
+            730.0,
+            99.65000000000217
+          ],
+          "predators": [
+            [
+              717.0264033901681,
+              950.92257278706,
+              77.84943477398281,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 39.1,
+          "bait": [
+            800.0,
+            730.0,
+            98.65000000000222
+          ],
+          "predators": [
+            [
+              690.3007642967868,
+              805.4731019312484,
+              52.188153562623,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": true
+        },
+        {
+          "t": 40.1,
+          "bait": [
+            800.0,
+            730.0,
+            97.65000000000228
+          ],
+          "predators": [
+            [
+              772.1644200995764,
+              732.1229534295884,
+              36.604357418133134,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": true
+        }
+      ]
+    },
+    {
+      "case": {
+        "gap": 15,
+        "length": 90,
+        "heading_offset": 0.3,
+        "seconds": 60,
+        "release_s": 10
+      },
+      "site": {
+        "goal": [
+          800,
+          530
+        ],
+        "start": [
+          800,
+          485
+        ],
+        "predator": [
+          800,
+          450
+        ],
+        "mouth": [
+          800,
+          500
+        ],
+        "heading": 1.5707963267948966,
+        "gap": 15,
+        "length": 90
+      },
+      "elapsed_s": 60.00000000000058,
+      "acquired_s": 0.5,
+      "capture_s": null,
+      "alive": true,
+      "energy_remaining": 77.75000000000341,
+      "movement_energy": 12.25,
+      "food_energy": 3.4139358007223564e-12,
+      "first_escape_s": 13.299999999999969,
+      "after_acquisition_s": 59.5,
+      "containment_fraction": 0.2134453781512605,
+      "attention_fraction": 0.20504201680672268,
+      "joint_fraction": 0.20504201680672268,
+      "active_joint_fraction": 0.17755102040816326,
+      "maximum_odometry_error": 0,
+      "trace": [
+        {
+          "t": 0.1,
+          "bait": [
+            800.0,
+            495.0,
+            149.4
+          ],
+          "predators": [
+            [
+              797.758428012896,
+              464.8315661690406,
+              99.42612675853621,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 1.1,
+          "bait": [
+            800.0,
+            530.0,
+            146.65000000000006
+          ],
+          "predators": [
+            [
+              808.6344692249079,
+              489.74510364425294,
+              73.74512183943784,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 2.1,
+          "bait": [
+            800.0,
+            530.0,
+            145.65000000000012
+          ],
+          "predators": [
+            [
+              808.743678155263,
+              488.6408963157551,
+              48.055791131240184,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 3.1,
+          "bait": [
+            800.0,
+            530.0,
+            144.65000000000018
+          ],
+          "predators": [
+            [
+              787.0863263546154,
+              489.94603891973463,
+              34.39196208574832,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 4.1,
+          "bait": [
+            800.0,
+            530.0,
+            143.65000000000023
+          ],
+          "predators": [
+            [
+              809.0326893730028,
+              489.32571894838907,
+              28.73085168575384,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 5.1,
+          "bait": [
+            800.0,
+            530.0,
+            142.6500000000003
+          ],
+          "predators": [
+            [
+              809.1420049539207,
+              488.70306522151674,
+              23.071324962553796,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 6.1,
+          "bait": [
+            800.0,
+            530.0,
+            141.65000000000035
+          ],
+          "predators": [
+            [
+              809.2406107264245,
+              489.7373297265461,
+              17.41615955605757,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 7.1,
+          "bait": [
+            800.0,
+            530.0,
+            140.6500000000004
+          ],
+          "predators": [
+            [
+              787.511508471023,
+              489.66417427284415,
+              11.761620187304478,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 8.1,
+          "bait": [
+            800.0,
+            530.0,
+            139.65000000000046
+          ],
+          "predators": [
+            [
+              809.4629450140179,
+              489.2957777751874,
+              6.1010779777611335,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 9.1,
+          "bait": [
+            800.0,
+            530.0,
+            138.65000000000052
+          ],
+          "predators": [
+            [
+              809.5786055153146,
+              488.69227856714633,
+              0.44200537894580083,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 10.1,
+          "bait": [
+            800.0,
+            530.0,
+            137.65000000000057
+          ],
+          "predators": [
+            [
+              798.59238030971,
+              489.24260186461714,
+              26.875552818358127,
+              true
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 11.1,
+          "bait": [
+            800.0,
+            630.0,
+            131.65000000000063
+          ],
+          "predators": [
+            [
+              798.59238030971,
+              489.24260186461714,
+              56.87555281835813,
+              true
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 12.1,
+          "bait": [
+            800.0,
+            730.0,
+            125.65000000000069
+          ],
+          "predators": [
+            [
+              798.59238030971,
+              489.24260186461714,
+              86.87555281835813,
+              true
+            ]
+          ],
+          "confined": true,
+          "attention": true
+        },
+        {
+          "t": 13.1,
+          "bait": [
+            800.0,
+            730.0,
+            124.65000000000074
+          ],
+          "predators": [
+            [
+              767.1914452525303,
+              455.1686563923036,
+              96.63112058513732,
+              false
+            ]
+          ],
+          "confined": true,
+          "attention": false
+        },
+        {
+          "t": 14.1,
+          "bait": [
+            800.0,
+            730.0,
+            123.6500000000008
+          ],
+          "predators": [
+            [
+              731.483529939525,
+              351.59372763996845,
+              91.06547379171876,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 15.1,
+          "bait": [
+            800.0,
+            730.0,
+            122.65000000000086
+          ],
+          "predators": [
+            [
+              682.8319486249101,
+              253.08839192192067,
+              85.5058410179579,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 16.1,
+          "bait": [
+            800.0,
+            730.0,
+            121.65000000000092
+          ],
+          "predators": [
+            [
+              628.424361401893,
+              157.68438470129138,
+              79.97548413510044,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 17.1,
+          "bait": [
+            800.0,
+            730.0,
+            120.65000000000097
+          ],
+          "predators": [
+            [
+              549.3710420429663,
+              82.43288204947308,
+              74.40849497748795,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 18.1,
+          "bait": [
+            800.0,
+            730.0,
+            119.65000000000103
+          ],
+          "predators": [
+            [
+              443.8586445001334,
+              80.28523661205845,
+              68.76339379505353,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 19.1,
+          "bait": [
+            800.0,
+            730.0,
+            118.65000000000109
+          ],
+          "predators": [
+            [
+              339.43882625275614,
+              114.54160137867983,
+              63.178198981186625,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 20.1,
+          "bait": [
+            800.0,
+            730.0,
+            117.65000000000114
+          ],
+          "predators": [
+            [
+              232.06842012242342,
+              137.26165412164335,
+              57.61625812100004,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 21.1,
+          "bait": [
+            800.0,
+            730.0,
+            116.6500000000012
+          ],
+          "predators": [
+            [
+              127.08983528127594,
+              169.2757691510058,
+              52.079927652082226,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 22.1,
+          "bait": [
+            800.0,
+            730.0,
+            115.65000000000126
+          ],
+          "predators": [
+            [
+              51.29658163026714,
+              242.8774764014395,
+              46.42876197368169,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 23.1,
+          "bait": [
+            800.0,
+            730.0,
+            114.65000000000131
+          ],
+          "predators": [
+            [
+              99.52006711461557,
+              340.493071085731,
+              40.76956934611842,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 24.1,
+          "bait": [
+            800.0,
+            730.0,
+            113.65000000000137
+          ],
+          "predators": [
+            [
+              138.08827091097922,
+              442.9023108003436,
+              35.18833594173854,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 25.1,
+          "bait": [
+            800.0,
+            730.0,
+            112.65000000000143
+          ],
+          "predators": [
+            [
+              162.33713107668757,
+              550.1262029074882,
+              29.589185311451246,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 26.1,
+          "bait": [
+            800.0,
+            730.0,
+            111.65000000000148
+          ],
+          "predators": [
+            [
+              195.4739992236087,
+              654.9254634682284,
+              24.01438207206978,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 27.1,
+          "bait": [
+            800.0,
+            730.0,
+            110.65000000000154
+          ],
+          "predators": [
+            [
+              227.23431083185122,
+              760.1687522042675,
+              18.429659841888196,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 28.1,
+          "bait": [
+            800.0,
+            730.0,
+            109.6500000000016
+          ],
+          "predators": [
+            [
+              237.8218172432398,
+              869.3557693450799,
+              12.855464614224234,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 29.1,
+          "bait": [
+            800.0,
+            730.0,
+            108.65000000000165
+          ],
+          "predators": [
+            [
+              252.11671883915344,
+              978.3581232080322,
+              7.315760130047852,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 30.1,
+          "bait": [
+            800.0,
+            730.0,
+            107.65000000000171
+          ],
+          "predators": [
+            [
+              284.6844066149529,
+              1083.1189059611313,
+              1.7762970937062854,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 31.1,
+          "bait": [
+            800.0,
+            730.0,
+            106.65000000000177
+          ],
+          "predators": [
+            [
+              307.6123143567174,
+              1120.5735156644007,
+              17.543287532446918,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 32.1,
+          "bait": [
+            800.0,
+            730.0,
+            105.65000000000182
+          ],
+          "predators": [
+            [
+              307.6123143567174,
+              1120.5735156644007,
+              47.54328753244692,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 33.1,
+          "bait": [
+            800.0,
+            730.0,
+            104.65000000000188
+          ],
+          "predators": [
+            [
+              307.6123143567174,
+              1120.5735156644007,
+              77.54328753244693,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 34.1,
+          "bait": [
+            800.0,
+            730.0,
+            103.65000000000194
+          ],
+          "predators": [
+            [
+              322.8648893580505,
+              1136.3889499526438,
+              100.41454591771351,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 35.1,
+          "bait": [
+            800.0,
+            730.0,
+            102.650000000002
+          ],
+          "predators": [
+            [
+              419.3163881446105,
+              1113.4516532822377,
+              94.67827325414014,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 36.1,
+          "bait": [
+            800.0,
+            730.0,
+            101.65000000000205
+          ],
+          "predators": [
+            [
+              517.8009987578974,
+              1064.9253881033578,
+              89.08785974267796,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 37.1,
+          "bait": [
+            800.0,
+            730.0,
+            100.65000000000211
+          ],
+          "predators": [
+            [
+              623.7747965459214,
+              1036.0618812113623,
+              83.50363117284108,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 38.1,
+          "bait": [
+            800.0,
+            730.0,
+            99.65000000000217
+          ],
+          "predators": [
+            [
+              728.0331014186737,
+              1001.6146609525442,
+              77.93189213390009,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 39.1,
+          "bait": [
+            800.0,
+            730.0,
+            98.65000000000222
+          ],
+          "predators": [
+            [
+              829.6049880800429,
+              961.0867259064374,
+              72.35631274621801,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 40.1,
+          "bait": [
+            800.0,
+            730.0,
+            97.65000000000228
+          ],
+          "predators": [
+            [
+              938.7158308241279,
+              963.3817549713261,
+              66.75973471816816,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 41.1,
+          "bait": [
+            800.0,
+            730.0,
+            96.65000000000234
+          ],
+          "predators": [
+            [
+              1048.4304878166188,
+              956.8135516787937,
+              61.17923167919643,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 42.1,
+          "bait": [
+            800.0,
+            730.0,
+            95.6500000000024
+          ],
+          "predators": [
+            [
+              1156.9376743112898,
+              939.6142294642757,
+              55.5996622727742,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 43.1,
+          "bait": [
+            800.0,
+            730.0,
+            94.65000000000245
+          ],
+          "predators": [
+            [
+              1266.0937120350306,
+              930.4558190161345,
+              50.01035454607194,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 44.1,
+          "bait": [
+            800.0,
+            730.0,
+            93.6500000000025
+          ],
+          "predators": [
+            [
+              1374.7268201714596,
+              917.2025896908277,
+              44.45222710100144,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 45.1,
+          "bait": [
+            800.0,
+            730.0,
+            92.65000000000256
+          ],
+          "predators": [
+            [
+              1477.2804615381851,
+              878.1750680155532,
+              38.9142814232242,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 46.1,
+          "bait": [
+            800.0,
+            730.0,
+            91.65000000000262
+          ],
+          "predators": [
+            [
+              1546.536203678414,
+              798.4511089962226,
+              33.26351622232715,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 47.1,
+          "bait": [
+            800.0,
+            730.0,
+            90.65000000000268
+          ],
+          "predators": [
+            [
+              1505.7960944035926,
+              697.0696716554938,
+              27.604882677031625,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 48.1,
+          "bait": [
+            800.0,
+            730.0,
+            89.65000000000273
+          ],
+          "predators": [
+            [
+              1479.3482439654758,
+              590.3658269605402,
+              22.022742251973636,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 49.1,
+          "bait": [
+            800.0,
+            730.0,
+            88.65000000000279
+          ],
+          "predators": [
+            [
+              1462.2113400823148,
+              482.105843139245,
+              16.433032793767403,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 50.1,
+          "bait": [
+            800.0,
+            730.0,
+            87.65000000000285
+          ],
+          "predators": [
+            [
+              1453.6297595008336,
+              372.52498087625946,
+              10.856061853424064,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 51.1,
+          "bait": [
+            800.0,
+            730.0,
+            86.6500000000029
+          ],
+          "predators": [
+            [
+              1432.085831577114,
+              264.8186626618903,
+              5.276758175639016,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 52.1,
+          "bait": [
+            800.0,
+            730.0,
+            85.65000000000296
+          ],
+          "predators": [
+            [
+              1402.9782359051412,
+              158.90503691649306,
+              -0.2524280315965269,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 53.1,
+          "bait": [
+            800.0,
+            730.0,
+            84.65000000000302
+          ],
+          "predators": [
+            [
+              1402.9782359051412,
+              158.90503691649306,
+              29.747571968403474,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 54.1,
+          "bait": [
+            800.0,
+            730.0,
+            83.65000000000308
+          ],
+          "predators": [
+            [
+              1402.9782359051412,
+              158.90503691649306,
+              59.74757196840348,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 55.1,
+          "bait": [
+            800.0,
+            730.0,
+            82.65000000000313
+          ],
+          "predators": [
+            [
+              1402.9782359051412,
+              158.90503691649306,
+              89.74757196840348,
+              true
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 56.1,
+          "bait": [
+            800.0,
+            730.0,
+            81.65000000000319
+          ],
+          "predators": [
+            [
+              1373.1297354496994,
+              100.18147774575057,
+              98.41453590461305,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 57.1,
+          "bait": [
+            800.0,
+            730.0,
+            80.65000000000325
+          ],
+          "predators": [
+            [
+              1282.7798048230725,
+              59.7232776522911,
+              92.68823005588548,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 58.1,
+          "bait": [
+            800.0,
+            730.0,
+            79.6500000000033
+          ],
+          "predators": [
+            [
+              1184.7507074600248,
+              109.2582735517861,
+              87.08369469385048,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        },
+        {
+          "t": 59.1,
+          "bait": [
+            800.0,
+            730.0,
+            78.65000000000336
+          ],
+          "predators": [
+            [
+              1080.7513781473647,
+              141.94686553067936,
+              81.49488687625698,
+              false
+            ]
+          ],
+          "confined": false,
+          "attention": false
+        }
+      ]
+    }
+  ]
+}

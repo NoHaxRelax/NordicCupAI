@@ -1,0 +1,813 @@
+{
+  "turning_circle_radius": 50.18799335788677,
+  "geometry": {
+    "test": "turning-circle",
+    "passed": true,
+    "ticks": 25,
+    "radius": 50.18799335788677,
+    "gap_min": 50.18799335788666,
+    "gap_max": 50.187993357887116,
+    "replay": "replays/geometry-check-v6866a1d297-seed7-20260917T134706490615Z-8bcee69976.json.gz",
+    "run_id": "geometry-check-v6866a1d297-seed7-20260917T134706490615Z-8bcee69976",
+    "recording_kind": "new_reproduction",
+    "reproduction": {
+      "source_case": "verification/turning-circle",
+      "source_file": "verification.json",
+      "source_file_sha256": "0c12a176a23bfc6732ed6a40c4168ec55c1f8d70414a5a103e3c485dcc075855",
+      "limitations": "New reproduction of the previously metrics-only verification fixture; original missing frames are not recoverable."
+    },
+    "metrics_file": "runs/geometry-check-v6866a1d297-seed7-20260917T134706490615Z-8bcee69976.metrics.json"
+  },
+  "observation_contract": {
+    "test": "observation-contract",
+    "passed": true,
+    "ticks": 50,
+    "replay": "replays/observation-contract-check-v6866a1d297-seed8-20260917T134707447996Z-5fa486d737.json.gz",
+    "run_id": "observation-contract-check-v6866a1d297-seed8-20260917T134707447996Z-5fa486d737",
+    "recording_kind": "new_reproduction",
+    "reproduction": {
+      "source_case": "verification/observation-contract",
+      "source_file": "verification.json",
+      "source_file_sha256": "0c12a176a23bfc6732ed6a40c4168ec55c1f8d70414a5a103e3c485dcc075855",
+      "limitations": "New reproduction of the previously metrics-only verification fixture; original missing frames are not recoverable."
+    },
+    "metrics_file": "runs/observation-contract-check-v6866a1d297-seed8-20260917T134707447996Z-5fa486d737.metrics.json"
+  },
+  "replays": [
+    {
+      "file": "ordinary150-food-exhaustion.json.gz",
+      "frames": 610,
+      "duration": 120.0
+    },
+    {
+      "file": "ordinary150-handoff-starvation.json.gz",
+      "frames": 612,
+      "duration": 120.0
+    },
+    {
+      "file": "prepared500-newborn-handoff.json.gz",
+      "frames": 611,
+      "duration": 120.0
+    },
+    {
+      "file": "relay-150-trees.json.gz",
+      "frames": 610,
+      "duration": 120.0
+    },
+    {
+      "file": "relay-500-trees.json.gz",
+      "frames": 613,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/geometry-check-v6866a1d297-seed7-20260917T134706490615Z-8bcee69976.json.gz",
+      "frames": 26,
+      "duration": 2.5
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134546344383Z-7064187b71.json.gz",
+      "frames": 62,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134546593671Z-940d723e47.json.gz",
+      "frames": 64,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134547013804Z-482971df03.json.gz",
+      "frames": 63,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134547758150Z-275c629ccc.json.gz",
+      "frames": 63,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134548638751Z-d59f5027c0.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134549636552Z-3fc0a8be35.json.gz",
+      "frames": 66,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134550432534Z-f7f05498d2.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134551228541Z-bf922d76e3.json.gz",
+      "frames": 66,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134552076422Z-8d99bc71da.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134552712249Z-76156388dd.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134553448278Z-0be3685fd9.json.gz",
+      "frames": 64,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134554100674Z-42879737ad.json.gz",
+      "frames": 66,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134554918760Z-8b1f5cbd67.json.gz",
+      "frames": 64,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134555591194Z-72f604692f.json.gz",
+      "frames": 66,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134556372839Z-f6062f1eda.json.gz",
+      "frames": 63,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134557241154Z-a8c60b94d4.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134557924491Z-be4ac5919d.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134558499539Z-eb2ce8a69b.json.gz",
+      "frames": 64,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134559206807Z-abd3296ad1.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/mpc-ve1f67bfc66-seed0-20260917T134559830479Z-24e9172582.json.gz",
+      "frames": 64,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed101-20260917T134545601266Z-429eb006b8.json.gz",
+      "frames": 248,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed101-20260917T134548135161Z-4ce885e690.json.gz",
+      "frames": 248,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed102-20260917T134551409418Z-f1ac078dbb.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed102-20260917T134553820830Z-05a1bf42b1.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed103-20260917T134556836473Z-6c60c18c9e.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed103-20260917T134559618921Z-60619dae27.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed104-20260917T134603090856Z-0f3cb89031.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed104-20260917T134605206062Z-6ecea06fb3.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed105-20260917T134608238095Z-a3badc836d.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed105-20260917T134610674671Z-76e981765a.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed106-20260917T134613820913Z-8d11900ccf.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed106-20260917T134616607528Z-ebfd0696c1.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed201-20260917T134619990567Z-a9080ecb09.json.gz",
+      "frames": 253,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed202-20260917T134622789209Z-22594d9c38.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed203-20260917T134625150173Z-e54baef02a.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed301-20260917T134627826368Z-9e3a82e276.json.gz",
+      "frames": 261,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed301-20260917T134631608714Z-7bfd24ef0a.json.gz",
+      "frames": 261,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed302-20260917T134636451595Z-be50fcfa79.json.gz",
+      "frames": 263,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed302-20260917T134639927278Z-d5f69c070b.json.gz",
+      "frames": 263,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed303-20260917T134644339172Z-cb12c49e79.json.gz",
+      "frames": 260,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-v96d8a373a2-seed303-20260917T134648064383Z-d384152b79.json.gz",
+      "frames": 260,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed101-20260917T134545601119Z-8ea58d4a34.json.gz",
+      "frames": 255,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed101-20260917T134548123131Z-ba1418f1e2.json.gz",
+      "frames": 255,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed102-20260917T134551383786Z-d397d42dd6.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed102-20260917T134553889772Z-ca362ebc1a.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed103-20260917T134557147652Z-050494691d.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed103-20260917T134559980720Z-a26092d0d3.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed104-20260917T134603272766Z-e863fe6046.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed104-20260917T134605971122Z-1a0a8c6fa1.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed105-20260917T134609124101Z-86d9c644be.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed105-20260917T134611753369Z-5a7b388ef2.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed106-20260917T134614974925Z-eb1288bf04.json.gz",
+      "frames": 252,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/none-vaf470cdd48-seed106-20260917T134617472236Z-cfc1dcc448.json.gz",
+      "frames": 252,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/observation-contract-check-v6866a1d297-seed8-20260917T134707447996Z-5fa486d737.json.gz",
+      "frames": 51,
+      "duration": 5.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134605934293Z-c5a50b87b9.json.gz",
+      "frames": 255,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134606783129Z-c2545a74db.json.gz",
+      "frames": 255,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134607621114Z-527d77a133.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134608871145Z-7ba8b79935.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134610114896Z-2e55cb43af.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134611112686Z-db61317e4a.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134612115247Z-a2b4d17b31.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134613459194Z-8f50522c1b.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134614905170Z-7c734a5882.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134616107265Z-ba74565ed3.json.gz",
+      "frames": 253,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134617214680Z-7012fd2882.json.gz",
+      "frames": 256,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v20f431b885-seed0-20260917T134618871175Z-185565d66e.json.gz",
+      "frames": 256,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed0-20260917T134652350329Z-ef2dc2c380.json.gz",
+      "frames": 377,
+      "duration": 180.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed0-20260917T134653261081Z-08cd393f2c.json.gz",
+      "frames": 384,
+      "duration": 180.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed0-20260917T134654706434Z-8bc7192492.json.gz",
+      "frames": 381,
+      "duration": 180.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed0-20260917T134659114056Z-1d5ec2f231.json.gz",
+      "frames": 387,
+      "duration": 180.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed101-20260917T134546806051Z-3bec2d60cb.json.gz",
+      "frames": 260,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed101-20260917T134549647145Z-0d82554e39.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed102-20260917T134552589598Z-418862d84f.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed102-20260917T134555245349Z-5a962e9a61.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed103-20260917T134558245134Z-27f2587e13.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed103-20260917T134601262228Z-629e3776c5.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed104-20260917T134604419151Z-ef9cc1aca7.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed104-20260917T134606685403Z-b50307c972.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed105-20260917T134609467677Z-cabad00139.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed105-20260917T134612242173Z-00c7c0446f.json.gz",
+      "frames": 260,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed106-20260917T134615382311Z-4d98e0f16b.json.gz",
+      "frames": 255,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed106-20260917T134618139470Z-bb293bfb53.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed201-20260917T134621659644Z-215aec2831.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed202-20260917T134623951884Z-fdb300f2cb.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed203-20260917T134626498985Z-3e19fdabc0.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed301-20260917T134629581980Z-6f3d57b4f0.json.gz",
+      "frames": 273,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed301-20260917T134633583624Z-3d13007f28.json.gz",
+      "frames": 276,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed302-20260917T134638160855Z-1a798539e4.json.gz",
+      "frames": 262,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed302-20260917T134641947518Z-0354718b23.json.gz",
+      "frames": 267,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed303-20260917T134645980626Z-7f73e3048c.json.gz",
+      "frames": 264,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-v96d8a373a2-seed303-20260917T134649984366Z-7bd3fec64d.json.gz",
+      "frames": 270,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed101-20260917T134546649424Z-976317005d.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed101-20260917T134549502551Z-b2a279fb1f.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed102-20260917T134552409929Z-3f80341ef6.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed102-20260917T134555241565Z-d0f10d8d42.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed103-20260917T134558278229Z-471c9f00c4.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed103-20260917T134601443742Z-346484de69.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed104-20260917T134604408241Z-2d57cdd745.json.gz",
+      "frames": 259,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed104-20260917T134607281982Z-36a8e51fa5.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed105-20260917T134610487562Z-b71ae5d57f.json.gz",
+      "frames": 261,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed105-20260917T134613271268Z-6e24f69a65.json.gz",
+      "frames": 261,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed106-20260917T134616245270Z-83f4cf309f.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-vaf470cdd48-seed106-20260917T134618941163Z-d3206a555d.json.gz",
+      "frames": 261,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134600610057Z-41108562c9.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134601305885Z-3c28bbf2a9.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134601986009Z-f0ba2bfeeb.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134602620386Z-005268351d.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134603291134Z-2230985f7f.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134603939067Z-9105bdde2e.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134604606512Z-03c750d41c.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit-ve1f67bfc66-seed0-20260917T134605239602Z-19c834b48b.json.gz",
+      "frames": 126,
+      "duration": 60.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed101-20260917T134546008561Z-7ded44b047.json.gz",
+      "frames": 256,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed101-20260917T134548505051Z-248be3f436.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed102-20260917T134551882972Z-3365f4df58.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed102-20260917T134554322931Z-9796869d1f.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed103-20260917T134557330711Z-dfbbd94e50.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed103-20260917T134600177108Z-0f9b69206e.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed104-20260917T134603601143Z-05598fea2c.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed104-20260917T134605723363Z-3185d6fb58.json.gz",
+      "frames": 253,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed105-20260917T134608801978Z-3262f5c013.json.gz",
+      "frames": 251,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed105-20260917T134611231542Z-bd26623a5c.json.gz",
+      "frames": 256,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed106-20260917T134614486772Z-33f9a4ef26.json.gz",
+      "frames": 254,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed106-20260917T134617126774Z-43b96dc502.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed201-20260917T134620728968Z-74c2b79245.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed202-20260917T134623334138Z-38c77d6926.json.gz",
+      "frames": 254,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed203-20260917T134625698141Z-dd9166c332.json.gz",
+      "frames": 255,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed301-20260917T134628331051Z-1c54e56525.json.gz",
+      "frames": 260,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed301-20260917T134632108022Z-0063c7aaa5.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed302-20260917T134637028840Z-73b70f3e8f.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed302-20260917T134640498270Z-1653858247.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed303-20260917T134644799912Z-d59d26e315.json.gz",
+      "frames": 257,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/orbit_single-v96d8a373a2-seed303-20260917T134648548664Z-42bca82c59.json.gz",
+      "frames": 258,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/radial-ve1f67bfc66-seed0-20260917T134532049080Z-fae35564a8.json.gz",
+      "frames": 62,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/radial-ve1f67bfc66-seed0-20260917T134545601679Z-2117f6b7dd.json.gz",
+      "frames": 64,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed101-20260917T134546181253Z-4252211f4c.json.gz",
+      "frames": 252,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed101-20260917T134548680874Z-90e359a020.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed102-20260917T134551951061Z-86a2b038a9.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed102-20260917T134554474807Z-3564ae70e8.json.gz",
+      "frames": 254,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed103-20260917T134557757876Z-396cd9af9b.json.gz",
+      "frames": 249,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed103-20260917T134600646759Z-2f5105cd9f.json.gz",
+      "frames": 254,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed104-20260917T134603859854Z-ea681417ee.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed104-20260917T134606576151Z-0ba89b8701.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed105-20260917T134609880228Z-cb79798fae.json.gz",
+      "frames": 253,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed105-20260917T134612537849Z-4be0490bfd.json.gz",
+      "frames": 252,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed106-20260917T134615656806Z-80f7e3a3c9.json.gz",
+      "frames": 250,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-vaf470cdd48-seed106-20260917T134618153554Z-525401ab49.json.gz",
+      "frames": 254,
+      "duration": 120.0
+    },
+    {
+      "file": "replays/single-ve1f67bfc66-seed0-20260917T134545886641Z-57f8cce588.json.gz",
+      "frames": 62,
+      "duration": 30.0
+    },
+    {
+      "file": "replays/single-ve1f67bfc66-seed0-20260917T134546054969Z-751ceba94d.json.gz",
+      "frames": 65,
+      "duration": 30.0
+    },
+    {
+      "file": "two-predator-pairs.json.gz",
+      "frames": 622,
+      "duration": 120.0
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "global-sweep-gaze-fitted-result-v1",
+  "map_seed": 10142,
+  "fixture_seed": 20142,
+  "classification": "fitted native-map repair",
+  "v20_diagnosis": {
+    "first_bait_target": 38.2,
+    "predator_distance_from_mouth_at_first_bait_target": 236.3,
+    "meaning": "distant line of sight, not capture",
+    "physical_entry": 273.5,
+    "guide_death": 153.9,
+    "primary_issue": "bounded search around a stale predator observation"
+  },
+  "global_sweep_without_forward_gaze": {
+    "guide_death": 30.8,
+    "outcome": "failure",
+    "cause": "crossed toward an unseen predator just outside hearing while looking away"
+  },
+  "global_sweep_with_forward_gaze": {
+    "guide_death": 65.3,
+    "guided_delivery": 65.4,
+    "confirmed_active_bait_capture": 65.4,
+    "physical_or_target_loss": false,
+    "distant_autonomous_capture": false,
+    "recorded_seconds": 300,
+    "native_frames": 3001,
+    "success": true,
+    "receipt": "results/simple_chase/real-map-GlobalSweepGaze-m10142-f20142-p1-direct_guide-sitebait1-bb3db8cd.json",
+    "audit": "results/simple_chase/active_bait_audits/real-map-GlobalSweepGaze-m10142-f20142-p1-direct_guide-sitebait1-bb3db8cd.audit.json",
+    "replay": "results/simple_chase/replays/real-map-GlobalSweepGaze-m10142-f20142-p1-direct_guide-sitebait1-bb3db8cd.json.gz"
+  },
+  "limitations": "One fitted repair on an arranged adjacent encounter; no fresh-map reliability implication."
+}

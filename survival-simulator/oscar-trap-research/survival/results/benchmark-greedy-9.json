@@ -1,0 +1,89 @@
+{
+  "mode": "greedy",
+  "seed": 9,
+  "horizon": 3000.0,
+  "survival_seconds": 545.8,
+  "score": 591.07076,
+  "alive": 0,
+  "peak_agents": 40,
+  "total_agents_created": 270,
+  "predators": 4,
+  "wall_seconds": 27.94,
+  "samples": [
+    {
+      "time": 50.0,
+      "score": 52.2492,
+      "alive": 12,
+      "predators": 0,
+      "best_walk": 14.765306630193384
+    },
+    {
+      "time": 100.0,
+      "score": 113.6114,
+      "alive": 28,
+      "predators": 0,
+      "best_walk": 19.40358733431345
+    },
+    {
+      "time": 150.0,
+      "score": 172.105,
+      "alive": 20,
+      "predators": 0,
+      "best_walk": 19.40358733431345
+    },
+    {
+      "time": 200.0,
+      "score": 231.0614,
+      "alive": 22,
+      "predators": 0,
+      "best_walk": 20
+    },
+    {
+      "time": 250.0,
+      "score": 287.9096,
+      "alive": 18,
+      "predators": 0,
+      "best_walk": 12.745231720563291
+    },
+    {
+      "time": 300.0,
+      "score": 343.7032,
+      "alive": 21,
+      "predators": 3,
+      "best_walk": 14.794050407888609
+    },
+    {
+      "time": 350.0,
+      "score": 394.5379,
+      "alive": 4,
+      "predators": 3,
+      "best_walk": 10
+    },
+    {
+      "time": 400.0,
+      "score": 444.9509,
+      "alive": 24,
+      "predators": 3,
+      "best_walk": 10
+    },
+    {
+      "time": 450.0,
+      "score": 495.4425,
+      "alive": 9,
+      "predators": 3,
+      "best_walk": 14.979027236881539
+    },
+    {
+      "time": 500.0,
+      "score": 544.6098,
+      "alive": 5,
+      "predators": 3,
+      "best_walk": 7.225233882174329
+    }
+  ],
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "python": "3.12.7",
+  "policy_sha256": "ed52fe5fd816329f771909642c0230f696434a7f4e12bc69f8bc4dedbf673ad2",
+  "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+  "limitations": "Local macOS generated maps; official evaluation uses Linux. No hidden state in policy. Read-only diagnostic metrics use engine state."
+}

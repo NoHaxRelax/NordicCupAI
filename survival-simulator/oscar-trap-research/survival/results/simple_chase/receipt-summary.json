@@ -1,0 +1,2989 @@
+{
+  "setup": "Predeployed depth5 bait, guide55 units from initially awake predator; subsequent actions use native observations only. Aligned controls explicitly separate.",
+  "rows": [
+    {
+      "receipt": "real-map-SimpleChase-m10000-f9204-p1-direct_guide-sitebait1-7193ad53.json",
+      "receipt_sha256": "edaf0851c35328737f49f63bdd6752fcd8ef19b0bcd634e06d3e2076900e7e86",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10000,
+      "fixture_seed": 9204,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        8.2
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10000-f9204-p1-direct_guide-sitebait1-7193ad53.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10000-f9204-p1-direct_guide-sitebait1-b2944c04.json",
+      "receipt_sha256": "69d3e203a6b75988d0bd4d424982419d33aec09f3c859f6215a438ead38b3d0b",
+      "policy": "simple_chase.policy_v7_bounded_spacing:SimpleChase",
+      "policy_hash": "836d2fe2256a069df0e360d273e1a02d5a0f10b2f1d0ec7f5e7e8d25d2c453cb",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming.py": "67c88010adcd1b2d51e2e154ca9284eaab791cfd4369e4daee5aaa841fd2e865",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder.py": "d52d828c21b076029af753754f07b0f8a663e0ac9464e32caedee8ad9246b17d"
+      },
+      "map_seed": 10000,
+      "fixture_seed": 9204,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        8.1
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10000-f9204-p1-direct_guide-sitebait1-b2944c04.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10000-f9204-p1-direct_guide-sitebait1-fbc5c0aa.json",
+      "receipt_sha256": "4b9ec45a234a990a40d1326048a168bbdd87cbc09fcc5ec3266dcb1a08dc89a6",
+      "policy": "simple_chase.policy_v5_short_site:SimpleChase",
+      "policy_hash": "83e55ecd4f7fd958387e83b3a7d13178a8b8c9d9906b640fdd4af5b88546128b",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 10000,
+      "fixture_seed": 9204,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 24.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10000-f9204-p1-direct_guide-sitebait1-fbc5c0aa.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10001-f9301-p1-direct_guide-sitebait1-447eca62.json",
+      "receipt_sha256": "2d7e631905a29ad93f7ecb43bd6ec173901a01b24a331eed0de48200e1252d31",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10001,
+      "fixture_seed": 9301,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        7.2
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10001-f9301-p1-direct_guide-sitebait1-447eca62.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10001-f9301-p1-direct_guide-sitebait1-4dcc2ede.json",
+      "receipt_sha256": "03c8340f3524d3aaf9957e1d2565a360ab62dd4010d0795ad60a34d1d41d491f",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10001,
+      "fixture_seed": 9301,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        4.0
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10001-f9301-p1-direct_guide-sitebait1-4dcc2ede.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-08c5a3ed.json",
+      "receipt_sha256": "aa47eb9255beb40280be0a208950e9964048f70688b1b1ccca7d4c87daecb0b2",
+      "policy": "simple_chase.policy_v9_turn_margin:SimpleChase",
+      "policy_hash": "224589e0c4f8a9b82771e56d2ef046b22441e7911d2152f219a6d9610e691cd1",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10002,
+      "fixture_seed": 9302,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        104.7
+      ],
+      "deaths": [
+        {
+          "time": 104.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-08c5a3ed.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-7b2626ab.json",
+      "receipt_sha256": "638ba79459cbb558e84a4d44cb130b74efca889207daa78ba1afbfd2c2220e4d",
+      "policy": "simple_chase.policy_v9_turn_margin:SimpleChase",
+      "policy_hash": "224589e0c4f8a9b82771e56d2ef046b22441e7911d2152f219a6d9610e691cd1",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10002,
+      "fixture_seed": 9302,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        104.7
+      ],
+      "deaths": [
+        {
+          "time": 104.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-7b2626ab.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-84aa268a.json",
+      "receipt_sha256": "1df1f8a36257dabdaa964d9ffefba6a2e7e9136bf10bd9815fde33d4d5a856fb",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10002,
+      "fixture_seed": 9302,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        6.2
+      ],
+      "deaths": [
+        {
+          "time": 6.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-84aa268a.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-f3331258.json",
+      "receipt_sha256": "17df12b5762409c723d9539c4b91d066d40ae29cb1a763b8f2e061ef544f8cba",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10002,
+      "fixture_seed": 9302,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 6.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10002-f9302-p1-direct_guide-sitebait1-f3331258.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10003-f9303-p1-direct_guide-sitebait1-aa10691f.json",
+      "receipt_sha256": "1b23dacb659a4c5f35d0cc6997a03c3feabf3846e202d6d8634ac5afb01c778c",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10003,
+      "fixture_seed": 9303,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        18.6
+      ],
+      "deaths": [
+        {
+          "time": 6.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10003-f9303-p1-direct_guide-sitebait1-aa10691f.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10003-f9303-p1-direct_guide-sitebait1-c5c6287f.json",
+      "receipt_sha256": "1eca67d66d586af2776723d988c9be136704527f7f3c612ad5df3a06ec5bd7ac",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10003,
+      "fixture_seed": 9303,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        37.9
+      ],
+      "deaths": [
+        {
+          "time": 37.6,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10003-f9303-p1-direct_guide-sitebait1-c5c6287f.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10004-f9304-p1-direct_guide-sitebait1-94f32a71.json",
+      "receipt_sha256": "93eb2e663b766ae35947c2704298fc4e715f9dbbfc9df97287797d69b3e5571e",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10004,
+      "fixture_seed": 9304,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        52.5
+      ],
+      "deaths": [
+        {
+          "time": 75.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 1,
+      "target_losses_after_delivery": 1,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10004-f9304-p1-direct_guide-sitebait1-94f32a71.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10004-f9304-p1-direct_guide-sitebait1-e1e4fe7e.json",
+      "receipt_sha256": "eb5cc0326c64752833cb04fd1de75ce24bac32d0fd6fbcf323f873de7f61a794",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10004,
+      "fixture_seed": 9304,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        8.0
+      ],
+      "deaths": [
+        {
+          "time": 7.9,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10004-f9304-p1-direct_guide-sitebait1-e1e4fe7e.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10005-f9305-p1-direct_guide-sitebait1-45d491ce.json",
+      "receipt_sha256": "0f58bf2035648d6af2388fbcb12a2c4070ad07385f84378183610352c974a630",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10005,
+      "fixture_seed": 9305,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        13.9
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10005-f9305-p1-direct_guide-sitebait1-45d491ce.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10005-f9305-p1-direct_guide-sitebait1-ba108692.json",
+      "receipt_sha256": "ed2c92f812108e711b8b7e1dc7755951ccf0728a3d67fcaa6935f4f1f6088364",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10005,
+      "fixture_seed": 9305,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        13.9
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10005-f9305-p1-direct_guide-sitebait1-ba108692.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10006-f9306-p1-direct_guide-sitebait1-b475e020.json",
+      "receipt_sha256": "15cfb59f76c92cf3d548775a59c34f61de35bfcff4f5d12c3990e3c274550572",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10006,
+      "fixture_seed": 9306,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        30.6
+      ],
+      "deaths": [
+        {
+          "time": 30.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10006-f9306-p1-direct_guide-sitebait1-b475e020.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10006-f9306-p1-direct_guide-sitebait1-fb9f01e0.json",
+      "receipt_sha256": "0eb086da1ffd073b4be9408171b0461410a4e7c1b62f6781bdeffa3df13081eb",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10006,
+      "fixture_seed": 9306,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        24.6
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10006-f9306-p1-direct_guide-sitebait1-fb9f01e0.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10007-f9307-p1-direct_guide-sitebait1-5b371614.json",
+      "receipt_sha256": "16e9c0076650981e88a07468924f81fee5c2202b4896f30506c07179a91448e9",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10007,
+      "fixture_seed": 9307,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        75.5
+      ],
+      "deaths": [
+        {
+          "time": 75.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10007-f9307-p1-direct_guide-sitebait1-5b371614.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10007-f9307-p1-direct_guide-sitebait1-a8e610e2.json",
+      "receipt_sha256": "8901730ce9151833c3c32db2f1d89d29e29ec65ae55c3d9f03fc0e754608b795",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10007,
+      "fixture_seed": 9307,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        53.8
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 1,
+      "target_losses_after_delivery": 1,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10007-f9307-p1-direct_guide-sitebait1-a8e610e2.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10008-f9308-p1-direct_guide-sitebait1-5906e11f.json",
+      "receipt_sha256": "3eb5b88363d2c3f48f80867ab896d80ce508974fc0cdcc020d2860cf73148d01",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10008,
+      "fixture_seed": 9308,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 52.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10008-f9308-p1-direct_guide-sitebait1-5906e11f.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10012-f9412-p1-direct_guide-sitebait1-4c73ffba.json",
+      "receipt_sha256": "7cb742b2d35f32e3617a0fea54da45d269f865bc75558357f5f33d4960a80846",
+      "policy": "simple_chase.policy_v13_close_reacquire:SimpleChase",
+      "policy_hash": "f6bed4e62dfc8f385f3f5ebd2cbca39764e62429b26c613512859d8376afd88f",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10012,
+      "fixture_seed": 9412,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        8.9
+      ],
+      "deaths": [
+        {
+          "time": 8.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10012-f9412-p1-direct_guide-sitebait1-4c73ffba.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10012-f9412-p1-direct_guide-sitebait1-b6d008ea.json",
+      "receipt_sha256": "8761bbcde2daa241ec74469993e5923536c8f4e0ef75ab296fd038131990f7d4",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10012,
+      "fixture_seed": 9412,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10012-f9412-p1-direct_guide-sitebait1-b6d008ea.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10013-f9413-p1-direct_guide-sitebait1-d8422528.json",
+      "receipt_sha256": "f49a4b68afe71d913a3d982795d5ddf31785a430af7169a58263303a10269eb0",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10013,
+      "fixture_seed": 9413,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        41.6
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10013-f9413-p1-direct_guide-sitebait1-d8422528.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10014-f9414-p1-direct_guide-sitebait1-01717c4b.json",
+      "receipt_sha256": "87e2909e970bea53f302c68411569da7e5ff3200c262c39f0a76786afafcd073",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10014,
+      "fixture_seed": 9414,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 119.0,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10014-f9414-p1-direct_guide-sitebait1-01717c4b.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10014-f9414-p1-direct_guide-sitebait1-54f60c2e.json",
+      "receipt_sha256": "16a07e7dfabdeeb4ca20843d4e73b8497bfc6babbed8b6ffe9914b39cd7fef91",
+      "policy": "simple_chase.policy_v13_close_reacquire:SimpleChase",
+      "policy_hash": "f6bed4e62dfc8f385f3f5ebd2cbca39764e62429b26c613512859d8376afd88f",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10014,
+      "fixture_seed": 9414,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        52.3
+      ],
+      "deaths": [
+        {
+          "time": 52.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10014-f9414-p1-direct_guide-sitebait1-54f60c2e.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10014-f9414-p1-direct_guide-sitebait1-93ad21bd.json",
+      "receipt_sha256": "14ce854b4865b0dc4d5d52cacdd8dee37a48f5dfd2415af753551085f104dd17",
+      "policy": "simple_chase.policy_v12_close_hearing:SimpleChase",
+      "policy_hash": "2f7fc72269430b4e68c0143924fd991f6f47797e4c2aecb0e141b26cb26a233e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10014,
+      "fixture_seed": 9414,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        44.6
+      ],
+      "deaths": [
+        {
+          "time": 44.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10014-f9414-p1-direct_guide-sitebait1-93ad21bd.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10015-f9415-p1-direct_guide-sitebait1-3a9b23b5.json",
+      "receipt_sha256": "308f6285f0dd05f6717de287b9aebe9551aba636287220e1d4e504041c84db2e",
+      "policy": "simple_chase.policy_v13_close_reacquire:SimpleChase",
+      "policy_hash": "f6bed4e62dfc8f385f3f5ebd2cbca39764e62429b26c613512859d8376afd88f",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10015,
+      "fixture_seed": 9415,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        12.1
+      ],
+      "deaths": [
+        {
+          "time": 11.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10015-f9415-p1-direct_guide-sitebait1-3a9b23b5.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10015-f9415-p1-direct_guide-sitebait1-56f2cc8d.json",
+      "receipt_sha256": "4103ea0526815ba8eebe31eba44be4aecfa4c020f8bb0352617ff7c1687475e2",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10015,
+      "fixture_seed": 9415,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        25.7
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 1,
+      "target_losses_after_delivery": 1,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10015-f9415-p1-direct_guide-sitebait1-56f2cc8d.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10016-f9416-p1-direct_guide-sitebait1-03d50c97.json",
+      "receipt_sha256": "c1413cdd2f13861fa696a5c9602f07b8a79198b4c0d78fdf94abe00168d2b64b",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10016,
+      "fixture_seed": 9416,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10016-f9416-p1-direct_guide-sitebait1-03d50c97.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10016-f9416-p1-direct_guide-sitebait1-1fe1e1be.json",
+      "receipt_sha256": "d502ee713eb80d806853451e34d8dbe8fd1485315b2c9e7d87560878b7c7a684",
+      "policy": "simple_chase.policy_v14_relative_start:SimpleChase",
+      "policy_hash": "619eb59e58785eecc12c6184568801cc5632f2277bb25b2c575e92afc7277783",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10016,
+      "fixture_seed": 9416,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        17.1
+      ],
+      "deaths": [
+        {
+          "time": 17.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10016-f9416-p1-direct_guide-sitebait1-1fe1e1be.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10016-f9416-p1-direct_guide-sitebait1-e766fda5.json",
+      "receipt_sha256": "9404f2a7138ba42a3e0e02ddf0f2713ad374ad2bd54c653699f84e0cfb5b3e8b",
+      "policy": "simple_chase.policy_v13_close_reacquire:SimpleChase",
+      "policy_hash": "f6bed4e62dfc8f385f3f5ebd2cbca39764e62429b26c613512859d8376afd88f",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10016,
+      "fixture_seed": 9416,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10016-f9416-p1-direct_guide-sitebait1-e766fda5.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10017-f9417-p1-direct_guide-sitebait1-71f32c92.json",
+      "receipt_sha256": "1fd8e00afce0e6ecfde15e231a18f647afd74be87df69bb8b3b665d9d8226949",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10017,
+      "fixture_seed": 9417,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        8.2
+      ],
+      "deaths": [
+        {
+          "time": 138.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10017-f9417-p1-direct_guide-sitebait1-71f32c92.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10018-f9418-p1-direct_guide-sitebait1-978c19b1.json",
+      "receipt_sha256": "39ed447c4bab48b8929ee7ea3f78d1d557f6bb102cdcc642a3ad4c60cbb4e0ed",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10018,
+      "fixture_seed": 9418,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        52.9
+      ],
+      "deaths": [
+        {
+          "time": 124.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10018-f9418-p1-direct_guide-sitebait1-978c19b1.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10019-f9419-p1-direct_guide-sitebait1-a69c5ddc.json",
+      "receipt_sha256": "f63ffe089fbf9ca641c4ff441883b3fbab5dbefdf13ffafd8416766f6ee08162",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10019,
+      "fixture_seed": 9419,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        8.1
+      ],
+      "deaths": [
+        {
+          "time": 7.9,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10019-f9419-p1-direct_guide-sitebait1-a69c5ddc.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10020-f9420-p1-direct_guide-sitebait1-cf7503a7.json",
+      "receipt_sha256": "028474caaea62dd652a80026b5d275c6cbdd53472503dd1325167628faa26a84",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10020,
+      "fixture_seed": 9420,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        23.4
+      ],
+      "deaths": [
+        {
+          "time": 23.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10020-f9420-p1-direct_guide-sitebait1-cf7503a7.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10021-f9421-p1-direct_guide-sitebait1-02b72f1a.json",
+      "receipt_sha256": "f3ece3ebcfd45fe0cc9f489eef14f354f6368823ba50827595256818403648bb",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10021,
+      "fixture_seed": 9421,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 133.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10021-f9421-p1-direct_guide-sitebait1-02b72f1a.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10021-f9421-p1-direct_guide-sitebait1-b390359a.json",
+      "receipt_sha256": "5924a2daa73898971ee1efec251312e83030d5f06d3a84966a8bd9a45bc4b7c6",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10021,
+      "fixture_seed": 9421,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        38.3
+      ],
+      "deaths": [
+        {
+          "time": 38.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10021-f9421-p1-direct_guide-sitebait1-b390359a.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10022-f9422-p1-direct_guide-sitebait1-fb9542e7.json",
+      "receipt_sha256": "4bfd239bd20996bb7305420c35c3b65387363190779c93db5dfc2212de83dbb2",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10022,
+      "fixture_seed": 9422,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        13.5
+      ],
+      "deaths": [
+        {
+          "time": 13.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10022-f9422-p1-direct_guide-sitebait1-fb9542e7.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10023-f9423-p1-direct_guide-sitebait1-1979f980.json",
+      "receipt_sha256": "5f6d7de441965c098c4bfb2d3ff972e389f096cae2c6f03f5d7f3021a416dedd",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10023,
+      "fixture_seed": 9423,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        21.6
+      ],
+      "deaths": [
+        {
+          "time": 21.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10023-f9423-p1-direct_guide-sitebait1-1979f980.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10024-f9424-p1-direct_guide-sitebait1-df3373a6.json",
+      "receipt_sha256": "4ba33a057341a8f4d88fb54b767c7246c7c4936d23bf2c2bb84ed24079a9a909",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10024,
+      "fixture_seed": 9424,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        42.3
+      ],
+      "deaths": [
+        {
+          "time": 83.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10024-f9424-p1-direct_guide-sitebait1-df3373a6.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10025-f9425-p1-direct_guide-sitebait1-2e54451b.json",
+      "receipt_sha256": "35f6a8f98ae43634b0d6f14e038bddf1afeae6e978e510e70f3ac939526f66b8",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10025,
+      "fixture_seed": 9425,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        10.7
+      ],
+      "deaths": [
+        {
+          "time": 10.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10025-f9425-p1-direct_guide-sitebait1-2e54451b.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10026-f9426-p1-direct_guide-sitebait1-10625305.json",
+      "receipt_sha256": "0acf29ff118a0ba0341d0b65e122f9be50bd3ada35bb2b27e8dd13abf14a8e37",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10026,
+      "fixture_seed": 9426,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        14.4
+      ],
+      "deaths": [
+        {
+          "time": 14.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10026-f9426-p1-direct_guide-sitebait1-10625305.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10027-f9427-p1-direct_guide-sitebait1-1347ca56.json",
+      "receipt_sha256": "5afb47ae538695dc6eba34820d5dd03af5eab533f9cc8a57ac3aa85b04253e50",
+      "policy": "simple_chase.policy_v10_approach_lane:SimpleChase",
+      "policy_hash": "7e6cfad20eea082aa83e66a8cb505fe9ee9d19a5efb6aa601d6877a8bbd2d1e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10027,
+      "fixture_seed": 9427,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        6.1
+      ],
+      "deaths": [
+        {
+          "time": 5.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10027-f9427-p1-direct_guide-sitebait1-1347ca56.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10029-f9529-p1-direct_guide-sitebait1-ed724abc.json",
+      "receipt_sha256": "163e1655af778de608e78711252550a8111dc35cda55da601dcbe55cdf46e541",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10029,
+      "fixture_seed": 9529,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        10.5
+      ],
+      "deaths": [
+        {
+          "time": 10.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10029-f9529-p1-direct_guide-sitebait1-ed724abc.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10032-f9632-p1-direct_guide-sitebait1-d270d47a.json",
+      "receipt_sha256": "1d14e1b655c03c75d392ab2b28493b5e1c74acd2b1555abae3bcab0e31ab7527",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10032,
+      "fixture_seed": 9632,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        17.8
+      ],
+      "deaths": [
+        {
+          "time": 17.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10032-f9632-p1-direct_guide-sitebait1-d270d47a.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10032-f9632-p1-direct_guide-sitebait1-f51fc790.json",
+      "receipt_sha256": "7aceef832f48a987403b3247e3b50f20a61794b709b4e276c1173df717b68173",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10032,
+      "fixture_seed": 9632,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 8.9,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10032-f9632-p1-direct_guide-sitebait1-f51fc790.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10033-f9633-p1-direct_guide-sitebait1-644afb39.json",
+      "receipt_sha256": "170e685dbffadf239596a47937dfc0d89db9e2b980e5ef7bf05a9fb7b83d946a",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10033,
+      "fixture_seed": 9633,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        175.1
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10033-f9633-p1-direct_guide-sitebait1-644afb39.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10034-f9634-p1-direct_guide-sitebait1-f062aff5.json",
+      "receipt_sha256": "cb792f28a3f745a52bcbe5fbbfc15f2a68556116059fdc942213881cafa8489d",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10034,
+      "fixture_seed": 9634,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        18.4
+      ],
+      "deaths": [
+        {
+          "time": 18.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10034-f9634-p1-direct_guide-sitebait1-f062aff5.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10035-f9635-p1-direct_guide-sitebait1-02fe0432.json",
+      "receipt_sha256": "9a98288d672061c6650080b437eb6bbb94d482b2f938f7484b7fbf5eb2ae5257",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10035,
+      "fixture_seed": 9635,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        14.4
+      ],
+      "deaths": [
+        {
+          "time": 12.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10035-f9635-p1-direct_guide-sitebait1-02fe0432.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10036-f9636-p1-direct_guide-sitebait1-cd3bb499.json",
+      "receipt_sha256": "f327d5c3725359241f6f57002fdb89197c7a415f2e5202aef260a8403ffe5163",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10036,
+      "fixture_seed": 9636,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        33.2
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10036-f9636-p1-direct_guide-sitebait1-cd3bb499.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10037-f9637-p1-direct_guide-sitebait1-b35a661f.json",
+      "receipt_sha256": "e3d4c3a72134457f7389c26bd9c938abe60befdddeca70b5f6d9e3e4ea0d15ef",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10037,
+      "fixture_seed": 9637,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        21.7
+      ],
+      "deaths": [
+        {
+          "time": 21.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10037-f9637-p1-direct_guide-sitebait1-b35a661f.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10038-f9638-p1-direct_guide-sitebait1-24e3ac64.json",
+      "receipt_sha256": "c4df0aabc38f285f79dc6f7438fe0b913a44f5d9166aa67f6d7dc7b7c54dcd08",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10038,
+      "fixture_seed": 9638,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        5.2
+      ],
+      "deaths": [
+        {
+          "time": 5.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10038-f9638-p1-direct_guide-sitebait1-24e3ac64.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10038-f9638-p1-direct_guide-sitebait1-6d9944ce.json",
+      "receipt_sha256": "54c1e76f528842324bcba55efc32f823a33bd7e8dfdf55c05e1f9ba61172fe74",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10038,
+      "fixture_seed": 9638,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 3.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10038-f9638-p1-direct_guide-sitebait1-6d9944ce.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10038-f9638-p1-direct_guide-sitebait1-8e3d8caf.json",
+      "receipt_sha256": "b0396c63397dd6177646e9bcc6aad878e22d555c250f034e2db0dab3371a834b",
+      "policy": "simple_chase.policy_v17_wall_clearance:SimpleChase",
+      "policy_hash": "19b8fb8c47faa5b0b709d5dd1be2c4f0e4ace9d4d5848f7fa9f7adddd12e069a",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10038,
+      "fixture_seed": 9638,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 5.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10038-f9638-p1-direct_guide-sitebait1-8e3d8caf.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10039-f9639-p1-direct_guide-sitebait1-e7b15b1e.json",
+      "receipt_sha256": "886e70a95716007dde3e33f44995618d536b29fef055e9fb281819c137b83de2",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10039,
+      "fixture_seed": 9639,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        19.4
+      ],
+      "deaths": [
+        {
+          "time": 19.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10039-f9639-p1-direct_guide-sitebait1-e7b15b1e.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10040-f9640-p1-direct_guide-sitebait1-9f51e588.json",
+      "receipt_sha256": "00acdee6cae0552da4c9854040feb5b7c876c6c925ba86a6bf517d2231a200f9",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10040,
+      "fixture_seed": 9640,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 3.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10040-f9640-p1-direct_guide-sitebait1-9f51e588.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10040-f9640-p1-direct_guide-sitebait1-f70f0c17.json",
+      "receipt_sha256": "a07532750e1c28bb77816eaf283fb04aae4c3ff0a07b25d3fa86763fca6ce970",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10040,
+      "fixture_seed": 9640,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 3.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10040-f9640-p1-direct_guide-sitebait1-f70f0c17.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10041-f9641-p1-direct_guide-sitebait1-3b517f77.json",
+      "receipt_sha256": "67fb5b82338007dc5f53a53f583cb3944e89538464ff8555c8687b4a7d6e0a26",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10041,
+      "fixture_seed": 9641,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        44.1
+      ],
+      "deaths": [
+        {
+          "time": 43.9,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10041-f9641-p1-direct_guide-sitebait1-3b517f77.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10042-f9642-p1-direct_guide-sitebait1-0edca1cf.json",
+      "receipt_sha256": "fab5e1ced3e5cc927461cbc575ab31d5a2c8fff44eb3bf2f6501d2a7ad189ea1",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10042,
+      "fixture_seed": 9642,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        20.9
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10042-f9642-p1-direct_guide-sitebait1-0edca1cf.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10043-f9643-p1-direct_guide-sitebait1-64827ef5.json",
+      "receipt_sha256": "2d060939d2708d9aa443bf9a3c75e152db4ba18651c6edb4f25b8e7b67a361d5",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10043,
+      "fixture_seed": 9643,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        13.3
+      ],
+      "deaths": [
+        {
+          "time": 13.1,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10043-f9643-p1-direct_guide-sitebait1-64827ef5.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10043-f9643-p1-direct_guide-sitebait1-9b2cc5f1.json",
+      "receipt_sha256": "393c1e5ac827d1f0b1c4eb35cfdd0ac0d074a45da1059e3d2fa5094d174d533f",
+      "policy": "simple_chase.policy_v17_wall_clearance:SimpleChase",
+      "policy_hash": "19b8fb8c47faa5b0b709d5dd1be2c4f0e4ace9d4d5848f7fa9f7adddd12e069a",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10043,
+      "fixture_seed": 9643,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 0.6,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10043-f9643-p1-direct_guide-sitebait1-9b2cc5f1.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10043-f9643-p1-direct_guide-sitebait1-de6e083c.json",
+      "receipt_sha256": "9d4a7286280e5eb7c10c4f12ce3fdd579a60de463470d8c6e69ac59ed77dfa10",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10043,
+      "fixture_seed": 9643,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 0.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10043-f9643-p1-direct_guide-sitebait1-de6e083c.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10044-f9644-p1-direct_guide-sitebait1-8400c865.json",
+      "receipt_sha256": "5444c63029f4db430c27b8c451ec3143749b3732b0e9df0dbc646a7e4eccda5b",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10044,
+      "fixture_seed": 9644,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        61.5
+      ],
+      "deaths": [
+        {
+          "time": 61.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10044-f9644-p1-direct_guide-sitebait1-8400c865.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10045-f9645-p1-direct_guide-sitebait1-adf5f436.json",
+      "receipt_sha256": "aec11c0df41006504c5d82523f2205f8c7d9b7abcbdc460af73e78e2ec6f9886",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10045,
+      "fixture_seed": 9645,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        17.5
+      ],
+      "deaths": [
+        {
+          "time": 17.4,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10045-f9645-p1-direct_guide-sitebait1-adf5f436.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10045-f9645-p1-direct_guide-sitebait1-e66be5d7.json",
+      "receipt_sha256": "90527303851f7c0bda47374e4a02f89ddf3bd3a14ac20ad99fbc8db183748e3f",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10045,
+      "fixture_seed": 9645,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 3.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10045-f9645-p1-direct_guide-sitebait1-e66be5d7.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10046-f9646-p1-direct_guide-sitebait1-c4010b2d.json",
+      "receipt_sha256": "3b9a2a267f30e6b0f2d2d44cccf223d55bf27a129078078a7eada1f525a38dd7",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10046,
+      "fixture_seed": 9646,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        132.0
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10046-f9646-p1-direct_guide-sitebait1-c4010b2d.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10047-f9647-p1-direct_guide-sitebait1-23957172.json",
+      "receipt_sha256": "39d47e2d5ecc0e3f9157130bdcac0127644fced39a8e5b4f4c9b51a17f838848",
+      "policy": "simple_chase.policy_v15_direct_escape:SimpleChase",
+      "policy_hash": "b3dbdeeba0ff18cc476aff8dd5eee323dfbe1be20fa8b386edf1bca5c40f78cf",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10047,
+      "fixture_seed": 9647,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        13.0
+      ],
+      "deaths": [
+        {
+          "time": 162.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 1,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10047-f9647-p1-direct_guide-sitebait1-23957172.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10048-f9748-p1-direct_guide-sitebait1-71450a5b.json",
+      "receipt_sha256": "92b402ee38182340202b4c53c8816eb8c472041dfafc6271e112d9f667440893",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10048,
+      "fixture_seed": 9748,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        53.4
+      ],
+      "deaths": [
+        {
+          "time": 3.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10048-f9748-p1-direct_guide-sitebait1-71450a5b.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10049-f9749-p1-direct_guide-sitebait1-9c7e1c00.json",
+      "receipt_sha256": "4737edf2082303b6bf02b93a6003aad8a0a6f990755d51bbaf550d63ff3d7c57",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10049,
+      "fixture_seed": 9749,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        10.9
+      ],
+      "deaths": [
+        {
+          "time": 10.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10049-f9749-p1-direct_guide-sitebait1-9c7e1c00.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10050-f9750-p1-direct_guide-sitebait1-874c953f.json",
+      "receipt_sha256": "777a8a0a3cbcb39924d9485852511d48a4a10c1b0e160de31be475bdbcc387a9",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10050,
+      "fixture_seed": 9750,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        10.4
+      ],
+      "deaths": [
+        {
+          "time": 10.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10050-f9750-p1-direct_guide-sitebait1-874c953f.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m10051-f9751-p1-direct_guide-sitebait1-fa2cfb66.json",
+      "receipt_sha256": "16fada4b3c67172a73649b3c7a74c9a2b8e88cd0d5676e5ed9c9b76d16799f1e",
+      "policy": "simple_chase.policy_v18_escape_lookahead:SimpleChase",
+      "policy_hash": "33d6c5e3b116aa1e9fbf4e5a936d01ef1da3b8e92f964f26826237749c66c010",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 10051,
+      "fixture_seed": 9751,
+      "seconds": 180.0,
+      "requested_seconds": 180.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        83.3
+      ],
+      "deaths": [
+        {
+          "time": 83.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m10051-f9751-p1-direct_guide-sitebait1-fa2cfb66.json.gz",
+      "replay_frames": 1801
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-34249891.json",
+      "receipt_sha256": "a7a908afde63f0dbf0c1bf0240954daa9ee873b46fa445679126da530ce79689",
+      "policy": "simple_chase.policy_v4_final_contact:SimpleChase",
+      "policy_hash": "6681988bdf5e7267608f50dcd28529e1ab2bd78b352f0f35e6f7add41eb31a0b",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9201,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-34249891.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-6214de4e.json",
+      "receipt_sha256": "4947c65b92d371f184921080a14e04918e915b7a0ec124e5a683bdb7851d3257",
+      "policy": "simple_chase.policy_v7_bounded_spacing:SimpleChase",
+      "policy_hash": "836d2fe2256a069df0e360d273e1a02d5a0f10b2f1d0ec7f5e7e8d25d2c453cb",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming.py": "67c88010adcd1b2d51e2e154ca9284eaab791cfd4369e4daee5aaa841fd2e865",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder.py": "d52d828c21b076029af753754f07b0f8a663e0ac9464e32caedee8ad9246b17d"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9201,
+      "seconds": 90.0,
+      "requested_seconds": 90.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        12.7
+      ],
+      "deaths": [
+        {
+          "time": 12.6,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-6214de4e.json.gz",
+      "replay_frames": 901
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-baeb9241.json",
+      "receipt_sha256": "bbcfe639443eefbe4cd3e490341c9a7508eae112f4aa3a203163bc7dbe2ff476",
+      "policy": "simple_chase.policy_v3_repath:SimpleChase",
+      "policy_hash": "f11949b7bc37d1750326d9f739081e679aa47bd9434a6915104ebe68dd4a40e3",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9201,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-baeb9241.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-d259e904.json",
+      "receipt_sha256": "d658491d8b720745926b0255fbba71a00442619c8dd320ac8ac63568948eb442",
+      "policy": "simple_chase.policy_v6_close_final:SimpleChase",
+      "policy_hash": "11b904befd09e05f1af8d2add37cae943044eb034ceae4eb553e624fed7cbfd9",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9201,
+      "seconds": 90.0,
+      "requested_seconds": 90.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-d259e904.json.gz",
+      "replay_frames": 901
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-efa23d6e.json",
+      "receipt_sha256": "d489363a205ebc26d8d7089ad300a8b5dcb21e8e743925f67e0a8d376498e04f",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9201,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        30.3
+      ],
+      "deaths": [
+        {
+          "time": 29.5,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9201-p1-direct_guide-sitebait1-efa23d6e.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9202-p1-direct_guide-sitebait1-42262e74.json",
+      "receipt_sha256": "2e8c48cb6496a89663f1393fd482b012c1b7ebd3e15a1ec31700afe5a6b3a72e",
+      "policy": "simple_chase.policy_v7_bounded_spacing:SimpleChase",
+      "policy_hash": "836d2fe2256a069df0e360d273e1a02d5a0f10b2f1d0ec7f5e7e8d25d2c453cb",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming.py": "67c88010adcd1b2d51e2e154ca9284eaab791cfd4369e4daee5aaa841fd2e865",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder.py": "d52d828c21b076029af753754f07b0f8a663e0ac9464e32caedee8ad9246b17d"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9202,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 18.2,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9202-p1-direct_guide-sitebait1-42262e74.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9202-p1-direct_guide-sitebait1-4feee79d.json",
+      "receipt_sha256": "449d84854ed7955f3f103967c35503d6e228fb5715219d3f3f8cc8462d7b332b",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming.py": "67c88010adcd1b2d51e2e154ca9284eaab791cfd4369e4daee5aaa841fd2e865",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder.py": "d52d828c21b076029af753754f07b0f8a663e0ac9464e32caedee8ad9246b17d"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9202,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        31.5
+      ],
+      "deaths": [
+        {
+          "time": 31.3,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9202-p1-direct_guide-sitebait1-4feee79d.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-13ea7366.json",
+      "receipt_sha256": "4432913e185f8c47b2f0beafd8350c080f367a82dbb7d9e1f5347c328a340527",
+      "policy": "simple_chase.policy_v3_repath:SimpleChase",
+      "policy_hash": "f11949b7bc37d1750326d9f739081e679aa47bd9434a6915104ebe68dd4a40e3",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming.py": "67c88010adcd1b2d51e2e154ca9284eaab791cfd4369e4daee5aaa841fd2e865",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder.py": "d52d828c21b076029af753754f07b0f8a663e0ac9464e32caedee8ad9246b17d"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 3000.0,
+      "requested_seconds": 3000.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        21.9
+      ],
+      "deaths": [
+        {
+          "time": 21.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-13ea7366.json.gz",
+      "replay_frames": 30001
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-76cfee4a.json",
+      "receipt_sha256": "b776ac07ce304f230b541c86df2c90bb27fe82763c7bdde26fcb653d00f2e16c",
+      "policy": "simple_chase.policy:SimpleChase",
+      "policy_hash": "5f69427f96a629969a2b5d1ed622c34afdfd4c7f8555cdd85e53ea6e389e6f32",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 23.2,
+      "requested_seconds": 60.0,
+      "reason": "stop sentinel",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-76cfee4a.json.gz",
+      "replay_frames": 233
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-9590e974.json",
+      "receipt_sha256": "487e0dd8166abc9fcca5b9773dbe093f8f6917921b70179c79a10220afe04245",
+      "policy": "simple_chase.policy:SimpleChase",
+      "policy_hash": "5f69427f96a629969a2b5d1ed622c34afdfd4c7f8555cdd85e53ea6e389e6f32",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 90.0,
+      "requested_seconds": 90.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [
+        {
+          "time": 23.7,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-9590e974.json.gz",
+      "replay_frames": 901
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-a8893f0d.json",
+      "receipt_sha256": "75bc3645587e7dcd90ca862c5bc82ce002afa4acb60d66d9542b44add295c939",
+      "policy": "simple_chase.policy_v8_latency_spacing:SimpleChase",
+      "policy_hash": "2cff4718f66142a814eef5d727854001b865c4800aa0b4c4e4e8b26138ad2a0e",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming_v2.py": "837e02b05d1ba3af71df0949cb30beb18a8b2844f090f8b383c692192c52719a",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder_v2.py": "d5ecda6bb39ec74a9ad86fb20458df5de7f466d73052558af9e2877be3d99b19"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        34.6
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-a8893f0d.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-bc81e766.json",
+      "receipt_sha256": "7551bb0f9c68cf1174ff37372f345717bbf0b214cc12efa5ad91709c56ad6ae1",
+      "policy": "simple_chase.policy_v3_repath:SimpleChase",
+      "policy_hash": "f11949b7bc37d1750326d9f739081e679aa47bd9434a6915104ebe68dd4a40e3",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 1174.6,
+      "requested_seconds": 3000.0,
+      "reason": "stop sentinel",
+      "success": false,
+      "guided_delivery_times": [
+        21.9
+      ],
+      "deaths": [
+        {
+          "time": 21.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-bc81e766.json.gz",
+      "replay_frames": 11747
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-dab0af9c.json",
+      "receipt_sha256": "cb7e7cf4234c34c642bf4374a52fee586f7e1c66b6012e567109f3e1d5d1add7",
+      "policy": "simple_chase.policy_v3_repath:SimpleChase",
+      "policy_hash": "f11949b7bc37d1750326d9f739081e679aa47bd9434a6915104ebe68dd4a40e3",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 90.0,
+      "requested_seconds": 90.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        21.9
+      ],
+      "deaths": [
+        {
+          "time": 21.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-dab0af9c.json.gz",
+      "replay_frames": 901
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-dd9f08b5.json",
+      "receipt_sha256": "bb3737b8ff49b7a3a8c68cb4f21435ce4d9c695a7ff280923522de34a1c7919f",
+      "policy": "simple_chase.policy_v7_bounded_spacing:SimpleChase",
+      "policy_hash": "836d2fe2256a069df0e360d273e1a02d5a0f10b2f1d0ec7f5e7e8d25d2c453cb",
+      "harness_hashes": {
+        "research/simple_chase/run_streaming.py": "67c88010adcd1b2d51e2e154ca9284eaab791cfd4369e4daee5aaa841fd2e865",
+        "research/simple_chase/sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "research/simple_chase/static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c",
+        "debugger/streaming_recorder.py": "d52d828c21b076029af753754f07b0f8a663e0ac9464e32caedee8ad9246b17d"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 120.0,
+      "requested_seconds": 120.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        21.9
+      ],
+      "deaths": [
+        {
+          "time": 21.8,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-dd9f08b5.json.gz",
+      "replay_frames": 1201
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-e53109c8.json",
+      "receipt_sha256": "f8d22d68a1801b75ccacbe3556a7597759065a1194982dae5f855cd298b8cfdb",
+      "policy": "simple_chase.policy_v2_axial_runup:SimpleChase",
+      "policy_hash": "0dd534430fc1420036ab34470b86cd112840b1d550613a4769384c8a4985f272",
+      "harness_hashes": {
+        "run_aligned.py": "caa4343619d415d4ae277ed8bfda903c9bf9d9bebe15e4db878cb67be311c608",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 90.0,
+      "requested_seconds": 90.0,
+      "reason": "horizon",
+      "success": true,
+      "guided_delivery_times": [
+        1.0
+      ],
+      "deaths": [
+        {
+          "time": 0.6,
+          "agent_id": 1,
+          "role": "parent_guide"
+        }
+      ],
+      "bait_alive": true,
+      "guide_alive": false,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": true,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-e53109c8.json.gz",
+      "replay_frames": 901
+    },
+    {
+      "receipt": "real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-eaf1aa5f.json",
+      "receipt_sha256": "f30bc31e7af650a7769004d70785f3d248fc3756cc69adee33e137705d46e432",
+      "policy": "simple_chase.policy_v2_axial_runup:SimpleChase",
+      "policy_hash": "0dd534430fc1420036ab34470b86cd112840b1d550613a4769384c8a4985f272",
+      "harness_hashes": {
+        "run.py": "d84e036e35ae15aeaf3e193d41458cc329d84f4a1dbbbe83a7610681b95bcf27",
+        "sampling.py": "1efb7d309c4cc79bc87916c1bea72a7845e78d0c2cdf0aeaf9e2a758ceed48ab",
+        "static_map.py": "197b16cbe9dd2e3dd06b81fe9481986a97bd92d9c2a55f33597cc9b7280faf3c"
+      },
+      "map_seed": 5101,
+      "fixture_seed": 9203,
+      "seconds": 90.0,
+      "requested_seconds": 90.0,
+      "reason": "horizon",
+      "success": false,
+      "guided_delivery_times": [
+        null
+      ],
+      "deaths": [],
+      "bait_alive": true,
+      "guide_alive": true,
+      "physical_losses_after_delivery": 0,
+      "target_losses_after_delivery": 0,
+      "arranged_aligned_final_approach": null,
+      "outcome": null,
+      "replay": "results/simple_chase/replays/real-map-SimpleChase-m5101-f9203-p1-direct_guide-sitebait1-eaf1aa5f.json.gz",
+      "replay_frames": 901
+    }
+  ]
+}

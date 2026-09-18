@@ -1,0 +1,159 @@
+{
+  "status": "new_reproduction",
+  "provenance": {
+    "source_name": "acquisition.json",
+    "source_sha256": "d83be7f82b60c1bd8eddc4119ccb8adef433c8e58a586b981039d9e7bb0e075b",
+    "row_index": 2,
+    "fidelity_note": "Archived controller and base source hashes match the historical result; recording and diagnostic harness is current.",
+    "configuration_changes": [],
+    "historical_experiment_sha256": {
+      "advance.py": "05af7692538b5c289b99cce4e9118e08054a7cab9bc78972a054eeefe24bd17d",
+      "base_snapshot.py": "50b4995d1a63cbc8cda9626c2b2f5466c47f2b1d3594c8813b9074c23f74a6ae",
+      "common.py": "4fb645622eb2bfde6cf6e6eaeefa78f4474b14874f0d557bca5c24dd82d7ada5",
+      "controller.py": "72a270e29dec4c9d6a3731693258bbe1a8eb59ee526669b62d6483cd3575f196",
+      "run.py": "3a2aa126ebde5de1428a0bc1e1bf9fb74cf923271247daf20d32fd131b433f0d",
+      "sites.py": "f310a2e555929fdaf54da68d6530ba59d724a102bcc45e38756f936cfd6c7505"
+    }
+  },
+  "metric_differences": {},
+  "result": {
+    "case": {
+      "native": true,
+      "seed": 23,
+      "site": {
+        "center": [
+          1223.9131759111665,
+          944.5075961234938
+        ],
+        "angle": 1.3962634015954636,
+        "width": 56.0,
+        "common_water_width": 45.0,
+        "obstructed_samples": 29,
+        "nearby_native_trees": [
+          [],
+          []
+        ],
+        "nearby_native_fruits": [
+          [
+            {
+              "position": [
+                1154.9681623853428,
+                880.4821351014166
+              ],
+              "energy": 20
+            },
+            {
+              "position": [
+                1162.866001340374,
+                773.0866797384293
+              ],
+              "energy": 20
+            },
+            {
+              "position": [
+                1271.6616288113837,
+                733.305900495424
+              ],
+              "energy": 20
+            }
+          ],
+          []
+        ]
+      },
+      "site_index": 3,
+      "collision_model": true,
+      "seconds": 75,
+      "outside": 30,
+      "heading": 0.15
+    },
+    "elapsed_s": 0.30000000000000004,
+    "alive": 1,
+    "score": -1.0768853955256212,
+    "acquired_s": null,
+    "water_fraction": 0.3333333333333333,
+    "bait_attention_fraction": 1.0,
+    "joint_fraction": 0.3333333333333333,
+    "active_joint_fraction": 0.3333333333333333,
+    "after_acquisition_s": 0.0,
+    "after_acquisition_joint_fraction": 0.0,
+    "after_acquisition_water_fraction": 0.0,
+    "after_acquisition_attention_fraction": 0.0,
+    "first_capture_s": 0.30000000000000004,
+    "first_depletion_s": null,
+    "deaths": [
+      {
+        "t": 0.30000000000000004,
+        "id": 0,
+        "cause": "capture",
+        "energy": 137.68853955256213,
+        "age": 0.30000000000000004,
+        "max_age": 112.39354411680938
+      }
+    ],
+    "handoffs": [],
+    "births": [],
+    "newborn_localization": [],
+    "movement_turn_energy": {
+      "0": 12.011460447437884,
+      "1": 0.39404318470991484
+    },
+    "absorbed_native_fruit_energy": {},
+    "birth_energy_cost": 0,
+    "energy_remaining": {
+      "1": 149.3059568152901
+    },
+    "maximum_pose_error": 1.1368683772161603e-13,
+    "worker_living_seconds": 0.0,
+    "worker_captures": 0,
+    "maximum_predators": 1,
+    "trace": [
+      {
+        "t": 0.1,
+        "active": [
+          0,
+          1
+        ],
+        "agents": [
+          {
+            "id": 0,
+            "uv": [
+              28.000000000000036,
+              3.087627302110652e-14
+            ],
+            "energy": 148.9,
+            "age": 0.1
+          },
+          {
+            "id": 1,
+            "uv": [
+              30.000000000000014,
+              59.999999999999915
+            ],
+            "energy": 149.5805086292275,
+            "age": 0.1
+          }
+        ],
+        "predators": [
+          {
+            "uv": [
+              43.042167728316876,
+              -1.1239456090910718
+            ],
+            "water": false,
+            "target": 0
+          }
+        ],
+        "pose_error": 0,
+        "score": 0.1
+      }
+    ],
+    "fallback_s": null,
+    "recording": {
+      "path": "results/water_deployment/replays/Mapped-water-deployment-v52ed8cdb-seed23-b787a301000d.json.gz",
+      "duration": 0.3,
+      "score": -1.0769,
+      "frames": 2,
+      "reason": "loss or extinction stopped the run"
+    }
+  }
+}

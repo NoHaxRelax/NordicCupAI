@@ -1,0 +1,1868 @@
+{
+  "scope": "Bounded native-physics trap protocols with explicitly privileged fixture control.\n\nControllers know exact geometry and creature positions in this experiment.\nThis tests feasibility, not observation-only deployment or native game scores.\nAll agents start with 150 energy; flat forest, fixed walls, no food or new spawns.\nEvery living agent receives exactly one legal action per tick; every run records.\n",
+  "runs": [
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 20,
+      "initial_rest": false,
+      "seconds": 0.1,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 0.1,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d20-rest0-8b0146a2fc.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            827.0,
+            600.0
+          ],
+          "holder_alive": false
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 20,
+      "initial_rest": false,
+      "seconds": 0.1,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 0.1,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d20-rest0-bbe15fb22b.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            827.0,
+            600.0
+          ],
+          "holder_alive": false
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 20,
+      "initial_rest": true,
+      "seconds": 3.5,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 3.5,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d20-rest1-88bda3744b.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 20,
+      "initial_rest": true,
+      "seconds": 3.5,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 3.5,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d20-rest1-b47d599849.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            842.0,
+            600
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 70,
+      "initial_rest": false,
+      "seconds": 0.4,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 0.1,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 0.4,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d70-rest0-aad3d2decf.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            877.0,
+            600.0
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 70,
+      "initial_rest": false,
+      "seconds": 0.5,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 0.5,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d70-rest0-f036c0c558.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            877.669952663116,
+            604.4328030999201
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 70,
+      "initial_rest": true,
+      "seconds": 3.8,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 3.5,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 3.8,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d70-rest1-9b890dcfcd.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 70,
+      "initial_rest": true,
+      "seconds": 3.8,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 3.5,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 3.8,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d70-rest1-60082624a2.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            892.0,
+            600
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 1.0,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 0.7,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 1.0,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d160-rest0-d5a44993f4.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            967.0,
+            600.0
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 160,
+      "initial_rest": false,
+      "seconds": 35.0,
+      "holder_alive": true,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": true,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d160-rest0-fe6c8f26d1.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            970.5144270281559,
+            590.352118703651
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            845.6518998180734,
+            631.2299217595975
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            791.0106980738118,
+            733.035410048718
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            759.0797053107785,
+            838.1389707697286
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.353288844938,
+            606.7854894807155
+          ],
+          "new_position": [
+            741.701934311553,
+            946.6461700541045
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4731716974685,
+            606.7799093845323
+          ],
+          "new_position": [
+            708.3492287489024,
+            1051.275960426459
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.1356666265474,
+            606.5201605570857
+          ],
+          "new_position": [
+            642.8889960886277,
+            1137.7598472627544
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.1008158917477,
+            584.4342540405804
+          ],
+          "new_position": [
+            543.9160716716633,
+            1111.0609977589284
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.9261087014502,
+            584.4281382468321
+          ],
+          "new_position": [
+            466.9496283215304,
+            1033.18731842311
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.9664260864527,
+            606.2420260574547
+          ],
+          "new_position": [
+            432.7525886182627,
+            929.3330958016019
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5192581134687,
+            595.3376368100934
+          ],
+          "new_position": [
+            412.0196804833789,
+            822.8413375551897
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5192581134687,
+            595.3376368100934
+          ],
+          "new_position": [
+            426.20098193311037,
+            714.3362454821718
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5192581134687,
+            595.3376368100934
+          ],
+          "new_position": [
+            442.4847696962293,
+            605.8045849526733
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.4494951812728,
+            580.3531393458443
+          ],
+          "new_position": [
+            445.4016423982973,
+            496.0035925244536
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 14.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.6131604862143,
+            580.2599514426606
+          ],
+          "new_position": [
+            444.83348860145907,
+            485.0182749931695
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 15.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.389333639143,
+            610.2546405532656
+          ],
+          "new_position": [
+            444.83348860145907,
+            485.0182749931695
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 16.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.7729319109109,
+            588.3529620568233
+          ],
+          "new_position": [
+            444.83348860145907,
+            485.0182749931695
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 17.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.6136628889327,
+            610.1345844490628
+          ],
+          "new_position": [
+            442.03871963648805,
+            430.1731455774058
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 18.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.747320832011,
+            588.0151836045656
+          ],
+          "new_position": [
+            422.31876801730624,
+            322.02275606232496
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 19.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.8460421111243,
+            588.0993678535086
+          ],
+          "new_position": [
+            401.71413956376455,
+            214.06248738417614
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 20.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.5663710048254,
+            609.8796636806356
+          ],
+          "new_position": [
+            361.3422211708867,
+            112.09040728901928
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 21.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.818267584154,
+            587.7613191895665
+          ],
+          "new_position": [
+            276.39673256276313,
+            54.404109963579074
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 22.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.239651274648,
+            598.6744476176011
+          ],
+          "new_position": [
+            184.448005965693,
+            114.09734407698642
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 23.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.239651274648,
+            598.6744476176011
+          ],
+          "new_position": [
+            109.71800482774275,
+            194.22287157784385
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 24.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.239651274648,
+            598.6744476176011
+          ],
+          "new_position": [
+            80.19119359282502,
+            298.0697113309245
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 25.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.239651274648,
+            598.6744476176011
+          ],
+          "new_position": [
+            113.7240916635627,
+            402.402844533803
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 26.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5716680024191,
+            583.6696208133823
+          ],
+          "new_position": [
+            158.7985310660522,
+            502.34422378932453
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 27.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            772.4770052934488,
+            613.6009877284482
+          ],
+          "new_position": [
+            212.1810821772581,
+            598.2099072088878
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 28.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.5298680035839,
+            591.5782032278428
+          ],
+          "new_position": [
+            256.01436464420834,
+            698.8532327801057
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 29.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.1593506164546,
+            591.5495821435045
+          ],
+          "new_position": [
+            317.9009066290215,
+            789.3326600101894
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 30.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.6554176242429,
+            613.5154363225977
+          ],
+          "new_position": [
+            387.74302545146014,
+            873.9970897835982
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 31.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9209357156993,
+            591.5227782896369
+          ],
+          "new_position": [
+            464.26211055812684,
+            952.8506051645932
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 32.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9642807547506,
+            591.5700919114029
+          ],
+          "new_position": [
+            552.7289290444921,
+            1017.9673423248728
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 33.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.9946784489813,
+            613.4413309241357
+          ],
+          "new_position": [
+            645.2025616552132,
+            1074.9089557350487
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 34.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3947756653976,
+            591.5080690409502
+          ],
+          "new_position": [
+            739.0276915022447,
+            1130.7328545924413
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 160,
+      "initial_rest": true,
+      "seconds": 4.4,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 4.1,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 4.4,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d160-rest1-8ea00b6b9e.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.353288844938,
+            606.7854894807155
+          ],
+          "new_position": [
+            877.0,
+            600.0
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 160,
+      "initial_rest": true,
+      "seconds": 13.7,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 8.4,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 13.7,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d160-rest1-c3ca9577cf.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            982.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.353288844938,
+            606.7854894807155
+          ],
+          "new_position": [
+            895.0294041403204,
+            590.4988743267514
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4731716974685,
+            606.7799093845323
+          ],
+          "new_position": [
+            868.7619877221665,
+            737.1395074041052
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 6.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.1356666265474,
+            606.5201605570857
+          ],
+          "new_position": [
+            867.1125883872201,
+            879.119270165595
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 7.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.1008158917477,
+            584.4342540405804
+          ],
+          "new_position": [
+            867.0074088168566,
+            989.1191981611789
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 8.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.9261087014502,
+            584.4281382468321
+          ],
+          "new_position": [
+            867.0001956854668,
+            1099.1191977604935
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 9.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.9664260864527,
+            606.2420260574547
+          ],
+          "new_position": [
+            823.5801167597813,
+            1126.2300931735056
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 10.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5192581134687,
+            595.3376368100934
+          ],
+          "new_position": [
+            781.7156680809157,
+            1026.5686155170533
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 11.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5192581134687,
+            595.3376368100934
+          ],
+          "new_position": [
+            764.4173458906297,
+            918.2227564278585
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 12.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.5192581134687,
+            595.3376368100934
+          ],
+          "new_position": [
+            779.0253203071917,
+            809.399553307393
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 13.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.4494951812728,
+            580.3531393458443
+          ],
+          "new_position": [
+            825.6199461370283,
+            702.3232053887999
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 240,
+      "initial_rest": false,
+      "seconds": 1.6,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 1.3,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 1.6,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d240-rest0-ad60296210.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            1047.0,
+            600.0
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            897.0,
+            600.0
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 240,
+      "initial_rest": false,
+      "seconds": 2.2,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 2.2,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d240-rest0-7f55e09008.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            1051.3933982822018,
+            589.3933982822018
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            915.6533294528388,
+            549.5915362478602
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            826.4446603479968,
+            623.2807709738582
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_stationary",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 240,
+      "initial_rest": true,
+      "seconds": 5.0,
+      "holder_alive": false,
+      "guard_alive": false,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 1,
+          "time": 4.7,
+          "cause": "capture"
+        },
+        {
+          "agent": 0,
+          "time": 5.0,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_stationary-w30-h100-gap60-side1-d240-rest1-43109f376a.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.353288844938,
+            606.7854894807155
+          ],
+          "new_position": [
+            957.0,
+            600.0
+          ],
+          "holder_alive": true
+        }
+      ]
+    },
+    {
+      "kind": "guard_active",
+      "width": 30,
+      "height": 100,
+      "gap": 60,
+      "side": 1,
+      "heading": 0.0,
+      "intruder_distance": 240,
+      "initial_rest": true,
+      "seconds": 5.6,
+      "holder_alive": false,
+      "guard_alive": true,
+      "guide_alive": null,
+      "deaths": [
+        {
+          "agent": 0,
+          "time": 5.6,
+          "cause": "capture"
+        }
+      ],
+      "old_first_exit": null,
+      "old_tail": 1.0,
+      "new_tail": 0.0,
+      "old_targeted_guide_ticks": 0,
+      "success": false,
+      "replay": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/results/wall_deployment/replays/protocol-v2-guard_active-w30-h100-gap60-side1-d240-rest1-ddc3b075c6.json.gz",
+      "trace": [
+        {
+          "time": 0.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.0,
+            585.0
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 1.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4854245400559,
+            614.911830680386
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 2.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            773.9184720433533,
+            585.12003957945
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 3.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.3763843552485,
+            584.9772514744535
+          ],
+          "new_position": [
+            1062.0,
+            600
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 4.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.353288844938,
+            606.7854894807155
+          ],
+          "new_position": [
+            974.7755564033619,
+            544.4516898079132
+          ],
+          "holder_alive": true
+        },
+        {
+          "time": 5.1,
+          "old_contained": true,
+          "incoming_contained": false,
+          "old_target": 0,
+          "old_position": [
+            774.4731716974685,
+            606.7799093845323
+          ],
+          "new_position": [
+            852.6787272482634,
+            608.172823686603
+          ],
+          "holder_alive": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "real-map-intake-correction-v1",
+  "receipt": "real-map-NoBirthDiagnostic-m5101-f9203-p1-oracle_approach_child_guide-sitebait0-d52e175f.json",
+  "original_receipt_sha256": "63fc78a4c1e69afbdb7fef175b74a5fc204420ea84d11fff5dd269f2aba1d981",
+  "replay_unchanged": true,
+  "overrides": {
+    "failure_stage": "no_birth_diagnostic_no_delivery",
+    "conditional_delivery_denominator": false,
+    "conditional_delivery_status": "diagnostic_without_birth",
+    "guide_role": "parent",
+    "parent_role": "guide",
+    "child_role": "not_spawned_by_design",
+    "gaze_route_exercised": true
+  },
+  "reason": "Deliberate no-birth diagnostic of frozen v15, not a qualifying parent/child trial. Bait and guide survived 60 seconds, with zero deliveries. Final predator distance from the mouth was 234.53 units. Internal birth-intent events do not represent actual native births in this wrapper.",
+  "source_hashes": {
+    "research/real_map_guide_sol/policy_v15_hearing_reacquisition_frozen.py": "4455972445d877117433907a9fb855a9112520fc0ee86c3d9afd0bbc7a72e8ab",
+    "research/real_map_controls/no_birth_v15.py": "9b1cc6a35a2fc666548e482568018d226293da78467b550b502e658642b33232"
+  }
+}
