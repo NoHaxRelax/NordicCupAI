@@ -26,7 +26,7 @@ CORRIDOR = 150.0          # straight approach distance in front of the trap
 GAP_CORRIDOR_MIN = 100.0  # gap sites: shortest acceptable straight approach
 GAP_DEPTH = 5.0           # minimum bait depth inside the mouth
 GAP_FLYBY_OUT = 14.0      # where a guide leaves the axis in front of a staffed mouth
-KILL_MARGIN = 1.5         # extra distance beyond the 15 kill radius
+KILL_MARGIN = 3.0         # extra distance beyond the 15 kill radius
 
 
 def gap_reach(width):

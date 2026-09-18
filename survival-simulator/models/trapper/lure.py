@@ -341,9 +341,15 @@ class Lure:
                 for (o, chasing_us, v_o) in oth:
                     on = self._charge_step(o, q, v_o) if chasing_us else (o.p if v_o == 0.0 else add(o.p, (o.vx, o.vy)))
                     d_other = min(d_other, dist(q, on))
-                slow_ahead = real > 0.05 and w.biome_at(q) < min(0.9, p_mod - 0.05)
+                mod_q = w.biome_at(q) if real > 0.05 else 1.0
+                slow_ahead = real > 0.05 and mod_q < min(0.9, p_mod - 0.05)
+                if real > 0.05 and mod_q < 0.9:
+                    cost_e = cost_e / max(mod_q, 0.3) + 3.0      # slow ground: the same step costs more energy
                 dev = abs(wrap(h - desired)) if real > 0.05 else math.pi / 2
                 progress = real * math.cos(dev) if real > 0.05 else 0.0
+                # circling: the pair's "away" direction turning toward the desired heading is progress too
+                away2 = heading_of(sub(q, pn)) if dist(q, pn) > 1e-6 else away
+                progress += 40.0 * (abs(wrap(desired - away)) - abs(wrap(desired - away2)))
                 g2_eff = g2 - (0.8 * v_pred if real <= 0.05 else 0.0)     # standing: it keeps coming
                 if floor <= g2_eff and g2 <= ceil and d_other >= 30.0 and not slow_ahead:
                     if close:
@@ -385,8 +391,9 @@ class Lure:
         d.p_hist.append((p.pid, p.p))
         if len(d.p_hist) > 8:
             d.p_hist.pop(0)
-        stalled = (len(d.p_hist) >= 8 and all(h[0] == p.pid for h in d.p_hist)
-                   and dist(d.p_hist[0][1], p.p) < 8.0 and not (bool(p.resting) if p.resting is not None else is_resting(p)))
+        pts = [h[1] for h in d.p_hist if h[0] == p.pid]
+        spread = max((dist(u, v) for i, u in enumerate(pts) for v in pts[i + 1:]), default=0.0)
+        stalled = (len(pts) >= 8 and spread < 20.0 and not (bool(p.resting) if p.resting is not None else is_resting(p)))
         if int(round(w.time * 10)) % 10 == 0:
             d.trace.append((round(w.time, 1), 'S', round(gap), target, 1, round(a.energy), round(p.speed, 1), 0))
             if len(d.trace) > 150:
@@ -403,6 +410,17 @@ class Lure:
         if d.become_bait and not at_goal and -site.length + 1.0 < out < -1.0 and lateral < site.thickness / 2 - 1.0:
             d.decision = f'leash: inside the passage, settling on the holder ({dist(a.p, goal):.0f})'
             return step_toward(a, goal, min(a.walk * a.move_modifier, dist(a.p, goal)), face=site.front_mid)
+        if d.become_bait and not at_goal and -1.0 <= out < 32.0 and lateral < 14.0 and d.stage == 'run':
+            # the funnel: the mouth admits us only within ~2 of its centre line, so line up on the
+            # axis 6 out and walk straight in; the predator behind cannot follow
+            funnel = add(site.front_mid, mul(site.normal, 6.0))
+            tgt = funnel if (out > 7.0 and lateral > 1.5) else goal
+            if tgt is goal and gap > 58.0 and following and not (bool(p.resting) if p.resting is not None else is_resting(p)):
+                d.decision = f'leash: funnel, letting it close before going in (gap {gap:.0f})'
+                return action(a.id, 0.0, 0.0, face_away)
+            v = min((a.sprint_speed if a.can_sprint and gap < 40 else a.walk) * a.move_modifier, dist(a.p, tgt) + 0.5)
+            d.decision = f'leash: funnel, lining up on the axis ({out:.0f} out, {lateral:.0f} off, gap {gap:.0f})'
+            return step_toward(a, tgt, v, face=site.front_mid)
 
         # ---- endgame
         if at_goal and d.become_bait:
@@ -685,6 +703,9 @@ class Lure:
             return self._facing(d, a, p, hold(a))
         if d.stall_ticks >= FLYBY_TICKS:
             d.done = 'delivered'
+        if d.stall_ticks > FLYBY_TICKS + 6:
+            d.decision = f'flyby: done, standing clear ({gap:.0f})'
+            return hold(a) if gap > 60 else step_toward(a, add(a.p, mul(side, 40.0)), speed_for(a, gap < 45))
         d.decision = f'flyby: sprinting aside ({d.stall_ticks}), gap {gap:.0f}'
         return step_toward(a, add(a.p, mul(side, 40.0)), speed_for(a, True))
 
@@ -705,9 +726,11 @@ class Lure:
         w = self.world
         if d.leash and p is not None:
             d.lost_ticks = 0
-            if a.energy < 6.0 and d.phase != 'FLYBY' and not (d.become_bait and dist(a.p, d.site.holder) < 40):
+            far_to_go = d.path is not None and path_length([a.p] + list(d.path)) > 260.0
+            far_to_go = d.path is not None and path_length([a.p] + list(d.path)) > 320.0
+            if (a.energy < 6.0 or (a.energy < 125.0 and far_to_go)) and d.phase != 'FLYBY' and not (d.become_bait and dist(a.p, d.site.holder) < 40):
                 d.done = 'failed:guide_energy'
-                d.decision = 'leash: starving, handing over to the society'
+                d.decision = f'leash: energy {a.energy:.0f} with {path_length([a.p] + list(d.path or [])):.0f} to go; handing over while a flee still works'
                 return DEFER
             if d.phase == 'FLYBY':
                 return self._flyby(d, a, p, dist(a.p, p.p))

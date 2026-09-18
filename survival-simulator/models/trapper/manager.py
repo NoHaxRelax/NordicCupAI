@@ -314,6 +314,9 @@ class TrapManager:
             if d.done in ('delivered', 'guide_captured'):
                 if not hasattr(d, 'ended'):
                     d.ended = self.time
+                if d.done == 'delivered' and not d.become_bait and d.guide in world.agents and self.roles.get(d.guide, (None,))[0] == 'guide' \
+                        and self.time - d.ended > 2.0:
+                    self.roles.pop(d.guide, None)       # its part is done; the society takes it back
                 if d.become_bait and d.done == 'delivered' and d.guide in world.agents:
                     st = self._station(d.site)
                     if d.guide not in st.baits:
@@ -330,7 +333,8 @@ class TrapManager:
                         self.roles[d.guide] = ('bait', st.key)
                 if pid in held_now:
                     self.metrics['delivered'] += 1
-                    self.event('delivered', pid=pid, key=d.site.key, guide_alive=d.guide in world.agents)
+                    self.event('delivered', pid=pid, key=d.site.key, guide_alive=d.guide in world.agents, leash=d.leash,
+                               energy=round(world.agents[d.guide].energy) if d.guide in world.agents else None, after=round(self.time - d.created, 1))
                     if not (d.become_bait and d.guide in world.agents):
                         self.roles.pop(d.guide, None)
                         self.agent_cooldown[d.guide] = self.time + 8.0
@@ -671,8 +675,13 @@ class TrapManager:
                     if leashable and st is not None and st.staffed() and not site.extra.get('flyby_clear', True):
                         continue        # no room to fly past a staffed mouth here
                     lead = dist(a.p, entry) + CORRIDOR + 250.0
-                    # a leash costs about 0.45 energy per unit of lead (its sprints, rests, hooks);
-                    # keep 150 for the endgame and the walk home
+                    if leashable:
+                        # the real route (around obstacles, slow ground costed) decides the energy need
+                        run_far = add(site.front_mid, mul(site.normal, 200.0))
+                        route = plan(world.rects, world.width, world.height, a.p, run_far, radius=12.0, slow=world.biome_at)
+                        if route is None:
+                            continue
+                        lead = path_length(route) + 260.0
                     # arranged-arena measurement: a leash costs ~200 + 0.09 x lead at the 90th percentile
                     # and the guide must keep 100 to sprint at the end
                     if lead > (min(P['leash_lead_max'], (a.energy - 300.0) / 0.09) if leashable else P['lead_max']):

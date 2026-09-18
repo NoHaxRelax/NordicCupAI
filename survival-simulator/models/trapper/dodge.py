@@ -37,7 +37,7 @@ from .world import PRED_HEARING as PRED_HEAR, PRED_VISION, PRED_CONE, PRED_WALK,
 
 HALF_CONE = PRED_CONE / 2
 W = dict(cost=3., goal=1., unseen=40., band=1.5, band_gap=52., far=10., far_gap=60., margin=16.,
-         dodged_angle=1.0, undodged_penalty=12., other_hard=30., other_soft=60., slow=8., local=380., sprint_away=20., clear_cap=50., clear_reward=.5, goal_ramp=(18., 33.))
+         dodged_angle=1.0, undodged_penalty=12., other_hard=30., other_soft=60., slow=8., local=380., sprint_away=20., clear_cap=50., clear_reward=.5, goal_ramp=(18., 33.), passage=60.)
 
 
 def wrap_np(a):
@@ -160,6 +160,16 @@ class DodgeLure(Lure):
     def _flyby(self, d, a, p, gap):
         """Stock flyby sprints 14 ticks along the face; once the predator sits at the mouth on the
         bait, walking clear is enough. Sprint only while it could still lunge at us."""
+        site = d.site
+        out = (a.x - site.front_mid[0]) * site.normal[0] + (a.y - site.front_mid[1]) * site.normal[1]
+        lateral = abs((a.x - site.front_mid[0]) * -site.normal[1] + (a.y - site.front_mid[1]) * site.normal[0])
+        if out < 2.0 and lateral < site.thickness / 2 + 1.0:
+            # inside the passage nothing can reach us; a sideways sprint here deflects out of the mouth
+            d.stall_ticks += 1
+            if d.stall_ticks >= _lure.FLYBY_TICKS:
+                d.done = 'delivered'
+            d.decision = f'flyby: inside the passage, holding ({d.stall_ticks})'
+            return _lure.action(a.id, 0.0, 0.0, wrap(heading_of(sub(site.front_mid, a.p)) - a.heading))
         act = super()._flyby(d, a, p, gap)
         if act is not None and gap > 45.0 and act.get('move_distance', 0.) > a.walk:
             act['move_distance'] = float(a.walk)
@@ -219,6 +229,14 @@ class DodgeLure(Lure):
             here = w.biome_at(a.p)
             slow = np.array([w.biome_at((x, y)) < here - .05 for x, y in q])
             score += slow * W['slow']
+        # at a staffed mouth stay outside the passage: the bait is inside, and the flyby escape
+        # only works from the flyby point (a sprint inside the passage deflects out of the mouth)
+        d = self._d
+        if d is not None and not d.become_bait and d.site.kind == 'gap':
+            site = d.site
+            out = (q[:, 0] - site.front_mid[0]) * site.normal[0] + (q[:, 1] - site.front_mid[1]) * site.normal[1]
+            lat = np.abs((q[:, 0] - site.front_mid[0]) * -site.normal[1] + (q[:, 1] - site.front_mid[1]) * site.normal[0])
+            score += ((out < 8.0) & (lat < site.thickness / 2 + 8.0)) * W['passage']
         # other predators: predicted step toward us if they chase us, else straight on
         for o in others:
             chasing = predator_target(w, o) == a.id
@@ -295,8 +313,50 @@ def _patched_leash():
 DodgeLure._leash = _patched_leash()
 
 
-def install(manager_module=None):
-    """Use DodgeLure for every delivery in this process (the manager instantiates ``Lure`` by name)."""
-    from . import manager as _manager
-    (manager_module or _manager).Lure = DodgeLure
+from . import manager as _manager
+
+
+class DodgeManager(_manager.TrapManager):
+    """Trap manager whose leash gate fits a dodging guide: any agent that can afford a sprint
+    tick may lead (``leash_min_energy``, default 160 here), and the lead budget is
+    (energy - 90) / 0.25 units instead of the sprinting leash's (energy - 300) / 0.09.
+    Everything else is the stock manager; ``_assign`` is patched from the stock source at import
+    time so a change in manager.py fails loudly."""
+
+    def __init__(self, **params):
+        params.setdefault('leash_min_energy', 160.0)
+        super().__init__(**params)
+
+    def _leashable(self, a, site):
+        return (site.kind == 'gap' and a.energy >= self.P['leash_min_energy'] and a.id not in self.senescent
+                and a.age < 58.0 and a.sprint_speed >= 18.0 and a.walk >= 9.0)
+
+
+_ASSIGN_PATCHES = [
+    ("if lead > (min(P['leash_lead_max'], (a.energy - 300.0) / 0.09) if leashable else P['lead_max']):",
+     "if lead > (min(P['leash_lead_max'], (a.energy - 90.0) / 0.25) if leashable else P['lead_max']):"),
+]
+
+
+def _patched_assign():
+    src = textwrap.dedent(inspect.getsource(_manager.TrapManager._assign))
+    for old, new in _ASSIGN_PATCHES:
+        if src.count(old) != 1:
+            raise RuntimeError(f'dodge.py: stock TrapManager._assign changed; patch not found once: {old[:60]!r}')
+        src = src.replace(old, new)
+    ns = dict(vars(_manager))
+    exec(src, ns)
+    return ns['_assign']
+
+
+DodgeManager._assign = _patched_assign()
+
+
+def install(low_gate=False):
+    """Use DodgeLure for every delivery in this process (the manager instantiates ``Lure`` by
+    name); with ``low_gate`` also use DodgeManager in the policy."""
+    _manager.Lure = DodgeLure
+    if low_gate:
+        from . import policy as _policy
+        _policy.TrapManager = DodgeManager
     return DodgeLure
