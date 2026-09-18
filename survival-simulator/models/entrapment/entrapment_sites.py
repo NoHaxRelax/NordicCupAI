@@ -85,7 +85,7 @@ def _static_parts(static_map: Mapping) -> tuple[float, float, list[Rect]]:
 
 def enumerate_sites(static_map: Mapping, *, min_gap: float = 10.1,
                     max_gap: float = 19.9, min_overlap: float = 20.0,
-                    bait_depth: float = 5.0,
+                    bait_depth: float | None = 5.0,
                     require_second_access: bool = True,
                     allow_offset_approach: bool = True) -> list[dict]:
     """Return compatible site dictionaries, best first.
@@ -125,7 +125,8 @@ def enumerate_sites(static_map: Mapping, *, min_gap: float = 10.1,
                     inward = xy(0.0, float(sign))
                     add_depth = lambda p, d: (p[0] + inward[0] * d,
                                               p[1] + inward[1] * d)
-                    goal = add_depth(mouth, bait_depth)
+                    depth = min(5.0, overlap / 2) if bait_depth is None else bait_depth
+                    goal = add_depth(mouth, depth)
                     if not g.free(goal, 5.01):
                         continue
 
@@ -180,7 +181,7 @@ def enumerate_sites(static_map: Mapping, *, min_gap: float = 10.1,
                         replacement_entry=second_staging,
                         second_access_clear=second_clear,
                         second_access_radius=5.01,
-                        bait_depth=bait_depth,
+                        bait_depth=depth,
                         boundary_indices=boundary_indices,
                         geometric_replacement_access_only=True,
                     )
@@ -198,3 +199,30 @@ def select_site(static_map: Mapping, **kwargs) -> dict:
             "static map has no depth-5 short-gap site with clear predator runup "
             "and geometric bait access through the opposite mouth")
     return sites[0]
+
+
+def enumerate_corner_sites(static_map: Mapping) -> list[dict]:
+    """Short staggered corner pockets with global predator-contact exclusion.
+
+    An ordinary inside corner fails this check. These are narrow passages near
+    offset rectangle ends where placing bait centrally can remain uncatchable
+    despite less than the normal 10.3-unit wall overlap. Rear access and the
+    normal predator approach lane are still mandatory. Opt-in research selector.
+    """
+    from shapely.geometry import Point as ShapePoint, box
+    from shapely.ops import unary_union
+
+    width, height, rects = _static_parts(static_map)
+    predator_free = box(10., 10., width-10., height-10.).difference(unary_union([
+        box(x-10., y-10., x+w+10., y+h+10.) for x, y, w, h in rects]))
+    result = []
+    for site in enumerate_sites(static_map, min_overlap=8., bait_depth=None):
+        if site['overlap'] >= 10.3:
+            continue
+        clearance = ShapePoint(site['goal']).distance(predator_free)
+        # Native kills at centre distance strictly below 5 + 10. Keep a small
+        # margin and test every free predator position, not just the front.
+        if clearance >= 15.05:
+            result.append(dict(site, site_kind='corner_pocket',
+                               minimum_predator_distance=clearance))
+    return result
