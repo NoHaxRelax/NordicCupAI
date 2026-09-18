@@ -8,7 +8,9 @@ class SimulationCore:
 
     def __init__(self, env_width=1600, env_height=1200, chunk_size=400,
                  starting_agents=5, starting_predators=0, starting_fruits=None,
-                 starting_trees=50, seed=None, dt=1/10):
+                 starting_trees=50, seed=None, dt=1/10, backend=None):
+        from src.backend import resolve_backend
+        self.backend = resolve_backend(backend)
         self.env_width = env_width
         self.env_height = env_height
         self.chunk_size = chunk_size
@@ -34,7 +36,8 @@ class SimulationCore:
             starting_predators=self.starting_predators,
             starting_fruits=self.starting_fruits,
             starting_trees=self.starting_trees,
-            rng=self.rng
+            rng=self.rng,
+            backend=self.backend
         )
 
     def step(self, actions):

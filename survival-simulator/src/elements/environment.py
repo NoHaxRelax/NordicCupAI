@@ -10,13 +10,15 @@ from collections import defaultdict
 from typing import List, Tuple, Optional, Dict, Set
 import pygame
 from src.elements.biome import Map_generator, smooth_surface
+from src.backend import native_method, resolve_backend
 
 
 class Environment:
     """
     Environment class defines the environment in which the agents live. Handles all interactions.
     """
-    def __init__(self, width: int, height: int, chunk_size: int, rng: random.Random): # Chunk size must at least be the maximum visible distance
+    def __init__(self, width: int, height: int, chunk_size: int, rng: random.Random, backend=None): # Chunk size must at least be the maximum visible distance
+        self._backend = resolve_backend(backend)
         self.rng: random.Random = rng
 
         self.width: int = width
@@ -857,3 +859,20 @@ class Environment:
             (int(self.width * zoom), int(self.height * zoom))
         )
         screen.blit(scaled_world, (0, 0))
+
+
+# Keep the Python implementation available through __wrapped__ for differential
+# testing. Dispatch belongs to each environment, so both engines can coexist.
+for _name in (
+    "_is_position_free", "spawn_agent", "spawn_fruit", "spawn_fruit_around_tree",
+    "spawn_tree", "spawn_predator", "kill_agent", "remove_fruit", "remove_tree",
+    "_in_obstacle", "_keep_agent_in_bounds", "update_entity_position",
+    "update_entity_direction", "update_entity_energy", "agent_step",
+    "non_agent_step", "get_agent_state",
+    "_update_agent_grid", "_update_fruit_grid", "_update_tree_grid",
+    "_update_predator_grid", "_get_local_objects", "_get_local_agents",
+    "_get_local_fruits", "_get_local_trees", "_get_local_obstacles",
+    "_get_local_predators", "_get_local_edges",
+):
+    setattr(Environment, _name, native_method(getattr(Environment, _name)))
+del _name

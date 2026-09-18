@@ -2,6 +2,10 @@
 
 Improvise, adapt, overcome!
 
+The simulation has an optional Rust engine with the same Python API. With a Rust
+toolchain installed, run `uv sync --extra rust` from the repository root to enable
+it. See [Rust engine setup, parity tests, and benchmarks](docs/rust_engine.md).
+
 You are the hivemind of an entire species of herbivores. Ensure their survival by eating fruits and conserving energy, but beware of the predators roaming the territory.
 
 ## About the game

@@ -1,0 +1,15 @@
+[package]
+name = "survival-native"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "_survival_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.27", features = ["extension-module"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
