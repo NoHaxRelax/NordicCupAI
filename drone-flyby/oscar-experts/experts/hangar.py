@@ -36,8 +36,8 @@ class HangarSettings:
     min_rim_contrast: float = 0.      # ring L median minus interior L median, OpenCV 0-255 scale; sprite measures 140
     max_interior_chroma: float = 255.
     angle_offsets: tuple = (-10., 0., 10.)
-    partial_heading_step: int = 20     # coarse heading sweep for edge-cut components
-    partial_step: int = 6             # slide step along a cut axis, image px
+    partial_heading_step: int = 30     # coarse heading sweep for edge-cut components
+    partial_step: int = 8             # slide step along a cut axis, image px
     local_radius: int = 8
     local_step: int = 2
     min_visible: float = .35

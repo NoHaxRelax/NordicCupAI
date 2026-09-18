@@ -19,6 +19,7 @@ class SharedProposer:
         self.chunk = chunk
         self.experts = {n: e for n, e in experts.items() if hasattr(e, 'proposer') and hasattr(e, 'proposer_templates_for')}
         self.kernels = {}  # zoom -> list of dict(name, heading, angle, gray, high, mask, count, energy, h, w, threshold, peaks)
+        self.fft_cache = {}  # (zoom, scale, H, W, chunk index) -> (kf, mf, count, energy) on the device
 
     def _kernels(self, zoom, scale):
         key = (zoom, round(scale, 4))
@@ -61,15 +62,19 @@ class SharedProposer:
             group = [r for r in rows[first:first + self.chunk] if r['h'] <= H and r['w'] <= W]
             if not group:
                 continue
-            k = np.zeros((len(group), 2, H, W), np.float32)
-            m = np.zeros((len(group), 1, H, W), np.float32)
-            for i, r in enumerate(group):
-                k[i, :, :r['h'], :r['w']] = r['kernel']
-                m[i, 0, :r['h'], :r['w']] = r['mask']
-            kf = torch.fft.rfft2(torch.as_tensor(k, device=self.device))
-            mf = torch.fft.rfft2(torch.as_tensor(m, device=self.device))
-            count = torch.as_tensor([r['count'] for r in group], device=self.device)[:, None, None, None]
-            energy = torch.as_tensor(np.array([r['energy'] for r in group]), device=self.device)[:, :, None, None]
+            cache_key = (zoom, round(scale, 4), H, W, first)
+            if cache_key not in self.fft_cache:
+                k = np.zeros((len(group), 2, H, W), np.float32)
+                m = np.zeros((len(group), 1, H, W), np.float32)
+                for i, r in enumerate(group):
+                    k[i, :, :r['h'], :r['w']] = r['kernel']
+                    m[i, 0, :r['h'], :r['w']] = r['mask']
+                self.fft_cache[cache_key] = (torch.fft.rfft2(torch.as_tensor(k, device=self.device)), torch.fft.rfft2(torch.as_tensor(m, device=self.device)),
+                                             torch.as_tensor([r['count'] for r in group], device=self.device)[:, None, None, None],
+                                             torch.as_tensor(np.array([r['energy'] for r in group]), device=self.device)[:, :, None, None])
+                if len(self.fft_cache) > 40:
+                    self.fft_cache.pop(next(iter(self.fft_cache)))
+            kf, mf, count, energy = self.fft_cache[cache_key]
             numerator = torch.fft.irfft2(sf * kf.conj(), s=(H, W))
             total = torch.fft.irfft2(sf * mf.conj(), s=(H, W))
             total2 = torch.fft.irfft2(sqf * mf.conj(), s=(H, W))

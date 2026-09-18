@@ -27,6 +27,7 @@ class ClassSpec:
     proposer_threshold: float = .2
     proposer_downscale: float = 1.     # full resolution: half resolution lost 40-50 px objects among ground peaks
     proposer_single_template: bool = True  # sweep one template per zoom; every template still competes in the fine pose
+    fine_templates: int = 3                # at most this many templates per zoom in the fine pose (largest masks)
     proposer_blur: float = .8
     max_candidates: int = 24
     max_colour_candidates: int = 16
@@ -82,8 +83,8 @@ class GenericExpert:
         self._posed = {}
 
     def templates_for(self, zoom):
-        matching = [t for t in self.templates if t.zoom == zoom]
-        return matching or self.templates
+        matching = [t for t in self.templates if t.zoom == zoom] or self.templates
+        return sorted(matching, key=lambda t: -t.mask.sum())[:self.spec.fine_templates]
 
     def proposer_templates_for(self, zoom):
         """One template per zoom for the heading sweep (the largest mask); the fine pose still tries all."""

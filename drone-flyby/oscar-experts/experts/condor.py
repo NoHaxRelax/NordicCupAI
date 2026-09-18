@@ -26,13 +26,13 @@ ZOOM_FOR_SCALE = {.25: 0, .5: 1, 1.: 2}
 class CondorSettings:
     heading_step: int = 15
     proposer_threshold: float = .2
-    max_candidates: int = 24
+    max_candidates: int = 16
     duplicate_fraction: float = .33         # same object only if fitted centres are this close, in fuselage lengths
-    heading_sweep: int = 15                  # the part model resolves heading itself over 360 degrees
-    heading_refine: tuple = (-5., -2.5, 2.5, 5.)
-    scales: tuple = (.9, 1., 1.1)
+    heading_sweep: int = 30                  # the part model resolves heading itself over 360 degrees
+    heading_refine: tuple = (-15., -7.5, 7.5, 15.)
+    scales: tuple = (1.,)
     stretches: tuple = (.87, 1., 1.15)      # one-axis scale, covers foreshortening
-    shears: tuple = (-10., 0., 10.)
+    shears: tuple = (0.,)
     centre_offsets: tuple = (-4., 0., 4.)
     min_pattern: float = 0.           # recorded, not a gate: the verifier rules candidates out, not the expert
     min_xness: float = 0.             # bars must differ from the ground between the arms (true condor .6-.8, noise .02-.5)
@@ -78,6 +78,9 @@ class CondorExpert:
     def templates_for(self, zoom):
         matching = [t for t in self.templates if t.zoom == zoom]
         return matching or self.templates
+
+    def proposer_templates_for(self, zoom):
+        return [max(self.templates_for(zoom), key=lambda t: t.mask.sum())]
 
     def _combined(self, part, model):
         chroma_score = float(np.exp(-max(0., part['bar_chroma'] - model.chroma) / 10.))
@@ -132,7 +135,7 @@ class CondorExpert:
                 kept.append(row)
         return kept
 
-    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False):
+    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False, proposals=None):
         if image is None or image.ndim != 3 or image.shape[2] != 3 or image.dtype != np.uint8:
             raise ValueError('Expected uint8 BGR image')
         s = float(pixels_per_source_pixel)
@@ -145,7 +148,8 @@ class CondorExpert:
         L, chroma = lab[:, :, 0], np.hypot(lab[:, :, 1] - 128, lab[:, :, 2] - 128)
         gray, high = features(image)
         templates = self.templates_for(zoom)
-        proposals = self.proposer.merge(self.proposer.propose(image, s, templates), radius=.3 * self.model.fuselage_length * s)[:cfg.max_candidates]
+        raw = proposals if proposals is not None else self.proposer.propose(image, s, self.proposer_templates_for(zoom))
+        proposals = self.proposer.merge(raw, radius=.3 * self.model.fuselage_length * s)[:cfg.max_candidates]
         rows, pixel_rows, candidates = [], [], []
         for prop in proposals:
             cx, cy = prop['cx'], prop['cy']

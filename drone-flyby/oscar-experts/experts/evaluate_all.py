@@ -53,6 +53,8 @@ def main():
     p.add_argument('--limit', type=int)
     p.add_argument('--sample', type=int, help='tiles per class per zoom, stratified by frame; use with --seed that rotates per iteration')
     p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--shard', type=int, default=0)
+    p.add_argument('--shards', type=int, default=1)
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
     manifest = json.loads((a.grid / 'manifest.json').read_text())
@@ -100,6 +102,9 @@ def main():
         rng.shuffle(empties)
     if a.limit:
         positives = positives[:a.limit]
+    if a.shards > 1:
+        positives = positives[a.shard::a.shards]
+        empties = empties[a.shard::a.shards]
     per_class = {c: dict(rows=[], empty=[], totals=defaultdict(Counter), empty_totals=defaultdict(Counter)) for c in a.classes}
     pool = ThreadPoolExecutor(max_workers=a.workers)
     started = time.time(); proposer_seconds = 0.; cached = 0

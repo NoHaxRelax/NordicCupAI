@@ -24,8 +24,30 @@ rotated with the pose, blob expert for the launchers, separate colour-proposal c
 | mine_roller | 15/57 | 15/57 | the other 42 targets are the excluded mislabelled validation track; on the reference object 15/15 with IoU 1.0 |
 | small_tower, spacecraft | 51/51, 57/57 | pending | |
 
-Full tables: `stage1-best/summary.md` (ungated) and `stage1-gated/summary.md` (with gates v2) on the pod,
-copied here when done.
+Gated pass (gates v2 applied, 60 empty training tiles per class), 02:55-03:35:
+
+| class | found | cand/tile | false alarms / 60 empties |
+|---|---|---|---|
+| condor | 42/42 | 23.4 | 1263 (gate weak) |
+| hangar | 9/9 | 1.2 | 53 |
+| helicopter | 43/48 | 14.6 | 154 |
+| jammer | 69/72 | 1.0 | 0 |
+| jet_plane | 57/75 | 2.8 | 189 |
+| large_launcher | 53/102 | 6.3 | 144 |
+| large_tower | 48/57 | 1.0 | 3 |
+| medium_launcher | 18/18 | 2.5 | 9 |
+| medium_plane | 24/48 | 1.1 | 1 |
+| mine_roller | 15/15 | 1.0 | 0 |
+| small_launcher | 54/69 | 0.8 | 0 |
+| small_plane | 62/63 | 1.0 | 2 |
+| small_tower | 48/51 | 2.0 | 0 |
+| spacecraft | 57/57 | 1.4 | 6 |
+| ta-ta | 61/69 | 1.9 | 22 |
+| tank | 95/171 | 0.6 | 0 |
+
+Lesson: gates v2 were fitted on candidates from an earlier expert build; the fine-pose grid changed in
+between, so tank, medium plane and large launcher lost recall to a miscalibrated gate. Gates must be
+fitted on candidates produced by the deployed expert code; `full_pass.sh` does exactly that (pass 3).
 
 ## Gates (per-class logistic over recorded features, training tiles, out-of-fold)
 
