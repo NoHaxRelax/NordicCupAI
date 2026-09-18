@@ -689,7 +689,7 @@ Also measured today on the Qwen3.6-27B: many-shot 0.7935 and joint-demo-fewshot 
 
 Next: the whole endpoint on the pod behind its stable proxy hostname (`bench/hpc/pod_endpoint.sh`: faster-whisper, api.py, Ollama fallback on the same card), so the submitted URL depends neither on the laptop nor on a quick tunnel (committee report 02, finding 10; no tunnel is running today).
 
-### 50. Committee of 2026-09-18, salvaged measurements: self-consistency and a learned span re-ranker do not beat greedy on the 27B (2026-09-18 15:10)
+### 50. Committee of 2026-09-18, salvaged measurements: self-consistency and a learned span re-ranker do not beat greedy on the 27B (2026-09-18 14:05)
 
 The afternoon committee (one Opus verifier, five Fable proposers, launched 14:20) ran into the account's session limit before writing its reports; scratch results were scored directly. All numbers: Qwen3.8-27B, `units-fewshot`, clause-and units, training set, leave-one-conversation-out examples.
 
@@ -699,11 +699,11 @@ The afternoon committee (one Opus verifier, five Fable proposers, launched 14:20
 
 Both are scoped to this model and setup; the verifier's report follows separately.
 
-### 51. Clause position inside a sentence: the annotators take the first clause 2 to 1 (2026-09-18 15:40)
+### 51. Clause position inside a sentence: the annotators take the first clause 2 to 1 (2026-09-18 14:25)
 
 A teammate asked whether, when two pieces of one sentence both establish the fact, the gold prefers the earlier or the later piece. Training golds that lie inside one sentence which clause-and splits into two or more pieces: 51; the gold is the whole sentence in 23 and a part of it in 28. Of those 28: first piece 19 (18 single clause, one "2 of 3"), last piece 9, middle 0. So the annotators' cut, when they cut, keeps the opening clause about twice as often as the closing one, consistent with the fact being stated first and elaborated after ("your diabetes is stable, | with no signs of complications"). Across utterances the same question was measured in entry 43 (later 12, earlier 10 of 26): no preference. 28 cases is a prior, not a rule; nothing served changes on it. The verifier's report (research/committee-2026-09-18/verifier.md) is applied in commits 6fdf768 and d48db0c: 50 s wall with a 16-thread pool, logging configured before the warm-up import, a primary_skipped counter, an 8 s connect timeout for the TLS proxy path, offline hub flags in both supervisors, pod vLLM defaults MAX_LEN 16384 and GPU_UTIL 0.80.
 
-### 52. The pod endpoint is the one to submit: 0.815 through its public URL, and thinking mode costs 200 s per conversation (2026-09-18 16:10)
+### 52. The pod endpoint is the one to submit: 0.815 through its public URL, and thinking mode costs 200 s per conversation (2026-09-18 14:40)
 
 Whole pipeline on the pod (`bench/hpc/pod_endpoint.sh`: turbo ASR in its own venv, api.py on 9054, vLLM at 80 % of the A100, Ollama qwen3:4b as fallback; 71.6 GB of 80 in use after warm-up), driven from the laptop through `https://v2pqefpdqwlh57-9054.proxy.runpod.net/predict` with `local_evaluator.py` over the 39 training conversations: **score 0.815**, accuracy 0.990 (386 of 390), mean tIoU 0.698, 9.1 s mean and 16.5 s worst round trip, 0 failed conversations, 0 timeouts; endpoint counters 391 primary answers, 0 failed, 0 skipped, 0 fallbacks, 0 guesses. This equals the laptop path's 0.815 (entry 49) and proves the two things the verifier listed as unproven: a 4.7 MB body through the RunPod proxy and CUDA transcription from the API venv. An earlier soak of the same endpoint while a proposer's sampling run held the GPU at 100 % showed the failure mode instead: ASR 30 s, primary requests timing out into the fallback, the fallback timing out too, 52 s total and a well-formed reply of guesses. Nothing else may run on the pod during the attempt.
 
@@ -711,10 +711,10 @@ The pod's hostname is stable for the life of the pod and needs no laptop, tunnel
 
 Thinking mode on the 27B (DTU job 29443507, same few-shot prompt and clause-and units, `enable_thinking` true, 6000-token budget): 208 and 206 s per conversation for the first two conversations on the H100, with one request error each. Whatever its quality, which the job will report, that is three and a half times the 60 s budget, so thinking is not servable at this size on this hardware; a budget short enough to fit (about 150 tokens) is not reasoning.
 
-### 53. Pre-flight steps 7 and 8 on the pod endpoint: a second soak at 0.812, and the two rehearsed failures (2026-09-18 16:40)
+### 53. Pre-flight steps 7 and 8 on the pod endpoint: a second soak at 0.812, and the two rehearsed failures (2026-09-18 15:00)
 
 Second back-to-back soak through the public URL: score 0.812 (386 of 390, mean tIoU 0.694), 8.5 s mean and 13.2 s worst, 0 failed conversations, 0 fallbacks; within 0.003 of the first (entry 52), so step 7 passes.
 
 Rehearsal (step 8), a third soak with faults injected on the pod. (a) vLLM stopped for 100 s and restarted: 67 requests found the server gone, the 20 s breaker then sent 153 requests straight to the Ollama 4B, 6 more were skipped for lack of time; every conversation in that window was answered with a well-formed reply (the 4B's binaries are visibly worse: "said no" on positives whose span was right), 0 failed conversations, vLLM back at 80 % memory in about 3 minutes. (b) api.py killed once: the supervisor restarted it in 15 s (ASR load 3.3 s, warm-ups), but the evaluator's remaining nine conversations all arrived in that window, failed instantly at the proxy and were skipped, so the run reports 9 failed conversations and 0.593. That is the cost of a crash during the attempt: the evaluator does not wait, it moves on, and every conversation that lands in the restart window is lost. The mitigations already in place are the ones that stop the crash from happening (guesses instead of exceptions in predict, the 50 s wall, the fallback); there is no supervisor fast enough to hide one. Counters after the rehearsal: 0 guessed, 0 timed out.
 
-Thinking mode on the 27B (job 29443507, in progress): 90 to 210 s per conversation on the H100 with the 6000-token budget; 9 of 39 conversations done at 16:40.
+Thinking mode on the 27B (job 29443507, in progress): 90 to 210 s per conversation on the H100 with the 6000-token budget; 9 of 39 conversations done at 15:00.
