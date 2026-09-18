@@ -51,6 +51,13 @@ Ollama, oracle server and laptop endpoint may stay up; they do not touch the pod
 
 ## Two validation runs, then freeze
 
+> **Already done on Friday 2026-09-18 16:47.** Runs 394 and 395 on this exact URL both scored
+> **0.8074**, identical, 19 conversations each in 2 min 42 s, zero errors, fallbacks or guesses, no
+> restart between them. Step 11's criteria are met. Repeat step 5 tomorrow only as a freshness check
+> after any restart; if the pod has not been touched overnight, `GET /api` uptime plus one training
+> soak is enough, and a third validation run is optional.
+
+
 5. Elias queues **two validation runs** on the exact URL, back to back, no restart between.
    Read from `python bench/portal_status.py --watch`: both finish, 0 request errors, scores within
    0.02 of each other and at or above 0.70. The scores are read only for this go/no-go, not for

@@ -809,6 +809,14 @@ validation set: it picks the wrong sentence twice as often (entry 44, zero-overl
 validation golds (+1.1 s, committee finding d) cost the 27B nothing measurable, presumably because
 clause units let it cover the extra length when the annotator marked it.
 
+**Run 395, queued immediately after, returned 0.8074 again: identical to four decimals.** Across
+both runs the endpoint counted 38 conversations, 380 questions, 381 primary answers, and zero
+failures, skips, fallbacks, guesses or timeouts. The pipeline is therefore deterministic end to end
+(temperature 0, greedy decoding, the same audio), so run-to-run validation noise for *this* pipeline
+is 0, not the +-0.022 to 0.030 the committee measured on earlier runs. That is the pre-flight's
+step 11 (two back-to-back runs on the final URL, no restart between, scores within 0.02) passed a
+day early and with nothing to spare.
+
 Method note: the pipeline was frozen before this run and nothing was tuned on the result, per the
 standing rule. The number is a go/no-go and a sanity check on the served path, not a knob.
 
