@@ -82,6 +82,8 @@ class Tree:
     assigned: set = field(default_factory=set)
     fruit_here: int = 0
     fruit_free: int = 0
+    cluster: tuple = ()
+    cluster_t: float = -1.
 
 
 @dataclass
@@ -147,40 +149,45 @@ class Group:
 
     # spatial hash helpers (cell = CELL units)
     def add_tree(self, t):
-        self.trees[t.id] = t; self.tgrid.setdefault(cell_of(t.p), set()).add(t.id)
+        self.trees[t.id] = t; self.tgrid.setdefault(cell_of(t.p), []).append(t)
     def del_tree(self, tid):
-        t = self.trees.pop(tid); self.tgrid.get(cell_of(t.p), set()).discard(tid)
+        t = self.trees.pop(tid); cell = self.tgrid.get(cell_of(t.p))
+        if cell and t in cell: cell.remove(t)
     def move_tree(self, t, p):
-        self.tgrid.get(cell_of(t.p), set()).discard(t.id); t.p = p
-        self.tgrid.setdefault(cell_of(p), set()).add(t.id)
+        cell = self.tgrid.get(cell_of(t.p))
+        if cell and t in cell: cell.remove(t)
+        t.p = p; self.tgrid.setdefault(cell_of(p), []).append(t)
     def add_fruit(self, f):
-        self.fruits[f.id] = f; self.fgrid.setdefault(cell_of(f.p), set()).add(f.id)
+        self.fruits[f.id] = f; self.fgrid.setdefault(cell_of(f.p), []).append(f)
     def del_fruit(self, fid):
-        f = self.fruits.pop(fid); self.fgrid.get(cell_of(f.p), set()).discard(fid)
+        f = self.fruits.pop(fid); cell = self.fgrid.get(cell_of(f.p))
+        if cell and f in cell: cell.remove(f)
     def rebuild_grids(self):
         self.tgrid = {}; self.fgrid = {}
-        for t in self.trees.values(): self.tgrid.setdefault(cell_of(t.p), set()).add(t.id)
-        for f in self.fruits.values(): self.fgrid.setdefault(cell_of(f.p), set()).add(f.id)
-    def _near(self, grid, items, p, r):
-        c = cell_of(p); n = int(r//CELL)+1; out = []
+        for t in self.trees.values(): self.tgrid.setdefault(cell_of(t.p), []).append(t)
+        for f in self.fruits.values(): self.fgrid.setdefault(cell_of(f.p), []).append(f)
+    def _near(self, grid, p, r):
+        px, py = p; cx = math.floor(px/CELL); cy = math.floor(py/CELL); n = int(r//CELL)+1; out = []
+        dist = math.dist
         for dx in range(-n, n+1):
             for dy in range(-n, n+1):
-                ids = grid.get((c[0]+dx, c[1]+dy))
-                if not ids: continue
-                for i in ids:
-                    it = items[i]
-                    if math.dist(it.p, p) <= r: out.append(it)
+                cell = grid.get((cx+dx, cy+dy))
+                if not cell: continue
+                for it in cell:
+                    if dist(it.p, p) <= r: out.append(it)
         return out
-    def near_trees(self, p, r): return self._near(self.tgrid, self.trees, p, r)
-    def near_fruits(self, p, r): return self._near(self.fgrid, self.fruits, p, r)
+    def near_trees(self, p, r): return self._near(self.tgrid, p, r)
+    def near_fruits(self, p, r): return self._near(self.fgrid, p, r)
 
 
 class OrchardPolicy:
-    def __init__(self, seed=0, *, cap_mult=0.3, cap_min=3, cap_max=20, n0=80., tree_half=600.,
+    def __init__(self, seed=0, *, cap_mult=0.3, cap_min=4, cap_max=20, n0=80., tree_half=600.,
                  tree_slots=1, breed_reserve=200., emergency_reserve=105., ripen_wait=20., wait_tol=25., dump_slack=0.3,
                  sweep_rate=0.03, explore_radius=450., old_dump=True, fit_vision=1.0, fit_hear=0.3,
                  fit_energy=0.2, births_per_tick=3, fruit_reach=200., tree_reach=420., hungry=45.,
-                 idle_sweep=True, site_min=5., breed_reserve_late=200., reserve_t0=600., reserve_t1=1800., dist_pen=0.1, dump_food=3, vo_win_fruit=4.5, vo_win_far=4.5, vo_cap=12., heirs=1, extra_old=True, heir_age=55., heir_reserve=250., explore_min=60., cull=False, travel_turn=0.25, heir_select=True, heir_slack=0.05, repost_every=10., switch_gain=100., fruit_min_wait=0., no_eat_age=INF, late_still_t=INF, post_radius=30., min_stay=15., hungry_margin=5., fit_speed=0.3, explore_energy=200., watch_patience=30., watch_reach=500., watch_refresh=60., **_):
+                 idle_sweep=True, site_min=5., breed_reserve_late=200., reserve_t0=600., reserve_t1=1800., dist_pen=0.1, dump_food=3, vo_win_fruit=4.5, vo_win_far=4.5, vo_cap=12., heirs=1, extra_old=True, heir_age=55., heir_reserve=250., explore_min=60., cull=False, travel_turn=0.25, heir_select=True, heir_slack=0.05, repost_every=10., switch_gain=100., fruit_min_wait=0., no_eat_age=INF, late_still_t=INF, post_radius=30., min_stay=15., hungry_margin=5., fit_speed=0.3, explore_energy=200., watch_patience=30., watch_reach=500., watch_refresh=60., select_min_young=0, heir_at_food=False, dump_food_site=2, dump_mult=1.0,
+                 cluster_radius=0., spread_weight=0., feed_mode='hungry', low_pop_reserve=200., lone_reach_mult=1.0,
+                 old_reach=60., old_eat_last=True, rot_margin=47., dump_after_t=INF, cap_tree_slack=1, cap_hard_min=2, heir_needs_site=True, nursery_bonus=0., **_):
         self.rng = random.Random(seed)
         self.P = dict(cap_mult=cap_mult, cap_min=cap_min, cap_max=cap_max, n0=n0, tree_half=tree_half,
                       tree_slots=tree_slots, breed_reserve=breed_reserve, emergency_reserve=emergency_reserve,
@@ -188,7 +195,9 @@ class OrchardPolicy:
                       old_dump=old_dump, fit_vision=fit_vision, fit_hear=fit_hear, fit_energy=fit_energy,
                       births_per_tick=births_per_tick, fruit_reach=fruit_reach, tree_reach=tree_reach, hungry=hungry,
                       idle_sweep=idle_sweep, dump_slack=dump_slack, site_min=site_min, breed_reserve_late=breed_reserve_late,
-                      reserve_t0=reserve_t0, reserve_t1=reserve_t1, dist_pen=dist_pen, dump_food=dump_food, vo_win_fruit=vo_win_fruit, vo_win_far=vo_win_far, vo_cap=vo_cap, heirs=heirs, extra_old=extra_old, heir_age=heir_age, heir_reserve=heir_reserve, explore_min=explore_min, cull=cull, travel_turn=travel_turn, heir_select=heir_select, heir_slack=heir_slack, repost_every=repost_every, switch_gain=switch_gain, fruit_min_wait=fruit_min_wait, no_eat_age=no_eat_age, late_still_t=late_still_t, post_radius=post_radius, min_stay=min_stay, hungry_margin=hungry_margin, fit_speed=fit_speed, explore_energy=explore_energy, watch_patience=watch_patience, watch_reach=watch_reach, watch_refresh=watch_refresh)
+                      reserve_t0=reserve_t0, reserve_t1=reserve_t1, dist_pen=dist_pen, dump_food=dump_food, vo_win_fruit=vo_win_fruit, vo_win_far=vo_win_far, vo_cap=vo_cap, heirs=heirs, extra_old=extra_old, heir_age=heir_age, heir_reserve=heir_reserve, explore_min=explore_min, cull=cull, travel_turn=travel_turn, heir_select=heir_select, heir_slack=heir_slack, repost_every=repost_every, switch_gain=switch_gain, fruit_min_wait=fruit_min_wait, no_eat_age=no_eat_age, late_still_t=late_still_t, post_radius=post_radius, min_stay=min_stay, hungry_margin=hungry_margin, fit_speed=fit_speed, explore_energy=explore_energy, watch_patience=watch_patience, watch_reach=watch_reach, watch_refresh=watch_refresh, select_min_young=select_min_young, heir_at_food=heir_at_food, dump_food_site=dump_food_site, dump_mult=dump_mult,
+                      cluster_radius=cluster_radius, spread_weight=spread_weight, feed_mode=feed_mode, low_pop_reserve=low_pop_reserve,
+                      lone_reach_mult=lone_reach_mult, old_reach=old_reach, old_eat_last=old_eat_last, rot_margin=rot_margin, dump_after_t=dump_after_t, cap_tree_slack=cap_tree_slack, cap_hard_min=cap_hard_min, heir_needs_site=heir_needs_site, nursery_bonus=nursery_bonus)
         self.time = 0.
         self.minds: dict[int, Mind] = {}
         self.groups: dict[int, Group] = {}
@@ -407,9 +416,21 @@ class OrchardPolicy:
                 marks.append((pose.transform(tuple(o['coords'][0])), wt)); marks.append((pose.transform(tuple(o['coords'][1])), wt))
         if moved and marks and m.prev_marks:
             pairs = []
+            B = 25.
+            buckets = {}
+            for idx, (r, _) in enumerate(m.prev_marks):
+                buckets.setdefault((int(r[0]//B), int(r[1]//B)), []).append(idx)
+            prev = m.prev_marks
             for q, win in marks:
+                cx, cy = int(q[0]//B), int(q[1]//B)
+                cand = []
+                for dx in (-1, 0, 1):
+                    for dy in (-1, 0, 1):
+                        cand.extend(buckets.get((cx+dx, cy+dy), ()))
+                cand.sort()
                 best = None
-                for r, _ in m.prev_marks:
+                for idx in cand:
+                    r = prev[idx][0]
                     dd = math.dist(q, r)
                     if dd < win and (best is None or dd < best[0]): best = (dd, r)
                 if best is not None: pairs.append((best[1][0]-q[0], best[1][1]-q[1]))
@@ -429,8 +450,11 @@ class OrchardPolicy:
         for o in obs:
             if o['type'] != 'Edge': continue
             a, b = map(pose.transform, map(tuple, o['coords']))
+            ax, ay = a; bx, by = b
             for k, (ea, eb, t) in enumerate(m.edges):
-                if math.dist(a, ea) < 6 and math.dist(b, eb) < 6: m.edges[k] = (a, b, self.time); break
+                if abs(ea[0]-ax) < 6 and abs(ea[1]-ay) < 6 and abs(eb[0]-bx) < 6 and abs(eb[1]-by) < 6 \
+                        and math.dist(a, ea) < 6 and math.dist(b, eb) < 6:
+                    m.edges[k] = (a, b, self.time); break
             else:
                 m.edges.append((a, b, self.time))
         m.edges = [e for e in m.edges if self.time-e[2] < 40.][-150:]
@@ -512,17 +536,22 @@ class OrchardPolicy:
         now = self.time
         # which remembered items would some agent perceive right now?
         vis_t, vis_f = set(), set()
+        seen_t, seen_f = g.seen_trees, g.seen_fruits
         for a in g.agents:
             m = self.minds[a]; s = states[a]
             h, c, v = s['hearing_radius'], s['vision_angle'], s['vision_range']
-            edges = [(ea, eb) for ea, eb, et in m.edges if now-et < 40.]
+            edges = None
             def occluded(p):
+                nonlocal edges
                 if math.dist(p, m.pose.p) <= h-3.: return False   # hearing works through walls
+                if edges is None: edges = [(ea, eb) for ea, eb, et in m.edges if now-et < 40.]
                 return any(segments_cross(m.pose.p, p, ea, eb) for ea, eb in edges)
             for t in g.near_trees(m.pose.p, v):
-                if t.id not in vis_t and self._in_view(m.pose, h, c, v, t.p, 20.) and not occluded(t.p): vis_t.add(t.id)
+                if t.id in vis_t or t.id in seen_t or t.dead: continue    # only unseen live memories can be proven gone
+                if self._in_view(m.pose, h, c, v, t.p, 20.) and not occluded(t.p): vis_t.add(t.id)
             for f in g.near_fruits(m.pose.p, v):
-                if f.id not in vis_f and self._in_view(m.pose, h, c, v, f.p, 8.) and not occluded(f.p): vis_f.add(f.id)
+                if f.id in vis_f or f.id in seen_f: continue
+                if self._in_view(m.pose, h, c, v, f.p, 8.) and not occluded(f.p): vis_f.add(f.id)
         for tid in list(g.trees):
             t = g.trees[tid]
             if t.dead:
@@ -543,11 +572,18 @@ class OrchardPolicy:
         for t in g.trees.values():
             near = g.near_fruits(t.p, 70.)
             t.fruit_here = len(near); t.fruit_free = sum(1 for f in near if f.claimed is None)
+            t.cluster_t = -1.
         g.seen_trees.clear(); g.seen_fruits.clear()
 
     # ------------------------------------------------------------ economy
     def _n_est(self): return self.P['n0']*0.5**(self.time/self.P['tree_half'])
-    def _cap(self): return int(max(self.P['cap_min'], min(self.P['cap_max'], round(self.P['cap_mult']*self._n_est()))))
+    def _cap(self):
+        c = int(max(self.P['cap_min'], min(self.P['cap_max'], round(self.P['cap_mult']*self._n_est()))))
+        if self.P['cap_tree_slack'] >= 0 and self.groups:
+            # the population can only be fed by trees somebody knows about
+            known = max(sum(1 for t in g.trees.values() if not t.dead) for g in self.groups.values())
+            c = min(c, max(self.P['cap_hard_min'], known*self.P['tree_slots']+self.P['cap_tree_slack']))
+        return c
     def _fitness(self, s):
         """Harvesting/watching quality from public traits: swept vision area (range and cone),
         hearing disc, energy capacity, walking speed."""
@@ -560,7 +596,7 @@ class OrchardPolicy:
         if self.time < f.born_hi+self.P['fruit_min_wait']: return False   # extreme rule: always wait after first sighting
         if f.born_lo == -INF: return True
         # eat when surely ripe (20 s after the latest possible birth) or just before it can rot (50 s after the earliest)
-        t_eat = min(f.born_hi+self.P['ripen_wait'], f.born_lo+47.)
+        t_eat = min(f.born_hi+self.P['ripen_wait'], f.born_lo+self.P['rot_margin'])
         left = t_eat-self.time
         if left <= 0.: return True
         if old: return False
@@ -582,7 +618,8 @@ class OrchardPolicy:
         """Expected fruit energy at a site for this agent, minus travel, or -inf if unaffordable."""
         n = len(t.assigned-{m.aid})
         d = math.dist(t.p, m.pose.p)
-        if d > self.P['tree_reach']: return -INF
+        reach = self.P['tree_reach']*(self.P['lone_reach_mult'] if len(g.agents) <= 1 else 1.)
+        if d > reach: return -INF
         walk = max(1., min(s['speed'], s['sprint_speed'])*MOVE_PENALTY.get(s['biome'], 1.))
         travel_t = d/walk/10.; travel_e = d*0.05+travel_t
         wait = 0.; future = 0.
@@ -598,9 +635,30 @@ class OrchardPolicy:
             if not t.fresh and known > 15. and self.time-t.fruit_seen > known: rate *= 0.5   # watched, never fruited
             future = max(0., remaining-wait)*rate
         here = 55.*self._site_fruit(g, t, m.aid)
+        if self.P['cluster_radius'] > 0.:
+            # a site is worth every tree around it that the agent can also harvest from there
+            if t.cluster_t != self.time:
+                t.cluster = g.near_trees(t.p, self.P['cluster_radius']); t.cluster_t = self.time
+            for u in t.cluster:
+                if u.id == t.id or u.dead or len(u.assigned-{m.aid}) >= self.P['tree_slots']: continue
+                ur = (u.first+58.-self.time) if u.fresh else (u.first+55.-self.time)
+                if ur > 6.:
+                    ucell = g.cells.get(cell_of(u.p)); ub = ucell[1] if ucell else None
+                    future += 0.7*max(0., ur)*FRUIT_RATE.get(ub, 0.08)*60.
+                here += 55.*u.fruit_free
         if future+here <= 0.: return -INF
         if s['energy']-travel_e-wait-12. < 0.: return -INF
-        return (future+here)/(n+1)-travel_e-0.5*wait-self.P['dist_pen']*d
+        value = (future+here)/(n+1)-travel_e-0.5*wait-self.P['dist_pen']*d
+        if self.P['nursery_bonus'] > 0. and not m.heir_done and s['age'] >= self.P['heir_age']-8.:
+            # a parent about to leave an heir prefers a site where the child can eat at once
+            value += self.P['nursery_bonus']*min(4, t.fruit_free)
+        if self.P['spread_weight'] > 0.:
+            # family coverage: prefer sites far from where the others already look
+            others = [self.minds[a].pose.p for a in g.agents if a != m.aid]
+            if others:
+                gap = min(math.dist(t.p, q) for q in others)
+                value += self.P['spread_weight']*60.*min(1., gap/max(1., s['vision_range']))
+        return value
 
     def _assign_posts(self, g: Group, states):
         sites = [t for t in g.trees.values()]
@@ -639,13 +697,21 @@ class OrchardPolicy:
             s = states[a]
             if s['age'] > self.P['no_eat_age']: continue   # extreme rule: elders leave all fruit to the young
             full = s['energy'] > s['max_energy']-30.
-            reach = 60. if m.old else self.P['fruit_reach']
+            reach = self.P['old_reach'] if m.old else self.P['fruit_reach']*(self.P['lone_reach_mult'] if len(g.agents) <= 1 else 1.)
             for f in g.near_fruits(m.pose.p, reach):
                 if f.claimed is not None: continue
                 d = math.dist(f.p, m.pose.p)
                 if not self._ready(f, s['energy'], m.old): continue
                 owe_heir = (not m.heir_done) and s['age'] >= self.P['heir_age']-5. and s['energy'] < self.P['heir_reserve']+20.
-                bucket = 10 if (m.old or a in self.culled) else (0 if owe_heir else (9 if full else int(s['energy']//60)))
+                if m.old: bucket = 10 if self.P['old_eat_last'] else 5
+                elif a in self.culled: bucket = 10
+                elif owe_heir: bucket = 0
+                elif full: bucket = 9
+                elif self.P['feed_mode'] == 'breed':
+                    # food is for reproduction: agents that a meal brings to breeding energy first, then the rest by hunger
+                    bucket = 1 if s['energy'] < self._reserve()+20. else 2+int(s['energy']//120)
+                else:
+                    bucket = int(s['energy']//60)
                 pairs.append((bucket, -self._fitness(s), d, a, f.id))
         pairs.sort()
         taken = set()
@@ -816,11 +882,31 @@ class OrchardPolicy:
         for aid in elders:
             m = self.minds[aid]; s = states[aid]
             if m.heir_done or s['biome'] == 'river' or (aid in self.culled and not m.old): continue
-            if self.P['heir_select'] and fit[aid] < median_fit-self.P['heir_slack']: continue   # weak lineage: slot goes to a fitter parent
+            if self.P['heir_select'] and len(young) >= self.P['select_min_young'] and fit[aid] < median_fit-self.P['heir_slack']:
+                continue   # weak lineage while the colony is large: slot goes to a fitter parent
             dist, direction, turn, mode = plans[aid]
-            need = 101. if m.old else self.P['heir_reserve']
-            if s['energy']-cost_now(m, dist, turn, s) > need:
+            g = self.groups[m.group]
+            at_food = m.post is not None and m.post in g.trees and (g.trees[m.post].fruit_here > 0 or not g.trees[m.post].dead)
+            left = s['energy']-cost_now(m, dist, turn, s)
+            if m.old:
+                ok = left > 101.
+            else:
+                ok = left > self.P['heir_reserve'] or (self.P['heir_at_food'] and at_food and left > 130.)
+            if ok and self.P['heir_needs_site'] and not at_food and young_now >= cap and pop > 2:
+                ok = False   # no tree to inherit and the colony is already at its food-limited size
+            if ok:
                 spawn_set.add(aid); m.heir_done = True; self.metrics['old_births' if m.old else 'heir_births'] += 1; young_now += 1
+        # 1b. rich senescent agents standing at a fruiting site add extra children (their energy is lost otherwise)
+        for aid in elders:
+            m = self.minds[aid]; s = states[aid]
+            if not m.old or aid in spawn_set: continue
+            g = self.groups[m.group]
+            site = g.trees.get(m.post) if m.post is not None else None
+            late = self.time >= self.P['dump_after_t']   # late game: leftover energy buys extra watchers anywhere
+            if not late and (site is None or site.fruit_here < self.P['dump_food_site']): continue
+            dist, direction, turn, mode = plans[aid]
+            if s['energy']-cost_now(m, dist, turn, s) > 101. and young_now < cap*self.P['dump_mult']:
+                spawn_set.add(aid); self.metrics['old_births'] += 1; young_now += 1
         # 2. emergency: tiny population
         if pop <= 2:
             for aid, s in states.items():
@@ -839,7 +925,7 @@ class OrchardPolicy:
                 left = s['energy']-cost_now(m, dist, turn, s)
                 if m.old:
                     if not self.P['extra_old'] or left <= 101.: continue
-                elif left <= self._reserve(): continue
+                elif left <= (min(self._reserve(), self.P['low_pop_reserve']) if len(young) < self.P['cap_min'] else self._reserve()): continue
                 g = self.groups[m.group]
                 food = (m.post is not None and m.post in g.trees and not g.trees[m.post].dead) or bool(g.near_fruits(m.pose.p, 90.))
                 if not food: continue

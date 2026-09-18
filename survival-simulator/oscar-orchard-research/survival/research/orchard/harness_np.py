@@ -14,6 +14,7 @@ import harness  # noqa: E402  (sets up vendor path)
 from src.elements.environment import Environment  # noqa: E402
 
 Environment.spawn_predator = lambda self, *a, **k: None  # no predators, ever
+harness.PREDATORS = False  # same switch for the native engine (SURVIVAL_ENGINE=fast)
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()

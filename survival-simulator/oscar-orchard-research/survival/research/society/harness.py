@@ -14,6 +14,11 @@ sys.path.insert(0, str(ROOT / 'research'))
 sys.path.insert(0, str(ROOT / 'research' / 'society'))
 from src.core import SimulationCore
 
+# SURVIVAL_ENGINE=fast runs the native port (survival/fastsim), which reproduces this
+# engine step for step; see fastsim/README.md. harness_np sets PREDATORS = False.
+ENGINE = os.environ.get('SURVIVAL_ENGINE', 'python')
+PREDATORS = True
+
 
 def load_policy(spec, seed, **kw):
     """spec: 'module:Class' or one of the legacy simple modes."""
@@ -27,14 +32,34 @@ def load_policy(spec, seed, **kw):
 
 def run(spec, seed, horizon, out_dir, label='', record=False, verbose=False, sample_every=50., world_log=None, world_every=5., flee_log=None, **kw):
     start = time.perf_counter()
-    sim = SimulationCore(seed=seed)
+    fast = ENGINE == 'fast'
+    if fast:
+        sys.path.insert(0, str(ROOT))
+        import fastsim
+        if record:
+            raise ValueError('--record needs the Python engine (the recorder reads engine objects)')
+        sim = fastsim.SimulationCore(seed=seed, predators=PREDATORS)
+    else:
+        sim = SimulationCore(seed=seed)
     env = sim.env
     policy, pfile = load_policy(spec, seed, **kw)
 
     # --- read-only diagnostics ---
     diag = dict(deaths=[], fruit_eaten=0, fruit_energy=0., predator_energy_lost=0.)
+
+    def take_events():
+        # native engine: the same records the wrappers below collect
+        for kind, t, aid, age, energy in sim.pop_events():
+            if kind == 'fruit':
+                diag['fruit_eaten'] += 1
+                diag['fruit_energy'] += energy
+            else:
+                diag['deaths'].append(dict(t=round(t, 1), id=aid, age=round(age, 1), energy=round(energy, 2), cause=kind))
+                if kind == 'predator':
+                    diag['predator_energy_lost'] += energy
     phase = {'in_predator': False}
-    orig_kill, orig_remove_fruit, orig_non_agent_step = env.kill_agent, env.remove_fruit, env.non_agent_step
+    if not fast:
+        orig_kill, orig_remove_fruit, orig_non_agent_step = env.kill_agent, env.remove_fruit, env.non_agent_step
 
     def kill_agent(agent):
         cause = 'predator' if phase['in_predator'] else 'starvation'
@@ -80,7 +105,8 @@ def run(spec, seed, horizon, out_dir, label='', record=False, verbose=False, sam
             phase['agent_scan'] = False
         return r
 
-    env.kill_agent, env.remove_fruit, env.non_agent_step = kill_agent, remove_fruit, non_agent_step
+    if not fast:
+        env.kill_agent, env.remove_fruit, env.non_agent_step = kill_agent, remove_fruit, non_agent_step
 
     recorder = None
     if record:
@@ -90,6 +116,7 @@ def run(spec, seed, horizon, out_dir, label='', record=False, verbose=False, sam
                                   notes='state-only diagnostic sweep; generated map; observation-only policy')
 
     state = sim.step([])  # same first empty step as the official server
+    if fast: take_events()
     peak = state['num_agents']; samples = []; next_sample = sample_every
     if world_log: pathlib.Path(world_log).parent.mkdir(parents=True, exist_ok=True)
     wlog = open(world_log, 'w') if world_log else None; next_world = 0.
@@ -119,6 +146,7 @@ def run(spec, seed, horizon, out_dir, label='', record=False, verbose=False, sam
                 dec = getattr(policy, 'decisions', {}).get(aid)
                 flog.write(f"t={state['sim_time']:.1f} a{aid} e={ag.energy:.0f} age={ag.age:.0f} pos=({ag.x:.0f},{ag.y:.0f}) dir={ag.direction%6.2832:.2f} biome={obs_by[aid]['biome']} hear={ag.hearing_radius:.0f} vis={ag.vision_radius:.0f}/{ag.cone_angle:.2f} | P d={pd:.0f} pos=({pr.x:.0f},{pr.y:.0f}) dir={pr.direction%6.2832:.2f} rest={pr.resting} pe={pr.energy:.0f} | obs={po} | dec={dec} act=(d={act.move_distance:.1f},dir={act.move_direction:.2f},turn={act.turn_angle:.2f})\n")
         state = sim.step(actions)
+        if fast: take_events()
         if recorder: recorder.capture(actions)
         if wlog and state['sim_time'] >= next_world-1e-6:
             next_world += world_every; dump_world()
@@ -145,7 +173,7 @@ def run(spec, seed, horizon, out_dir, label='', record=False, verbose=False, sam
                   mean_energy_at_predator_death=round(sum(d['energy'] for d in pred_deaths)/max(1, len(pred_deaths)), 1),
                   deaths=diag['deaths'], samples=samples,
                   policy_metrics=getattr(policy, 'metrics', None),
-                  wall_seconds=round(time.perf_counter()-start, 1),
+                  wall_seconds=round(time.perf_counter()-start, 1), engine=ENGINE,
                   platform=platform.platform(), python=platform.python_version(),
                   policy_sha256=hashlib.sha256((ROOT/'research'/'society'/pfile).read_bytes()).hexdigest() if (ROOT/'research'/'society'/pfile).exists() else None,
                   source_commit='acfc31a4003a5f91bf11032a02cd98c178ddbd7e',

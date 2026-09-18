@@ -154,3 +154,24 @@ Finished pod batches are already in this branch under `survival/results/orchard/
 ## 8. Boundaries
 
 No competition validation or evaluation endpoint was called and no score was submitted. The vendored engine is unmodified; the harness wraps `kill_agent`, `remove_fruit` and `non_agent_step` read-only for diagnostics. The policy reads only observation fields and simulation time. Runs are local research and, per the team rules, every completed run should stay inspectable: this branch keeps the JSON results and world logs but not the replay files, which remain on Oscar's laptop.
+
+## Update 18 September 2026, late evening (Claude, orchard session)
+
+- Read `docs/survival-orchard.md` first: energy budget, ripeness fixes, tree-limited population, the
+  1600-run hyperparameter search, death-by-tree-count analysis, checkpoint methodology, rejected ideas.
+- Best configuration: `survival/results/orchard/best-config.json` (pass as `--kw` to `harness_np.py`,
+  `sweep.py` or `opt.py`). On 32 fresh seeds without predators: mean survival ~2530 s, fruit score ~148,
+  score ~2680, 5/32 runs reach 3000 s. Recorded validation runs: `survival/results/orchard/final/`.
+- Tools: `sweep.py` (parallel sweeps, `--record`), `opt.py` (random + hill-climbing search with successive
+  halving, tree-wall-credited objective), `opt_report.py`, `analyze.py` (`--pair`, death classes),
+  `snapshot.py` + `late_sweep.py` (late-game experiments from 1500 s checkpoints), `debug_*.py`
+  diagnostics (engine truth, never fed to the policy).
+- Search journals (every configuration and run): `artifacts/cpu-results/*/`; `artifacts/late-grid.json`
+  and `confirm-configs.json` are the late-game grid and the confirmed leaders.
+- Where it stands: the tuned late game is at a local optimum (single-parameter and behaviour changes on
+  44 checkpoints are all within +-60 s). Colonies die at 5-8 trees with 4-8 fruit on the map because heirs
+  restart at 75 energy; a different mechanism is needed to reach 3000 s reliably.
+- `survival/fastsim/` is the C++ engine port from the parallel Claude session (bit-identical to the
+  Python engine up to its set-ordering nondeterminism); build once with `fastsim/build.py`, then
+  `SURVIVAL_ENGINE=fast` on any harness command. `research/rustsim/` holds only a bit-exact port of
+  CPython's random.Random (parked).
