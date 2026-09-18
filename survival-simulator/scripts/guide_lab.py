@@ -52,22 +52,11 @@ def observations(env, agent):
 
 
 def choose_site(env, index=0):
+    from models.entrapment.observed_trap_sites import our_sites
     geometry = _Geometry(env.width, env.height,
                          [(o.x, o.y, o.width, o.height) for o in env.obstacles])
     static = dict(width=env.width, height=env.height, obstacles=geometry.rects)
-    # Include boundary gaps and short overlaps; preserve rear bait access.
-    sites = enumerate_sites(static, min_gap=10.1, min_overlap=10.3)
-    usable = []
-    for site in sites:
-        for distance in (25., 20., 30.):
-            handoff = tuple(site['mouth'][i] - site['inward'][i]*distance
-                            + site['cross'][i]*site['approach_lane_offset'] for i in range(2))
-            # A predator touching a radius-5 guide here is at most 15 units
-            # farther from bait. 45 + 15 <= its native 60-unit smell radius.
-            if geometry.free(handoff, 11.) and math.dist(handoff, site['goal']) <= 44.:
-                site['handoff'] = handoff
-                usable.append(site)
-                break
+    usable = our_sites(static)
     if index < 0 or index >= len(usable):
         raise ValueError(f'No usable site at index {index}; map has {len(usable)} eligible sites')
     return usable[index], geometry, len(usable)

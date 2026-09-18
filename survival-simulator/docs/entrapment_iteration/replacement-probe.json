@@ -1,0 +1,441 @@
+{
+  "seed": 424736271,
+  "encounter_seed": 1335789813,
+  "site": {
+    "mouth": [
+      641.041594575369,
+      849.6538977771984
+    ],
+    "inward": [
+      0.0,
+      -1.0
+    ],
+    "cross": [
+      1.0,
+      0.0
+    ],
+    "goal": [
+      641.041594575369,
+      844.6538977771984
+    ],
+    "far": [
+      641.041594575369,
+      974.6538977771984
+    ],
+    "hold": [
+      641.041594575369,
+      924.6538977771984
+    ],
+    "gap": 19.553929549882696,
+    "overlap": 69.80206729409645,
+    "runup": [
+      641.041594575369,
+      1099.6538977771984
+    ],
+    "approach_lane_offset": 0.0,
+    "offset_approach": false,
+    "obstacle_indices": [
+      6,
+      19
+    ],
+    "axis": 0,
+    "other_mouth": [
+      641.041594575369,
+      779.8518304831019
+    ],
+    "replacement_entry": [
+      641.041594575369,
+      759.8518304831019
+    ],
+    "second_access_clear": true,
+    "second_access_radius": 5.01,
+    "bait_depth": 5.0,
+    "boundary_indices": [],
+    "geometric_replacement_access_only": true,
+    "handoff": [
+      641.041594575369,
+      874.6538977771984
+    ]
+  },
+  "eligible_sites": 2,
+  "experiment": "30 preloaded + 1 sequential deliveries",
+  "outcome": "delivery_pass",
+  "frames": 685,
+  "seconds": 68.4,
+  "dt": 0.1,
+  "deliveries": [
+    {
+      "number": 1,
+      "predator_id": 31,
+      "start_time": 10.0,
+      "guide_start": [
+        1245.8441445994063,
+        742.6450936764326
+      ],
+      "predator_start": [
+        1352.9474162539057,
+        761.0495889007523
+      ],
+      "end_time": 38.4,
+      "duration": 28.4,
+      "delivered": true,
+      "guide_alive": false,
+      "capture": {
+        "time": 28.0,
+        "predators": [
+          31
+        ],
+        "cause": "predator"
+      },
+      "total_held": 31,
+      "prior_held_min": 30,
+      "prior_held_end": 30
+    }
+  ],
+  "baseline": {
+    "held": 30,
+    "passed": true,
+    "bait_alive": true,
+    "time": 10.0,
+    "rear_ids": []
+  },
+  "assumptions": [
+    "30 predators preplaced near the trap; first 30 deliveries are not tested",
+    "native simulator permits predator overlap; no predator separation force is added",
+    "new guide/predator encounters randomly placed at least 250 units from bait",
+    "guides start full; native energy/aging thereafter; survivors stand after their attempt",
+    "bait full energy and no aging; ambient predator additions disabled to isolate exactly 33",
+    "policy gets native observations and known map edges, never hidden predator state",
+    "Replacement fixture starts at rear staging; after arrival old bait is exhausted; replacement then becomes full-energy fixture bait"
+  ],
+  "success_rule": "Newcomer near bait (<=40) and sensing it for 10s; all original predators retained; final 30s hold with replacement side clear",
+  "policy_sha256": "fcc88bdaa4846a93c7e0a0d4fc7fb06dcbd9eeeb477a96ce7e7c0d5a3f59700c",
+  "final": {
+    "phase": "final_hold",
+    "total_predators": 31,
+    "held_count": 31,
+    "held_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "replacement_side_ids": [],
+    "initial_held": 30,
+    "bait_alive": true,
+    "initial_ever_left_hold_zone": [],
+    "initial_ever_beyond_60": [],
+    "active_guide_alive": null,
+    "all_33_continuous_seconds": 30.0,
+    "predators": [
+      {
+        "id": 1,
+        "x": 635.1083161285188,
+        "y": 860.2593669055385,
+        "distance_to_bait": 16.69534245960333,
+        "energy": 50.004391042664885,
+        "resting": false
+      },
+      {
+        "id": 2,
+        "x": 640.3881020942623,
+        "y": 860.588617773298,
+        "distance_to_bait": 15.948114427008589,
+        "energy": 34.614740864711635,
+        "resting": false
+      },
+      {
+        "id": 3,
+        "x": 634.9908697392851,
+        "y": 860.4422307426124,
+        "distance_to_bait": 16.908066976114743,
+        "energy": 36.302570783087916,
+        "resting": false
+      },
+      {
+        "id": 4,
+        "x": 639.2035660917061,
+        "y": 860.2444721190126,
+        "distance_to_bait": 15.698546334434651,
+        "energy": 32.919932362939406,
+        "resting": false
+      },
+      {
+        "id": 5,
+        "x": 638.3096182340971,
+        "y": 860.5936436479617,
+        "distance_to_bait": 16.17217342084191,
+        "energy": 47.62316410319996,
+        "resting": false
+      },
+      {
+        "id": 6,
+        "x": 634.7505627698285,
+        "y": 860.5872020218009,
+        "distance_to_bait": 17.130302546347192,
+        "energy": 31.167629069828656,
+        "resting": false
+      },
+      {
+        "id": 7,
+        "x": 632.2207884304046,
+        "y": 860.0981358842253,
+        "distance_to_bait": 17.785699641947833,
+        "energy": 68.00565804977752,
+        "resting": false
+      },
+      {
+        "id": 8,
+        "x": 630.7800042774555,
+        "y": 860.8808686881738,
+        "distance_to_bait": 19.199344269736766,
+        "energy": 57.98997556240273,
+        "resting": false
+      },
+      {
+        "id": 9,
+        "x": 638.5218373455682,
+        "y": 859.95188992171,
+        "distance_to_bait": 15.504120102433129,
+        "energy": 26.68030821815849,
+        "resting": false
+      },
+      {
+        "id": 10,
+        "x": 633.7204588684114,
+        "y": 860.2918656899026,
+        "distance_to_bait": 17.26687778605201,
+        "energy": 42.42254647824666,
+        "resting": false
+      },
+      {
+        "id": 11,
+        "x": 636.3783077467891,
+        "y": 860.1208708076283,
+        "distance_to_bait": 16.154674208093873,
+        "energy": 25.684086410394006,
+        "resting": false
+      },
+      {
+        "id": 12,
+        "x": 636.0200566191867,
+        "y": 860.2748876946127,
+        "distance_to_bait": 16.408265278369342,
+        "energy": 25.72812467437634,
+        "resting": false
+      },
+      {
+        "id": 13,
+        "x": 640.5770362250001,
+        "y": 862.7672274297192,
+        "distance_to_bait": 18.119286011368906,
+        "energy": 73.38816513107716,
+        "resting": false
+      },
+      {
+        "id": 14,
+        "x": 635.7609736899744,
+        "y": 860.2964064679371,
+        "distance_to_bait": 16.50978603965243,
+        "energy": 38.082404076085886,
+        "resting": false
+      },
+      {
+        "id": 15,
+        "x": 640.7153069316771,
+        "y": 863.7965609362279,
+        "distance_to_bait": 19.145443751621254,
+        "energy": 73.40515793120069,
+        "resting": false
+      },
+      {
+        "id": 16,
+        "x": 636.4249108111477,
+        "y": 860.1776467526346,
+        "distance_to_bait": 16.195695453767378,
+        "energy": 45.1589350055248,
+        "resting": false
+      },
+      {
+        "id": 17,
+        "x": 635.0925206043622,
+        "y": 860.0254082448182,
+        "distance_to_bait": 16.48256094084461,
+        "energy": 32.889700716070834,
+        "resting": false
+      },
+      {
+        "id": 18,
+        "x": 639.4939646586695,
+        "y": 860.4081601944837,
+        "distance_to_bait": 15.830096104311924,
+        "energy": 35.41201208887093,
+        "resting": false
+      },
+      {
+        "id": 19,
+        "x": 636.365389942053,
+        "y": 859.7821268332658,
+        "distance_to_bait": 15.834462546783493,
+        "energy": 33.61601730448831,
+        "resting": false
+      },
+      {
+        "id": 20,
+        "x": 636.7546199989795,
+        "y": 860.0487495434643,
+        "distance_to_bait": 15.980601112721338,
+        "energy": 34.61474048576737,
+        "resting": false
+      },
+      {
+        "id": 21,
+        "x": 633.6527791566613,
+        "y": 859.8461362055116,
+        "distance_to_bait": 16.893747415965755,
+        "energy": 20.66458899624051,
+        "resting": false
+      },
+      {
+        "id": 22,
+        "x": 640.5510902448498,
+        "y": 859.9363739442299,
+        "distance_to_bait": 15.290345721864647,
+        "energy": 35.31145602259229,
+        "resting": false
+      },
+      {
+        "id": 23,
+        "x": 637.6344129732994,
+        "y": 860.0159492389517,
+        "distance_to_bait": 15.735358641703735,
+        "energy": 70.88026068474903,
+        "resting": false
+      },
+      {
+        "id": 24,
+        "x": 639.2636861669139,
+        "y": 859.8514184464772,
+        "distance_to_bait": 15.301163119253758,
+        "energy": 60.31060445285016,
+        "resting": false
+      },
+      {
+        "id": 25,
+        "x": 633.9129549022646,
+        "y": 860.183628385391,
+        "distance_to_bait": 17.087715948949782,
+        "energy": 22.406812666687028,
+        "resting": false
+      },
+      {
+        "id": 26,
+        "x": 627.4123463075143,
+        "y": 859.8306828907928,
+        "distance_to_bait": 20.398314016875034,
+        "energy": 68.05626206780131,
+        "resting": false
+      },
+      {
+        "id": 27,
+        "x": 640.3775119974854,
+        "y": 860.2604801980281,
+        "distance_to_bait": 15.620704866567277,
+        "energy": 30.668324606572003,
+        "resting": false
+      },
+      {
+        "id": 28,
+        "x": 640.3780945282311,
+        "y": 860.3013240531503,
+        "distance_to_bait": 15.661487201856126,
+        "energy": 40.205335458665644,
+        "resting": false
+      },
+      {
+        "id": 29,
+        "x": 627.1368502549307,
+        "y": 860.6771281943817,
+        "distance_to_bait": 21.215226315524195,
+        "energy": 57.93849505432736,
+        "resting": false
+      },
+      {
+        "id": 30,
+        "x": 634.7494505381263,
+        "y": 860.2076676914045,
+        "distance_to_bait": 16.77828463012448,
+        "energy": 65.52095682244284,
+        "resting": false
+      },
+      {
+        "id": 31,
+        "x": 636.2816576847707,
+        "y": 860.0124092397124,
+        "distance_to_bait": 16.079206247407004,
+        "energy": 44.68091834918381,
+        "resting": true
+      }
+    ]
+  },
+  "events": [
+    {
+      "time": 10.0,
+      "event": "Start delivery 1: predator 31"
+    },
+    {
+      "time": 38.4,
+      "event": "Delivery 1: held; 31/31 held"
+    },
+    {
+      "time": 38.4,
+      "event": "Replacement bait enters from rear"
+    },
+    {
+      "time": 40.1,
+      "event": "Replacement arrived; old bait energy exhausted"
+    }
+  ],
+  "replacement": {
+    "start_time": 38.4,
+    "start": [
+      641.041594575369,
+      759.8518304831019
+    ],
+    "arrived": true,
+    "arrival_time": 40.1,
+    "alive_at_end": true
+  },
+  "replacement_side_final_period": [],
+  "replacement_side_ever": [],
+  "initial_min_held": 30,
+  "final_hold_min": 31,
+  "elapsed_seconds": 51.124
+}
