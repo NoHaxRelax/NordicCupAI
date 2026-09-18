@@ -471,7 +471,8 @@ def write_results(a: argparse.Namespace, client: Client, stats: Statistics, reco
               'limit': a.limit, 'no_think': a.no_think, 'json_mode': a.json_mode,
               'max_tokens': a.max_tokens, 'temperature': a.temperature, 'timeout': a.timeout,
               'start_offset': model.START_OFFSET, 'end_offset': model.END_OFFSET,
-              'pause_split': model.PAUSE_SPLIT, 'date': time.strftime('%Y-%m-%d %H:%M:%S')}
+              'pause_split': model.PAUSE_SPLIT, 'unit_split': os.environ.get('UNIT_SPLIT', 'sentence'),
+              'date': time.strftime('%Y-%m-%d %H:%M:%S')}
     tmp = target.with_name(target.name + '.tmp')
     tmp.write_text(json.dumps({'config': config, 'summary': summary, 'report': report,
                                'questions': records}, ensure_ascii=False, indent=1), encoding='utf-8')

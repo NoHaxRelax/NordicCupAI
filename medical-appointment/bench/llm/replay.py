@@ -63,14 +63,16 @@ def fitted(asr: str) -> Tuple[float, float]:
     return fwe, end
 
 
-_CONV_CACHE: Dict[Tuple[str, str], Tuple[list, float, list]] = {}
+_CONV_CACHE: Dict[Tuple[str, str, str], Tuple[list, float, list]] = {}
 
 
-def conversation(stem: str, asr: str):
-    key = (stem, asr)
+def conversation(stem: str, asr: str, unit_split: str = 'sentence'):
+    """Words, duration and units of one conversation, the units cut the way the
+    stored run cut them (config.unit_split; runs before 2026-09-18 are sentence)."""
+    key = (stem, asr, unit_split)
     if key not in _CONV_CACHE:
         words, duration, _ = load_words(TRANSCRIPTS / f'{stem}.{asr}.json')
-        _CONV_CACHE[key] = (words, duration, make_units(words))
+        _CONV_CACHE[key] = (words, duration, make_units(words, unit_split))
     return _CONV_CACHE[key]
 
 
@@ -91,7 +93,7 @@ def replay_file(path: Path, offsets: Optional[Tuple[float, float]], by_tid: Dict
         groups.setdefault(r['transcript_id'], []).append(r)
     for tid, recs in groups.items():
         stem, rows = by_tid[tid]
-        words, duration, units = conversation(stem, asr)
+        words, duration, units = conversation(stem, asr, cfg.get('unit_split') or 'sentence')
         if hasattr(variant, 'set_conversation'):
             variant.set_conversation(stem, asr)
         joint = getattr(variant, 'joint', False)
@@ -115,6 +117,7 @@ def replay_file(path: Path, offsets: Optional[Tuple[float, float]], by_tid: Dict
                           'prediction': pred, 'span': list(span) if span else None, 'gold': list(gold) if gold else None,
                           'tiou': temporal_iou(gold, span) if (gold and span) else (0.0 if gold else None)})
     return {'file': path.name, 'model': cfg.get('model'), 'variant': vname, 'asr': asr,
+            'unit_split': cfg.get('unit_split') or 'sentence',
             'partial': bool(d.get('summary', {}).get('partial')), 'questions': spans.total,
             'offsets': list(pair), 'stored_offsets': [cfg.get('start_offset'), cfg.get('end_offset')],
             'accuracy': spans.accuracy,
