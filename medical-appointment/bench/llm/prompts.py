@@ -684,6 +684,11 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     # the two act on different halves of the score: the ASR line on binaries (0.990 -> 0.997),
     # the acted-upon line on spans (tIoU 0.696 -> 0.710), so they are stacked and measured together
     'units-fewshot-both': FewShot('units', note_extra=_ASR_NOTE + _ACT_NOTE),
+    # How many example lines? The served block shows the 12 nearest positives + 2 negatives. On the
+    # evaluation set every training example is available (no conversation of it is in the pool), and
+    # on training FewShot already holds the tested conversation out, so these are honest LOO tests.
+    'units-fewshot-both-k40': FewShot('units', k=40, k_neg=8, note_extra=_ASR_NOTE + _ACT_NOTE),
+    'units-fewshot-both-kall': FewShot('units', k=10000, k_neg=10000, note_extra=_ASR_NOTE + _ACT_NOTE),
     'words-fewshot': FewShot('words'),
     'units-joint': Joint(),
     'units-joint-demo': JointDemo(2),
