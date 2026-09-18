@@ -14,6 +14,7 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_IMGSZ, DRONE_CONF   detector input size and confidence floor        [960, 0.25]
   DRONE_DETECT_EVERY        run the detector on every k-th frame            [1]
   DRONE_EXTENT_POLICY       detector | blend | prior                        [blend]
+  DRONE_CLASS_EXTENT        JSON per-class override, e.g. {"small_tower":"prior"} [{}]
   DRONE_EMIT_PARTIALS, DRONE_ENTRY_TRACKS, DRONE_CLIP_LAST_INDEX            [1, 1, 1]
   DRONE_BIRTH_CONFIDENCE, DRONE_UPDATE_CONFIDENCE                           [0.6, 0.4]
   DRONE_VERTICAL_FRACTION   band of the L1 crops, 0 = top                   [0]
@@ -67,6 +68,7 @@ CONFIG = RevisitConfig(
     clip_last_index=_flag('DRONE_CLIP_LAST_INDEX', True),
     birth_confidence=float(os.environ.get('DRONE_BIRTH_CONFIDENCE', '0.6')),
     update_confidence=float(os.environ.get('DRONE_UPDATE_CONFIDENCE', '0.4')),
+    class_extent=json.loads(os.environ.get('DRONE_CLASS_EXTENT', '{}')) or None,
 )
 # Several replays share one machine: cap the per-process thread pools so
 # concurrent processes do not thrash (0 keeps the library defaults).

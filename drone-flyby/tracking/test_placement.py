@@ -161,6 +161,14 @@ class TrackerPlacementTests(unittest.TestCase):
         tracker.update([], self.full, 6, 6)  # now fully inside the view and unseen: retired
         self.assertEqual(len(tracker.tracks), 0)
 
+    def test_class_extent_overrides_default_policy(self):
+        config = RevisitConfig(extent_policy='blend', class_extent={'tank': 'prior'})
+        tracker = RevisitTracker(self.model, 's', config); tracker.prior = prior()
+        rows = tracker.update([self.detection([100, 100, 120, 130], self.full)], self.full, 1, 1)
+        np.testing.assert_allclose(rows[0]['bbox_source_xyxy'], [90, 85, 130, 145])  # prior size for the tank
+        with self.assertRaises(ValueError):
+            RevisitConfig(class_extent={'tank': 'nonsense'})
+
     def test_state_round_trip_keeps_placement_config(self):
         config = RevisitConfig(extent_policy='blend', emit_partials=True, clip_last_index=True)
         tracker = RevisitTracker(self.model, 's', config)

@@ -63,6 +63,7 @@ class RevisitConfig:
     clip_last_index: bool = False
     forecast_decay: float = 0.
     entry_tracks: bool = False
+    class_extent: dict | None = None  # per-class override of extent_policy, e.g. {'small_tower': 'prior'}
 
     def __post_init__(self):
         for name in ('birth_confidence', 'update_confidence', 'association_iou',
@@ -73,6 +74,9 @@ class RevisitConfig:
             raise ValueError(f'extent_policy must be one of {EXTENT_POLICIES}')
         if self.prior_weight is not None and not 0 <= float(finite(self.prior_weight, 'prior_weight')) <= 1:
             raise ValueError('prior_weight must lie in [0,1]')
+        for label, policy in (self.class_extent or {}).items():
+            if policy not in EXTENT_POLICIES:
+                raise ValueError(f'class_extent[{label!r}] must be one of {EXTENT_POLICIES}')
         if self.needs_prior and not self.size_prior:
             raise ValueError('This extent policy or partial emission needs a size prior')
         if self.birth_confidence < self.update_confidence:
@@ -86,7 +90,13 @@ class RevisitConfig:
 
     @property
     def needs_prior(self):
-        return self.emit_partials or self.entry_tracks or (self.extent_policy != 'detector' and self.prior_weight != 0)
+        return (self.emit_partials or self.entry_tracks or (self.extent_policy != 'detector' and self.prior_weight != 0)
+                or any(p != 'detector' for p in (self.class_extent or {}).values()))
+
+    def policy_for(self, label):
+        """(policy, prior_weight) for one class: the per-class override or the default."""
+        override = (self.class_extent or {}).get(label)
+        return (override, None) if override else (self.extent_policy, self.prior_weight)
 
     def load_prior(self):
         """The class size prior this configuration uses, or None when unused."""
@@ -112,10 +122,10 @@ def frame_rows(detections, view, config, prior):
         complete = (d.complete and np.all(np.array(d.box[:2]) > margin) and
                     np.all(np.array(d.box[2:]) < np.array(view.image_size)-margin))
         if complete and d.confidence >= config.birth_confidence:
-            box = normalize_extent(d.label, source, prior, config.extent_policy, config.prior_weight)
+            box = normalize_extent(d.label, source, prior, *config.policy_for(d.label))
             confidence = d.confidence
         elif config.emit_partials:
-            box = (place_partial(d.label, source, view.region, view.source_size, prior, config.extent_policy, config.prior_weight, margin)
+            box = (place_partial(d.label, source, view.region, view.source_size, prior, *config.policy_for(d.label), margin)
                    if not complete else source)
             confidence = d.confidence*config.partial_confidence_scale
         else:
@@ -246,7 +256,7 @@ class RevisitTracker:
                         np.all(np.array(d.box[2:]) < np.array(view.image_size)-margin))
             if complete:
                 # The stored extent follows the scoring convention, not the silhouette.
-                source = normalize_extent(d.label, source, self.prior, self.config.extent_policy, self.config.prior_weight)
+                source = normalize_extent(d.label, source, self.prior, *self.config.policy_for(d.label))
             if d.confidence >= self.config.update_confidence:
                 incoming.append((d, source, complete))
         if not detector_ran and incoming:
@@ -334,7 +344,7 @@ class RevisitTracker:
                     # Report what is visible now; an object entering at the frame
                     # edge is scored against an equally clipped organizer box.
                     shown = box if complete else place_partial(d.label, box, view.region, view.source_size, self.prior,
-                                                               self.config.extent_policy, self.config.prior_weight,
+                                                               *self.config.policy_for(d.label),
                                                                self.config.crop_margin_pixels*max(view.scale))
                     self.transients.append({'track_id': f'transient-{len(self.transients)+1:03d}', 'object_id': d.label,
                                             'bbox_source_xyxy': shown, 'confidence': d.confidence*self.config.partial_confidence_scale,

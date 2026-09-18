@@ -40,6 +40,7 @@ def main():
     parser.add_argument('--imgsz', default='960')
     parser.add_argument('--conf', default='0.25')
     parser.add_argument('--extent-policy', default='blend')
+    parser.add_argument('--class-extent', default=None, help='JSON per-class extent override')
     parser.add_argument('--detect-every', default='1')
     parser.add_argument('--log-dir', default=str(HERE/'logs'))
     parser.add_argument('--realtime', action='store_true')
@@ -53,6 +54,8 @@ def main():
     env['DRONE_OVERVIEW_BETWEEN_SIDES'] = args.overview_between_sides
     env['DRONE_VERTICAL_FRACTION'] = args.vertical_fraction
     env['DRONE_CAMERA_MODE'] = args.camera_mode
+    if args.class_extent:
+        env['DRONE_CLASS_EXTENT'] = args.class_extent
     env['DRONE_REVISIT_EVERY'] = args.revisit_every
     env['DRONE_REVISIT_MIN_AGE'] = args.revisit_min_age
     if args.birth_confidence:
