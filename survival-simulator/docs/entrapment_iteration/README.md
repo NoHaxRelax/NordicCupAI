@@ -26,11 +26,17 @@ stay clear. Same criteria as `docs/guide_multi_1000_results.md`.
 | Bounded wait for observed stationary predator | — | 63 |
 | Distant, sight-checked sacrifice (opt-in) | 5 | — |
 | Prefer a central valid site | 5 | — |
+| Sight guard at the ordinary delivery distance | 8 | — |
 
 Each column uses identical map/encounter seeds across variants. The 12-map and
 100-map encounter lists differ. These are repeated development measurements,
 not independent estimates of general reliability. The tracking change won
 seven cases and lost three versus baseline. Four of the 100 maps had no site.
+The selected default passed **74/100 on fresh maps**, or **74/98 eligible maps**.
+None of these map seeds overlaps the development set. A binomial Wilson 95%
+interval is about 64.6–81.6%, describing this protocol, not whole-game reliability.
+Failures: 12 original-group retention failures, 10 delivery/retention failures,
+2 rear-side failures, and 2 maps without a site.
 The historical 1,000-case result remains unchanged; it does not evaluate these
 new policies. No 95% delivery reliability is claimed.
 
@@ -95,12 +101,12 @@ score comparisons. Proximity is a proxy for capture, and bait occupancy is based
 on the policy's estimated localization. Every native tick is recorded. Replay:
 http://localhost:9063 (seed 0, 600 seconds, native sprites).
 
-The 100-case tracking-plus-route-recovery overview is at http://localhost:9064.
+The fresh 100-case tracking-plus-route-recovery overview is at http://localhost:9064.
 It shows all outcomes and provides on-demand native-sprite replays from frozen
 source. Re-rendered multi-predator outcomes/final states must match the recorded
 evaluation before display. The original tick traces are also downloadable.
 Restart it with `python scripts/guide_batch_viewer.py
-logs/entrapment-iteration/track-rejoin-100 --port 9064` from the simulator folder.
+logs/entrapment-iteration/track-rejoin-fresh100 --port 9064` from the simulator folder.
 
 ## Implementation and limits
 
@@ -126,16 +132,18 @@ logs/entrapment-iteration/track-rejoin-100 --port 9064` from the simulator folde
 - A recording-only hearing audit of the 200-second native game counted 27
   exposed bystander agent-ticks out of 28,560, and zero hearing-exposed ticks
   involving predators within 40 of bait. This does not audit vision or prove
-  safety; there is no matched baseline.
+  safety; there is no matched baseline. The selected-default 300-second audit
+  found 2 hearing-exposed bystander ticks out of 46,687, also zero involving the
+  held group. Neither audit covers vision.
 
 ## Remaining experiments
 
 The nine-way delivery-radius/walking-threshold screen found no improvement over
 its 17/20 control. Bounded waiting regressed to 63/100 and is not enabled.
 The waiting variant passed 72/100 on fresh maps (batch seed 19092026). The
-selected default is being evaluated on the same fresh cases. Central-site
-ranking regressed to 5/12 and is not enabled. Native-game coordination checks
-and a near-distance sight guard remain in progress.
+selected default passed 74/100 on the same fresh cases. Central-site
+ranking regressed to 5/12 and is not enabled. The near-distance sight guard also regressed (8/12 versus 9/12) and is not
+enabled. The selected-default native-game check is complete.
 
 The native console formerly labeled cumulative guide assignments as `guides`.
 It now reports `active_guides` and `guide_assignments` separately. A speculative

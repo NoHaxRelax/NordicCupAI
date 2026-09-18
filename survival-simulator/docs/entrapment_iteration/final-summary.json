@@ -1,0 +1,70 @@
+{
+  "selected_default": "Observed-motion association, 55-unit sacrifice threshold, recovery into predator-width routes",
+  "development": {
+    "passed": 72,
+    "maps": 100,
+    "eligible": 96
+  },
+  "fresh": {
+    "passed": 74,
+    "maps": 100,
+    "eligible": 98,
+    "binomial_wilson_95_percent_interval": [
+      64.6,
+      81.6
+    ],
+    "outcomes": {
+      "delivery_pass": 74,
+      "initial_predators_escaped": 12,
+      "delivery_or_retention_failed": 10,
+      "no_usable_bait_site": 2,
+      "wrong_side": 2
+    },
+    "newcomer_delivered": 77,
+    "shared_map_seeds_with_development": 0
+  },
+  "versus_waiting_on_fresh": {
+    "wins": [
+      8,
+      12,
+      19,
+      24,
+      33,
+      36,
+      50,
+      52,
+      57,
+      61,
+      79,
+      87,
+      92
+    ],
+    "losses": [
+      5,
+      16,
+      29,
+      37,
+      41,
+      53,
+      72,
+      88,
+      94,
+      95,
+      98
+    ]
+  },
+  "replacement_sample": {
+    "maps": 12,
+    "passed_with_and_without_replacement": 9,
+    "replacements_arrived_alive": 12
+  },
+  "runpod_spent_usd": 0,
+  "limitations": [
+    "95% reliability not achieved",
+    "Benchmark uses 30 preloaded predators and fixture bait, not a whole native game",
+    "Fresh interval describes this 100-map benchmark protocol",
+    "Native integration checked for 300 seconds, not full-game retention",
+    "Surviving guide release not demonstrated",
+    "Account usage remaining is not exposed"
+  ]
+}
