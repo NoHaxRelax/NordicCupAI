@@ -56,7 +56,7 @@ DEFAULTS = dict(
     staff_range=230.0,           # staff a station in advance only with a loose predator this close to its mouth
     turn_bonus=math.radians(50), # extra steering allowance for a guide with spare sprint energy
     lead_max=900.0,              # longest lead (guide to entry + corridor + run-in) worth starting
-    gap_reserve=False,           # reserve bait 10 behind the front one (A/B over 32 runs: no gain)
+    gap_reserve=True,            # replacement enters behind a dying bait and moves up when it dies (fixture 6/6)
     leash_min_energy=330.0,      # measured: ~200 + 0.09 x lead at p90, plus 100 to sprint at the end
     leash_lead_max=900.0,        # longest leash lead (guide to entry + corridor + run-in)
     hold_bait_min_life=120.0,    # life on arrival for a bait replacing one at a station that holds predators
@@ -925,23 +925,30 @@ class TrapManager:
 
     def _gap_approach(self, world: WorldState, holder: Holder, a: AgentView, site: Site, goal, held_now):
         """Reach a point inside a gap passage through the far mouth, never through the
-        predator crowd at the front mouth; wait outside if a loose predator sits there."""
+        predator crowd at the front mouth; wait back if a loose predator sits at the far mouth
+        (predators held at the front mouth do not count, even on a short passage)."""
         far = site.far_mouth if site.far_mouth is not None else site.front_mid
-        outside = add(far, mul(site.normal, -80.0))
-        if not free_point(outside, 7.0, world.rects, world.width, world.height):
-            outside = site.successor if site.far_mouth is not None else add(far, mul(site.normal, 40.0))
+        back = mul(site.normal, -1.0)
         inside_passage = abs(dot(sub(a.p, site.front_mid), site.axis)) < site.length + 5 and \
             abs(dot(sub(a.p, site.front_mid), (-site.axis[1], site.axis[0]))) < site.thickness / 2 + 1.0 and \
             dot(sub(a.p, site.front_mid), site.axis) > -1.0
         if inside_passage:
             return step_toward(a, goal, min(a.walk * a.move_modifier, dist(a.p, goal)), face=goal), 'gap: walking the passage'
-        loose = [p for p in world.recent_predators() if dist(p.p, far) < 75 and not is_resting(p)]
-        near_far = dist(a.p, far) < 45 and path_clear(a.p, far, AGENT_RADIUS + 0.5, world.rects)
-        if loose and (dist(a.p, outside) < 12 or near_far):
-            return hold(a), 'gap: waiting for the far-mouth predators to rest'
-        if dist(a.p, outside) < 6 or near_far:
-            return step_toward(a, far, a.walk * a.move_modifier, face=far), 'gap: entering the far mouth'
-        act, why = holder.act(a, outside, site, avoid=[(site.held_center(), self.P['zone_radius'])])
+        held_here = set(held_now) if isinstance(held_now, (set, dict)) else set()
+        loose = [p for p in world.recent_predators() if dist(p.p, far) < 75 and not is_resting(p)
+                 and p.pid not in held_here and dot(sub(p.p, site.front_mid), site.normal) < 5.0]
+        d_far = dist(a.p, far)
+        if loose:
+            wait_pt = add(far, mul(back, 110.0))
+            if dist(a.p, wait_pt) < 8.0:
+                return hold(a), 'gap: waiting back, a loose predator is at the far mouth'
+            act, why = holder.act(a, wait_pt, site, avoid=[(site.held_center(), self.P['zone_radius'])])
+            return act, 'gap: falling back, a loose predator is at the far mouth'
+        if d_far < 45.0 and path_clear(a.p, far, AGENT_RADIUS + 0.5, world.rects):
+            return step_toward(a, far, min(a.walk * a.move_modifier, d_far + 2.0), face=far), 'gap: entering the far mouth'
+        # approach the far mouth from behind: aim at a point 30 out of it, around the front mouth crowd
+        approach = add(far, mul(back, 30.0))
+        act, why = holder.act(a, approach, site, avoid=[(site.held_center(), self.P['zone_radius']), (site.front_mid, 80.0)])
         return act, why.replace('holder', 'gap route')
 
     def _wild_threat(self, world: WorldState, st: Station, a: AgentView, held_now):
