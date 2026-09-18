@@ -71,3 +71,15 @@ def our_sites(static, *, corner_only=False):
                 result.append(accepted)
                 break
     return result
+
+
+def available_sites(static, *, keep_corner_sites=False):
+    """Prefer crevices; use certified corner pockets when no crevice qualifies.
+
+    Keep an occupied corner in revalidation even if exploration later discovers
+    a crevice, so finding a new site never evicts established bait.
+    """
+    regular = our_sites(static)
+    if regular and not keep_corner_sites:
+        return regular
+    return regular + our_sites(static, corner_only=True)

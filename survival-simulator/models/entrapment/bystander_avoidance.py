@@ -11,8 +11,8 @@ from shapely.geometry import LineString, Point
 TERRAIN = {'forest': 1., 'grassland': 1., 'desert': .8, 'swamp': .5, 'river': .3}
 
 
-def avoid_predators(action, state, bait=None):
-    predators = [o for o in state['observations'] if o['type'] == 'Predator']
+def avoid_predators(action, state, bait=None, shared_predators=()):
+    predators = [o for o in state['observations'] if o['type'] == 'Predator'] + list(shared_predators)
     if not predators and (bait is None or math.hypot(*bait) > 125.):
         return action, False
     walls = [LineString(o['coords']) for o in state['observations'] if o['type'] == 'Edge']
