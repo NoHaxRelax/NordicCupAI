@@ -101,13 +101,4 @@ def prioritize(action, bait, edges, agent, memory, target=None):
         debug = {'mode': debug}
         memory['debug'] = debug
     debug['steering'] = best[2]
-    # `_guide`'s mode describes its requested pace, before safety steering and
-    # the native low-energy walking cap. Show the action actually returned.
-    debug['steering'].update(
-        selected_move=round(best[1]['move_distance'], 3),
-        sprint_selected=best[1]['move_distance'] > agent['speed'],
-        movement_cap=cap,
-        energy=round(energy, 3),
-        low_energy_walk_cap=energy < agent.get('max_energy', 500.) / 5,
-    )
     return best[1]

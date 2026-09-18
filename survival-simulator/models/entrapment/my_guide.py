@@ -171,7 +171,11 @@ def _guide(bait, edges, agent, context, memory):
         memory['_last_predator_fixed'] = to_fixed((predator['distance']*math.cos(predator['angle']),
                                                    predator['distance']*math.sin(predator['angle'])))
         memory['_last_contact_position_fixed'] = to_fixed((0., 0.))
-    if predator is None or not_following:
+    # A visible, motion-associated target is actionable even when the
+    # following heuristic temporarily disagrees.  Returning toward a visible
+    # predator can undo hundreds of units of route progress after ordinary
+    # pivots around walls.  Reserve recovery for an actual loss of contact.
+    if predator is None:
         action = _return_to_predator(bait, edges, agent, memory, to_local, turn)
         memory['debug']['following_check'] = memory['_following_debug']
         return action
