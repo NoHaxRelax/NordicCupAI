@@ -20,11 +20,12 @@ stay clear. Same criteria as `docs/guide_multi_1000_results.md`.
 | Require newcomer within bait hearing before stopping | 9 | — |
 | Restrict stopping to the front approach lane | 10 | 65 |
 | Front-lane stop plus recovery into predator-width paths | — | 67 |
-| 55-unit stop, tracking plus route recovery (current default) | — | 72 |
+| 55-unit stop, tracking plus route recovery (current default) | 9 | 72 |
 | Crowd-preference sacrifice guard | 9 | — |
 | Side-offset handoff | 6 | — |
 | Bounded wait for observed stationary predator | — | 63 |
 | Distant, sight-checked sacrifice (opt-in) | 5 | — |
+| Prefer a central valid site | 5 | — |
 
 Each column uses identical map/encounter seeds across variants. The 12-map and
 100-map encounter lists differ. These are repeated development measurements,
@@ -64,7 +65,10 @@ rear staging point during final hold. It walks into the channel; after arrival,
 the old bait is explicitly exhausted and retention is measured against the new
 bait. This isolates physical handoff access. It does not test travel from a
 random location, candidate scheduling, or natural old-bait life estimation.
-Those are exercised separately by native games. Replacement position/energy/
+A paired 12-case check of the selected default passed the same 9 cases with
+and without physical replacement. All 12 replacements arrived and were alive
+at the end; no additional failed outcomes were introduced in this sample.
+Those wider scheduling concerns are exercised separately by native games. Replacement position/energy/
 alive status are retained in the tick trace.
 
 ## Native game checks
@@ -123,8 +127,10 @@ logs/entrapment-iteration/track-rejoin-100 --port 9064` from the simulator folde
 
 The nine-way delivery-radius/walking-threshold screen found no improvement over
 its 17/20 control. Bounded waiting regressed to 63/100 and is not enabled.
-Fresh-map validation, paired physical bait replacement, central-site ranking,
-and a native game of the selected default are being recorded. Smaller stopping distances
+The waiting variant passed 72/100 on fresh maps (batch seed 19092026). The
+selected default is being evaluated on the same fresh cases. Central-site
+ranking regressed to 5/12 and is not enabled. Native-game coordination checks
+and a near-distance sight guard remain in progress. Smaller stopping distances
 and front-lane restrictions regressed and should not be promoted from intuition.
 Do not read 96.5% map-site availability as a delivery success rate.
 
