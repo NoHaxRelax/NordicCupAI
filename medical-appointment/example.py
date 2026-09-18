@@ -7,6 +7,8 @@ worth nothing.
 """
 
 import logging
+import os
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
 
 import model
 from dtos import ASRQuestionRequestDto, ASRQuestionResponseDto
@@ -17,6 +19,13 @@ logger = logging.getLogger(__name__)
 # Load the ASR and exercise the LLM once, at import. The first inference is the
 # slowest and there is no grace period for it.
 model.warm_up()
+
+# Hard wall for one conversation. model.answer_all bounds its own LLM calls (LLM_DEADLINE),
+# but nothing bounds the ASR, and the evaluator scores a reply that arrives after 60 s as ten
+# wrong answers. Past this many seconds the request is answered with guesses instead.
+PREDICT_DEADLINE = float(os.environ.get('PREDICT_DEADLINE', '55'))
+_pool = ThreadPoolExecutor(max_workers=4, thread_name_prefix='predict')
+timed_out = 0
 
 
 def _dump(audio_filename: str, audio_bytes: bytes, questions) -> None:
@@ -47,7 +56,13 @@ def predict(request: ASRQuestionRequestDto) -> ASRQuestionResponseDto:
     try:
         audio_bytes = decode_audio(request.audio_base64)
         _dump(request.audio_filename, audio_bytes, request.questions)
-        answers, spans = model.answer_all(audio_bytes, request.audio_filename, request.questions)
+        future = _pool.submit(model.answer_all, audio_bytes, request.audio_filename, request.questions)
+        try:
+            answers, spans = future.result(timeout=PREDICT_DEADLINE)
+        except FutureTimeout:
+            global timed_out
+            timed_out += 1
+            raise TimeoutError(f'answer_all still running after {PREDICT_DEADLINE:.0f} s; answering with guesses')
         if len(answers) != n or len(spans) != n:
             raise ValueError(f'model returned {len(answers)} answers for {n} questions')
     except Exception:

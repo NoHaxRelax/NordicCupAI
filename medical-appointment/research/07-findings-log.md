@@ -660,3 +660,19 @@ Until now the endpoint could only run the Ollama 4B with the plain `units` promp
 | clause-and | 64.8 | 0.919 | 146 | 0.951 | 30 | 2 |
 
 Ten per cent more units close 0.058 of the 0.085 between the sentence oracle and the word-level oracle (0.946, entry 42), and golds under 0.7 fall from 32 to 6. What remains is two annotation errors (gold = the opening "Good"), adjunct boundaries with no comma or conjunction ("100 mg daily | for 2 weeks", "taken your blood test today | as part of the follow-up") and starts that skip a lead-in word. The oracle only says the boundaries now exist; whether the 27B cites the right clause, and whether it still cites both halves when the gold is the whole sentence, is what DTU job 29442374 measures (`bench/hpc/clause_bench.lsf`: one vLLM, `units-fewshot`, the three clause modes, results named `<model>.<variant>.<asr>.<mode>.json`). `bench.py` records `unit_split` in the run config and `replay.py` rebuilds units in that mode.
+
+### 48. Clause units measured with the LLM: +0.015 to +0.019 on three runs, binaries untouched; serve `UNIT_SPLIT=clause-and` (2026-09-18 12:50)
+
+DTU jobs 29442374, 29442469, 29442470, 29442484 (`bench/hpc/clause_bench.lsf`, H100, turbo transcripts, training set, replayed; paired difference with a standard error clustered over the 39 conversations):
+
+| run | sentence units | clause-and units | paired difference | accuracy | zero-overlap |
+|---|---:|---:|---:|---|---|
+| Qwen3.8-27B `units-fewshot` | 0.7974 | 0.8125 | +0.0151 ± 0.0089 | 0.990 both | 17 both |
+| Qwen3.6-27B `units-fewshot` | 0.7970 | 0.8139 | +0.0169 ± 0.0082 | 0.987 both | 17 both |
+| Qwen3.8-27B `units-joint-demo` | 0.7936 | 0.8126 | +0.0190 ± 0.0135 | 0.995 both | 18, 16 |
+
+The milder modes land where their oracle ceilings put them (entry 47): `clause` 0.8024 (+0.0050 ± 0.0064), `clause-all` 0.8068 (+0.0094 ± 0.0078), `clause-and` 0.8125. No single run clears two standard errors by much, but three runs on two models and two prompt designs agree in sign and size, the three modes order themselves by their ceilings, and the mechanism was predicted before the measurement (entry 45 priced the clause loss at +0.048 with perfect trimming; this recovers a third of it, the share the committee's replay had estimated). Accuracy does not move and the wrong-sentence cases stay where they were: the gain is span extent only. Latency is unchanged (2.8 s mean, 6.5 s worst per conversation; 1502 prompt tokens against 1472).
+
+What did not help. `clause-prep` (also cutting before comma-less prepositions and subordinators): oracle 0.921 against clause-and's 0.919 for five per cent more units; not benchmarked, removed. `units-fewshot-cl` (one prompt line explaining that a sentence can appear as several pieces, written after reading the 12 positives that lost tIoU, 9 of which cited fewer pieces than the gold covers): 0.8144 against 0.8125, +0.0019 ± 0.0046; the variant stays in `prompts.py` but the plain prompt is served. Many-shot on the 27B (`units-joint-demo-all`, 44.5k prompt tokens, 20.7 s per conversation): 0.7899, accuracy 390 of 390 but mean tIoU 0.650; like Opus (entry 41), more worked conversations do not buy spans. Joint-demo-fewshot on the Qwen3.6-27B is still running in job 29442160 and no longer matters.
+
+**Serving decision:** Qwen3.8-27B, `LLM_VARIANT=units-fewshot`, `UNIT_SPLIT=clause-and` (set in the laptop's serve.env; the code default stays `sentence` so every stored bench run keeps reproducing). Expected training score 0.81. Open caveat: validation golds run about a second longer than training golds (committee report 01), so clause golds may be rarer there; the held-out check through the real pipeline reports both modes, and that number is shown to Elias, not used to pick.
