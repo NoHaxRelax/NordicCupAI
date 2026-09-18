@@ -14,8 +14,9 @@ from models.exploration.global_planner import load_planner_config
 from models.exploration.navigation import Navigator
 from models.exploration.world_estimator import rotate
 from models.survival.oscar_orchard import OrchardPolicy, MOVE_PENALTY
-from models.entrapment.observed_trap_sites import observed_rectangles, our_sites
+from models.entrapment.observed_trap_sites import observed_rectangles, available_sites
 from models.entrapment.my_guide import guide
+from models.entrapment.bystander_avoidance import avoid_predators
 
 
 def action_for(aid, **kwargs):
@@ -54,6 +55,7 @@ class Track:
     memory: dict = field(default_factory=dict)
     edges: list = field(default_factory=list)
     completed_at: float | None = None
+    held_since: float | None = None
 
 
 class EntrapmentPolicy:
@@ -80,7 +82,7 @@ class EntrapmentPolicy:
         self.next_site_check = 0.
         self.map_stats = {}
         self.now = 0.
-        self.metrics = dict(site_discoveries=0, guide_assignments=0, guide_deaths=0,
+        self.metrics = dict(site_discoveries=0, guide_assignments=0, guide_deaths=0, guide_releases=0,
                             delivery_arrivals=0, bait_arrivals=0, overlapping_replacements=0,
                             estimated_unbaited_seconds=0., no_viable_bait_ticks=0)
         self.last_time = None
@@ -102,13 +104,15 @@ class EntrapmentPolicy:
             self.map_stats[gid] = dict(edges=len(group.edges), anchored=group.anchored,
                                       rectangles=0 if static is None else len(static['obstacles']))
             if static is None: continue
-            sites = our_sites(static)
+            sites = available_sites(static, keep_corner_sites=(self.site is not None and
+                                    self.site.get('site_kind') == 'corner_pocket'))
             self.map_stats[gid]['our_sites'] = len(sites)
             candidates.extend((gid, group.frame_revision, site) for site in sites)
         if self.site is not None:
             # Observe and revalidate, including newly discovered blocking walls.
             same = next((c for c in candidates if c[0] == self.site_group
-                         and c[1] == self.site_frame and math.dist(c[2]['goal'], self.site['goal']) < 2.), None)
+                         and c[1] == self.site_frame and math.dist(c[2]['goal'], self.site['goal']) <
+                         (.02 if self.site.get('site_kind') == 'corner_pocket' else 2.)), None)
             if same:
                 return
             self.event('site_invalidated_by_mapping')
@@ -215,10 +219,44 @@ class EntrapmentPolicy:
                     self.tracks[track.key] = track
                 used.add(track.key)
                 track.observers[aid] = obs
+        # A long occlusion/localization correction may create a new track for
+        # the guide's only visible predator. Do not keep an obsolete assignment
+        # while assigning another guide to that same current sighting. This is
+        # deliberately limited to one observed target; crowded sightings remain
+        # ambiguous and are not merged by proximity alone.
+        for old in list(self.tracks.values()):
+            aid = old.guide_id
+            if aid not in states or aid in old.observers or self.now-old.seen <= .5:
+                continue
+            visible = [t for t in self.tracks.values()
+                       if t.group == old.group and aid in t.observers]
+            if len(visible) != 1:
+                continue
+            current = visible[0]
+            old.guide_id = None
+            old.memory = {}
+            old.completed_at = None
+            if current.guide_id not in states:
+                current.guide_id = aid
+                current.edges = old.edges
+                current.memory = {}
+                current.completed_at = None
+            self.metrics['guide_reassociations'] = self.metrics.get('guide_reassociations', 0)+1
+            self.event('guide_reassociated', agent=aid, old_track=old.key,
+                       track=current.key, retained=current.guide_id == aid)
         if self.site is None or self.bait is None or not self._arrival(self.bait): return
         assigned = {t.guide_id for t in self.tracks.values() if t.guide_id is not None}
         for track in self.tracks.values():
             if track.group != self.site_group: continue
+            near_bait = math.dist(track.position, self.site['goal']) <= 40.
+            track.held_since = (self.now if track.held_since is None else track.held_since) if near_bait else None
+            if (track.guide_id in states and track.held_since is not None
+                    and self.now-track.held_since >= 10. and self.now-track.seen < .2):
+                self.event('guide_released', agent=track.guide_id, track=track.key)
+                self.metrics['guide_releases'] += 1
+                track.guide_id = None
+                track.memory = {}
+                track.completed_at = None
             if track.guide_id in states:
                 self.roles[track.guide_id] = 'guide'
                 continue
@@ -275,6 +313,31 @@ class EntrapmentPolicy:
             self.event('guide_at_delivery', agent=aid, track=track.key)
         return action_for(aid, **value)
 
+    def _shared_predators(self, aid):
+        """Current teammate sightings transformed into this agent's local frame."""
+        pose = self.estimator.poses.get(aid)
+        if pose is None or pose.uncertainty > 8.: return []
+        result = []
+        for track in self.tracks.values():
+            if (track.group != pose.group_id or self.now-track.seen > .15
+                    or aid in track.observers or not track.observers):
+                continue
+            x, y = local(pose, track.position)
+            distance = math.hypot(x, y)
+            if distance > 275.: continue
+            obs = dict(type='Predator', distance=distance, angle=math.atan2(y, x))
+            observer, sighting = next(iter(track.observers.items()))
+            source = self.estimator.poses.get(observer)
+            if source is not None and 'rel_dir' in sighting:
+                toward_observer = math.atan2(source.position[1]-track.position[1],
+                                             source.position[0]-track.position[0])
+                heading = toward_observer-sighting['rel_dir']
+                bearing = math.atan2(pose.position[1]-track.position[1],
+                                     pose.position[0]-track.position[0])-heading
+                obs['rel_dir'] = math.atan2(math.sin(bearing), math.cos(bearing))
+            result.append(obs)
+        return result
+
     def __call__(self, states_list, sim_time):
         self.now = sim_time
         states = {s['agent_id']: s for s in states_list}
@@ -296,10 +359,13 @@ class EntrapmentPolicy:
             else:
                 role = 'explorer' if self.site is None else 'gatherer'
                 action = exploration[aid] if self.site is None else orchard[aid]
-                # Gathering is overridden by ordinary observed-predator escape,
-                # including predators currently following another guide.
-                if any(o['type'] == 'Predator' and o['distance'] < 130 for o in s['observations']):
-                    action = exploration[aid]
+                bait_local = None
+                if self.site is not None and self.bait is not None:
+                    pose = self.estimator.poses.get(aid)
+                    if pose is not None and pose.group_id == self.site_group:
+                        bait_local = local(pose, self.site['goal'])
+                action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
+                if avoiding:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
             # Reproduction belongs to fit young gatherers/explorers, not bait.

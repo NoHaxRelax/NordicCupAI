@@ -23,6 +23,8 @@ You may call breakpoint() here, or use the runner's --break-at TICK option.
 """
 
 import math
+from shapely.geometry import LineString
+from shapely.ops import unary_union
 from models.entrapment.guide_pathfinding import fixed_frame, navigation_plan
 from models.entrapment.predator_following import predator_is_not_following
 from models.entrapment.guide_steering import prioritize, HEARING_TARGET
@@ -81,13 +83,66 @@ def _return_to_predator(bait, edges, agent, memory, to_local, turn):
 
 def guide(bait, edges, agent, context, memory):
     """Guide safely en route; stand at delivery while the predator follows."""
+    context = dict(context)
+    if 'target_predator' not in context:
+        context['target_predator'] = _select_target(bait, edges, agent, context, memory)
     action = _guide(bait, edges, agent, context, memory)
     if isinstance(memory.get('debug'), dict) and memory['debug'].get('mode') == 'hold_at_delivery':
         # Intentional handoff: survival steering must not pull us away when
         # the following predator approaches. Being caught here is allowed.
         return action
-    return prioritize(action, bait, edges, agent, memory)
+    return prioritize(action, bait, edges, agent, memory, target=context['target_predator'])
 
+
+def _bait_visible_for_handoff(predator, bait, edges, memory):
+    """Conservative sight alignment from ordinary bearing/heading observations."""
+    p = (predator['distance']*math.cos(predator['angle']),
+         predator['distance']*math.sin(predator['angle']))
+    distance = math.dist(p, bait)
+    if distance <= 55.:
+        return True
+    if distance > 230. or 'rel_dir' not in predator:
+        return False
+    toward_guide = math.atan2(-p[1], -p[0])
+    heading = toward_guide-predator['rel_dir']
+    toward_bait = math.atan2(bait[1]-p[1], bait[0]-p[0])
+    wrap = lambda a: abs(math.atan2(math.sin(a), math.cos(a)))
+    if max(wrap(heading-toward_bait),wrap(toward_guide-toward_bait)) > math.radians(5):
+        return False
+    to_fixed, _ = fixed_frame(bait, edges)
+    if '_handoff_visibility_walls' not in memory:
+        memory['_handoff_visibility_walls'] = unary_union([
+            LineString([to_fixed(a),to_fixed(b)]) for a,b in edges])
+    return not memory['_handoff_visibility_walls'].intersects(LineString([to_fixed(p),to_fixed(bait)]))
+
+
+def _select_target(bait, edges, agent, context, memory):
+    """Associate ordinary sightings by motion; never acquire the held crowd.
+
+    Native observations have no predator IDs. Ambiguous overlap can therefore
+    never establish identity, but a nearby held predator must not replace a
+    missing newcomer simply because it is closest to the guide.
+    """
+    observations = [o for o in agent['observations'] if o['type'] == 'Predator']
+    to_fixed, _ = fixed_frame(bait, edges)
+    samples = [(o, to_fixed((o['distance'] * math.cos(o['angle']),
+                            o['distance'] * math.sin(o['angle'])))) for o in observations]
+    tick = context.get('tick', 0)
+    previous = memory.get('_target_track')
+    if previous is None:
+        choices = [(o, p) for o, p in samples if math.hypot(*p) > 40.]
+        selected = min(choices, key=lambda row: row[0]['distance'], default=None)
+    else:
+        elapsed = max(1, tick - previous['tick'])
+        choices = [(o, p) for o, p in samples
+                   if math.dist(p, previous['position']) <= 15.75 * min(elapsed, 5)
+                   and (math.hypot(*p) > 40. or math.hypot(*previous['position']) <= 55.)]
+        selected = min(choices, key=lambda row: math.dist(row[1], previous['position']), default=None)
+    if selected is None:
+        return None
+    observation, position = selected
+    memory['_target_track'] = dict(position=position, tick=tick)
+    return observation
 
 def _guide(bait, edges, agent, context, memory):
     """Follow a predator-width A* route while looking at the predator."""
@@ -116,8 +171,11 @@ def _guide(bait, edges, agent, context, memory):
         memory.pop('_recovery_navigation', None)
     memory['_lost_ticks'] = 0
 
-    if (math.hypot(*bait) <= HEARING_TARGET
-            or math.hypot(*context['handoff']) <= DELIVERY_ARRIVAL_DISTANCE):
+    delivery_ready = (math.hypot(*bait) <= HEARING_TARGET
+                      or math.hypot(*context['handoff']) <= DELIVERY_ARRIVAL_DISTANCE)
+    if context.get('vision_delivery'):
+        delivery_ready = delivery_ready and _bait_visible_for_handoff(predator, bait, edges, memory)
+    if delivery_ready:
         memory['debug'] = dict(mode='hold_at_delivery',
                                handoff_distance=math.hypot(*context['handoff']),
                                bait_distance=math.hypot(*bait),

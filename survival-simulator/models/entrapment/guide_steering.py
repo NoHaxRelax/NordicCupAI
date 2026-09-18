@@ -16,11 +16,11 @@ TRAPPED_RADIUS = 40.0
 TERRAIN = {'forest': 1., 'grassland': 1., 'desert': .8, 'swamp': .5, 'river': .3}
 
 
-def prioritize(action, bait, edges, agent, memory):
+def prioritize(action, bait, edges, agent, memory, target=None):
     predators = [p for p in agent['observations'] if p['type'] == 'Predator']
     if not predators:
         return action
-    target = min(predators, key=lambda p: p['distance'])
+    target = target if target is not None else min(predators, key=lambda p: p['distance'])
     positions = [(p['distance'] * math.cos(p['angle']),
                   p['distance'] * math.sin(p['angle'])) for p in predators]
     # Observation-only approximation of the held group. Relax clearance only
@@ -37,7 +37,7 @@ def prioritize(action, bait, edges, agent, memory):
     if '_steering_geometry' not in memory:
         fixed_edges = [(to_fixed(a), to_fixed(b)) for a, b in edges]
         memory['_steering_geometry'] = (
-            RoutePlanner(fixed_edges, clearance=5.5),
+            RoutePlanner(fixed_edges, clearance=5.5, exclusion_radius=memory.get('_trap_exclusion_radius', 0.)),
             unary_union([LineString(e) for e in fixed_edges]))
     geometry, walls = memory['_steering_geometry']
     origin = to_fixed((0., 0.))

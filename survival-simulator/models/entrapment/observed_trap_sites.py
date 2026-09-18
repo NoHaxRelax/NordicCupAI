@@ -1,7 +1,7 @@
 """Adapt observed geometry to OUR existing trap detector, never hidden map data."""
 import math
 
-from models.entrapment.entrapment_sites import _Geometry, enumerate_sites
+from models.entrapment.entrapment_sites import _Geometry, enumerate_sites, enumerate_corner_sites
 
 
 def observed_rectangles(group, tolerance=1.5):
@@ -48,15 +48,38 @@ def observed_rectangles(group, tolerance=1.5):
     return dict(width=width, height=height, obstacles=unique)
 
 
-def our_sites(static):
+def our_sites(static, *, corner_only=False):
     """Exactly the short-overlap/boundary-gap acceptance used in guide_lab."""
     geometry = _Geometry(static['width'], static['height'], static['obstacles'])
     result = []
-    for site in enumerate_sites(static, min_gap=10.1, min_overlap=10.3):
+    candidates = (enumerate_corner_sites(static) if corner_only else
+                  enumerate_sites(static, min_gap=10.1, min_overlap=10.3))
+    for site in candidates:
+        accepted = None
+        offsets = [0.] if not corner_only else [0.]+[sign*d for d in (2.,4.,6.,8.,10.,12.,15.,18.,22.,26.) for sign in (1.,-1.)]
         for distance in (25., 20., 30.):
-            handoff = [site['mouth'][i] - site['inward'][i]*distance
-                       + site['cross'][i]*site['approach_lane_offset'] for i in range(2)]
-            if geometry.free(handoff, 11.) and math.dist(handoff, site['goal']) <= 44.:
-                result.append(dict(site, handoff=handoff))
+            for shift in offsets:
+                handoff = [site['mouth'][i] - site['inward'][i]*distance
+                           + site['cross'][i]*(site['approach_lane_offset']+shift) for i in range(2)]
+                if (geometry.free(handoff, 11.) and math.dist(handoff, site['goal']) <= 44.
+                        and (not corner_only or geometry.clear(site['hold'], handoff, 11.))):
+                    accepted = dict(site, handoff=handoff)
+                    if corner_only:
+                        accepted['handoff_lane_shift'] = shift
+                    break
+            if accepted is not None:
+                result.append(accepted)
                 break
     return result
+
+
+def available_sites(static, *, keep_corner_sites=False):
+    """Prefer crevices; use certified corner pockets when no crevice qualifies.
+
+    Keep an occupied corner in revalidation even if exploration later discovers
+    a crevice, so finding a new site never evicts established bait.
+    """
+    regular = our_sites(static)
+    if regular and not keep_corner_sites:
+        return regular
+    return regular + our_sites(static, corner_only=True)
