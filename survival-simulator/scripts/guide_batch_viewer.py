@@ -23,6 +23,8 @@ def main():
     args = parser.parse_args()
     root = args.folder.resolve()
     manifest = json.loads((root/'manifest.json').read_text())
+    multi = bool(manifest['config'].get('multi'))
+    run_glob = 'multi-*' if multi else 'map-*'
     for name, expected_hash in manifest['source_hashes'].items():
         if hashlib.sha256((root/'source'/name).read_bytes()).hexdigest()!=expected_hash:
             raise ValueError(f'Frozen source changed: {name}')
@@ -32,15 +34,22 @@ def main():
 
     def status(index):
         folder = root/'replays'/f'case-{index:04}'
-        summaries = sorted(folder.glob('map-*/summary.json'))
+        with lock:
+            pending = dict(jobs.get(index, {}))
+        if pending.get('state') in ('queued','rendering','failed'):
+            pending['frames'] = sum(1 for _ in folder.glob(run_glob+'/frames/*.png'))
+            return pending
+        summaries = sorted(folder.glob(run_glob+'/summary.json'))
         for p in summaries:
             summary = json.loads(p.read_text())
+            if multi and any(summary.get(k)!=cases[index].get(k) for k in ('outcome','seconds','final')):
+                continue
             if summary.get('frames',0) and (p.parent/'frames/0.png').exists():
                 return dict(state='ready', url='/'+str(p.parent.relative_to(root))+'/index.html',
                             frames=summary['frames'], outcome=summary['outcome'])
         with lock:
             state = dict(jobs.get(index, dict(state='not_generated')))
-        state['frames'] = sum(1 for _ in folder.glob('map-*/frames/*.png'))
+        state['frames'] = sum(1 for _ in folder.glob(run_glob+'/frames/*.png'))
         return state
 
     def render(index):
@@ -53,22 +62,28 @@ def main():
                    '--seed', str(case['seed']), '--encounter-seed', str(case['encounter_seed']),
                    '--seconds', str(manifest['config']['seconds']), '--width', '640',
                    '--output', str(folder)]
+        if multi:
+            command = [sys.executable,str(root/'source/scripts/guide_multi.py'),'--deliveries','1',
+                       '--seed',str(case['seed']),'--encounter-seed',str(case['encounter_seed']),
+                       '--output',str(folder)]
         env = os.environ | {'OPENBLAS_NUM_THREADS':'1','OMP_NUM_THREADS':'1','MKL_NUM_THREADS':'1'}
         try:
             with (folder/'render.log').open('w') as output:
                 result = subprocess.run(command, env=env, stdout=output,
-                                        stderr=subprocess.STDOUT, timeout=180)
-            summaries = sorted(folder.glob('map-*/summary.json'))
+                                        stderr=subprocess.STDOUT, timeout=300 if multi else 180)
+            summaries = sorted(folder.glob(run_glob+'/summary.json'))
             if result.returncode or not summaries:
                 raise RuntimeError('Replay process failed; see render.log.')
             summary = json.loads(summaries[0].read_text())
             if summary.get('error') or not summary.get('frames'):
                 raise RuntimeError(summary.get('error','No frames were produced.'))
+            if multi and any(summary.get(k)!=case.get(k) for k in ('outcome','seconds','final')):
+                raise RuntimeError('Rerender differs from recorded evaluation; use the original tick trace.')
             with lock:
                 jobs[index] = dict(state='ready')
         except subprocess.TimeoutExpired:
             with lock:
-                jobs[index] = dict(state='failed', message='Replay exceeded 3 minutes. The recorded batch trace is available below.')
+                jobs[index] = dict(state='failed', message='Replay exceeded its rendering time limit. The recorded batch trace remains available.')
         except Exception as error:
             with lock:
                 jobs[index] = dict(state='failed', message=str(error))
@@ -89,7 +104,8 @@ def main():
         def do_GET(self):
             path = urlsplit(self.path).path
             if path=='/':
-                data = Path(__file__).with_suffix('.html').read_bytes()
+                html=Path(__file__).with_name('guide_multi_viewer.html') if multi else Path(__file__).with_suffix('.html')
+                data = html.read_bytes()
                 self.send_response(200)
                 self.send_header('Content-Type','text/html; charset=utf-8')
                 self.send_header('Content-Length',str(len(data)))
@@ -99,10 +115,11 @@ def main():
                 compact=[]
                 for index,r in sorted(cases.items()):
                     item={k:r.get(k) for k in ('index','seed','encounter_seed','outcome','seconds','frames',
-                          'final','guide_caught','eligible_sites','contact_metrics','site','error')}
+                          'final','guide_caught','eligible_sites','contact_metrics','site','error',
+                          'outcome_rear_at_end_only','deliveries','initial_min_held','final_hold_min','replacement_side_final_period')}
                     trace=next((root/'retries'/f'case-{index:04}').glob('map-*/ticks.jsonl.gz'),None)
                     if trace is None:
-                        trace=next((root/f'case-{index:04}').glob('map-*/ticks.jsonl.gz'),None)
+                        trace=next((root/f'case-{index:04}').glob(run_glob+'/ticks.jsonl.gz'),None)
                     item['trace']='/'+str(trace.relative_to(root)) if trace else None
                     item['replay']=status(index)
                     compact.append(item)

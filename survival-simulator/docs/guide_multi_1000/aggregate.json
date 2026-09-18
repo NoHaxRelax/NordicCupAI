@@ -1,0 +1,81 @@
+{
+  "maps": 1000,
+  "outcomes": {
+    "initial_predators_escaped": 116,
+    "delivery_pass": 682,
+    "delivery_or_retention_failed": 138,
+    "wrong_side": 17,
+    "no_usable_bait_site": 47
+  },
+  "outcomes_rear_at_end_only": {
+    "initial_predators_escaped": 124,
+    "delivery_pass": 682,
+    "delivery_or_retention_failed": 141,
+    "no_usable_bait_site": 47,
+    "wrong_side_at_end": 6
+  },
+  "success_all_maps": {
+    "successes": 682,
+    "total": 1000,
+    "fraction": 0.682,
+    "wilson_95": [
+      0.6524865706462925,
+      0.7101204892649656
+    ]
+  },
+  "success_known_eligible_maps": {
+    "successes": 682,
+    "total": 953,
+    "fraction": 0.7156348373557188,
+    "wilson_95": [
+      0.6861727369903856,
+      0.7433655070010035
+    ]
+  },
+  "success_valid_preloads": {
+    "successes": 682,
+    "total": 953,
+    "fraction": 0.7156348373557188,
+    "wilson_95": [
+      0.6861727369903856,
+      0.7433655070010035
+    ]
+  },
+  "known_eligible_sites": 953,
+  "valid_preloads": 953,
+  "wrong_side_final_period": 17,
+  "wrong_side_at_final_frame": 6,
+  "original_retention_failures_any_outcome": 127,
+  "all_31_held_final_period_before_side_and_original_retention_checks": 722,
+  "source_hashes": {
+    "src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+    "src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+    "src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+    "src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+    "src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+    "src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+    "src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+    "src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+    "src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+    "src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+    "src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+    "src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1",
+    "src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+    "models/my_guide.py": "11378a6679de62b58681fb7a02dd9d0ae7432bd216f60f2c46b5b87a4ef20ba1",
+    "models/guide_pathfinding.py": "e66425c2fb77fab3143932206e6fbc2f772411e3c25cf0324ff9729abade35c2",
+    "models/guide_steering.py": "3f29f9e48b86fd3cc5e71d1bd13252f5b3ff89275a0f46fbeaaa3b788a639679",
+    "models/predator_following.py": "bd56ea339e8aa017e4f55c178c919ac0459204bbdc580bf5b158dc90bb02045c",
+    "scripts/guide_multi.py": "ddcb96c1a20ad55bcebcf5f5152620cd44d2e3385c2ab147c16d77d2c5b6fa37",
+    "scripts/guide_lab.py": "d0164f2b45f727eaee7d3234a65a2356f7781c16267bb75604f312f2aee7f5b9",
+    "scripts/guide_lab_sites.py": "dca2109d46f85d2448b0237b541b4a54fca4d0ec096684402ba684259daf2a02",
+    "scripts/guide_batch.py": "5a2df3fa2050ab5f2f058735a13a1c72ec5cb507ecb5b9e73ab322ef0aff72c0"
+  },
+  "limitations": [
+    "30 predators are preloaded; delivering the initial 30 is not tested.",
+    "Bait full energy/no aging; guide energy/aging native; static edges known.",
+    "A 30-second final hold is not whole-game retention.",
+    "Rear occupancy is a geometric/hearing-distance proxy, not a live bait-replacement test.",
+    "No-site, setup errors, and computational timeouts remain in all-map denominator.",
+    "One random visible encounter per map; guide death alone is not a failure."
+  ]
+}

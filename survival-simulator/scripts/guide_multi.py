@@ -18,6 +18,13 @@ import guide_lab as lab
 from models.my_guide import guide as policy
 
 
+def replacement_side(point, site):
+    """Conservative rear-mouth/hearing-zone occupancy, evaluation only."""
+    axial=sum((point[k]-site['mouth'][k])*site['inward'][k] for k in range(2))
+    return (axial > site['overlap']/2 and
+            min(math.dist(point,site['goal']),math.dist(point,site['replacement_entry'])) <= 60.)
+
+
 def write_viewer(folder):
     html=Path(lab.__file__).with_suffix('.html').read_text()
     html=html.replace('Cyan: guide · green: bait · yellow ring: handoff point · red: predator.',
@@ -37,7 +44,7 @@ const b=document.createElement('button');b.textContent='Final state';b.onclick=(
 
 def run(args):
     started=time.monotonic()
-    folder=lab.ROOT/'logs/guide_lab'/f'multi-{args.seed}-{time.time_ns()}'
+    folder=args.output/f'multi-{args.seed}-{time.time_ns()}'
     folder.mkdir(parents=True)
     (folder/'frames').mkdir(); (folder/'ticks').mkdir()
     write_viewer(folder)
@@ -66,7 +73,7 @@ def run(args):
         tracked.append(predator);env.predators.append(predator)
     env._update_predator_grid()
     summary=dict(seed=args.seed,encounter_seed=args.encounter_seed,site=site,eligible_sites=site_count,
-                 experiment='30 preloaded + 3 sequential deliveries',outcome='running',frames=0,
+                 experiment=f'30 preloaded + {args.deliveries} sequential deliveries',outcome='running',frames=0,
                  seconds=0.,dt=core.dt,deliveries=[],baseline={},
                  assumptions=['30 predators preplaced near the trap; first 30 deliveries are not tested',
                     'native simulator permits predator overlap; no predator separation force is added',
@@ -74,12 +81,12 @@ def run(args):
                     'guides start full; native energy/aging thereafter; survivors stand after their attempt',
                     'bait full energy and no aging; ambient predator additions disabled to isolate exactly 33',
                     'policy gets native observations and known map edges, never hidden predator state'],
-                 success_rule='Each newcomer near bait (<=40) and sensing it for 10s; final all-33 hold observed for 30s',
+                 success_rule='Newcomer near bait (<=40) and sensing it for 10s; all original predators retained; final 30s hold with replacement side clear',
                  policy_sha256=hashlib.sha256((lab.ROOT/'models/my_guide.py').read_bytes()).hexdigest())
     lab.write_json(folder/'summary.json',summary)
     phase='settle';phase_start=0.;delivery=None;active=None;memory={};held_since=None;dead_since=None
     guides=[];events=[];departed=set();outside_hearing=set();min_initial=30;final_min=None;all_since=None
-    stage_prior=set();stage_min=0;capture_events={}
+    stage_prior=set();stage_min=0;capture_events={};rear_final=set();rear_ever=set()
     native_kill=env.kill_agent
     def kill(agent):
         if agent in guides:
@@ -125,13 +132,15 @@ def run(args):
                 seen=p.observe(agents=env._get_local_agents(p),edges=env._get_local_edges(p))
                 if bait_alive and distance<=40 and any(o['type']=='Agent' and o.get('id')==bait.agent_id for o in seen):held.append(i+1)
             held_set=set(held)
+            rear={i+1 for i,p in enumerate(tracked) if replacement_side((p.x,p.y),site)}
+            rear_ever.update(rear)
             if phase!='settle':
                 min_initial=min(min_initial,len(held_set&set(range(1,31))))
                 departed.update(set(range(1,31))-held_set)
                 outside_hearing.update(i+1 for i,d in enumerate(distances[:30]) if d>60.)
             if phase=='settle' and now>=10.:
-                summary['baseline']=dict(held=len(held),passed=len(held)==30,bait_alive=bait_alive,time=now)
-                if bait_alive:spawn_delivery(now)
+                summary['baseline']=dict(held=len(held),passed=len(held)==30 and not rear,bait_alive=bait_alive,time=now,rear_ids=sorted(rear))
+                if bait_alive and summary['baseline']['passed']:spawn_delivery(now)
             elif phase=='delivery':
                 stage_min=min(stage_min,len(stage_prior&held_set))
                 arrived=delivery['predator_id'] in held_set
@@ -147,13 +156,14 @@ def run(args):
                                     prior_held_end=len(stage_prior&held_set))
                     events.append(dict(time=now,event=f'Delivery {delivery["number"]}: {"held" if passed else "failed"}; {len(held)}/{len(tracked)} held'))
                     print(events[-1],flush=True)
-                    if len(summary['deliveries'])<3 and bait_alive:spawn_delivery(now)
+                    if len(summary['deliveries'])<args.deliveries and bait_alive:spawn_delivery(now)
                     else:
                         phase='final_hold';phase_start=now;active=None;final_min=len(held);all_since=None
             if phase=='final_hold':
                 final_min=min(final_min,len(held))
-                all_since=(now if all_since is None else all_since) if len(held)==33 else None
-            terminal=not bait_alive or (phase=='final_hold' and now-phase_start>=30.-1e-8) or tick==2500
+                rear_final.update(rear)
+                all_since=(now if all_since is None else all_since) if len(held)==30+args.deliveries else None
+            terminal=not bait_alive or (phase=='settle' and now>=10.) or (phase=='final_hold' and now-phase_start>=30.-1e-8) or tick==2500
             inputs=action=None
             if active is not None and active in env.agents and not terminal:
                 inputs=dict(bait=lab.local(site['goal'],active),edges=[[lab.local(a,active),lab.local(b,active)] for a,b in env.edges],
@@ -161,6 +171,7 @@ def run(args):
                             context=dict(tick=tick,dt=core.dt,time=now,handoff=lab.local(site['handoff'],active),mouth=lab.local(site['mouth'],active)))
                 action=lab.validate_action(policy(**copy.deepcopy(inputs),memory=memory),active)
             evaluation=dict(phase=phase,total_predators=len(tracked),held_count=len(held),held_ids=held,
+                            replacement_side_ids=sorted(rear),
                             initial_held=len(held_set&set(range(1,31))),bait_alive=bait_alive,
                             initial_ever_left_hold_zone=sorted(departed),initial_ever_beyond_60=sorted(outside_hearing),
                             active_guide_alive=active in env.agents if active else None,
@@ -170,28 +181,36 @@ def run(args):
             event=next((e['event'] for e in reversed(events) if e['time']==now),'')
             row=dict(tick=tick,time=now,input=inputs,action=action.model_dump() if action else None,
                      debug=memory.get('debug'),evaluation=evaluation,event=event,error=None)
-            lab.write_json(folder/'ticks'/f'{tick}.json',row);trace.write(json.dumps(row)+'\n')
-            env.draw(screen)
-            scale=640/env.width
-            # Magnify the actual native trap rendering; stacked predators still overlap.
-            bx,by=round(bait.x*scale),round(bait.y*scale)
-            crop=lab.pygame.Rect(bx-38,by-38,76,76).clamp(screen.get_rect())
-            inset=lab.pygame.transform.scale(screen.subsurface(crop).copy(),(190,190))
-            screen.blit(inset,(442,282));lab.pygame.draw.rect(screen,(235,240,245),(442,282,190,190),2)
-            for i,p in enumerate(tracked[30:],31):
-                x,y=round(p.x*scale),round(p.y*scale)
-                lab.pygame.draw.circle(screen,(255,230,100),(x,y),7,1)
-                screen.blit(font.render(str(i),True,(255,240,160)),(x+8,y-10))
-            lab.pygame.draw.rect(screen,(15,22,26),(0,0,640,27))
-            screen.blit(font.render(f'{now:.1f}s | {phase} | held {len(held)}/{len(tracked)} | original {evaluation["initial_held"]}/30',True,(245,245,245)),(8,5))
-            lab.pygame.image.save(screen,folder/'frames'/f'{tick}.png')
+            trace.write(json.dumps(row)+'\n')
+            if not args.bulk:
+                lab.write_json(folder/'ticks'/f'{tick}.json',row)
+                env.draw(screen)
+                scale=640/env.width
+                bx,by=round(bait.x*scale),round(bait.y*scale)
+                crop=lab.pygame.Rect(bx-38,by-38,76,76).clamp(screen.get_rect())
+                inset=lab.pygame.transform.scale(screen.subsurface(crop).copy(),(190,190))
+                screen.blit(inset,(442,282));lab.pygame.draw.rect(screen,(235,240,245),(442,282,190,190),2)
+                for i,p in enumerate(tracked[30:],31):
+                    x,y=round(p.x*scale),round(p.y*scale)
+                    lab.pygame.draw.circle(screen,(255,230,100),(x,y),7,1)
+                    screen.blit(font.render(str(i),True,(255,240,160)),(x+8,y-10))
+                lab.pygame.draw.rect(screen,(15,22,26),(0,0,640,27))
+                screen.blit(font.render(f'{now:.1f}s | {phase} | held {len(held)}/{len(tracked)} | original {evaluation["initial_held"]}/30',True,(245,245,245)),(8,5))
+                lab.pygame.image.save(screen,folder/'frames'/f'{tick}.png')
             summary.update(frames=tick+1,seconds=now,final=evaluation,events=events)
             if terminal:break
             bait.energy=bait.max_energy;bait.age=0.
             core.step([(active.agent_id,action)] if action else [])
             bait.energy=bait.max_energy;bait.age=0.
             if tick and tick%200==0:print(f'{now:.1f}s {phase}: held {len(held)}/{len(tracked)}',flush=True)
-    summary.update(outcome='all_33_retained' if bait_alive and len(held)==33 and final_min==33 and phase=='final_hold' and now-phase_start>=30.-1e-8 else 'incomplete_or_retention_failed',
+    count=30+args.deliveries
+    outcome=('initial_trap_failed' if not summary['baseline'].get('passed') else
+             'bait_dead' if not bait_alive else
+             'wrong_side' if rear_final or rear else
+             'initial_predators_escaped' if min_initial<30 else
+             'delivery_pass' if len(held)==count and final_min==count and phase=='final_hold' and now-phase_start>=30.-1e-8 else
+             'delivery_or_retention_failed')
+    summary.update(outcome=outcome,replacement_side_final_period=sorted(rear_final),replacement_side_ever=sorted(rear_ever),
                    initial_min_held=min_initial,final_hold_min=final_min,
                    elapsed_seconds=round(time.monotonic()-started,3))
     lab.write_json(folder/'summary.json',summary)
@@ -205,4 +224,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--seed',type=int,default=424736271)
     parser.add_argument('--encounter-seed',type=int,default=1335789813)
+    parser.add_argument('--deliveries',type=int,default=3,choices=(1,3))
+    parser.add_argument('--bulk',action='store_true')
+    parser.add_argument('--output',type=Path,default=lab.ROOT/'logs/guide_lab')
     run(parser.parse_args())

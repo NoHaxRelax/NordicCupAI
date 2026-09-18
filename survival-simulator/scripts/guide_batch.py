@@ -27,6 +27,7 @@ def main():
     parser.add_argument('--seconds', type=float, default=60.)
     parser.add_argument('--timeout', type=float, default=180.)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--multi', action='store_true', help='30 preloaded predators plus one new delivery; rear entrance must stay clear')
     args = parser.parse_args()
     if not 0 <= args.shard < args.shards or min(args.maps, args.workers) < 1:
         parser.error('Invalid shard or worker/map count')
@@ -36,6 +37,8 @@ def main():
     jobs = [dict(index=i, seed=s, encounter_seed=rng.randrange(2**31)) for i,s in enumerate(seeds)]
     sources = list((ROOT/'src').rglob('*.py')) + [ROOT/'models'/name for name in
                ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py')]
+    if args.multi:
+        sources += [ROOT/'scripts'/name for name in ('guide_multi.py','guide_lab.py','guide_lab_sites.py','guide_batch.py')]
     manifest = dict(config=vars(args) | {'output': str(args.output)}, jobs=jobs,
                     source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources})
     (args.output/'manifest.json').write_text(json.dumps(manifest, indent=2))
@@ -50,13 +53,20 @@ def main():
         command = [sys.executable, str(ROOT/'scripts/guide_lab.py'), '--bulk',
                    '--seed', str(job['seed']), '--encounter-seed', str(job['encounter_seed']),
                    '--seconds', str(args.seconds), '--output', str(folder)]
+        if args.multi:
+            command = [sys.executable,str(ROOT/'scripts/guide_multi.py'),'--bulk','--deliveries','1',
+                       '--seed',str(job['seed']),'--encounter-seed',str(job['encounter_seed']),'--output',str(folder)]
         started = time.monotonic()
         try:
             with (folder/'worker.log').open('w') as log:
                 completed = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT,
                                            env=env, timeout=args.timeout)
-            paths = list(folder.glob('map-*/summary.json'))
+            paths = list(folder.glob(('multi-*' if args.multi else 'map-*')+'/summary.json'))
             result = json.loads(paths[0].read_text()) if paths else dict(outcome='worker_error', returncode=completed.returncode)
+            if result['outcome']=='running':
+                result['outcome']='worker_error'
+            if args.multi and not paths and 'No usable site at index 0; map has 0 eligible sites' in (folder/'worker.log').read_text():
+                result['outcome']='no_usable_bait_site'
             if result['outcome']=='setup_error' and 'No usable site at index 0; map has 0 eligible sites' in result.get('error',''):
                 result['outcome']='no_usable_bait_site'
         except subprocess.TimeoutExpired:
