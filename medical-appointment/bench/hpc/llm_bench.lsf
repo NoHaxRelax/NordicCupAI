@@ -1,0 +1,237 @@
+#!/bin/bash
+### bench/hpc/llm_bench.lsf: one gpuh100 job that, for each answering model,
+### starts vLLM (bench/llm/serve_vllm.sh), runs bench/llm/bench.py for every
+### ASR tag x prompt variant, stops vLLM and moves on. Submit ON the cluster
+### from the case folder:
+###
+###     cd /dtu/blackhole/1e/205502/nordic/medical-appointment && bsub < bench/hpc/llm_bench.lsf
+###
+### Needs: venv-vllm (bench/hpc/env.sh venvs), the LLM weights in HF_HOME
+### (bench/hpc/env.sh prefetch: compute nodes have no internet, the job runs
+### HF_HUB_OFFLINE=1) and transcripts/<stem>.<asr tag>.json for every ASR tag
+### (asr_bench.lsf, or sync.sh up with the laptop's transcripts/).
+###
+### Failure-tolerant: a model that does not start, or a bench run that fails,
+### is logged and the loop continues. A finished result file (its summary has
+### "partial": false) is not recomputed (FORCE=1 to redo), so a resubmission
+### continues where it stopped. A run killed by BENCH_TIMEOUT or the walltime
+### leaves only bench.py's <name>.partial.json checkpoint and is redone in full.
+###
+### Overrides at submit time (space-separated lists):
+###     MODELS="Qwen/Qwen3.8-27B openai/gpt-oss-20b" bsub < bench/hpc/llm_bench.lsf
+###     ASR_TAGS="large-v3 parakeet-tdt-0.6b-v2" VARIANTS="units units-claim words" bsub < ...
+###     LIMIT=3 bsub < ...        # first 3 conversations per bench run (smoke)
+###
+### Model ids: every id below answered https://huggingface.co/api/models/<id>
+### with gated=false on 2026-09-17. Not existing: mistralai/Ministral-3-14B-Instruct
+### (401; the real id is mistralai/Ministral-3-14B-Instruct-2512) and
+### google/gemma-4-31b-it (the id is google/gemma-4-31B-it, capital B).
+### Rough sizes (BF16 unless noted): Qwen3.8-27B / Qwen3.6-27B / Qwen3.5-27B 56 GB,
+### Qwen3.6-35B-A3B-FP8 / Qwen3.5-35B-A3B-FP8 37 GB (their BF16 twins are 72 GB:
+### 35.95 B params per the HF API, which leaves no room for a KV cache on 80 GB,
+### so the FP8 repos are used; both exist with gated=false), Qwen3-30B-A3B-
+### Instruct-2507 60 GB, gpt-oss-120b 65 GB MXFP4, gpt-oss-20b 16 GB,
+### gemma-4-31B-it 62 GB, GLM-4.7-Flash 64 GB, Ministral-3-14B 28 GB (research/04).
+### All fit one 80 GB H100 at GPU_UTIL 0.95 (the vLLM gpt-oss recipe's TP=1 value).
+### The order is by expected value: research/04 recommends Qwen3.8/3.6-27B first.
+###
+### Walltime: 11 models x 2 ASR tags x 3 variants x 390 questions. With prefix
+### caching a 27B dense model answers a conversation in a few seconds, so about
+### 20-30 min per model including load; the two gpt-oss models generate reasoning
+### (1500-token budget, see BENCH_FOR) and take longer. 8 h covers the list but
+### not a stall.
+### The gpuh100 cap is 24 h (bqueues -l gpuh100); raise -W if the summary shows
+### models left. DTU's rusage[mem] is per core (hpc.dtu.dk page_id=1416):
+### 8 x 8 GB = 64 GB host RAM for vLLM's checkpoint loading.
+#BSUB -q gpuh100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -J llm_bench
+#BSUB -n 8
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=8GB]"
+#BSUB -W 8:00
+#BSUB -o /dtu/blackhole/1e/205502/nordic/logs/llm_bench.%J.out
+#BSUB -e /dtu/blackhole/1e/205502/nordic/logs/llm_bench.%J.err
+
+set -uo pipefail          # no -e: one failing model must not end the job
+
+BH=/dtu/blackhole/1e/205502
+ROOT=$BH/nordic
+CASE=$ROOT/medical-appointment
+VENVS=$BH/venvs
+JOB=${LSB_JOBID:-local}
+FORCE=${FORCE:-0}
+LIMIT=${LIMIT:-0}
+PORT=${PORT:-8000}
+MAX_LEN=${MAX_LEN:-8192}
+GPU_UTIL=${GPU_UTIL:-0.95}            # one exclusive GPU per job; 0.95 is what the vLLM gpt-oss recipe uses for TP=1
+SERVE_WAIT=${SERVE_WAIT:-1500}        # seconds for /health; weights are local, the 120b from NFS still takes minutes
+BENCH_TIMEOUT=${BENCH_TIMEOUT:-2400}  # seconds per bench.py run (390 questions); TIMEOUT_FOR below overrides per model
+
+MODELS=${MODELS:-"Qwen/Qwen3.8-27B Qwen/Qwen3.6-27B openai/gpt-oss-20b Qwen/Qwen3.6-35B-A3B-FP8 google/gemma-4-31B-it zai-org/GLM-4.7-Flash openai/gpt-oss-120b mistralai/Ministral-3-14B-Instruct-2512 Qwen/Qwen3.5-27B Qwen/Qwen3.5-35B-A3B-FP8 Qwen/Qwen3-30B-A3B-Instruct-2507"}
+ASR_TAGS=${ASR_TAGS:-"large-v3 parakeet-tdt-0.6b-v2"}
+VARIANTS=${VARIANTS:-"units units-claim words"}
+
+# Per-model extra `vllm serve` flags, passed through serve_vllm.sh's EXTRA, which
+# appends them after its own model-aware DEFAULT_EXTRA: for Qwen/Qwen3.[5-9]* and
+# Qwen3-VL that is "--reasoning-parser qwen3 --language-model-only
+# --default-chat-template-kwargs '{\"enable_thinking\": false}'" (serve_vllm.sh,
+# the Text-Only serve line of the Qwen3.6 card), so Qwen3.8-27B, Qwen3.6-* and
+# Qwen3.5-* are served text-only with thinking off without an entry here.
+# Empty = vLLM defaults. UNVERIFIED candidate, only if the model fails to load:
+#   Ministral-3: "--tokenizer-mode mistral --config-format mistral --load-format mistral"
+#                (needed when the repo ships only consolidated.safetensors)
+declare -A EXTRA_FOR=(
+  ["mistralai/Ministral-3-14B-Instruct-2512"]="${EXTRA_MINISTRAL:-}"
+)
+# Per-model extra bench.py flags (word-split) and per-model bench timeouts.
+# gpt-oss cannot switch reasoning off (the card offers reasoning low/medium/high
+# only; vLLM's gpt-oss recipe has include_reasoning:false, which hides the analysis
+# channel but still generates it, and it counts against max_tokens). With bench.py's
+# default --max-tokens 200 most answers stop with finish_reason "length" and empty
+# or partial JSON, so those two get a 1500-token budget and a longer timeout.
+# bench.py has no --reasoning-effort flag yet; when it grows one, send
+# reasoning_effort=low for gpt-oss (the card sets it through the system prompt).
+declare -A BENCH_FOR=(
+  ["openai/gpt-oss-20b"]="--max-tokens 1500"
+  ["openai/gpt-oss-120b"]="--max-tokens 1500"
+  ["Qwen/Qwen3.8-27B"]="--max-tokens 1500"
+  ["Qwen/Qwen3.6-27B"]="--max-tokens 1500"
+)
+declare -A TIMEOUT_FOR=(
+  ["openai/gpt-oss-20b"]=4800
+  ["openai/gpt-oss-120b"]=4800
+)
+
+cd "$CASE" || { echo "case folder $CASE missing: run bench/hpc/sync.sh up"; exit 1; }
+mkdir -p bench/results/logs bench/results/llm "$ROOT/logs"
+exec > >(tee -a "bench/results/logs/llm_bench.$JOB.log") 2>&1
+
+# --- environment (same reasoning as asr_bench.lsf) ------------------------------
+unset PYTHONHOME PYTHONPATH
+# vLLM 0.29 JIT-compiles some kernels (gpt-oss MXFP4, FP8 MoE) and looks for nvcc under
+# CUDA_HOME; the compute nodes have no /usr/local/cuda, the toolkit comes from a module
+# (job 29429655: "Could not find nvcc and default cuda_home='/usr/local/cuda' doesn't exist").
+type module >/dev/null 2>&1 || source /etc/profile 2>/dev/null
+module load "${CUDA_MODULE:-cuda/13.3.1}" 2>/dev/null || echo "module load ${CUDA_MODULE:-cuda/13.3.1} failed"
+if command -v nvcc >/dev/null 2>&1; then export CUDA_HOME="$(dirname "$(dirname "$(command -v nvcc)")")"; fi
+echo "CUDA_HOME=${CUDA_HOME:-unset}  nvcc=$(command -v nvcc || echo none)"
+export HF_HOME=$BH/hf
+export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}
+export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
+export HF_HUB_DISABLE_TELEMETRY=1
+export TMPDIR=$BH/tmp TORCH_HOME=$BH/torch-home
+export VLLM_LOGGING_LEVEL=${VLLM_LOGGING_LEVEL:-INFO}
+export OMP_NUM_THREADS=8 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED=1
+mkdir -p "$TMPDIR" "$TORCH_HOME"
+PY="$VENVS/venv-vllm/bin/python"
+VLLM_BIN="$VENVS/venv-vllm/bin/vllm"
+LIMIT_ARGS=(); [ "$LIMIT" != 0 ] && LIMIT_ARGS=(--limit "$LIMIT")
+
+echo "=== llm_bench job $JOB on $(hostname) start $(date -Is)"
+echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}  LSB_HOSTS=${LSB_HOSTS:-}"
+nvidia-smi || echo "nvidia-smi failed: no GPU visible?"
+[ -x "$PY" ] && [ -x "$VLLM_BIN" ] || { echo "venv-vllm missing ($VLLM_BIN): run bench/hpc/env.sh venvs"; exit 1; }
+"$PY" -c "import importlib.metadata as m; print('vllm', m.version('vllm'), 'torch', m.version('torch'), 'transformers', m.version('transformers'))"
+echo "models: $MODELS"; echo "asr tags: $ASR_TAGS"; echo "variants: $VARIANTS"
+for ASR in $ASR_TAGS; do echo "  transcripts for $ASR: $(ls transcripts/*."$ASR".json 2>/dev/null | wc -l)"; done
+
+# Same "short" rule as bench/llm/serve_vllm.sh, so its log/pid files and our
+# result names agree: org dropped, lowercase, non [a-z0-9.+-] runs -> '-'.
+short() { echo "${1##*/}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9.+-]+/-/g; s/^-+|-+$//g'; }
+
+# A result counts as done only when bench.py finished it: the final file carries
+# `"partial": false` in its summary (json.dumps indent=1, so the literal is stable).
+# bench.py checkpoints into <name>.partial.json and writes <name>.json only at the
+# end, so this is belt and braces: a result file that is not a finished one of its
+# own (older layout, a copied checkpoint, "partial": true) is redone, never frozen.
+done_result() { [ -f "$1" ] && grep -q '"partial": false' "$1"; }
+
+stop_vllm() {  # stop_vllm <model>: serve_vllm.sh stop, then belt and braces, then wait for the GPU
+  bash bench/llm/serve_vllm.sh stop "$1" >/dev/null 2>&1 || true
+  pkill -u "$USER" -f "vllm serve" 2>/dev/null || true
+  sleep 3
+  pkill -u "$USER" -f "VLLM" 2>/dev/null || true          # EngineCore workers rename themselves VLLM::...
+  for _ in $(seq 1 30); do curl -sf "http://localhost:$PORT/health" >/dev/null 2>&1 || break; sleep 2; done
+  local used=""
+  for _ in $(seq 1 45); do
+    used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' ')
+    [ -n "$used" ] && [ "$used" -lt 2000 ] && break
+    sleep 2
+  done
+  echo "  vLLM stopped (gpu mem used now: ${used:-?} MiB)"
+}
+
+SUMMARY=()
+for MODEL in $MODELS; do
+  SHORT=$(short "$MODEL")
+  echo; echo "##### [$(date -Is)] MODEL $MODEL  (short: $SHORT)"
+  if [ ! -d "$HF_HOME/hub/models--${MODEL//\//--}" ]; then
+    echo "  not in $HF_HOME/hub: skip (bench/hpc/env.sh prefetch on the login node)"
+    SUMMARY+=("SKIP   $MODEL (not cached)"); continue
+  fi
+  todo=0
+  for ASR in $ASR_TAGS; do for V in $VARIANTS; do done_result "bench/results/llm/$SHORT.$V.$ASR.json" || todo=1; done; done
+  if [ "$todo" = 0 ] && [ "$FORCE" != 1 ]; then echo "  every result exists: skip"; SUMMARY+=("DONE   $MODEL (results existed)"); continue; fi
+
+  t0=$SECONDS
+  SERVE_LOG="bench/results/logs/llm_bench.$JOB.$SHORT.serve.log"
+  VLLM_LOG="bench/results/llm/vllm.$SHORT.log"
+  # serve_vllm.sh: positional model; env PORT MAX_LEN GPU_UTIL EXTRA WAIT LOG VLLM;
+  # exits 0 once /health answers and prints the pid last (bench/llm/serve_vllm.sh header).
+  if ! VLLM="$VLLM_BIN" PORT="$PORT" MAX_LEN="$MAX_LEN" GPU_UTIL="$GPU_UTIL" WAIT="$SERVE_WAIT" \
+       EXTRA="${EXTRA_FOR[$MODEL]:-}" LOG="$VLLM_LOG" \
+       timeout -k 60 $((SERVE_WAIT + 180)) bash bench/llm/serve_vllm.sh "$MODEL" > "$SERVE_LOG" 2>&1; then
+    echo "  vLLM did not come up ($((SECONDS - t0))s). $SERVE_LOG:"; tail -n 15 "$SERVE_LOG" | sed 's/^/  | /'
+    echo "  $VLLM_LOG (tail):"; tail -n 25 "$VLLM_LOG" 2>/dev/null | sed 's/^/  | /'
+    SUMMARY+=("FAIL   $MODEL (vllm did not start)")
+    stop_vllm "$MODEL"; continue
+  fi
+  echo "  vLLM ready in $((SECONDS - t0))s: $(grep -E '^ready' "$SERVE_LOG" | head -c 200)"
+
+  for ASR in $ASR_TAGS; do
+    n=$(ls transcripts/*."$ASR".json 2>/dev/null | wc -l)
+    if [ "$n" = 0 ]; then echo "  no transcripts for tag $ASR: skip"; SUMMARY+=("SKIP   $SHORT * $ASR (no transcripts)"); continue; fi
+    for V in $VARIANTS; do
+      OUT="bench/results/llm/$SHORT.$V.$ASR.json"
+      if done_result "$OUT" && [ "$FORCE" != 1 ]; then echo "  done: $OUT"; continue; fi
+      LOG="bench/results/logs/llm_bench.$JOB.$SHORT.$V.$ASR.log"
+      BENCH_ARGS=(); [ -n "${BENCH_FOR[$MODEL]:-}" ] && read -r -a BENCH_ARGS <<< "${BENCH_FOR[$MODEL]}"
+      T_BENCH=${TIMEOUT_FOR[$MODEL]:-$BENCH_TIMEOUT}
+      echo "  --- [$(date -Is)] bench variant=$V asr=$ASR ($n transcripts, timeout ${T_BENCH}s${BENCH_ARGS[*]:+, extra: ${BENCH_ARGS[*]}}) -> $OUT"
+      t1=$SECONDS
+      # bench.py flags from its argparse (2026-09-17): --asr --variant --model --url --no-think --out --limit --max-tokens
+      if timeout -k 60 "$T_BENCH" "$PY" bench/llm/bench.py --asr "$ASR" --variant "$V" \
+           --model "$MODEL" --no-think vllm --url "http://localhost:$PORT/v1" --out "$OUT" "${LIMIT_ARGS[@]}" "${BENCH_ARGS[@]}" > "$LOG" 2>&1; then
+        echo "      OK $((SECONDS - t1))s"; tail -n 12 "$LOG" | sed 's/^/      | /'
+        SUMMARY+=("OK     $SHORT $V $ASR $((SECONDS - t1))s")
+      else
+        rc=$?
+        if [ "$rc" = 124 ]; then echo "      TIMEOUT after $((SECONDS - t1))s (${T_BENCH}s): only ${OUT%.json}.partial.json is kept, the run is redone on resubmission"; fi
+        echo "      FAIL rc=$rc after $((SECONDS - t1))s; $LOG (tail):"; tail -n 15 "$LOG" | sed 's/^/      | /'
+        SUMMARY+=("FAIL   $SHORT $V $ASR rc=$rc")
+        curl -sf "http://localhost:$PORT/health" >/dev/null 2>&1 || { echo "      server is gone, next model"; break 2; }
+      fi
+    done
+  done
+  stop_vllm "$MODEL"
+  echo "  model finished in $((SECONDS - t0))s"
+done
+stop_vllm "" 2>/dev/null || true
+
+echo; echo "=== results in bench/results/llm:"; ls -la bench/results/llm/*.json 2>/dev/null | sed 's/^/    /'
+echo; echo "=== numeric summary fields per result (whatever bench.py wrote under 'summary'):"
+"$PY" - <<'PY' 2>/dev/null || true
+import glob, json, os
+for f in sorted(glob.glob('bench/results/llm/*.json')):
+    try:
+        d = json.load(open(f, encoding='utf-8'))
+    except Exception as e:
+        print(f'  {os.path.basename(f)}: unreadable ({e})'); continue
+    s = d.get('summary', d) if isinstance(d, dict) else {}
+    nums = {k: v for k, v in s.items() if isinstance(v, (int, float)) and not isinstance(v, bool)} if isinstance(s, dict) else {}
+    print('  ' + os.path.basename(f) + '  ' + '  '.join(f'{k}={v:.3f}' if isinstance(v, float) else f'{k}={v}' for k, v in list(nums.items())[:8]))
+PY
+echo; echo "=== summary ($(date -Is), $((SECONDS / 60)) min total):"
+printf '    %s\n' "${SUMMARY[@]}"
+echo "=== done $(date -Is)"

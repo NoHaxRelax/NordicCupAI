@@ -1,0 +1,95 @@
+{
+ "stem": "conversation_sample_16",
+ "items": [
+  {
+   "question": "Does the patient have a bee allergy?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Wasps, not bees (#13-#14).",
+   "check": false
+  },
+  {
+   "question": "Was Thor's hammer used during the examination to test any aspect of the patient's condition?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic; no reflex hammer, lung measurements only.",
+   "check": false
+  },
+  {
+   "question": "Has the patient expressed motivation to quit smoking?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Opposite: \"I smoke, and I am not motivated to stop.\" (#14).",
+   "check": false
+  },
+  {
+   "question": "Is the patient allergic to wasps?",
+   "answer": true,
+   "start": 64.76,
+   "end": 69.56,
+   "segs": "#13-#14",
+   "note": "\"And I understand you are allergic to wasps. / Yes, wasps.\"",
+   "check": false
+  },
+  {
+   "question": "Does the conversation indicate the patient discussed their college studies?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic.",
+   "check": false
+  },
+  {
+   "question": "Peak flow was recorded as 523.6 L/min, correct?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Transcript says 423.6 L/min (#17). **CHECK** by ear: 423.6 vs 523.6.",
+   "check": true
+  },
+  {
+   "question": "Has cost been the reason Spiriva is not taken regularly?",
+   "answer": true,
+   "start": 45.06,
+   "end": 50.68,
+   "segs": "#10",
+   "note": "\"Not the Spiriva. It is the cost, honestly. I have not been taking it regularly.\"",
+   "check": false
+  },
+  {
+   "question": "Was the patient advised to take Spiriva regularly?",
+   "answer": true,
+   "start": 128.18,
+   "end": 130.98,
+   "segs": "#25",
+   "note": "\"I do recommend that you take the Spiriva regularly.\"",
+   "check": false
+  },
+  {
+   "question": "The FEV1/FVC ratio came out at 88 percent, right?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Transcript says \"The ratio to FVC, 68%\" (#17). **CHECK** by ear: 68 vs 88.",
+   "check": true
+  },
+  {
+   "question": "Was FEV1 measured at 82 percent?",
+   "answer": true,
+   "start": 81.82,
+   "end": 84.54,
+   "segs": "#17",
+   "note": "\"Your FEV1 is 82%.\"",
+   "check": false
+  }
+ ]
+}

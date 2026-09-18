@@ -1,123 +1,80 @@
-"""The baseline. This is the file to replace.
+"""The endpoint's model: delegates to ``model.answer_all``.
 
-It answers ``True`` to everything and points at nothing, which scores the floor
-and nothing more. It is here to prove the plumbing — that the audio arrives
-intact and that your server speaks the protocol — not to compete.
-
-Note how weak that floor now is. Answering yes to everything still gets half
-the questions right, but it finds none of the evidence, and evidence is the
-larger half of the score. The sketch under the dummy model shows where a real
-system goes.
+Kept deliberately thin. Everything that can raise is inside ``model`` and is
+caught there per question; this layer catches whatever is left so a request
+always gets a well-formed reply. A guess is worth half a mark; an exception is
+worth nothing.
 """
 
 import logging
-from typing import Optional, Tuple
 
+import model
 from dtos import ASRQuestionRequestDto, ASRQuestionResponseDto
-from utils import Span, audio_duration_seconds, decode_audio
+from utils import decode_audio
 
 logger = logging.getLogger(__name__)
+
+# Load the ASR and exercise the LLM once, at import. The first inference is the
+# slowest and there is no grace period for it.
+model.warm_up()
+
+
+def _dump(audio_filename: str, audio_bytes: bytes, questions) -> None:
+    """Record an incoming request on disk when REQUEST_DUMP_DIR is set (off by
+    default). Never raises: a failed dump must not cost a conversation."""
+    import json
+    import os
+    from pathlib import Path
+    d = os.environ.get('REQUEST_DUMP_DIR')
+    if not d:
+        return
+    try:
+        p = Path(d)
+        p.mkdir(parents=True, exist_ok=True)
+        stem = Path(audio_filename).stem or 'request'
+        if not (p / f'{stem}.mp3').exists():
+            (p / f'{stem}.mp3').write_bytes(audio_bytes)
+        (p / f'{stem}.questions.json').write_text(json.dumps(list(questions), ensure_ascii=False, indent=1), encoding='utf-8')
+    except Exception:
+        logger.exception('request dump failed for %s', audio_filename)
 
 
 ### CALL YOUR CUSTOM MODEL VIA THIS FUNCTION ###
 
 def predict(request: ASRQuestionRequestDto) -> ASRQuestionResponseDto:
-    """Answer every question about one conversation.
+    """Answer every question about one conversation."""
+    n = len(request.questions)
+    try:
+        audio_bytes = decode_audio(request.audio_base64)
+        _dump(request.audio_filename, audio_bytes, request.questions)
+        answers, spans = model.answer_all(audio_bytes, request.audio_filename, request.questions)
+        if len(answers) != n or len(spans) != n:
+            raise ValueError(f'model returned {len(answers)} answers for {n} questions')
+    except Exception:
+        logger.exception('%s: whole-conversation fallback', request.audio_filename)
+        answers, spans = [True] * n, [None] * n
 
-    The whole conversation and all of its questions arrive together, so the
-    expensive half — transcription — is paid once here and shared by every
-    answer below.
-    """
-    audio_bytes = decode_audio(request.audio_base64)
-
-    duration = audio_duration_seconds(audio_bytes)
-    logger.info(
-        '%s (%.1f s, %.1f MB): %d questions',
-        request.audio_filename,
-        duration if duration is not None else float('nan'),
-        len(audio_bytes) / 1e6,
-        len(request.questions),
-    )
-
-    # Never let this raise. An exception means no response, and no response
-    # means every question about this conversation is scored wrong — ten marks,
-    # not one. A guess is worth half a mark on average; an error is worth
-    # nothing.
-    answers = []
-    evidence_start = []
-    evidence_end = []
-
-    for question in request.questions:
-        try:
-            answer, span = answer_question(
-                audio_bytes, request.audio_filename, question
-            )
-        except Exception:
-            logger.exception('Falling back to a guess for: %s', question)
-            answer, span = True, None
-
-        answers.append(answer)
-        evidence_start.append(span[0] if span is not None else None)
-        evidence_end.append(span[1] if span is not None else None)
-
+    _dump_answers(request.audio_filename, request.questions, answers, spans)
     return ASRQuestionResponseDto(
-        answers=answers,
-        evidence_start=evidence_start,
-        evidence_end=evidence_end,
+        answers=[bool(a) for a in answers],
+        evidence_start=[s[0] if s is not None else None for s in spans],
+        evidence_end=[s[1] if s is not None else None for s in spans],
     )
 
 
-### DUMMY MODEL ###
-
-def answer_question(
-    audio_bytes: bytes,
-    audio_filename: str,
-    question: str,
-) -> Tuple[bool, Optional[Span]]:
-    """Always says yes, and never says where.
-
-    Both splits are exactly balanced between yes and no, so the answer half of
-    this scores 0.500: every ``positive`` question right, every
-    ``hard_negative`` and ``off_topic`` question wrong. The evidence half scores
-    0.000, because ``None`` means "nothing to point at" and every annotated yes
-    question is therefore missed. Run ``local_evaluator.py`` and read the
-    per-type breakdown and the evidence block — that shape is the problem you
-    are solving.
-
-    Replace this. The shape of a real answer is roughly:
-
-        def predict(request):
-            # The expensive half, paid once per request rather than once per
-            # question. Ten questions share this transcript.
-            segments = transcribe(decode_audio(request.audio_base64))
-
-            answers, starts, ends = [], [], []
-
-            for question in request.questions:
-                answer, span = answer_from_transcript(segments, question)
-                answers.append(answer)
-                starts.append(span[0] if span else None)
-                ends.append(span[1] if span else None)
-
-            return ASRQuestionResponseDto(
-                answers=answers, evidence_start=starts, evidence_end=ends,
-            )
-
-    where ``transcribe`` is a local ASR model **that returns timestamps** — the
-    span you send back is the start and end of the segment you read the answer
-    off, so word- or segment-level timing is not an optional extra here. Both
-    halves must run without calling a cloud API; see the Rules section of the
-    README.
-
-    Two things to watch while you work:
-
-    Return the passage, not the clip. A span covering the whole conversation
-    overlaps every annotation and scores a temporal IoU near zero against all
-    of them.
-
-    Watch the ``hard_negative`` questions. They are near-misses on dose, drug
-    and entity — "0.15 mg" against a transcript that says "0.3 mg" — so
-    anything that answers from topical overlap alone stays at the floor no
-    matter how good the transcript is.
-    """
-    return True, None
+def _dump_answers(audio_filename: str, questions, answers, spans) -> None:
+    """With REQUEST_DUMP_DIR set, also append what we answered, so a later
+    offline step can compare or reuse it. Never raises."""
+    import json
+    import os
+    from pathlib import Path
+    d = os.environ.get('REQUEST_DUMP_DIR')
+    if not d:
+        return
+    try:
+        with open(Path(d) / 'answers.jsonl', 'a', encoding='utf-8') as f:
+            f.write(json.dumps({'file': audio_filename, 'questions': list(questions),
+                                'answers': [bool(a) for a in answers],
+                                'spans': [list(s) if s else None for s in spans]}, ensure_ascii=False) + '\n')
+    except Exception:
+        logger.exception('answer dump failed for %s', audio_filename)

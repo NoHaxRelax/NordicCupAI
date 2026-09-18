@@ -1,0 +1,173 @@
+#!/bin/bash
+### bench/hpc/asr_bench.lsf: one gpuh100 job that runs every ASR runner of the
+### bench on the 39 training conversations, then compare.py. Submit ON the
+### cluster from the case folder:
+###
+###     cd /dtu/blackhole/1e/205502/nordic/medical-appointment && bsub < bench/hpc/asr_bench.lsf
+###
+### Before submitting (once): bench/hpc/sync.sh up (laptop), then on the login
+### node: bash bench/hpc/env.sh venvs && bash bench/hpc/env.sh prefetch.
+### Compute nodes have no internet (bench/hpc/README.md), so the job runs with
+### HF_HUB_OFFLINE=1 and every model must already sit in HF_HOME.
+###
+### Every step is wrapped: a failure is logged and the next step runs. Each
+### step has its own log under bench/results/logs/ (comes back with sync.sh
+### down); the LSF stdout goes to /dtu/blackhole/1e/205502/nordic/logs/.
+### Runners skip conversations that already have a transcript for their tag,
+### so a resubmitted job only redoes what is missing (FORCE=1 to redo all).
+###
+### Environment overrides at submit time, e.g.
+###     STEPS="fw-large-v3 parakeet-v2 compare" bsub < bench/hpc/asr_bench.lsf
+###     LIMIT=3 bsub < bench/hpc/asr_bench.lsf          # first 3 files only (smoke)
+###     STEP_TIMEOUT=1200 bsub < ...                    # seconds per step (default 3600)
+###
+### LSF template and the login-shell/module gotchas: ~/.claude/skills/dtu-hpc-shared/REFERENCE.md.
+### gpuh100 cap is 24 h (bqueues -l gpuh100, probed 2026-09-17); DTU's rusage[mem]
+### is per core (https://www.hpc.dtu.dk/?page_id=1416), so 8 x 4 GB = 32 GB host RAM.
+#BSUB -q gpuh100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -J asr_bench
+#BSUB -n 8
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=4GB]"
+#BSUB -W 8:00
+#BSUB -o /dtu/blackhole/1e/205502/nordic/logs/asr_bench.%J.out
+#BSUB -e /dtu/blackhole/1e/205502/nordic/logs/asr_bench.%J.err
+
+set -uo pipefail          # no -e: one failing step must not end the job
+
+BH=/dtu/blackhole/1e/205502
+ROOT=$BH/nordic
+CASE=$ROOT/medical-appointment
+VENVS=$BH/venvs
+JOB=${LSB_JOBID:-local}
+STEP_TIMEOUT=${STEP_TIMEOUT:-3600}
+LIMIT=${LIMIT:-0}
+FORCE=${FORCE:-0}
+
+cd "$CASE" || { echo "case folder $CASE missing: run bench/hpc/sync.sh up"; exit 1; }
+mkdir -p bench/results/logs bench/results/asr transcripts "$ROOT/logs"
+# A copy of everything printed lands under bench/results (synced down), while LSF
+# still writes its own -o file.
+exec > >(tee -a "bench/results/logs/asr_bench.$JOB.log") 2>&1
+
+# --- environment -------------------------------------------------------------
+# No python3 module: python3/3.11.9 sets PYTHONHOME and PYTHONPATH (module show,
+# 2026-09-17), which would leak into the venvs; the venvs point at the /appl9
+# interpreters directly. No cuda module either: every venv carries its own CUDA
+# runtime through the pip nvidia-* wheels, and a system CUDA on LD_LIBRARY_PATH
+# can shadow the pip cuDNN 9 that CTranslate2 (faster-whisper) needs.
+unset PYTHONHOME PYTHONPATH
+module load ffmpeg/7.1 2>/dev/null || true       # torchcodec / audioread fallback decoders
+for d in /appl9/ffmpeg/7.1.0/lib64 /appl9/ffmpeg/7.1.0/lib; do   # the module sets no LD_LIBRARY_PATH
+  [ -d "$d" ] && export LD_LIBRARY_PATH="$d:${LD_LIBRARY_PATH:-}"
+done
+export HF_HOME=$BH/hf                            # bench/README.md: nothing under $HOME
+export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}       # weights were prefetched by env.sh (compute nodes: no internet)
+export TRANSFORMERS_OFFLINE=${TRANSFORMERS_OFFLINE:-1}
+export HF_HUB_DISABLE_TELEMETRY=1
+export TORCH_HOME=$BH/torch-home                 # torchaudio pipelines (MMS_FA, wav2vec2) checkpoints
+export NLTK_DATA=$BH/nltk_data                   # nltk punkt_tab for whisperx.align; run_whisperx.py check_caches()
+                                                 # exits when HF_HOME, TORCH_HOME or NLTK_DATA is unset/under $HOME
+export NEMO_CACHE_DIR=$BH/nemo-cache             # UNVERIFIED: NeMo's env var for its ~/.cache/torch/NeMo dir
+export TMPDIR=$BH/tmp
+export OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED=1
+mkdir -p "$TMPDIR" "$TORCH_HOME" "$NLTK_DATA" "$NEMO_CACHE_DIR"
+
+echo "=== asr_bench job $JOB on $(hostname) start $(date -Is)"
+echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}  LSB_HOSTS=${LSB_HOSTS:-}"
+nvidia-smi || echo "nvidia-smi failed: no GPU visible?"
+echo "venvs:"; ls -d "$VENVS"/venv-* 2>/dev/null || echo "  none (run bench/hpc/env.sh venvs)"
+echo "cached HF models (models--org--name under $HF_HOME/hub):"
+# Qwen/Qwen3-1.7B and nvidia/canary-1b-flash are not run on their own: SALM.from_pretrained
+# ('nvidia/canary-qwen-2.5b') resolves both at load (its config.json: pretrained_llm,
+# pretrained_asr; nemo/collections/speechlm2/parts/pretrained.py), so offline they must be cached.
+for id in Systran/faster-whisper-large-v3 mobiuslabsgmbh/faster-whisper-large-v3-turbo \
+          Systran/faster-distil-whisper-large-v3 openai/whisper-large-v3 distil-whisper/distil-large-v3 \
+          nvidia/parakeet-tdt-0.6b-v2 nvidia/parakeet-tdt-0.6b-v3 nvidia/canary-qwen-2.5b \
+          Qwen/Qwen3-1.7B nvidia/canary-1b-flash \
+          Qwen/Qwen3-ASR-1.7B Qwen/Qwen3-ForcedAligner-0.6B ibm-granite/granite-speech-4.1-2b-plus; do
+  if [ -d "$HF_HOME/hub/models--${id//\//--}" ]; then echo "  ok      $id"; else echo "  MISSING $id"; fi
+done
+echo "torch hub checkpoints: $(ls "$TORCH_HOME/hub/checkpoints" 2>/dev/null | tr '\n' ' ')"
+if [ -d "$NLTK_DATA/tokenizers/punkt_tab" ]; then echo "nltk punkt_tab: ok ($NLTK_DATA)"; else echo "nltk punkt_tab: MISSING in $NLTK_DATA (env.sh prefetch runs run_whisperx.py --prefetch)"; fi
+echo "audio files: $(ls data/audio/*.mp3 2>/dev/null | wc -l)   transcripts: $(ls transcripts/*.json 2>/dev/null | wc -l)"
+
+# --- step wrapper --------------------------------------------------------------
+SUMMARY=()
+common_args=()
+[ "$LIMIT" != 0 ] && common_args+=(--limit "$LIMIT")
+[ "$FORCE" = 1 ] && common_args+=(--force)
+
+# LD_LIBRARY_PATH for CTranslate2: cuBLAS + cuDNN 9 from the pip nvidia-* wheels
+# that torch pulls in (https://github.com/SYSTRAN/faster-whisper#gpu, the
+# documented one-liner). Must be set before Python starts.
+ct2_libs() {
+  "$1" -c 'import os, nvidia.cublas.lib, nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__file__) + ":" + os.path.dirname(nvidia.cudnn.lib.__file__))' 2>/dev/null
+}
+
+want() {  # want <step-name>: run when STEPS is unset or lists it
+  [ -z "${STEPS:-}" ] && return 0
+  for s in $STEPS; do [ "$s" = "$1" ] && return 0; done
+  return 1
+}
+
+step() {  # step <name> <venv> <script> [args...]
+  local name=$1 venv=$2; shift 2
+  want "$name" || { echo; echo "--- skip $name (not in STEPS)"; return 0; }
+  local py="$VENVS/$venv/bin/python" log="bench/results/logs/asr_bench.$JOB.$name.log"
+  echo; echo "=== [$(date -Is)] STEP $name   venv=$venv"; echo "    $py $*"
+  if [ ! -x "$py" ]; then
+    echo "    SKIP: $py missing (bench/hpc/env.sh venvs)"; SUMMARY+=("SKIP   $name (no $venv)"); return 0
+  fi
+  local t0=$SECONDS
+  (
+    export PATH="$VENVS/$venv/bin:$PATH" VIRTUAL_ENV="$VENVS/$venv"
+    libs=$(ct2_libs "$py"); [ -n "$libs" ] && export LD_LIBRARY_PATH="$libs:${LD_LIBRARY_PATH:-}"
+    exec timeout -k 60 "$STEP_TIMEOUT" "$py" "$@"
+  ) > "$log" 2>&1
+  local rc=$?
+  local dt=$((SECONDS - t0))
+  if [ $rc -eq 0 ]; then
+    echo "    OK in ${dt}s"; tail -n 3 "$log" | sed 's/^/    | /'; SUMMARY+=("OK     $name ${dt}s")
+  else
+    if [ $rc -eq 124 ]; then echo "    TIMEOUT after ${dt}s (STEP_TIMEOUT=$STEP_TIMEOUT)"; else echo "    FAILED rc=$rc after ${dt}s"; fi
+    echo "    log: $log (last 25 lines):"; tail -n 25 "$log" | sed 's/^/    | /'
+    SUMMARY+=("FAIL   $name rc=$rc ${dt}s")
+  fi
+  nvidia-smi --query-gpu=memory.used --format=csv,noheader 2>/dev/null | sed 's/^/    gpu mem used after step: /'
+}
+
+# --- the steps, in the order of the task ------------------------------------
+# venv-asr:      torch + faster-whisper + transformers>=5 (+ MMS_FA, granite, compare)
+# venv-whisperx: whisperx pins torch~=2.8 and huggingface-hub<1, incompatible with transformers 5
+# venv-nemo:     nemo_toolkit[asr,speechlm2] (parakeet, canary-qwen)
+# venv-qwen:     qwen-asr pins transformers==4.57.6
+# CLI flags verified against every runner's docstring/argparse on 2026-09-17
+# (run_faster_whisper --model; run_hf_whisper --assistant <HF id>; run_whisperx
+# plain -> tag whisperx-large-v3; run_parakeet --model v3; run_canary_qwen plain;
+# run_qwen3_asr --align-only <tag>; run_granite plain; align_mms --tag <tag> ->
+# <tag>+mms; compare --ref <tag>). All take --limit/--force from common.standard_args
+# except compare.py (its --force means something else, so it gets no common_args).
+step fw-large-v3        venv-asr      bench/asr/run_faster_whisper.py --model large-v3        "${common_args[@]}"
+step fw-large-v3-turbo  venv-asr      bench/asr/run_faster_whisper.py --model large-v3-turbo  "${common_args[@]}"
+step fw-distil-large-v3 venv-asr      bench/asr/run_faster_whisper.py --model distil-large-v3 "${common_args[@]}"
+step hf-whisper         venv-asr      bench/asr/run_hf_whisper.py                             "${common_args[@]}"
+step hf-whisper-spec    venv-asr      bench/asr/run_hf_whisper.py --assistant distil-whisper/distil-large-v3 "${common_args[@]}"
+step whisperx           venv-whisperx bench/asr/run_whisperx.py                               "${common_args[@]}"
+step parakeet-v2        venv-nemo     bench/asr/run_parakeet.py                               "${common_args[@]}"
+step parakeet-v3        venv-nemo     bench/asr/run_parakeet.py --model v3                    "${common_args[@]}"
+step canary-qwen        venv-nemo     bench/asr/run_canary_qwen.py                            "${common_args[@]}"
+step qwen3-asr          venv-qwen     bench/asr/run_qwen3_asr.py                              "${common_args[@]}"
+step qwen3-align-lv3    venv-qwen     bench/asr/run_qwen3_asr.py --align-only large-v3        "${common_args[@]}"
+step granite            venv-asr      bench/asr/run_granite.py                                "${common_args[@]}"
+step mms-large-v3       venv-asr      bench/asr/align_mms.py --tag large-v3                   "${common_args[@]}"
+step mms-parakeet-v2    venv-asr      bench/asr/align_mms.py --tag parakeet-tdt-0.6b-v2       "${common_args[@]}"
+step compare            venv-asr      bench/asr/compare.py --ref canary-qwen-2.5b
+
+echo; echo "=== transcripts per tag:"
+ls transcripts 2>/dev/null | sed -E 's/^conversation_sample_[0-9]+\.//' | sort | uniq -c | sed 's/^/    /'
+echo; echo "=== summary ($(date -Is), $((SECONDS / 60)) min total):"
+printf '    %s\n' "${SUMMARY[@]}"
+if [ -f bench/results/asr/summary.md ]; then echo; echo "=== bench/results/asr/summary.md:"; cat bench/results/asr/summary.md; fi
+echo "=== done $(date -Is)"

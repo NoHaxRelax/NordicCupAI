@@ -1,0 +1,95 @@
+{
+ "stem": "conversation_sample_80",
+ "items": [
+  {
+   "question": "Will the patient be started on a course of antibiotics?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "\"No further treatment.\" (#29); no infection.",
+   "check": false
+  },
+  {
+   "question": "Was the healing judged to be delayed?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Opposite: uncomplicated healing (#24-#26).",
+   "check": false
+  },
+  {
+   "question": "Is there any discussion about the patient owning a digital camera?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic.",
+   "check": false
+  },
+  {
+   "question": "Is the patient here to have a plaster cast removed?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Sutures, not a cast (#00, #06).",
+   "check": false
+  },
+  {
+   "question": "Were signs of infection seen around the wound?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Opposite: \"There are no signs of infection.\" (#17).",
+   "check": false
+  },
+  {
+   "question": "The patient showed up in person for this visit, correct?",
+   "answer": true,
+   "start": 8.48,
+   "end": 11.8,
+   "segs": "#00",
+   "note": "\"I have an appointment to have my sutures removed.\" The patient is physically present: came in by the side door (#02-#03), sits down, sutures removed (#22). model: no. **CHECK**: I read this as the note's contact type (in person, not phone or e-consultation). Where the annotator put the span is a guess.",
+   "check": true
+  },
+  {
+   "question": "Were the sutures put in after an open hip operation?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Arthroscopy (#06), not an open hip operation.",
+   "check": false
+  },
+  {
+   "question": "Has the course after the procedure been uncomplicated?",
+   "answer": true,
+   "start": 51.2,
+   "end": 55.92,
+   "segs": "#08",
+   "note": "\"Uncomplicated, thankfully. Nothing out of the ordinary at any point since the arthroscopy.\" Conclusion repeated at #24-#26 (111.72-124.94).",
+   "check": false
+  },
+  {
+   "question": "Is the patient talking about their pet's recent birthday celebration?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic.",
+   "check": false
+  },
+  {
+   "question": "Was the wound free of any signs of infection?",
+   "answer": true,
+   "start": 90.3,
+   "end": 94.46,
+   "segs": "#17",
+   "note": "\"There are no signs of infection. Nothing there to suggest a problem.\"",
+   "check": false
+  }
+ ]
+}

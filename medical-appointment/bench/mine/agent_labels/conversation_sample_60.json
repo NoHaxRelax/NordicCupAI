@@ -1,0 +1,95 @@
+{
+ "stem": "conversation_sample_60",
+ "items": [
+  {
+   "question": "Has the patient been left free of complaints?",
+   "answer": true,
+   "start": 16.78,
+   "end": 23.88,
+   "segs": "#05",
+   "note": "\"Well, actually, no complaints at all.\"",
+   "check": false
+  },
+  {
+   "question": "Will the current treatment continue unchanged?",
+   "answer": true,
+   "start": 48.1,
+   "end": 52.8,
+   "segs": "#16",
+   "note": "\"The plan is that you continue your current treatment.\" (#17-#18 repeat it).",
+   "check": false
+  },
+  {
+   "question": "Does the patient complain of tiredness at this visit?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "No complaints (#05-#07).",
+   "check": false
+  },
+  {
+   "question": "Have the lipid values worsened?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Opposite: improved (#12).",
+   "check": false
+  },
+  {
+   "question": "Does the doctor consider the diabetes well controlled?",
+   "answer": true,
+   "start": 40.3,
+   "end": 44.32,
+   "segs": "#14",
+   "note": "\"Taken together, your diabetes and your lipids are both well-controlled.\" model: no.",
+   "check": false
+  },
+  {
+   "question": "Is a specific dish being planned for dinner discussed?",
+   "answer": false,
+   "start": null,
+   "end": null,
+   "segs": "",
+   "note": "Off-topic (supermarket).",
+   "check": false
+  },
+  {
+   "question": "Have the lipid values improved?",
+   "answer": true,
+   "start": 36.26,
+   "end": 38.08,
+   "segs": "#12",
+   "note": "\"And your lipids have improved as well.\"",
+   "check": false
+  },
+  {
+   "question": "Was the HbA1c 42 mmol/mol?",
+   "answer": true,
+   "start": 29.38,
+   "end": 32.84,
+   "segs": "#10",
+   "note": "\"Your long-term sugar value is 42 millimoles per mole.\"",
+   "check": false
+  },
+  {
+   "question": "The lipids are also under good control, aren't they?",
+   "answer": true,
+   "start": 40.3,
+   "end": 44.32,
+   "segs": "#14",
+   "note": "\"your diabetes and your lipids are both well-controlled.\"",
+   "check": false
+  },
+  {
+   "question": "Is the patient feeling well?",
+   "answer": true,
+   "start": 16.78,
+   "end": 19.56,
+   "segs": "#05",
+   "note": "\"Well, actually, no complaints at all.\" in answer to \"How have you been feeling?\" **CHECK**: same evidence as q1.",
+   "check": true
+  }
+ ]
+}

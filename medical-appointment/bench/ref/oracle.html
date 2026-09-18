@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Transcript oracle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#f6f7f9; --fg:#1b1f24; --muted:#5b6470; --card:#fff; --line:#e3e6ea; --accent:#0b5fff; --hi:#fff3bf; --ok:#1a7f37; --warn:#b35c00; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0f1216; --fg:#e6e8eb; --muted:#9aa4b2; --card:#171b21; --line:#2a3039; --accent:#6ea0ff; --hi:#3b3410; --ok:#3fb950; --warn:#e3a54c; } }
+  :root[data-theme="dark"] { --bg:#0f1216; --fg:#e6e8eb; --muted:#9aa4b2; --card:#171b21; --line:#2a3039; --accent:#6ea0ff; --hi:#3b3410; --ok:#3fb950; --warn:#e3a54c; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, sans-serif; display:grid; grid-template-columns:230px 1fr; min-height:100vh; }
+  aside { border-right:1px solid var(--line); background:var(--card); padding:12px 8px; overflow:auto; position:sticky; top:0; height:100vh; }
+  aside h1 { font-size:14px; margin:4px 8px 10px; color:var(--muted); font-weight:600; }
+  .f { display:flex; justify-content:space-between; align-items:center; padding:5px 8px; border-radius:6px; cursor:pointer; font-size:14px; }
+  .f:hover { background:color-mix(in srgb, var(--accent) 8%, transparent); }
+  .f.cur { background:color-mix(in srgb, var(--accent) 16%, transparent); }
+  .f .st { font-size:12px; color:var(--muted); }
+  .f.checked .st { color:var(--ok); }
+  .f.edited .st { color:var(--warn); }
+  main { padding:14px 16px 60px; }
+  .bar { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px; position:sticky; top:8px; z-index:2; }
+  .bar label { color:var(--muted); font-size:13px; }
+  button { font:inherit; padding:5px 11px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .big { font-size:20px; font-variant-numeric:tabular-nums; min-width:5ch; display:inline-block; }
+  #rows { margin-top:12px; }
+  .row { display:grid; grid-template-columns:7ch 3.2ch 1fr auto; gap:8px; align-items:center; padding:4px 8px; border-left:3px solid transparent; border-radius:4px; }
+  .row.cur { background:var(--hi); border-left-color:var(--accent); }
+  .row .t { color:var(--muted); font-variant-numeric:tabular-nums; cursor:pointer; }
+  .row .sp { font-weight:700; cursor:pointer; text-align:center; border:1px solid var(--line); border-radius:6px; padding:2px 0; user-select:none; }
+  .row .sp.D { color:var(--accent); } .row .sp.P { color:var(--ok); } .row .sp.q { color:var(--warn); }
+  .row input { font:inherit; width:100%; padding:4px 8px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); }
+  .row input.dirty { border-color:var(--warn); }
+  .row .x { color:var(--muted); font-size:12px; cursor:pointer; }
+  .hint { color:var(--muted); font-size:13px; margin:8px 2px; }
+  kbd { border:1px solid var(--line); border-radius:4px; padding:0 5px; font-size:12px; }
+  #save { min-width:11ch; }
+  @media (max-width: 760px) { body { grid-template-columns:1fr; } aside { position:static; height:auto; max-height:30vh; } }
+</style>
+</head>
+<body>
+<aside>
+  <h1>conversations <span id="done"></span></h1>
+  <div id="files"></div>
+</aside>
+<main>
+  <div class="bar">
+    <button id="play">play</button>
+    <span class="big" id="clock">0:00.0</span>
+    <label>speed <input id="rate" type="range" min="1" max="10" step="0.25" value="1"> <span class="big" id="rv">1x</span></label>
+    <label><input id="pitch" type="checkbox" checked> keep pitch (to 4x)</label>
+    <label><input id="follow" type="checkbox" checked> follow audio</label>
+    <button id="save" class="primary">saved</button>
+    <button id="check">mark checked</button>
+    <span class="hint" id="msg"></span>
+  </div>
+  <div class="hint"><kbd>space</kbd> play/pause (when not typing) · <kbd>Esc</kbd> leave the text box · <kbd>←</kbd><kbd>→</kbd> 2 s · <kbd>↑</kbd><kbd>↓</kbd> speed · <kbd>Ctrl+S</kbd> save · click a time to seek · click <b>D/P</b> to flip the speaker · <kbd>Ctrl+Enter</kbd> in a box splits the line at the cursor · <kbd>Tab</kbd> next line · edits autosave after 2 s</div>
+  <audio id="a" preload="auto"></audio>
+  <div id="rows"></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const a = $('a'), rate = $('rate'), rv = $('rv'), clock = $('clock'), playBtn = $('play'), pitch = $('pitch'), follow = $('follow');
+let stem = null, head = [], lines = [], dirty = false, saveTimer = null, buf = null, ctx = null, src = null, srcStart = 0, srcOffset = 0, mode = 'el', curIdx = -1;
+const fmt = s => `${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
+const mark = t => `[${Math.floor(t/60)}:${(t%60).toFixed(1).padStart(4,'0')}]`;
+
+async function loadList() {
+  const files = await (await fetch('/api/list')).json();
+  const box = $('files'); box.innerHTML = '';
+  let done = 0;
+  for (const f of files) {
+    if (f.checked) done++;
+    const d = document.createElement('div');
+    d.className = 'f' + (f.checked ? ' checked' : f.edited ? ' edited' : '') + (f.stem === stem ? ' cur' : '');
+    d.dataset.stem = f.stem;
+    d.innerHTML = `<span>${f.stem.replace('conversation_','')}</span><span class="st">${f.checked ? '✓ checked' : f.edited ? `line ${f.progress}/${f.lines}` : `${f.lines} lines`}</span>`;
+    d.onclick = () => open(f.stem);
+    box.appendChild(d);
+  }
+  $('done').textContent = `${done}/${files.length}`;
+  return files;
+}
+
+async function open(s) {
+  if (dirty) await save();
+  stem = s; localStorage.setItem('oracle.last', s);
+  const d = await (await fetch('/api/text/' + s)).json();
+  head = []; lines = [];
+  for (const raw of d.text.split(/\r?\n/)) {
+    const m = raw.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(?:\[([DP?])\]\s*)?(.*)$/);
+    if (m) lines.push({t: +m[1]*60 + +m[2], sp: m[3] || '?', text: m[4]});
+    else if (raw.startsWith('#')) head.push(raw);
+    else if (raw.trim()) lines.push({t: lines.length ? lines[lines.length-1].t : 0, sp: '?', text: raw});
+  }
+  const prog = head.map(h => h.match(/^#\s*progress:\s*(\d+)/)).find(Boolean);
+  render();
+  stopBuf(); a.src = '/audio/' + s + '.mp3'; buf = null;
+  try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); const r = await fetch('/audio/' + s + '.mp3'); buf = await ctx.decodeAudioData(await r.arrayBuffer()); } catch (e) { console.warn(e); }
+  document.title = s.replace('conversation_', '') + ' · oracle';
+  $('check').textContent = head.some(h => h.trim() === '# checked') ? 'unmark checked' : 'mark checked';
+  setDirty(false);
+  await loadList();
+  if (prog) { const i = Math.min(+prog[1], lines.length - 1); focusRow(i); seek(lines[i].t, false); }
+}
+
+function render() {
+  const box = $('rows'); box.innerHTML = '';
+  lines.forEach((l, i) => {
+    const r = document.createElement('div'); r.className = 'row'; r.dataset.i = i;
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    r.innerHTML = `<span class="t">${fmt(l.t)}</span><span class="sp ${l.sp === '?' ? 'q' : l.sp}">${l.sp}</span><input type="text" value="${esc(l.text)}"><span class="x" title="delete this line">✕</span>`;
+    r.querySelector('.t').onclick = () => seek(l.t);
+    r.querySelector('.sp').onclick = () => { l.sp = l.sp === 'D' ? 'P' : 'D'; const el = r.querySelector('.sp'); el.textContent = l.sp; el.className = 'sp ' + l.sp; setDirty(true); };
+    const inp = r.querySelector('input');
+    inp.oninput = () => { l.text = inp.value; inp.classList.add('dirty'); setDirty(true); };
+    inp.onfocus = () => { curIdx = i; };
+    inp.onkeydown = e => {
+      if (e.key === 'Escape') { inp.blur(); }
+      else if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); splitAt(i, inp.selectionStart); }
+      else if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); focusRow(i + 1); }
+      else if (e.key === 'Tab' && e.shiftKey) { e.preventDefault(); focusRow(i - 1); }
+    };
+    r.querySelector('.x').onclick = () => { if (confirm('Delete this line?')) { lines.splice(i, 1); render(); setDirty(true); } };
+    box.appendChild(r);
+  });
+}
+function focusRow(i) { i = Math.max(0, Math.min(i, lines.length - 1)); const el = document.querySelector(`.row[data-i="${i}"] input`); if (el) { el.focus(); el.scrollIntoView({block: 'center'}); } curIdx = i; }
+function splitAt(i, pos) {
+  const l = lines[i]; const left = l.text.slice(0, pos).trim(), right = l.text.slice(pos).trim();
+  if (!right) return;
+  l.text = left;
+  lines.splice(i + 1, 0, {t: l.t, sp: l.sp === 'D' ? 'P' : 'D', text: right});
+  render(); setDirty(true); focusRow(i + 1);
+}
+function serialize() {
+  const h = head.filter(x => !/^#\s*progress:/.test(x));
+  const prog = Math.max(0, curIdx);
+  const out = [...h, `# progress: ${prog}`, ...lines.map(l => `${mark(l.t)} [${l.sp}] ${l.text}`)];
+  return out.join('\n') + '\n';
+}
+function setDirty(v) { dirty = v; $('save').textContent = v ? 'save (Ctrl+S)' : 'saved'; if (v) { clearTimeout(saveTimer); saveTimer = setTimeout(save, 2000); } }
+async function save() {
+  if (!stem) return;
+  const r = await fetch('/api/text/' + stem, {method: 'POST', body: serialize()});
+  if (r.ok) { setDirty(false); document.querySelectorAll('input.dirty').forEach(x => x.classList.remove('dirty')); $('msg').textContent = 'saved ' + new Date().toLocaleTimeString(); loadList(); }
+  else { $('msg').textContent = 'SAVE FAILED: ' + (await r.text()); }
+}
+$('save').onclick = save;
+$('check').onclick = async () => {
+  const has = head.some(h => h.trim() === '# checked');
+  head = has ? head.filter(h => h.trim() !== '# checked') : ['# checked', ...head];
+  $('check').textContent = has ? 'mark checked' : 'unmark checked';
+  setDirty(true); await save();
+};
+
+/* audio: element up to 4x with pitch kept; raw buffer above that */
+function curTime() { return mode === 'el' ? a.currentTime : (src ? srcOffset + (ctx.currentTime - srcStart) * src.playbackRate.value : srcOffset); }
+function playing() { return mode === 'el' ? !a.paused : !!src; }
+function stopBuf() { if (src) { try { src.stop(); } catch (e) {} src.disconnect(); srcOffset = curTime(); src = null; } }
+function startBuf(at) { if (!buf) return; stopBuf(); ctx.resume(); src = ctx.createBufferSource(); src.buffer = buf; src.playbackRate.value = +rate.value; src.connect(ctx.destination); srcOffset = Math.max(0, Math.min(at, buf.duration)); srcStart = ctx.currentTime; src.start(0, srcOffset); src.onended = () => { if (src) { srcOffset = buf.duration; src = null; } }; }
+function wantMode() { return (+rate.value > 4 && buf) ? 'buf' : 'el'; }
+function applyRate() {
+  const r = +rate.value; rv.textContent = r.toFixed(2).replace(/\.?0+$/, '') + 'x';
+  const m = wantMode();
+  if (m !== mode) { const t = curTime(), was = playing(); if (mode === 'el') a.pause(); else stopBuf(); mode = m; if (mode === 'el') { a.currentTime = t; if (was) a.play(); } else { srcOffset = t; if (was) startBuf(t); } }
+  a.playbackRate = Math.min(r, 16); a.preservesPitch = pitch.checked; a.mozPreservesPitch = pitch.checked;
+  if (mode === 'buf' && src) startBuf(curTime());
+}
+function seek(t, play = true) { if (mode === 'el') { a.currentTime = t; if (play && a.paused) a.play(); } else { if (play) startBuf(t); else { stopBuf(); srcOffset = t; } } }
+function toggle() { if (mode === 'el') { a.paused ? a.play() : a.pause(); } else { src ? stopBuf() : startBuf(srcOffset); } }
+rate.oninput = applyRate; pitch.onchange = applyRate; playBtn.onclick = toggle;
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key.toLowerCase() === 's') { e.preventDefault(); save(); return; }
+  const typing = e.target.tagName === 'INPUT' && e.target.type === 'text';
+  if (typing) return;
+  if (e.code === 'Space') { e.preventDefault(); toggle(); }
+  else if (e.code === 'ArrowRight') seek(curTime() + 2);
+  else if (e.code === 'ArrowLeft') seek(Math.max(0, curTime() - 2));
+  else if (e.code === 'ArrowUp') { rate.value = Math.min(10, +rate.value + 0.25); applyRate(); }
+  else if (e.code === 'ArrowDown') { rate.value = Math.max(1, +rate.value - 0.25); applyRate(); }
+});
+setInterval(() => {
+  const t = curTime(); clock.textContent = fmt(t); playBtn.textContent = playing() ? 'pause' : 'play';
+  let cur = -1; for (let i = 0; i < lines.length; i++) if (lines[i].t <= t + 0.05) cur = i;
+  document.querySelectorAll('.row').forEach(d => d.classList.toggle('cur', +d.dataset.i === cur));
+  const el = document.querySelector('.row.cur'); if (el && playing() && follow.checked && document.activeElement.tagName !== 'INPUT') el.scrollIntoView({block: 'center', behavior: 'smooth'});
+}, 150);
+window.addEventListener('beforeunload', e => { if (dirty) { save(); e.preventDefault(); e.returnValue = ''; } });
+(async () => { const files = await loadList(); const last = localStorage.getItem('oracle.last'); await open(files.some(f => f.stem === last) ? last : files[0].stem); })();
+</script>
+</body>
+</html>

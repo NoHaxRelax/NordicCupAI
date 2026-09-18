@@ -1,0 +1,9 @@
+{"expect": "DENIED", "name": "curl POST to the evaluation queue", "tool_name": "Bash", "tool_input": {"command": "curl -X POST https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/evaluate/queue -H x"}}
+{"expect": "DENIED", "name": "Agent prompt asking to queue the evaluation", "tool_name": "Agent", "tool_input": {"prompt": "Go to cases.nordicaicup.com and queue evaluation for our team"}}
+{"expect": "DENIED", "name": "PowerShell Invoke-RestMethod to the evaluation queue", "tool_name": "PowerShell", "tool_input": {"command": "Invoke-RestMethod -Method Post https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/evaluate/queue"}}
+{"expect": "DENIED", "name": "WebFetch of the evaluation queue url", "tool_name": "WebFetch", "tool_input": {"url": "https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/evaluate/queue", "prompt": "x"}}
+{"expect": "ALLOWED", "name": "validation queue", "tool_name": "Bash", "tool_input": {"command": "curl -X POST https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/validate/queue"}}
+{"expect": "ALLOWED", "name": "local evaluator script", "tool_name": "Bash", "tool_input": {"command": "python local_evaluator.py --verbose"}}
+{"expect": "ALLOWED", "name": "status endpoint", "tool_name": "WebFetch", "tool_input": {"url": "https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/status", "prompt": "team status"}}
+{"expect": "ALLOWED", "name": "bench run mentioning the evaluation set", "tool_name": "Bash", "tool_input": {"command": "python bench/llm/bench.py --asr large-v3  # compare to the evaluation set later"}}
+{"expect": "ALLOWED", "name": "verify endpoint", "tool_name": "Bash", "tool_input": {"command": "curl -X POST https://cases.nordicaicup.com/api/v1/usecases/medical-appointment/verify"}}
