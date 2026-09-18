@@ -16,11 +16,11 @@ TRAPPED_RADIUS = 40.0
 TERRAIN = {'forest': 1., 'grassland': 1., 'desert': .8, 'swamp': .5, 'river': .3}
 
 
-def prioritize(action, bait, edges, agent, memory):
+def prioritize(action, bait, edges, agent, memory, target=None):
     predators = [p for p in agent['observations'] if p['type'] == 'Predator']
     if not predators:
         return action
-    target = min(predators, key=lambda p: p['distance'])
+    target = target if target is not None else min(predators, key=lambda p: p['distance'])
     positions = [(p['distance'] * math.cos(p['angle']),
                   p['distance'] * math.sin(p['angle'])) for p in predators]
     # Observation-only approximation of the held group. Relax clearance only

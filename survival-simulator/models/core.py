@@ -16,6 +16,7 @@ from models.exploration.world_estimator import rotate
 from models.survival.oscar_orchard import OrchardPolicy, MOVE_PENALTY
 from models.entrapment.observed_trap_sites import observed_rectangles, our_sites
 from models.entrapment.my_guide import guide
+from models.entrapment.bystander_avoidance import avoid_predators
 
 
 def action_for(aid, **kwargs):
@@ -54,6 +55,7 @@ class Track:
     memory: dict = field(default_factory=dict)
     edges: list = field(default_factory=list)
     completed_at: float | None = None
+    held_since: float | None = None
 
 
 class EntrapmentPolicy:
@@ -80,7 +82,7 @@ class EntrapmentPolicy:
         self.next_site_check = 0.
         self.map_stats = {}
         self.now = 0.
-        self.metrics = dict(site_discoveries=0, guide_assignments=0, guide_deaths=0,
+        self.metrics = dict(site_discoveries=0, guide_assignments=0, guide_deaths=0, guide_releases=0,
                             delivery_arrivals=0, bait_arrivals=0, overlapping_replacements=0,
                             estimated_unbaited_seconds=0., no_viable_bait_ticks=0)
         self.last_time = None
@@ -219,6 +221,15 @@ class EntrapmentPolicy:
         assigned = {t.guide_id for t in self.tracks.values() if t.guide_id is not None}
         for track in self.tracks.values():
             if track.group != self.site_group: continue
+            near_bait = math.dist(track.position, self.site['goal']) <= 40.
+            track.held_since = (self.now if track.held_since is None else track.held_since) if near_bait else None
+            if (track.guide_id in states and track.held_since is not None
+                    and self.now-track.held_since >= 10. and self.now-track.seen < .2):
+                self.event('guide_released', agent=track.guide_id, track=track.key)
+                self.metrics['guide_releases'] += 1
+                track.guide_id = None
+                track.memory = {}
+                track.completed_at = None
             if track.guide_id in states:
                 self.roles[track.guide_id] = 'guide'
                 continue
@@ -275,6 +286,31 @@ class EntrapmentPolicy:
             self.event('guide_at_delivery', agent=aid, track=track.key)
         return action_for(aid, **value)
 
+    def _shared_predators(self, aid):
+        """Current teammate sightings transformed into this agent's local frame."""
+        pose = self.estimator.poses.get(aid)
+        if pose is None or pose.uncertainty > 8.: return []
+        result = []
+        for track in self.tracks.values():
+            if (track.group != pose.group_id or self.now-track.seen > .15
+                    or aid in track.observers or not track.observers):
+                continue
+            x, y = local(pose, track.position)
+            distance = math.hypot(x, y)
+            if distance > 275.: continue
+            obs = dict(type='Predator', distance=distance, angle=math.atan2(y, x))
+            observer, sighting = next(iter(track.observers.items()))
+            source = self.estimator.poses.get(observer)
+            if source is not None and 'rel_dir' in sighting:
+                toward_observer = math.atan2(source.position[1]-track.position[1],
+                                             source.position[0]-track.position[0])
+                heading = toward_observer-sighting['rel_dir']
+                bearing = math.atan2(pose.position[1]-track.position[1],
+                                     pose.position[0]-track.position[0])-heading
+                obs['rel_dir'] = math.atan2(math.sin(bearing), math.cos(bearing))
+            result.append(obs)
+        return result
+
     def __call__(self, states_list, sim_time):
         self.now = sim_time
         states = {s['agent_id']: s for s in states_list}
@@ -296,10 +332,13 @@ class EntrapmentPolicy:
             else:
                 role = 'explorer' if self.site is None else 'gatherer'
                 action = exploration[aid] if self.site is None else orchard[aid]
-                # Gathering is overridden by ordinary observed-predator escape,
-                # including predators currently following another guide.
-                if any(o['type'] == 'Predator' and o['distance'] < 130 for o in s['observations']):
-                    action = exploration[aid]
+                bait_local = None
+                if self.site is not None and self.bait is not None:
+                    pose = self.estimator.poses.get(aid)
+                    if pose is not None and pose.group_id == self.site_group:
+                        bait_local = local(pose, self.site['goal'])
+                action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
+                if avoiding:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
             # Reproduction belongs to fit young gatherers/explorers, not bait.
