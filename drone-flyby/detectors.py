@@ -46,12 +46,20 @@ class UltralyticsDetector:
         path = Path(weights)
         if not path.is_file():
             raise ValueError(f'Weights must be an existing local file, got {path}')
+        # Importing Ultralytics resets OpenCV to a single thread process-wide,
+        # which made the tracker's SIFT calibration four times slower. Keep
+        # the caller's thread budget for the tracker.
+        import cv2
+        threads = cv2.getNumThreads()
         try:
-            from ultralytics import YOLO
-        except ImportError as exc:
-            raise RuntimeError('DRONE_DETECTOR=ultralytics needs torch and ultralytics installed') from exc
-        with redirect_stdout(sys.stderr):
-            self.model = YOLO(str(path))
+            try:
+                from ultralytics import YOLO
+            except ImportError as exc:
+                raise RuntimeError('DRONE_DETECTOR=ultralytics needs torch and ultralytics installed') from exc
+            with redirect_stdout(sys.stderr):
+                self.model = YOLO(str(path))
+        finally:
+            cv2.setNumThreads(threads)
         names = set(self.model.names.values())
         if names != set(OBJECT_CLASSES):
             raise ValueError(f'Checkpoint classes {sorted(names)} are not the competition classes')
