@@ -31,6 +31,8 @@ VARIANTS=${VARIANTS:-units-fewshot}
 MODES=${MODES:-"clause-and clause-all clause"}   # most promising first, in case the walltime cuts it
 PORT=${PORT:-8011}
 MAX_LEN=${MAX_LEN:-8192}
+SUFFIX=${SUFFIX:-}                 # extra result-name suffix, e.g. .think
+BENCH_EXTRA=${BENCH_EXTRA:-"--no-think vllm --max-tokens 1500"}   # bench.py flags: thinking off by default
 
 BH=/dtu/blackhole/1e/205502
 CASE=$BH/nordic/medical-appointment
@@ -73,15 +75,15 @@ echo "vLLM ready in $((SECONDS - t0)) s"
 
 for M in $MODES; do
   for V in $VARIANTS; do
-    OUT="bench/results/llm/$SHORT.$V.$ASR.$M.json"
+    OUT="bench/results/llm/$SHORT.$V.$ASR.$M$SUFFIX.json"
     if [ -f "$OUT" ] && grep -q '"partial": false' "$OUT"; then echo "done: $OUT"; continue; fi
     echo "--- [$(date -Is)] UNIT_SPLIT=$M variant=$V -> $OUT"
     t1=$SECONDS
     UNIT_SPLIT=$M timeout -k 60 2400 "$VENV/bin/python" bench/llm/bench.py --asr "$ASR" --variant "$V" \
-        --model "$MODEL" --no-think vllm --url "http://localhost:$PORT/v1" --max-tokens 1500 \
-        --suffix ".$M" > "bench/results/logs/clause_bench.$JOB.$V.$M.log" 2>&1 \
-      && { echo "    OK $((SECONDS - t1)) s"; tail -n 14 "bench/results/logs/clause_bench.$JOB.$V.$M.log" | sed 's/^/    | /'; } \
-      || { echo "    FAIL rc=$? after $((SECONDS - t1)) s"; tail -n 15 "bench/results/logs/clause_bench.$JOB.$V.$M.log" | sed 's/^/    | /'; }
+        --model "$MODEL" --url "http://localhost:$PORT/v1" $BENCH_EXTRA \
+        --suffix ".$M$SUFFIX" > "bench/results/logs/clause_bench.$JOB.$V.$M$SUFFIX.log" 2>&1 \
+      && { echo "    OK $((SECONDS - t1)) s"; tail -n 14 "bench/results/logs/clause_bench.$JOB.$V.$M$SUFFIX.log" | sed 's/^/    | /'; } \
+      || { echo "    FAIL rc=$? after $((SECONDS - t1)) s"; tail -n 15 "bench/results/logs/clause_bench.$JOB.$V.$M$SUFFIX.log" | sed 's/^/    | /'; }
   done
 done
 echo "=== done $(date -Is)"
