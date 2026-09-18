@@ -88,7 +88,7 @@ class FixedAssetDetector:
     """
     name = 'fixed_assets'
 
-    def __init__(self, bundle, project, *, device='cpu', min_confidence=0., family_min=None):
+    def __init__(self, bundle, project, *, device='cpu', min_confidence=0., family_min=None, family_levels=None):
         project = Path(project)
         if not (project/'drone').is_dir():
             raise ValueError(f'DRONE_PROJECT must contain the drone package, got {project}')
@@ -104,15 +104,21 @@ class FixedAssetDetector:
             cv2.setNumThreads(threads)
         self.min_confidence = float(min_confidence)
         self.family_min = dict(family_min or {})
+        # Recognition families that are only trustworthy at native or near-native
+        # zoom can be restricted to those levels: {"pose_pixels": [2], ...}.
+        self.family_levels = {k: set(int(v) for v in vals) for k, vals in (family_levels or {}).items()}
 
     def __call__(self, image, request):
         x1, y1, x2, y2 = request['view']['source_region_xyxy']
         scale = request['view']['width']/(x2-x1)  # delivered pixels per source pixel
+        level = int(request['view'].get('resolution_level', 2))
         with redirect_stdout(sys.stderr):
             rows = self.detector.detect(np.ascontiguousarray(image), scale)
         out = []
         for r in rows:
             family = r.get('family') or r.get('method')
+            if family in self.family_levels and level not in self.family_levels[family]:
+                continue
             floor = max(self.min_confidence, self.family_min.get(family, 0.))
             if r['score'] < floor:
                 continue
@@ -167,8 +173,10 @@ def build_detector(environ=os.environ):
         if not bundle or not project:
             raise ValueError('DRONE_DETECTOR=fixed_assets needs DRONE_BUNDLE (manifest.json) and DRONE_PROJECT (repo root)')
         family_min = json.loads(environ.get('DRONE_FAMILY_MIN', '{}'))
+        family_levels = json.loads(environ.get('DRONE_FAMILY_LEVELS', '{}'))
         return FixedAssetDetector(bundle, project, device=environ.get('DRONE_DEVICE', 'cpu'),
-                                  min_confidence=float(environ.get('DRONE_CONF', '0')), family_min=family_min)
+                                  min_confidence=float(environ.get('DRONE_CONF', '0')), family_min=family_min,
+                                  family_levels=family_levels)
     if kind == 'oracle':
         return OracleDetector(environ.get('DRONE_ORACLE_SCENE', str(Path(__file__).resolve().parent/'src/helsinki')))
     if ':' in kind:

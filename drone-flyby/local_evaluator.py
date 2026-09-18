@@ -30,6 +30,7 @@ import argparse
 import base64
 import json
 import math
+import os
 import sys
 import time
 from dataclasses import dataclass, field
@@ -67,7 +68,9 @@ DEFAULT_URL = 'http://localhost:9053/predict'
 FRAMES_PER_SECOND = 3.0
 RESPONSE_TIMEOUT_FRAMES = 10.0
 FRAME_INTERVAL_SECONDS = 1.0 / FRAMES_PER_SECOND
-RESPONSE_TIMEOUT_SECONDS = RESPONSE_TIMEOUT_FRAMES * FRAME_INTERVAL_SECONDS
+# Local override for offline accuracy studies: DRONE_EVAL_TIMEOUT_S lifts the
+# per-request budget. The evaluation service itself keeps 3333 ms.
+RESPONSE_TIMEOUT_SECONDS = float(os.environ.get('DRONE_EVAL_TIMEOUT_S', RESPONSE_TIMEOUT_FRAMES * FRAME_INTERVAL_SECONDS))
 FRAME_INTERVAL_MS = int(FRAME_INTERVAL_SECONDS * 1000)       # 333
 RESPONSE_TIMEOUT_MS = int(RESPONSE_TIMEOUT_SECONDS * 1000)   # 3333
 SEQUENCE_ID = 'local'
