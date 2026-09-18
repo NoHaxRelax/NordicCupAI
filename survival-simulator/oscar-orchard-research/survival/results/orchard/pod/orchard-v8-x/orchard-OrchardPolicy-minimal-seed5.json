@@ -1,0 +1,934 @@
+{
+ "policy": "orchard:OrchardPolicy",
+ "label": "minimal",
+ "seed": 5,
+ "horizon": 3000.0,
+ "survival_seconds": 1708.3,
+ "score": 1773.1208,
+ "alive": 0,
+ "peak_agents": 14,
+ "total_agents_created": 99,
+ "predators": 0,
+ "fruit_eaten": 1334,
+ "fruit_score": 64.8208,
+ "predator_deaths": 0,
+ "starvation_deaths": 99,
+ "predator_penalty": 0.0,
+ "mean_energy_at_predator_death": 0.0,
+ "deaths": [
+  {
+   "t": 64.2,
+   "id": 1,
+   "age": 64.3,
+   "energy": -0.98,
+   "cause": "starvation"
+  },
+  {
+   "t": 122.5,
+   "id": 3,
+   "age": 122.6,
+   "energy": -1.23,
+   "cause": "starvation"
+  },
+  {
+   "t": 139.8,
+   "id": 4,
+   "age": 139.8,
+   "energy": -0.72,
+   "cause": "starvation"
+  },
+  {
+   "t": 143.8,
+   "id": 5,
+   "age": 122.5,
+   "energy": -1.07,
+   "cause": "starvation"
+  },
+  {
+   "t": 147.4,
+   "id": 2,
+   "age": 147.4,
+   "energy": -0.52,
+   "cause": "starvation"
+  },
+  {
+   "t": 164.2,
+   "id": 0,
+   "age": 164.3,
+   "energy": -0.96,
+   "cause": "starvation"
+  },
+  {
+   "t": 171.5,
+   "id": 8,
+   "age": 116.6,
+   "energy": -0.0,
+   "cause": "starvation"
+  },
+  {
+   "t": 187.0,
+   "id": 7,
+   "age": 132.1,
+   "energy": -0.25,
+   "cause": "starvation"
+  },
+  {
+   "t": 203.2,
+   "id": 6,
+   "age": 148.0,
+   "energy": -0.36,
+   "cause": "starvation"
+  },
+  {
+   "t": 207.2,
+   "id": 10,
+   "age": 144.2,
+   "energy": -0.51,
+   "cause": "starvation"
+  },
+  {
+   "t": 216.2,
+   "id": 13,
+   "age": 106.3,
+   "energy": -1.05,
+   "cause": "starvation"
+  },
+  {
+   "t": 218.1,
+   "id": 9,
+   "age": 162.9,
+   "energy": -0.59,
+   "cause": "starvation"
+  },
+  {
+   "t": 242.3,
+   "id": 12,
+   "age": 132.4,
+   "energy": -1.01,
+   "cause": "starvation"
+  },
+  {
+   "t": 268.8,
+   "id": 11,
+   "age": 158.7,
+   "energy": -0.14,
+   "cause": "starvation"
+  },
+  {
+   "t": 273.2,
+   "id": 14,
+   "age": 163.0,
+   "energy": -0.0,
+   "cause": "starvation"
+  },
+  {
+   "t": 279.4,
+   "id": 15,
+   "age": 114.4,
+   "energy": -0.73,
+   "cause": "starvation"
+  },
+  {
+   "t": 288.6,
+   "id": 16,
+   "age": 123.6,
+   "energy": -1.33,
+   "cause": "starvation"
+  },
+  {
+   "t": 301.9,
+   "id": 18,
+   "age": 112.0,
+   "energy": -0.27,
+   "cause": "starvation"
+  },
+  {
+   "t": 306.5,
+   "id": 20,
+   "age": 86.6,
+   "energy": -0.42,
+   "cause": "starvation"
+  },
+  {
+   "t": 311.2,
+   "id": 17,
+   "age": 133.0,
+   "energy": -0.6,
+   "cause": "starvation"
+  },
+  {
+   "t": 315.1,
+   "id": 19,
+   "age": 106.5,
+   "energy": -1.12,
+   "cause": "starvation"
+  },
+  {
+   "t": 342.7,
+   "id": 25,
+   "age": 64.4,
+   "energy": -0.62,
+   "cause": "starvation"
+  },
+  {
+   "t": 351.9,
+   "id": 24,
+   "age": 80.2,
+   "energy": -0.74,
+   "cause": "starvation"
+  },
+  {
+   "t": 356.8,
+   "id": 21,
+   "age": 119.9,
+   "energy": -0.01,
+   "cause": "starvation"
+  },
+  {
+   "t": 378.4,
+   "id": 22,
+   "age": 132.7,
+   "energy": -0.01,
+   "cause": "starvation"
+  },
+  {
+   "t": 421.4,
+   "id": 23,
+   "age": 152.4,
+   "energy": -0.72,
+   "cause": "starvation"
+  },
+  {
+   "t": 427.2,
+   "id": 26,
+   "age": 120.9,
+   "energy": -0.09,
+   "cause": "starvation"
+  },
+  {
+   "t": 450.7,
+   "id": 29,
+   "age": 108.8,
+   "energy": -0.92,
+   "cause": "starvation"
+  },
+  {
+   "t": 465.1,
+   "id": 28,
+   "age": 133.0,
+   "energy": -1.31,
+   "cause": "starvation"
+  },
+  {
+   "t": 469.3,
+   "id": 27,
+   "age": 137.4,
+   "energy": -0.29,
+   "cause": "starvation"
+  },
+  {
+   "t": 480.7,
+   "id": 31,
+   "age": 108.8,
+   "energy": -0.62,
+   "cause": "starvation"
+  },
+  {
+   "t": 510.7,
+   "id": 30,
+   "age": 164.5,
+   "energy": -1.02,
+   "cause": "starvation"
+  },
+  {
+   "t": 515.0,
+   "id": 33,
+   "age": 128.2,
+   "energy": -0.67,
+   "cause": "starvation"
+  },
+  {
+   "t": 518.1,
+   "id": 32,
+   "age": 135.5,
+   "energy": -0.99,
+   "cause": "starvation"
+  },
+  {
+   "t": 540.7,
+   "id": 34,
+   "age": 143.6,
+   "energy": -0.38,
+   "cause": "starvation"
+  },
+  {
+   "t": 541.0,
+   "id": 35,
+   "age": 140.0,
+   "energy": -0.52,
+   "cause": "starvation"
+  },
+  {
+   "t": 544.4,
+   "id": 38,
+   "age": 92.5,
+   "energy": -0.77,
+   "cause": "starvation"
+  },
+  {
+   "t": 555.0,
+   "id": 36,
+   "age": 128.0,
+   "energy": -0.66,
+   "cause": "starvation"
+  },
+  {
+   "t": 572.4,
+   "id": 40,
+   "age": 113.0,
+   "energy": -0.55,
+   "cause": "starvation"
+  },
+  {
+   "t": 573.8,
+   "id": 37,
+   "age": 136.3,
+   "energy": -1.08,
+   "cause": "starvation"
+  },
+  {
+   "t": 583.6,
+   "id": 39,
+   "age": 127.5,
+   "energy": -0.94,
+   "cause": "starvation"
+  },
+  {
+   "t": 613.4,
+   "id": 41,
+   "age": 131.3,
+   "energy": -1.55,
+   "cause": "starvation"
+  },
+  {
+   "t": 627.3,
+   "id": 42,
+   "age": 134.8,
+   "energy": -1.06,
+   "cause": "starvation"
+  },
+  {
+   "t": 633.4,
+   "id": 43,
+   "age": 126.4,
+   "energy": -0.65,
+   "cause": "starvation"
+  },
+  {
+   "t": 647.1,
+   "id": 44,
+   "age": 136.1,
+   "energy": -1.18,
+   "cause": "starvation"
+  },
+  {
+   "t": 672.0,
+   "id": 46,
+   "age": 126.7,
+   "energy": -1.28,
+   "cause": "starvation"
+  },
+  {
+   "t": 673.7,
+   "id": 47,
+   "age": 102.2,
+   "energy": -0.96,
+   "cause": "starvation"
+  },
+  {
+   "t": 693.1,
+   "id": 45,
+   "age": 158.2,
+   "energy": -1.37,
+   "cause": "starvation"
+  },
+  {
+   "t": 724.8,
+   "id": 48,
+   "age": 134.8,
+   "energy": -0.56,
+   "cause": "starvation"
+  },
+  {
+   "t": 736.0,
+   "id": 49,
+   "age": 131.4,
+   "energy": -0.83,
+   "cause": "starvation"
+  },
+  {
+   "t": 748.8,
+   "id": 53,
+   "age": 96.5,
+   "energy": -0.32,
+   "cause": "starvation"
+  },
+  {
+   "t": 752.5,
+   "id": 52,
+   "age": 109.4,
+   "energy": -0.21,
+   "cause": "starvation"
+  },
+  {
+   "t": 755.0,
+   "id": 50,
+   "age": 134.2,
+   "energy": -1.0,
+   "cause": "starvation"
+  },
+  {
+   "t": 756.4,
+   "id": 54,
+   "age": 99.6,
+   "energy": -0.26,
+   "cause": "starvation"
+  },
+  {
+   "t": 770.3,
+   "id": 51,
+   "age": 133.1,
+   "energy": -1.37,
+   "cause": "starvation"
+  },
+  {
+   "t": 807.4,
+   "id": 55,
+   "age": 131.5,
+   "energy": -0.28,
+   "cause": "starvation"
+  },
+  {
+   "t": 837.6,
+   "id": 57,
+   "age": 105.0,
+   "energy": -0.62,
+   "cause": "starvation"
+  },
+  {
+   "t": 842.9,
+   "id": 56,
+   "age": 118.4,
+   "energy": -0.52,
+   "cause": "starvation"
+  },
+  {
+   "t": 852.7,
+   "id": 59,
+   "age": 111.6,
+   "energy": -0.5,
+   "cause": "starvation"
+  },
+  {
+   "t": 854.5,
+   "id": 58,
+   "age": 114.8,
+   "energy": -0.33,
+   "cause": "starvation"
+  },
+  {
+   "t": 883.8,
+   "id": 60,
+   "age": 104.2,
+   "energy": -0.94,
+   "cause": "starvation"
+  },
+  {
+   "t": 908.3,
+   "id": 62,
+   "age": 92.4,
+   "energy": -0.76,
+   "cause": "starvation"
+  },
+  {
+   "t": 949.3,
+   "id": 61,
+   "age": 151.9,
+   "energy": -1.35,
+   "cause": "starvation"
+  },
+  {
+   "t": 952.8,
+   "id": 65,
+   "age": 100.5,
+   "energy": -0.55,
+   "cause": "starvation"
+  },
+  {
+   "t": 962.3,
+   "id": 63,
+   "age": 141.2,
+   "energy": -1.45,
+   "cause": "starvation"
+  },
+  {
+   "t": 970.4,
+   "id": 67,
+   "age": 94.5,
+   "energy": -0.27,
+   "cause": "starvation"
+  },
+  {
+   "t": 973.5,
+   "id": 64,
+   "age": 133.5,
+   "energy": -0.38,
+   "cause": "starvation"
+  },
+  {
+   "t": 981.2,
+   "id": 68,
+   "age": 105.1,
+   "energy": -0.61,
+   "cause": "starvation"
+  },
+  {
+   "t": 995.7,
+   "id": 66,
+   "age": 124.6,
+   "energy": -0.84,
+   "cause": "starvation"
+  },
+  {
+   "t": 1011.7,
+   "id": 70,
+   "age": 98.9,
+   "energy": -0.59,
+   "cause": "starvation"
+  },
+  {
+   "t": 1031.5,
+   "id": 71,
+   "age": 76.3,
+   "energy": -0.67,
+   "cause": "starvation"
+  },
+  {
+   "t": 1036.8,
+   "id": 69,
+   "age": 141.7,
+   "energy": -0.76,
+   "cause": "starvation"
+  },
+  {
+   "t": 1053.6,
+   "id": 72,
+   "age": 95.3,
+   "energy": -0.01,
+   "cause": "starvation"
+  },
+  {
+   "t": 1079.1,
+   "id": 73,
+   "age": 111.2,
+   "energy": -0.54,
+   "cause": "starvation"
+  },
+  {
+   "t": 1096.1,
+   "id": 74,
+   "age": 122.7,
+   "energy": -0.16,
+   "cause": "starvation"
+  },
+  {
+   "t": 1097.7,
+   "id": 76,
+   "age": 81.1,
+   "energy": -0.03,
+   "cause": "starvation"
+  },
+  {
+   "t": 1109.4,
+   "id": 75,
+   "age": 93.1,
+   "energy": -0.5,
+   "cause": "starvation"
+  },
+  {
+   "t": 1114.7,
+   "id": 78,
+   "age": 69.6,
+   "energy": -0.03,
+   "cause": "starvation"
+  },
+  {
+   "t": 1161.7,
+   "id": 80,
+   "age": 61.9,
+   "energy": -0.03,
+   "cause": "starvation"
+  },
+  {
+   "t": 1166.6,
+   "id": 77,
+   "age": 121.7,
+   "energy": -0.43,
+   "cause": "starvation"
+  },
+  {
+   "t": 1232.8,
+   "id": 79,
+   "age": 136.5,
+   "energy": -0.05,
+   "cause": "starvation"
+  },
+  {
+   "t": 1261.7,
+   "id": 82,
+   "age": 97.9,
+   "energy": -0.67,
+   "cause": "starvation"
+  },
+  {
+   "t": 1283.6,
+   "id": 81,
+   "age": 132.2,
+   "energy": -0.9,
+   "cause": "starvation"
+  },
+  {
+   "t": 1295.2,
+   "id": 84,
+   "age": 75.7,
+   "energy": -0.44,
+   "cause": "starvation"
+  },
+  {
+   "t": 1298.4,
+   "id": 83,
+   "age": 80.2,
+   "energy": -0.56,
+   "cause": "starvation"
+  },
+  {
+   "t": 1325.5,
+   "id": 85,
+   "age": 73.8,
+   "energy": -0.22,
+   "cause": "starvation"
+  },
+  {
+   "t": 1417.8,
+   "id": 87,
+   "age": 119.4,
+   "energy": -1.0,
+   "cause": "starvation"
+  },
+  {
+   "t": 1424.4,
+   "id": 86,
+   "age": 132.9,
+   "energy": -0.66,
+   "cause": "starvation"
+  },
+  {
+   "t": 1436.5,
+   "id": 88,
+   "age": 113.8,
+   "energy": -1.17,
+   "cause": "starvation"
+  },
+  {
+   "t": 1454.4,
+   "id": 89,
+   "age": 95.7,
+   "energy": -0.16,
+   "cause": "starvation"
+  },
+  {
+   "t": 1494.8,
+   "id": 90,
+   "age": 99.6,
+   "energy": -0.54,
+   "cause": "starvation"
+  },
+  {
+   "t": 1512.9,
+   "id": 91,
+   "age": 61.3,
+   "energy": -0.23,
+   "cause": "starvation"
+  },
+  {
+   "t": 1529.4,
+   "id": 92,
+   "age": 74.4,
+   "energy": -0.09,
+   "cause": "starvation"
+  },
+  {
+   "t": 1593.2,
+   "id": 94,
+   "age": 54.4,
+   "energy": -0.03,
+   "cause": "starvation"
+  },
+  {
+   "t": 1607.7,
+   "id": 93,
+   "age": 95.8,
+   "energy": -0.18,
+   "cause": "starvation"
+  },
+  {
+   "t": 1632.8,
+   "id": 96,
+   "age": 36.9,
+   "energy": -0.09,
+   "cause": "starvation"
+  },
+  {
+   "t": 1678.7,
+   "id": 97,
+   "age": 70.9,
+   "energy": -0.33,
+   "cause": "starvation"
+  },
+  {
+   "t": 1693.9,
+   "id": 95,
+   "age": 101.4,
+   "energy": -0.78,
+   "cause": "starvation"
+  },
+  {
+   "t": 1708.2,
+   "id": 98,
+   "age": 71.9,
+   "energy": -0.78,
+   "cause": "starvation"
+  }
+ ],
+ "samples": [
+  {
+   "time": 100.0,
+   "score": 108.435,
+   "alive": 10,
+   "predators": 0,
+   "trees": 65,
+   "fruits": 138,
+   "mean_energy": 408.2,
+   "max_age": 100.0,
+   "fruit_eaten": 167
+  },
+  {
+   "time": 200.0,
+   "score": 217.948,
+   "alive": 11,
+   "predators": 0,
+   "trees": 65,
+   "fruits": 107,
+   "mean_energy": 266.8,
+   "max_age": 144.8,
+   "fruit_eaten": 368
+  },
+  {
+   "time": 300.0,
+   "score": 322.639,
+   "alive": 9,
+   "predators": 0,
+   "trees": 56,
+   "fruits": 128,
+   "mean_energy": 133.1,
+   "max_age": 121.7,
+   "fruit_eaten": 474
+  },
+  {
+   "time": 400.0,
+   "score": 428.311,
+   "alive": 10,
+   "predators": 0,
+   "trees": 52,
+   "fruits": 105,
+   "mean_energy": 250.6,
+   "max_age": 130.9,
+   "fruit_eaten": 593
+  },
+  {
+   "time": 500.0,
+   "score": 536.289,
+   "alive": 12,
+   "predators": 0,
+   "trees": 47,
+   "fruits": 82,
+   "mean_energy": 276.1,
+   "max_age": 153.7,
+   "fruit_eaten": 754
+  },
+  {
+   "time": 600.0,
+   "score": 640.621,
+   "alive": 8,
+   "predators": 0,
+   "trees": 53,
+   "fruits": 93,
+   "mean_energy": 234.3,
+   "max_age": 117.8,
+   "fruit_eaten": 839
+  },
+  {
+   "time": 700.0,
+   "score": 746.84,
+   "alive": 8,
+   "predators": 0,
+   "trees": 39,
+   "fruits": 63,
+   "mean_energy": 242.9,
+   "max_age": 109.9,
+   "fruit_eaten": 960
+  },
+  {
+   "time": 800.0,
+   "score": 850.458,
+   "alive": 7,
+   "predators": 0,
+   "trees": 40,
+   "fruits": 71,
+   "mean_energy": 140.1,
+   "max_age": 124.0,
+   "fruit_eaten": 1032
+  },
+  {
+   "time": 900.0,
+   "score": 953.945,
+   "alive": 9,
+   "predators": 0,
+   "trees": 35,
+   "fruits": 58,
+   "mean_energy": 154.1,
+   "max_age": 102.5,
+   "fruit_eaten": 1101
+  },
+  {
+   "time": 1000.0,
+   "score": 1057.548,
+   "alive": 6,
+   "predators": 0,
+   "trees": 22,
+   "fruits": 59,
+   "mean_energy": 132.3,
+   "max_age": 104.8,
+   "fruit_eaten": 1181
+  },
+  {
+   "time": 1100.0,
+   "score": 1159.176,
+   "alive": 5,
+   "predators": 0,
+   "trees": 18,
+   "fruits": 53,
+   "mean_energy": 92.0,
+   "max_age": 83.6,
+   "fruit_eaten": 1214
+  },
+  {
+   "time": 1200.0,
+   "score": 1259.873,
+   "alive": 3,
+   "predators": 0,
+   "trees": 20,
+   "fruits": 58,
+   "mean_energy": 151.4,
+   "max_age": 103.6,
+   "fruit_eaten": 1227
+  },
+  {
+   "time": 1300.0,
+   "score": 1361.506,
+   "alive": 3,
+   "predators": 0,
+   "trees": 16,
+   "fruits": 33,
+   "mean_energy": 50.1,
+   "max_age": 48.2,
+   "fruit_eaten": 1264
+  },
+  {
+   "time": 1400.0,
+   "score": 1462.788,
+   "alive": 5,
+   "predators": 0,
+   "trees": 23,
+   "fruits": 44,
+   "mean_energy": 132.2,
+   "max_age": 108.4,
+   "fruit_eaten": 1290
+  },
+  {
+   "time": 1500.0,
+   "score": 1563.687,
+   "alive": 2,
+   "predators": 0,
+   "trees": 15,
+   "fruits": 33,
+   "mean_energy": 33.6,
+   "max_age": 48.3,
+   "fruit_eaten": 1310
+  },
+  {
+   "time": 1600.0,
+   "score": 1664.353,
+   "alive": 3,
+   "predators": 0,
+   "trees": 18,
+   "fruits": 31,
+   "mean_energy": 68.9,
+   "max_age": 88.0,
+   "fruit_eaten": 1324
+  },
+  {
+   "time": 1700.0,
+   "score": 1764.821,
+   "alive": 1,
+   "predators": 0,
+   "trees": 12,
+   "fruits": 23,
+   "mean_energy": 15.5,
+   "max_age": 63.6,
+   "fruit_eaten": 1334
+  }
+ ],
+ "policy_metrics": {
+  "births": 20,
+  "old_births": 13,
+  "emergency_births": 9,
+  "pose_corrections": 1905,
+  "anchors": 4,
+  "merges": 3,
+  "deflections": 257,
+  "stuck_events": 4,
+  "explore_ticks": 1789,
+  "idle_ticks": 84413,
+  "travel_ticks": 11378,
+  "fruit_ticks": 13386,
+  "waits_started": 0,
+  "old_detected": 94,
+  "trees_seen": 1027,
+  "fruits_seen": 4500,
+  "fresh_fruits": 4219,
+  "new_groups": 5,
+  "vo_corrections": 198,
+  "heir_births": 52,
+  "starve_ticks": 2401,
+  "post_changes": 484,
+  "post_dist": 66465.36200472219,
+  "post_dead": 0
+ },
+ "wall_seconds": 224.8,
+ "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.39",
+ "python": "3.12.3",
+ "policy_sha256": null,
+ "source_commit": "acfc31a4003a5f91bf11032a02cd98c178ddbd7e",
+ "limitations": "Local Linux generated maps; no hidden state used by the policy; diagnostics read engine state only."
+}
