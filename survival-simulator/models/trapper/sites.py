@@ -187,8 +187,14 @@ def find_gap_sites(rects, width, height, depth=None, min_overlap=GAP_MIN_OVERLAP
                         continue
                     normal = m['normal']
                     far_open = other['entry_ok']
+                    # a guide that flies past a staffed mouth needs a clear run along the face on at
+                    # least one side of the flyby point
+                    fly = add(m['mouth'], mul(normal, GAP_FLYBY_OUT))
+                    tng = perp(normal)
+                    flyby_clear = any(free_point(add(fly, mul(tng, sgn * 60.0)), AGENT_RADIUS, rects, width, height)
+                                      and path_clear(fly, add(fly, mul(tng, sgn * 60.0)), AGENT_RADIUS, rects) for sgn in (1.0, -1.0))
                     score = (max(0.0, 60.0 - length) + (0.0 if far_open else 40.0) + abs(gap - 14.0) * 3.0
-                             + (CORRIDOR + 100.0 - m['corridor']) * 0.3)
+                             + (CORRIDOR + 100.0 - m['corridor']) * 0.3 + (0.0 if flyby_clear else 60.0))
                     key = f'gap{i}-{j}{orient}{"+" if normal == mul(axis, 1.0) else "-"}'
                     # replacement baits stage outside the far mouth, off the axis, so the old bait
                     # can walk out past them to the exit point on the other side
@@ -212,7 +218,7 @@ def find_gap_sites(rects, width, height, depth=None, min_overlap=GAP_MIN_OVERLAP
                                       successor=stage, guard=None,
                                       thickness=gap, length=length, lateral=gap / 2 + PREDATOR_RADIUS,
                                       far_mouth=other['mouth'], far_mouth_open=far_open, score=score,
-                                      extra=dict(depth=d, corridor=m['corridor'], exit=exit_pt)))
+                                      extra=dict(depth=d, corridor=m['corridor'], exit=exit_pt, flyby_clear=flyby_clear)))
     # de-duplicate the (i,j)/(j,i) symmetric hits
     seen = {}
     for s in sites:

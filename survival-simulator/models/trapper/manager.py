@@ -535,6 +535,11 @@ class TrapManager:
         out.sort(key=lambda t: t[:-1])
         return [t[-1] for t in out]
 
+    def _leashable(self, a: AgentView, site: Site):
+        """A guide for the close-range lead: sprint energy, a sprint that beats 15, not senescent."""
+        return (site.kind == 'gap' and a.energy >= self.P['leash_min_energy'] and a.id not in self.senescent
+                and a.age < 58.0 and a.sprint_speed >= 18.0 and a.walk >= 9.0)
+
     def _predator_near(self, world: WorldState, site: Site, held_now=(), rng=None):
         """A loose, awake predator within ``rng`` (default staff_range) of the mouth."""
         rng = self.P['staff_range'] if rng is None else rng
@@ -624,7 +629,7 @@ class TrapManager:
                     to_entry = heading_of(sub(entry, a.p))
                     axis_dir = heading_of(mul(site.normal, -1.0))
                     turn = abs(wrap(to_entry - away)) + 0.5 * abs(wrap(axis_dir - to_entry))
-                    leashable = site.kind == 'gap' and a.energy >= P['leash_min_energy']
+                    leashable = self._leashable(a, site)
                     if turn > allowance and not leashable:
                         continue
                     lead = dist(a.p, entry) + CORRIDOR + 250.0
@@ -668,7 +673,7 @@ class TrapManager:
             bait_in_place = any(b in world.agents and dist(world.agents[b].p, site.holder) < 3.0 for b in st.baits)
             become_bait = site.kind == 'gap' and not bait_in_place
             d = Delivery(site=site, guide=a.id, pid=p.pid, become_bait=become_bait, created=world.time,
-                         leash=site.kind == 'gap' and a.energy >= P['leash_min_energy'])
+                         leash=self._leashable(a, site))
             self.deliveries[p.pid] = d
             self.roles[a.id] = ('guide', st.key)
             busy_guides.add(a.id)

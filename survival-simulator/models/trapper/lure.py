@@ -241,6 +241,61 @@ class Lure:
         st2 = pm.move(st, speed, turn, w.biome_at(p.p), lrects, w.width, w.height)
         return (st2.x, st2.y)
 
+    def _pivot_step(self, p: PredatorView, q, q_heading, speed):
+        """Where a predator that sees an agent at q (facing it, so |rel_dir| <= pi/2) and is at
+        least 90 away ends up this tick: it moves ``speed`` at 45 degrees off the line, on the side
+        opposite the agent's look direction, then turns to face the agent. Returns (pos, heading)."""
+        ang = wrap(heading_of(sub(q, p.p)) - p.heading)
+        rel = wrap(heading_of(sub(p.p, q)) - q_heading)
+        pivot = -1.0 if rel > 0 else (1.0 if rel < 0 else 0.0)
+        move_dir = ang + pivot * math.pi / 4
+        st = pm.PredState(p.x, p.y, p.heading, energy=200.0, resting=False)
+        w = self.world
+        lrects = pm.local_rects(w.rects, p.x, p.y)
+        st2 = pm.move(st, speed, move_dir, w.biome_at(p.p), lrects, w.width, w.height)
+        return (st2.x, st2.y), heading_of(sub(q, (st2.x, st2.y)))
+
+    def _walk_choose(self, a: AgentView, p: PredatorView, desired, gap, v_pred, gaze_sign, others=()):
+        """Walking guide (no sprint): stay in its pivot band (90-240, facing it, line of sight),
+        as close to ``desired`` as the predicted gap allows. Returns (heading, real_speed, gap2)."""
+        w = self.world
+        away = heading_of(sub(a.p, p.p))
+        floor = 96.0 if gap >= 98.0 else max(gap - 1.0, 88.0)
+        ceil = 235.0
+        walk = a.walk * a.move_modifier
+        speeds = sorted({0.0, walk * 0.5, walk})
+        headings = [away + math.radians(10) * k for k in range(-9, 10)] + [desired]
+        best = None; nearest = None
+        for real in speeds:
+            for h in (headings if real > 0.05 else [desired]):
+                if real > 0.05 and not heading_clear(a.p, h, max(real, 12.0) + 4.0, w.rects):
+                    continue
+                q = add(a.p, polar(h, real)) if real > 0.05 else a.p
+                face = heading_of(sub(p.p, q)) + GAZE_OFFSET * gaze_sign
+                pn, ph = self._pivot_step(p, q, face, v_pred)
+                g2 = dist(q, pn)
+                seen = los_clear(pn, q, w.rects)
+                d_other = 1e9
+                for o in others:
+                    on = self._charge_step(o, q, pred_next_speed(o) * w.biome_at(o.p)) if predator_target(w, o) == a.id else add(o.p, (o.vx, o.vy))
+                    d_other = min(d_other, dist(q, on))
+                dev = abs(wrap(h - desired)) if real > 0.05 else math.pi / 2
+                progress = real * math.cos(dev) if real > 0.05 else 0.0
+                ok = floor <= g2 <= ceil and seen and d_other >= 95.0
+                if ok:
+                    cost = -progress + 0.05 * abs(g2 - 125.0)
+                    if best is None or cost < best[0]:
+                        best = (cost, h, real, g2)
+                miss = (floor - g2) if g2 < floor else (g2 - ceil if g2 > ceil else 0.0)
+                miss += (0.0 if seen else 30.0) + max(0.0, 95.0 - d_other) * 2.0
+                if nearest is None or miss < nearest[0]:
+                    nearest = (miss, h, real, g2)
+        if best is not None:
+            return best[1], best[2], best[3]
+        if nearest is not None:
+            return nearest[1], nearest[2], nearest[3]
+        return away, 0.0, gap
+
     def _leash_choose(self, a: AgentView, p: PredatorView, desired, gap, v_pred, gap_target, cap, others=(), run=False):
         """Joint choice of heading (36 directions plus ``desired``) and speed so that the predicted
         gap after both move lands in the window [floor, hearing] and every other nearby predator
@@ -248,12 +303,16 @@ class Lure:
         in energy. Returns (heading, real_speed, gap2)."""
         w = self.world
         away = heading_of(sub(a.p, p.p))
+        close = gap < 35.0
         floor = max(gap_target - 10.0, 26.0) if gap >= gap_target - 10.0 else max(gap - 2.0, 18.0)
         if run:
             # on the run down the axis the predator swings in behind us by itself; do not sidestep
             # to keep the gap, accept it closer for a few ticks (it cannot kill beyond 15)
             floor = min(floor, 28.0) if gap >= 30.0 else max(gap - 2.0, 18.0)
+        if close:
+            floor = gap + 2.0          # too close: every move must open the gap
         ceil = LEASH_HEAR - 2.0
+        p_mod = w.biome_at(p.p)
         speeds = sorted({0.0, 5.0, 10.0, min(v_pred, cap), min(v_pred + 4.0, cap), cap})
         if run:
             headings = [desired + math.radians(12) * k for k in range(-3, 4)]
@@ -278,14 +337,21 @@ class Lure:
                 for (o, chasing_us, v_o) in oth:
                     on = self._charge_step(o, q, v_o) if chasing_us else add(o.p, (o.vx, o.vy))
                     d_other = min(d_other, dist(q, on))
+                slow_ahead = real > 0.05 and w.biome_at(q) < min(0.9, p_mod - 0.05)
                 dev = abs(wrap(h - desired)) if real > 0.05 else math.pi / 2
                 progress = real * math.cos(dev) if real > 0.05 else 0.0
-                if floor <= g2 <= ceil and d_other >= 30.0:
-                    cost = -progress + 2.0 * cost_e + 0.3 * abs(g2 - gap_target) + (0.0 if d_other > 60 else (60 - d_other) * 0.4)
+                g2_eff = g2 - (0.8 * v_pred if real <= 0.05 else 0.0)     # standing: it keeps coming
+                if floor <= g2_eff and g2 <= ceil and d_other >= 30.0 and not slow_ahead:
+                    if close:
+                        cost = -g2 * 3.0 - progress
+                    else:
+                        cost = -progress + 2.0 * cost_e + 0.3 * abs(g2 - gap_target) + (0.0 if d_other > 60 else (60 - d_other) * 0.4)
                     if best is None or cost < best[0]:
                         best = (cost, h, real, g2)
-                miss = (floor - g2) if g2 < floor else (g2 - ceil if g2 > ceil else 0.0)
-                miss += max(0.0, 30.0 - d_other) * 2.0
+                miss = (floor - g2_eff) if g2_eff < floor else (g2 - ceil if g2 > ceil else 0.0)
+                miss += max(0.0, 30.0 - d_other) * 2.0 + (8.0 if slow_ahead else 0.0)
+                if gap < 45.0:
+                    miss = -min(g2, d_other)        # in trouble: the move that ends farthest from any predator
                 if nearest is None or miss < nearest[0] or (miss == nearest[0] and cost_e < nearest[4]):
                     nearest = (miss, h, real, g2, cost_e)
         if best is not None:
@@ -361,6 +427,14 @@ class Lure:
         resting = bool(p.resting) if p.resting is not None else (3 <= p.still_ticks < 30)
         waking = bool(p.resting) and ((p.energy is not None and p.energy > 100.0) or (p.energy is None and p.still_ticks >= 30))
         if resting and not waking:
+            others_near = [q for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
+                           and not (bool(q.resting) if q.resting is not None else is_resting(q)) and dist(q.p, a.p) < 120]
+            if others_near:
+                # another predator about: keep clear of it while staying inside 55 of the sleeper
+                cap = a.sprint_speed if a.can_sprint else a.walk
+                h, real, g2 = self._leash_choose(a, p, away, gap, 0.0, 42.0, cap, others_near)
+                d.decision = f'leash: it rests at {gap:.0f}, dodging predator {others_near[0].pid} ({dist(others_near[0].p, a.p):.0f})'
+                return self._move_heading(a, h, real) if real > 0.05 else action(a.id, 0.0, 0.0, face_away)
             if gap > 48:
                 d.decision = f'leash: it rests at {gap:.0f}, closing in'
                 return step_toward(a, p.p, min(a.walk * a.move_modifier, gap - 42.0))
@@ -381,6 +455,20 @@ class Lure:
                     # it is coming our way and will see us: let it come (free)
                     d.decision = f'leash: in its sight, letting it come ({gap:.0f})'
                     return action(a.id, 0.0, 0.0, face_away)
+                if target is not None and target in w.agents and dist(w.agents[target].p, p.p) < gap - 10.0:
+                    # it chases someone nearer: come to just inside that distance, not onto it
+                    want = max(38.0, dist(w.agents[target].p, p.p) - 8.0)
+                    d.decision = f'leash: undercutting agent {target} to {want:.0f} ({gap:.0f})'
+                    return step_toward(a, p.p, min(speed_for(a, a.energy > 260), max(gap - want, 0.0)))
+                others_near = [q for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
+                               and not (bool(q.resting) if q.resting is not None else is_resting(q)) and dist(q.p, a.p) < 140]
+                if others_near:
+                    cap = a.sprint_speed if a.can_sprint else a.walk
+                    toward = heading_of(sub(p.p, a.p))
+                    # a hook is a move toward it: use the chooser with a wide window and the others kept off
+                    h, real, g2 = self._leash_choose(a, p, toward, gap, 0.0, 45.0, cap, others_near)
+                    d.decision = f'leash: hooking it ({gap:.0f}) around predator {others_near[0].pid}'
+                    return self._move_heading(a, h, real) if real > 0.05 else action(a.id, 0.0, 0.0, face_away)
                 goal_h = p.p
                 if not heading_clear(a.p, heading_of(sub(p.p, a.p)), min(gap, 40.0), w.rects):
                     path = plan(w.rects, w.width, w.height, a.p, p.p, radius=6.0, slow=w.biome_at)
@@ -391,8 +479,12 @@ class Lure:
                 d.decision = f'leash: hooking it ({gap:.0f}){" at a sprint" if sprint else ""}'
                 return step_toward(a, goal_h, speed_for(a, sprint))
             if target is not None and target in w.agents and dist(w.agents[target].p, p.p) < gap:
-                d.decision = f'leash: undercutting agent {target} ({gap:.0f})'
-                return step_toward(a, p.p, min(a.walk * a.move_modifier, max(gap - 30.0, 0.0)))
+                want = max(38.0, dist(w.agents[target].p, p.p) - 8.0)
+                if gap > want + 2.0:
+                    d.decision = f'leash: undercutting agent {target} to {want:.0f} ({gap:.0f})'
+                    return step_toward(a, p.p, min(a.walk * a.move_modifier, gap - want))
+                d.decision = f'leash: nearer than agent {target}, waiting ({gap:.0f})'
+                return action(a.id, 0.0, 0.0, face_away)
             d.decision = f'leash: in its hearing, waiting for it to turn ({gap:.0f})'
             return action(a.id, 0.0, 0.0, face_away)
 
@@ -401,6 +493,10 @@ class Lure:
             d.path = self._leash_path(d, a, p)
             d.path_t = w.time
         wp = next_waypoint(a.p, d.path, reach=8.0) or goal
+
+        # ---- no sprint left: lead from its pivot band instead (facing it, 96-235 away, in sight)
+        if not a.can_sprint:
+            return self._walk_lead(d, a, p, gap, wp, goal, waking)
 
         # ---- move: heading and speed chosen jointly on the predicted gap after both move
         v_pred = pred_next_speed(p) * w.biome_at(p.p)
@@ -417,6 +513,31 @@ class Lure:
         if real <= 0.05:
             return action(a.id, 0.0, 0.0, face_away)
         return self._move_heading(a, h, real)
+
+    def _walk_lead(self, d: Delivery, a: AgentView, p: PredatorView, gap, wp, goal, waking):
+        """Walking guide. Facing it beyond 90 it pivots (closes 10.6 per tick sprinting, 7.8
+        walking) so a walker holds or gains the gap and can steer up to 39 degrees while it walks;
+        inside 90 it charges at 15 and a walker cannot escape, so the band is kept at all cost."""
+        w = self.world
+        site = d.site
+        v_pred = pred_next_speed(p) * w.biome_at(p.p)
+        d.gaze = -d.gaze
+        others = [q for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
+                  and not (bool(q.resting) if q.resting is not None else is_resting(q)) and dist(q.p, a.p) < 200]
+        if gap < 90.0 and not waking:
+            # in its charge range without a sprint: straight away, and hope it walks or rests
+            away = heading_of(sub(a.p, p.p))
+            h = steer(a, p, away, w.rects, math.radians(35), probe=60.0, keep_los=True, slow=w.biome_at)
+            d.decision = f'walk-lead: inside 90 ({gap:.0f}), retreating'
+            return self._facing(d, a, p, self._move_heading(a, h, a.walk * a.move_modifier))
+        desired = heading_of(sub(wp, a.p))
+        h, real, g2 = self._walk_choose(a, p, desired, gap, v_pred, d.gaze, others)
+        if wp is goal or dist(wp, goal) < 1e-6:
+            real = min(real, dist(a.p, goal))
+        d.decision = f'walk-lead: gap {gap:.0f}->{g2:.0f}, v {real:.0f} (pred {v_pred:.0f}), wp {tuple(round(v) for v in wp)}, e {a.energy:.0f}'
+        act = self._move_heading(a, h, real) if real > 0.05 else hold(a)
+        act['turn_angle'] = float(wrap(heading_of(sub(p.p, add(a.p, polar(h, real)))) + GAZE_OFFSET * d.gaze - a.heading))
+        return act
 
     # ------------------------------------------------------------------ hearing tap
     @staticmethod
@@ -495,6 +616,10 @@ class Lure:
         w = self.world
         if d.leash and p is not None:
             d.lost_ticks = 0
+            if a.energy < 22.0 and d.phase != 'FLYBY' and not (d.become_bait and dist(a.p, d.site.holder) < 40):
+                d.done = 'failed:guide_energy'
+                d.decision = 'leash: out of energy, handing over to the society'
+                return DEFER
             if d.phase == 'FLYBY':
                 return self._flyby(d, a, p, dist(a.p, p.p))
             return self._leash(d, a, p)
