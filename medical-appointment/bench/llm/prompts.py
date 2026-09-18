@@ -572,6 +572,30 @@ class JointDemo(Joint):
         return Prompt(system, p.user, p.schema, p.postprocess, self.demos_for(questions))
 
 
+# Experimental instruction lines, one per variant, appended to the joint-demo system
+# prompt; measured as A/B against the plain joint-demo prompt under the same protocol
+# (findings log entry 43). Text is data here: keep each line self-contained.
+EXTRA_LINES = {
+    'x1': ('When the transcript states the fact more than once, cite the utterance where it is\n'
+           'confirmed or acted upon (the conclusion, the prescription, the plan, the explicit\n'
+           'confirmation), not where it is first raised, suspected or asked about. When those two\n'
+           'utterances are adjacent, cite both.'),
+}
+
+
+class JointDemoX(JointDemo):
+    """JointDemo plus one experimental instruction line (EXTRA_LINES[key])."""
+
+    def __init__(self, key: str, k: int = 2):
+        super().__init__(k)
+        self.extra = EXTRA_LINES[key]
+
+    def build_all(self, questions: List[str], units_: List[Unit]) -> Prompt:
+        p = super().build_all(questions, units_)
+        system = p.system.replace(_RETURN_MARK, self.extra + '\n' + _RETURN_MARK, 1)
+        return Prompt(system, p.user, p.schema, p.postprocess, p.demos)
+
+
 class JointDemoFewShot(JointDemo):
     """JointDemo plus the nearest-question example lines (FewShot) inside the user turn:
     whole conversations show selection, the example lines show granularity for the
@@ -609,6 +633,7 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units-joint-demo': JointDemo(2),
     'units-joint-demo-fewshot': JointDemoFewShot(2, 12),
     'units-joint-demo-all': JointDemo(38),     # every other training conversation as a demonstration (~60k tokens)
+    'units-joint-demo-x1': JointDemoX('x1'),   # joint-demo plus the 'confirmed or acted upon' line (entry 43)
 }
 
 

@@ -578,3 +578,34 @@ Readings. (1) Perfect token marking caps at tIoU about 0.95 on training and 0.95
 | all four, turbo weighted double | 0.943 | 0.13 / 0.05 |
 
 No combination beats turbo alone, and the residual spread hardly moves: the models' edge errors are correlated (they hear the same onsets), so averaging cancels nothing. The ASR side is settled twice over (entry 29 for the ceiling, this entry for the edges); the loss is in span selection and span granularity.
+
+### 43. The zero-overlap spans read one by one, and what one instruction line does to them (2026-09-18 16:40)
+
+Elias's questions: is there a common denominator among the completely misaligned spans (not self-contained proof? not the most specific clause? scattered?), and what does prompting that awareness do to the spans we already get right and to the ones with no overlap?
+
+**The cases.** Every positive answered yes with a span that does not touch the gold, in the three cleanest runs (27B few-shot 16, Opus with 38 demos 18, clean Sonnet 24; union 26; 15 wrong in all three, and in those the models mostly return the *same* wrong span). Read with gold text against picked text:
+
+| class | n | examples (gold / models' pick) |
+|---|---:|---|
+| the fact is stated twice; annotator marked the **later** confirmation, plan or prescription | 12 | "I would still rather have them off" (85 s) / "I want them gone" (20 s); "the medicine is genuinely working? Yes" / "It has helped"; fluconazole prescription / "I have got thrush in my mouth"; doctor's "the infection came after that" / patient's "I think it has become infected"; "Then the appointment for removal is the plan" / "I will arrange an appointment" |
+| the fact is stated twice; annotator marked the **earlier**, first-hand statement | 10 | "I have kept it up. I really have." / doctor's later "you have maintained your lifestyle. Yes"; "No redness at all. No swelling either." (patient) / "No redness. No swelling." (doctor's exam); "I keep getting pain... it keeps coming back" / "It comes and goes"; "From what you describe, I suspect chondromalacia" / "this is a clinical suspicion" |
+| annotation error (gold is the opening "Good" at 0 s) | 2 | lipid profile normal; wounds ruled out |
+| model semantic mishap | 2 | Sonnet: "follow-up done" for "does the visit concern asthma"; Opus: strep-test span that stops before "It was negative" |
+
+So 24 of 26 are one thing: the consultation states the fact twice (the complaint and the diagnosis, the request and the prescription, the symptom and its summary), the model cites one, the annotator marked the other, and which one the annotator marked follows no rule visible in the transcript: later in 12, earlier in 10. It is not "not self-contained proof" (both utterances establish the fact), and it is only half "not the most specific clause": the model's pick shares more of the question's words than the gold in 14 of 26, the gold in 9, tie 3, so lexical greed explains about half. Speaker authority (doctor over patient) is also mixed: 2 cases for, 2 against. The honest label is: genuinely ambiguous from the transcript; the question writer had one sentence in mind.
+
+**The instruction test.** One line appended to the joint-demo system prompt (variant `units-joint-demo-x1` in `bench/llm/prompts.py`): *"When the transcript states the fact more than once, cite the utterance where it is confirmed or acted upon (the conclusion, the prescription, the plan, the explicit confirmation), not where it is first raised, suspected or asked about. When those two utterances are adjacent, cite both."* Same protocol as the clean control (Sonnet, one agent per conversation, prompts identical apart from the line, verified by diff):
+
+| | control | with the line |
+|---|---:|---:|
+| score (spans on no) | 0.786 | 0.771 |
+| mean tIoU, 195 positives | 0.649 | 0.628 |
+| wrong binaries | 3 | 6 |
+| control's 100 exact spans (>= 0.8): improved / worsened by > 0.1 | | 0 / 11 |
+| control's 32 partial spans | | 3 / 2 |
+| control's 37 weak spans | | 3 / 7 |
+| control's 26 zero-overlap spans: fixed | | 2 |
+
+Paired difference -0.021 tIoU, clustered standard error 0.015; 162 of 195 spans identical. What the line did: it fixed two zeros ("No redness at all... No swelling either", "Then the appointment for removal is the plan"), left 22 zeros exactly where they were (the model still cites "I want them gone" and "It has helped", so it does not perceive those pairs as raised-versus-confirmed either), produced two "no span" refusals and three more wrong binaries, and broke eleven exact spans by extending "cite both" to a neighbour ("There is no erythema migrans" gained the next sentence; "The plan is to continue it as needed" gained the question before it) or by switching to a later summary ("Nothing you have described today points to something new" instead of "No, nothing new").
+
+**Answer.** Prompting awareness of the two-statement ambiguity degrades the spans we get right more than it repairs the ones with no overlap, because the right ones contain the same ambiguity with the model's default choice happening to match. No instruction can encode a convention the annotators did not follow consistently. The levers that remain are structural: clause-level units for the 15 % of golds that are a clause (entry 40), and, only if it survives its own A/B, "cite both" restricted to *adjacent* duplicates, which is where the line's two fixes came from. The zero-overlap class is otherwise the floor for every model we have measured, about 8 % of positives. Answers kept under `bench/results/probe/sonnet-x1/`. Caveat: Sonnet is the judge here, not the 27B, and this is one line tested once; the sign and the breakdown are clear enough not to spend a pod hour on it.
