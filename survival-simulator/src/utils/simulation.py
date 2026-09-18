@@ -2,8 +2,7 @@ from src.elements.environment import Environment
 
 
 def create_environment(env_width, env_height, chunk_size, starting_agents,
-                       starting_predators, starting_fruits, starting_trees, rng,
-                       predators_enabled=True):
+                       starting_predators, starting_fruits, starting_trees, rng):
     """
     Initialize an environment for simulation.
     
@@ -19,7 +18,6 @@ def create_environment(env_width, env_height, chunk_size, starting_agents,
         Environment: The initialized environment object.
     """
     env = Environment(env_width, env_height, chunk_size, rng)
-    env.predators_enabled = predators_enabled
 
     obstacles = env_width // 20
 

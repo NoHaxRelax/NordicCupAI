@@ -8,13 +8,12 @@ class SimulationCore:
 
     def __init__(self, env_width=1600, env_height=1200, chunk_size=400,
                  starting_agents=5, starting_predators=0, starting_fruits=None,
-                 starting_trees=50, seed=None, dt=1/10, predators_enabled=True):
+                 starting_trees=50, seed=None, dt=1/10):
         self.env_width = env_width
         self.env_height = env_height
         self.chunk_size = chunk_size
         self.starting_agents = starting_agents
         self.starting_predators = starting_predators
-        self.predators_enabled = predators_enabled
         self.starting_fruits = starting_fruits or env_width // 50
         self.starting_trees = starting_trees
         self.dt = dt
@@ -35,8 +34,7 @@ class SimulationCore:
             starting_predators=self.starting_predators,
             starting_fruits=self.starting_fruits,
             starting_trees=self.starting_trees,
-            rng=self.rng,
-            predators_enabled=self.predators_enabled,
+            rng=self.rng
         )
 
     def step(self, actions):

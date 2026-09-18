@@ -1,0 +1,904 @@
+{
+  "seed": 0,
+  "status": "complete",
+  "frames": 10737,
+  "sim_time": 1073.600000000119,
+  "runtime_seconds": 354.61457929899916,
+  "score": 1116.5957332618311,
+  "final_agents": 0,
+  "peak_agents": 28,
+  "total_agents_seen": 144,
+  "predators": 11,
+  "first_bait_time": 29.000000000000142,
+  "maximum_predators_within_40_of_bait": 11,
+  "maximum_predators_continuously_near_bait_30s": 11,
+  "distinct_predators_ever_near_bait_30s": 11,
+  "estimated_bait_gap_seconds_after_first_arrival": 7.999999999999988,
+  "longest_estimated_bait_gap_seconds": 7.999999999999988,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 32,
+    "guide_deaths": 31,
+    "delivery_arrivals": 15,
+    "bait_arrivals": 24,
+    "overlapping_replacements": 23,
+    "estimated_unbaited_seconds": 10.39999999999285,
+    "no_viable_bait_ticks": 79
+  },
+  "events": [
+    {
+      "time": 26.5,
+      "kind": "our_trap_discovered",
+      "group": 0,
+      "site": {
+        "mouth": [
+          570.6851192641268,
+          563.9441217944379
+        ],
+        "inward": [
+          -1.0,
+          0.0
+        ],
+        "cross": [
+          -0.0,
+          -1.0
+        ],
+        "goal": [
+          565.6851192641268,
+          563.9441217944379
+        ],
+        "far": [
+          695.6851192641268,
+          563.9441217944379
+        ],
+        "hold": [
+          645.6851192641268,
+          563.9441217944379
+        ],
+        "gap": 16.67847337376918,
+        "overlap": 28.552538004659027,
+        "runup": [
+          820.6851192641268,
+          563.9441217944379
+        ],
+        "approach_lane_offset": 0.0,
+        "offset_approach": false,
+        "obstacle_indices": [
+          8,
+          10
+        ],
+        "axis": 1,
+        "other_mouth": [
+          542.1325812594678,
+          563.9441217944379
+        ],
+        "replacement_entry": [
+          522.1325812594678,
+          563.9441217944379
+        ],
+        "second_access_clear": true,
+        "second_access_radius": 5.01,
+        "bait_depth": 5.0,
+        "boundary_indices": [],
+        "geometric_replacement_access_only": true,
+        "handoff": [
+          595.6851192641268,
+          563.9441217944379
+        ]
+      }
+    },
+    {
+      "time": 26.5,
+      "kind": "replacement_dispatched",
+      "agent": 0,
+      "current": null,
+      "conservative_travel_seconds": 6.518857600412584,
+      "active_lifetime_seconds": 0.0
+    },
+    {
+      "time": 29.0,
+      "kind": "bait_arrived",
+      "agent": 0,
+      "previous": null
+    },
+    {
+      "time": 71.5,
+      "kind": "replacement_dispatched",
+      "agent": 7,
+      "current": 0,
+      "conservative_travel_seconds": 30.97021210369304,
+      "active_lifetime_seconds": 13.635406448861655
+    },
+    {
+      "time": 81.3,
+      "kind": "bait_arrived",
+      "agent": 7,
+      "previous": 0
+    },
+    {
+      "time": 98.0,
+      "kind": "guide_assigned",
+      "agent": 1,
+      "track": 1
+    },
+    {
+      "time": 99.5,
+      "kind": "guide_lost",
+      "agent": 1,
+      "track": 1
+    },
+    {
+      "time": 104.5,
+      "kind": "replacement_dispatched",
+      "agent": 20,
+      "current": 7,
+      "conservative_travel_seconds": 20.802480787992813,
+      "active_lifetime_seconds": 40.77201438471599
+    },
+    {
+      "time": 105.0,
+      "kind": "guide_assigned",
+      "agent": 4,
+      "track": 2
+    },
+    {
+      "time": 111.0,
+      "kind": "bait_arrived",
+      "agent": 20,
+      "previous": 7
+    },
+    {
+      "time": 117.2,
+      "kind": "guide_at_delivery",
+      "agent": 4,
+      "track": 2
+    },
+    {
+      "time": 118.6,
+      "kind": "guide_lost",
+      "agent": 4,
+      "track": 2
+    },
+    {
+      "time": 153.3,
+      "kind": "replacement_dispatched",
+      "agent": 24,
+      "current": 20,
+      "conservative_travel_seconds": 9.265913269949795,
+      "active_lifetime_seconds": 29.012146966811148
+    },
+    {
+      "time": 156.3,
+      "kind": "bait_arrived",
+      "agent": 24,
+      "previous": 20
+    },
+    {
+      "time": 166.3,
+      "kind": "replacement_dispatched",
+      "agent": 29,
+      "current": 24,
+      "conservative_travel_seconds": 29.616120838764328,
+      "active_lifetime_seconds": 41.24255811595976
+    },
+    {
+      "time": 179.0,
+      "kind": "bait_arrived",
+      "agent": 29,
+      "previous": 24
+    },
+    {
+      "time": 181.5,
+      "kind": "guide_assigned",
+      "agent": 15,
+      "track": 3
+    },
+    {
+      "time": 188.5,
+      "kind": "guide_at_delivery",
+      "agent": 15,
+      "track": 3
+    },
+    {
+      "time": 188.7,
+      "kind": "guide_lost",
+      "agent": 15,
+      "track": 3
+    },
+    {
+      "time": 218.8,
+      "kind": "replacement_dispatched",
+      "agent": 43,
+      "current": 29,
+      "conservative_travel_seconds": 29.407901975832313,
+      "active_lifetime_seconds": 29.390344162203114
+    },
+    {
+      "time": 227.9,
+      "kind": "bait_arrived",
+      "agent": 43,
+      "previous": 29
+    },
+    {
+      "time": 260.5,
+      "kind": "guide_assigned",
+      "agent": 44,
+      "track": 4
+    },
+    {
+      "time": 262.1,
+      "kind": "guide_at_delivery",
+      "agent": 44,
+      "track": 4
+    },
+    {
+      "time": 263.0,
+      "kind": "guide_lost",
+      "agent": 44,
+      "track": 4
+    },
+    {
+      "time": 267.4,
+      "kind": "replacement_dispatched",
+      "agent": 52,
+      "current": 43,
+      "conservative_travel_seconds": 25.26085676551086,
+      "active_lifetime_seconds": 29.727691585025276
+    },
+    {
+      "time": 278.5,
+      "kind": "bait_arrived",
+      "agent": 52,
+      "previous": 43
+    },
+    {
+      "time": 307.7,
+      "kind": "replacement_dispatched",
+      "agent": 57,
+      "current": 52,
+      "conservative_travel_seconds": 19.877532596449505,
+      "active_lifetime_seconds": 39.58547082492997
+    },
+    {
+      "time": 314.0,
+      "kind": "bait_arrived",
+      "agent": 57,
+      "previous": 52
+    },
+    {
+      "time": 321.9,
+      "kind": "guide_assigned",
+      "agent": 64,
+      "track": 5
+    },
+    {
+      "time": 325.4,
+      "kind": "guide_assigned",
+      "agent": 51,
+      "track": 6
+    },
+    {
+      "time": 330.4,
+      "kind": "guide_lost",
+      "agent": 51,
+      "track": 6
+    },
+    {
+      "time": 331.2,
+      "kind": "guide_assigned",
+      "agent": 65,
+      "track": 6
+    },
+    {
+      "time": 331.9,
+      "kind": "guide_assigned",
+      "agent": 66,
+      "track": 8
+    },
+    {
+      "time": 340.9,
+      "kind": "guide_assigned",
+      "agent": 46,
+      "track": 9
+    },
+    {
+      "time": 343.6,
+      "kind": "guide_at_delivery",
+      "agent": 64,
+      "track": 5
+    },
+    {
+      "time": 345.0,
+      "kind": "guide_at_delivery",
+      "agent": 46,
+      "track": 9
+    },
+    {
+      "time": 346.1,
+      "kind": "guide_lost",
+      "agent": 64,
+      "track": 5
+    },
+    {
+      "time": 346.2,
+      "kind": "guide_assigned",
+      "agent": 67,
+      "track": 5
+    },
+    {
+      "time": 349.2,
+      "kind": "guide_lost",
+      "agent": 66,
+      "track": 8
+    },
+    {
+      "time": 349.7,
+      "kind": "replacement_dispatched",
+      "agent": 68,
+      "current": 57,
+      "conservative_travel_seconds": 14.605984901828913,
+      "active_lifetime_seconds": 34.52904144360308
+    },
+    {
+      "time": 350.1,
+      "kind": "guide_lost",
+      "agent": 46,
+      "track": 9
+    },
+    {
+      "time": 350.6,
+      "kind": "guide_assigned",
+      "agent": 37,
+      "track": 8
+    },
+    {
+      "time": 351.7,
+      "kind": "guide_lost",
+      "agent": 37,
+      "track": 8
+    },
+    {
+      "time": 351.8,
+      "kind": "guide_assigned",
+      "agent": 45,
+      "track": 8
+    },
+    {
+      "time": 354.8,
+      "kind": "guide_lost",
+      "agent": 45,
+      "track": 8
+    },
+    {
+      "time": 355.1,
+      "kind": "guide_lost",
+      "agent": 65,
+      "track": 6
+    },
+    {
+      "time": 356.5,
+      "kind": "guide_lost",
+      "agent": 67,
+      "track": 5
+    },
+    {
+      "time": 357.4,
+      "kind": "bait_arrived",
+      "agent": 68,
+      "previous": 57
+    },
+    {
+      "time": 357.4,
+      "kind": "guide_assigned",
+      "agent": 61,
+      "track": 6
+    },
+    {
+      "time": 364.3,
+      "kind": "replacement_dispatched",
+      "agent": 70,
+      "current": 68,
+      "conservative_travel_seconds": 22.314739233177296,
+      "active_lifetime_seconds": 41.933581090949374
+    },
+    {
+      "time": 367.0,
+      "kind": "guide_assigned",
+      "agent": 74,
+      "track": 10
+    },
+    {
+      "time": 373.6,
+      "kind": "guide_lost",
+      "agent": 74,
+      "track": 10
+    },
+    {
+      "time": 374.3,
+      "kind": "bait_arrived",
+      "agent": 70,
+      "previous": 68
+    },
+    {
+      "time": 379.9,
+      "kind": "guide_lost",
+      "agent": 61,
+      "track": 6
+    },
+    {
+      "time": 383.0,
+      "kind": "guide_assigned",
+      "agent": 63,
+      "track": 12
+    },
+    {
+      "time": 406.1,
+      "kind": "guide_assigned",
+      "agent": 55,
+      "track": 13
+    },
+    {
+      "time": 406.9,
+      "kind": "guide_lost",
+      "agent": 55,
+      "track": 13
+    },
+    {
+      "time": 407.0,
+      "kind": "guide_assigned",
+      "agent": 62,
+      "track": 13
+    },
+    {
+      "time": 408.5,
+      "kind": "guide_at_delivery",
+      "agent": 62,
+      "track": 13
+    },
+    {
+      "time": 408.7,
+      "kind": "guide_lost",
+      "agent": 62,
+      "track": 13
+    },
+    {
+      "time": 435.9,
+      "kind": "replacement_dispatched",
+      "agent": 83,
+      "current": 70,
+      "conservative_travel_seconds": 16.06289902492303,
+      "active_lifetime_seconds": 19.797362816586595
+    },
+    {
+      "time": 440.9,
+      "kind": "bait_arrived",
+      "agent": 83,
+      "previous": 70
+    },
+    {
+      "time": 461.6,
+      "kind": "replacement_dispatched",
+      "agent": 88,
+      "current": 83,
+      "conservative_travel_seconds": 16.49972155778046,
+      "active_lifetime_seconds": 36.30361112478647
+    },
+    {
+      "time": 462.3,
+      "kind": "guide_assigned",
+      "agent": 89,
+      "track": 14
+    },
+    {
+      "time": 463.4,
+      "kind": "guide_assigned",
+      "agent": 84,
+      "track": 15
+    },
+    {
+      "time": 469.6,
+      "kind": "bait_arrived",
+      "agent": 88,
+      "previous": 83
+    },
+    {
+      "time": 471.6,
+      "kind": "guide_lost",
+      "agent": 89,
+      "track": 14
+    },
+    {
+      "time": 474.1,
+      "kind": "guide_assigned",
+      "agent": 79,
+      "track": 17
+    },
+    {
+      "time": 474.7,
+      "kind": "guide_lost",
+      "agent": 84,
+      "track": 15
+    },
+    {
+      "time": 476.4,
+      "kind": "guide_at_delivery",
+      "agent": 79,
+      "track": 17
+    },
+    {
+      "time": 476.6,
+      "kind": "guide_lost",
+      "agent": 79,
+      "track": 17
+    },
+    {
+      "time": 492.4,
+      "kind": "guide_assigned",
+      "agent": 77,
+      "track": 18
+    },
+    {
+      "time": 497.8,
+      "kind": "guide_at_delivery",
+      "agent": 77,
+      "track": 18
+    },
+    {
+      "time": 498.2,
+      "kind": "guide_lost",
+      "agent": 77,
+      "track": 18
+    },
+    {
+      "time": 512.1,
+      "kind": "replacement_dispatched",
+      "agent": 93,
+      "current": 88,
+      "conservative_travel_seconds": 13.728092559248296,
+      "active_lifetime_seconds": 33.725148241595534
+    },
+    {
+      "time": 516.4,
+      "kind": "bait_arrived",
+      "agent": 93,
+      "previous": 88
+    },
+    {
+      "time": 532.2,
+      "kind": "replacement_dispatched",
+      "agent": 97,
+      "current": 93,
+      "conservative_travel_seconds": 20.733429774916857,
+      "active_lifetime_seconds": 40.644444022345525
+    },
+    {
+      "time": 538.6,
+      "kind": "bait_arrived",
+      "agent": 97,
+      "previous": 93
+    },
+    {
+      "time": 577.5,
+      "kind": "guide_assigned",
+      "agent": 99,
+      "track": 19
+    },
+    {
+      "time": 586.6,
+      "kind": "guide_at_delivery",
+      "agent": 99,
+      "track": 19
+    },
+    {
+      "time": 586.8,
+      "kind": "guide_lost",
+      "agent": 99,
+      "track": 19
+    },
+    {
+      "time": 588.2,
+      "kind": "guide_assigned",
+      "agent": 92,
+      "track": 21
+    },
+    {
+      "time": 600.2,
+      "kind": "replacement_dispatched",
+      "agent": 102,
+      "current": 97,
+      "conservative_travel_seconds": 7.181675822684344,
+      "active_lifetime_seconds": 27.073990839806072
+    },
+    {
+      "time": 600.2,
+      "kind": "guide_lost",
+      "agent": 92,
+      "track": 21
+    },
+    {
+      "time": 601.1,
+      "kind": "guide_assigned",
+      "agent": 91,
+      "track": 21
+    },
+    {
+      "time": 602.9,
+      "kind": "bait_arrived",
+      "agent": 102,
+      "previous": 97
+    },
+    {
+      "time": 606.3,
+      "kind": "guide_at_delivery",
+      "agent": 91,
+      "track": 21
+    },
+    {
+      "time": 606.5,
+      "kind": "guide_lost",
+      "agent": 91,
+      "track": 21
+    },
+    {
+      "time": 608.2,
+      "kind": "guide_assigned",
+      "agent": 95,
+      "track": 22
+    },
+    {
+      "time": 621.1,
+      "kind": "replacement_dispatched",
+      "agent": 106,
+      "current": 102,
+      "conservative_travel_seconds": 29.388218155119198,
+      "active_lifetime_seconds": 47.680653858281026
+    },
+    {
+      "time": 627.3,
+      "kind": "guide_lost",
+      "agent": 95,
+      "track": 22
+    },
+    {
+      "time": 630.1,
+      "kind": "bait_arrived",
+      "agent": 106,
+      "previous": 102
+    },
+    {
+      "time": 633.0,
+      "kind": "guide_assigned",
+      "agent": 98,
+      "track": 25
+    },
+    {
+      "time": 642.9,
+      "kind": "replacement_dispatched",
+      "agent": 112,
+      "current": 106,
+      "conservative_travel_seconds": 27.17781342478213,
+      "active_lifetime_seconds": 47.0101500658842
+    },
+    {
+      "time": 646.9,
+      "kind": "guide_at_delivery",
+      "agent": 98,
+      "track": 25
+    },
+    {
+      "time": 648.6,
+      "kind": "guide_lost",
+      "agent": 98,
+      "track": 25
+    },
+    {
+      "time": 648.7,
+      "kind": "guide_assigned",
+      "agent": 110,
+      "track": 25
+    },
+    {
+      "time": 649.7,
+      "kind": "guide_lost",
+      "agent": 110,
+      "track": 25
+    },
+    {
+      "time": 654.2,
+      "kind": "bait_arrived",
+      "agent": 112,
+      "previous": 106
+    },
+    {
+      "time": 669.3,
+      "kind": "guide_assigned",
+      "agent": 107,
+      "track": 26
+    },
+    {
+      "time": 674.1,
+      "kind": "guide_at_delivery",
+      "agent": 107,
+      "track": 26
+    },
+    {
+      "time": 684.3,
+      "kind": "guide_assigned",
+      "agent": 103,
+      "track": 27
+    },
+    {
+      "time": 701.3,
+      "kind": "guide_at_delivery",
+      "agent": 103,
+      "track": 27
+    },
+    {
+      "time": 701.7,
+      "kind": "guide_lost",
+      "agent": 103,
+      "track": 27
+    },
+    {
+      "time": 711.4,
+      "kind": "replacement_dispatched",
+      "agent": 118,
+      "current": 112,
+      "conservative_travel_seconds": 31.45613448930372,
+      "active_lifetime_seconds": 51.30044991930235
+    },
+    {
+      "time": 713.1,
+      "kind": "guide_lost",
+      "agent": 107,
+      "track": 26
+    },
+    {
+      "time": 722.0,
+      "kind": "bait_arrived",
+      "agent": 118,
+      "previous": 112
+    },
+    {
+      "time": 776.1,
+      "kind": "replacement_dispatched",
+      "agent": 124,
+      "current": 118,
+      "conservative_travel_seconds": 18.887018692462327,
+      "active_lifetime_seconds": 28.30462851390873
+    },
+    {
+      "time": 782.0,
+      "kind": "bait_arrived",
+      "agent": 124,
+      "previous": 118
+    },
+    {
+      "time": 814.1,
+      "kind": "replacement_dispatched",
+      "agent": 130,
+      "current": 124,
+      "conservative_travel_seconds": 16.22952579555375,
+      "active_lifetime_seconds": 34.854034971425314
+    },
+    {
+      "time": 830.3,
+      "kind": "bait_arrived",
+      "agent": 130,
+      "previous": 124
+    },
+    {
+      "time": 862.0,
+      "kind": "replacement_dispatched",
+      "agent": 133,
+      "current": 130,
+      "conservative_travel_seconds": 5.095556747319672,
+      "active_lifetime_seconds": 24.96832500500036
+    },
+    {
+      "time": 862.5,
+      "kind": "replacement_dispatched",
+      "agent": 134,
+      "current": 130,
+      "conservative_travel_seconds": 17.731553469370244,
+      "active_lifetime_seconds": 24.468325005000356
+    },
+    {
+      "time": 868.0,
+      "kind": "bait_arrived",
+      "agent": 134,
+      "previous": 130
+    },
+    {
+      "time": 886.6,
+      "kind": "replacement_dispatched",
+      "agent": 139,
+      "current": 134,
+      "conservative_travel_seconds": 14.886932171558701,
+      "active_lifetime_seconds": 34.78903067537251
+    },
+    {
+      "time": 891.7,
+      "kind": "bait_arrived",
+      "agent": 139,
+      "previous": 134
+    },
+    {
+      "time": 925.1,
+      "kind": "replacement_dispatched",
+      "agent": 141,
+      "current": 139,
+      "conservative_travel_seconds": 24.011971249152474,
+      "active_lifetime_seconds": 42.131489358937415
+    },
+    {
+      "time": 932.4,
+      "kind": "bait_arrived",
+      "agent": 141,
+      "previous": 139
+    },
+    {
+      "time": 962.1,
+      "kind": "guide_assigned",
+      "agent": 142,
+      "track": 31
+    },
+    {
+      "time": 968.0,
+      "kind": "replacement_dispatched",
+      "agent": 143,
+      "current": 141,
+      "conservative_travel_seconds": 18.770627697032698,
+      "active_lifetime_seconds": 38.76751029427362
+    },
+    {
+      "time": 972.1,
+      "kind": "guide_assigned",
+      "agent": 140,
+      "track": 32
+    },
+    {
+      "time": 974.6,
+      "kind": "guide_at_delivery",
+      "agent": 140,
+      "track": 32
+    },
+    {
+      "time": 974.8,
+      "kind": "guide_lost",
+      "agent": 140,
+      "track": 32
+    },
+    {
+      "time": 975.1,
+      "kind": "bait_arrived",
+      "agent": 143,
+      "previous": 141
+    },
+    {
+      "time": 984.1,
+      "kind": "guide_lost",
+      "agent": 142,
+      "track": 31
+    },
+    {
+      "time": 984.1,
+      "kind": "guide_assigned",
+      "agent": 136,
+      "track": 31
+    },
+    {
+      "time": 987.1,
+      "kind": "guide_at_delivery",
+      "agent": 136,
+      "track": 31
+    },
+    {
+      "time": 987.3,
+      "kind": "guide_lost",
+      "agent": 136,
+      "track": 31
+    }
+  ],
+  "metric_note": "Near bait for 30s is a proximity proxy, not proof of permanent capture. Bait occupancy uses estimated localization."
+}

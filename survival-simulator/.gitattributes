@@ -1,0 +1,8 @@
+# The frozen entrapment benchmark verifies source bytes against its manifest.
+# Keep these sources stable on Windows checkouts as well as Linux.
+/models/*.py text eol=lf
+/models/**/*.py text eol=lf
+/models/nikolaj/config/*.json text eol=lf
+/src/**/*.py text eol=lf
+/src/core.py text eol=lf
+/scripts/entrapment_game.py text eol=lf
