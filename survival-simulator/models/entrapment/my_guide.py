@@ -81,13 +81,44 @@ def _return_to_predator(bait, edges, agent, memory, to_local, turn):
 
 def guide(bait, edges, agent, context, memory):
     """Guide safely en route; stand at delivery while the predator follows."""
+    context = dict(context)
+    if 'target_predator' not in context:
+        context['target_predator'] = _select_target(bait, edges, agent, context, memory)
     action = _guide(bait, edges, agent, context, memory)
     if isinstance(memory.get('debug'), dict) and memory['debug'].get('mode') == 'hold_at_delivery':
         # Intentional handoff: survival steering must not pull us away when
         # the following predator approaches. Being caught here is allowed.
         return action
-    return prioritize(action, bait, edges, agent, memory)
+    return prioritize(action, bait, edges, agent, memory, target=context['target_predator'])
 
+
+def _select_target(bait, edges, agent, context, memory):
+    """Associate ordinary sightings by motion; never acquire the held crowd.
+
+    Native observations have no predator IDs. Ambiguous overlap can therefore
+    never establish identity, but a nearby held predator must not replace a
+    missing newcomer simply because it is closest to the guide.
+    """
+    observations = [o for o in agent['observations'] if o['type'] == 'Predator']
+    to_fixed, _ = fixed_frame(bait, edges)
+    samples = [(o, to_fixed((o['distance'] * math.cos(o['angle']),
+                            o['distance'] * math.sin(o['angle'])))) for o in observations]
+    tick = context.get('tick', 0)
+    previous = memory.get('_target_track')
+    if previous is None:
+        choices = [(o, p) for o, p in samples if math.hypot(*p) > 40.]
+        selected = min(choices, key=lambda row: row[0]['distance'], default=None)
+    else:
+        elapsed = max(1, tick - previous['tick'])
+        choices = [(o, p) for o, p in samples
+                   if math.dist(p, previous['position']) <= 15.75 * min(elapsed, 5)
+                   and (math.hypot(*p) > 40. or math.hypot(*previous['position']) <= 55.)]
+        selected = min(choices, key=lambda row: math.dist(row[1], previous['position']), default=None)
+    if selected is None:
+        return None
+    observation, position = selected
+    memory['_target_track'] = dict(position=position, tick=tick)
+    return observation
 
 def _guide(bait, edges, agent, context, memory):
     """Follow a predator-width A* route while looking at the predator."""

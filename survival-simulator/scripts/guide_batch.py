@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import random
+import shutil
 import subprocess
 import sys
 import time
@@ -35,13 +36,24 @@ def main():
     rng = random.Random(args.seed)
     seeds = rng.sample(range(2**31), args.maps)
     jobs = [dict(index=i, seed=s, encounter_seed=rng.randrange(2**31)) for i,s in enumerate(seeds)]
-    sources = list((ROOT/'src').rglob('*.py')) + [ROOT/'models/entrapment'/name for name in
-               ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py')]
-    if args.multi:
-        sources += [ROOT/'scripts'/name for name in ('guide_multi.py','guide_lab.py','guide_lab_sites.py','guide_batch.py')]
+    sources = sorted({p for directory in ('src', 'models', 'scripts')
+                      for p in (ROOT/directory).rglob('*')
+                      if p.is_file() and p.suffix in ('.py', '.json', '.html')})
     manifest = dict(config=vars(args) | {'output': str(args.output)}, jobs=jobs,
                     source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources})
-    (args.output/'manifest.json').write_text(json.dumps(manifest, indent=2))
+    manifest_path = args.output/'manifest.json'
+    if manifest_path.exists():
+        previous = json.loads(manifest_path.read_text())
+        if (previous['source_hashes'] != manifest['source_hashes'] or previous['jobs'] != jobs
+                or any(previous['config'].get(k) != manifest['config'].get(k)
+                       for k in ('multi', 'seconds', 'timeout'))):
+            parser.error('Existing batch has different code, seeds, or settings; use a new output directory.')
+    source_root = args.output/'source'
+    for source in sources:
+        target = source_root/source.relative_to(ROOT)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    manifest_path.write_text(json.dumps(manifest, indent=2))
     env = os.environ | {key:'1' for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS')}
 
     def execute(job):
@@ -50,11 +62,11 @@ def main():
         result_file = folder/'result.json'
         if result_file.exists():
             return json.loads(result_file.read_text())
-        command = [sys.executable, str(ROOT/'scripts/guide_lab.py'), '--bulk',
+        command = [sys.executable, str(source_root/'scripts/guide_lab.py'), '--bulk',
                    '--seed', str(job['seed']), '--encounter-seed', str(job['encounter_seed']),
                    '--seconds', str(args.seconds), '--output', str(folder)]
         if args.multi:
-            command = [sys.executable,str(ROOT/'scripts/guide_multi.py'),'--bulk','--deliveries','1',
+            command = [sys.executable,str(source_root/'scripts/guide_multi.py'),'--bulk','--deliveries','1',
                        '--seed',str(job['seed']),'--encounter-seed',str(job['encounter_seed']),'--output',str(folder)]
         started = time.monotonic()
         try:
