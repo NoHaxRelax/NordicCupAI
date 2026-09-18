@@ -10,14 +10,14 @@
 # answering /health is kept. The container disk is wiped on every stop, so the venv
 # is rebuilt after a restart (a few minutes); the weights and code live on the volume.
 #
-# Env (all optional): MODEL (Qwen/Qwen3.8-27B), PORT (8000), MAX_LEN (73728: room for the
-# 60k-token many-shot prompt), GPU_UTIL (0.92), MAX_SEQS (64: hybrid Mamba models refuse the
+# Env (all optional): MODEL (Qwen/Qwen3.8-27B), PORT (8000), MAX_LEN (16384, the served config;
+# 73728 for the many-shot bench), GPU_UTIL (0.80), MAX_SEQS (64: hybrid Mamba models refuse the
 # default 1024), HF_HOME (/workspace/hf), LOG (/workspace/logs/vllm.log), WAIT (900 s).
 set -uo pipefail
 MODEL=${MODEL:-Qwen/Qwen3.8-27B}
 PORT=${PORT:-8000}
-MAX_LEN=${MAX_LEN:-73728}
-GPU_UTIL=${GPU_UTIL:-0.92}
+MAX_LEN=${MAX_LEN:-16384}
+GPU_UTIL=${GPU_UTIL:-0.80}          # leaves ~8 GB for Ollama's 4B and the turbo ASR next to vLLM (verifier 2026-09-18, #1)
 MAX_SEQS=${MAX_SEQS:-64}
 export HF_HOME=${HF_HOME:-/workspace/hf}
 export HF_HUB_OFFLINE=${HF_HUB_OFFLINE:-1}

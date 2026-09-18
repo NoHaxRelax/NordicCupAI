@@ -58,11 +58,13 @@ serve() {
   ollama_up
   cd "$CASE" || return 1
   export LD_LIBRARY_PATH="$(libpath)${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1   # weights are local; never wait on huggingface.co at a restart
   while true; do
+    unset LLM_MAX_TOKENS LLM_TIMEOUT LLM_NUM_CTX START_RULE START_OFFSET END_OFFSET SPAN_ON_NO ASR_CLEAN
     export ASR_MODEL=large-v3-turbo TRANSCRIPT_CACHE=0 LLM_BACKEND=vllm LLM_URL=http://localhost:8000/v1 \
            LLM_MODEL=Qwen/Qwen3.8-27B LLM_VARIANT=units-fewshot LLM_NO_THINK=vllm UNIT_SPLIT=clause-and \
            LLM_FALLBACK_URL=http://localhost:11434 LLM_FALLBACK_MODEL=qwen3:4b LLM_DEADLINE=40 PREDICT_DEADLINE=55 \
-           REQUEST_DUMP_DIR=/workspace/request_dump
+           REQUEST_DUMP_DIR=/workspace/request_dump PREDICT_DEADLINE=50
     [ -f /workspace/serve.env ] && set -a && . /workspace/serve.env && set +a
     echo "$(date -Is) supervisor: starting api.py (LLM_URL=$LLM_URL UNIT_SPLIT=$UNIT_SPLIT variant=$LLM_VARIANT fallback=$LLM_FALLBACK_MODEL)" >> "$LOGS/api.supervisor.log"
     "$VENV/bin/python" api.py >> "$LOGS/api.log" 2>&1
