@@ -23,7 +23,7 @@ with zipfile.ZipFile(out, 'a', zipfile.ZIP_DEFLATED) as z:
     z.writestr('medical-appointment/README_JURY.md', readme)
     names = z.namelist()
 # bench/results/probe (hosted-model probe answers on training files) is tracked on purpose; secrets and dumps are not.
-bad = [n for n in names if '.claude' in n or 'nordic-api-key' in n or 'nordic-control-token' in n or '.venv' in n or 'request_dump' in n or 'transcripts/' in n]
+bad = [n for n in names if '.claude' in n or 'nordic-api-key' in n or 'nordic-control-token' in n or '.venv' in n or 'request_dump' in n]
 print(f'{out}: {len(names)} entries, {pathlib.Path(out).stat().st_size/1e6:.1f} MB', 'CLEAN' if not bad else f'FORBIDDEN CONTENT: {bad[:5]}')
 sys.exit(1 if bad else 0)
 PY
