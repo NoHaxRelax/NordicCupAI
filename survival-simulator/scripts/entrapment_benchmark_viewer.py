@@ -99,7 +99,13 @@ def main():
                     mime = 'text/html; charset=utf-8'
                 elif url.path == '/api/overview':
                     rows = cases()
-                    payload = json.dumps(dict(cases=rows, summary=aggregate(rows))).encode()
+                    final_path = args.folder/'final_status.json'
+                    final = json.loads(final_path.read_text()) if final_path.exists() else None
+                    if final:
+                        final = dict(status=final['status'], completed=final['completed'],
+                                     incomplete=final['incomplete'],
+                                     incomplete_seeds=sorted(r['seed'] for r in final['summary']['incomplete_cases']))
+                    payload = json.dumps(dict(cases=rows, summary=aggregate(rows), final_status=final)).encode()
                 elif url.path in ('/api/case','/api/tick','/frame'):
                     seed = int(query['seed'][0])
                     path = folder(seed)
