@@ -92,7 +92,10 @@ def guide(bait, edges, agent, context, memory):
 def _guide(bait, edges, agent, context, memory):
     """Follow a predator-width A* route while looking at the predator."""
     predators = [o for o in agent['observations'] if o['type'] == 'Predator']
-    predator = min(predators, key=lambda o: o['distance']) if predators else None
+    # Colony coordinator may associate a particular ordinary observation with
+    # this guide. Omitted context preserves the evaluated single-guide policy.
+    predator = (context['target_predator'] if 'target_predator' in context else
+                min(predators, key=lambda o: o['distance']) if predators else None)
     # Keep the current heading until contact; track the observed bearing in all modes.
     turn = predator['angle'] if predator is not None else 0.
     to_fixed, to_local = fixed_frame(bait, edges)

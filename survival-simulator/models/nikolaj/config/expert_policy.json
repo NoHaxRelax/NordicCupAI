@@ -1,0 +1,98 @@
+{
+  "perception": {
+    "nearest_fruits": 5,
+    "predator_danger_radius": 100.0
+  },
+  "memory": {
+    "predator_escape_seconds": 2.0
+  },
+  "crowd": {
+    "enabled": true,
+    "memory_seconds": 4.0,
+    "neighbor_radius": 120.0,
+    "max_remembered_neighbors": 64,
+    "direction_bins": 24,
+    "angular_spread": 1.0471975511965976,
+    "full_strength_neighbors": 2.0,
+    "minimum_contrast": 0.05,
+    "tie_score_fraction": 0.02,
+    "exploration_strength": 0.3,
+    "foraging_strength": 0.12
+  },
+  "movement": {
+    "walk_speed_fraction": 1.0,
+    "flee_speed_fraction": 1.0,
+    "max_turn_angle": 0.7853981633974483,
+    "turn_deadzone": 0.05,
+    "food_sprint_enabled": true,
+    "food_sprint_min_energy": 170.0,
+    "food_sprint_max_distance": 70.0,
+    "food_sprint_energy_reserve": 110.0,
+    "scan_nearby_food": true
+  },
+  "exploration": {
+    "speed_fraction": 0.8,
+    "turn_amplitude": 0.15,
+    "turn_period_seconds": 12.0
+  },
+  "reproduction": {
+    "enabled": true,
+    "energy_threshold": 350.0,
+    "minimum_age": 0.0,
+    "minimum_energy_reserve": 75.0,
+    "selection": {
+      "enabled": true,
+      "elite_fraction": 0.2,
+      "dispersal_fraction": 0.2,
+      "normal_energy_threshold": 260.0,
+      "elite_energy_threshold": 220.0,
+      "low_rank_energy_threshold": 300.0,
+      "normal_cooldown_seconds": 12.0,
+      "elite_cooldown_seconds": 8.0,
+      "growth_population_target": 40,
+      "capacity_threshold_fraction": 0.85,
+      "post_alignment": {
+        "enabled": true,
+        "normal_energy_threshold": 260,
+        "elite_energy_threshold": 220,
+        "low_rank_energy_threshold": 300,
+        "normal_cooldown_seconds": 8.0,
+        "elite_cooldown_seconds": 5.0,
+        "growth_population_target": 60
+      }
+    }
+  },
+  "harvest": {
+    "enabled": false,
+    "replan_seconds": 1.0,
+    "match_radius": 4.0,
+    "max_pose_uncertainty": 4.0,
+    "unknown_initial_age_seconds": 5.0,
+    "ripe_energy": 56.0,
+    "emergency_energy": 90.0,
+    "minimum_population": 12,
+    "maximum_population": 60,
+    "food_budget_per_agent_second": 6.0,
+    "parent_reserve": 100.0,
+    "birth_interval_seconds": 0.5,
+    "minimum_breeder_trait_score": 1.0,
+    "gene_backup_age": 40.0,
+    "gene_backup_interval_seconds": 35.0,
+    "coverage": {
+      "enabled": true,
+      "orchard_revisit_seconds": 20.0,
+      "other_revisit_seconds": 60.0,
+      "territory_seconds": 30.0,
+      "food_imbalance_fraction": 0.35,
+      "minimum_patch_width": 25.0,
+      "gap_cell_size": 10.0,
+      "nearby_gap_distance": 220.0
+    }
+  },
+  "mechanics": {
+    "walking_energy_per_unit": 0.05,
+    "sprinting_energy_per_unit": 0.5,
+    "spawn_energy_cost": 100.0,
+    "sprint_min_energy_fraction": 0.2
+  }
+}
