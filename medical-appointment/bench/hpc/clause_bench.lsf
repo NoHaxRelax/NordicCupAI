@@ -22,13 +22,15 @@
 #BSUB -e /dtu/blackhole/1e/205502/nordic/logs/clause_bench.%J.err
 
 set -uo pipefail
-MODEL="Qwen/Qwen3.8-27B"
-SHORT="qwen3.8-27b"
-ASR="large-v3-turbo"
-VARIANTS="units-fewshot"
-MODES="clause-and clause-all clause"          # most promising first, in case the walltime cuts it
-PORT=8011
-MAX_LEN=8192
+# Defaults; a wrapper script may export other values before running this file (the DTU bsub
+# drops the submitter's environment, so `VAR=x bsub < file` does not work).
+MODEL=${MODEL:-Qwen/Qwen3.8-27B}
+SHORT=${SHORT:-$(echo "${MODEL##*/}" | tr '[:upper:]' '[:lower:]')}
+ASR=${ASR:-large-v3-turbo}
+VARIANTS=${VARIANTS:-units-fewshot}
+MODES=${MODES:-"clause-and clause-all clause"}   # most promising first, in case the walltime cuts it
+PORT=${PORT:-8011}
+MAX_LEN=${MAX_LEN:-8192}
 
 BH=/dtu/blackhole/1e/205502
 CASE=$BH/nordic/medical-appointment
