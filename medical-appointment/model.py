@@ -44,6 +44,18 @@ laptop (small model) and on a big GPU (large model) without edits.
                      training conversations, see research/07-findings-log.md)
   END_OFFSET         seconds added to unit ends          (default 0.12)
   PAUSE_SPLIT        split a sentence at a pause >= this (default 0.6)
+  UNIT_SPLIT         sentence | clause | clause-all: how far the word stream is
+                     cut up. sentence = terminal punctuation, segment ends and
+                     pauses only (default). clause = additionally cut a sentence
+                     at a comma or semicolon that starts a new clause (a
+                     conjunction follows, or a subject-verb clause of at least
+                     four words does), pieces of at least three words.
+                     clause-all = cut at every comma or semicolon with at least
+                     three words on both sides. clause-and = clause-all plus a
+                     cut before a coordinating conjunction (and, but, or, so)
+                     that has no comma. The annotators mark a clause
+                     inside a sentence for 15 % of the training golds
+                     (research/07-findings-log.md entries 40, 44, 45).
   ASR_CLEAN          1 = temperature 0, no conditioning on previous text, no
                      fallback ladder (removes the slow-file tail)  (default 1)
   SPAN_ON_NO         1 = return the best span for every question, including
@@ -109,6 +121,7 @@ _fwe, _us, _end = _FITTED.get(ASR_MODEL, _FITTED['large-v3'])
 START_OFFSET = float(os.environ.get('START_OFFSET', str(_fwe if START_RULE == 'first-word-end' else _us)))
 END_OFFSET = float(os.environ.get('END_OFFSET', str(_end)))
 PAUSE_SPLIT = float(os.environ.get('PAUSE_SPLIT', '0.6'))
+UNIT_SPLIT = os.environ.get('UNIT_SPLIT', 'sentence')
 # Off by default: on the 39 training files the no-ladder decode gave cleaner
 # text but worse timestamps (raw ceiling 0.730 vs 0.753 for large-v3), and the
 # fitted offsets above were measured with the default decode.
@@ -202,17 +215,131 @@ class Unit:
 
 _TERMINAL = re.compile(r'[.!?]["\')\]]*\x00?$')
 
+# --- clause cut (UNIT_SPLIT=clause) ----------------------------------------- #
+# The annotators mark a clause inside one of our sentence units for about 15 %
+# of the training golds; 37 of the 27B's 195 spans lose tIoU that way and no
+# whole-sentence citation can reach them (findings log 40, 44, 45). These
+# lists drive the cut; they are deliberately small and closed, because every
+# extra split costs the model an id it has to choose between.
+_CLAUSE_LEAD = frozenset("""
+    and but so because which who where when while if then or although though
+    unless since as after before
+""".split())
+# a comma followed by one of these plus a verb nearby starts a new clause even
+# without a conjunction ("I take the tablet, my blood sugar has been fine")
+_CLAUSE_SUBJ = frozenset("""
+    i you he she it we they that this there the a an my your his her its our their
+    everything nothing something anything someone everyone nobody one
+""".split())
+_CLAUSE_VERB = frozenset("""
+    is are was were am be been being has have had having do does did done
+    will would can could should shall may might must get gets got take takes took
+    feel feels felt think thinks thought said says say want wants need needs
+    seem seems look looks keep keeps kept go goes went come comes came
+    make makes made give gives gave start starts started stop stops stopped
+    stay stays stayed remain remains use uses used
+""".split())
+# never cut between a number and its unit ("53, mmol/mol" is one measurement)
+_CLAUSE_UNITS = frozenset("""
+    mg mcg ug g kg ml l dl cl mmol mol mmhg kpa cm mm m km iu ius unit units
+    percent bpm milligrams milligram micrograms grams kilos kilograms millilitres
+    millilitre litres litre mmol/mol mg/dl mg/ml mmol/l ml/min
+""".split())
+# clause-and: a coordinating conjunction starts a new piece even without a comma
+_CLAUSE_COORD = frozenset({'and', 'but', 'or', 'so'})
+_NUMERIC = re.compile(r'^[0-9][0-9.,/-]*$')
+_CLAUSE_END = re.compile(r'[,;]["\')\]]*$')       # the comma is the word's own tail
 
-def make_units(words: List[Word]) -> List[Unit]:
-    """Sentence-ish units: cut at terminal punctuation, segment ends, long pauses."""
-    units: List[Unit] = []
+
+def _clause_tok(w: Word) -> str:
+    return w.w.replace('\x00', '').strip()
+
+
+def _clause_bare(w: Word) -> str:
+    """Lower-cased word without surrounding punctuation ('mmol/mol' keeps its slash)."""
+    return _clause_tok(w).strip('.,;:!?"\'()[]-').lower()
+
+
+def _clause_nwords(piece: List[Word]) -> int:
+    return sum(1 for w in piece if _clause_bare(w))
+
+
+def _clause_is_break(words: List[Word], i: int) -> bool:
+    """True when words[i] ends with a comma or semicolon that may be cut after."""
+    if i + 1 >= len(words):
+        return False
+    if not _CLAUSE_END.search(_clause_tok(words[i])):
+        return False
+    # never inside a number or between a number and its unit
+    head, nxt = _clause_bare(words[i]), _clause_bare(words[i + 1])
+    if not nxt:
+        return False
+    if _NUMERIC.match(head) and (_NUMERIC.match(nxt) or nxt in _CLAUSE_UNITS):
+        return False
+    return nxt not in _CLAUSE_UNITS
+
+
+def _clause_chunk(words: List[Word], i: int) -> List[Word]:
+    """The words after the break at i, up to the next break or the unit's end."""
+    out: List[Word] = []
+    for j in range(i + 1, len(words)):
+        out.append(words[j])
+        if _CLAUSE_END.search(_clause_tok(words[j])):
+            break
+    return out
+
+
+def _clause_subject_verb(chunk: List[Word]) -> bool:
+    """A new subject-verb clause of at least four words."""
+    bare = [b for b in (_clause_bare(w) for w in chunk) if b]
+    if len(bare) < 4:
+        return False
+    if not any(b in _CLAUSE_SUBJ for b in bare[:2]):
+        return False
+    return any(b in _CLAUSE_VERB for b in bare[1:5])
+
+
+def _clause_split(group: List[Word], mode: str) -> List[List[Word]]:
+    """One sentence unit's words cut into clause pieces of at least 3 words."""
+    breaks = []
+    for i in range(len(group) - 1):
+        if not _clause_is_break(group, i):
+            if mode == 'clause-and' and _clause_bare(group[i + 1]) in _CLAUSE_COORD:
+                breaks.append(i)
+            continue
+        if mode in ('clause-all', 'clause-and'):
+            breaks.append(i)
+        elif (_clause_bare(group[i + 1]) in _CLAUSE_LEAD
+                or _clause_subject_verb(_clause_chunk(group, i))):
+            breaks.append(i)
+    if not breaks:
+        return [group]
+    pieces: List[List[Word]] = []
+    last = 0
+    for i in breaks:
+        if _clause_nwords(group[last:i + 1]) < 3:
+            continue                                  # piece too short: merge right
+        if _clause_nwords(group[i + 1:]) < 3:
+            break                                     # tail too short: merge left
+        pieces.append(group[last:i + 1])
+        last = i + 1
+    pieces.append(group[last:])
+    return pieces
+
+
+def make_units(words: List[Word], mode: Optional[str] = None) -> List[Unit]:
+    """Sentence-ish units: cut at terminal punctuation, segment ends, long pauses.
+
+    With mode (or UNIT_SPLIT) 'clause' or 'clause-all' each sentence is cut
+    again at clause commas; 'sentence' (the default) is the served behaviour.
+    """
+    mode = (mode or UNIT_SPLIT).lower()
+    groups: List[List[Word]] = []
     cur: List[Word] = []
 
     def flush():
         if cur:
-            text = ''.join(w.w for w in cur).replace('\x00', '').strip()
-            if text:
-                units.append(Unit(len(units), cur[0].start, cur[-1].end, text, cur[0].end))
+            groups.append(list(cur))
             cur.clear()
 
     for i, w in enumerate(words):
@@ -223,6 +350,17 @@ def make_units(words: List[Word]) -> List[Unit]:
         elif nxt is not None and nxt.start - w.end >= PAUSE_SPLIT:
             flush()
     flush()
+
+    if mode in ('clause', 'clause-all', 'clause-and'):
+        groups = [p for g in groups for p in _clause_split(g, mode)]
+    elif mode != 'sentence':
+        raise ValueError(f'UNIT_SPLIT={mode}: expected sentence, clause, clause-all or clause-and')
+
+    units: List[Unit] = []
+    for g in groups:
+        text = ''.join(w.w for w in g).replace('\x00', '').strip()
+        if text:
+            units.append(Unit(len(units), g[0].start, g[-1].end, text, g[0].end))
     return units
 
 

@@ -1,0 +1,85 @@
+#!/bin/bash
+### bench/hpc/clause_bench.lsf: one vLLM server, one prompt variant, several UNIT_SPLIT modes.
+### Measures whether clause-level units (model.py UNIT_SPLIT, findings log entry 47) raise the
+### served score: the unit-level oracle says they can, only the LLM's citations say they do.
+###
+###     cd /dtu/blackhole/1e/205502/nordic/medical-appointment && bsub < bench/hpc/clause_bench.lsf
+###
+### Self-contained on purpose: it starts its own vLLM (own port, pid and log) instead of going
+### through serve_vllm.sh, because llm_bench.lsf's stop step runs `pkill -f "vllm serve"` and
+### shares that script's pid file per model; the host of a running llm_bench job is excluded
+### below for the same reason. The DTU bsub does not pass the submitter's environment, so the
+### settings are edited here, not given at submit time.
+#BSUB -q gpuh100
+#BSUB -gpu "num=1:mode=exclusive_process"
+#BSUB -J clause_bench
+#BSUB -n 8
+#BSUB -R "span[hosts=1]"
+#BSUB -R "rusage[mem=8GB]"
+#BSUB -R "select[hname!='n-62-12-81']"
+#BSUB -W 2:00
+#BSUB -o /dtu/blackhole/1e/205502/nordic/logs/clause_bench.%J.out
+#BSUB -e /dtu/blackhole/1e/205502/nordic/logs/clause_bench.%J.err
+
+set -uo pipefail
+MODEL="Qwen/Qwen3.8-27B"
+SHORT="qwen3.8-27b"
+ASR="large-v3-turbo"
+VARIANTS="units-fewshot"
+MODES="clause-and clause-all clause"          # most promising first, in case the walltime cuts it
+PORT=8011
+MAX_LEN=8192
+
+BH=/dtu/blackhole/1e/205502
+CASE=$BH/nordic/medical-appointment
+VENV=$BH/venvs/venv-vllm
+JOB=${LSB_JOBID:-local}
+cd "$CASE" || exit 1
+mkdir -p bench/results/logs bench/results/llm
+exec > >(tee -a "bench/results/logs/clause_bench.$JOB.log") 2>&1
+
+unset PYTHONHOME PYTHONPATH
+type module >/dev/null 2>&1 || source /etc/profile 2>/dev/null
+module load cuda/13.3.1 2>/dev/null || echo "module load cuda failed"
+if command -v nvcc >/dev/null 2>&1; then export CUDA_HOME="$(dirname "$(dirname "$(command -v nvcc)")")"; fi
+export HF_HOME=$BH/hf HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1
+export TMPDIR=$BH/tmp TORCH_HOME=$BH/torch-home
+export XDG_CACHE_HOME=$BH/cache
+export VLLM_CACHE_ROOT=$XDG_CACHE_HOME/vllm VLLM_CONFIG_ROOT=$XDG_CACHE_HOME/vllm-config
+export TRITON_CACHE_DIR=$XDG_CACHE_HOME/triton TORCHINDUCTOR_CACHE_DIR=$XDG_CACHE_HOME/torchinductor
+export FLASHINFER_WORKSPACE_BASE=$XDG_CACHE_HOME
+export OMP_NUM_THREADS=8 TOKENIZERS_PARALLELISM=false PYTHONUNBUFFERED=1
+export PATH="$VENV/bin:$PATH"
+mkdir -p "$TMPDIR" "$TORCH_HOME" "$VLLM_CACHE_ROOT" "$VLLM_CONFIG_ROOT" "$TRITON_CACHE_DIR" "$TORCHINDUCTOR_CACHE_DIR"
+
+echo "=== clause_bench job $JOB on $(hostname) start $(date -Is)"
+nvidia-smi --query-gpu=name,memory.used --format=csv,noheader
+VLOG="bench/results/logs/clause_bench.$JOB.vllm.log"
+nohup "$VENV/bin/vllm" serve "$MODEL" --port "$PORT" --max-model-len "$MAX_LEN" \
+    --gpu-memory-utilization 0.95 --enable-prefix-caching --max-num-seqs 64 \
+    --reasoning-parser qwen3 --language-model-only \
+    --default-chat-template-kwargs '{"enable_thinking": false}' > "$VLOG" 2>&1 &
+VPID=$!
+trap 'kill $VPID 2>/dev/null; sleep 5; kill -9 $VPID 2>/dev/null' EXIT
+t0=$SECONDS
+until curl -sf "http://localhost:$PORT/health" >/dev/null 2>&1; do
+  kill -0 $VPID 2>/dev/null || { echo "vLLM died:"; tail -n 30 "$VLOG"; exit 1; }
+  [ $((SECONDS - t0)) -gt 1500 ] && { echo "vLLM not healthy after 1500 s"; tail -n 30 "$VLOG"; exit 1; }
+  sleep 5
+done
+echo "vLLM ready in $((SECONDS - t0)) s"
+
+for M in $MODES; do
+  for V in $VARIANTS; do
+    OUT="bench/results/llm/$SHORT.$V.$ASR.$M.json"
+    if [ -f "$OUT" ] && grep -q '"partial": false' "$OUT"; then echo "done: $OUT"; continue; fi
+    echo "--- [$(date -Is)] UNIT_SPLIT=$M variant=$V -> $OUT"
+    t1=$SECONDS
+    UNIT_SPLIT=$M timeout -k 60 2400 "$VENV/bin/python" bench/llm/bench.py --asr "$ASR" --variant "$V" \
+        --model "$MODEL" --no-think vllm --url "http://localhost:$PORT/v1" --max-tokens 1500 \
+        --suffix ".$M" > "bench/results/logs/clause_bench.$JOB.$V.$M.log" 2>&1 \
+      && { echo "    OK $((SECONDS - t1)) s"; tail -n 14 "bench/results/logs/clause_bench.$JOB.$V.$M.log" | sed 's/^/    | /'; } \
+      || { echo "    FAIL rc=$? after $((SECONDS - t1)) s"; tail -n 15 "bench/results/logs/clause_bench.$JOB.$V.$M.log" | sed 's/^/    | /'; }
+  done
+done
+echo "=== done $(date -Is)"
