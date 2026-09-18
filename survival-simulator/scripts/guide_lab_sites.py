@@ -83,8 +83,8 @@ def _static_parts(static_map: Mapping) -> tuple[float, float, list[Rect]]:
     return width, height, rects
 
 
-def enumerate_sites(static_map: Mapping, *, min_gap: float = 10.9,
-                    max_gap: float = 19.1, min_overlap: float = 20.0,
+def enumerate_sites(static_map: Mapping, *, min_gap: float = 10.1,
+                    max_gap: float = 19.9, min_overlap: float = 20.0,
                     bait_depth: float = 5.0,
                     require_second_access: bool = True,
                     allow_offset_approach: bool = True) -> list[dict]:
