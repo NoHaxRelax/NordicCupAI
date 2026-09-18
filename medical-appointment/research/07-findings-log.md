@@ -718,3 +718,32 @@ Second back-to-back soak through the public URL: score 0.812 (386 of 390, mean t
 Rehearsal (step 8), a third soak with faults injected on the pod. (a) vLLM stopped for 100 s and restarted: 67 requests found the server gone, the 20 s breaker then sent 153 requests straight to the Ollama 4B, 6 more were skipped for lack of time; every conversation in that window was answered with a well-formed reply (the 4B's binaries are visibly worse: "said no" on positives whose span was right), 0 failed conversations, vLLM back at 80 % memory in about 3 minutes. (b) api.py killed once: the supervisor restarted it in 15 s (ASR load 3.3 s, warm-ups), but the evaluator's remaining nine conversations all arrived in that window, failed instantly at the proxy and were skipped, so the run reports 9 failed conversations and 0.593. That is the cost of a crash during the attempt: the evaluator does not wait, it moves on, and every conversation that lands in the restart window is lost. The mitigations already in place are the ones that stop the crash from happening (guesses instead of exceptions in predict, the 50 s wall, the fallback); there is no supervisor fast enough to hide one. Counters after the rehearsal: 0 guessed, 0 timed out.
 
 Thinking mode on the 27B (job 29443507, in progress): 90 to 210 s per conversation on the H100 with the 6000-token budget; 9 of 39 conversations done at 15:00.
+
+### 54. Reasoning before answering, measured on the served 27B: no uplift, and it breaks 5 % of the questions (2026-09-18 15:25)
+
+Elias asked whether we let the model reason first. We do not: the served path sends
+`chat_template_kwargs {"enable_thinking": false}` and the model goes straight into the constrained
+JSON. That was a latency choice made in September, never measured on this model, so `bench.py` grew
+`--no-think think` (thinking ON, overriding the server-side default) and DTU job 29443507 ran the
+exact served design (Qwen3.8-27B, `units-fewshot`, clause-and units) with a 6000-token budget. It
+reached 15 of 39 conversations before the 2400 s timeout; both arms scored on those same 150
+questions:
+
+| | score | accuracy | mean tIoU |
+|---|---:|---:|---:|
+| thinking on | 0.7763 | 0.927 | 0.676 |
+| thinking off (served) | 0.8079 | 0.973 | 0.698 |
+
+Paired difference -0.0316 ± 0.0152 over the 15 conversations. The whole loss is one mechanism:
+**8 of 150 questions (5.3 %) spent the entire 6000-token budget on the reasoning channel and
+returned no JSON at all** (`finish_reason` length, JSONDecodeError on empty content), which counts
+as a wrong answer with no span. Mean completion was 1277 tokens against the 6 to 30 the answer
+itself needs. On the 142 questions where the model did finish, thinking is a wash: 0.8188 against
+0.8219, tIoU 0.712 against 0.717.
+
+Latency settles it independently: 149.8 s mean and 208.7 s worst per conversation on the H100
+against a 60 s budget, so thinking is unservable here at any quality. The general result that
+reasoning lifts hard benchmarks does not transfer: this task's answer is a lookup plus a boundary
+judgement, the binaries are already at 0.99, and the residual is the annotators' convention, which
+no amount of deliberation reveals (entries 43, 45). Scoped, as always, to this model and setup: a
+bigger model, or a short reasoning budget with a repair pass for the truncations, is untested.
