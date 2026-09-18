@@ -75,6 +75,26 @@ CONFIG = RevisitConfig(
     visible_misses_before_retirement=int(os.environ.get('DRONE_MISS_RETIRE', '3')),
     miss_rule=os.environ.get('DRONE_MISS_RULE', 'any'),
 )
+# Concealed validation runs: the pipeline runs identically over the whole sequence (tracking, camera,
+# everything warm) but annotations are only EMITTED inside these frame_index windows, e.g. '0:125' for
+# the first half or '125:100000' for the second. AP is near-additive over disjoint windows when
+# precision is high, so two half runs give the full score while each shows about half of it.
+# Empty (the default) emits everywhere. The log keeps the full answer either way.
+def _windows(text):
+    out = []
+    for part in (text or '').split(','):
+        if part.strip():
+            a, b = part.split(':'); out.append((int(a or 0), int(b or 10**9)))
+    return out
+
+
+ANSWER_WINDOWS = _windows(os.environ.get('DRONE_ANSWER_WINDOWS', ''))
+
+
+def _emit(frame_index):
+    return not ANSWER_WINDOWS or any(a <= frame_index < b for a, b in ANSWER_WINDOWS)
+
+
 # Several replays share one machine: cap the per-process thread pools so
 # concurrent processes do not thrash (0 keeps the library defaults).
 _THREADS = int(os.environ.get('DRONE_CV_THREADS', '0'))
@@ -201,21 +221,23 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
                 session.workflow = session.new_workflow(); session.failures = 0
         tracking_ms = (time.perf_counter()-tracking_started)*1000
         requested = answer.get('requested_view')
+        full_rows = answer['annotations']
+        emitted = _emit(req['frame_index'])
         response = DroneFlybyPredictResponseDto(
             request_id=req['request_id'], frame=req['frame'],
             annotations=[DroneFlybyPredictionDto(object_id=a['object_id'], bbox=list(a['bbox']),
-                                                 confidence=float(a['confidence'])) for a in answer['annotations']],
+                                                 confidence=float(a['confidence'])) for a in (full_rows if emitted else [])],
             requested_view=RequestedViewDto(**requested) if requested else None)
         total_ms = (time.perf_counter()-started)*1000
         session.record({'frame': req['frame'], 'frame_index': req['frame_index'], 'level': req['view']['resolution_level'],
                         'region': req['view']['source_region_xyxy'], 'detections': len(detections), 'detector_ran': ran,
-                        'annotations': len(response.annotations), 'requested_view': requested,
+                        'annotations': len(full_rows), 'emitted': emitted, 'requested_view': requested,
                         'detector_ms': round(detector_ms, 1), 'tracking_ms': round(tracking_ms, 1), 'total_ms': round(total_ms, 1),
                         'status': diagnostics.get('status'), 'timing': diagnostics.get('timing'),
                         'calibration_error': diagnostics.get('calibration_error'), 'events': diagnostics.get('events'),
                         'tracks': len(diagnostics.get('tracks') or []), 'raw_detections': raw_rows[:200],
-                        'response': [{'object_id': a.object_id, 'bbox': [round(v, 5) for v in a.bbox], 'confidence': round(float(a.confidence), 3)}
-                                     for a in response.annotations][:500]})
+                        'response': [{'object_id': a['object_id'], 'bbox': [round(float(v), 5) for v in a['bbox']], 'confidence': round(float(a['confidence']), 3)}
+                                     for a in full_rows][:500]})
         logger.info('frame %s L%s: %d detections, %d annotations, detector %.0f ms, tracking %.0f ms, total %.0f ms',
                     req['frame'], req['view']['resolution_level'], len(detections), len(response.annotations),
                     detector_ms, tracking_ms, total_ms)
