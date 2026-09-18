@@ -328,6 +328,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
+    double oracle_r = 600., age_infer = 0.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
@@ -675,6 +676,10 @@ public:
                 bool fresh = m.prev_pose && in_view(*m.prev_pose, m.prev_hear, m.prev_cone, m.prev_vis, p, 3.);
                 t = std::make_shared<TreeM>();
                 t->id = g.next_tree; t->p = p; t->first = time; t->last = time; t->fresh = fresh;
+                if (!fresh && P.age_infer > 0.) {   // nightsim: the tree's cell was in view dt ago without it => age <= dt
+                    CellV* cv = g.cells.get(cell_of(p));
+                    if (cv && cv->last < time && time - cv->last < P.age_infer) { t->first = 0.5 * (cv->last + time); t->fresh = true; }
+                }
                 g.add_tree(t); g.next_tree++;
             } else {
                 P2 err = sub(t->p, p);
@@ -1203,14 +1208,27 @@ public:
     // ------------------------------------------------------------ oracle (diagnostic upper bound only)
     std::vector<P2> oracle_p; std::vector<double> oracle_age;
     void apply_oracle() {
+        // 1: every live tree; 2: only trees within oracle_r of a group member; 3: ages of already-known trees only
+        int mode = (int)P.oracle_trees;
         groups.each([&](const int64_t&, GroupP& g) {
             if (!g->anchored) return;
+            std::vector<P2> mem;
+            g->agents.each([&](int64_t a) { mem.push_back(M(a).pose->p); });
             for (size_t k = 0; k < oracle_p.size(); k++) {
                 P2 p = oracle_p[k]; TreeP t; double td = 0;
+                if (mode == 2) {
+                    bool nearm = false;
+                    for (auto& q : mem) if (dist_lt(q, p, P.oracle_r)) { nearm = true; break; }
+                    if (!nearm) continue;
+                }
                 for (auto& c : g->near_trees(p, 12)) {
                     if (c->dead) continue;
                     double dd = dist(c->p, p);
                     if (!t || dd < td) { t = c; td = dd; }
+                }
+                if (mode == 3) {
+                    if (t) { t->first = time - oracle_age[k]; t->fresh = true; }
+                    continue;
                 }
                 if (!t) {
                     t = std::make_shared<TreeM>();
