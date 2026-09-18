@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from anomaly.experiment import iou, proposals, render
+from anomaly.experiment import average_precision, iou, proposals, render
 
 
 class ExperimentTests(unittest.TestCase):
@@ -29,6 +29,15 @@ class ExperimentTests(unittest.TestCase):
             self.assertEqual(len(box), 4)
             self.assertTrue(0 <= box[0] < box[2] <= 960)
             self.assertTrue(0 <= box[1] < box[3] <= 540)
+
+    def test_ap_matches_each_object_only_once(self):
+        views = [dict(id='v', truth=[dict(box=[0, 0, 10, 10])], predictions=[
+            (0.9, [0, 0, 10, 10]), (0.8, [0, 0, 10, 10]), (0.7, [20, 20, 30, 30])])]
+        result = average_precision(views, threshold=.5, budget=10)
+        self.assertEqual(result['true_positives'], 1)
+        self.assertEqual(result['false_positives'], 2)
+        self.assertEqual(result['false_negatives'], 0)
+        self.assertEqual(result['ap'], 1.0)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,426 @@
+{
+  "method": "binary object-vs-background CNN reranking anomaly proposals",
+  "split": "alternating sorted object identities; all appearances of an identity remain together",
+  "train_object_ids": [
+    "condor",
+    "helicopter",
+    "jet_plane",
+    "large_tower",
+    "medium_plane",
+    "small_launcher",
+    "small_tower",
+    "ta-ta"
+  ],
+  "heldout_object_ids": [
+    "hangar",
+    "jammer",
+    "large_launcher",
+    "medium_launcher",
+    "mine_roller",
+    "small_plane",
+    "spacecraft",
+    "tank"
+  ],
+  "training_crops": {
+    "positive": 1314,
+    "negative": 2190
+  },
+  "metrics": {
+    "L0/budget25/IoU0.25": {
+      "all_objects": {
+        "ap": 4.429973198662148e-05,
+        "true_positives": 2,
+        "false_positives": 623,
+        "false_negatives": 257,
+        "ground_truth": 259,
+        "predictions": 625,
+        "precision": 0.0032,
+        "recall": 0.007722007722007722
+      },
+      "heldout_objects": {
+        "ap": 8.859946397324296e-05,
+        "true_positives": 2,
+        "false_positives": 623,
+        "false_negatives": 111,
+        "ground_truth": 113,
+        "predictions": 625,
+        "precision": 0.0032,
+        "recall": 0.017699115044247787
+      }
+    },
+    "L0/budget25/IoU0.50": {
+      "all_objects": {
+        "ap": 0.0,
+        "true_positives": 0,
+        "false_positives": 625,
+        "false_negatives": 259,
+        "ground_truth": 259,
+        "predictions": 625,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "heldout_objects": {
+        "ap": 0.0,
+        "true_positives": 0,
+        "false_positives": 625,
+        "false_negatives": 113,
+        "ground_truth": 113,
+        "predictions": 625,
+        "precision": 0.0,
+        "recall": 0.0
+      }
+    },
+    "L0/budget100/IoU0.25": {
+      "all_objects": {
+        "ap": 7.96165368674649e-05,
+        "true_positives": 5,
+        "false_positives": 2495,
+        "false_negatives": 254,
+        "ground_truth": 259,
+        "predictions": 2500,
+        "precision": 0.002,
+        "recall": 0.019305019305019305
+      },
+      "heldout_objects": {
+        "ap": 0.00018557950827194388,
+        "true_positives": 5,
+        "false_positives": 2495,
+        "false_negatives": 108,
+        "ground_truth": 113,
+        "predictions": 2500,
+        "precision": 0.002,
+        "recall": 0.04424778761061947
+      }
+    },
+    "L0/budget100/IoU0.50": {
+      "all_objects": {
+        "ap": 0.0,
+        "true_positives": 0,
+        "false_positives": 2500,
+        "false_negatives": 259,
+        "ground_truth": 259,
+        "predictions": 2500,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "heldout_objects": {
+        "ap": 0.0,
+        "true_positives": 0,
+        "false_positives": 2500,
+        "false_negatives": 113,
+        "ground_truth": 113,
+        "predictions": 2500,
+        "precision": 0.0,
+        "recall": 0.0
+      }
+    },
+    "L0/budget300/IoU0.25": {
+      "all_objects": {
+        "ap": 8.765196776075037e-05,
+        "true_positives": 6,
+        "false_positives": 7494,
+        "false_negatives": 253,
+        "ground_truth": 259,
+        "predictions": 7500,
+        "precision": 0.0008,
+        "recall": 0.023166023166023165
+      },
+      "heldout_objects": {
+        "ap": 0.00019361493916522936,
+        "true_positives": 6,
+        "false_positives": 7494,
+        "false_negatives": 107,
+        "ground_truth": 113,
+        "predictions": 7500,
+        "precision": 0.0008,
+        "recall": 0.05309734513274336
+      }
+    },
+    "L0/budget300/IoU0.50": {
+      "all_objects": {
+        "ap": 0.0,
+        "true_positives": 0,
+        "false_positives": 7500,
+        "false_negatives": 259,
+        "ground_truth": 259,
+        "predictions": 7500,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "heldout_objects": {
+        "ap": 0.0,
+        "true_positives": 0,
+        "false_positives": 7500,
+        "false_negatives": 113,
+        "ground_truth": 113,
+        "predictions": 7500,
+        "precision": 0.0,
+        "recall": 0.0
+      }
+    },
+    "L1/budget25/IoU0.25": {
+      "all_objects": {
+        "ap": 0.00787600502864546,
+        "true_positives": 116,
+        "false_positives": 6359,
+        "false_negatives": 689,
+        "ground_truth": 805,
+        "predictions": 6475,
+        "precision": 0.017915057915057916,
+        "recall": 0.14409937888198757
+      },
+      "heldout_objects": {
+        "ap": 0.0018051407767226677,
+        "true_positives": 24,
+        "false_positives": 2801,
+        "false_negatives": 127,
+        "ground_truth": 151,
+        "predictions": 2825,
+        "precision": 0.008495575221238939,
+        "recall": 0.15894039735099338
+      }
+    },
+    "L1/budget25/IoU0.50": {
+      "all_objects": {
+        "ap": 0.0020136776414106166,
+        "true_positives": 59,
+        "false_positives": 6416,
+        "false_negatives": 746,
+        "ground_truth": 805,
+        "predictions": 6475,
+        "precision": 0.009111969111969112,
+        "recall": 0.07329192546583851
+      },
+      "heldout_objects": {
+        "ap": 0.00027420621926541196,
+        "true_positives": 10,
+        "false_positives": 2815,
+        "false_negatives": 141,
+        "ground_truth": 151,
+        "predictions": 2825,
+        "precision": 0.0035398230088495575,
+        "recall": 0.06622516556291391
+      }
+    },
+    "L1/budget100/IoU0.25": {
+      "all_objects": {
+        "ap": 0.00955246543031522,
+        "true_positives": 200,
+        "false_positives": 25700,
+        "false_negatives": 605,
+        "ground_truth": 805,
+        "predictions": 25900,
+        "precision": 0.007722007722007722,
+        "recall": 0.2484472049689441
+      },
+      "heldout_objects": {
+        "ap": 0.0024023809239818047,
+        "true_positives": 38,
+        "false_positives": 11262,
+        "false_negatives": 113,
+        "ground_truth": 151,
+        "predictions": 11300,
+        "precision": 0.0033628318584070795,
+        "recall": 0.25165562913907286
+      }
+    },
+    "L1/budget100/IoU0.50": {
+      "all_objects": {
+        "ap": 0.0032323121793867145,
+        "true_positives": 139,
+        "false_positives": 25761,
+        "false_negatives": 666,
+        "ground_truth": 805,
+        "predictions": 25900,
+        "precision": 0.005366795366795366,
+        "recall": 0.17267080745341615
+      },
+      "heldout_objects": {
+        "ap": 0.0007651658428215164,
+        "true_positives": 23,
+        "false_positives": 11277,
+        "false_negatives": 128,
+        "ground_truth": 151,
+        "predictions": 11300,
+        "precision": 0.0020353982300884955,
+        "recall": 0.152317880794702
+      }
+    },
+    "L1/budget300/IoU0.25": {
+      "all_objects": {
+        "ap": 0.009784778389343995,
+        "true_positives": 233,
+        "false_positives": 77467,
+        "false_negatives": 572,
+        "ground_truth": 805,
+        "predictions": 77700,
+        "precision": 0.0029987129987129988,
+        "recall": 0.2894409937888199
+      },
+      "heldout_objects": {
+        "ap": 0.0027658404657877693,
+        "true_positives": 59,
+        "false_positives": 33717,
+        "false_negatives": 92,
+        "ground_truth": 151,
+        "predictions": 33776,
+        "precision": 0.0017468024632875413,
+        "recall": 0.39072847682119205
+      }
+    },
+    "L1/budget300/IoU0.50": {
+      "all_objects": {
+        "ap": 0.003232298407153849,
+        "true_positives": 139,
+        "false_positives": 77561,
+        "false_negatives": 666,
+        "ground_truth": 805,
+        "predictions": 77700,
+        "precision": 0.001788931788931789,
+        "recall": 0.17267080745341615
+      },
+      "heldout_objects": {
+        "ap": 0.0007651599765702048,
+        "true_positives": 23,
+        "false_positives": 33830,
+        "false_negatives": 128,
+        "ground_truth": 151,
+        "predictions": 33853,
+        "precision": 0.000679408028830532,
+        "recall": 0.152317880794702
+      }
+    },
+    "L2/budget25/IoU0.25": {
+      "all_objects": {
+        "ap": 0.015275170919462972,
+        "true_positives": 92,
+        "false_positives": 6383,
+        "false_negatives": 220,
+        "ground_truth": 312,
+        "predictions": 6475,
+        "precision": 0.014208494208494208,
+        "recall": 0.2948717948717949
+      },
+      "heldout_objects": {
+        "ap": 0.007947873431313894,
+        "true_positives": 40,
+        "false_positives": 2785,
+        "false_negatives": 73,
+        "ground_truth": 113,
+        "predictions": 2825,
+        "precision": 0.01415929203539823,
+        "recall": 0.35398230088495575
+      }
+    },
+    "L2/budget25/IoU0.50": {
+      "all_objects": {
+        "ap": 0.0043717163041415525,
+        "true_positives": 72,
+        "false_positives": 6403,
+        "false_negatives": 240,
+        "ground_truth": 312,
+        "predictions": 6475,
+        "precision": 0.011119691119691119,
+        "recall": 0.23076923076923078
+      },
+      "heldout_objects": {
+        "ap": 0.00261014694625356,
+        "true_positives": 27,
+        "false_positives": 2798,
+        "false_negatives": 86,
+        "ground_truth": 113,
+        "predictions": 2825,
+        "precision": 0.009557522123893806,
+        "recall": 0.23893805309734514
+      }
+    },
+    "L2/budget100/IoU0.25": {
+      "all_objects": {
+        "ap": 0.01793505849263304,
+        "true_positives": 175,
+        "false_positives": 25725,
+        "false_negatives": 137,
+        "ground_truth": 312,
+        "predictions": 25900,
+        "precision": 0.006756756756756757,
+        "recall": 0.5608974358974359
+      },
+      "heldout_objects": {
+        "ap": 0.012507880700012741,
+        "true_positives": 86,
+        "false_positives": 11214,
+        "false_negatives": 27,
+        "ground_truth": 113,
+        "predictions": 11300,
+        "precision": 0.007610619469026548,
+        "recall": 0.7610619469026548
+      }
+    },
+    "L2/budget100/IoU0.50": {
+      "all_objects": {
+        "ap": 0.006250770809925298,
+        "true_positives": 140,
+        "false_positives": 25760,
+        "false_negatives": 172,
+        "ground_truth": 312,
+        "predictions": 25900,
+        "precision": 0.005405405405405406,
+        "recall": 0.44871794871794873
+      },
+      "heldout_objects": {
+        "ap": 0.00543725917033149,
+        "true_positives": 65,
+        "false_positives": 11235,
+        "false_negatives": 48,
+        "ground_truth": 113,
+        "predictions": 11300,
+        "precision": 0.005752212389380531,
+        "recall": 0.5752212389380531
+      }
+    },
+    "L2/budget300/IoU0.25": {
+      "all_objects": {
+        "ap": 0.018461126234763415,
+        "true_positives": 199,
+        "false_positives": 77501,
+        "false_negatives": 113,
+        "ground_truth": 312,
+        "predictions": 77700,
+        "precision": 0.0025611325611325612,
+        "recall": 0.6378205128205128
+      },
+      "heldout_objects": {
+        "ap": 0.013595936612307144,
+        "true_positives": 103,
+        "false_positives": 33759,
+        "false_negatives": 10,
+        "ground_truth": 113,
+        "predictions": 33862,
+        "precision": 0.0030417577225208196,
+        "recall": 0.911504424778761
+      }
+    },
+    "L2/budget300/IoU0.50": {
+      "all_objects": {
+        "ap": 0.00658673348546285,
+        "true_positives": 160,
+        "false_positives": 77540,
+        "false_negatives": 152,
+        "ground_truth": 312,
+        "predictions": 77700,
+        "precision": 0.002059202059202059,
+        "recall": 0.5128205128205128
+      },
+      "heldout_objects": {
+        "ap": 0.006263845581825908,
+        "true_positives": 84,
+        "false_positives": 33803,
+        "false_negatives": 29,
+        "ground_truth": 113,
+        "predictions": 33887,
+        "precision": 0.0024788266887006815,
+        "recall": 0.7433628318584071
+      }
+    }
+  }
+}
