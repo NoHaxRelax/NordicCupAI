@@ -42,12 +42,14 @@ def fixed_frame(bait, edges):
 
 
 class RoutePlanner:
-    def __init__(self, edges, clearance=PREDATOR_CLEARANCE):
+    def __init__(self, edges, clearance=PREDATOR_CLEARANCE, exclusion_radius=0.):
         self.clearance = clearance
         # Sweeping a square-capped buffer around each wall matches the native
         # rectangular collision bounds conservatively, including wall corners.
         walls = unary_union([LineString(e).buffer(clearance, cap_style=3, join_style=2)
                              for e in edges if math.dist(*e) > 1e-8])
+        if exclusion_radius:
+            walls = unary_union([walls, Point(0., 0.).buffer(exclusion_radius)])
         self.blocked = prep(walls)
         points = [p for e in edges for p in e]
         self.bounds = (min(p[0] for p in points), min(p[1] for p in points),
@@ -134,8 +136,38 @@ def navigation_plan(bait, edges, target, memory):
     to_fixed,to_local = fixed_frame(bait,edges)
     start,goal = to_fixed((0.,0.)),to_fixed(target)
     if '_route_planner' not in memory:
-        memory['_route_planner'] = RoutePlanner([[to_fixed(a),to_fixed(b)] for a,b in edges])
+        memory['_route_planner'] = RoutePlanner([[to_fixed(a),to_fixed(b)] for a,b in edges],
+                                               exclusion_radius=memory.get('_trap_exclusion_radius', 0.))
     planner=memory['_route_planner']
+    if not planner.free(start):
+        # The local survival controller uses an agent-width corridor. Native
+        # deflection can also leave us near a wall. Rejoin an open predator lane
+        # instead of asking a radius-11 planner to start inside its own buffer.
+        if '_lane_rejoin_planner' not in memory:
+            memory['_lane_rejoin_planner'] = RoutePlanner(
+                [[to_fixed(a), to_fixed(b)] for a, b in edges], clearance=5.01,
+                exclusion_radius=memory.get('_trap_exclusion_radius', 0.))
+        agent_planner = memory['_lane_rejoin_planner']
+        candidates = []
+        for radius in (8., 12., 18., 25., 35.):
+            for i in range(24):
+                angle = i*math.tau/24
+                point = (start[0]+radius*math.cos(angle), start[1]+radius*math.sin(angle))
+                if planner.free(point) and agent_planner.clear(start, point):
+                    candidates.append((radius+math.dist(point, goal), point))
+        for _, point in sorted(candidates)[:8]:
+            rest = planner.plan(point, goal)
+            if not rest:
+                continue
+            waypoint = to_local(point)
+            memory['_route'] = [point]+rest
+            memory['_route_goal'] = goal
+            memory['_route_replans'] = memory.get('_route_replans', 0)+1
+            return dict(dist=math.dist(start, point)+sum(math.dist(a,b) for a,b in zip([point]+rest,rest)),
+                        dist_to_point=math.hypot(*waypoint),dir=math.atan2(waypoint[1],waypoint[0]),
+                        waypoints=[to_local(p) for p in [point]+rest],clearance=5.01,
+                        mode='rejoin_predator_lane',replans=memory['_route_replans'])
+        return None
     route=memory.get('_route',[])
     target_changed=math.dist(goal,memory.get('_route_goal',goal))>0.01
     # Keep an existing turn until actually reached; shortcut only along a
