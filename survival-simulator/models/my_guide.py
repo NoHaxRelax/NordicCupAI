@@ -118,7 +118,7 @@ def _guide(bait, edges, agent, context, memory):
 
     # Look at the predator
     speed = agent['sprint_speed'] if predator['distance'] < 100 else agent['speed']
-    # Also put lower speed if predator is more than 120 away e.g. we can hyperparameterize this.
+    # TODO Also put lower speed if predator is more than 120 away e.g. we can hyperparameterize this.
     memory['debug'] = {
         'predator_distance': round(predator['distance'], 2),
         'handoff_distance': round(distance_to_target, 2),
