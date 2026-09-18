@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--scene', default='helsinki', help='Scene under src/ to replay')
     parser.add_argument('--overview-between-sides', default='1')
     parser.add_argument('--vertical-fraction', default='0')
+    parser.add_argument('--camera-mode', default='l1')
     parser.add_argument('--device', default='cpu')
     parser.add_argument('--imgsz', default='960')
     parser.add_argument('--conf', default='0.25')
@@ -47,6 +48,7 @@ def main():
                DRONE_EXTENT_POLICY=args.extent_policy, DRONE_DETECT_EVERY=args.detect_every, DRONE_LOG_DIR=args.log_dir)
     env['DRONE_OVERVIEW_BETWEEN_SIDES'] = args.overview_between_sides
     env['DRONE_VERTICAL_FRACTION'] = args.vertical_fraction
+    env['DRONE_CAMERA_MODE'] = args.camera_mode
     if args.weights:
         env['DRONE_WEIGHTS'] = args.weights
     if args.bundle:

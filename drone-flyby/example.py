@@ -18,6 +18,7 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_BIRTH_CONFIDENCE, DRONE_UPDATE_CONFIDENCE                           [0.6, 0.4]
   DRONE_VERTICAL_FRACTION   band of the L1 crops, 0 = top                   [0]
   DRONE_OVERVIEW_BETWEEN_SIDES  L0 between the L1 sides (0 = L1 centre)     [1]
+  DRONE_CAMERA_MODE         l1 (upper L1 sweep) | l2_top (native L2 sweep of the top row) [l1]
   DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
   DRONE_LOG_DIR             per-sequence diagnostics JSONL                  [unset]
 """
@@ -51,6 +52,7 @@ SETTINGS = {
     'vertical_fraction': float(os.environ.get('DRONE_VERTICAL_FRACTION', '0')),
     'overview_between_sides': _flag('DRONE_OVERVIEW_BETWEEN_SIDES', True),
     'observe_motion': _flag('DRONE_OBSERVE_MOTION', True),
+    'camera_mode': os.environ.get('DRONE_CAMERA_MODE', 'l1'),
     'log_dir': os.environ.get('DRONE_LOG_DIR') or None,
     'max_sessions': 4,
 }
@@ -84,7 +86,8 @@ class Session:
     def new_workflow():
         return DroneTrackingWorkflow(CONFIG, observe_motion=SETTINGS['observe_motion'],
                                      vertical_fraction=SETTINGS['vertical_fraction'],
-                                     overview_between_sides=SETTINGS['overview_between_sides'])
+                                     overview_between_sides=SETTINGS['overview_between_sides'],
+                                     camera_mode=SETTINGS['camera_mode'])
 
     def record(self, row):
         if self.log:

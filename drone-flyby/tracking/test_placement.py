@@ -170,5 +170,35 @@ class TrackerPlacementTests(unittest.TestCase):
         self.assertIsNotNone(restored.prior)
 
 
+class CameraModeTests(unittest.TestCase):
+    def test_l2_top_sweep_is_legal_and_covers_the_row(self):
+        import sys
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[2]
+        for candidate in (root/'artifacts/drone-source-2026-09-17', Path(__file__).resolve().parents[1]):
+            if (candidate/'local_evaluator.py').exists():
+                sys.path.insert(0, str(candidate)); break
+        from local_evaluator import Camera
+        from .workflow import LevelOneSweep
+        camera = Camera(); sweep = LevelOneSweep(mode='l2_top')
+        levels, centres = [], []
+        for frame in range(40):
+            request = {'original_width': 3840, 'original_height': 2160,
+                       'view': {'resolution_level': camera.resolution_level, 'center_x': camera.center_x, 'center_y': camera.center_y},
+                       'camera_constraints': camera.constraints()}
+            requested = sweep.next_view(request, overview=frame < 2)
+            self.assertIsNotNone(requested)
+            camera.apply(**requested)  # raises CameraRejection on any illegal move
+            levels.append(camera.resolution_level); centres.append((camera.center_x, camera.center_y))
+        self.assertEqual(levels[:2], [0, 0]); self.assertEqual(levels[2], 1)
+        self.assertTrue(all(level == 2 for level in levels[3:]))
+        xs = sorted({x for (x, y), level in zip(centres, levels) if level == 2})
+        self.assertEqual(xs[0], 480); self.assertEqual(xs[-1], 3360); self.assertGreaterEqual(len(xs), 7)
+        self.assertTrue(all(y == 270 for (x, y), level in zip(centres, levels) if level == 2))
+        hops = [abs(a[0]-b[0]) for a, b in zip(centres[3:], centres[4:])]
+        self.assertTrue(all(h <= 551 for h in hops))
+        self.assertEqual(max(hops), 480)
+
+
 if __name__ == '__main__':
     unittest.main()

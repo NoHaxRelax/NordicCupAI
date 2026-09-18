@@ -14,13 +14,32 @@ from .revisit import Detection, RevisitConfig, RevisitTracker, frame_rows
 
 
 class LevelOneSweep:
-    """Upper sweep with center crops or full overviews between the two sides."""
-    def __init__(self, vertical_fraction=0., *, overview_between_sides=False):
+    """Upper sweep with center crops or full overviews between the two sides.
+
+    mode 'l1': L1 left, centre (or L0 overview), right, centre. mode 'l2_top':
+    native L2 crops bouncing along the upper row; hops stay within the L2
+    move limit, so every column is delivered at native resolution about
+    every six frames. Level changes step one level at a time.
+    """
+    def __init__(self, vertical_fraction=0., *, overview_between_sides=False, mode='l1'):
         if not 0 <= vertical_fraction <= 1:
             raise ValueError('Vertical fraction must be in [0,1]')
+        if mode not in ('l1', 'l2_top'):
+            raise ValueError("Camera mode must be 'l1' or 'l2_top'")
         self.vertical_fraction = vertical_fraction
         self.overview_between_sides = overview_between_sides
+        self.mode = mode
         self.waypoint = 0
+
+    def l2_waypoints(self, request):
+        width, height = request['original_width'], request['original_height']
+        limit = 550.  # inside the L2 move limit of half its view diagonal (551 px)
+        low, high = 480., width-480.
+        count = int(np.ceil((high-low)/limit))+1
+        xs = np.linspace(low, high, count)
+        y = 270.+self.vertical_fraction*(height-540.)
+        order = list(range(count))+list(range(count-2, 0, -1))  # bounce
+        return xs, y, order
 
     def next_view(self, request, *, focus_box=None, overview=False):
         constraints = request['camera_constraints']; view = request['view']
@@ -32,6 +51,14 @@ class LevelOneSweep:
         elif focus_box is not None and 2 in bounds:
             from .motion import box_array
             box = box_array(focus_box); level, target = 2, (box[:2]+box[2:])/2
+        elif self.mode == 'l2_top' and (2 in bounds or 1 in bounds):
+            xs, y, order = self.l2_waypoints(request)
+            level, target = 2, np.array([xs[order[self.waypoint % len(order)]], y])
+            if view['resolution_level'] == 2 and np.linalg.norm(current-target) < 1:
+                self.waypoint = (self.waypoint+1) % len(order)
+                target = np.array([xs[order[self.waypoint]], y])
+            if level not in bounds:
+                level = 1  # one level at a time: approach through L1
         elif 1 in bounds:
             level = 1; b = bounds[level]
             xs = [b['minimum_center_x'], (b['minimum_center_x']+b['maximum_center_x'])/2,
@@ -150,11 +177,11 @@ class DroneTrackingWorkflow:
     detections refresh boxes automatically; crop absence never removes a track.
     No class-conditioned shape model is enabled.
     """
-    def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False):
+    def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False, camera_mode='l1'):
         self.config = config or RevisitConfig()
         self.prior = self.config.load_prior()
         self.observe_motion = observe_motion
-        self.camera = LevelOneSweep(vertical_fraction, overview_between_sides=overview_between_sides)
+        self.camera = LevelOneSweep(vertical_fraction, overview_between_sides=overview_between_sides, mode=camera_mode)
         self.sequence_id = None
         self.tracker = None
         self.warmup = None
@@ -239,7 +266,7 @@ class DroneTrackingWorkflow:
             raise ValueError('Save the workflow after calibration completes')
         return {'version': 1, 'tracker': self.tracker.to_dict(), 'config': asdict(self.config),
                 'observe_motion': self.observe_motion, 'camera_waypoint': self.camera.waypoint,
-                'overview_between_sides': self.camera.overview_between_sides,
+                'overview_between_sides': self.camera.overview_between_sides, 'camera_mode': self.camera.mode,
                 'vertical_fraction': self.camera.vertical_fraction, 'last_frame': self.last_frame,
                 'motion_tick': self.motion_tick, 'last_request_id': self.last_request_id,
                 'last_response': self.last_response}
@@ -250,7 +277,8 @@ class DroneTrackingWorkflow:
             raise ValueError('Unsupported workflow state version')
         result = cls(RevisitConfig(**data['config']), observe_motion=data['observe_motion'],
                      vertical_fraction=data['vertical_fraction'],
-                     overview_between_sides=data.get('overview_between_sides', False))
+                     overview_between_sides=data.get('overview_between_sides', False),
+                     camera_mode=data.get('camera_mode', 'l1'))
         result.tracker = RevisitTracker.from_dict(data['tracker']); result.sequence_id = result.tracker.sequence_id
         result.camera.waypoint = data['camera_waypoint']; result.last_frame = data['last_frame']
         result.motion_tick = data['motion_tick']; result.last_request_id = data['last_request_id']
