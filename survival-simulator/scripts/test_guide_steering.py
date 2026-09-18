@@ -58,3 +58,23 @@ class SteeringTests(unittest.TestCase):
         action = dict(move_distance=10., move_direction=1., turn_angle=0.)
         self.assertEqual(prioritize(action, (300.,0.), EDGES,
                                    dict(observations=[]), {}), action)
+
+    def test_bait_held_predator_allows_close_final_approach(self):
+        memory={}
+        # Guide at 0, bait at 70, held predator at 65: walking to 20
+        # brings predator clearance below 48 while bait remains much closer.
+        agent=dict(observations=[dict(type='Predator',distance=65.,angle=0.,rel_dir=0.)],
+                   speed=10.,sprint_speed=20.,biome='grassland',energy=500.,max_energy=500.)
+        result=prioritize(dict(move_distance=20.,move_direction=0.,turn_angle=0.),
+                          (70.,0.),EDGES,agent,memory)
+        self.assertAlmostEqual(result['move_distance']*math.cos(result['move_direction']),20.)
+        self.assertTrue(memory['debug']['steering']['safe'])
+        self.assertEqual(memory['debug']['steering']['relaxed_predators'],1)
+
+    def test_close_bait_does_not_remove_incoming_predator_avoidance(self):
+        memory={}
+        agent=dict(observations=[dict(type='Predator',distance=25.,angle=math.pi,rel_dir=0.)],
+                   speed=10.,sprint_speed=20.,biome='grassland',energy=500.,max_energy=500.)
+        prioritize(dict(move_distance=20.,move_direction=0.,turn_angle=0.),
+                   (70.,0.),EDGES,agent,memory)
+        self.assertEqual(memory['debug']['steering']['relaxed_predators'],0)

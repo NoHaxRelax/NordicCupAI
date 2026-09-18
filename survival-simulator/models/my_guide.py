@@ -25,11 +25,12 @@ You may call breakpoint() here, or use the runner's --break-at TICK option.
 import math
 from models.guide_pathfinding import fixed_frame, navigation_plan
 from models.predator_following import predator_is_not_following
-from models.guide_steering import prioritize
+from models.guide_steering import prioritize, HEARING_TARGET
 
 
 LOST_WAIT_TICKS = 5  # Hold for 0.5 seconds before returning to last contact.
 REACQUIRE_ARRIVAL_DISTANCE = 12.0
+DELIVERY_ARRIVAL_DISTANCE = 1.0
 
 
 def _walking_action(plan, agent, turn):
@@ -79,8 +80,12 @@ def _return_to_predator(bait, edges, agent, memory, to_local, turn):
     return _walking_action(plan, agent, turn)
 
 def guide(bait, edges, agent, context, memory):
-    """Survival first, predator contact second, destination progress third."""
+    """Guide safely en route; stand at delivery while the predator follows."""
     action = _guide(bait, edges, agent, context, memory)
+    if isinstance(memory.get('debug'), dict) and memory['debug'].get('mode') == 'hold_at_delivery':
+        # Intentional handoff: survival steering must not pull us away when
+        # the following predator approaches. Being caught here is allowed.
+        return action
     return prioritize(action, bait, edges, agent, memory)
 
 
@@ -108,6 +113,15 @@ def _guide(bait, edges, agent, context, memory):
         memory.pop('_recovery_navigation', None)
     memory['_lost_ticks'] = 0
 
+    if (math.hypot(*bait) <= HEARING_TARGET
+            or math.hypot(*context['handoff']) <= DELIVERY_ARRIVAL_DISTANCE):
+        memory['debug'] = dict(mode='hold_at_delivery',
+                               handoff_distance=math.hypot(*context['handoff']),
+                               bait_distance=math.hypot(*bait),
+                               predator_distance=predator['distance'],
+                               following_check=memory['_following_debug'])
+        return dict(move_distance=0., move_direction=0., turn_angle=turn)
+
     # A* routes around edges to the handoff, with predator radius + margin.
     # The cached plan survives translation/rotation of the local input frame.
     guide_plan = navigation_plan(bait, edges, context['handoff'], memory)
@@ -118,7 +132,7 @@ def _guide(bait, edges, agent, context, memory):
 
     # Look at the predator
     speed = agent['sprint_speed'] if predator['distance'] < 100 else agent['speed']
-    # TODO Also put lower speed if predator is more than 120 away e.g. we can hyperparameterize this.
+    # TODO Also don't move if predator is more than 120 away e.g. we can hyperparameterize this.
     memory['debug'] = {
         'predator_distance': round(predator['distance'], 2),
         'handoff_distance': round(distance_to_target, 2),

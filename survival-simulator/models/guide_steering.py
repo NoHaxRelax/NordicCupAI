@@ -10,6 +10,9 @@ HEARING_TARGET = 55.0  # Five units inside the native 60-unit hearing circle.
 VISION_TARGET = 235.0
 HALF_CONE_TARGET = math.radians(25)  # Native half angle is 30 degrees.
 SAFE_DISTANCE = 48.0  # 15 contact + 15 stale step + 15 next step + 3 margin.
+BAIT_BUFFER = 5.0
+CONTACT_BUFFER = 18.0  # Native contact radius 15 plus three units.
+TRAPPED_RADIUS = 40.0
 TERRAIN = {'forest': 1., 'grassland': 1., 'desert': .8, 'swamp': .5, 'river': .3}
 
 
@@ -20,6 +23,12 @@ def prioritize(action, bait, edges, agent, memory):
     target = min(predators, key=lambda p: p['distance'])
     positions = [(p['distance'] * math.cos(p['angle']),
                   p['distance'] * math.sin(p['angle'])) for p in predators]
+    # Observation-only approximation of the held group. Relax clearance only
+    # while the bait remains closer by a buffer; never permit physical contact
+    # along the proposed move. Incoming predators retain normal clearance.
+    required = [min(SAFE_DISTANCE, max(CONTACT_BUFFER, math.dist(other, bait)+BAIT_BUFFER))
+                if math.dist(other, bait) <= TRAPPED_RADIUS else SAFE_DISTANCE
+                for other in positions]
     p = positions[predators.index(target)]
     # rel_dir is the bearing FROM the predator TO us minus its heading.
     heading = (math.atan2(-p[1], -p[0]) - target['rel_dir']
@@ -55,15 +64,15 @@ def prioritize(action, bait, edges, agent, memory):
             continue  # Avoid native collision deflections invalidating our choice.
         distances = [math.dist(q, other) for other in positions]
         path = LineString([(0., 0.), q]) if length else Point(0., 0.)
-        no_approach = all(path.distance(Point(other)) >= min(math.hypot(*other), SAFE_DISTANCE) - 1e-6
-                          for other in positions)
+        no_approach = all(path.distance(Point(other)) >= min(math.hypot(*other), margin) - 1e-6
+                          for other, margin in zip(positions, required))
         clearance = min(distances)
         turn = math.atan2(p[1] - q[1], p[0] - q[0])
         cost = (min(length, agent['speed']) * .05
                 + max(0., length - agent['speed']) * .5
                 + min(math.pi, abs(turn)) / math.tau)
         affordable = cost + 1. < energy
-        safe = clearance >= SAFE_DISTANCE and no_approach and affordable
+        safe = all(d >= margin for d, margin in zip(distances, required)) and no_approach and affordable
         distance = math.dist(p, q)
         hearing_error = max(0., distance - HEARING_TARGET)
         vision_error = math.inf
@@ -74,11 +83,17 @@ def prioritize(action, bait, edges, agent, memory):
         contact_error = min(hearing_error, vision_error)
         # Lexicographic priorities: safe first, contact second, route third.
         # If every option is unsafe, maximize separation before other concerns.
+        # On the final approach, take a safe clear route movement rather than
+        # hovering to maintain contact with an already bait-held predator.
+        final_approach = math.hypot(*bait) <= HEARING_TARGET + agent['sprint_speed']
+        progress = math.dist(q, desired)
         rank = (not affordable, not safe, -clearance if not safe else 0.,
-                contact_error, math.dist(q, desired), cost)
+                progress if final_approach else contact_error,
+                contact_error if final_approach else progress, cost)
         if best is None or rank < best[0]:
             best = (rank, dict(move_distance=length, move_direction=angle, turn_angle=turn),
                     dict(safe=safe, clearance=round(clearance, 2),
+                         relaxed_predators=sum(m < SAFE_DISTANCE for m in required),
                          contact_error=round(contact_error, 2),
                          detectable=contact_error == 0.))
     debug = memory.get('debug')
