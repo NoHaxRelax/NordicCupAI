@@ -358,6 +358,12 @@ _FEWSHOT_NOTE = ('\nEXAMPLES below show, for other consultations, the exact stre
                  'utterances too; otherwise it is the single utterance that states the fact.')
 
 
+# For clause-level units (model.py UNIT_SPLIT): of the 12 positives that lost tIoU when the 27B moved
+# from sentence to clause-and units, 9 cited fewer pieces than the gold covers (findings log entry 48).
+_CLAUSE_NOTE = ('\nA long sentence may appear in the list as several consecutive pieces (its clauses). When the\n'
+                'evidence is the whole sentence, cite every piece of it; when it is one clause, cite only that piece.')
+
+
 def _qtokens(q: str) -> set:
     return {t for t in _NONWORD.split(q.lower()) if t and t not in _STOP}
 
@@ -376,9 +382,9 @@ class FewShot:
     copy on a pod does not need the gitignored transcripts), else built from
     data/question_train.csv and transcripts/<stem>.<asr>.json."""
 
-    def __init__(self, base: str, k: int = 12, k_neg: int = 2):
+    def __init__(self, base: str, k: int = 12, k_neg: int = 2, note_extra: str = ''):
         assert base in ('units', 'words')
-        self.base, self.k, self.k_neg = base, k, k_neg
+        self.base, self.k, self.k_neg, self.note_extra = base, k, k_neg, note_extra
         self.exclude: Optional[str] = None
         self.asr = 'large-v3-turbo'
         self._pool: Optional[List[dict]] = None
@@ -440,7 +446,7 @@ class FewShot:
         user = f'TRANSCRIPT:\n{render_transcript(units_)}\n\n{block}\n\n{units_question(question)}'
         if self.base == 'words':
             return Prompt(WORDS_SYSTEM + _FEWSHOT_NOTE, user, WORDS_SCHEMA, _words_post)
-        return Prompt(SYSTEM + _FEWSHOT_NOTE, user, SCHEMA,
+        return Prompt(SYSTEM + _FEWSHOT_NOTE + self.note_extra, user, SCHEMA,
                       lambda out, u, w, d: _units_post(out, u, w, d, offsets=True))
 
 
@@ -644,6 +650,7 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units-nooffset': units_nooffset,
     'words': words,
     'units-fewshot': FewShot('units'),
+    'units-fewshot-cl': FewShot('units', note_extra=_CLAUSE_NOTE),   # for UNIT_SPLIT=clause-*: explains the pieces
     'words-fewshot': FewShot('words'),
     'units-joint': Joint(),
     'units-joint-demo': JointDemo(2),
