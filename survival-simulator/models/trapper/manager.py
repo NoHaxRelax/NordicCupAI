@@ -674,7 +674,7 @@ class TrapManager:
             busy_guides.add(a.id)
             self.metrics['deliveries'] += 1
             self.event('delivery_started', pid=p.pid, key=st.key, guide=a.id, cost=round(cost, 1), chased=target == a.id, turn=turn_deg,
-                       gap=round(dist(a.p, p.p)))
+                       gap=round(dist(a.p, p.p)), leash=d.leash, energy=round(a.energy))
 
     # ------------------------------------------------------------------ actions
     def _actions(self, world: WorldState, held_now):

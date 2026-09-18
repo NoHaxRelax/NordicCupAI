@@ -241,7 +241,7 @@ class Lure:
         st2 = pm.move(st, speed, turn, w.biome_at(p.p), lrects, w.width, w.height)
         return (st2.x, st2.y)
 
-    def _leash_choose(self, a: AgentView, p: PredatorView, desired, gap, v_pred, gap_target, cap, others=()):
+    def _leash_choose(self, a: AgentView, p: PredatorView, desired, gap, v_pred, gap_target, cap, others=(), run=False):
         """Joint choice of heading (36 directions plus ``desired``) and speed so that the predicted
         gap after both move lands in the window [floor, hearing] and every other nearby predator
         stays beyond 30; among feasible moves prefer the one closest to ``desired`` and cheapest
@@ -249,9 +249,16 @@ class Lure:
         w = self.world
         away = heading_of(sub(a.p, p.p))
         floor = max(gap_target - 10.0, 26.0) if gap >= gap_target - 10.0 else max(gap - 2.0, 18.0)
+        if run:
+            # on the run down the axis the predator swings in behind us by itself; do not sidestep
+            # to keep the gap, accept it closer for a few ticks (it cannot kill beyond 15)
+            floor = min(floor, 28.0) if gap >= 30.0 else max(gap - 2.0, 18.0)
         ceil = LEASH_HEAR - 2.0
         speeds = sorted({0.0, 5.0, 10.0, min(v_pred, cap), min(v_pred + 4.0, cap), cap})
-        headings = [away + math.radians(10) * k for k in range(-18, 18)] + [desired]
+        if run:
+            headings = [desired + math.radians(12) * k for k in range(-3, 4)]
+        else:
+            headings = [away + math.radians(10) * k for k in range(-18, 18)] + [desired]
         # other predators: where each will be after this tick (charging us if it targets us)
         oth = []
         for q in others:
@@ -402,7 +409,7 @@ class Lure:
         desired = heading_of(sub(wp, a.p))
         others = [q for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
                   and not (bool(q.resting) if q.resting is not None else is_resting(q)) and dist(q.p, a.p) < 140]
-        h, real, g2 = self._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others)
+        h, real, g2 = self._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others, run=(d.stage == 'run'))
         if wp is goal or dist(wp, goal) < 1e-6:
             real = min(real, dist(a.p, goal))
         d.decision = (f'leash: gap {gap:.0f}->{g2:.0f}, v {real:.0f} (pred {v_pred:.0f}), dev {math.degrees(wrap(h - away)):.0f}, '

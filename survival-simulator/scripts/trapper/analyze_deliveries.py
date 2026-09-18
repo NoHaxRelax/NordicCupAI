@@ -25,7 +25,7 @@ for f in sys.argv[1:]:
             s = started.get(e['pid'], {})
             out = 'delivered' if k == 'delivered' else str(e.get('reason'))
             outcomes[out] += 1
-            grp = ('chased' if s.get('chased') else 'attract') + ('+transfer' if e['pid'] in transferred else '')
+            grp = ('leash' if s.get('leash') else 'lead') + ('+transfer' if e['pid'] in transferred else '')
             by_group[grp][out] += 1
             by_turn[min(180, (s.get('turn', 0) // 30) * 30)][0 if k == 'delivered' else 1] += 1
             durations.append(round(e['t'] - s.get('t', e['t']), 1))
