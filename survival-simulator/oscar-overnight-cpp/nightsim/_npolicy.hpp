@@ -316,6 +316,11 @@ struct Params {
            dump_food_site = 2, dump_mult = 1.0, cluster_radius = 0., spread_weight = 0., low_pop_reserve = 200.,
            lone_reach_mult = 1.0, old_reach = 60., rot_margin = 47., dump_after_t = OINF, cap_tree_slack = 1,
            cap_hard_min = 2, nursery_bonus = 0.;
+    // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
+    // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
+    double merge_anchored = 0.;
+    double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260.;
+    double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
          old_eat_last = true, heir_needs_site = true;
     bool feed_breed = false;  // feed_mode == 'breed' (else 'hungry')
@@ -420,6 +425,12 @@ public:
         groups.erase(gb.id);
     }
     void merge_groups() {
+        if (P.merge_anchored > 0.) {   // nightsim: anchored groups share the absolute frame, so merge them at once
+            GroupP first;
+            std::vector<GroupP> rest;
+            groups.each([&](const int64_t&, GroupP& g) { if (g->anchored) { if (!first) first = g; else rest.push_back(g); } });
+            for (auto& g : rest) merge(*first, *g, 0., P2{0., 0.});
+        }
         while (true) {
             bool changed = false;
             for (const AState& s : states) {
@@ -1176,6 +1187,32 @@ public:
         return {dd, dir, turn};
     }
 
+    // ------------------------------------------------------------ predators (nightsim)
+    // A predator is a threat when it is within pred_r, or within pred_face_r and facing us (rel_dir small:
+    // rel_dir = bearing(predator->agent) - predator heading). Response: move directly away from the
+    // inverse-distance-weighted threats; face the nearest one (a faced predator beyond 90 uses the slow 45-degree
+    // pivot approach); sprint only inside pred_sprint_r. Plans stay the odometry source, so poses remain exact.
+    int64_t n_evading = 0;
+    bool evade(const AState& s, Plan& pl) {
+        const Obs* nr = nullptr; double vx = 0., vy = 0.;
+        for (const Obs& o : *s.obs) {
+            if (o.type != 2) continue;
+            bool facing = o.has_rel_dir && std::fabs(o.rel_dir) < 0.5;
+            if (!(o.distance < P.pred_r || (facing && o.distance < P.pred_face_r))) continue;
+            double w = 1.0 / pmax(o.distance, 15.);
+            vx -= std::cos(o.angle) * w; vy -= std::sin(o.angle) * w;
+            if (!nr || o.distance < nr->distance) nr = &o;
+        }
+        if (!nr) return false;
+        double away = std::atan2(vy, vx);
+        double walk = pmin(s.speed, s.sprint);
+        double step = nr->distance < P.pred_sprint_r ? s.sprint : walk;
+        double turn = P.pred_face > 0. ? nr->angle : 0.;
+        pl = Plan{step, away, turn};
+        n_evading++;
+        return true;
+    }
+
     // ------------------------------------------------------------ main
     double cost_now(double dist_, double turn, const AState& s) const {
         double d = pmax(0., pmin(dist_, s.sprint));
@@ -1184,8 +1221,14 @@ public:
         return c + pmin(OPI, std::fabs(turn)) / TAU;
     }
 
+    bool late_on = false;
+    void apply_late() {
+        auto ov = [](double& dst, double v) { if (!std::isnan(v)) dst = v; };
+        ov(P.fruit_reach, P.l_fruit_reach); ov(P.tree_reach, P.l_tree_reach); ov(P.watch_reach, P.l_watch_reach); ov(P.explore_energy, P.l_explore_energy); ov(P.cap_min, P.l_cap_min); ov(P.cap_mult, P.l_cap_mult); ov(P.cap_tree_slack, P.l_cap_tree_slack); ov(P.cap_hard_min, P.l_cap_hard_min); ov(P.sweep_rate, P.l_sweep_rate); ov(P.watch_patience, P.l_watch_patience); ov(P.explore_radius, P.l_explore_radius); ov(P.old_reach, P.l_old_reach); ov(P.dist_pen, P.l_dist_pen);
+    }
     std::vector<Act> call(std::vector<AState>&& sts, double sim_time) {
         time = sim_time;
+        if (!late_on && time >= P.late_t) { late_on = true; apply_late(); }
         states = std::move(sts);
         sidx.clear();
         for (size_t i = 0; i < states.size(); i++) sidx[states[i].aid] = i;
@@ -1235,6 +1278,7 @@ public:
         std::unordered_set<int64_t> spawn_set;
         std::unordered_map<int64_t, Plan> plans;
         for (const AState& s : states) plans[s.aid] = act(M(s.aid), s);
+        if (P.pred_mode > 0.) for (const AState& s : states) evade(s, plans[s.aid]);
         int64_t young_now = (int64_t)young.size();
         std::unordered_map<int64_t, double> fit;
         for (const AState& s : states) fit[s.aid] = fitness(s);

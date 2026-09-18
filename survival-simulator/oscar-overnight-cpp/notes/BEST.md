@@ -4,3 +4,7 @@
 | --- | --- | --- | ---: | ---: | ---: | ---: |
 | 00:30 | 0f880eec (= peer's _orchard.hpp) | r21s0c2 (configs-all.json) | 453 (1000-1999, Linux EPYC) | 2376 | 2537 | 161 |
 | 00:30 | 0f880eec | best (old best-config.json r3s2c6) | 453 | 2363 | 2503 | 140 |
+| 00:32 | 0f880eec / 4be33b1c (late schedule off) | r21s0c2 | 953 (1000-1999) | 2391 | 2553 | 162 |
+| 00:32 | same | best (r3s2c6) | 953 | 2353 | 2492 | 140 |
+
+r21s0c2 vs best paired on 950 seeds: survival +38 ± 14 s, score +60 ± 14, fruit +22.6.
