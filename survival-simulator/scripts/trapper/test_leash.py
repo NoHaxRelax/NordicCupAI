@@ -104,9 +104,10 @@ def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=
             break
         if e_done is None and d.done == 'delivered' and guide.agent_id in world.agents:
             e_done = world.agents[guide.agent_id].energy
-        target = predator_target(world, p)
         bait_ids = {bait.agent_id} if bait else ({guide.agent_id} if d.done == 'delivered' else set())
-        held = target in bait_ids and site.in_front_zone(p.p, margin=15)
+        # any predator held at this mouth counts (with a second predator the guide may lead that one)
+        held = any(predator_target(world, q) in bait_ids and site.in_front_zone(q.p, margin=15) for q in world.predators)
+        target = predator_target(world, p)
         if held:
             held_ticks += 1
             if first_hold is None:

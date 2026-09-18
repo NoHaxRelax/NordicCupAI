@@ -142,6 +142,23 @@ that remain in games: guides that started with too little energy for the lead (n
 crowded mouths (the flyby point moves out to 62 when predators already sit there) and a few
 pockets in the terrain.
 
+## Scenario bank (fast iteration on real maps)
+
+`run_game.py --scenarios DIR` (also `batch.py --scenarios DIR`) pickles the engine and the policy
+the moment a leash starts (pygame surfaces dropped, ~160 KB gzipped each);
+`scripts/trapper/replay_scenario.py DIR/*.pkl.gz --seconds 45` restores one and runs only that
+segment (a few seconds each, `xargs -P 6` for a whole bank), reporting delivered/held/guide alive
+and the last decision, `--verbose` traces it per second. 44 scenarios from 16 games take about
+two minutes to replay; this is how the remaining in-game failures are being worked through.
+
+## Designated traps
+
+Oscar's rule: one or two traps only (one near the map centre, or two on opposite sides, at least
+500 apart), everything is lured there. `TrapManager._designate` picks them from the usable gap
+sites by score plus distance to the centre (`n_traps`, default 2); deliveries and refuge runs use
+only the designated sites; sites already staffed or holding keep their designation when an
+estimated map is refreshed.
+
 ## Bait replacement (reserve slot)
 
 A replacement walks in through the far mouth to the reserve slot 10 behind the bait while the bait
