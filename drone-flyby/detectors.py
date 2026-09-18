@@ -13,6 +13,8 @@ Selection is by environment variable ``DRONE_DETECTOR``:
   checkpoint with exactly the 16 competition class names.
 * ``none``: no detector; the endpoint answers with tracks only (useful to test
   the camera and transport).
+* ``fixed_assets``: the preparation project's frozen fixed-asset bundle
+  (``DRONE_BUNDLE`` manifest, ``DRONE_PROJECT`` repo root). Seconds per view.
 * ``oracle``: reads the organizer annotations of a local scene. Local plumbing
   tests only; it cannot run against the evaluation service.
 * ``package.module:factory``: a custom factory returning a detector callable.
@@ -77,6 +79,48 @@ class UltralyticsDetector:
         return rows
 
 
+class FixedAssetDetector:
+    """The frozen fixed-asset bundle (geometry, pixel matching and CNNs) from the preparation project.
+
+    Slow (seconds per view) but the strongest recognizer available offline.
+    Needs ``DRONE_PROJECT`` on sys.path for its ``drone`` package, torch and
+    ultralytics. Rows carry the recognition ``family`` for diagnostics.
+    """
+    name = 'fixed_assets'
+
+    def __init__(self, bundle, project, *, device='cpu', min_confidence=0., family_min=None):
+        project = Path(project)
+        if not (project/'drone').is_dir():
+            raise ValueError(f'DRONE_PROJECT must contain the drone package, got {project}')
+        if str(project) not in sys.path:
+            sys.path.insert(0, str(project))
+        import cv2
+        threads = cv2.getNumThreads()
+        try:
+            from drone.scratch_objects.bundle import load_bundle
+            with redirect_stdout(sys.stderr):
+                self.detector = load_bundle(bundle, device=device)
+        finally:
+            cv2.setNumThreads(threads)
+        self.min_confidence = float(min_confidence)
+        self.family_min = dict(family_min or {})
+
+    def __call__(self, image, request):
+        x1, y1, x2, y2 = request['view']['source_region_xyxy']
+        scale = request['view']['width']/(x2-x1)  # delivered pixels per source pixel
+        with redirect_stdout(sys.stderr):
+            rows = self.detector.detect(np.ascontiguousarray(image), scale)
+        out = []
+        for r in rows:
+            family = r.get('family') or r.get('method')
+            floor = max(self.min_confidence, self.family_min.get(family, 0.))
+            if r['score'] < floor:
+                continue
+            out.append({'label': r['class'], 'box': list(map(float, r['bbox'])), 'confidence': float(min(1., r['score'])),
+                        'family': family})
+        return out
+
+
 class OracleDetector:
     """Organizer boxes of a local scene as detections. For local tests only."""
     name = 'oracle'
@@ -118,6 +162,13 @@ def build_detector(environ=os.environ):
                                    image_size=int(environ.get('DRONE_IMGSZ', '960')),
                                    confidence=float(environ.get('DRONE_CONF', '0.25')),
                                    half=environ.get('DRONE_HALF', '0') == '1')
+    if kind == 'fixed_assets':
+        bundle, project = environ.get('DRONE_BUNDLE'), environ.get('DRONE_PROJECT')
+        if not bundle or not project:
+            raise ValueError('DRONE_DETECTOR=fixed_assets needs DRONE_BUNDLE (manifest.json) and DRONE_PROJECT (repo root)')
+        family_min = json.loads(environ.get('DRONE_FAMILY_MIN', '{}'))
+        return FixedAssetDetector(bundle, project, device=environ.get('DRONE_DEVICE', 'cpu'),
+                                  min_confidence=float(environ.get('DRONE_CONF', '0')), family_min=family_min)
     if kind == 'oracle':
         return OracleDetector(environ.get('DRONE_ORACLE_SCENE', str(Path(__file__).resolve().parent/'src/helsinki')))
     if ':' in kind:

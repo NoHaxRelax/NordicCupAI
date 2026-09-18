@@ -126,9 +126,14 @@ def _detections(image, request, view):
             if np.any(box[2:]-box[:2] < 1) or row['label'] not in _CLASSES:
                 continue
             detections.append(Detection(row['label'], tuple(box.tolist()), float(min(1., max(0., row['confidence'])))))
+            _RAW.append({'label': row['label'], 'box': [round(v, 1) for v in box.tolist()],
+                         'confidence': round(float(row['confidence']), 3), 'family': row.get('family')})
         except (KeyError, TypeError, ValueError):
             continue
     return detections, True, (time.perf_counter()-started)*1000
+
+
+_RAW = []  # raw detector rows of the current frame, for the diagnostics log
 
 
 def _fallback(request, detections, session, view):
@@ -152,7 +157,9 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
                            request.camera_command_feedback.frame, request.camera_command_feedback.reason)
         view = ViewGeometry.from_request(req)
         image = decode_view(request.view)
+        _RAW.clear()
         detections, ran, detector_ms = _detections(image, req, view)
+        raw_rows = list(_RAW)
         tracking_started = time.perf_counter()
         try:
             answer = session.workflow.process(req, detections, image=image, detector_ran=ran)
@@ -180,7 +187,9 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
                         'detector_ms': round(detector_ms, 1), 'tracking_ms': round(tracking_ms, 1), 'total_ms': round(total_ms, 1),
                         'status': diagnostics.get('status'), 'timing': diagnostics.get('timing'),
                         'calibration_error': diagnostics.get('calibration_error'), 'events': diagnostics.get('events'),
-                        'tracks': len(diagnostics.get('tracks') or [])})
+                        'tracks': len(diagnostics.get('tracks') or []), 'raw_detections': raw_rows[:200],
+                        'response': [{'object_id': a.object_id, 'bbox': [round(v, 5) for v in a.bbox], 'confidence': round(float(a.confidence), 3)}
+                                     for a in response.annotations][:500]})
         logger.info('frame %s L%s: %d detections, %d annotations, detector %.0f ms, tracking %.0f ms, total %.0f ms',
                     req['frame'], req['view']['resolution_level'], len(detections), len(response.annotations),
                     detector_ms, tracking_ms, total_ms)
