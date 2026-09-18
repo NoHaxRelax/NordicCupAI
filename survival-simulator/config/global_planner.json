@@ -1,6 +1,14 @@
 {
   "enabled": false,
   "mapping_enabled": true,
+  "trap_inference": {
+    "enabled": true,
+    "refresh_interval_seconds": 10.0,
+    "face_tolerance": 0.5,
+    "safety": "safe",
+    "max_sites": 64,
+    "max_scan_cells": 2400000
+  },
   "biome_inference": {
     "enabled": true,
     "max_sites": 10,

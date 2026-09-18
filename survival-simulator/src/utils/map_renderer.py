@@ -17,6 +17,7 @@ PANEL = (18, 28, 39)
 UNKNOWN = (8, 14, 22)
 TEXT = (224, 233, 241)
 MUTED = (140, 160, 177)
+TRAP_COLORS = {"wall": (255, 190, 65), "slot": (55, 231, 163), "shelter": (188, 150, 247)}
 BIOME_COLORS = {
     "forest": (41, 118, 61), "grassland": (96, 174, 75),
     "swamp": (85, 112, 95), "desert": (210, 167, 95),
@@ -66,6 +67,7 @@ class MapRenderer:
         self.dragging = None
         self.last_mouse = (0, 0)
         self.show_biome_estimates = True
+        self.show_trap_estimates = True
         self.biome_surfaces = {}
 
     def _text(self, surface, text, position, color=TEXT, font=None, max_width=None):
@@ -105,6 +107,8 @@ class MapRenderer:
                 view.pan = pointer - (pointer - view.pan) * (view.zoom / previous)
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
             self.show_biome_estimates = not self.show_biome_estimates
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_t:
+            self.show_trap_estimates = not self.show_trap_estimates
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_f:
             key = self._view_at(self.last_mouse)
             targets = [self.views[key]] if key in self.views else self.views.values()
@@ -127,6 +131,7 @@ class MapRenderer:
             points += [tree["position"] for tree in group.get("trees", [])]
             points += [sample["position"] for sample in group.get("biomes", [])]
             points += [edge[name] for edge in group.get("edges", []) for name in ("start", "end")]
+            points += [site["bait"] for site in (group.get("trap_estimate") or {}).get("sites", [])]
         if not points:
             points = [(0, 0)]
         low = pygame.Vector2(min(p[0] for p in points), min(p[1] for p in points))
@@ -169,6 +174,9 @@ class MapRenderer:
         self._text(surface, f"Cluster {group_id}  |  {status}", (rect.x + 10, rect.y + 7),
                    (120, 219, 179) if anchored else TEXT, max_width=rect.width - 20)
         counts = f'{len(agents)} agents   {len(group.get("edges", []))} edges   {len(group.get("biomes", []))} biome samples'
+        traps = group.get("trap_estimate")
+        if traps is not None:
+            counts += f'   {len(traps["sites"])} potential traps' + (' (stale)' if traps.get("stale") else '')
         self._text(surface, counts, (rect.x + 10, rect.y + 28), MUTED,
                    self.small_font, rect.width - 20)
         plot = pygame.Rect(rect.x + 7, rect.y + 49, max(1, rect.width - 14), max(1, rect.height - 73))
@@ -263,6 +271,8 @@ class MapRenderer:
             self._dashed(history_surface, color, view.pixel(observer["position"]), view.pixel(target["position"]))
         if subdued_history:
             surface.blit(history_surface, (0, 0))
+        if traps is not None and self.show_trap_estimates:
+            self._draw_trap_estimate(surface, view, traps)
         roles = snapshot.get("roles", {})
         labels = []
         markers = [pygame.Rect(view.pixel(agent["position"]), (0, 0)).inflate(14, 14)
@@ -322,6 +332,27 @@ class MapRenderer:
                 footer += f' | check in {remaining:.0f}s'
         self._text(surface, footer, (rect.x + 10, rect.bottom - 20), MUTED,
                    self.small_font, rect.width - 20)
+
+    def _draw_trap_estimate(self, surface, view, estimate):
+        for site in estimate.get("sites", []):
+            kind = site["kind"]
+            color = MUTED if estimate.get("stale") else TRAP_COLORS[kind]
+            x, y = view.pixel(site["bait"])
+            if kind != "shelter":
+                px, py = view.pixel(site["predator_side"])
+                self._dashed(surface, color, (x, y), (px, py))
+                pygame.draw.line(surface, color, (px - 5, py - 5), (px + 5, py + 5), 2)
+                pygame.draw.line(surface, color, (px - 5, py + 5), (px + 5, py - 5), 2)
+            if not surface.get_clip().inflate(28, 28).collidepoint(x, y):
+                continue
+            if kind == "shelter":
+                pygame.draw.circle(surface, UNKNOWN, (x, y), 10)
+                pygame.draw.circle(surface, color, (x, y), 10, 3)
+            else:
+                points = ([(x, y - 12), (x + 11, y + 9), (x - 11, y + 9)] if kind == "wall" else
+                          [(x, y - 12), (x + 12, y), (x, y + 12), (x - 12, y)])
+                pygame.draw.polygon(surface, UNKNOWN, points)
+                pygame.draw.polygon(surface, color, points, 3)
 
     def _draw_biome_estimate(self, surface, view, group_id, estimate):
         cached = self.biome_surfaces.get(group_id)
@@ -394,20 +425,21 @@ class MapRenderer:
         self._text(surface, "Agents' internal map", (rect.x + 12, rect.y + 10), font=self.title_font)
         self._text(surface, status,
                    (rect.x + 12, rect.y + 37), MUTED, self.small_font, rect.width - 24)
-        self._text(surface, "Drag: pan   Wheel: zoom   F: fit   B: estimated biomes",
+        self._text(surface, "Drag: pan   Wheel: zoom   F: fit   B: biomes   T: trap sites",
                    (rect.x + 12, rect.y + 56), MUTED, self.small_font, rect.width - 24)
         ordered = [groups[key] for key in sorted(groups)]
         self.views = {key: view for key, view in self.views.items() if key in groups}
         self.biome_surfaces = {key: value for key, value in self.biome_surfaces.items() if key in groups}
         harvest_legend_height = 36 if snapshot.get("harvest", {}).get("active") else 0
+        trap_legend_height = 36 if any(group.get("trap_estimate") is not None for group in ordered) else 0
         content = pygame.Rect(rect.x + 10, rect.y + 83, rect.width - 20,
-                              max(1, rect.height - 163 - harvest_legend_height))
+                              max(1, rect.height - 163 - harvest_legend_height - trap_legend_height))
         if not ordered:
             self._text(surface, "Waiting for agent observations", content.move(12, 20).topleft, MUTED)
         for group, panel in zip(ordered, panel_layout(content, len(ordered))):
             agents = [agent for agent in snapshot.get("agents", []) if agent["group_id"] == group["group_id"]]
             self._draw_group(surface, panel, group, agents, snapshot)
-        legend_y = rect.bottom - 69 - harvest_legend_height
+        legend_y = rect.bottom - 69 - harvest_legend_height - trap_legend_height
         self._text(surface, "Solid: observed edges   Rings: trees   Dashes: sighting history",
                    (rect.x + 12, legend_y), MUTED, self.small_font, rect.width - 24)
         self._text(surface, "Dots: observed biome   Shading / tan borders: estimates   *: elite",
@@ -421,10 +453,18 @@ class MapRenderer:
             self._text(surface, name, (x + 11, legend_y + 36), MUTED, self.small_font)
             x += width
         if snapshot.get("harvest", {}).get("active"):
-            self._text(surface, "Fruit squares: green growing / gold ripe   Gold dashes: harvest targets",
+            simple = snapshot["harvest"].get("mode") == "simple"
+            self._text(surface, ("Gold squares: known fruit   Gold dashes: collection targets" if simple else
+                                "Fruit squares: green growing / gold ripe   Gold dashes: harvest targets"),
                        (rect.x + 12, legend_y + 54), MUTED, self.small_font, rect.width - 24)
-            self._text(surface, "Colored outlines: territories   Cyan: patrols / gaps   Labels: task",
+            self._text(surface, ("Cyan crosses: assigned homes   Cyan lines: patrols   Labels: task" if simple else
+                                "Colored outlines: territories   Cyan: patrols / gaps   Labels: task"),
                        (rect.x + 12, legend_y + 72), MUTED, self.small_font, rect.width - 24)
+        if trap_legend_height:
+            self._text(surface, "Potential traps: amber triangles = walls   green diamonds = slots",
+                       (rect.x + 12, legend_y + 54 + harvest_legend_height), MUTED, self.small_font, rect.width - 24)
+            self._text(surface, "Purple rings = shelters   Grey = refresh pending   Cross = predator side",
+                       (rect.x + 12, legend_y + 72 + harvest_legend_height), MUTED, self.small_font, rect.width - 24)
 
 
 def draw_comparison(surface, actual_surface, snapshot, renderer, label=""):

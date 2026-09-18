@@ -10,6 +10,7 @@ from scipy.optimize import linear_sum_assignment
 
 from src.utils.controllers.biome_estimator import BiomeEstimator, BiomeInferenceConfig
 from src.utils.controllers.exploration import ExplorationConfig, ExplorationCoordinator
+from src.utils.controllers.trap_map import TrapInferenceConfig, TrapMapper
 from src.utils.controllers.policy_inputs import SectionHint
 from src.utils.controllers.world_estimator import EstimatorConfig, WorldEstimator, rotate
 
@@ -24,6 +25,7 @@ class PlannerConfig(BaseModel):
     population_after_alignment: bool = Field(default=False, strict=True)
     alignment_hold_seconds: float = Field(default=1.0, ge=0)
     biome_inference: BiomeInferenceConfig = Field(default_factory=BiomeInferenceConfig)
+    trap_inference: TrapInferenceConfig = Field(default_factory=TrapInferenceConfig)
     exploration: ExplorationConfig = Field(default_factory=ExplorationConfig)
     replan_interval_seconds: float = Field(gt=0)
     grid_cell_size: float = Field(gt=0)
@@ -160,12 +162,15 @@ class GlobalPlanner:
         self.exploration = ExplorationCoordinator(self.config.exploration,
                                                  self.config.estimator.max_position_uncertainty)
         self.biome_estimator = BiomeEstimator(self.config.biome_inference)
+        self.trap_mapper = TrapMapper(self.config.trap_inference,
+            self.config.estimator.boundary_wall_thickness, self.config.estimator.boundary_minimum_length)
         self.reset()
 
     def reset(self):
         self.estimator.reset()
         self.exploration.reset()
         self.biome_estimator.reset()
+        self.trap_mapper.reset()
         self.plans: dict[int, GroupPlan] = {}
         self.hints: dict[int, SectionHint] = {}
         self.exploration_hints = {}
@@ -176,6 +181,7 @@ class GlobalPlanner:
         self.shared_frame_since = None
         self.shared_frame_established_at = None
         self.last_time = None
+        self.last_map_observation = None
 
     def _update_phase(self, now):
         if not self.config.population_after_alignment:
@@ -247,7 +253,8 @@ class GlobalPlanner:
         vector = rotate(own, -pose.heading)
         return SectionHint(tuple(float(value) for value in vector), self.config.push_strength)
 
-    def instructions(self, agent_states, sim_time, trait_ratings=None, territory_policy=False):
+    def instructions(self, agent_states, sim_time, trait_ratings=None, territory_policy=False,
+                     map_interval_seconds=0.):
         if not agent_states:
             self.reset()
             return {}
@@ -261,9 +268,18 @@ class GlobalPlanner:
         if self.last_time == sim_time:
             return self.hints.copy()
         self.trait_ratings = {} if trait_ratings is None else dict(trait_ratings)
-        self.estimator.update(agent_states, sim_time)
+        observe = (not self.population_phase or self.last_map_observation is None
+                   or sim_time - self.last_map_observation >= map_interval_seconds - 1e-9
+                   or any(state["agent_id"] not in self.estimator.poses for state in agent_states)
+                   or any(not self.estimator.groups[p.group_id].anchored
+                          for p in self.estimator.poses.values()))
+        self.estimator.update(agent_states, sim_time, observe=observe)
+        if observe:
+            self.last_map_observation = sim_time
         self._update_phase(sim_time)
-        self.biome_estimator.update(self.estimator.groups, self.estimator.poses, sim_time)
+        if observe:
+            self.biome_estimator.update(self.estimator.groups, self.estimator.poses, sim_time)
+            self.trap_mapper.update(self.estimator.groups, sim_time)
         managed_groups = {key for key, group in self.estimator.groups.items()
                           if territory_policy and self.population_phase and group.anchored
                           and (group.world_size is not None or
@@ -314,6 +330,7 @@ class GlobalPlanner:
         snapshot["shared_frame_established_at"] = self.shared_frame_established_at
         for group in snapshot["groups"]:
             group["biome_estimate"] = self.biome_estimator.snapshot(group["group_id"])
+            group["trap_estimate"] = self.trap_mapper.snapshot(group["group_id"])
             plan = self.plans.get(group["group_id"])
             group["updated_at"] = None if plan is None else plan.updated_at
             group["sections"] = [] if plan is None else [

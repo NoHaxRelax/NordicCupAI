@@ -46,6 +46,11 @@ class HarvestHint:
     waiting: bool
     survey: bool = False
     look_direction: float | None = None
+    # A bounded observation sweep is different from an idle survey heading.
+    scan_while_stationary: bool = False
+    allow_local_food: bool = True
+    # Retired from foraging/breeding; may still scout unvisited terrain.
+    retired: bool = False
 
 
 @dataclass(frozen=True)
@@ -53,6 +58,9 @@ class ReproductionHint:
     energy_threshold: float
     allowed: bool = True
     minimum_energy_reserve: float = 0.
+    # An explicit colony-renewal decision may spend an aging parent's reserve
+    # to keep a younger generation alive. Ordinary breeding keeps its floor.
+    preserve_lineage: bool = False
 
 
 @dataclass(frozen=True)

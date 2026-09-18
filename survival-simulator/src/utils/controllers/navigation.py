@@ -24,6 +24,7 @@ class NavigationResult:
 @dataclass
 class Route:
     destination: np.ndarray
+    arrival_radius: float = 0.
     points: list[np.ndarray] = field(default_factory=list)
     best_remaining: float = math.inf
     progress_at: float = 0.
@@ -31,6 +32,7 @@ class Route:
     revision: int = -1
     status: str = "new"
     remaining: float = math.inf
+    paused_at: float | None = None
 
 
 class Navigator:
@@ -52,6 +54,8 @@ class Navigator:
         self.next_geometry = 0.
         self.blocked = None
         self.origin = self.extent = self.pitch = None
+        self.connections = {}
+        self.portals = None
 
     def update(self, group, now):
         size = group.world_size
@@ -71,6 +75,8 @@ class Navigator:
         self.edge_min, self.edge_max = self.edges.min(axis=1), self.edges.max(axis=1)
         self.revision += 1
         self.blocked = None
+        self.connections.clear()
+        self.portals = None
 
     def prune(self, living_ids):
         living = set(living_ids)
@@ -80,25 +86,43 @@ class Navigator:
         """Forget a completed/rejected goal so a later retry starts fresh."""
         self.routes.pop(agent_id, None)
 
+    def pause(self, agent_id, now):
+        """Exclude deliberate rest from the stall clock, retaining its history.
+
+        Accumulated time without progress is preserved. Repeated short scouting
+        windows can therefore still expose a stuck route across longer rests.
+        Call on each resting tick; the next steer also excludes the final
+        paused interval before resuming.
+        """
+        route = self.routes.get(agent_id)
+        if route is None:
+            return
+        if route.paused_at is not None:
+            route.progress_at += max(0., now - route.paused_at)
+        route.paused_at = now
+        if route.status != "blocked":
+            route.status = "paused"
+
     def _inside(self, point):
         if self.size is not None:
             return bool(np.all(point >= 0) and np.all(point <= np.asarray(self.size)))
         return ((self.width is None or 0 <= point[0] <= self.width)
                 and (self.height is None or 0 <= point[1] <= self.height))
 
-    def _clear(self, start, end):
+    def _clear(self, start, end, clearance=None):
         if not self._inside(end):
             return False
+        margin = self.clearance if clearance is None else clearance
         delta = end - start
         distance = float(np.linalg.norm(delta))
         if distance < 1e-8 or not len(self.edges):
             return True
-        low, high = np.minimum(start, end) - self.clearance, np.maximum(start, end) + self.clearance
+        low, high = np.minimum(start, end) - margin, np.maximum(start, end) + margin
         nearby = np.all(self.edge_max >= low, axis=1) & np.all(self.edge_min <= high, axis=1)
         # _path_clear permits moving out of an existing clearance violation,
         # but never crossing a wall. Pose noise must not trap agents in padding.
         return _path_clear(math.atan2(delta[1], delta[0]), distance,
-                           self.edges[nearby] - start, self.clearance)
+                           self.edges[nearby] - start, margin)
 
     def _grid(self, start, end):
         if self.blocked is not None:
@@ -123,9 +147,11 @@ class Navigator:
             shape = np.maximum(1, np.ceil(extent / spacing).astype(int))
         self.origin, self.extent, self.pitch = low, extent, extent / shape
         self.blocked = np.zeros((shape[1], shape[0]), dtype=bool)
-        # Reserve enough clearance that adjacent free cell centers cannot cut
-        # across a thin wall. Segment checks smooth the resulting coarse path.
-        padding = self.clearance + float(np.linalg.norm(self.pitch)) / 2
+        self.connections.clear()
+        # Nodes need physical agent clearance. Inflating by another half-cell
+        # diagonal erases usable gaps and can force enormous detours. Each
+        # connection is checked exactly below, including thin-wall crossings.
+        padding = self.clearance
         for edge in self.edges:
             a, b = edge
             lower = np.maximum(0, np.floor((edge.min(axis=0) - padding - low) / self.pitch).astype(int))
@@ -139,6 +165,49 @@ class Navigator:
             t = np.zeros(xx.shape) if length == 0 else np.clip(((centers - a) @ direction) / length, 0, 1)
             occupied = np.linalg.norm(centers - a - t[..., None] * direction, axis=-1) <= padding
             self.blocked[yy, xx] |= occupied
+
+    def _connection_clear(self, first, second):
+        key = tuple(sorted((first, second)))
+        if key not in self.connections:
+            self.connections[key] = self._clear(self._center(first), self._center(second))
+        return self.connections[key]
+
+    def _short_passage(self, start, end):
+        """Check a bounded set of exact two-segment routes near wall ends.
+
+        An opening may lie between coarse grid rows. Public wall endpoints
+        supply useful passage candidates without allocating a finer full map.
+        Cached candidates are cheap; at most 96 are checked for each route.
+        """
+        if self.portals is None:
+            candidates = []
+            margin = self.clearance + .5
+            for edge in self.edges:
+                along = edge[1] - edge[0]
+                length = float(np.linalg.norm(along))
+                if length < 1e-8:
+                    continue
+                along /= length
+                normal = np.array([-along[1], along[0]])
+                for end_point in edge:
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1),
+                                   (1, 1), (1, -1), (-1, 1), (-1, -1)):
+                        candidates.append(end_point + margin * (dx * along + dy * normal))
+            self.portals = (np.unique(np.round(candidates, 8), axis=0)
+                            if candidates else np.empty((0, 2)))
+        if not len(self.portals):
+            return []
+        lengths = np.linalg.norm(self.portals - start, axis=1) + np.linalg.norm(self.portals - end, axis=1)
+        # Only accept genuinely short alternatives here. More complex routes
+        # still use the grid, whose safe connections are cached per geometry.
+        limit = 1.5 * float(np.linalg.norm(end - start))
+        order = np.flatnonzero(lengths <= limit)
+        order = order[np.argsort(lengths[order], kind="stable")[:96]]
+        for index in order:
+            point = self.portals[index]
+            if self._clear(start, point) and self._clear(point, end):
+                return [point.copy(), end.copy()]
+        return []
 
     def _center(self, cell):
         y, x = cell
@@ -167,6 +236,9 @@ class Navigator:
             return [end.copy()]
         if not self._inside(end):
             return []
+        passage = self._short_passage(start, end)
+        if passage:
+            return passage
         self._grid(start, end)
         first, last = self._endpoint(start, escaping=True), self._endpoint(end)
         if first is None or last is None:
@@ -205,9 +277,38 @@ class Navigator:
                 neighbor, proposed = (ny, nx), cost + step
                 if proposed >= costs.get(neighbor, math.inf):
                     continue
+                if not self._connection_clear(cell, neighbor):
+                    continue
                 costs[neighbor], previous[neighbor] = proposed, cell
                 heuristic = math.hypot((last[1] - nx) * self.pitch[0], (last[0] - ny) * self.pitch[1])
                 heapq.heappush(frontier, (proposed + heuristic, proposed, neighbor))
+        return []
+
+    def _plan_arrival(self, start, end, radius):
+        """Reach a safe point near a collectible, without entering its center.
+
+        Fruit pickup is based on contact distance. Its observed center can be
+        inside wall padding even when the fruit is reachable from open ground.
+        Every approach keeps normal agent clearance; the final sightline to
+        the fruit may enter padding but must never cross an observed wall.
+        """
+        if radius <= 0:
+            return self._plan(start, end)
+        angle = math.atan2(start[1] - end[1], start[0] - end[0])
+        candidates = []
+        for offset in (0., math.pi / 4, -math.pi / 4, math.pi / 2,
+                       -math.pi / 2, 3 * math.pi / 4, -3 * math.pi / 4, math.pi):
+            point = end + radius * np.array([math.cos(angle + offset), math.sin(angle + offset)])
+            if self._inside(point) and self._clear(point, end, clearance=0.):
+                candidates.append(point)
+                if self._clear(start, point):
+                    return [point]
+        # Most pickups use the direct approach above. Wall detours use the
+        # existing bounded planner and the first reachable nearby endpoint.
+        for point in candidates:
+            route = self._plan(start, point)
+            if route:
+                return route
         return []
 
     @staticmethod
@@ -217,28 +318,61 @@ class Navigator:
         path = np.vstack((position, points))
         return float(np.linalg.norm(np.diff(path, axis=0), axis=1).sum())
 
-    def steer(self, agent_id, position, destination, now, waiting=False):
+    def steer(self, agent_id, position, destination, now, waiting=False, arrival_radius=0.):
         position, destination = np.asarray(position, dtype=float), np.asarray(destination, dtype=float)
+        arrival_radius = float(arrival_radius)
+        if not math.isfinite(arrival_radius) or arrival_radius < 0:
+            raise ValueError("arrival_radius must be finite and nonnegative")
         route = self.routes.get(agent_id)
+        destination_changed = False
         if route is None or np.linalg.norm(destination - route.destination) > 5.:
-            route = self.routes[agent_id] = Route(destination.copy(), progress_at=now)
+            route = self.routes[agent_id] = Route(destination.copy(), arrival_radius=arrival_radius, progress_at=now)
+        elif (not math.isclose(route.arrival_radius, arrival_radius)
+              or (arrival_radius > 0 and np.linalg.norm(destination - route.destination) > 1e-8)):
+            # Pose uncertainty changes the permitted pickup radius. Refine
+            # the existing approach without treating radius noise as a new
+            # task, or stationary agents could reset stall recovery forever.
+            before = self._remaining(position, route.points)
+            if route.points:
+                offset = route.points[-1] - route.destination
+                if np.linalg.norm(offset) < 1e-8:
+                    offset = position - destination
+                length = float(np.linalg.norm(offset))
+                route.points[-1] = (destination + offset * arrival_radius / length
+                                    if length > 1e-8 else destination.copy())
+            route.destination = destination.copy()
+            route.arrival_radius = arrival_radius
+            after = self._remaining(position, route.points)
+            if math.isfinite(before) and math.isfinite(after):
+                # Only agent motion should count as progress. A larger pickup
+                # circle shortens the path without moving the agent at all.
+                route.best_remaining += after - before
+            destination_changed = True
+        if route.paused_at is not None:
+            route.progress_at += max(0., now - route.paused_at)
+            route.paused_at = None
         if waiting:
             route.progress_at = now
             route.status = "waiting"
             route.remaining = float(np.linalg.norm(destination - position))
             return NavigationResult(None, False, route.remaining, route.status)
-        if np.linalg.norm(route.destination - position) <= 4.:
+        if (arrival_radius > 0 and np.linalg.norm(route.destination - position) <= arrival_radius + 1e-9
+                and self._clear(position, route.destination, clearance=0.)):
+            route.status, route.remaining, route.progress_at = "arrived", 0., now
+            return NavigationResult(None, False, 0., route.status)
+        if arrival_radius <= 0 and np.linalg.norm(route.destination - position) <= 4.:
             route.status, route.remaining, route.progress_at = "arrived", 0., now
             return NavigationResult(route.destination.copy(), False, 0., route.status)
         if route.status == "blocked":
             return NavigationResult(None, True, route.remaining, route.status)
-        changed = route.revision != self.revision
+        changed = route.revision != self.revision or destination_changed
         if changed and route.points:
             path = [position] + route.points
-            if not all(self._clear(a, b) for a, b in zip(path, path[1:])):
+            if (not all(self._clear(a, b) for a, b in zip(path, path[1:]))
+                    or (arrival_radius > 0 and not self._clear(route.points[-1], route.destination, clearance=0.))):
                 route.points = []
         if not route.points:
-            route.points = self._plan(position, route.destination)
+            route.points = self._plan_arrival(position, route.destination, arrival_radius)
             # A newly observed wall changes the route length, not whether the
             # agent has made progress. Repeated geometry updates must not keep
             # a stationary agent's stall timer alive indefinitely.
@@ -263,7 +397,7 @@ class Navigator:
                 route.status, route.remaining = "blocked", remaining
                 return NavigationResult(None, True, remaining, route.status)
             route.retries += 1
-            route.points = self._plan(position, route.destination)
+            route.points = self._plan_arrival(position, route.destination, arrival_radius)
             route.best_remaining = self._remaining(position, route.points)
             route.progress_at, route.status = now, "replanned"
             if not route.points:

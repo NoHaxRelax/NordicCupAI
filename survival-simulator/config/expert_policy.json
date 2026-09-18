@@ -1,4 +1,18 @@
 {
+  "policy_mode": "standard",
+  "simple": {
+    "population_early": 12,
+    "population_middle": 6,
+    "population_late": 3,
+    "renewal_age": 40.0,
+    "middle_seconds": 900.0,
+    "late_seconds": 1800.0,
+    "parent_reserve": 75.0,
+    "birth_interval_seconds": 8.0,
+    "territory_interval_seconds": 30.0,
+    "map_interval_seconds": 0.5,
+    "late_map_interval_seconds": 2.0
+  },
   "perception": {
     "nearest_fruits": 5,
     "predator_danger_radius": 100.0
@@ -71,6 +85,18 @@
     "ripe_energy": 56.0,
     "emergency_energy": 90.0,
     "minimum_population": 12,
+    "survival_population": 2,
+    "scouting_population_early": 6,
+    "scouting_population_middle": 4,
+    "population_cap_early": 12,
+    "population_cap_middle": 4,
+    "population_cap_late": 2,
+    "population_middle_seconds": 900.0,
+    "population_late_seconds": 1800.0,
+    "emergency_parent_reserve": 20.0,
+    "lineage_transfer_reserve": 5.0,
+    "renewal_age": 55.0,
+    "renewal_parent_reserve": 40.0,
     "maximum_population": 60,
     "food_budget_per_agent_second": 6.0,
     "parent_reserve": 100.0,
@@ -78,6 +104,14 @@
     "minimum_breeder_trait_score": 1.0,
     "gene_backup_age": 40.0,
     "gene_backup_interval_seconds": 35.0,
+    "conservation": {
+      "enabled": true,
+      "start_seconds": 300.0,
+      "full_seconds": 1800.0,
+      "late_scouting_fraction": 0.3,
+      "late_scan_interval_seconds": 18.0,
+      "scouting_cycle_seconds": 10.0
+    },
     "coverage": {
       "enabled": true,
       "orchard_revisit_seconds": 20.0,

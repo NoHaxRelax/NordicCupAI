@@ -143,8 +143,43 @@ def retry_interrupted(study, frozen):
         study.enqueue_trial(frozen.system_attrs.get("fixed_params", {}), user_attrs=attrs)
 
 
+def repair_journal_tail(journal):
+    """Recover a torn final append, with the coordinator lock already held.
+
+    Optuna ignores an incomplete final line when reading, but appending after
+    it makes the journal unreadable. Preserve the fragment before truncating.
+    Corruption anywhere except the last record is an error, never discarded.
+    """
+    if not journal.exists():
+        return
+    with journal.open("r+b") as handle:
+        while True:
+            offset = handle.tell()
+            line = handle.readline()
+            if not line:
+                return
+            try:
+                if not line.endswith(b"\n"):
+                    raise ValueError("Incomplete final record")
+                json.loads(line)
+            except (ValueError, UnicodeError) as exc:
+                if handle.read(1):
+                    raise ValueError(f"Invalid journal record at byte {offset}; history was left unchanged") from exc
+                backup = journal.with_name(f"{journal.name}.torn-tail-{time.time_ns()}.bin")
+                with backup.open("xb") as fragment:
+                    fragment.write(line)
+                    fragment.flush()
+                    os.fsync(fragment.fileno())
+                handle.truncate(offset)
+                handle.flush()
+                os.fsync(handle.fileno())
+                print(f"Recovered interrupted journal write; preserved fragment in {backup.name}", flush=True)
+                return
+
+
 def open_study(output, optimizer_seed, startup_trials, base):
     journal = output / "optuna.journal"
+    repair_journal_tail(journal)
     storage = JournalStorage(JournalFileBackend(str(journal), lock_obj=JournalFileOpenLock(str(journal))))
     sampler = optuna.samplers.TPESampler(seed=optimizer_seed, n_startup_trials=startup_trials,
                                         multivariate=True, constant_liar=True)
@@ -171,10 +206,10 @@ def candidate_directory(output, expert):
     return path
 
 
-def submit_seeds(pool, output, expert, planner, seeds, seconds, phase, deadline):
+def submit_seeds(pool, output, expert, planner, seeds, seconds, phase, deadline, checkpoint_seconds=60.):
     directory = candidate_directory(output, expert) / phase
     return {pool.submit(evaluate_seed, expert, planner, seed, seconds,
-                        str(directory / f"seed-{seed}.json"), deadline): seed for seed in seeds}
+                        str(directory / f"seed-{seed}.json"), deadline, checkpoint_seconds): seed for seed in seeds}
 
 
 def export_search(study, output, base, planner):
@@ -186,6 +221,13 @@ def export_search(study, output, base, planner):
     if trials:
         atomic_json(output / "best_search_expert_policy.json", configured(base, trials[0].params))
         atomic_json(output / "best_search_global_planner.json", planner)
+    lines = ["# Policy search progress", "", f"Completed trials: {len(trials)}.", "",
+             "Scores use the shorter training episodes. Full-length validation is reported in `report.md`.", "",
+             "| Trial | Mean score | Baseline |", "| --- | ---: | --- |"]
+    lines += [f"| {row['trial']} | {row['mean_score']:.4f} | {'yes' if row['baseline'] else ''} |" for row in rows]
+    lines += ["", ("Best training settings: `best_search_expert_policy.json` and `best_search_global_planner.json`."
+                   if trials else "First trial pending; checkpoints and completed seeds are retained when stopped."), ""]
+    (output / "search_report.md").write_text("\n".join(lines), encoding="utf-8")
     return trials
 
 
@@ -202,7 +244,7 @@ def search(pool, study, args, base, planner, deadline, stop):
             trial = study.ask(fixed_distributions=SPACE)
             expert = configured(base, trial.params)
             jobs = submit_seeds(pool, args.output, expert, planner, args.train_seeds,
-                                args.train_seconds, "train", deadline)
+                                args.train_seconds, "train", deadline, args.checkpoint_seconds)
             active[trial.number] = dict(trial=trial, results={}, remaining=len(jobs), interrupted=False)
             futures.update({future: (trial.number, seed) for future, seed in jobs.items()})
             print(f"Started trial {trial.number}; {len(active)} configurations in flight", flush=True)
@@ -216,6 +258,7 @@ def search(pool, study, args, base, planner, deadline, stop):
                 result = future.result()
             except Exception as exc:
                 study.tell(pending["trial"], state=TrialState.FAIL)
+                retry_interrupted(study, study.trials[number])
                 atomic_json(args.output / "worker_error.json", dict(trial=number, seed=seed, error=repr(exc)))
                 stop.set()
                 raise RuntimeError(f"Trial {number}, seed {seed} failed; see worker_error.json") from exc
@@ -308,13 +351,19 @@ def validation_report(output, candidates, results, seeds, planner):
 
 def validate(pool, study, args, base, planner, deadline, stop):
     trials = export_search(study, args.output, base, planner)
-    candidates = select_finalists(trials, base, args.finalists)
+    run_state = read_run_state(args.output)
+    if run_state.get("phase") == "validation":
+        candidates = [{**row, "expert": configured(base, row["params"])} for row in run_state["finalists"]]
+    else:
+        candidates = select_finalists(trials, base, args.finalists)
     results = {candidate["label"]: {} for candidate in candidates}
     futures = {}
-    atomic_json(args.output / "finalists.json", [{k: v for k, v in c.items() if k != "expert"} for c in candidates])
+    finalists = [{k: v for k, v in c.items() if k != "expert"} for c in candidates]
+    atomic_json(args.output / "run_state.json", dict(phase="validation", finalists=finalists))
+    atomic_json(args.output / "finalists.json", finalists)
     for candidate in candidates:
         jobs = submit_seeds(pool, args.output, candidate["expert"], planner, args.validation_seeds,
-                            args.validation_seconds, "validation", deadline)
+                            args.validation_seconds, "validation", deadline, args.checkpoint_seconds)
         futures.update({future: (candidate["label"], seed) for future, seed in jobs.items()})
     validation_report(args.output, candidates, results, args.validation_seeds, planner)
     heartbeat = time.monotonic()
@@ -336,34 +385,87 @@ def validate(pool, study, args, base, planner, deadline, stop):
             print(f"Validation: {len(futures)} episodes pending, "
                   f"{max(0, deadline - time.monotonic()) / 3600:.2f} hours remaining", flush=True)
             heartbeat = time.monotonic()
+    if all(all(seed in results[c["label"]] for seed in args.validation_seeds) for c in candidates):
+        atomic_json(args.output / "run_state.json", dict(phase="complete"))
+
+
+def read_run_state(output):
+    path = output / "run_state.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def resolve_options(args):
+    """Keep cluster defaults while allowing one short laptop command."""
+    if args.output is None:
+        if args.laptop and os.name == "nt" and os.environ.get("LOCALAPPDATA"):
+            # Frequent checkpoints and journal appends should stay out of OneDrive.
+            args.output = Path(os.environ["LOCALAPPDATA"]) / "NordicCupAI" / "bo-laptop"
+        else:
+            args.output = ROOT / "runs" / ("bo-laptop" if args.laptop else "bo-dtu")
+    if args.workers is None:
+        args.workers = min(6, max(1, (os.cpu_count() or 2) // 2)) if args.laptop else 1
+    if args.total_hours is None:
+        args.total_hours = 8. if args.laptop else 11.5
+    if args.search_hours is None:
+        args.search_hours = .75 * args.total_hours if args.laptop else min(8., .75 * args.total_hours)
+    if args.startup_trials is None:
+        args.startup_trials = 16 if args.laptop else 24
+    if args.finalists is None:
+        args.finalists = 2 if args.laptop else 7
+    if args.keep_awake is None:
+        args.keep_awake = args.laptop and os.name == "nt"
+    return args
+
+
+@contextmanager
+def keep_awake(enabled):
+    """Temporarily prevent Windows idle sleep; allow the display to turn off."""
+    active = False
+    if enabled and os.name == "nt":
+        import ctypes
+        set_state = ctypes.windll.kernel32.SetThreadExecutionState
+        active = bool(set_state(0x80000001))  # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+        if not active:
+            print("Could not prevent idle sleep; check Windows power settings.", flush=True)
+    try:
+        yield
+    finally:
+        if active:
+            set_state(0x80000000)
 
 
 def parser():
     cli = argparse.ArgumentParser(description=__doc__)
-    cli.add_argument("--output", type=Path, default=ROOT / "runs" / "bo-dtu")
+    cli.add_argument("--laptop", action="store_true", help="Laptop defaults: up to 6 CPU workers, 8 hours, 2 finalists plus baseline")
+    cli.add_argument("--output", type=Path, help="Resume directory; laptop Windows default is LOCALAPPDATA/NordicCupAI/bo-laptop")
     cli.add_argument("--expert-config", type=Path)
     cli.add_argument("--planner-config", type=Path)
-    cli.add_argument("--workers", type=int, default=1)
+    cli.add_argument("--workers", type=int)
     cli.add_argument("--trials", type=int, default=300, help="Total completed search trials, including previous submissions")
-    cli.add_argument("--startup-trials", type=int, default=24)
-    cli.add_argument("--search-hours", type=float, default=8., help="Search time per submission; 0 resumes validation only")
-    cli.add_argument("--total-hours", type=float, default=11.5, help="Whole invocation budget, including validation")
+    cli.add_argument("--startup-trials", type=int)
+    cli.add_argument("--search-hours", type=float, help="Search time per invocation; 0 runs validation only")
+    cli.add_argument("--total-hours", "--hours", type=float, help="Whole invocation budget, including validation")
+    cli.add_argument("--checkpoint-seconds", type=float, default=60., help="Wall-clock interval for saving in-progress episodes")
+    cli.add_argument("--keep-awake", action=argparse.BooleanOptionalAction, help="Prevent Windows idle sleep while running; default on with --laptop")
     cli.add_argument("--train-seconds", type=float, default=600.)
     cli.add_argument("--validation-seconds", type=float, default=3000.)
     cli.add_argument("--train-seeds", type=int, nargs="+", default=[1, 7, 42])
     cli.add_argument("--validation-seeds", type=int, nargs="+", default=[1001, 1007, 1042])
-    cli.add_argument("--finalists", type=int, default=7, help="Top distinct candidates, in addition to baseline")
+    cli.add_argument("--finalists", type=int, help="Top distinct candidates, in addition to baseline")
     cli.add_argument("--optimizer-seed", type=int, default=20260917)
     return cli
 
 
 def run(args):
+    args = resolve_options(args)
     started = time.monotonic()
     if not (math.isfinite(args.search_hours) and math.isfinite(args.total_hours)
             and 0 <= args.search_hours < args.total_hours):
         raise ValueError("Require 0 <= --search-hours < --total-hours")
     if min(args.workers, args.trials, args.startup_trials, args.finalists) < 1:
         raise ValueError("Workers, trials, startup-trials and finalists must be positive")
+    if not math.isfinite(args.checkpoint_seconds) or args.checkpoint_seconds <= 0:
+        raise ValueError("--checkpoint-seconds must be finite and positive")
     if not 0 < args.train_seconds <= args.validation_seconds <= 3000:
         raise ValueError("Require 0 < train-seconds <= validation-seconds <= 3000")
     if set(args.train_seeds) & set(args.validation_seeds):
@@ -387,7 +489,7 @@ def run(args):
             and base["reproduction"]["selection"]["enabled"]
             and base["reproduction"]["selection"]["post_alignment"]["enabled"]):
         raise ValueError("Tuning requires shared mapping and post-alignment population selection to be enabled")
-    manifest = dict(format_version=1, source_hash=source_hash(), expert=base, planner=planner,
+    manifest = dict(format_version=2, source_hash=source_hash(), expert=base, planner=planner,
                     python=platform.python_version(), system=platform.system(),
                     packages={name: version(name) for name in ("optuna", "numpy", "scipy", "pydantic", "pygame", "shapely")},
                     search_space={name: optuna.distributions.distribution_to_json(dist) for name, dist in SPACE.items()},
@@ -399,23 +501,28 @@ def run(args):
     stop = context.Event()
 
     def request_stop(signum, frame):
-        print("Stopping: preserving completed episodes and trial history.", flush=True)
+        print("Stopping: saving active episodes and trial history. Please wait for workers to finish checkpointing.", flush=True)
         stop.set()
 
     previous_handlers = {sig: signal.signal(sig, request_stop) for sig in (signal.SIGINT, signal.SIGTERM)}
     try:
-        with coordinator_lock(args.output):
+        with coordinator_lock(args.output), keep_awake(args.keep_awake):
             check_manifest(args.output / "manifest.json", manifest)
             atomic_json(args.output / "base_expert_policy.json", base)
             atomic_json(args.output / "base_global_planner.json", planner)
             study = open_study(args.output, args.optimizer_seed, args.startup_trials, base)
             export_search(study, args.output, base, planner)
             print(f"Output: {args.output}\nCPU workers: {args.workers}; predators: off; "
-                  "biome schedule: deterministic simulation time", flush=True)
+                  f"checkpoint interval: {args.checkpoint_seconds:g}s\n"
+                  f"Budget: {args.total_hours:g} hours. Ctrl+C saves and stops; repeat the command to resume.", flush=True)
             with ProcessPoolExecutor(max_workers=args.workers, mp_context=context,
                                      initializer=initialize_worker, initargs=(stop,)) as pool:
                 try:
-                    search(pool, study, args, base, planner, started + args.search_hours * 3600, stop)
+                    if read_run_state(args.output).get("phase") == "validation":
+                        print("Resuming unfinished validation before any new search.", flush=True)
+                    else:
+                        atomic_json(args.output / "run_state.json", dict(phase="search"))
+                        search(pool, study, args, base, planner, started + args.search_hours * 3600, stop)
                     if not stop.is_set():
                         validate(pool, study, args, base, planner, started + args.total_hours * 3600, stop)
                 finally:

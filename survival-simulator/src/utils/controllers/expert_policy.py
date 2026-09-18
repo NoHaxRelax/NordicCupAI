@@ -4,6 +4,7 @@ import math
 import os
 from dataclasses import dataclass, replace
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -14,6 +15,7 @@ from src.utils.controllers.global_planner import GlobalPlanner, PlannerConfig
 from src.utils.controllers.harvest import HarvestConfig, HarvestCoordinator
 from src.utils.controllers.policy_inputs import ExplorationHint, PolicyInputs, ReproductionHint, SectionHint, prepare_inputs
 from src.utils.controllers.population import PopulationConfig, PopulationTracker
+from src.utils.controllers.simple_policy import SimpleConfig, SimpleCoordinator
 
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[3] / "config" / "expert_policy.json"
@@ -67,6 +69,8 @@ class MechanicsConfig(ConfigSection):
 
 
 class ExpertConfig(ConfigSection):
+    policy_mode: Literal["standard", "simple"] = "standard"
+    simple: SimpleConfig = Field(default_factory=SimpleConfig)
     perception: PerceptionConfig
     memory: MemoryConfig
     crowd: CrowdConfig
@@ -100,9 +104,17 @@ class ExpertPolicy:
     def __init__(self, config: ExpertConfig | None = None, planner_config: PlannerConfig | None = None):
         self.config = config if config is not None else load_config()
         self.planner = GlobalPlanner(planner_config)
+        if self.config.policy_mode == "simple":
+            # Coarse, deterministic biome fitting is sufficient for territories.
+            biome = self.planner.biome_estimator.config.model_copy(update={
+                "refit_interval_seconds": 10., "refit_interval_increment_seconds": 5.,
+                "max_refit_interval_seconds": 60., "adapt_to_wall_clock": False})
+            self.planner.config = self.planner.config.model_copy(update={"biome_inference": biome})
+            self.planner.biome_estimator.config = biome
         self.crowd_tracker = CrowdTracker(self.config.crowd)
         self.population = PopulationTracker(self.config.reproduction.selection)
-        self.harvest = HarvestCoordinator(self.config.harvest)
+        self.harvest = (SimpleCoordinator(self.config.simple) if self.config.policy_mode == "simple"
+                        else HarvestCoordinator(self.config.harvest))
         self._escape_memories: dict[int, EscapeMemory] = {}
         self._observation_frames: dict[int, tuple[float, float, bool]] = {}
         self._last_step_time: float | None = None
@@ -138,8 +150,12 @@ class ExpertPolicy:
         self._observation_frames = {key: frame for key, frame in self._observation_frames.items()
                                     if key in living_ids}
         self.population.update(agent_states, sim_time)
+        simple = self.config.policy_mode == "simple"
+        map_interval = (self.config.simple.interpolate(sim_time, self.config.simple.map_interval_seconds,
+                        self.config.simple.late_map_interval_seconds) if simple else 0.)
         hints = self.planner.instructions(agent_states, sim_time, trait_ratings=self.population.ratings,
-            territory_policy=self.config.harvest.enabled and self.config.harvest.coverage.enabled)
+            territory_policy=simple or (self.config.harvest.enabled and self.config.harvest.coverage.enabled),
+            map_interval_seconds=map_interval)
         self.population.population_phase = self.planner.population_phase
         self.planner.population_snapshot = self.population.snapshot()
         harvest_hints, breeding_hints = self.harvest.update(
@@ -171,7 +187,8 @@ class ExpertPolicy:
         """
         inputs = prepare_inputs(
             agent_state,
-            self.config.perception.nearest_fruits,
+            (max(1, len(agent_state["observations"])) if harvest_hint is not None and harvest_hint.retired
+             else self.config.perception.nearest_fruits),
             self.config.perception.predator_danger_radius,
         )
         inputs = replace(inputs, section_hint=section_hint, exploration_hint=exploration_hint,
@@ -236,9 +253,28 @@ class ExpertPolicy:
         fruits = inputs.fruits
         harvest = inputs.harvest_hint
         assigned_harvest = harvest is not None and harvest.vector is not None
+        urgent_food = (stats["energy"] < cfg.harvest.emergency_energy
+                       and not (harvest is not None and harvest.waiting
+                                and stats["energy"] >= cfg.harvest.survival_reserve))
+        preserve_food_reservation = assigned_harvest and stats["age"] >= 90.
+        if (urgent_food and fruits and not preserve_food_reservation
+                and (harvest is None or harvest.allow_local_food)):
+            # A reservation or survey route must not hide food beside a hungry
+            # agent. Only override navigation for a nearby, observed clear
+            # approach; a fruit heard through a wall still needs its route.
+            nearby = tuple(fruit for fruit in fruits
+                           if fruit.distance <= stats["hearing_radius"]
+                           and _path_clear(fruit.angle, fruit.distance, inputs.obstacle_edges, 4.))
+            if nearby and (not assigned_harvest or harvest.waiting or harvest.survey
+                           or harvest.track_id is None
+                           or min(fruit.distance for fruit in nearby) <= math.hypot(*harvest.vector)):
+                fruits = nearby
+                harvest = None
+                assigned_harvest = False
         if harvest is not None and (assigned_harvest or stats["energy"] >= cfg.harvest.emergency_energy):
             fruits = ()
-        if inputs.exploration_hint is not None and inputs.exploration_hint.food_distance_limit is not None:
+        if (not urgent_food and inputs.exploration_hint is not None
+                and inputs.exploration_hint.food_distance_limit is not None):
             fruits = tuple(fruit for fruit in fruits
                            if fruit.distance <= inputs.exploration_hint.food_distance_limit)
 
@@ -258,7 +294,7 @@ class ExpertPolicy:
         elif fruits:
             # Compare ripeness only if every candidate supplies it. If any is
             # unknown, choose the nearest rather than treating unknown as unripe.
-            if all(fruit.ripeness is not None for fruit in fruits):
+            if not urgent_food and all(fruit.ripeness is not None for fruit in fruits):
                 target = min(
                     fruits,
                     key=lambda fruit: (-fruit.ripeness, fruit.distance, fruit.angle),
@@ -278,6 +314,7 @@ class ExpertPolicy:
                 mapping_sprint_reserve = cfg.movement.food_sprint_energy_reserve
             # Nearby fruit remains audible while the scout surveys sideways.
             scan_during_food = (cfg.movement.scan_nearby_food and inputs.observations_fresh
+                                and not urgent_food
                                 and target.distance <= stats["hearing_radius"])
             desired_turn = direction
         elif inputs.exploration_hint is not None:
@@ -298,7 +335,8 @@ class ExpertPolicy:
                 math.tau * stats["age"] / cfg.exploration.turn_period_seconds
             )
 
-        if not in_danger and not assigned_harvest and inputs.section_hint is not None:
+        if (not in_danger and not assigned_harvest and not (urgent_food and fruits)
+                and inputs.section_hint is not None):
             hint = inputs.section_hint
             center_distance = math.hypot(*hint.vector)
             if center_distance > 0 and hint.strength > 0:
@@ -314,7 +352,7 @@ class ExpertPolicy:
                     direction = math.atan2(y, x)
                     desired_turn = direction
 
-        if not in_danger and not assigned_harvest and distance > 0:
+        if not in_danger and not assigned_harvest and not (urgent_food and fruits) and distance > 0:
             crowd = crowd_direction(inputs.neighbors, direction, cfg.crowd, inputs.agent_id)
             if crowd is not None:
                 open_direction, crowd_strength = crowd
@@ -353,8 +391,43 @@ class ExpertPolicy:
             # food and emergency escape still look where they are going.
             desired_turn = _wrap_angle(explore_look)
 
-        if not in_danger and assigned_harvest and harvest.survey and harvest.look_direction is not None:
+        if (not in_danger and not urgent_food and assigned_harvest
+                and harvest.survey and harvest.look_direction is not None):
             desired_turn = _wrap_angle(harvest.look_direction)
+
+        if not in_danger and harvest is not None and harvest.retired:
+            # Aging scouts leave fruit for the foragers. The engine eats on
+            # contact, so check the final motion after ordinary wall steering.
+            if not inputs.observations_fresh:
+                distance = 0.
+            elif inputs.fruits:
+                factor = self.planner.config.estimator.biome_movement_factors.get(stats["biome"], 1.)
+                nearby = [f for f in inputs.fruits if f.distance < distance * factor + 12.]
+                if nearby:
+                    best, choice = min(f.distance for f in nearby), (direction, 0.)
+                    for offset in (0., math.pi / 6, -math.pi / 6, math.pi / 3, -math.pi / 3,
+                                   math.pi / 2, -math.pi / 2, math.pi):
+                        angle = _wrap_angle(direction + offset)
+                        x, y = distance * factor * math.cos(angle), distance * factor * math.sin(angle)
+                        clearance = min(math.hypot(f.vector[0] - x, f.vector[1] - y) for f in nearby)
+                        if _path_clear(angle, distance, inputs.obstacle_edges, 4.):
+                            if clearance >= 12.:
+                                choice = (angle, distance)
+                                break
+                            if clearance > best + 1e-6:
+                                best, choice = clearance, (angle, distance)
+                    direction, distance = choice
+                    desired_turn = direction
+
+        if not in_danger and assigned_harvest and distance <= 1e-9:
+            # Moving and looking are independent, and every turn costs energy.
+            # Only an explicit, bounded observation sweep may turn at rest.
+            desired_turn = (_wrap_angle(harvest.look_direction)
+                            if harvest.scan_while_stationary and harvest.look_direction is not None else 0.)
+        elif not in_danger and urgent_food and fruits and target.distance <= stats["hearing_radius"]:
+            # Nearby fruit remains audible in every direction. Turning adds
+            # no information needed for this emergency pickup.
+            desired_turn = 0.
 
         turn = max(
             -cfg.movement.max_turn_angle,
@@ -381,6 +454,10 @@ class ExpertPolicy:
         )
         energy_after_action = stats["energy"] - action_cost
         breeding = inputs.reproduction_hint
+        parent_reserve = (breeding.minimum_energy_reserve
+                          if breeding is not None and breeding.preserve_lineage
+                          else max(cfg.reproduction.minimum_energy_reserve,
+                                   0. if breeding is None else breeding.minimum_energy_reserve))
         spawn = (
             cfg.reproduction.enabled
             and (breeding is None or breeding.allowed)
@@ -390,8 +467,7 @@ class ExpertPolicy:
             and energy_after_action > cfg.mechanics.spawn_energy_cost
             and (
                 energy_after_action - cfg.mechanics.spawn_energy_cost
-                >= max(cfg.reproduction.minimum_energy_reserve,
-                       0. if breeding is None else breeding.minimum_energy_reserve)
+                >= parent_reserve
             )
         )
         return ActionRequest(

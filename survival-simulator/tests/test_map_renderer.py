@@ -8,7 +8,7 @@ os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
 
 import pygame
 
-from src.utils.map_renderer import MapRenderer, draw_comparison, panel_layout
+from src.utils.map_renderer import MapRenderer, TRAP_COLORS, draw_comparison, panel_layout
 
 
 def snapshot_fixture():
@@ -36,6 +36,31 @@ def snapshot_fixture():
 
 
 class MapRendererTests(unittest.TestCase):
+    def test_trap_types_render_toggle_and_mark_stale_without_mutating_snapshot(self):
+        snapshot = snapshot_fixture()
+        snapshot["groups"] = snapshot["groups"][:1]
+        snapshot["agents"] = snapshot["agents"][:1]
+        estimate = dict(stale=False, sites=[dict(kind=kind, bait=[400 + 350 * i, 500],
+            predator_side=[360 + 350 * i, 500]) for i, kind in enumerate(("wall", "slot", "shelter"))])
+        snapshot["groups"][0]["trap_estimate"] = estimate
+        original = copy.deepcopy(snapshot)
+        renderer = MapRenderer()
+        surface = pygame.Surface((800, 900))
+        renderer.draw(surface, snapshot)
+        for site in estimate["sites"]:
+            x, y = renderer.views[0].pixel(site["bait"])
+            y -= 10 if site["kind"] == "shelter" else 12
+            self.assertEqual(surface.get_at((x, y))[:3], TRAP_COLORS[site["kind"]])
+        shown = pygame.image.tobytes(surface, "RGB")
+        renderer.handle_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t))
+        renderer.draw(surface, snapshot)
+        self.assertNotEqual(shown, pygame.image.tobytes(surface, "RGB"))
+        self.assertEqual(snapshot, original)
+        renderer.handle_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_t))
+        estimate["stale"] = True
+        renderer.draw(surface, snapshot)
+        self.assertNotEqual(shown, pygame.image.tobytes(surface, "RGB"))
+
     def test_estimated_biomes_render_independently_toggle_and_zoom_without_large_allocations(self):
         snapshot = snapshot_fixture()
         snapshot["groups"] = snapshot["groups"][:1]

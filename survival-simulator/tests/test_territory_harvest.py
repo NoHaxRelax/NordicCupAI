@@ -31,7 +31,7 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.harvest.coverage = SimpleNamespace(
             update=Mock(), reset=Mock(), hint=Mock(return_value=patrol),
             owner=Mock(return_value=owner), homes={s["agent_id"]: np.array([100., 100.]) for s in states},
-            gap_targets={}, reject_target=Mock())
+            gap_targets={}, tasks={}, reject_target=Mock())
         return self.harvest.coverage
 
     def ripe_track(self, track_id, x, *, now=20.):
@@ -43,12 +43,12 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.harvest._assign(states, self.poses, now, self.population, self.cfg.mechanics)
         return self.harvest.assignments
 
-    def test_healthy_agents_only_target_fruit_in_their_own_territory(self):
+    def test_nearby_food_is_shared_when_its_owner_is_farther_away(self):
         states = [agent_state(agent_id=1, energy=300), agent_state(agent_id=2, energy=300)]
         self.prepare(states, owner=2)
         self.poses[2].position = np.array([220., 100.])
         self.ripe_track(10, 130.)
-        self.assertEqual(self.assign(states), {2: 10})
+        self.assertEqual(self.assign(states), {1: 10})
 
     def test_hungry_agent_can_borrow_foreign_reservation_without_duplicates(self):
         states = [agent_state(agent_id=1, energy=300), agent_state(agent_id=2, energy=40)]
@@ -60,13 +60,13 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.assertEqual(assigned, {2: 10, 1: 11})
         self.assertEqual(len(assigned), len(set(assigned.values())))
 
-    def test_new_nearer_fruit_does_not_interrupt_viable_ripe_target(self):
+    def test_much_nearer_fruit_replaces_an_expensive_old_target(self):
         states = [agent_state(agent_id=1, energy=300)]
         self.prepare(states, owner=1)
         self.ripe_track(10, 180.)
         self.assertEqual(self.assign(states), {1: 10})
         self.ripe_track(11, 120., now=21.)
-        self.assertEqual(self.assign(states, 21.), {1: 10})
+        self.assertEqual(self.assign(states, 21.), {1: 11})
 
     def test_legacy_scout_role_does_not_disable_owned_fruit(self):
         states = [agent_state(agent_id=1, energy=300)]
@@ -99,7 +99,7 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.assertEqual(self.harvest.navigator.snapshot()[1]["replans"], 0)
 
     def test_patrol_uses_same_stall_recovery_and_rejects_failed_target(self):
-        states = [agent_state(agent_id=1, energy=300)]
+        states = [agent_state(agent_id=1, energy=150)]
         coverage = self.prepare(states, owner=1,
                                 patrol=HarvestHint((80., 0.), None, 0., False, survey=True))
         with patch.object(self.harvest.navigator, "release", wraps=self.harvest.navigator.release) as release:
@@ -129,6 +129,7 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.assertEqual(planner.exploration_hints, {})
 
     def test_disconnected_and_uncertain_agents_cannot_bypass_central_birth_slot_or_cap(self):
+        self.harvest.config = self.harvest.config.model_copy(update={"survival_population": 12})
         states = [agent_state(agent_id=i, energy=400.) for i in (1, 2, 3)]
         self.prepare(states, owner=1)
         self.poses[2].group_id = 2
@@ -154,8 +155,8 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.assertGreater(moving.move_distance, 0.)
         self.assertFalse(moving.spawn_agent)
 
-    def test_agent_returns_to_its_territory_before_idling(self):
-        states = [agent_state(agent_id=1, energy=300)]
+    def test_hungry_agent_returns_to_its_territory_before_idling(self):
+        states = [agent_state(agent_id=1, energy=150)]
         coverage = self.prepare(states, owner=2)
         coverage.homes[1] = np.array([300., 100.])
         hints, _ = self.step(states, 0.)
@@ -168,7 +169,7 @@ class TerritoryHarvestTests(unittest.TestCase):
         self.assertNotIn(1, self.harvest.navigator.routes)
 
     def test_unreachable_home_is_not_retried_every_step(self):
-        states = [agent_state(agent_id=1, energy=300)]
+        states = [agent_state(agent_id=1, energy=150)]
         coverage = self.prepare(states, owner=2)
         coverage.homes[1] = np.array([300., 100.])
         failure = SimpleNamespace(blocked=True, waypoint=None, remaining=math.inf, status="blocked")
@@ -178,6 +179,15 @@ class TerritoryHarvestTests(unittest.TestCase):
             self.assertEqual(steer.call_count, 1)
             self.step(states, 20.)
             self.assertEqual(steer.call_count, 2)
+
+    def test_hungry_agent_does_not_walk_to_an_unaffordable_territory_home(self):
+        states = [agent_state(agent_id=1, energy=10)]
+        coverage = self.prepare(states, owner=2)
+        coverage.homes[1] = np.array([900., 100.])
+        hints, _ = self.step(states, 0.)
+        self.assertEqual(self.harvest.tasks[1]["kind"], "idle")
+        self.assertEqual(hints[1].vector, (0., 0.))
+        self.assertTrue(hints[1].scan_while_stationary)
 
 
 if __name__ == "__main__":

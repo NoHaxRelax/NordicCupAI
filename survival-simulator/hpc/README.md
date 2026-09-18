@@ -47,7 +47,9 @@ Avoid changing its Python/module/dependencies midway through a study.
 
 Logs are `bo_JOBID.out` and `bo_JOBID.err` in the submission directory. Follow
 progress with `tail -f bo_JOBID.out`. `bkill JOBID` stops a job; completed episodes
-remain saved. There is no display window, renderer, or GPU allocation.
+remain saved, and active episodes checkpoint on a cooperative stop. There is no
+display window, renderer, or GPU allocation. The same tuner also has a
+[laptop profile](../LAPTOP_TUNING.md).
 
 To check a short real submission first, copy `submit_bo.sh` to a separate script
 and use 4 slots, `-W 00:15`, `--workers 4 --trials 3 --startup-trials 1`,
@@ -92,8 +94,8 @@ living traits are diagnostic and can rise simply because weaker agents died.
 | Parent energy reserve | 100 | 80–160 |
 | Normal breeding cooldown after alignment | 8 s | 6–16 s |
 
-Elite selection, the founder-normalized breeding floor, gene backups, mapping
-behavior, and elite cooldown are preserved. Fruit mechanics are not tuned.
+Founder-normalized trait ranking, population forecasts, mapping behavior,
+and elite cooldown are not tuned. Fruit mechanics are not tuned.
 The exact space lives in `SPACE` in `tune_policy.py`; changing it requires a
 new output directory.
 
@@ -109,15 +111,20 @@ Results are in `runs/bo-dtu/`:
 - `best_search_expert_policy.json` and `best_search_global_planner.json`: the
   shorter-horizon search winner; this is **not** the validated result.
 - `search_results.json`: all completed trials ranked by training score.
+- `search_report.md`: readable best-so-far training results, updated each trial.
 - `manifest.json`, `optuna.journal`, and `candidates/`: configs, versions, source
   fingerprint, optimizer history and individual seed results for resuming.
 - `.venv-hpc/installed-packages.txt` (outside the output directory): installed
   dependency versions from setup.
 
 Re-submit `bsub < hpc/submit_bo.sh` to continue the same study. It retains
-completed trials and seed results; an interrupted episode restarts from its
-beginning. Each submission receives a fresh time budget. The trial limit counts
-previous completed trials. Increase `--trials` to extend the search.
+completed trials and seed results; interrupted episodes restore their simulation
+and policy state from checkpoints. Checkpoints are saved every 60 wall-clock
+seconds and on cooperative stops. Hard termination loses work since the most
+recent complete checkpoint. Each submission receives a fresh time budget. The
+trial limit counts previous completed trials. Increase `--trials` to extend the
+search. If validation was interrupted, the next submission finishes those same
+finalists and exits; a subsequent submission continues searching.
 
 To finish validation without further searching, change `--search-hours 8` to
 `--search-hours 0` in the submission script. Use the same output directory,
@@ -127,7 +134,7 @@ create independent studies.
 
 The manifest rejects incompatible resumes after changes to policy code,
 settings, Python, relevant package versions, seed batches, or episode lengths.
-Worker count and wall-clock budgets can change. Keep results on persistent
+Worker count, checkpoint interval and wall-clock budgets can change. Keep results on persistent
 storage; do not use disposable node-local scratch as the only copy.
 
 To try the selected settings in the playground, load **both** files:

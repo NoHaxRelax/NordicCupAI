@@ -437,9 +437,84 @@ to disable trait-based duties independently. `faster_mapping_enabled` controls
 the cached frontier strategy and early scouting allocation. Initial populations
 are treated equally, so early growth benefits all founders.
 
-### Centralized harvesting without predators
+### Simple experimental policy
 
-Run the predator-free experiment with coordinated fruit harvesting and breeding:
+Select the simpler controller with `--policy simple`. The existing controller
+remains available as `--policy standard`; no saved BO settings are overwritten.
+Run these commands from `survival-simulator`:
+
+```powershell
+# Graphical comparison, including shared map and speed buttons
+.\.venv\Scripts\python.exe local_playground.py --policy simple --no-predators --seed 42 --speed 5
+
+# Unthrottled headless run with progress and final score
+.\.venv\Scripts\python.exe -u local_playground.py --policy simple --headless --no-diagnostics --no-predators --seed 42
+
+# Short comparison against the existing coordinated policy
+.\.venv\Scripts\python.exe -u local_playground.py --policy standard --central-harvest --headless --no-diagnostics --no-predators --seed 42 --max-seconds 120
+```
+
+The simple coordinator has three rules:
+
+1. **Control births.** Target 12 agents under 40 seconds old before simulation
+   time 900 seconds, 6 until 1,800 seconds, then 3. Older agents do not count
+   toward these targets, so total population can exceed them. Birth spacing is
+   `min(8 seconds, 0.8 * 40 / target)`: approximately 2.7, 5.3, and 8 seconds.
+   This can replenish the young population while preserving 75 energy in the
+   parent after the 100-energy birth cost. Prefer the strongest eligible
+   founder-normalized trait score; energy availability can prevent a birth.
+2. **Share productive space.** Assign stable homes spread over coarse cells
+   using observed biomes and the estimated Voronoi map. Reconsider homes every
+   30 seconds or when membership changes. Agents make short patrols near their
+   home, then rest; patrol intervals grow from 12 to 40 seconds and observation
+   sweeps from 4 to 15 seconds by 1,800 seconds. Known river cells are excluded.
+3. **Collect food.** Share observed fruit positions, reserve each fruit for one
+   nearby agent, and eat immediately. Refresh assignments every 0.5 seconds.
+   Forget fruit missing from fresh hearing observations or unseen for 8 seconds.
+   Keep obstacle routing and remember blocked destinations for 30 seconds.
+   There is no ripeness prediction or harvest waiting.
+
+Agents over 40 can keep foraging and breeding while healthy. Actual old age is
+detected from two energy-loss samples matching the simulator's senescence drain,
+after subtracting walking, sprinting, turning, and birth costs. These agents retire
+from foraging and breeding and become **aging scouts**. They give up their food
+and home assignments and receive distinct nearby unvisited frontier targets, with
+obstacle routing and retry delays. They walk rather than sprint and avoid stepping
+onto visible fruit. If their estimated position becomes uncertain they scan to
+relocalize. This replaces the earlier proposal to make old agents simply rest.
+
+The simulator eats automatically on contact and has no eat-disable action, so
+incidental pickups (for example fruit appearing underneath a scout) remain possible.
+The window and headless progress show total population, the under-40 count/target,
+and the number of confirmed aging scouts separately.
+
+Initial coordinate discovery retains the existing scout behavior. Once agents
+share an anchored map, expensive map observation passes run approximately every
+0.5 seconds, gradually increasing to 2 seconds. Movement and heading prediction,
+local obstacle avoidance, and food observations still run every tick. Newborns
+and unanchored groups force frequent alignment updates. Biome refits start at
+10-second intervals and can back off to 60 seconds; the shared trap layer remains
+available. All scheduling uses simulation time.
+
+Tune the `simple` section in `config/expert_policy.json`; `renewal_age` is the
+young-population counting cutoff (40), not the retirement age. Set `policy_mode` to
+`"simple"` in that file to use it in the agent server too. `--central-harvest`
+only selects coordination for the standard mode; simple mode always coordinates.
+Predators are controlled separately by `--no-predators`.
+
+For a checkpointed, multi-seed full-horizon test:
+
+```powershell
+.\.venv\Scripts\python.exe -u benchmark_survival.py --policy simple --seeds 42 1001 1007 --workers 1 --seconds 3000 --output runs/simple-survival
+```
+
+Ctrl+C saves progress; repeat exactly the same command to resume. Use a new output
+folder after code/config changes. The simple policy is an experiment; surviving
+3,000 seconds or improving the score must be established by those longer tests.
+
+### Centralized survival without predators
+
+Run the predator-free experiment with coordinated feeding and generation renewal:
 
 ```powershell
 .\.venv\Scripts\python.exe local_playground.py --seed 42 --no-predators --central-harvest
@@ -463,42 +538,138 @@ Reliable missing observations, expiry, and frame changes retire old tracks.
 
 Fruit starts at 20 energy, grows by two energy per simulated second, reaches
 about 60 after 20 seconds, and disappears after approximately 50 seconds.
-After the absolute map dimensions are known, one territory owner chooses
-each area's food and survey tasks. Every second the coordinator checks for
-emergency food, fruit ripe by arrival, and overdue or unexplored patrol goals,
-in that order. A viable fruit target stays assigned until collected or blocked.
-Developing fruit is left to ripen while there is useful patrol work; otherwise
-the agent can explicitly wait outside pickup range (56 energy by default).
-Hungry agents may borrow food from another territory, and colonies below 12
-agents can collect their own fruit early to fund growth. Fruit reservations
-remain unique; there is no colony-wide assignment optimizer or genetic food
-priority. Eating is automatic on contact, so incidental pickup while passing
-through another territory remains possible.
+After the absolute map dimensions are known, territories organize nearby food
+and survey work, but do not prohibit feeding across a border. Reservations
+prioritize viable young agents and urgent hunger, account for travel energy,
+and reject trips that the agent cannot survive. A hungry agent can take nearby
+reachable food instead of following a distant patrol assignment. Elderly
+agents respect the coordinator's reservations for the next generation.
+Local greedy movement respects central reservations and rejected routes,
+including walls remembered outside the current view.
+Fruit waits are only allowed for young agents with enough energy
+remaining after travel and waiting; ripeness is secondary to survival.
+Waiting is allowed only when a preceding empty observation brackets the
+fruit's birth. Fruit of unknown age is collected immediately because it may
+already be close to rotting.
+Eating is automatic on contact, so incidental pickup remains possible.
+
+When no meal is assigned, agents can conserve energy near recently observed
+trees or rest with a food reserve. Occasional scans keep the surrounding area
+observable. Agents leave an unproductive tree after eight seconds, and avoid
+camping in rivers. Search routes favor productive terrain with lower movement
+costs. When no coarse survey center is affordable, a shorter search step keeps
+food discovery possible while energy remains.
+These decisions use observed trees, fruit tracks, biome estimates and public
+agent statistics, never the simulator's complete map or true fruit ages.
+
+After mapping, `harvest.conservation` gradually shifts optional work toward
+energy saving. Between 300 and 1,800 simulated seconds, scouting decreases
+from continuous movement to three seconds per ten-second cycle, with agents
+staggered across the cycle. Stationary scans slow from once per six seconds
+to once per eighteen seconds, and optional head sweeping during patrols fades
+out. Each uninterrupted scan makes a full turn; interrupted scans restart at
+the next stationary opportunity. Food collection, travel
+to observed orchards, river escape, and predator escape remain responsive.
+Rest preserves the survey destination and does not consume the navigator's
+stuck timer. Set `harvest.conservation.enabled` to `false` to disable the dial;
+its timing and late scouting fraction are configurable. The harvest snapshot
+reports the current conservation fraction, scouting fraction and scan interval.
 
 All harvest and patrol destinations use one cached route planner over observed
 rock edges. It plans around rocks with bounded A*, while local edge avoidance
 checks the actual movement step. After five seconds without progress along
 the route it replans once; another five seconds without progress releases the
-target for a cooldown. Intentional ripening waits do not count as stuck.
+target for a cooldown. Fruit routes can end safely within pickup distance,
+including beside a rock, without crossing walls. Intentional ripening waits
+do not count as stuck.
+Affordability is checked against the complete route around rocks and the
+estimated biomes along it, including expensive river crossings. Swamps retain
+their food-producing value instead of triggering compulsory relocation. The grid
+checks connections against physical clearance and searches for short passages
+through narrow openings instead of closing them with excessive padding.
 The old scout/resident and section-steering policies stop supplying goals to
 mapped territories; they remain available before alignment and for disconnected
 groups. Walking remains the normal harvest speed; predator escape has priority.
 
 Breeding uses the existing mean of six founder-normalized trait ratios.
-Higher overall scores receive priority, while low-ranked agents can still
-reproduce to recover a small population. Once established, ordinary breeding
-requires at least the founder-average trait score. Trait thresholds and normal
-cooldowns come from the existing population tracker, without a second set of
-harvest-specific breeding thresholds or individual-trait champion exceptions.
-Observed fruit arrivals and standing food stocks set a population
-target between 12 and 60. Births are staggered, and parents retain at least
-100 energy, in addition to the normal action-cost checks.
-Valuable agents aged 40 or older can produce a replacement even above the
-food target when fewer than two young agents retain at least 95% of their
-overall trait score. Such births are limited to one per parent per 35 seconds and
-one colony-wide per five seconds, and still obey the 60-agent hard cap.
+Parents with fresh food nearby receive priority, followed by replacement need
+and trait quality. The existing population tracker supplies ordinary energy
+thresholds and individual cooldowns. Smoothed observed fruit arrivals and
+standing food stocks set a population target. To prevent low discovery from
+shrinking the colony prematurely, the default scouting floor is six agents
+until 900 seconds, four until 1,800, then two. A separate scheduled ceiling
+prevents food estimates from expanding the late colony again:
+
+| Simulation time | Target range | Target ceiling setting |
+| --- | --- | --- |
+| Before 900 seconds | 6–12 agents | `harvest.population_cap_early` |
+| 900–1,800 seconds | 4 agents | `harvest.population_cap_middle` |
+| From 1,800 seconds | 2 agents | `harvest.population_cap_late` |
+
+The two transitions are `harvest.population_middle_seconds` and
+`harvest.population_late_seconds`. These five settings in
+`config/expert_policy.json` are the main knobs for testing population schedules.
+Ceilings must stay level or decrease over time, and the global hard limit still
+applies. Existing agents live on as targets fall; births slow down, with bounded
+temporary parent–child overlap for generation replacement. Near-extinction
+breeding reserves remain independent of the scheduled ceilings. The snapshot's
+`reproduction_plan` reports `population_phase`, `target_cap`, and the actual target.
+These new ceilings are an experimental setting; the earlier survival report
+does not establish their full-game performance.
+This matters because the engine halves new tree spawning every 300 simulated
+seconds, while old trees die. Agents also incur additional energy drain after
+a hidden age between 60 and 120 seconds; at age 100, the extra drain can be
+10 energy per second. Keeping old agents walking is therefore expensive.
+
+The coordinator forecasts viable population 30 and 60 seconds ahead using
+public ages, energy, and shared nearby food. It seeks a mix of generations,
+allowing bounded temporary overlap between parents and replacements. Births
+are spaced across the colony, with faster recovery when extinction is near.
+Normal births retain a 100-energy parent reserve; replacements use 40, and
+an endangered final lineage can use 20. Young parents retain ordinary reserves
+unless the actual population is near extinction. Confirmed aging parents may
+transfer stored energy to missing successors with a five-energy reserve;
+these births can temporarily exceed the ordinary overlap limit, but stop when
+the required healthy young population exists and always respect the hard cap.
+Survival takes precedence over gene
+ranking. Expected aging uses the engine's public onset range; the controller
+cannot read an individual's hidden lifespan. Clean energy observations narrow
+that onset range, and confirmed aging uses the observed higher drain. Renewal
+forecasts also credit half the smoothed observed fruit-arrival energy, capped
+at three energy per second per agent and allocated only where fresh nearby
+food supports access. Standing fruit is counted separately, so stock does not
+create a second income credit. The `reproduction_plan` snapshot
+records forecasts, target, selected parent and reason for allowing or deferring
+a birth. The hard population cap remains 60.
+Travel and waiting budgets estimate passive energy use from public energy
+changes after accounting for movement, turning and births. Observed aging
+remains remembered across meals; food gains cannot make an old agent appear
+young again. Predicted shortages alone do not authorize births into barren
+areas while young successors already exist.
+Younger carriers choose food before agents with confirmed aging drain.
+Viable meals within 160 pixels of carriers without confirmed aging are
+protected when those carriers have room for at least 20 more energy, including
+their next meal after the currently reserved fruit. Aging agents can still
+collect other unclaimed food. When no meal is assigned and at least two
+healthy young carriers exist, they rest and scan while retaining the option
+to reproduce from stored energy. Confirmed funded transfers use the global
+birth interval instead of the ordinary parent's longer growth cooldown.
 This is a food-aware selection heuristic: mutations remain random and good
 genes are not guaranteed to survive indefinitely.
+The former `minimum_breeder_trait_score`, `gene_backup_age` and
+`gene_backup_interval_seconds` settings remain accepted for compatibility
+with exported configurations; population forecasts now replace those gates.
+
+Check full-game survival with a resumable three-seed benchmark:
+
+```powershell
+.\.venv\Scripts\python.exe benchmark_survival.py --seeds 1001 1007 1042 --workers 3 --seconds 3000
+```
+
+The benchmark saves checkpoints, a summary, population/food histories, and
+death details in `runs/survival-validation`. Simulator truth in those diagnostic
+records is never passed to the policy. Use a new output folder after changing
+policy code or settings.
 
 The internal map shows green squares for developing fruit, gold squares for
 estimated ripe fruit, and gold dashed routes. Agent labels distinguish
@@ -668,6 +839,44 @@ roles, headings, uncertainty circles, tree and edge landmarks, sampled biomes,
 and dashed historical sighting links (not present-day measured distances).
 Pan an internal panel by dragging, zoom with the wheel, and press **F** or middle
 click to fit it again. Matching ID colours help compare the two views.
+
+The bottom bar has **1x, 2x, 5x, 10x, and 20x** playback buttons. Keys **1–5**
+select those same speeds. Start at a chosen speed with `--speed 5`, for example:
+
+```powershell
+.\.venv\Scripts\python.exe local_playground.py --seed 42 --no-predators --central-harvest --speed 5
+```
+
+One-times playback targets one simulated second per real second. Higher settings
+run more ordinary 0.1-second steps between renders; every step still gets its
+policy decision and diagnostics. The bar shows the achieved speed, which may be
+below the requested speed when computation is the bottleneck. The agent counter
+shows the coordinator's current population target. Headless runs remain
+unthrottled regardless of `--speed`.
+
+Potential predator traps are part of each group's `trap_estimate` layer in the
+planner snapshot. After absolute anchoring and discovery of both world bounds,
+the mapper reconstructs rock rectangles from adjoining observed faces and runs
+the same detector as the trap experiments. It never reads `env.obstacles`.
+Each reconstructed rectangle records whether two, three, or four faces support
+it. The world boundary uses the observed dimensions and the public wall thickness.
+
+Press **T** to toggle the trap layer. Amber triangles mark wall-trap bait points,
+green diamonds mark narrow-slot bait points, and purple rings mark deep shelters.
+A line to a cross shows the estimated predator position for wall and slot traps.
+Grey markers are awaiting refresh after new geometry. These are **candidates**:
+unseen obstacles, map error, and an unverified approach can invalidate them.
+`geometry_guaranteed` describes the detector's geometry model; the estimated-map
+layer always sets `guaranteed` to false. This layer adds map information and does
+not assign bait agents or change escape/harvesting decisions.
+
+Configure `trap_inference` in `config/global_planner.json`. It is enabled by
+default, uses the `safe` preset, retains up to 64 sites, and checks changed
+geometry at most once every 10 simulated seconds. Repeated sightings and
+unchanged reconstructed rectangles reuse the scan. New frame transforms clear
+old positions immediately; departed/merged groups are pruned. The raster budget
+is 2.4 million cells; larger inferred bounds defer scanning rather than allocating
+an unbounded grid. Snapshots and rendering never trigger a scan.
 
 From `survival-simulator`:
 
@@ -925,6 +1134,20 @@ to open the report automatically. Use `--diagnostics-config PATH` for another
 file, `--output-dir PATH` to override the destination, or `--no-diagnostics` to
 disable recording. Relative output paths are resolved from `survival-simulator`.
 
+
+### Overnight policy tuning on a laptop
+
+From the repository root in PowerShell:
+
+```powershell
+.\survival-simulator\.venv\Scripts\python.exe -u .\survival-simulator\tune_policy.py --laptop --hours 8
+```
+
+Uses up to six CPU workers and saves active episodes every minute. Press Ctrl+C
+and rerun the same command to resume. Windows results go to
+`%LOCALAPPDATA%\NordicCupAI\bo-laptop`, with a continuously updated
+`search_report.md` and exported best settings. See the
+[laptop tuning guide](LAPTOP_TUNING.md) for validation, power settings and results.
 
 ### Overnight policy tuning on DTU HPC
 

@@ -851,7 +851,7 @@ class WorldEstimator:
         if field_name == "edges" and len(order) != len(landmarks):
             group._edge_revision += 1
 
-    def update(self, agent_states, sim_time):
+    def update(self, agent_states, sim_time, *, observe=True):
         if not agent_states:
             self.reset()
             return
@@ -863,6 +863,9 @@ class WorldEstimator:
         # Retries must not integrate movement or count the same sighting twice.
         if self.last_time is not None and sim_time == self.last_time:
             return
+        # Prediction still runs every action tick when shared-map sensing is
+        # throttled. New agents always need a real observation/alignment pass.
+        observe = observe or any(state["agent_id"] not in self.poses for state in agent_states)
         agent_states = sorted(agent_states, key=lambda state: state["agent_id"])
         # The supplied simulator can skip an observation/age update when a
         # preceding agent dies while its list is being traversed. Its action
@@ -875,7 +878,8 @@ class WorldEstimator:
                      and state["age"] == self.poses[state["agent_id"]].age}
         agent_states = [dict(state, observations=[]) if state["agent_id"] in stale_ids else state
                         for state in agent_states]
-        geometry = {state["agent_id"]: ObservationGeometry(state["observations"]) for state in agent_states}
+        geometry = ({state["agent_id"]: ObservationGeometry(state["observations"]) for state in agent_states}
+                    if observe else {})
         unchanged_corrections = {}
         living = {state["agent_id"] for state in agent_states}
         self.poses = {key: pose for key, pose in self.poses.items() if key in living}
@@ -898,11 +902,19 @@ class WorldEstimator:
                 pose.heading = wrap(pose.heading + action.turn_angle)
                 pose.uncertainty += abs(displacement) * self.config.odometry_error_per_unit
             pose.biome, pose.age = state["biome"], state["age"]
+            if not observe:
+                continue
             old_x, old_y = pose.position
             if not self._correct_from_edges(pose, geometry[agent_id]):
                 self._correct_from_trees(pose, geometry[agent_id])
             if pose.position[0] == old_x and pose.position[1] == old_y:
                 unchanged_corrections[agent_id] = self._correction_state(pose)
+
+        if not observe:
+            live_groups = {pose.group_id for pose in self.poses.values()}
+            self.groups = {key: group for key, group in self.groups.items() if key in live_groups}
+            self.last_time = sim_time
+            return
 
         # Agent observations provide both an identified relative position and
         # relative heading: heading_j = heading_i + bearing_ij + pi - rel_dir.

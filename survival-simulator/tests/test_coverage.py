@@ -204,7 +204,7 @@ class CoverageTests(unittest.TestCase):
         forest = self.coverage.food_weights[self.coverage.points[:, 0] < 500].mean()
         desert = self.coverage.food_weights[self.coverage.points[:, 0] > 500].mean()
         self.assertGreater(forest, desert)
-        self.group.trees = [TreeLandmark(np.array([700., 400.]), 0)]
+        self.group.trees = [TreeLandmark(np.array([700., 400.]), 30)]
         self.update(30, biome_layer=layer)
         near_tree = np.argmin(np.linalg.norm(self.coverage.points - [700., 400.], axis=1))
         self.assertGreater(self.coverage.food_weights[near_tree], forest)
@@ -253,6 +253,91 @@ class CoverageTests(unittest.TestCase):
         self.update()
         self.assertFalse(self.coverage.homes)
 
+    def test_hungry_patrol_prefers_food_biomes_over_an_equally_close_desert(self):
+        self.states = [agent_state(agent_id=0, energy=75)]
+        self.poses[0].position = np.array([500., 400.])
+        layer = dict(bounds=[0, 0, 1000, 800], palette=["forest", "desert"],
+                     labels=[[0, 1]], confidence=[[1., 1.]])
+        self.update(biome_layer=layer)
+        self.assertLess(self.coverage.destination(0)[0], 500.)
+
+    def test_energy_drop_replaces_an_unaffordable_persistent_target_immediately(self):
+        self.states = [agent_state(agent_id=0, energy=300)]
+        self.update()
+        farthest = int(np.argmax(np.linalg.norm(self.coverage.points - self.poses[0].position, axis=1)))
+        self.coverage.gap_targets.pop(0, None)
+        self.coverage.targets[0] = farthest
+        self.coverage.target_since[0] = 0.
+        self.states[0]["energy"] = 20.
+        self.update(.1)  # Earlier than the ordinary two-second replan.
+        distance = np.linalg.norm(self.coverage.destination(0) - self.poses[0].position)
+        self.assertLess(distance, 200.)
+        self.assertNotEqual(self.coverage.targets.get(0), farthest)
+
+    def test_low_energy_newborn_can_search_nearby_across_a_territory_boundary(self):
+        self.update()
+        owners = self.coverage.owners.copy()
+        agent_id = next(i for i in self.coverage.homes
+                        if self.coverage.owner(self.poses[i].position) != i)
+        self.states[agent_id]["energy"] = 30.
+        self.coverage._clear_target(agent_id)
+        self.coverage.next_plan = 0.
+        self.update(.1)
+        destination = self.coverage.destination(agent_id)
+        self.assertLess(np.linalg.norm(destination - self.poses[agent_id].position), 200.)
+        self.assertNotEqual(self.coverage.owner(destination), agent_id)
+        np.testing.assert_array_equal(self.coverage.owners, owners)
+
+    def test_hungry_search_still_respects_disconnected_observed_components(self):
+        self.states = [agent_state(agent_id=0, energy=75), agent_state(agent_id=1, energy=300)]
+        self.poses[0].position = np.array([450., 400.])
+        self.poses[1].position = np.array([800., 400.])
+        self.group.edges = [EdgeLandmark(np.array([500., 0.]), np.array([500., 800.]), 0)]
+        self.group.trees = [TreeLandmark(np.array([550., 400.]), 0)]
+        self.update()
+        self.assertLess(self.coverage.destination(0)[0], 500.)
+
+    def test_food_search_does_not_wait_for_the_normal_survey_revisit_deadline(self):
+        self.states = [agent_state(agent_id=0, energy=75)]
+        self.update()
+        self.coverage.seen[:] = 0.
+        self.coverage.gaps.seen[:] = True
+        self.coverage._clear_target(0)
+        self.update(2.)
+        self.assertEqual(self.coverage.tasks[0], "forage")
+        self.assertGreater(np.linalg.norm(self.coverage.destination(0) - self.poses[0].position), 25.)
+
+    def test_tree_food_prior_fades_without_new_sightings(self):
+        self.group.trees = [TreeLandmark(np.array([200., 200.]), 0)]
+        self.update()
+        before = self.coverage.food_weights.sum()
+        self.update(46.)
+        self.assertLess(self.coverage.food_weights.sum(), before)
+        self.assertFalse(self.coverage.orchards.any())
+
+    def test_slow_terrain_and_age_reduce_safe_search_range(self):
+        young = agent_state(agent_id=0, energy=75, age=10)
+        old = dict(young, age=100)
+        river = dict(young, biome="river")
+        self.assertLess(self.coverage._travel_budget(old), self.coverage._travel_budget(young))
+        self.assertLess(self.coverage._travel_budget(river), self.coverage._travel_budget(young))
+
+    def test_unaffordable_search_stops_but_still_periodically_looks_for_food(self):
+        self.states = [agent_state(agent_id=0, energy=1)]
+        self.update(views={0: view()})
+        hint = self.coverage.hint(0, self.poses[0])
+        self.assertEqual(self.coverage.tasks[0], "conserve energy")
+        self.assertEqual(hint.vector, (0., 0.))
+        self.assertTrue(hint.scan_while_stationary)
+        self.assertEqual(hint.look_direction, math.pi / 4)
+        self.update(1.5)
+        hint = self.coverage.hint(0, self.poses[0])
+        self.assertFalse(hint.scan_while_stationary)
+
+    def test_low_energy_still_allows_an_affordable_emergency_search(self):
+        state = agent_state(agent_id=0, energy=10, age=10)
+        self.assertGreater(self.coverage._travel_budget(state), 50.)
+
 
 class CoverageIntegrationTests(unittest.TestCase):
     setUp = test_harvest.HarvestTests.setUp
@@ -272,6 +357,13 @@ class CoverageIntegrationTests(unittest.TestCase):
         self.assertFalse(hints[patroller].survey)
         self.assertIsNotNone(hints[patroller].track_id)
         np.testing.assert_array_equal(self.harvest.coverage.owners, before)
+
+    def test_stationary_search_scan_survives_harvest_navigation(self):
+        self.harvest = HarvestCoordinator(HarvestConfig(enabled=True))
+        hints, _ = self.step([agent_state(agent_id=1, energy=1)], 0)
+        self.assertEqual(hints[1].vector, (0., 0.))
+        self.assertTrue(hints[1].scan_while_stationary)
+        self.assertEqual(hints[1].look_direction, math.pi / 4)
 
 
 if __name__ == "__main__":

@@ -11,7 +11,8 @@ from pydantic import ValidationError
 from agent_server import app, predict
 from src.utils.DTOs import ObservationResponse, StepResponse
 from src.utils.controllers.expert_policy import ExpertConfig, ExpertPolicy, load_config
-from src.utils.controllers.policy_inputs import prepare_inputs
+from src.utils.controllers.policy_inputs import (ExplorationHint, HarvestHint,
+                                                ReproductionHint, SectionHint, prepare_inputs)
 
 
 def agent_state(observations=(), **stats):
@@ -80,6 +81,83 @@ class ExpertPolicyTests(unittest.TestCase):
                 ]))
                 self.assertAlmostEqual(action.move_direction, -1.0)
                 self.assertEqual(action.move_distance, 3.0)
+
+    def test_critical_agent_takes_nearby_food_before_harvest_wait_or_survey(self):
+        for hint in (HarvestHint((0., 0.), 1, 25., True),
+                     HarvestHint((-100., 0.), None, 0., False, survey=True),
+                     HarvestHint((-100., 0.), 1, 60., False)):
+            with self.subTest(hint=hint):
+                action = self.policy.action_decision(
+                    agent_state([fruit(5., .6, ripeness=.1), fruit(30., -1., ripeness=1.)], energy=30.),
+                    harvest_hint=hint,
+                    exploration_hint=ExplorationHint((0., 100.), "scout", "survey", food_distance_limit=1.),
+                    section_hint=SectionHint((-100., 0.), 1.),
+                )
+                self.assertAlmostEqual(action.move_direction, .6)
+                self.assertEqual(action.move_distance, 5.)
+                self.assertEqual(action.turn_angle, 0.)
+
+    def test_emergency_food_does_not_override_a_route_around_a_visible_wall(self):
+        action = self.policy.action_decision(
+            agent_state([fruit(10.), {"type": "Edge", "coords": [[5., -20.], [5., 20.]]}], energy=40.),
+            harvest_hint=HarvestHint((0., 25.), 1, 30., False),
+        )
+        self.assertAlmostEqual(action.move_direction, math.pi / 2)
+        self.assertGreater(action.move_distance, 0.)
+
+    def test_resting_agent_does_not_pay_for_survey_turns(self):
+        resting = self.policy.action_decision(
+            agent_state(energy=300.),
+            harvest_hint=HarvestHint((0., 0.), None, 0., False, survey=True, look_direction=math.pi / 2),
+        )
+        moving = self.policy.action_decision(
+            agent_state(energy=300.),
+            harvest_hint=HarvestHint((20., 0.), None, 0., False, survey=True, look_direction=math.pi / 2),
+        )
+        self.assertEqual(resting.move_distance, 0.)
+        self.assertEqual(resting.turn_angle, 0.)
+        self.assertGreater(moving.turn_angle, 0.)
+
+    def test_intentional_stationary_sweep_can_observe_food_without_patrolling(self):
+        hint = HarvestHint((0., 0.), None, 0., False, look_direction=math.pi / 4,
+                           scan_while_stationary=True)
+        scan = self.policy.action_decision(agent_state(energy=40.), harvest_hint=hint)
+        self.assertEqual(scan.move_distance, 0.)
+        self.assertEqual(scan.turn_angle, math.pi / 4)
+        escape = self.policy.action_decision(agent_state([predator(20.)], energy=200.), harvest_hint=hint)
+        self.assertEqual(escape.move_distance, 20.)
+
+    def test_old_agent_respects_food_reserved_for_younger_carriers(self):
+        idle = HarvestHint((0., 0.), None, 0., False)
+        hungry = agent_state([fruit(20.)], energy=40.)
+        young = self.policy.action_decision({**hungry, "age": 89.9}, harvest_hint=idle)
+        old = self.policy.action_decision({**hungry, "age": 90.}, harvest_hint=idle)
+        assigned = self.policy.action_decision(
+            {**hungry, "age": 90.}, harvest_hint=HarvestHint((20., 0.), 1, 30., False))
+        local = self.policy.action_decision({**hungry, "age": 90.})
+        self.assertGreater(young.move_distance, 0.)
+        self.assertEqual(old.move_distance, 0.)
+        self.assertGreater(assigned.move_distance, 0.)
+        self.assertGreater(local.move_distance, 0.)
+
+    def test_only_explicit_lineage_preservation_can_use_a_lower_parent_reserve(self):
+        idle = HarvestHint((0., 0.), None, 0., False)
+        state = agent_state(energy=150., age=100.)
+        ordinary = self.policy.action_decision(
+            state, harvest_hint=idle,
+            reproduction_hint=ReproductionHint(110., minimum_energy_reserve=40.),
+        )
+        renewal = self.policy.action_decision(
+            state, harvest_hint=idle,
+            reproduction_hint=ReproductionHint(110., minimum_energy_reserve=40., preserve_lineage=True),
+        )
+        too_low = self.policy.action_decision(
+            {**state, "energy": 139.9}, harvest_hint=idle,
+            reproduction_hint=ReproductionHint(110., minimum_energy_reserve=40., preserve_lineage=True),
+        )
+        self.assertFalse(ordinary.spawn_agent)
+        self.assertTrue(renewal.spawn_agent)
+        self.assertFalse(too_low.spawn_agent)
 
     def test_equal_ripeness_prefers_nearest_and_order_is_stable(self):
         observations = [fruit(20, 1, ripeness=0.8), fruit(5, -1, ripeness=0.8)]

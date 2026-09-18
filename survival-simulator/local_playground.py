@@ -3,6 +3,7 @@ import json
 import math
 from pathlib import Path
 import random
+import time
 import webbrowser
 
 import pygame
@@ -12,6 +13,7 @@ from src.utils.controllers.expert_policy import ExpertPolicy, load_config
 from src.utils.controllers.global_planner import load_planner_config
 from src.utils.map_renderer import MapRenderer, draw_comparison
 from src.utils.planner_overlay import draw_planner_overlay
+from src.utils.playback import PlaybackControls
 from src.utils.run_diagnostics import HORIZON_SECONDS, RunDiagnostics, load_diagnostics_config
 
 
@@ -31,13 +33,16 @@ def local_simulation(verbose=True, seed=None, config_path=None,
                      diagnostics_config_path=None, output_dir=None,
                      max_seconds=HORIZON_SECONDS, open_report=None, diagnostics=True,
                      planner_config_path=None, map_view=True, map_screenshot=None,
-                     predators_enabled=True, central_harvest=None):
+                     predators_enabled=True, central_harvest=None, speed=1, policy_mode=None):
     """Run the expert, optionally render, and save a recap even on window close."""
     if not math.isfinite(max_seconds) or not 0 < max_seconds <= HORIZON_SECONDS:
         raise ValueError(f"max_seconds must be in (0, {HORIZON_SECONDS:g}]")
+    playback = PlaybackControls(speed)
     if seed is None:
         seed = random.randint(0, 2**32 - 1)
     policy_config = load_config(config_path)
+    if policy_mode is not None:
+        policy_config = policy_config.model_copy(update={"policy_mode": policy_mode})
     if central_harvest is not None:
         policy_config = policy_config.model_copy(update={"harvest": policy_config.harvest.model_copy(
             update={"enabled": central_harvest})})
@@ -52,7 +57,9 @@ def local_simulation(verbose=True, seed=None, config_path=None,
     reason = "error"
     next_progress = 0.0
     print(f"Seed: {seed}")
-    print(f"Predators: {'enabled' if predators_enabled else 'disabled'} | Central harvest: {policy.config.harvest.enabled}")
+    print(f"Policy: {policy_config.policy_mode}")
+    coordinated = policy_config.policy_mode == "simple" or policy_config.harvest.enabled
+    print(f"Predators: {'enabled' if predators_enabled else 'disabled'} | Central harvest: {coordinated}")
     if recorder:
         print(f"Run data: {recorder.directory}")
 
@@ -75,43 +82,61 @@ def local_simulation(verbose=True, seed=None, config_path=None,
                 reason = "window_closed"
                 break
             for event in events:
+                if playback.handle_event(event, screen.get_size()):
+                    continue
                 if map_view and map_renderer:
                     map_renderer.handle_event(event)
-            if recorder:
-                recorder.before_step(actions)
-            state = sim.step(actions)
-            if recorder:
-                recorder.after_step()
-
-            actions = [
-                (action.agent_id, action) for action in policy.actions_for_step(
-                    state["observations"], sim_time=state["sim_time"]
-                )
-            ]
+            if verbose:
+                playback.advance(clock.tick(60) / 1000.)
+            frame_deadline = time.perf_counter() + playback.MAX_FRAME_WORK_SECONDS
+            finished = False
+            while not verbose or playback.consume_step(sim.dt):
+                if recorder:
+                    recorder.before_step(actions)
+                state = sim.step(actions)
+                if recorder:
+                    recorder.after_step()
+                actions = [
+                    (action.agent_id, action) for action in policy.actions_for_step(
+                        state["observations"], sim_time=state["sim_time"]
+                    )
+                ]
+                if sim.env.time >= next_progress:
+                    detail = ''
+                    if policy_config.policy_mode == 'simple':
+                        detail = (f' | Under {policy_config.simple.renewal_age:g}s: '
+                                  f'{policy.harvest.population_plan.get("young", 0)}/{policy.harvest.population_target}'
+                                  f' | Aging scouts: {len(policy.harvest.retired)}')
+                    print(f'Score: {state["score"]:.2f} | Agents alive: {state["num_agents"]} | Time: {sim.env.time:.2f}{detail}')
+                    next_progress += report_config.progress_interval_seconds
+                if state["num_agents"] == 0:
+                    reason, finished = "extinction", True
+                elif sim.env.time + 1e-9 >= max_seconds:
+                    reason = "horizon" if max_seconds == HORIZON_SECONDS else "time_limit"
+                    finished = True
+                # Keep event handling/rendering responsive even when the policy
+                # cannot compute the requested speed. Always decide every tick.
+                if finished or not verbose or time.perf_counter() >= frame_deadline:
+                    break
 
             if verbose:
-                label = f'Score: {state["score"]:.2f} | Agents: {state["num_agents"]} | Time: {sim.env.time:.1f}s'
+                target = f' (target {policy.harvest.population_target})' if policy.harvest.active else ''
+                if policy.harvest.active and policy_config.policy_mode == 'simple':
+                    target = (f' (under {policy_config.simple.renewal_age:g}s: '
+                              f'{policy.harvest.population_plan.get("young", 0)}/{policy.harvest.population_target}; '
+                              f'scouts: {len(policy.harvest.retired)})')
+                label = f'Score: {sim.env.score:.2f} | Agents: {len(sim.env.agents)}{target} | Time: {sim.env.time:.1f}s'
+                viewport = screen.subsurface((0, 0, screen.get_width(),
+                                              max(1, screen.get_height() - playback.HEIGHT)))
                 if map_view:
-                    _draw_map_comparison(screen, sim, policy.planner, map_renderer, actual_surface, label)
+                    _draw_map_comparison(viewport, sim, policy.planner, map_renderer, actual_surface, label)
                 else:
-                    sim.env.draw(screen)
-                    draw_planner_overlay(screen, sim.env, policy.planner, font)
-                    screen.blit(font.render(label, True, (255, 255, 255)), (20, 20))
+                    sim.env.draw(viewport)
+                    draw_planner_overlay(viewport, sim.env, policy.planner, font)
+                    viewport.blit(font.render(label, True, (255, 255, 255)), (20, 20))
+                playback.draw(screen, font)
                 pygame.display.flip()
-                clock.tick(60)
-
-            if sim.env.time >= next_progress:
-                print(f'Score: {state["score"]:.2f} | Agents alive: {state["num_agents"]} | Time: {sim.env.time:.2f}')
-                next_progress += report_config.progress_interval_seconds
-            if state["num_agents"] == 0:
-                reason = "extinction"
-                break
-            # Preserve the original competition runner's >3000 termination.
-            if sim.env.time > HORIZON_SECONDS:
-                reason = "horizon"
-                break
-            if max_seconds < HORIZON_SECONDS and sim.env.time + 1e-9 >= max_seconds:
-                reason = "time_limit"
+            if finished:
                 break
     except KeyboardInterrupt:
         reason = "interrupted"
@@ -147,10 +172,14 @@ def local_simulation(verbose=True, seed=None, config_path=None,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the expert and save score/evolution diagnostics.")
     parser.add_argument("--headless", action="store_true", help="Run without a Pygame window.")
+    parser.add_argument("--policy", choices=("standard", "simple"), default=None,
+                        help="Select the existing policy or the simple population/territory/food policy.")
     parser.add_argument("--no-predators", action="store_true", help="Disable initial and later predator spawns.")
     parser.add_argument("--central-harvest", action=argparse.BooleanOptionalAction, default=None,
-                        help="Coordinate ripe-fruit harvesting and breeding after shared absolute mapping.")
+                        help="Coordinate survival, feeding and generation renewal after shared absolute mapping.")
     parser.add_argument("--seed", type=int, help="World seed for reproducible runs on the same OS.")
+    parser.add_argument("--speed", type=int, choices=PlaybackControls.SPEEDS, default=1,
+                        help="Initial graphical playback speed; buttons or keys 1-5 change it during a run. Headless runs are unthrottled.")
     parser.add_argument("--config", help="Expert policy JSON path.")
     parser.add_argument("--planner-config", help="Global planner JSON path.")
     parser.add_argument("--map-view", action=argparse.BooleanOptionalAction, default=True,
@@ -170,4 +199,5 @@ if __name__ == "__main__":
                      max_seconds=args.max_seconds, open_report=args.open_report,
                      diagnostics=not args.no_diagnostics, planner_config_path=args.planner_config,
                      map_view=args.map_view, map_screenshot=args.map_screenshot,
-                     predators_enabled=not args.no_predators, central_harvest=args.central_harvest)
+                     predators_enabled=not args.no_predators, central_harvest=args.central_harvest,
+                     speed=args.speed, policy_mode=args.policy)
