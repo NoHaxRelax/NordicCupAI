@@ -995,3 +995,69 @@ validation conversations) and the pod logs (`pod_logs.tgz`).
 last day so the final score does not tell competitors what is achievable. Rebuilding the endpoint is
 `bench/hpc/pod_bootstrap.sh` + `pod_endpoint.sh` per `research/09-saturday-runbook.md`, about 12
 minutes from a bare A100 with a 580 driver, plus one validation run to confirm it reproduces 0.8084.
+
+
+## 61. The span-extractor probe: correlation is not the blocker, level is, and no router exists
+
+Nine agents, nine adversarial verifiers, every load-bearing number re-derived from
+`data/question_train.csv` rather than from the analyst's own intermediate files. Scripts in the
+session scratchpad under `probe/`; the repo was not touched. Both extractors were run **zero-shot**,
+so their level is a floor, not an estimate of what a fine-tune would reach.
+
+| system | mean tIoU | median | tIoU = 0 | tIoU >= 0.6 |
+| --- | --- | --- | --- | --- |
+| incumbent (Qwen3.8-27B, clause-and units) | **0.7119** | 0.854 | 16 | 134 |
+| deberta-v3-large-squad2 zero-shot | 0.4117 | 0.300 | 69 | 73 |
+| roberta-base-squad2 zero-shot | 0.4108 | 0.368 | 55 | 62 |
+
+**The errors really are fairly independent.** Spearman rho 0.294 (deberta) and 0.260 (roberta) per
+question; controlling for gold span length *raises* it slightly (0.321 / 0.281), so it is not an
+artifact of shared question difficulty. Oracle-of-two would score **0.8465** (+0.0203, 95 % CI
++0.009 to +0.034, 5000 conversation-clustered resamples) and 0.8497 (+0.0236) - both CIs exclude
+zero. Decomposing: if the extractor were quantile-mapped to our own level while keeping the measured
+correlation, the oracle would be **0.909** and a router would need to be right only **50 %** of the
+time to break even (an algebraic identity when the two means are equal).
+
+**So why this is still a no for routing, on three grounds the correlation coefficient hides:**
+
+1. **No signal routes.** AUC for "the extractor beats the incumbent here" is 0.511 (its own answer
+   margin), 0.475 (agreement between the two spans), 0.584 (extractor span length), 0.622 (our span
+   length - a property of *us*, not of it). Leave-one-conversation-out over five signals and both
+   directions, plus a weighted logistic on all five: **nothing beats always-incumbent, 0.8261.**
+   The best in-sample fit over all 195 reached 0.8268, inside the noise floor. An oracle is not a
+   policy; this policy is worth +0.0000.
+2. **The failures coincide exactly where routing would have to work.** On our 16 whole-unit misses
+   (tIoU exactly 0), deberta also scores 0 on **16 of 16** and roberta on 14 of 16 - and on 11 of
+   those 16 it picks the *same wrong passage* we do (10 at tIoU > 0.9 against our wrong span).
+   Across all questions where both are bad, 18 of 27 are the same wrong place. Rescuable questions,
+   the honest measure of the near-term prize: **2 of 195.**
+3. **Conversation-level correlation is 0.614 against question-level 0.294.** Both systems eat the
+   same turbo transcript, so transcript-level failure is shared by construction, and a fine-tune on
+   the same transcripts inherits it. Mean agreement is already 0.510 mean tIoU with 72 of 195 spans
+   near-identical: as a fine-tune improves it converges on the same gold evidence we find, which
+   *mechanically raises* correlation. The 0.29 measured here is more likely an under-estimate than
+   an over-estimate of the correlation at parity.
+
+**The character-level trimming claim does not survive contact.** Where the two systems agree on the
+evidence (tIoU > 0.3, n = 115), our median absolute edge error is **0.100 s at the start and 0.040 s
+at the end**; the extractor's edge is closer to gold on 8 of 115 starts and 8 of 115 ends, and on the
+subset where we are already good (tIoU >= 0.8, n = 72) on **0 of 72 and 0 of 72**. Edge-swap chimeras
+confirm it: substituting either of the extractor's edges into our span *lowers* mean tIoU
+(0.7042 -> 0.6866 with its start, -> 0.6737 with its end). Where we are weak both are wrong by
+*seconds* - that is wrong-location, not trimming. The 0.118 of tIoU sitting inside our units is not
+reachable this way.
+
+**Independent confirmation of our span rule, from the verifier's own robustness check.** Round-
+tripping the gold character ranges shows the served convention (first word's end -0.20, last word's
+end -0.02) is the best-fitted pair available, ceiling **0.9335** on turbo, beating the two
+alternative conventions at 0.9158 and 0.8901. Re-tuning the offsets specifically to flatter the
+extractor moves it only 0.4117 -> 0.4139. The scoring convention is not rigged against it.
+
+**Verdict.** A fine-tune is worth a GPU hour **as a level test with the decision rule fixed in
+advance - does its own mean tIoU clear 0.7119** - and not as a routing or hybrid test. Budget
+nothing for a router: on this evidence the router it would need does not exist, and building one is a
+separate unfunded problem. Two preconditions carried from the survey: pin `transformers<5` (the v5
+windowing defect silently truncates contexts and would train on amputated inputs) and use folds wider
+than four held-out conversations (+-0.092 per-score interval is wider than anything being measured).
+Given entry 59 - headroom <= 0.024 against a measurement resolution of +-0.030 - this is a curiosity
+to run only if time is free, not a path to a better submission.
