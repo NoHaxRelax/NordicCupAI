@@ -29,7 +29,10 @@ def main():
     parser.add_argument('--timeout', type=float, default=180.)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--multi', action='store_true', help='30 preloaded predators plus one new delivery; rear entrance must stay clear')
+    parser.add_argument('--replace-bait', action='store_true', help='Exercise rear-entry bait replacement during multi-predator final hold')
     args = parser.parse_args()
+    if args.replace_bait and not args.multi:
+        parser.error('--replace-bait requires --multi')
     if not 0 <= args.shard < args.shards or min(args.maps, args.workers) < 1:
         parser.error('Invalid shard or worker/map count')
     args.output.mkdir(parents=True, exist_ok=True)
@@ -46,7 +49,7 @@ def main():
         previous = json.loads(manifest_path.read_text())
         if (previous['source_hashes'] != manifest['source_hashes'] or previous['jobs'] != jobs
                 or any(previous['config'].get(k) != manifest['config'].get(k)
-                       for k in ('multi', 'seconds', 'timeout'))):
+                       for k in ('multi', 'replace_bait', 'seconds', 'timeout'))):
             parser.error('Existing batch has different code, seeds, or settings; use a new output directory.')
     source_root = args.output/'source'
     for source in sources:
@@ -68,6 +71,8 @@ def main():
         if args.multi:
             command = [sys.executable,str(source_root/'scripts/guide_multi.py'),'--bulk','--deliveries','1',
                        '--seed',str(job['seed']),'--encounter-seed',str(job['encounter_seed']),'--output',str(folder)]
+        if args.replace_bait:
+            command.append('--replace-bait')
         started = time.monotonic()
         try:
             with (folder/'worker.log').open('w') as log:

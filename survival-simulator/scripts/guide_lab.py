@@ -51,21 +51,21 @@ def observations(env, agent):
                          edges=env._get_local_edges(agent))
 
 
-def choose_site(env, index=0):
+def choose_site(env, index=0, *, corner_only=False):
     from models.entrapment.observed_trap_sites import our_sites
     geometry = _Geometry(env.width, env.height,
                          [(o.x, o.y, o.width, o.height) for o in env.obstacles])
     static = dict(width=env.width, height=env.height, obstacles=geometry.rects)
-    usable = our_sites(static)
+    usable = our_sites(static, corner_only=corner_only)
     if index < 0 or index >= len(usable):
         raise ValueError(f'No usable site at index {index}; map has {len(usable)} eligible sites')
     return usable[index], geometry, len(usable)
 
 
-def setup(seed, encounter_seed, site_index):
+def setup(seed, encounter_seed, site_index, *, corner_only=False):
     core = SimulationCore(seed=seed, starting_agents=0, starting_predators=0)
     env = core.env
-    site, geometry, count = choose_site(env, site_index)
+    site, geometry, count = choose_site(env, site_index, corner_only=corner_only)
     rng = random.Random(encounter_seed)
     bait = Agent(*site['goal'], rng=env.rng, color=(60, 240, 100))
     bait.agent_id = 0

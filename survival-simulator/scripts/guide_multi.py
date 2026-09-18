@@ -51,7 +51,7 @@ def run(args):
     shutil.copy2(__file__,folder/'multi_runner.py')
     for name in ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py'):
         shutil.copy2(lab.ROOT/'models/entrapment'/name,folder/('policy.py' if name=='my_guide.py' else name))
-    core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,0)
+    core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,0,corner_only=getattr(args, 'corner_only', False))
     env=core.env
     geometry=lab._Geometry(env.width,env.height,[(o.x,o.y,o.width,o.height) for o in env.obstacles])
     env.agents=[bait]; env.agents_dict={0:bait}; env.predators=[]
@@ -184,6 +184,10 @@ def run(args):
             evaluation=dict(phase=phase,total_predators=len(tracked),held_count=len(held),held_ids=held,
                             replacement_side_ids=sorted(rear),
                             initial_held=len(held_set&set(range(1,31))),bait_alive=bait_alive,
+                            bait_id=bait.agent_id,
+                            replacement_agent=None if replacement is None else dict(
+                                x=replacement.x,y=replacement.y,energy=replacement.energy,
+                                alive=replacement in env.agents,arrived=replacement_arrived),
                             initial_ever_left_hold_zone=sorted(departed),initial_ever_beyond_60=sorted(outside_hearing),
                             active_guide_alive=active in env.agents if active else None,
                             all_33_continuous_seconds=0 if all_since is None else round(now-all_since,3),
@@ -262,6 +266,7 @@ if __name__=='__main__':
     parser.add_argument('--encounter-seed',type=int,default=1335789813)
     parser.add_argument('--deliveries',type=int,default=3,choices=(1,3))
     parser.add_argument('--bulk',action='store_true')
+    parser.add_argument('--corner-only',action='store_true',help='Opt-in short staggered corner pockets with static contact exclusion')
     parser.add_argument('--replace-bait',action='store_true',help='During final hold, walk a replacement from rear entry to bait and exhaust old bait after arrival')
     parser.add_argument('--output',type=Path,default=lab.ROOT/'logs/guide_lab')
     run(parser.parse_args())
