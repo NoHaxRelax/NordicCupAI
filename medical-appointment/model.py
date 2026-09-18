@@ -6,8 +6,10 @@ Pipeline for one request:
      the cached transcript when TRANSCRIPT_CACHE=1 and one exists (dev only).
   2. cut the word stream into sentence units at terminal punctuation, segment
      boundaries and pauses longer than PAUSE_SPLIT seconds.
-  3. for each question, ask the LLM (Ollama, JSON schema output) for a verbatim
-     quote, yes/no, and the ids of the units that support a yes.
+  3. for each question, ask the LLM (JSON schema output) for a verbatim quote,
+     yes/no, and the ids of the units that support a yes. The prompt is one of
+     the variants in bench/llm/prompts.py (LLM_VARIANT), so what serves is
+     exactly what the bench measured.
   4. map ids back to seconds, apply the fitted edge offsets, return.
 
 Everything is configured by environment variables so the same file runs on the
@@ -16,9 +18,26 @@ laptop (small model) and on a big GPU (large model) without edits.
   ASR_MODEL          faster-whisper model name           (default large-v3)
   ASR_DEVICE         cuda | cpu                          (default cuda)
   TRANSCRIPT_CACHE   1 = use transcripts/<stem>.<ASR_MODEL>.json when present
-  LLM_URL            Ollama base URL                     (default http://localhost:11434)
-  LLM_MODEL          Ollama model tag                    (default qwen3.5:4b)
-  LLM_TIMEOUT        seconds per question               (default 25)
+  LLM_URL            Ollama base URL, or an OpenAI-compatible base URL ending in
+                     /v1 (vLLM)                          (default http://localhost:11434)
+  LLM_BACKEND        ollama | vllm                       (default: vllm when LLM_URL
+                     ends in /v1, else ollama)
+  LLM_MODEL          model name as the server knows it   (default qwen3.5:4b for
+                     Ollama; for vLLM '' = the first id of GET /v1/models)
+  LLM_VARIANT        prompt variant from bench/llm/prompts.py (default units for
+                     Ollama, units-fewshot for vLLM: the served 27B design)
+  LLM_TIMEOUT        seconds per LLM request             (default 25)
+  LLM_DEADLINE       seconds after the request arrived by which every LLM answer
+                     must be in, ASR included            (default 40; the endpoint
+                     has 60 s per conversation)
+  LLM_MAX_TOKENS     completion budget, vLLM only        (default 600)
+  LLM_NO_THINK       vllm | ollama | none: how thinking is switched off on the
+                     OpenAI-compatible path              (default ollama when
+                     LLM_URL has port 11434, else vllm)
+  LLM_FALLBACK_MODEL Ollama tag answered locally when the vLLM request fails,
+                     times out or would overrun the deadline (default qwen3:4b
+                     on the vllm backend, '' = no fallback)
+  LLM_FALLBACK_URL   Ollama base URL for the fallback    (default http://localhost:11434)
   START_RULE         first-word-end | unit-start         (default first-word-end)
   START_OFFSET       seconds added to the start anchor   (default -0.14 for
                      first-word-end, +0.36 for unit-start; fitted on the 39
@@ -67,8 +86,16 @@ ASR_MODEL = os.environ.get('ASR_MODEL', 'large-v3')
 ASR_DEVICE = os.environ.get('ASR_DEVICE', 'cuda')
 TRANSCRIPT_CACHE = os.environ.get('TRANSCRIPT_CACHE', '0') == '1'
 LLM_URL = os.environ.get('LLM_URL', 'http://localhost:11434').rstrip('/')
-LLM_MODEL = os.environ.get('LLM_MODEL', 'qwen3.5:4b')
+LLM_BACKEND = os.environ.get('LLM_BACKEND', 'vllm' if LLM_URL.endswith('/v1') else 'ollama')
+LLM_MODEL = os.environ.get('LLM_MODEL', 'qwen3.5:4b' if LLM_BACKEND == 'ollama' else '')
+LLM_VARIANT = os.environ.get('LLM_VARIANT', 'units' if LLM_BACKEND == 'ollama' else 'units-fewshot')
 LLM_TIMEOUT = float(os.environ.get('LLM_TIMEOUT', '25'))
+LLM_DEADLINE = float(os.environ.get('LLM_DEADLINE', '40'))
+LLM_MAX_TOKENS = int(os.environ.get('LLM_MAX_TOKENS', '600'))
+LLM_NO_THINK = os.environ.get('LLM_NO_THINK', 'ollama' if ':11434' in LLM_URL else 'vllm')
+LLM_FALLBACK_URL = os.environ.get('LLM_FALLBACK_URL', 'http://localhost:11434').rstrip('/')
+LLM_FALLBACK_MODEL = os.environ.get('LLM_FALLBACK_MODEL', 'qwen3:4b' if LLM_BACKEND == 'vllm' else '')
+LLM_NUM_CTX = int(os.environ.get('LLM_NUM_CTX', '3072'))
 START_RULE = os.environ.get('START_RULE', 'first-word-end')
 # Edge offsets fitted leave-one-conversation-out on the 39 training files
 # (bench/asr/fit_edges.py, research/07-findings-log.md entries 5 and 17), keyed
@@ -237,41 +264,213 @@ def render_transcript(units: List[Unit]) -> str:
     return '\n'.join(f'[{u.idx}] {u.text}' for u in units)
 
 
-def ask_llm(transcript: str, question: str) -> dict:
-    claim = question.strip()
-    tag = _TAG.search(claim)
-    if tag:
-        claim = f'{claim}  (Read this as the plain question: is it established that {claim[:tag.start()].strip().rstrip(",")}?)'
+_FENCE = re.compile(r'^\s*```(?:json)?\s*|\s*```\s*$', re.S)
+_THINK = re.compile(r'<think>.*?</think>', re.S)
+
+
+def parse_json(content: str) -> dict:
+    """The JSON object in a completion, tolerating a stray <think> block or a
+    code fence (same reader as bench/llm/bench.py)."""
+    s = _THINK.sub('', content or '').strip()
+    s = _FENCE.sub('', s).strip()
+    try:
+        out = json.loads(s)
+    except json.JSONDecodeError:
+        a, b = s.find('{'), s.rfind('}')
+        if a < 0 or b <= a:
+            raise
+        out = json.loads(s[a:b + 1])
+    if not isinstance(out, dict):
+        raise ValueError(f'model returned {type(out).__name__}, not an object')
+    return out
+
+
+_prompts_mod = None
+
+
+def prompts_module():
+    """bench/llm/prompts.py, imported lazily: that module imports this one
+    (SYSTEM, SCHEMA, the unit builder, the span rule), so it can only load
+    once this module is complete."""
+    global _prompts_mod
+    if _prompts_mod is None:
+        import sys
+        p = str(HERE / 'bench' / 'llm')
+        if p not in sys.path:
+            sys.path.insert(0, p)
+        import prompts
+        _prompts_mod = prompts
+    return _prompts_mod
+
+
+def variant():
+    """The prompt builder named by LLM_VARIANT."""
+    return prompts_module().VARIANTS[LLM_VARIANT]
+
+
+def _chat_ollama(url: str, model_tag: str, system: str, user: str, schema: dict,
+                 timeout: float, num_ctx: int = LLM_NUM_CTX) -> dict:
+    """Ollama's native chat API: schema-constrained JSON, thinking off."""
     body = {
-        'model': LLM_MODEL,
-        'messages': [
-            {'role': 'system', 'content': SYSTEM},
-            {'role': 'user', 'content': f'TRANSCRIPT:\n{transcript}\n\nQUESTION: {claim}'},
-        ],
+        'model': model_tag,
+        'messages': [{'role': 'system', 'content': system}, {'role': 'user', 'content': user}],
         'stream': False,
         'think': False,
-        'format': SCHEMA,
-        'logprobs': True,          # P(yes) at the answer token, see p_yes_from_native
-        'top_logprobs': 6,
+        'format': schema,
         # num_ctx sizes Ollama's per-slot KV cache. A 3.5-minute consultation is
         # ~1k tokens; 3072 leaves room for the system prompt and the reply
         # without spilling the cache to CPU on an 8 GB card.
-        'options': {'temperature': 0.0, 'num_ctx': int(os.environ.get('LLM_NUM_CTX', '3072')),
-                    'num_predict': 200},
+        'options': {'temperature': 0.0, 'num_ctx': num_ctx, 'num_predict': 200},
         'keep_alive': -1,
     }
-    r = requests.post(f'{LLM_URL}/api/chat', json=body, timeout=LLM_TIMEOUT)
+    r = requests.post(f'{url}/api/chat', json=body, timeout=timeout)
     r.raise_for_status()
-    content = r.json()['message']['content']
-    return json.loads(content)
+    return parse_json(r.json()['message']['content'])
+
+
+_session = requests.Session()
+_session.mount('http://', requests.adapters.HTTPAdapter(pool_maxsize=32, pool_connections=4))
+_session.mount('https://', requests.adapters.HTTPAdapter(pool_maxsize=32, pool_connections=4))
+_resolved_model: Optional[str] = None
+
+
+def llm_model() -> str:
+    """LLM_MODEL, or for vLLM with LLM_MODEL unset the first id GET /v1/models
+    returns (cached once it answered)."""
+    global _resolved_model
+    if LLM_MODEL:
+        return LLM_MODEL
+    if _resolved_model is None:
+        r = _session.get(f'{LLM_URL}/models', timeout=(3.05, 10))
+        r.raise_for_status()
+        _resolved_model = r.json()['data'][0]['id']
+        logger.info('LLM model resolved from %s/models: %s', LLM_URL, _resolved_model)
+    return _resolved_model
+
+
+def _chat_openai(system: str, user: str, schema: dict, demos, timeout: float) -> dict:
+    """OpenAI-compatible chat completions (vLLM): schema-constrained JSON, the
+    worked examples of a demo variant as prior turns, thinking off. Same body
+    as bench/llm/bench.py's Client minus the log-probabilities."""
+    messages = [{'role': 'system', 'content': system}]
+    for du, da in (demos or []):
+        messages.append({'role': 'user', 'content': du})
+        messages.append({'role': 'assistant', 'content': da})
+    messages.append({'role': 'user', 'content': user})
+    body: dict = {
+        'model': llm_model(),
+        'messages': messages,
+        'temperature': 0.0,
+        'max_tokens': LLM_MAX_TOKENS,
+        'stream': False,
+        'response_format': {'type': 'json_schema', 'json_schema': {'name': 'answer', 'schema': schema}},
+    }
+    if LLM_NO_THINK == 'vllm':
+        body['chat_template_kwargs'] = {'enable_thinking': False}
+    elif LLM_NO_THINK == 'ollama':
+        body['reasoning_effort'] = 'none'
+    # connect timeout short: a pod that is gone must fail over within seconds
+    r = _session.post(f'{LLM_URL}/chat/completions', json=body, timeout=(3.05, max(1.0, timeout)))
+    r.raise_for_status()
+    return parse_json(r.json()['choices'][0]['message'].get('content') or '')
+
+
+class _Breaker:
+    """After a transport failure of the primary LLM every question goes straight
+    to the fallback for a while instead of each waiting out its own timeout."""
+
+    def __init__(self, hold: float = 20.0):
+        self.hold = hold
+        self.until = 0.0
+
+    def open(self) -> bool:
+        return time.time() < self.until
+
+    def trip(self, exc: Exception) -> None:
+        if isinstance(exc, (requests.ConnectionError, requests.Timeout)):
+            self.until = time.time() + self.hold
+            logger.warning('primary LLM unreachable (%s); fallback only for %.0f s', type(exc).__name__, self.hold)
+
+
+_breaker = _Breaker()
+_FALLBACK_RESERVE = 12.0      # seconds kept for the local fallback when the primary is tried
+_FALLBACK_GRACE = 12.0        # the fallback may run this long past LLM_DEADLINE (still < 60 s)
+
+
+def ask_primary(p, deadline: float) -> dict:
+    """Send one built prompt to the configured backend and return the parsed
+    JSON. On the vLLM backend the request gets what is left before `deadline`
+    minus the fallback reserve, and is skipped (TimeoutError) while the breaker
+    is open or when that budget is under two seconds."""
+    remaining = deadline - time.time()
+    if LLM_BACKEND != 'vllm':
+        return _chat_ollama(LLM_URL, LLM_MODEL, p.system, p.user, p.schema, min(LLM_TIMEOUT, max(3.0, remaining)))
+    budget = min(LLM_TIMEOUT, remaining - (_FALLBACK_RESERVE if LLM_FALLBACK_MODEL else 0.0))
+    if _breaker.open():
+        raise TimeoutError('primary LLM skipped: breaker open after a transport failure')
+    if budget < 2.0:
+        raise TimeoutError(f'primary LLM skipped: {remaining:.1f} s left before the deadline')
+    try:
+        return _chat_openai(p.system, p.user, p.schema, getattr(p, 'demos', None), budget)
+    except Exception as exc:
+        _breaker.trip(exc)
+        raise
+
+
+def ask_fallback(p, deadline: float) -> dict:
+    """The local Ollama fallback model on the same prompt, allowed to run a
+    little past the LLM deadline (still inside the 60 s of the endpoint)."""
+    return _chat_ollama(LLM_FALLBACK_URL, LLM_FALLBACK_MODEL, p.system, p.user, p.schema,
+                        max(3.0, deadline + _FALLBACK_GRACE - time.time()), num_ctx=max(LLM_NUM_CTX, 4096))
+
+
+def ask(p, deadline: float) -> dict:
+    """ask_primary, then ask_fallback when the primary fails and a fallback
+    model is configured. Raises when both fail."""
+    try:
+        return ask_primary(p, deadline)
+    except Exception as exc:
+        if LLM_BACKEND != 'vllm' or not LLM_FALLBACK_MODEL:
+            raise
+        logger.warning('primary LLM failed (%s: %s); falling back to %s',
+                       type(exc).__name__, str(exc)[:120], LLM_FALLBACK_MODEL)
+    return ask_fallback(p, deadline)
 
 
 def warm_llm() -> None:
+    """Resolve the model, build the few-shot pool (and refuse to serve without
+    it), and send one real request so the first conversation is not the slow one."""
+    v = variant()
+    if hasattr(v, 'pool'):
+        pool = v.pool()
+        n_pos = sum(1 for e in pool if e.get('yes') and e.get('text'))
+        if n_pos < 150:
+            raise RuntimeError(f'few-shot pool for {LLM_VARIANT} has {n_pos} positives with evidence text '
+                               f'(expected >= 150): bench/llm/pool/{ASR_MODEL}.json or the transcripts are missing')
+        logger.info('few-shot pool: %d examples, %d positives', len(pool), n_pos)
+    if hasattr(v, 'set_conversation'):
+        v.set_conversation('', ASR_MODEL)
+    units = [Unit(0, 0.0, 1.0, 'Hello.', 0.4)]
     try:
-        ask_llm('[0] Hello.', 'Did anyone say hello?')
-        logger.info('LLM %s warm', LLM_MODEL)
+        if LLM_BACKEND == 'vllm':
+            logger.info('LLM backend vllm at %s, model %s, variant %s, fallback %s',
+                        LLM_URL, llm_model(), LLM_VARIANT, LLM_FALLBACK_MODEL or 'none')
+        else:
+            logger.info('LLM backend ollama at %s, model %s, variant %s', LLM_URL, LLM_MODEL, LLM_VARIANT)
+        t0 = time.time()
+        p = v.build_all(['Did anyone say hello?'], units) if getattr(v, 'joint', False) else v('Did anyone say hello?', units)
+        out = ask(p, time.time() + 30.0)
+        logger.info('LLM warm in %.1fs: %s', time.time() - t0, json.dumps(out)[:120])
     except Exception:
-        logger.exception('LLM warm-up failed (is Ollama running with %s?)', LLM_MODEL)
+        logger.exception('LLM warm-up failed (is the server at %s running with %s?)', LLM_URL, LLM_MODEL or 'the model')
+    if LLM_BACKEND == 'vllm' and LLM_FALLBACK_MODEL:
+        try:
+            t0 = time.time()
+            _chat_ollama(LLM_FALLBACK_URL, LLM_FALLBACK_MODEL, SYSTEM, 'TRANSCRIPT:\n[0] Hello.\n\nQUESTION: Did anyone say hello?',
+                         SCHEMA, 30.0)
+            logger.info('fallback %s warm in %.1fs', LLM_FALLBACK_MODEL, time.time() - t0)
+        except Exception:
+            logger.exception('fallback warm-up failed (is Ollama at %s running with %s?)', LLM_FALLBACK_URL, LLM_FALLBACK_MODEL)
 
 
 # --------------------------------------------------------------------------- #
@@ -341,24 +540,50 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
     words, duration = transcribe(audio_bytes, audio_filename)
     units = make_units(words)
     t_asr = time.time() - t0
-    transcript = render_transcript(units)
     logger.info('%s: %d words, %d units, ASR %.1fs', audio_filename, len(words), len(units), t_asr)
+    deadline = t0 + LLM_DEADLINE
+    v = variant()
+    if hasattr(v, 'set_conversation'):          # few-shot variants: examples never come from this file
+        v.set_conversation(Path(audio_filename).stem, ASR_MODEL)
+    prompts = prompts_module()
+
+    def finish(out: dict, p) -> Tuple[bool, Optional[Span]]:
+        yes, span = p.postprocess(out, units, words, duration)
+        if not yes and not SPAN_ON_NO:
+            span = None
+        return bool(yes), span
 
     def one(q: str) -> Tuple[bool, Optional[Span]]:
         try:
-            out = ask_llm(transcript, q)
-            yes = str(out.get('answer', '')).lower() == 'yes'
-            ids = anchor_ids(out, units)
-            span = span_from_ids(ids, units, duration)
-            if not yes and not SPAN_ON_NO:
-                span = None
-            return yes, span
+            p = v(q, units)
+            return finish(ask(p, deadline), p)
         except Exception:
             logger.exception('question failed, guessing: %s', q)
             return True, None
 
-    with ThreadPoolExecutor(max_workers=len(questions) or 1) as ex:
-        results = list(ex.map(one, questions))
+    def one_fallback(q: str) -> Tuple[bool, Optional[Span]]:
+        # joint request failed: each question alone, plain units prompt, local fallback model
+        try:
+            p = prompts.units(q, units)
+            return finish(ask_fallback(p, deadline), p)
+        except Exception:
+            logger.exception('fallback question failed, guessing: %s', q)
+            return True, None
+
+    if getattr(v, 'joint', False):
+        try:
+            p = v.build_all(list(questions), units)
+            results = [finish(item, p) for item in v.split(ask_primary(p, deadline), len(questions))]
+        except Exception:
+            logger.exception('joint request failed; %s', 'per-question fallback' if LLM_FALLBACK_MODEL else 'guessing')
+            if LLM_FALLBACK_MODEL:
+                with ThreadPoolExecutor(max_workers=len(questions) or 1) as ex:
+                    results = list(ex.map(one_fallback, questions))
+            else:
+                results = [(True, None)] * len(questions)
+    else:
+        with ThreadPoolExecutor(max_workers=len(questions) or 1) as ex:
+            results = list(ex.map(one, questions))
 
     answers = [a for a, _ in results]
     spans = [s for _, s in results]

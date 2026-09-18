@@ -362,10 +362,19 @@ def _qtokens(q: str) -> set:
     return {t for t in _NONWORD.split(q.lower()) if t and t not in _STOP}
 
 
+POOL_DIR = HERE / 'pool'      # bench/llm/pool/<asr>.json: the few-shot pool as data (see FewShot.pool)
+
+
 class FewShot:
     """Callable variant: examples from OTHER training conversations (leave-one-out),
     chosen by question-word overlap, each with the transcript words inside the gold
-    span. bench.py calls set_conversation(stem, asr) before each conversation."""
+    span. bench.py calls set_conversation(stem, asr) before each conversation.
+
+    The pool (question, answer, evidence text per training question) is read from
+    bench/llm/pool/<asr>.json when that file exists (exported with
+    `python bench/llm/prompts.py --export-pool <asr>`, committed, so the serving
+    copy on a pod does not need the gitignored transcripts), else built from
+    data/question_train.csv and transcripts/<stem>.<asr>.json."""
 
     def __init__(self, base: str, k: int = 12, k_neg: int = 2):
         assert base in ('units', 'words')
@@ -383,6 +392,13 @@ class FewShot:
             return self._pool
         import csv
         import json
+        f = POOL_DIR / f'{self.asr}.json'
+        if f.exists():
+            pool = json.loads(f.read_text(encoding='utf-8'))
+            for e in pool:
+                e['toks'] = set(e['toks'])
+            self._pool, self._pool_asr = pool, self.asr
+            return pool
         rows = list(csv.DictReader(open(CASE / 'data' / 'question_train.csv', encoding='utf-8')))
         words_by: Dict[str, List[dict]] = {}
         pool: List[dict] = []
@@ -637,7 +653,30 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
 }
 
 
+def export_pool(asr: str) -> Path:
+    """Write bench/llm/pool/<asr>.json from the transcripts (forces a rebuild,
+    ignoring an existing file), and return the path."""
+    import json
+    fs = FewShot('units')
+    fs.asr = asr
+    f = POOL_DIR / f'{asr}.json'
+    if f.exists():
+        f.unlink()
+    pool = fs.pool()
+    n_pos = sum(1 for e in pool if e['yes'])
+    if n_pos < 150:
+        raise SystemExit(f'only {n_pos} positives with evidence text for {asr}: transcripts missing?')
+    POOL_DIR.mkdir(parents=True, exist_ok=True)
+    f.write_text(json.dumps([dict(e, toks=sorted(e['toks'])) for e in pool], ensure_ascii=False, indent=0),
+                 encoding='utf-8')
+    print(f'{f}: {len(pool)} examples, {n_pos} positives')
+    return f
+
+
 if __name__ == '__main__':          # tiny CPU self-check of the rewrites and the matcher
+    if len(sys.argv) == 3 and sys.argv[1] == '--export-pool':
+        export_pool(sys.argv[2])
+        raise SystemExit(0)
     for q in ('The lipid profile came back normal, didn\'t it?',
               'Did the HbA1c come out at 43 mmol/mol?',
               'HbA1c was 47 mmol/mol, right?'):

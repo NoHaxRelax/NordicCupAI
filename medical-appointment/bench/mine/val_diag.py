@@ -9,6 +9,7 @@ IoU < 0.9), exact (IoU >= 0.9). Diagnosis only: the pipeline is never tuned on t
 
     python bench/mine/val_diag.py
     python bench/mine/val_diag.py --list        # one line per positive
+    python bench/mine/val_diag.py --dump DIR   # answers.jsonl written by bench/mine/send_dump.py
 """
 from __future__ import annotations
 
@@ -36,11 +37,12 @@ def iou(a, b) -> float:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument('--list', action='store_true')
+    ap.add_argument('--dump', default=str(CASE / 'request_dump'), help='dump dir with answers.jsonl (default request_dump/)')
     a = ap.parse_args()
     rows = answers_md.parse()
     state = json.loads((HERE / 'span_state.json').read_text(encoding='utf-8')) if (HERE / 'span_state.json').exists() else {}
     served = {}
-    for line in (CASE / 'request_dump' / 'answers.jsonl').read_text(encoding='utf-8').splitlines():
+    for line in (Path(a.dump) / 'answers.jsonl').read_text(encoding='utf-8').splitlines():
         d = json.loads(line); served[Path(d['file']).stem] = d
     n = correct = 0
     ious, cats, starts, ends = [], {'missed': 0, 'wrong place': 0, 'edges': 0, 'exact': 0, 'no gold yet': 0}, [], []
