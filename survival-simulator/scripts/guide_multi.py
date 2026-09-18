@@ -51,7 +51,7 @@ def run(args):
     shutil.copy2(__file__,folder/'multi_runner.py')
     for name in ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py'):
         shutil.copy2(lab.ROOT/'models/entrapment'/name,folder/('policy.py' if name=='my_guide.py' else name))
-    core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,0,corner_only=getattr(args, 'corner_only', False))
+    core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,getattr(args, 'site', 0),corner_only=getattr(args, 'corner_only', False))
     env=core.env
     geometry=lab._Geometry(env.width,env.height,[(o.x,o.y,o.width,o.height) for o in env.obstacles])
     env.agents=[bait]; env.agents_dict={0:bait}; env.predators=[]
@@ -72,7 +72,7 @@ def run(args):
         predator.energy=rng.uniform(80.,200.);predator.resting=False
         tracked.append(predator);env.predators.append(predator)
     env._update_predator_grid()
-    summary=dict(seed=args.seed,encounter_seed=args.encounter_seed,site=site,eligible_sites=site_count,
+    summary=dict(seed=args.seed,encounter_seed=args.encounter_seed,site_index=getattr(args, 'site', 0),site=site,eligible_sites=site_count,
                  experiment=f'30 preloaded + {args.deliveries} sequential deliveries',outcome='running',frames=0,
                  seconds=0.,dt=core.dt,deliveries=[],baseline={},
                  assumptions=['30 predators preplaced near the trap; first 30 deliveries are not tested',
@@ -264,6 +264,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--seed',type=int,default=424736271)
     parser.add_argument('--encounter-seed',type=int,default=1335789813)
+    parser.add_argument('--site',type=int,default=0,help='Candidate index in the ordinary or corner-only site list')
     parser.add_argument('--deliveries',type=int,default=3,choices=(1,3))
     parser.add_argument('--bulk',action='store_true')
     parser.add_argument('--vision-delivery',action='store_true',help='Experimental distant handoff with observed bait sight alignment')

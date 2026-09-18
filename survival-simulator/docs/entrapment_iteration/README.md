@@ -160,5 +160,5 @@ returned HTTP 400, "no longer any instances available with the requested
 specifications." Existing team pods were not changed. All completed experiments
 ran locally. `runpod-budget.json` records this separately from other team work.
 
-Account usage remaining is not exposed by the available tools. The requested
-20% account-usage stopping threshold cannot be measured automatically here.
+Correction: account usage is available in local Codex session rate-limit events.
+The overnight plan now monitors that signal and the clock. See `overnight_plan.md`.
