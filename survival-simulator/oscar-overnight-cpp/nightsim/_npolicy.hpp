@@ -318,7 +318,7 @@ struct Params {
            cap_hard_min = 2, nursery_bonus = 0.;
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
-    double merge_anchored = 0.;
+    double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260.;
     double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
@@ -805,7 +805,7 @@ public:
     double fitness(const AState& s) const {
         return (P.fit_vision * std::pow(s.vr / 200., 2.0) * pmin(1.5, s.cone / 1.0472)
                 + P.fit_hear * std::pow(s.hear / 50., 2.0)
-                + P.fit_energy * pmin(2., s.max_energy / 500.) + P.fit_speed * pmin(1.5, pmin(s.speed, s.sprint) / 10.));
+                + P.fit_energy * pmin(2., s.max_energy / 500.) + P.fit_speed * pmin(P.fit_speed_cap, pmin(s.speed, s.sprint) / 10.));
     }
     bool ready(const FruitM& f, double energy = OINF, bool old = false) const {
         if (time < f.born_hi + P.fruit_min_wait) return false;
@@ -1360,7 +1360,7 @@ public:
         for (int64_t aid : order) {
             const AState& s = st(aid); Mind& m = M(aid);
             const Plan& pl = plans[aid];
-            bool spawn = spawn_set.count(aid) > 0;
+            bool spawn = spawn_set.count(aid) > 0 && P.no_spawn <= 0.;
             bool ok = spawn && s.energy - cost_now(pl.dist, pl.turn, s) > 100.;
             m.spawned_ok = ok;
             if (ok) last_spawners.push_back(aid);

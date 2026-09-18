@@ -1759,7 +1759,7 @@ bool parse_params(PyObject* d, orchard::Params& P) {
               {"cluster_radius", &P.cluster_radius}, {"spread_weight", &P.spread_weight}, {"low_pop_reserve", &P.low_pop_reserve},
               {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
               {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
-              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}};
+              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}};
     for (F& f : fs) {
         PyObject* v = PyDict_GetItemString(d, f.k);
         if (!v) continue;
@@ -1955,6 +1955,54 @@ PyObject* Engine_rng_state(EngineObject* self, PyObject*) {
     PyTuple_SET_ITEM(t, 624, PyLong_FromLong(e->rng.mti));
     return Py_BuildValue("(iNO)", 3, t, Py_None);
 }
+// ---- nightsim scenario hooks (tests only; never used by the policy)
+PyObject* Engine_dbg_keep_agent(EngineObject* self, PyObject* args) {
+    // keep only the agent with this id (or the first agent if id < 0); returns its (id, x, y)
+    long long keep; if (!PyArg_ParseTuple(args, "L", &keep)) return nullptr;
+    Engine* e = self->eng; if (e->agents.empty()) Py_RETURN_NONE;
+    size_t k = 0; bool found = false;
+    for (size_t i = 0; i < e->agents.size(); i++) if (keep < 0 || e->agents[i].id == keep) { k = i; found = true; break; }
+    if (!found) Py_RETURN_NONE;
+    Creature a = e->agents[k]; e->agents.clear(); e->agents.push_back(a); e->agents_dirty = true;
+    return Py_BuildValue("(Ldd)", (long long)a.id, a.x, a.y);
+}
+PyObject* Engine_dbg_set_agent(EngineObject* self, PyObject* args) {
+    // set the traits/state of an existing agent: (id, x, y, direction, energy, speed, sprint, max_energy, hearing, vision, cone, max_age)
+    long long id; double x, y, d, en, sp, spr, me, he, vi, co, ma;
+    if (!PyArg_ParseTuple(args, "Lddddddddddd", &id, &x, &y, &d, &en, &sp, &spr, &me, &he, &vi, &co, &ma)) return nullptr;
+    Engine* e = self->eng;
+    for (auto& a : e->agents) if (a.id == id) {
+        a.x = x; a.y = y; a.direction = d; a.energy = en; a.speed = sp; a.sprint_speed = spr; a.max_energy = me;
+        a.hearing_radius = he; a.vision_radius = vi; a.cone_angle = co; a.max_age = ma;
+        e->agents_dirty = true; Py_RETURN_TRUE;
+    }
+    Py_RETURN_FALSE;
+}
+PyObject* Engine_dbg_add_predator(EngineObject* self, PyObject* args) {
+    // (x, y, direction, energy, resting) -> True if the position is free
+    double x, y, d, en; int rest;
+    if (!PyArg_ParseTuple(args, "ddddp", &x, &y, &d, &en, &rest)) return nullptr;
+    Engine* e = self->eng;
+    if (!e->is_position_free(x, y, 10, 10)) Py_RETURN_FALSE;
+    Creature p;
+    p.key = (int32_t)e->next_serial; p.hash = py_hash_int(e->next_serial); e->next_serial++;
+    p.x = x; p.y = y; p.size = 10; p.speed = 11; p.sprint_speed = 15;
+    p.age = 0.0; p.energy = en; p.max_energy = 200.0; p.direction = d;
+    p.hearing_radius = 60; p.vision_radius = 250; p.cone_angle = PI / 3; p.max_age = 0;
+    p.resting = rest != 0;
+    e->predators.push_back(p); e->predators_dirty = true;
+    Py_RETURN_TRUE;
+}
+PyObject* Engine_dbg_free(EngineObject* self, PyObject* args) {
+    double x, y, sz; if (!PyArg_ParseTuple(args, "ddd", &x, &y, &sz)) return nullptr;
+    if (self->eng->is_position_free(x, y, sz, sz)) Py_RETURN_TRUE; Py_RETURN_FALSE;
+}
+PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
+    // counters from the policy's predator layer
+    if (!self->pol) Py_RETURN_NONE;
+    return Py_BuildValue("{s:L}", "n_evading", (long long)self->pol->n_evading);
+}
+
 PyObject* Engine_get_info(EngineObject* self, PyObject*) {
     Engine* e = self->eng;
     return Py_BuildValue("{s:d,s:d,s:L,s:L,s:i,s:i,s:i}", "time", e->time, "score", e->score,
@@ -2001,6 +2049,11 @@ PyMethodDef Engine_methods[] = {
     {"biome_map", (PyCFunction)Engine_biome_map, METH_NOARGS, "bytes, index x*height+y, 0 forest 1 swamp 2 desert 3 grassland 4 river"},
     {"rng_state", (PyCFunction)Engine_rng_state, METH_NOARGS, "random.Random.getstate() equivalent"},
     {"info", (PyCFunction)Engine_get_info, METH_NOARGS, "time, score, counters"},
+    {"dbg_keep_agent", (PyCFunction)Engine_dbg_keep_agent, METH_VARARGS, "tests: keep one agent"},
+    {"dbg_set_agent", (PyCFunction)Engine_dbg_set_agent, METH_VARARGS, "tests: set agent state"},
+    {"dbg_add_predator", (PyCFunction)Engine_dbg_add_predator, METH_VARARGS, "tests: add predator"},
+    {"dbg_free", (PyCFunction)Engine_dbg_free, METH_VARARGS, "tests: is position free"},
+    {"dbg_eval", (PyCFunction)Engine_dbg_eval, METH_NOARGS, "tests: policy predator counters"},
     {"policy_init", (PyCFunction)Engine_policy_init, METH_VARARGS, "policy_init(seed_key, config_dict): native orchard policy"},
     {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
     {"policy_minds", (PyCFunction)Engine_policy_minds, METH_NOARGS, "debug: native minds"},
