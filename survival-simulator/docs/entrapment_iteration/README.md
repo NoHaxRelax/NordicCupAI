@@ -84,6 +84,13 @@ score comparisons. Proximity is a proxy for capture, and bait occupancy is based
 on the policy's estimated localization. Every native tick is recorded. Replay:
 http://localhost:9063 (seed 0, 600 seconds, native sprites).
 
+The 100-case tracking-plus-route-recovery overview is at http://localhost:9064.
+It shows all outcomes and provides on-demand native-sprite replays from frozen
+source. Re-rendered multi-predator outcomes/final states must match the recorded
+evaluation before display. The original tick traces are also downloadable.
+Restart it with `python scripts/guide_batch_viewer.py
+logs/entrapment-iteration/track-rejoin-100 --port 9064` from the simulator folder.
+
 ## Implementation and limits
 
 - `my_guide.py`: associates the newcomer by observed motion rather than always

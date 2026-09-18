@@ -28,7 +28,24 @@ def main():
     for name, expected_hash in manifest['source_hashes'].items():
         if hashlib.sha256((root/'source'/name).read_bytes()).hexdigest()!=expected_hash:
             raise ValueError(f'Frozen source changed: {name}')
-    cases = {r['index']:r for r in json.loads((root/'cases.json').read_text())}
+    case_file = root/'cases.json'
+    if not case_file.exists():
+        case_file = root/'results.json'
+    cases = {r['index']:r for r in json.loads(case_file.read_text())}
+    aggregate_file = root/'aggregate.json'
+    if aggregate_file.exists():
+        aggregate = json.loads(aggregate_file.read_text())
+    else:
+        passed = sum(r['outcome']=='delivery_pass' for r in cases.values())
+        eligible = sum(r['outcome']!='no_usable_bait_site' for r in cases.values())
+        aggregate = dict(maps=len(cases),
+                         success_all_maps=dict(successes=passed,total=len(cases),
+                                               fraction=passed/max(1,len(cases))),
+                         success_known_eligible_maps=dict(successes=passed,total=eligible,
+                                                          fraction=passed/max(1,eligible)),
+                         wrong_side_at_final_frame=sum(r['outcome']=='wrong_side' for r in cases.values()),
+                         wrong_side_final_period=sum(bool(r.get('replacement_side_final_period'))
+                                                     for r in cases.values()))
     jobs, lock = {}, threading.Lock()
     pool = ThreadPoolExecutor(max_workers=2)
 
@@ -66,6 +83,9 @@ def main():
             command = [sys.executable,str(root/'source/scripts/guide_multi.py'),'--deliveries','1',
                        '--seed',str(case['seed']),'--encounter-seed',str(case['encounter_seed']),
                        '--output',str(folder)]
+            for option in ('replace_bait','vision_delivery'):
+                if manifest['config'].get(option):
+                    command.append('--'+option.replace('_','-'))
         env = os.environ | {'OPENBLAS_NUM_THREADS':'1','OMP_NUM_THREADS':'1','MKL_NUM_THREADS':'1'}
         try:
             with (folder/'render.log').open('w') as output:
@@ -123,7 +143,21 @@ def main():
                     item['trace']='/'+str(trace.relative_to(root)) if trace else None
                     item['replay']=status(index)
                     compact.append(item)
-                self.send_json(dict(summary=json.loads((root/'aggregate.json').read_text()),cases=compact))
+                self.send_json(dict(summary=aggregate,cases=compact))
+            elif path=='/aggregate.json':
+                self.send_json(aggregate)
+            elif path=='/cases.json':
+                self.send_json(list(cases.values()))
+            elif path=='/protocol.txt' and not (root/'protocol.txt').exists():
+                data = ('Frozen evaluation configuration:\n'+
+                        json.dumps(manifest['config'],indent=2)+
+                        '\n\nReplays rerun the frozen source with the recorded seeds.\n'
+                        'Multi-predator outcomes and final state must match before display.\n').encode()
+                self.send_response(200)
+                self.send_header('Content-Type','text/plain; charset=utf-8')
+                self.send_header('Content-Length',str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
             elif path.startswith('/api/replay/'):
                 try:
                     index=int(path.rsplit('/',1)[1])
