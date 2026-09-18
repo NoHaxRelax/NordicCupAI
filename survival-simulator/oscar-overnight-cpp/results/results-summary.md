@@ -11,7 +11,16 @@ Python policy), Linux EPYC pods, 3000 s horizon, paired comparisons on identical
 | Late-game harvest (r21s0c2) | 450 | 92% of spawned fruit eaten before 1000 s, 62-72% after 2000 s |
 | Rotted late fruit by nearest agent (r21s0c2) | 152 | 80-90% had no agent within 200 units during its life; 55% none within 400 |
 | Perfect tree knowledge (oracle, diagnostic) | ~500 | +99 ± 30 s: the discovery headroom |
-| 32 perturbations, 12 single-parameter probes, 48 late-game schedules | 96-128 each | none clearly better; late-game changes lean negative |
+| 32 perturbations, 44 single-parameter probes, 48 late-game schedules | 96-128 each | none clearly better; late-game changes lean negative |
+| Best screen winners re-run (L1c18, L1c45, s1a*, q_n0_60, q_sm0, q_brl450, combo) | 512 each | all within +-2 SE of r21s0c2 (winner's curse) |
+| Vision selection (fit_vision 1.5/2/3, heir_select), faster sweep | 512 each | within +-12 s |
+| Late birth control (1 birth/tick, lower late cap), tree-age inference (cell coverage, fruit) | 256-512 | no gain |
+| Oracle split: trees within 120/200/300/400/800 of a member | 256-512 | +48/+17/+85/+122/+129 s; ages only +15; own vision range +75 |
+| Protect known live trees from false 'dead' marks (oracle) | 256 | +51 ± 22; practical miss thresholds and wall-map occlusion do not capture it |
+
+**Phase 1 conclusion (01:45):** r21s0c2 stays the best practical policy: 2393 s mean survival, score 2555 over
+1465 seeds. The remaining headroom is detection of trees 200-400 units from agents (~+120 s with perfect local
+knowledge), which no parameter, selection or bookkeeping change tested tonight captures.
 
 Survival correlates weakly with the map's tree count (+0.1) and more with the colony's own state at 1500 s
 (agents alive +0.38, fruit eaten 1500-2000 s +0.45).
