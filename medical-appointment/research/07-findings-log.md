@@ -964,3 +964,34 @@ closing too.
 resolution on a set of this size (+-0.030). Any further "improvement" found by trying variants and
 keeping the winner is, in expectation, mostly selection bias. The correct move is to stop searching
 and submit.
+
+### 60. Example count settled, and the pod stood down (2026-09-18 evening)
+
+Elias asked whether the final model should simply be shown all the training data as examples. The
+served prompt shows the 12 nearest positives plus 2 negatives, chosen by question-word overlap.
+Benched on the pod, 27B, clause-and units, both prompt lines, paired over the same conversations:
+
+| example lines | training | paired vs 12 | prompt tokens | wall per conversation |
+|---|---:|---:|---:|---:|
+| **12 + 2 (served)** | **0.8261** | | 1 502 | 4.0 s |
+| 40 + 8 | 0.8191 | -0.0071 +- 0.0046 | 2 692 | 6.5 s |
+| all (190 + 190) | 0.8277 | +0.0004 +- 0.0043 | 11 332 | 30.2 s |
+
+More is not better: 40 is worse, all of them is a dead heat costing seven times the latency (30 s of
+the 60 s budget before ASR). The nearest twelve carry the signal and the rest dilute it. Note this
+is the opposite of the whole-conversation many-shot result on **Sonnet** (+0.019, entry 41) and
+consistent with it on the **27B** (-0.007, entry 50): example count is the most model-dependent
+knob measured in this project.
+
+**Pod `9rf8oeyh70minl` terminated at Elias's instruction** (2026-09-18 evening), after entry 59
+established that the remaining headroom is smaller than the measurement error and there is nothing
+left worth testing. Terminate rather than stop, deliberately: a stopped pod is pinned to its host
+and may never restart, which is how `v2pqefpdqwlh57` became unrecoverable this morning. Preserved
+before termination: every bench result (`bench/results/llm/*.p3.json`, `*.p4.json`), the endpoint's
+own record of what it answered (`bench/results/served/pod3/answers.jsonl`, 58 training + 3x19
+validation conversations) and the pod logs (`pod_logs.tgz`).
+
+**Nothing is submitted: 0 of 1 evaluation attempts used.** Elias is holding the submission until the
+last day so the final score does not tell competitors what is achievable. Rebuilding the endpoint is
+`bench/hpc/pod_bootstrap.sh` + `pod_endpoint.sh` per `research/09-saturday-runbook.md`, about 12
+minutes from a bare A100 with a 580 driver, plus one validation run to confirm it reproduces 0.8084.
