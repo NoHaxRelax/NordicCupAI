@@ -160,6 +160,8 @@ def main() -> int:
     ap.add_argument('--json', default='', help='write the per-run summaries (no per-question rows) to this path')
     ap.add_argument('--per-question', default='', help='write per-question replayed rows for every run to this path')
     ap.add_argument('--include-partial', action='store_true')
+    ap.add_argument('--rewrite', default='', help='directory: write a corrected copy of every replayed result file there '
+                    '(same shape, spans/tiou/prediction/summary replaced, config.replayed=true) for tools that read result files')
     a = ap.parse_args()
 
     offsets = None
@@ -183,6 +185,20 @@ def main() -> int:
             skipped.append(f'{f.name}: partial run')
             continue
         results.append(r)
+        if a.rewrite:
+            d = json.loads(f.read_text(encoding='utf-8'))
+            by_q = {q['question_id']: q for q in r['per_question']}
+            for rec in d['questions']:
+                q = by_q[rec['question_id']]
+                rec['span'], rec['tiou'], rec['prediction'] = q['span'], q['tiou'], q['prediction']
+                rec['answer'] = None if q['prediction'] == UNANSWERED else bool(q['prediction'])
+                rec['correct'] = q['prediction'] == q['label']
+            d['summary'].update({'accuracy': r['accuracy'], 'mean_tiou': r['spans']['mean_tiou'], 'score': r['spans']['score'],
+                                 'nulls_on_no': {'mean_tiou': r['nulls']['mean_tiou'], 'score': r['nulls']['score']}})
+            d['config'].update({'start_offset': r['offsets'][0], 'end_offset': r['offsets'][1], 'replayed': True,
+                                'replayed_from': f.name})
+            out_dir = Path(a.rewrite); out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / f.name).write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding='utf-8')
         print(f"{f.name}: acc {r['accuracy']:.3f}  spans {r['spans']['score']:.4f}  nulls {r['nulls']['score']:.4f}"
               f"  stored {r['stored']['score'] if r['stored']['score'] is not None else '-'}"
               f"  offsets {r['offsets'][0]:+.2f}/{r['offsets'][1]:+.2f}", file=sys.stderr, flush=True)

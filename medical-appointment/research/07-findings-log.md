@@ -495,3 +495,28 @@ Readings, against the error bars of entry 38 (single score ±0.014-0.021, paired
 5. The MoE models trail as before: the 35B-A3B few-shot is 0.008 behind the 27B (one paired error), gpt-oss-120b and 20b are 0.03 behind. Few-shot examples hurt both gpt-oss models (-0.004 and -0.016), the only models where they do.
 6. The Claude probe (contaminated batches, entry 37): Opus 0.807, Sonnet 0.763, Haiku 0.753. Opus is +0.009 over the 27B few-shot on all 390 questions, one paired error.
 7. `bench/results/llm/replay.summary.json` is not kept; rerun the replay when new result files arrive (it takes about a minute for the whole directory, the many-shot demos dominate).
+
+### 40. What a gold span is, measured on the training set only (2026-09-18 10:20)
+
+Elias asked for the structure of the annotated stretches before any more prompt work, and for every rule to be derived from training, never from the validation labels. 195 annotated training spans against the turbo units (`make_units`), no validation data involved:
+
+| property | count of 195 |
+|---|---:|
+| gold covers one unit (by at least 30 % of the unit) | 135 (69 %) |
+| two units | 42 (22 %) |
+| three to six units | 18 (9 %) |
+| best contiguous run of raw units reaches IoU 0.8 | 140 (72 %) |
+| best run below IoU 0.5 (no whole-unit span can score) | 20 (10 %) |
+| gold is a fragment of its best run (under 60 % of the run's duration) | 29 (15 %) |
+| gold ends where its last unit ends (no words after) | 167 (86 %); three or more trailing words: 24 |
+| gold starts at its first unit's first word (0 or 1 word before) | 182 (93 %); three or more leading words: 10 |
+| multi-unit golds whose last unit is a reply of at most four words | 28 of 57 |
+| multi-unit golds whose first unit is a short question (at most four words) | 20 of 57 |
+
+Gold length: median 2.88 s, mean 3.21 s, p10 1.32 s, p90 5.50 s. Gold start minus first unit start: median +0.29 s (p25 +0.18, p75 +0.40); gold end minus last unit end: median -0.02 s (p25 -0.06, p75 +0.02). These are the fitted turbo offsets of entry 17 seen from the other side, and they explain Elias's observation on the timeline page that the transcription inside the gold interval "cuts off the first word": the page took words by midpoint, and the first word's midpoint sits before a gold start that begins 0.3 s into the word. A display artefact; the model always sees whole units. The page now shows every word that overlaps the interval by a third of its duration.
+
+The 20 spans no whole-unit span can reach are clauses inside list-like utterances (sample 69 alone holds five: "diabetes stable, blood pressure normal, foot status normal, no complications" is one turbo unit and four golds), plus a few one-word golds ("normal", "no"). That is the case for clause-level units (committee report 03), not for more prompting.
+
+Re-derivation of the few-shot note. The sentence "when the fact is completed by the question that prompted it or by the confirming reply, the marked stretch includes those utterances too" was first written after a validation observation (committee report 01). The training numbers support it: half of the multi-unit golds end on a reply of at most four words ("Yes.", "All three renewed.", "From today.") and a third begin with a short question. The comment above `_FEWSHOT_NOTE` in `bench/llm/prompts.py` now records this.
+
+What to tell the model, as candidates for the next bench (not yet measured; the served 4B is too weak a judge, these go to the 27B on the pod): (a) the granularity numbers in one line, one utterance seven times in ten, two adjacent two times in ten, never more than four; (b) the end is the end of the utterance that states the detail, plus the short reply that confirms it; (c) do not start before the utterance that states the detail (report 03: 40 of 60 sub-0.5 spans on the 27B start earlier than the gold). The timeline page (artifact, version 5) now shows the corrected 27B few-shot run on the training set instead of the served 4B.

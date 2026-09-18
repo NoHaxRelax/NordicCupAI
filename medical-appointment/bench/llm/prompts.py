@@ -347,6 +347,11 @@ _STOP = set('the a an is was were are did does do has have had be been being of 
             'and or any this that it its there they them their he she his her you your we our i me my not no '
             'yes patient doctor conversation mention mentioned discuss discussed correct right isn t didn wasn '
             'about as from into than then which who whom what when where while also still ever any some'.split())
+# The granularity sentence below is supported by the TRAINING golds against turbo units
+# (re-derived 2026-09-18, findings log entry 40, after the committee noted it was first
+# written from a validation observation): 135 of 195 golds cover one unit, 42 cover two,
+# 18 three or more; of the 57 multi-unit golds, 28 end on a reply of at most four words
+# ("Yes.", "All three renewed.", "From today.") and 20 begin with a short question.
 _FEWSHOT_NOTE = ('\nEXAMPLES below show, for other consultations, the exact stretch of speech the annotators marked\n'
                  'as the evidence for a question. Match their granularity: when the fact is completed by the\n'
                  'question that prompted it or by the confirming reply, the marked stretch includes those\n'

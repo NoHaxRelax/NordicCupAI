@@ -39,11 +39,19 @@ def segments(path: Path) -> tuple[list[dict], float, list[dict]]:
 
 
 def text_in(words: list[dict], span) -> str:
-    """The turbo words whose midpoint falls inside the interval."""
+    """The turbo words that overlap the interval by at least a third of their own
+    duration. (A midpoint rule dropped the first word of most gold spans: gold
+    starts sit a median 0.29 s after Whisper's first word start on the training
+    set, so that word's midpoint falls just before the gold begins.)"""
     if not span or not words:
         return ''
     a, b = span
-    return ' '.join(w['w'] for w in words if a <= (w['s'] + w['e']) / 2 <= b)
+    out = []
+    for w in words:
+        d = max(1e-3, w['e'] - w['s'])
+        if min(b, w['e']) - max(a, w['s']) >= d / 3:
+            out.append(w['w'])
+    return ' '.join(out)
 
 
 def add_texts(qs: list[dict], words: list[dict]) -> None:
