@@ -772,7 +772,23 @@ rules (entry 45) and the two-statement cases (entry 43). Consistent with propose
 finding that question wording does not predict the speaker ("the patient" questions: doctor-gold 33,
 patient-gold 29).
 
-Caveat: 22 of the 39 files' tags are machine-assigned, not human-verified. Tag noise would have to
-be large and one-sided to turn a 6-against-5 split into a usable rule, so the conclusion stands
-without further hand-checking. Recommendation: stop oracling for this purpose; the errors are
-within-speaker sentence choice, which no speaker signal can fix.
+**Correction, same day.** Elias pointed out that the tags are AI-assigned and only the 17
+`# checked` files are human-verified, so the pooled table above is partly machine-labelled. Split:
+
+| subset | files | positives | gold is doctor | model agrees on speaker | wrong spans: same speaker / gold D took P / gold P took D |
+|---|---:|---:|---:|---:|---|
+| human-verified | 17 | 91 | 74 % | 84 % | 9 / 5 / 3 |
+| machine-tagged | 22 | 104 | 65 % | 92 % | 12 / 1 / 2 |
+
+He was right that it matters: on his verified files the model agrees with the gold's speaker 84 %
+of the time against 92 % on the machine-tagged ones, i.e. the machine tags smooth the disagreement
+away, and cross-speaker errors are 8 of 17 there against 3 of 15 here. The actionable conclusion
+nevertheless survives on the verified half alone, because the asymmetry is 5 against 3: a
+"prefer the doctor" tiebreak would fix five spans and break three, worth about +0.005 score if it
+could be applied only where the model is torn, and we have no measure of tornness to gate it with
+(sample agreement was measured as calibrated but unexploitable, entry 50). What would change this
+is a one-sided split such as 12 against 1, which is not what the verified data shows.
+
+Note the reference transcripts feed no part of the served pipeline: it reads the Whisper JSONs, not
+`bench/ref`. Recommendation: no more oracling for the sake of this question; finishing the other 22
+files would roughly double a sample whose signal is already two-sided and small.
