@@ -8,3 +8,7 @@
 | 00:32 | same | best (r3s2c6) | 953 | 2353 | 2492 | 140 |
 
 r21s0c2 vs best paired on 950 seeds: survival +38 ± 14 s, score +60 ± 14, fruit +22.6.
+
+01:25: still r21s0c2 (configs-all.json). 1465 seeds overall: survival 2393 s, score 2555, fruit 162, 38 runs reach 3000 s.
+No tested parameter or schedule beats it on 512 paired seeds (all within +-2 SE). Diagnostic headroom: perfect local
+tree knowledge within 400 units +146 s.

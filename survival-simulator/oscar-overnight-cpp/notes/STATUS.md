@@ -57,3 +57,6 @@ Log (newest last)
   (late bursts are heirs/emergency births), late cap cuts ~0 or worse, age_fruit -12±31.
   Queued: v1 (fit_vision 1.5/2/3+heir_select, fit_hear 0.2, sweep 0.035, oracle mode 4 = own vision range only) on
   j/n1; c3 (q_n0_60, q_sm0, q_brl450, combo) on i/k seeds 10000-10511. Spend ~ $9.5 of $100.
+- 01:25 c3 (512 seeds): q_n0_60/q_sm0/q_brl450 -11..-13, combo +12±16 => parameter space converged around r21s0c2.
+  bc1 final: late birth control no gain. Running: v1 (vision selection + oracle mode 4) on j/n1/n3/n4/n5 (512 seeds),
+  or5 (oracle within 120/200/300) on i/k (256 seeds), bc1 remainder on n2.
