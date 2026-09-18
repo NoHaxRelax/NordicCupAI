@@ -1,0 +1,36 @@
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.12/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/orchard/sweep.py", line 17, in _run
+    r = harness.run(policy, seed, horizon, out, label, False, False, sample_every=100., **kw)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/society/harness.py", line 110, in run
+    actions = policy(state['observations'], state['sim_time'])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/orchard/orchard.py", line 654, in __call__
+    for aid, s in states.items(): self._observe(self.minds[aid], s)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/orchard/orchard.py", line 389, in _observe
+    t = min((t for t in g.near_trees(p, 12) if not t.dead), key=lambda t: math.dist(t.p, p), default=None)
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/orchard/orchard.py", line 163, in near_trees
+    def near_trees(self, p, r): return self._near(self.tgrid, self.trees, p, r)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/orchard/orchard.py", line 160, in _near
+    it = items[i]
+         ~~~~~^^^
+KeyError: 110
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/survival/research/orchard/sweep.py", line 50, in <module>
+    for r in pool.imap_unordered(_run, jobs):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/multiprocessing/pool.py", line 873, in next
+    raise value
+KeyError: 110
