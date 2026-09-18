@@ -1,0 +1,546 @@
+{
+  "manifest": {
+    "config": {
+      "maps": 12,
+      "workers": 4,
+      "seed": 9182026,
+      "shards": 1,
+      "shard": 0,
+      "seconds": 60.0,
+      "timeout": 240.0,
+      "output": "survival-simulator/logs/entrapment-iteration/track40-12",
+      "multi": true
+    },
+    "jobs": [
+      {
+        "index": 0,
+        "seed": 412572006,
+        "encounter_seed": 650657616
+      },
+      {
+        "index": 1,
+        "seed": 424736271,
+        "encounter_seed": 555948143
+      },
+      {
+        "index": 2,
+        "seed": 780566658,
+        "encounter_seed": 2140410150
+      },
+      {
+        "index": 3,
+        "seed": 882536520,
+        "encounter_seed": 524315602
+      },
+      {
+        "index": 4,
+        "seed": 1152318527,
+        "encounter_seed": 825338698
+      },
+      {
+        "index": 5,
+        "seed": 155568418,
+        "encounter_seed": 1121765272
+      },
+      {
+        "index": 6,
+        "seed": 1743629318,
+        "encounter_seed": 109271431
+      },
+      {
+        "index": 7,
+        "seed": 148874829,
+        "encounter_seed": 2088818044
+      },
+      {
+        "index": 8,
+        "seed": 2028602704,
+        "encounter_seed": 1890188181
+      },
+      {
+        "index": 9,
+        "seed": 2050567370,
+        "encounter_seed": 1463837424
+      },
+      {
+        "index": 10,
+        "seed": 1938596677,
+        "encounter_seed": 1214587917
+      },
+      {
+        "index": 11,
+        "seed": 1640564005,
+        "encounter_seed": 1211402689
+      }
+    ],
+    "source_hashes": {
+      "src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+      "src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1",
+      "src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+      "src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+      "src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+      "src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+      "src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+      "src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+      "src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+      "src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+      "src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+      "src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+      "src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+      "models/entrapment/my_guide.py": "9db3f7fa3a0fb71af621362dd3eb1f9e78b5e61aa8f457166cd8a0b3cae39718",
+      "models/entrapment/guide_pathfinding.py": "e66425c2fb77fab3143932206e6fbc2f772411e3c25cf0324ff9729abade35c2",
+      "models/entrapment/guide_steering.py": "96786eefadb4730c9cd0aaed8f07add6509187aabe1d00f5cdd09cb559afab7c",
+      "models/entrapment/predator_following.py": "4c1c14665754a2e19ca1c2c1738c6bc5074b2334dcd0ed642132a83d5cc685b9",
+      "scripts/guide_multi.py": "391a7cc0ea945cc74dc198666ecce9d4ca79284244f14f0fe3e79043e400e80d",
+      "scripts/guide_lab.py": "fa3992f9e417ced18b621f486385df89ce3f83a757f5dd0526d82ce5f41abde1",
+      "scripts/guide_lab_sites.py": "e1c6827161f9570cd1362ddec7a606474085b2576b6dd1d52ee37f70da845895",
+      "scripts/guide_batch.py": "e231b6450d62f1d0c55cbd89d86077cf84054b9218fcfae1e0532aec4d290b49"
+    }
+  },
+  "cases": [
+    {
+      "index": 0,
+      "seed": 412572006,
+      "encounter_seed": 650657616,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            363.5994758740606,
+            123.8610610613637
+          ],
+          "predator_start": [
+            468.6939384343232,
+            56.6422938661219
+          ],
+          "end_time": 58.1,
+          "duration": 48.1,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 47.9,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 26.17
+    },
+    {
+      "index": 1,
+      "seed": 424736271,
+      "encounter_seed": 555948143,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            1355.6413730692896,
+            628.7307150824452
+          ],
+          "predator_start": [
+            1437.7380480632241,
+            584.2961294264851
+          ],
+          "end_time": 43.1,
+          "duration": 33.1,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 31.4,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 25.669
+    },
+    {
+      "index": 2,
+      "seed": 780566658,
+      "encounter_seed": 2140410150,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            549.307681195688,
+            478.16593125368615
+          ],
+          "predator_start": [
+            409.3211288142332,
+            481.4082269565958
+          ],
+          "end_time": 30.9,
+          "duration": 20.9,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 20.7,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 17.851
+    },
+    {
+      "index": 3,
+      "seed": 882536520,
+      "encounter_seed": 524315602,
+      "outcome": "initial_predators_escaped",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            1272.1110106764922,
+            630.5358104000511
+          ],
+          "predator_start": [
+            1151.0079070731385,
+            644.7655037605051
+          ],
+          "end_time": 59.8,
+          "duration": 49.8,
+          "delivered": false,
+          "guide_alive": false,
+          "capture": {
+            "time": 39.8,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 30,
+          "prior_held_min": 22,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 22,
+      "final_hold_min": 23,
+      "wall_seconds": 31.611
+    },
+    {
+      "index": 4,
+      "seed": 1152318527,
+      "encounter_seed": 825338698,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            329.971757515512,
+            518.0983012926648
+          ],
+          "predator_start": [
+            349.54907420747026,
+            439.94417749301107
+          ],
+          "end_time": 44.6,
+          "duration": 34.6,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 34.4,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 21.47
+    },
+    {
+      "index": 5,
+      "seed": 155568418,
+      "encounter_seed": 1121765272,
+      "outcome": "delivery_or_retention_failed",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            728.3671337731323,
+            294.2554889619061
+          ],
+          "predator_start": [
+            667.1472941047404,
+            369.4351537581154
+          ],
+          "end_time": 47.1,
+          "duration": 37.1,
+          "delivered": false,
+          "guide_alive": false,
+          "capture": {
+            "time": 27.1,
+            "predators": [
+              17
+            ],
+            "cause": "predator"
+          },
+          "total_held": 30,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 30,
+      "wall_seconds": 21.419
+    },
+    {
+      "index": 6,
+      "seed": 1743629318,
+      "encounter_seed": 109271431,
+      "outcome": "delivery_or_retention_failed",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            1375.6811202208826,
+            284.77343308521233
+          ],
+          "predator_start": [
+            1396.2423002597836,
+            179.9297437692079
+          ],
+          "end_time": 70.0,
+          "duration": 60.0,
+          "delivered": false,
+          "guide_alive": true,
+          "capture": null,
+          "total_held": 30,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 30,
+      "wall_seconds": 34.149
+    },
+    {
+      "index": 7,
+      "seed": 148874829,
+      "encounter_seed": 2088818044,
+      "outcome": "initial_predators_escaped",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            1464.9663742476575,
+            851.1334379632766
+          ],
+          "predator_start": [
+            1421.3368108057625,
+            956.9206172689239
+          ],
+          "end_time": 37.6,
+          "duration": 27.6,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 25.0,
+            "predators": [
+              2
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 29,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 29,
+      "final_hold_min": 31,
+      "wall_seconds": 22.356
+    },
+    {
+      "index": 8,
+      "seed": 2028602704,
+      "encounter_seed": 1890188181,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            1379.5838111932094,
+            775.4180084362674
+          ],
+          "predator_start": [
+            1460.4195134294412,
+            721.56220332969
+          ],
+          "end_time": 67.0,
+          "duration": 57.0,
+          "delivered": true,
+          "guide_alive": true,
+          "capture": null,
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 23.516
+    },
+    {
+      "index": 9,
+      "seed": 2050567370,
+      "encounter_seed": 1463837424,
+      "outcome": "initial_predators_escaped",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            1207.432680955703,
+            160.75844121398376
+          ],
+          "predator_start": [
+            1138.0114155680335,
+            266.6194422587416
+          ],
+          "end_time": 49.0,
+          "duration": 39.0,
+          "delivered": false,
+          "guide_alive": false,
+          "capture": {
+            "time": 29.0,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 29,
+          "prior_held_min": 29,
+          "prior_held_end": 29
+        }
+      ],
+      "initial_min_held": 29,
+      "final_hold_min": 29,
+      "wall_seconds": 23.963
+    },
+    {
+      "index": 10,
+      "seed": 1938596677,
+      "encounter_seed": 1214587917,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            808.4101250927282,
+            99.04570004517069
+          ],
+          "predator_start": [
+            855.0204801700504,
+            237.34771126957216
+          ],
+          "end_time": 25.8,
+          "duration": 15.8,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 15.6,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 13.242
+    },
+    {
+      "index": 11,
+      "seed": 1640564005,
+      "encounter_seed": 1211402689,
+      "outcome": "delivery_pass",
+      "deliveries": [
+        {
+          "number": 1,
+          "predator_id": 31,
+          "start_time": 10.0,
+          "guide_start": [
+            835.2994198973214,
+            906.3538721764106
+          ],
+          "predator_start": [
+            856.8391895448945,
+            797.3669551804228
+          ],
+          "end_time": 30.6,
+          "duration": 20.6,
+          "delivered": true,
+          "guide_alive": false,
+          "capture": {
+            "time": 20.5,
+            "predators": [
+              31
+            ],
+            "cause": "predator"
+          },
+          "total_held": 31,
+          "prior_held_min": 30,
+          "prior_held_end": 30
+        }
+      ],
+      "initial_min_held": 30,
+      "final_hold_min": 31,
+      "wall_seconds": 14.39
+    }
+  ]
+}
