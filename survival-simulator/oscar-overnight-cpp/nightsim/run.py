@@ -16,7 +16,8 @@ def parse_seeds(items):
             elif part: out.append(int(part))
     return out
 
-DIAG_FROM = float(os.environ.get('NIGHT_DIAG_FROM', '0'))  # >0: per-fruit fate diagnostics after this time (engine truth, analysis only)
+DIAG_FROM = float(os.environ.get('NIGHT_DIAG_FROM', '0'))
+TAIL = int(os.environ.get('NIGHT_TAIL', '0'))   # >0: keep the last TAIL 10-s snapshots (alive, old, meanE, minE, ages) before the end  # >0: per-fruit fate diagnostics after this time (engine truth, analysis only)
 
 def fruit_diag(eng, horizon, stop_at, F, out):
     # step in 1 s chunks; F: fid -> [spawn_t, last_age, min_agent_dist, x, y]
@@ -53,7 +54,8 @@ def one(job):
     kw = dict(kw); pl = kw.pop('test_pred_life', 0.)
     eng.dbg_pred_life(float(pl))   # tests only: perfect-trap model (0 = off)
     eng.policy_init(nightsim.seed_key(seed), kw)
-    peak = state['num_agents']; nxt = sample; last = None; traj = []; FD = {}; fates = []
+    peak = state['num_agents']; nxt = sample; last = None; traj = []; FD = {}; fates = []; tail = []
+    if TAIL > 0: sample = 10.; nxt = 10.
     while True:
         info = eng.info(); n = len(eng.agents())
         if n == 0 or info['time'] >= horizon: break
@@ -65,6 +67,11 @@ def one(job):
         info = eng.info()
         if info['time'] >= nxt - 1e-6:
             last = (len(eng.trees()), len(eng.fruits()), len(eng.agents()), len(eng.predators()))
+            if TAIL > 0:
+                ags = eng.agents()
+                tail.append([int(nxt), len(ags), sum(1 for a in ags if a[4] > a[13]), round(sum(a[5] for a in ags)/max(1, len(ags))),
+                             round(min((a[5] for a in ags), default=0)), sorted(round(a[4]) for a in ags), len(eng.trees()), eaten])
+                tail = tail[-TAIL:]
             if abs(nxt % 250) < 1e-6:
                 ags = eng.agents()
                 # t, alive, trees, predators, fruit spawned so far (max id), eaten so far, eaten energy so far, mean energy
@@ -74,7 +81,7 @@ def one(job):
     return dict(label=label, seed=seed, surv=round(info['time'], 1), score=round(info['score'], 3), fruit=round(fe/1000, 3),
                 eaten=eaten, peak=peak, created=info['next_agent_id'], pdeaths=pd, sdeaths=sd, penalty=round(pen, 3),
                 trees_d=last and last[0], fruits_d=last and last[1], preds=len(eng.predators()), traj=traj,
-                wall=round(time.perf_counter()-t0, 1), **({'fates': fates} if DIAG_FROM > 0 else {}))
+                wall=round(time.perf_counter()-t0, 1), **({'fates': fates} if DIAG_FROM > 0 else {}), **({'tail': tail} if TAIL > 0 else {}))
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()

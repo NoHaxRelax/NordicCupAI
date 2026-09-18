@@ -45,3 +45,9 @@ Log (newest last)
   on n2-n5 seeds 2000-2127 (r21s0c2 regression identical). c2 queued after c1 on i/j/k/n1 (seeds 10000-10511):
   oracle split (nearby-only 400/800, ages-only) + age_infer 20/40/60 (new: tree first seen in a cell viewed dt ago
   gets birth estimate at dt/2).
+- 01:05 c1 (512 seeds 10000-10511) final: oracle tree knowledge +124±17 s (+11.6 fruit) = real discovery headroom;
+  old_reach 150 +20±17; L1c18/L1c45/s1a*/L1c38 ~0 (winner's curse); merge_anchored -9±16; speed selection -89±18.
+  tail1 (end-of-game traces): late colonies of 3-5 agents boom (bursts of 3-4 same-age births) and bust; intake falls
+  from ~20 to ~10 energy/s in the last 300 s. Added late overrides l_births_per_tick/l_emergency_reserve/
+  l_low_pop_reserve and age_fruit (a fruit seen by born_hi bounds its tree's birth <= born_hi-20).
+  Running: c2 (oracle split + age_infer) on i/j/k/n1; q1 on n2-n5, then bc1 (late birth control + age_fruit).

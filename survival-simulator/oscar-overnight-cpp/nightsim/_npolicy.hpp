@@ -328,12 +328,12 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double oracle_r = 600., age_infer = 0.;
+    double oracle_r = 600., age_infer = 0., age_fruit = 0.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
            pred_dodge_r = 0., pred_dodge_ang = 1.5708;
-    double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN;
+    double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN, l_births_per_tick = NAN, l_emergency_reserve = NAN, l_low_pop_reserve = NAN;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
          old_eat_last = true, heir_needs_site = true;
     bool feed_breed = false;  // feed_mode == 'breed' (else 'hungry')
@@ -712,6 +712,11 @@ public:
                 f->id = g.next_fruit; f->p = p; f->born_lo = lo; f->born_hi = time; f->last = time;
                 g.add_fruit(f); g.next_fruit++;
                 for (auto& t : g.near_trees(p, 70)) if (!t->dead) t->fruit_seen = time;
+                if (P.age_fruit > 0.) {   // nightsim: a fruit born by born_hi proves its tree was >= 20 s old then
+                    TreeP tn; double tdn = 0;
+                    for (auto& t : g.near_trees(p, 70)) { if (t->dead) continue; double dd = dist(t->p, p); if (!tn || dd < tdn) { tn = t; tdn = dd; } }
+                    if (tn && !tn->fresh && f->born_hi - 20. < tn->first) tn->first = f->born_hi - 20.;
+                }
             }
             f->last = time; g.seen_fruits.insert(f->id);
         }
@@ -1487,7 +1492,7 @@ public:
     bool late_on = false;
     void apply_late() {
         auto ov = [](double& dst, double v) { if (!std::isnan(v)) dst = v; };
-        ov(P.fruit_reach, P.l_fruit_reach); ov(P.tree_reach, P.l_tree_reach); ov(P.watch_reach, P.l_watch_reach); ov(P.explore_energy, P.l_explore_energy); ov(P.cap_min, P.l_cap_min); ov(P.cap_mult, P.l_cap_mult); ov(P.cap_tree_slack, P.l_cap_tree_slack); ov(P.cap_hard_min, P.l_cap_hard_min); ov(P.sweep_rate, P.l_sweep_rate); ov(P.watch_patience, P.l_watch_patience); ov(P.explore_radius, P.l_explore_radius); ov(P.old_reach, P.l_old_reach); ov(P.dist_pen, P.l_dist_pen);
+        ov(P.fruit_reach, P.l_fruit_reach); ov(P.tree_reach, P.l_tree_reach); ov(P.watch_reach, P.l_watch_reach); ov(P.explore_energy, P.l_explore_energy); ov(P.cap_min, P.l_cap_min); ov(P.cap_mult, P.l_cap_mult); ov(P.cap_tree_slack, P.l_cap_tree_slack); ov(P.cap_hard_min, P.l_cap_hard_min); ov(P.sweep_rate, P.l_sweep_rate); ov(P.watch_patience, P.l_watch_patience); ov(P.explore_radius, P.l_explore_radius); ov(P.old_reach, P.l_old_reach); ov(P.dist_pen, P.l_dist_pen); ov(P.births_per_tick, P.l_births_per_tick); ov(P.emergency_reserve, P.l_emergency_reserve); ov(P.low_pop_reserve, P.l_low_pop_reserve);
     }
     std::vector<Act> call(std::vector<AState>&& sts, double sim_time) {
         time = sim_time;

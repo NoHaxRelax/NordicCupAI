@@ -24,11 +24,15 @@ P1 no-predator survival (C++ fork survival/nightsim, runner nightsim/run.py, dri
 - L2 parameters: paired search around the leader, 200-500 seeds per candidate, confirm on 1000+.
 - L3 mechanisms in C++ (each behind a parameter, default off, A/B on 500+ seeds): chosen from L1 data.
 - L4 population strategy (colony count/spread, late-game size).
-P2 predators (after ~02:00): report lucas-trap-report.md (branch survival-simulator/lucas-experimental).
-- T0 port harness: predators on in nightsim runner; measure current survival policy with predators.
-- T1 escape tests (single predator, scripted): sprint, circle-behind, backwards, wall hiding -> loss rate.
-- T2 guide-to-trap and bait-holding tests; T3 bait replacement by old agents; T4 full games; T5 many
-  predators late; trap on/off comparison on the same seeds.
+P2 predators (after 02:00) — ONE problem at a time, nail it, then build on it (Oscar 00:57):
+  1. Walking ONE predator to the trap (guide + narrow-gap crevice bait; Lucas's work as the base, improve it).
+     Narrow scenario tests first (nightsim hooks), then in full games. Done = high delivery rate, guide rarely dies.
+  2. Multiple predators into the same trap (holding several; delivering while others are held).
+  3. Not losing agents to predators in general (evasion: detection, facing/backing, dodge, speed, refuges).
+  4. Then: bait replacement by old agents, keepers near the trap, many-predator late game, resource limits.
+  Parked code ready for reuse: evasion (pred_mode/share/dodge), crevice site finder (trap_mode=1), bait role
+  (trap_mode=2), scenario hooks (dbg_*), perfect-trap model (test_pred_life), escape.py, trapsite.py.
+  Crevice (narrow gap) baits only; never wall/corner baits.
 
 ## Rules of thumb
 - Judge by paired means on >=500 seeds (per-run sd ~330 s). Report survival relative to trees left.
