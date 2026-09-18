@@ -30,9 +30,10 @@ from dataclasses import dataclass, field
 
 from .geometry import add, sub, mul, dot, dist, unit, wrap, heading_of, polar, path_clear, los_clear
 from .motion import action, step_toward, hold, speed_for, next_waypoint
-from .paths import plan
+from .paths import plan, path_length
 from .predator_model import PredState, observed_agents
 from .sites import Site
+from . import predator_model as pm
 from .world import AGENT_RADIUS, WorldState, AgentView, PredatorView, PRED_CHARGE_RANGE
 
 LEAD_DISTANCE = 125.0       # regulate the gap around this while leading (must stay > 90)
@@ -44,6 +45,9 @@ GAZE_OFFSET = 0.12          # alternating facing offset that keeps it zig-zaggin
 RUN_IN = 250.0              # straight run along the axis before the corridor entry
 CORRIDOR_MIN_GAP = 100.0    # turn our back only with at least this gap
 FLYBY_GAP = 45.0            # gap at which a guide in front of a staffed mouth sprints aside
+LEASH_GAP = 50.0            # leash lead: gap kept in front of a charging predator (kill radius 15)
+LEASH_HEAR = 55.0           # inside this it hears us through anything and never loses us
+LEASH_RUN_IN = 200.0        # straight run down the axis before the mouth (predator lines up behind)
 FLYBY_TICKS = 14            # sprint ticks along the face before the guide is released
 RETREAT_DEV_SPRINT = math.radians(25)   # steering cone while it sprints (closes 0.6/tick head-on)
 RETREAT_DEV_WALK = math.radians(40)     # steering cone while it walks (falls back 2.2/tick)
@@ -67,6 +71,10 @@ class Delivery:
     max_phase: str = 'ATTRACT'
     trace: list = field(default_factory=list)
     ticks: list = field(default_factory=list)   # last 40 ticks, for post-mortems
+    leash: bool = False           # close-range lead (guide keeps 40-60 behind it, charge mode)
+    path: list | None = None
+    path_t: float = -1e9
+    stage: str = 'approach'       # leash: 'approach' (to the run-in start) or 'run' (down the axis)
     done: str | None = None       # 'delivered' | 'guide_captured' | 'failed:<reason>'
     decision: str = ''
 
@@ -179,6 +187,230 @@ class Lure:
         self.held = set(held)
         self.baits = set(baits)      # agents standing as baits: a predator that targets one is delivered
 
+    # ------------------------------------------------------------------ leash lead
+    def _leash_path(self, d: Delivery, a: AgentView, p: PredatorView):
+        """Waypoints: around obstacles to the run-in start (on the axis, LEASH_RUN_IN out), then
+        straight down the axis to the run-in end and the goal. The straight run puts the predator
+        on the axis behind us, so it arrives at the mouth and not at its side. Other predators, the
+        one behind us and the far mouth are kept clear of."""
+        w = self.world
+        site = d.site
+        goal = site.holder if d.become_bait else site.front
+        run_far = add(site.front_mid, mul(site.normal, LEASH_RUN_IN))
+        run_end = add(site.front_mid, mul(site.normal, 60.0))
+        out = dot(sub(a.p, site.front_mid), site.normal)
+        lateral = abs(dot(sub(a.p, site.front_mid), (-site.normal[1], site.normal[0])))
+        behind = abs(wrap(heading_of(sub(p.p, a.p)) - heading_of(site.normal))) < 0.7
+        ahead = abs(wrap(heading_of(sub(p.p, a.p)) - heading_of(mul(site.normal, -1.0)))) < 1.0
+        # stages with hysteresis: the run down the axis starts at the run-in point with the
+        # predator behind us and is only abandoned if it gets between us and the mouth
+        if d.stage == 'run':
+            if ahead and out > 40.0:
+                d.stage = 'approach'
+            elif lateral > 30.0 and out > 40.0:
+                d.stage = 'approach'
+        if d.stage != 'run' and lateral < 18.0 and 0.0 <= out <= LEASH_RUN_IN + 25.0 and (behind or out < 40.0):
+            d.stage = 'run'
+        if d.stage == 'run':
+            return [run_end, goal] if out > 62.0 else [goal]
+        avoid = [(q.p, 60.0) for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
+                 and predator_target(w, q) != a.id]
+        avoid.append((p.p, 70.0))
+        if site.far_mouth is not None:
+            avoid.append((site.far_mouth, 110.0))     # it must not get sucked into the far mouth
+        avoid.append((site.front_mid, 70.0))          # approach the mouth only along the axis
+        best = None
+        for radius in (12.0, 8.0, 6.0):
+            path = plan(w.rects, w.width, w.height, a.p, run_far, radius=radius, avoid=avoid, slow=w.biome_at)
+            if path is None:
+                continue
+            length = path_length(path) * (1.0 if radius >= 12 else (1.08 if radius >= 8 else 1.2))
+            if best is None or length < best[0]:
+                best = (length, path)
+        head = best[1][1:] if best is not None else [run_far]
+        return head + [run_end, goal]
+
+    def _charge_step(self, p: PredatorView, q, speed):
+        """Where a predator that charges point q ends up this tick (engine: turn at most 0.3 rad
+        toward it, move ``speed`` along the new heading, deflect around obstacles)."""
+        ang = wrap(heading_of(sub(q, p.p)) - p.heading)
+        turn = max(-0.3, min(0.3, ang * 0.5)) if abs(ang) > 0.05 else ang
+        st = pm.PredState(p.x, p.y, p.heading, energy=200.0, resting=False)
+        w = self.world
+        lrects = pm.local_rects(w.rects, p.x, p.y)
+        st2 = pm.move(st, speed, turn, w.biome_at(p.p), lrects, w.width, w.height)
+        return (st2.x, st2.y)
+
+    def _leash_choose(self, a: AgentView, p: PredatorView, desired, gap, v_pred, gap_target, cap, others=()):
+        """Joint choice of heading (36 directions plus ``desired``) and speed so that the predicted
+        gap after both move lands in the window [floor, hearing] and every other nearby predator
+        stays beyond 30; among feasible moves prefer the one closest to ``desired`` and cheapest
+        in energy. Returns (heading, real_speed, gap2)."""
+        w = self.world
+        away = heading_of(sub(a.p, p.p))
+        floor = max(gap_target - 10.0, 26.0) if gap >= gap_target - 10.0 else max(gap - 2.0, 18.0)
+        ceil = LEASH_HEAR - 2.0
+        speeds = sorted({0.0, 5.0, 10.0, min(v_pred, cap), min(v_pred + 4.0, cap), cap})
+        headings = [away + math.radians(10) * k for k in range(-18, 18)] + [desired]
+        # other predators: where each will be after this tick (charging us if it targets us)
+        oth = []
+        for q in others:
+            tq = predator_target(w, q)
+            oth.append((q, tq == a.id, pred_next_speed(q) * w.biome_at(q.p)))
+        best = None; nearest = None
+        for sp in speeds:
+            real = sp * a.move_modifier
+            cost_e = (sp * 0.05 if sp <= 10.0 else 0.5 + (sp - 10.0) * 0.5)
+            for h in (headings if real > 0.05 else [desired]):
+                if real > 0.05 and not heading_clear(a.p, h, max(real, 12.0) + 4.0, w.rects):
+                    continue
+                q = add(a.p, polar(h, real)) if real > 0.05 else a.p
+                pn = self._charge_step(p, q, v_pred)
+                g2 = dist(q, pn)
+                d_other = 1e9
+                for (o, chasing_us, v_o) in oth:
+                    on = self._charge_step(o, q, v_o) if chasing_us else add(o.p, (o.vx, o.vy))
+                    d_other = min(d_other, dist(q, on))
+                dev = abs(wrap(h - desired)) if real > 0.05 else math.pi / 2
+                progress = real * math.cos(dev) if real > 0.05 else 0.0
+                if floor <= g2 <= ceil and d_other >= 30.0:
+                    cost = -progress + 2.0 * cost_e + 0.3 * abs(g2 - gap_target) + (0.0 if d_other > 60 else (60 - d_other) * 0.4)
+                    if best is None or cost < best[0]:
+                        best = (cost, h, real, g2)
+                miss = (floor - g2) if g2 < floor else (g2 - ceil if g2 > ceil else 0.0)
+                miss += max(0.0, 30.0 - d_other) * 2.0
+                if nearest is None or miss < nearest[0] or (miss == nearest[0] and cost_e < nearest[4]):
+                    nearest = (miss, h, real, g2, cost_e)
+        if best is not None:
+            return best[1], best[2], best[3]
+        if nearest is not None:
+            return nearest[1], nearest[2], nearest[3]
+        return away, 0.0, gap
+
+    def _leash(self, d: Delivery, a: AgentView, p: PredatorView):
+        """Close-range lead. With our back to it the predator charges straight at us (15 per tick,
+        turning at most 0.3 rad per tick) and, inside 60, hears us through walls; so we walk our
+        planned path at its own speed, 50 ahead of it, sprinting only to correct. Facing and line
+        of sight do not matter; other predators that join the chase are welcome."""
+        w = self.world
+        site = d.site
+        gap = dist(a.p, p.p)
+        target = predator_target(w, p)
+        following = target == a.id
+        d.phase = 'LEASH'
+        if int(round(w.time * 10)) % 10 == 0:
+            d.trace.append((round(w.time, 1), 'S', round(gap), target, 1, round(a.energy), round(p.speed, 1), 0))
+            if len(d.trace) > 150:
+                d.trace.pop(0)
+        away = heading_of(sub(a.p, p.p))
+        face_away = wrap(away - a.heading)
+
+        goal = site.holder if d.become_bait else site.front
+        at_goal = dist(a.p, goal) < (3.0 if d.become_bait else 2.0)
+        # inside the passage nothing can reach us: just settle on the holder point
+        out = dot(sub(a.p, site.front_mid), site.normal)
+        lateral = abs(dot(sub(a.p, site.front_mid), (-site.normal[1], site.normal[0])))
+        if d.become_bait and not at_goal and -site.length + 1.0 < out < -1.0 and lateral < site.thickness / 2 - 1.0:
+            d.decision = f'leash: inside the passage, settling on the holder ({dist(a.p, goal):.0f})'
+            return step_toward(a, goal, min(a.walk * a.move_modifier, dist(a.p, goal)), face=site.front_mid)
+
+        # ---- endgame
+        if at_goal and d.become_bait:
+            if target != a.id and gap > 55 and not bool(p.resting):
+                # it lost us as we went in: stand in the mouth (it cannot enter) until it hears us
+                q = add(site.front_mid, mul(site.normal, -2.0))
+                d.decision = f'leash: bait, it lost us ({gap:.0f}); stepping to the mouth'
+                return step_toward(a, q, min(a.walk * a.move_modifier, dist(a.p, q)), face=site.front_mid)
+            d.decision = 'leash: inside the passage, holding as bait'
+            d.done = 'delivered'
+            return hold(a)
+        if at_goal:
+            if gap <= FLYBY_GAP + 10 and not is_resting(p):
+                d.phase = 'FLYBY'
+                d.stall_ticks = 0
+                d.flee_heading = None
+                d.event(w.time, 'flyby', gap=round(gap, 1))
+                return self._flyby(d, a, p, gap)
+            if not following and gap > 80 and not bool(p.resting):
+                d.decision = f'leash: at the flyby point but it is gone ({gap:.0f}); hooking'
+                return step_toward(a, p.p, speed_for(a, gap < 130 and a.energy > 320))
+            d.decision = f'leash: at the flyby point, waiting for it ({gap:.0f})'
+            return action(a.id, 0.0, 0.0, face_away)
+
+        # ---- it already wants the bait: we are done, get out of its way
+        if target is not None and target in self.baits and not d.become_bait:
+            # it has taken the bait: we are delivered; keep sprinting clear (FLYBY continues the
+            # escape for whoever drives us next)
+            d.done = 'delivered'
+            d.phase = 'FLYBY'
+            d.stall_ticks = 0
+            side = self.flyby_side(site, a, p) or (-site.normal[1], site.normal[0])
+            d.flee_heading = side
+            d.decision = f'leash: it targets bait {target}; sprinting clear'
+            return step_toward(a, add(a.p, mul(side, 40.0)), speed_for(a, True))
+
+        # ---- it rests: it cannot kill, and it wakes deaf to anything beyond 60. Sit at ~42 and
+        # do not move until the tick it wakes on (energy above 100 at its step), then keep pace.
+        resting = bool(p.resting) if p.resting is not None else (3 <= p.still_ticks < 30)
+        waking = bool(p.resting) and ((p.energy is not None and p.energy > 100.0) or (p.energy is None and p.still_ticks >= 30))
+        if resting and not waking:
+            if gap > 48:
+                d.decision = f'leash: it rests at {gap:.0f}, closing in'
+                return step_toward(a, p.p, min(a.walk * a.move_modifier, gap - 42.0))
+            if gap < 36:
+                d.decision = f'leash: it rests at {gap:.0f}, stepping back'
+                h = steer(a, p, away, w.rects, math.radians(60), keep_los=False, slow=w.biome_at)
+                return self._move_heading(a, h, min(a.walk * a.move_modifier, 42.0 - gap))
+            d.decision = f'leash: it rests at {gap:.0f}, waiting'
+            return action(a.id, 0.0, 0.0, face_away)
+        if waking:
+            following = True     # it hears us the moment it acts; the predicted gap keeps us inside 60
+
+        # ---- hook: it is not chasing us yet
+        if not following:
+            if gap > LEASH_HEAR:
+                bearing = abs(wrap(heading_of(sub(a.p, p.p)) - p.heading))
+                if bearing < math.radians(50) and gap < 240 and los_clear(p.p, a.p, w.rects) and not bool(p.resting):
+                    # it is coming our way and will see us: let it come (free)
+                    d.decision = f'leash: in its sight, letting it come ({gap:.0f})'
+                    return action(a.id, 0.0, 0.0, face_away)
+                goal_h = p.p
+                if not heading_clear(a.p, heading_of(sub(p.p, a.p)), min(gap, 40.0), w.rects):
+                    path = plan(w.rects, w.width, w.height, a.p, p.p, radius=6.0, slow=w.biome_at)
+                    goal_h = path[1] if path and len(path) > 1 else p.p
+                # a sprint costs 5.5 per tick: only when rich, for the last stretch or when it walks
+                # away from us (it is faster than our walk)
+                sprint = a.energy > 260 and gap < 260 and (gap < 130 or bearing > math.radians(90))
+                d.decision = f'leash: hooking it ({gap:.0f}){" at a sprint" if sprint else ""}'
+                return step_toward(a, goal_h, speed_for(a, sprint))
+            if target is not None and target in w.agents and dist(w.agents[target].p, p.p) < gap:
+                d.decision = f'leash: undercutting agent {target} ({gap:.0f})'
+                return step_toward(a, p.p, min(a.walk * a.move_modifier, max(gap - 30.0, 0.0)))
+            d.decision = f'leash: in its hearing, waiting for it to turn ({gap:.0f})'
+            return action(a.id, 0.0, 0.0, face_away)
+
+        # ---- path
+        if d.path is None or w.time - d.path_t > 1.5:
+            d.path = self._leash_path(d, a, p)
+            d.path_t = w.time
+        wp = next_waypoint(a.p, d.path, reach=8.0) or goal
+
+        # ---- move: heading and speed chosen jointly on the predicted gap after both move
+        v_pred = pred_next_speed(p) * w.biome_at(p.p)
+        gap_target = LEASH_GAP
+        cap = a.sprint_speed if a.can_sprint else a.walk
+        desired = heading_of(sub(wp, a.p))
+        others = [q for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
+                  and not (bool(q.resting) if q.resting is not None else is_resting(q)) and dist(q.p, a.p) < 140]
+        h, real, g2 = self._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others)
+        if wp is goal or dist(wp, goal) < 1e-6:
+            real = min(real, dist(a.p, goal))
+        d.decision = (f'leash: gap {gap:.0f}->{g2:.0f}, v {real:.0f} (pred {v_pred:.0f}), dev {math.degrees(wrap(h - away)):.0f}, '
+                      f'wp {tuple(round(v) for v in wp)}, {len(d.path)} wps, e {a.energy:.0f}')
+        if real <= 0.05:
+            return action(a.id, 0.0, 0.0, face_away)
+        return self._move_heading(a, h, real)
+
     # ------------------------------------------------------------------ hearing tap
     @staticmethod
     def _tap_budget(a: AgentView):
@@ -199,14 +431,17 @@ class Lure:
         return step_toward(a, goal, speed_for(a, True))
 
     # ------------------------------------------------------------------ flyby (gap sites)
-    def flyby_side(self, site: Site, a: AgentView):
+    def flyby_side(self, site: Site, a: AgentView, p: PredatorView | None = None):
         """Unit vector along the obstacle face with the longer clear sprint from the flyby point,
-        away from other predators when both are clear; None if neither side is clear for 40."""
+        never toward the predator's side, away from other predators when both are clear; None if
+        neither side is clear for 40."""
         w = self.world
         tangent = (-site.normal[1], site.normal[0])
         best = None
         for sgn in (1.0, -1.0):
             side = mul(tangent, sgn)
+            if p is not None and dot(sub(p.p, a.p), side) > 12.0:
+                continue          # it stands on that side
             run = 0.0
             for length in (40.0, 60.0, 90.0, 120.0):
                 end = add(a.p, mul(side, length))
@@ -225,7 +460,7 @@ class Lure:
     def _flyby(self, d: Delivery, a: AgentView, p: PredatorView, gap):
         side = d.flee_heading
         if side is None:
-            side = self.flyby_side(d.site, a)
+            side = self.flyby_side(d.site, a, p)
             d.flee_heading = side
         d.stall_ticks += 1
         if side is None:
@@ -251,6 +486,11 @@ class Lure:
 
     def _act(self, d: Delivery, a: AgentView, p: PredatorView | None):
         w = self.world
+        if d.leash and p is not None:
+            d.lost_ticks = 0
+            if d.phase == 'FLYBY':
+                return self._flyby(d, a, p, dist(a.p, p.p))
+            return self._leash(d, a, p)
         # another loose predator close by: let the society's flee logic act for us
         for q in w.recent_predators():
             if p is not None and q.pid == p.pid or q.pid in self.held or is_resting(q):
@@ -269,7 +509,7 @@ class Lure:
             d.decision = 'predator unknown; holding'
             return hold(a)
         d.lost_ticks = 0
-        order = ('ATTRACT', 'OPEN', 'LEAD', 'CORRIDOR', 'FRONT', 'FLYBY', 'ENTER')
+        order = ('ATTRACT', 'OPEN', 'LEAD', 'LEASH', 'CORRIDOR', 'FRONT', 'FLYBY', 'ENTER')
         if order.index(d.phase) > order.index(d.max_phase):
             d.max_phase = d.phase
         target = predator_target(w, p)
