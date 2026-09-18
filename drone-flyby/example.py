@@ -69,6 +69,10 @@ CONFIG = RevisitConfig(
     birth_confidence=float(os.environ.get('DRONE_BIRTH_CONFIDENCE', '0.6')),
     update_confidence=float(os.environ.get('DRONE_UPDATE_CONFIDENCE', '0.4')),
     class_extent=json.loads(os.environ.get('DRONE_CLASS_EXTENT', '{}')) or None,
+    # A miss is counted whenever a predicted box lies inside the view and the detector stays silent,
+    # whatever the zoom. An L0 overview therefore counts against a small object no detector can
+    # see at L0. Raise this to study how many points that rule costs.
+    visible_misses_before_retirement=int(os.environ.get('DRONE_MISS_RETIRE', '3')),
 )
 # Several replays share one machine: cap the per-process thread pools so
 # concurrent processes do not thrash (0 keeps the library defaults).

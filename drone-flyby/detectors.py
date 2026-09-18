@@ -131,7 +131,11 @@ class OracleDetector:
     """Organizer boxes of a local scene as detections. For local tests only."""
     name = 'oracle'
 
-    def __init__(self, scene_directory):
+    def __init__(self, scene_directory, min_pixels=0.):
+        # min_pixels: an object whose longer side in the DELIVERED image is below this is not
+        # returned. 0 is the plain oracle; ~20 mimics a real recognizer, which cannot name a
+        # 6 px launcher at L0. Separates camera-policy loss from detector loss.
+        self.min_pixels = float(min_pixels)
         self.directory = Path(scene_directory)/'annotations'
         if not self.directory.is_dir():
             raise ValueError(f'No annotations under {self.directory}')
@@ -150,6 +154,8 @@ class OracleDetector:
             b = np.array(a['bbox'], float)
             visible = [max(b[0], x1), max(b[1], y1), min(b[2], x2), min(b[3], y2)]
             if visible[2]-visible[0] <= 1 or visible[3]-visible[1] <= 1:
+                continue
+            if max((b[2]-b[0])/sx, (b[3]-b[1])/sy) < self.min_pixels:
                 continue
             rows.append({'label': a['object_id'], 'confidence': .9,
                          'box': [(visible[0]-x1)/sx, (visible[1]-y1)/sy, (visible[2]-x1)/sx, (visible[3]-y1)/sy]})
@@ -178,7 +184,8 @@ def build_detector(environ=os.environ):
                                   min_confidence=float(environ.get('DRONE_CONF', '0')), family_min=family_min,
                                   family_levels=family_levels)
     if kind == 'oracle':
-        return OracleDetector(environ.get('DRONE_ORACLE_SCENE', str(Path(__file__).resolve().parent/'src/helsinki')))
+        return OracleDetector(environ.get('DRONE_ORACLE_SCENE', str(Path(__file__).resolve().parent/'src/helsinki')),
+                              min_pixels=float(environ.get('DRONE_ORACLE_MIN_PX', '0')))
     if ':' in kind:
         module, attribute = kind.split(':', 1)
         factory = getattr(importlib.import_module(module), attribute)
