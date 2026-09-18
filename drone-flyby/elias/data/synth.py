@@ -1058,7 +1058,14 @@ class SynthWindows:
         alpha = cv2.warpAffine(sprite.alpha, matrix, (canvas_w, canvas_h),
                                flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
                                borderValue=0)
-        alpha = cv2.GaussianBlur((alpha >= 0.5).astype(np.float32), (3, 3), 0)
+        # SYNTH_ALPHA_MODE: 'hard' = binary paste, 'feather' (default) = 1 px soft edge, 'soft' = wider
+        # edge that blends the object into the terrain (the blending arm of the experiment matrix)
+        mode = os.environ.get('SYNTH_ALPHA_MODE', 'feather')
+        alpha = (alpha >= 0.5).astype(np.float32)
+        if mode == 'feather':
+            alpha = cv2.GaussianBlur(alpha, (3, 3), 0)
+        elif mode == 'soft':
+            alpha = cv2.GaussianBlur(alpha, (5, 5), 1.2)
         if sigma >= 0.2:
             colour = cv2.GaussianBlur(colour, (5, 5), sigma)
             alpha = cv2.GaussianBlur(alpha, (5, 5), sigma)

@@ -41,7 +41,10 @@ helsinki terrain; enlarged it keeps them, but it leaks into the terrain more oft
 Neither variant wins everywhere, so both are cut and the review picks. Sprite pixels are always the
 original source pixels. Afterwards: largest connected component plus any component of at least 10 %
 of its area, 3x3 closing, holes smaller than max(3 px, 0.5 % of the mask) filled. Masks stay binary
-(alpha 0 or 255), nothing is feathered. On validation the pseudo-label boxes are often offset, so
+(alpha 0 or 255), nothing is feathered. Every cv2.grabCut call starts from the same OpenCV random
+seed: without it the k-means start of GrabCut made a candidate's mask depend on how many candidates
+were cut before it in the process (95 of 169 kept sprites changed pixels between two runs), and a
+review of pixels is only worth something if a rerun gives the same pixels. On validation the pseudo-label boxes are often offset, so
 when the foreground runs along a box side the box is grown on that side by 20 % and GrabCut is run
 again (at most 3 times); box_in_sprite always refers to the ORIGINAL annotation box.
 
@@ -344,18 +347,20 @@ def extend_line(response, out, part, centre, low):
     # The end to extend is the one further away from the mask centre.
     ends = [(t.max(), 1.0), (t.min(), -1.0)]
     t_end, sign = max(ends, key=lambda e: math.hypot(x0 + e[0] * vx - centre[0], y0 + e[0] * vy - centre[1]))
-    misses, added = 0, 0
+    skipped, added = [], 0
     for step in range(1, int(2 * (t.max() - t.min() + 1)) + 1):
         x, y = int(round(x0 + (t_end + sign * step) * vx)), int(round(y0 + (t_end + sign * step) * vy))
         if not (1 <= x < out.shape[1] - 1 and 1 <= y < out.shape[0] - 1):
             break
         if response[y - 1:y + 2, x - 1:x + 2].max() > low:
-            out[y, x] = 1
-            added += 1
-            misses = 0
+            # A single skipped step before this hit is filled too, so the line stays in one piece.
+            for sx, sy in skipped + [(x, y)]:
+                out[sy, sx] = 1
+                added += 1
+            skipped = []
         else:
-            misses += 1
-            if misses >= 2:
+            skipped.append((x, y))
+            if len(skipped) >= 2:
                 break
     return added
 
