@@ -15,15 +15,16 @@ import time
 import uvicorn
 from fastapi import FastAPI
 
-from dtos import ASRQuestionRequestDto, ASRQuestionResponseDto
-from example import predict
-from utils import validate_response
+# Logging first: example.py runs the model warm-up at import and its lines are lost otherwise.
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+from dtos import ASRQuestionRequestDto, ASRQuestionResponseDto  # noqa: E402
+from example import predict  # noqa: E402
+from utils import validate_response  # noqa: E402
 
 HOST = '0.0.0.0'
 PORT = 9054
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 app = FastAPI()
 start_time = time.time()

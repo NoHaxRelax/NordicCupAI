@@ -23,8 +23,10 @@ model.warm_up()
 # Hard wall for one conversation. model.answer_all bounds its own LLM calls (LLM_DEADLINE),
 # but nothing bounds the ASR, and the evaluator scores a reply that arrives after 60 s as ten
 # wrong answers. Past this many seconds the request is answered with guesses instead.
-PREDICT_DEADLINE = float(os.environ.get('PREDICT_DEADLINE', '55'))
-_pool = ThreadPoolExecutor(max_workers=4, thread_name_prefix='predict')
+PREDICT_DEADLINE = float(os.environ.get('PREDICT_DEADLINE', '50'))
+# Wide pool: a conversation that overruns the wall keeps its thread busy until answer_all
+# returns on its own, and the evaluator's next conversations must not queue behind it.
+_pool = ThreadPoolExecutor(max_workers=16, thread_name_prefix='predict')
 timed_out = 0
 
 

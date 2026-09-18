@@ -507,8 +507,9 @@ def _chat_openai(system: str, user: str, schema: dict, demos, timeout: float) ->
         body['chat_template_kwargs'] = {'enable_thinking': False}
     elif LLM_NO_THINK == 'ollama':
         body['reasoning_effort'] = 'none'
-    # connect timeout short: a pod that is gone must fail over within seconds
-    r = _session.post(f'{LLM_URL}/chat/completions', json=body, timeout=(3.05, max(1.0, timeout)))
+    # connect timeout: short enough that a dead pod fails over within seconds, long enough that a
+    # slow TLS handshake through the RunPod proxy does not trip the breaker (verifier 2026-09-18, #6)
+    r = _session.post(f'{LLM_URL}/chat/completions', json=body, timeout=(8.0, max(1.0, timeout)))
     r.raise_for_status()
     return parse_json(r.json()['choices'][0]['message'].get('content') or '')
 
@@ -532,7 +533,7 @@ class _Breaker:
 
 _breaker = _Breaker()
 _stats_lock = __import__('threading').Lock()
-_stats = {'conversations': 0, 'questions': 0, 'primary_ok': 0, 'primary_failed': 0, 'fallback_ok': 0,
+_stats = {'conversations': 0, 'questions': 0, 'primary_ok': 0, 'primary_failed': 0, 'primary_skipped': 0, 'fallback_ok': 0,
           'guessed': 0, 'last_wall_s': None, 'worst_wall_s': 0.0, 'last_primary_error': None}
 
 
@@ -569,8 +570,10 @@ def ask_primary(p, deadline: float) -> dict:
         return out
     budget = min(LLM_TIMEOUT, remaining - (_FALLBACK_RESERVE if LLM_FALLBACK_MODEL else 0.0))
     if _breaker.open():
+        _count('primary_skipped')
         raise TimeoutError('primary LLM skipped: breaker open after a transport failure')
     if budget < 2.0:
+        _count('primary_skipped')
         raise TimeoutError(f'primary LLM skipped: {remaining:.1f} s left before the deadline')
     try:
         out = _chat_openai(p.system, p.user, p.schema, getattr(p, 'demos', None), budget)
