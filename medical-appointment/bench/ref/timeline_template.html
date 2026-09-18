@@ -94,7 +94,7 @@
   <h1>Span Timelines</h1>
   <p class="sub" id="src"></p>
   <div class="controls">
-    <span class="seg-btn" id="setbtn"></span>
+    <label>run <select id="setsel" style="max-width:min(70vw,900px)"></select></label>
     <label>zoom <input id="zoom" type="range" min="3" max="40" step="1" value="9"> <span class="mono" id="zv">9 px/s</span></label>
     <label>show
       <select id="filter">
@@ -126,6 +126,16 @@
 
 <script>
 const SETS = /*DATA*/null;
+const TRANS = /*TRANS*/null || {};
+const QBASE = /*QBASE*/null || {};
+// runs share transcripts and the set-independent question fields (see bench/timeline.py)
+for (const s of SETS) for (const c of s.convs) {
+  if (!c.tk) continue;
+  const t = TRANS[c.tk] || { segs: [], dur: 0 };
+  c.segs = t.segs; c.dur = t.dur;
+  const base = QBASE[c.tk] || [];
+  c.qs = c.qs.map((q, i) => Object.assign({}, base[i] || {}, q));
+}
 const CLIPS = /*CLIPS*/null || {};
 const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 const $ = id => document.getElementById(id);
@@ -286,8 +296,9 @@ audio.addEventListener('timeupdate', () => { if (stopAt !== null && audio.curren
 document.addEventListener('mouseover', e => { const l = e.target.closest('[data-lane]'); document.querySelectorAll('.cur').forEach(x => x.classList.remove('cur')); if (l) document.querySelectorAll(`[data-lane="${l.dataset.lane}"]`).forEach(x => x.classList.add('cur')); });
 
 // controls
-const setbtn = $('setbtn');
-SETS.forEach((s, i) => { const b = document.createElement('button'); b.textContent = s.name; b.className = i === 0 ? 'on' : ''; b.onclick = () => { setIdx = i; [...setbtn.children].forEach((x, j) => x.classList.toggle('on', j === i)); render(); }; setbtn.appendChild(b); });
+const setsel = $('setsel');
+SETS.forEach((s, i) => { const o = document.createElement('option'); o.value = i; o.textContent = (s.score != null ? s.score.toFixed(4) + '   ' : '') + s.name; setsel.appendChild(o); });
+setsel.onchange = () => { setIdx = +setsel.value; render(); };
 $('zoom').oninput = () => { pxs = +$('zoom').value; $('zv').textContent = pxs + ' px/s'; render(); };
 $('filter').onchange = $('sort').onchange = $('hideok').onchange = $('showtxt').onchange = render;
 try { const z = localStorage.getItem('tl.zoom'); if (z) { pxs = +z; $('zoom').value = z; $('zv').textContent = z + ' px/s'; } } catch (e) {}
