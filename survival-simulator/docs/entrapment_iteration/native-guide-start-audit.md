@@ -4,7 +4,7 @@ Audit of the downloaded baseline native traces at 20:55 UTC: 113 assignments
 across seven games with assignments in the downloaded portion. Some games
 were still running; this is a mechanism audit, not a complete-game score batch.
 
-At the assignment tick, 37/113 agents were already below 20% maximum energy
+At the assignment tick, 36/113 agents were already below 20% maximum energy
 and 78/113 below half maximum energy. Frame world state is recorded after
 policy evaluation and before the returned action is applied, so the energy
 is the assignment-time value. See the JSON for each seed, timestamp and agent.
