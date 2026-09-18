@@ -11,7 +11,10 @@ CASE="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$CASE"
 if [ -n "$(git status --porcelain -- .)" ]; then echo "working tree not clean: commit first"; git status --short -- . | head; exit 1; fi
 SHA=$(git rev-parse --short HEAD)
 OUT=${1:-$CASE/jury_submission_$SHA.zip}
-git archive --format=zip --prefix=medical-appointment/ -o "$OUT" "HEAD:medical-appointment"
+# From the repo root with the folder as pathspec: `git archive HEAD:medical-appointment` run inside the
+# folder applies the folder as an implicit pathspec on top of the subtree and yields an empty archive.
+ROOT=$(git rev-parse --show-toplevel)
+git -C "$ROOT" archive --format=zip -o "$OUT" HEAD medical-appointment
 python - "$OUT" <<'PY'
 import sys, zipfile, pathlib
 out = sys.argv[1]
