@@ -424,6 +424,8 @@ Unlike the 4B, the 27B gains nothing from seeing the ten questions together (its
 
 ### 36. Claude Haiku 4.5 and Sonnet 5 on the same prompt: capability beyond the 27B does not move the spans
 
+*Entry 41: the Sonnet and Haiku rows here were damaged by batching five prompts per agent (21 and 20 wrong binaries); Sonnet with one agent per conversation scores 0.786, not 0.763.*
+
 *Scored with the wrong edge offsets and/or under the nulls-on-no policy (entry 38); the corrected numbers are in entry 39.*
 
 Elias's probe (not part of the competition pipeline, run through the Claude Code Agent tool with `bench/llm/dump_prompts.py`, the `units-joint-demo` prompt on turbo transcripts, scored identically):
@@ -520,3 +522,28 @@ The 20 spans no whole-unit span can reach are clauses inside list-like utterance
 Re-derivation of the few-shot note. The sentence "when the fact is completed by the question that prompted it or by the confirming reply, the marked stretch includes those utterances too" was first written after a validation observation (committee report 01). The training numbers support it: half of the multi-unit golds end on a reply of at most four words ("Yes.", "All three renewed.", "From today.") and a third begin with a short question. The comment above `_FEWSHOT_NOTE` in `bench/llm/prompts.py` now records this.
 
 What to tell the model, as candidates for the next bench (not yet measured; the served 4B is too weak a judge, these go to the 27B on the pod): (a) the granularity numbers in one line, one utterance seven times in ten, two adjacent two times in ten, never more than four; (b) the end is the end of the utterance that states the detail, plus the short reply that confirms it; (c) do not start before the utterance that states the detail (report 03: 40 of 60 sub-0.5 spans on the 27B start earlier than the gold). The timeline page (artifact, version 5) now shows the corrected 27B few-shot run on the training set instead of the served 4B.
+
+### 41. Many-shot probe: all 38 other worked conversations in the prompt, Opus and Sonnet, one agent per conversation (2026-09-18 12:30)
+
+Elias's question after the committee review: is there still value in giving the model every training conversation except the tested one, or does the prompt need something else? Run as before through `bench/llm/dump_prompts.py` (variant `units-joint-demo-all`: the joint prompt preceded by the 38 other training conversations as user/assistant turns, about 35k tokens, 2,990 lines per prompt), but this time **one agent per conversation** so nothing can leak between conversations, and a script check that the held-out transcript never appears among its own demos (0 of 39). Sonnet also got a clean 2-demo control with one agent per conversation, because the entry 36 Sonnet number came from batched agents. Training set, turbo transcripts, turbo offsets, spans-on-no policy, scored by the same harness as every other row.
+
+| model | demos | agents | accuracy | wrong binaries | tIoU | score |
+|---|---|---|---:|---:|---:|---:|
+| Claude Opus 5 | 38 | one per conversation | 1.000 | 0 | 0.680 | **0.808** |
+| Claude Opus 5 | 2 | five per agent (entry 37) | 1.000 | 0 | 0.677 | 0.807 |
+| Claude Sonnet 5 | 38 | one per conversation | 0.997 | 1 | 0.676 | **0.805** |
+| Qwen3.8-27B | few-shot lines | vLLM (entry 39) | 0.990 | 4 | 0.669 | 0.797 |
+| Qwen3.8-27B | 2 | vLLM (entry 39) | 0.995 | 2 | 0.659 | 0.794 |
+| Claude Sonnet 5 | 2 | one per conversation (control) | 0.992 | 3 | 0.649 | 0.786 |
+| Claude Sonnet 5 | 2 | five per agent (entry 36) | 0.946 | 21 | 0.641 | 0.763 |
+| Claude Haiku 4.5 | 2 | five per agent (entry 36) | 0.949 | 20 | 0.623 | 0.753 |
+
+Paired readings (conversation-clustered standard errors):
+
+1. **Opus gains nothing from 36 more worked conversations.** 38 demos against 2: tIoU +0.002, identical span on 160 of 195 positives, 14 spans better by more than 0.1 and 14 worse. The 2-demo Opus number of entry 37 stands (its batching did not hurt Opus).
+2. **Sonnet gains a little.** 38 demos against the clean 2-demo control: tIoU +0.027 ± 0.015 (1.8 standard errors), identical span on 168 of 195; the binaries go from 3 wrong to 1. With 38 demos Sonnet reaches Opus.
+3. **Entry 36 undercounted Sonnet and Haiku.** Sonnet's 21 wrong binaries in the batched run become 3 with one agent per conversation (0.763 to 0.786); the batching, not the model, produced most of that gap. Haiku's 0.753 carries the same defect and was not rerun. Opus was not affected.
+4. **The plateau.** The three best configurations sit at 0.805 to 0.808. The 27B with few-shot lines is 0.010 ± 0.012 tIoU behind Opus with all 38 conversations: less than one standard error. There is no frontier-model or example-count headroom left to measure with whole-unit spans.
+5. **What every model misses, identically.** 48 positives score below 0.5 for Opus-38, Opus-2 and the 27B alike, and Opus-38 and the 27B return the *same* span on 34 of them. By the training gold structure of entry 40: 16 are golds no whole-unit span can reach (clauses inside list-like utterances), 8 are long multi-unit golds, 8 have a best run between 0.5 and 0.8, and 16 are cases where a whole utterance would score above 0.8 but every model picks a different utterance. Reading those 16 by hand: in 8 of the 10 clear cases the annotator marked the *later* restatement (the prescription rather than the complaint, "I would still rather have them off" at 85 s rather than "I want them gone" at 20 s, "the medicine is genuinely working? Yes" at 55 s rather than "It has helped" at 24 s); in 4 the models include the doctor's question where the annotator kept only the reply ("No, nothing new." alone), which the training statistics of entry 40 put at a coin flip (20 of 57 multi-unit golds include the question); 2 are quirks (the opening greeting as evidence for "did the patient show up in person").
+
+Conclusion for Elias's question: more examples and a bigger model are both exhausted at about 0.81 on training. The 27B few-shot is within noise of that ceiling, so the many-shot prompt is not worth its 35k-token cost in serving (the pod bench could still confirm the 27B's own number, entry 35's estimate is 0 to +0.02). What remains is not comprehension: it is the annotators' choice between two valid utterances, where a "prefer the later, more explicit restatement" line has 8-of-10 support and deserves a bench test rather than adoption, and the clause-level golds, which need clause units (committee report 03, entry 40). Probe answers are kept under `bench/results/probe/{opus-all,sonnet-all,sonnet-2clean}/` (force-added; `bench/results/` is otherwise ignored). Cost: about 100k tokens per many-shot agent, 39 agents per model; the 2-demo control about 55k per agent.
