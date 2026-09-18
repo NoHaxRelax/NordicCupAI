@@ -547,3 +547,34 @@ Paired readings (conversation-clustered standard errors):
 5. **What every model misses, identically.** 48 positives score below 0.5 for Opus-38, Opus-2 and the 27B alike, and Opus-38 and the 27B return the *same* span on 34 of them. By the training gold structure of entry 40: 16 are golds no whole-unit span can reach (clauses inside list-like utterances), 8 are long multi-unit golds, 8 have a best run between 0.5 and 0.8, and 16 are cases where a whole utterance would score above 0.8 but every model picks a different utterance. Reading those 16 by hand: in 8 of the 10 clear cases the annotator marked the *later* restatement (the prescription rather than the complaint, "I would still rather have them off" at 85 s rather than "I want them gone" at 20 s, "the medicine is genuinely working? Yes" at 55 s rather than "It has helped" at 24 s); in 4 the models include the doctor's question where the annotator kept only the reply ("No, nothing new." alone), which the training statistics of entry 40 put at a coin flip (20 of 57 multi-unit golds include the question); 2 are quirks (the opening greeting as evidence for "did the patient show up in person").
 
 Conclusion for Elias's question: more examples and a bigger model are both exhausted at about 0.81 on training. The 27B few-shot is within noise of that ceiling, so the many-shot prompt is not worth its 35k-token cost in serving (the pod bench could still confirm the 27B's own number, entry 35's estimate is 0 to +0.02). What remains is not comprehension: it is the annotators' choice between two valid utterances, where a "prefer the later, more explicit restatement" line has 8-of-10 support and deserves a bench test rather than adoption, and the clause-level golds, which need clause units (committee report 03, entry 40). Probe answers are kept under `bench/results/probe/{opus-all,sonnet-all,sonnet-2clean}/` (force-added; `bench/results/` is otherwise ignored). Cost: about 100k tokens per many-shot agent, 39 agents per model; the 2-demo control about 55k per agent.
+
+### 42. The ceiling of perfect token marking under the served transformation, and whether averaging ASR timestamps lifts it (2026-09-18 14:10)
+
+Elias's question: with Whisper's timestamps and our offsets, what does a perfect LLM (perfect binaries, perfect choice of words) score? Oracle search over every contiguous word range within 3 s of each gold (and every run of whole units), turbo transcripts, both edges through the served rule (start = first word's end - 0.20 s, end = last word's end - 0.02 s):
+
+| set | oracle | mean tIoU | spans >= 0.9 | score ceiling |
+|---|---|---:|---:|---:|
+| training (195 golds) | best run of whole units | 0.861 | | 0.916 |
+| training | best word range, raw word boundaries | 0.925 | 77 % | 0.955 |
+| training | **best word range, served rule** | **0.946** | 86 % | **0.967** |
+| training | best word range, word-start constant (+0.14 / 0.00) | 0.932 | 80 % | 0.959 |
+| validation (95 golds) | best run of whole units | 0.906 | | 0.943 |
+| validation | best word range, served rule | 0.955 | 89 % | 0.973 |
+
+Readings. (1) Perfect token marking caps at tIoU about 0.95 on training and 0.955 on validation (longer spans, entry 38, so the same edge error costs less); the remaining 0.05 is Whisper's own edge jitter (residual quartiles after the constants: start -0.14 to +0.05 s, end -0.02 to +0.04 s, on a 2.9 s median span) plus the 20 ms annotation grid. (2) Anchoring the start on the first word's *end* beats anchoring on its start (0.946 against 0.932): Whisper's word onsets are the noisy edge, its offsets are the stable one, which is why the served rule was fitted that way (entry 17). (3) Where we stand: the 27B few-shot is at 0.669 and Opus at 0.680, against 0.861 for perfect whole-unit selection and 0.946 for perfect words. About 0.19 of tIoU is selection headroom with the units we already have, and a further 0.085 needs clause-level or word-level spans. Whisper itself is not the limit.
+
+**Averaging timestamps across ASR models does not help.** Elias asked whether a linear combination of several models' word boundaries gets closer to the annotators. Words of large-v3, whisperx-large-v3 and the MMS forced alignment were aligned to turbo's words by text (98 to 100 % matched), boundaries averaged with several weightings, constants refitted per combination, same oracle:
+
+| timestamps | oracle tIoU | residual IQR start / end |
+|---|---:|---:|
+| turbo alone | 0.943 | 0.14 s / 0.06 s |
+| large-v3 alone | 0.935 | 0.13 / 0.10 |
+| whisperx alone | 0.930 | 0.15 / 0.08 |
+| MMS alignment alone | 0.928 | 0.14 / 0.08 |
+| turbo + large-v3 | 0.941 | 0.14 / 0.08 |
+| turbo + whisperx | 0.940 | 0.14 / 0.05 |
+| turbo + MMS | 0.941 | 0.13 / 0.06 |
+| all four, equal | 0.942 | 0.13 / 0.05 |
+| all four, turbo weighted double | 0.943 | 0.13 / 0.05 |
+
+No combination beats turbo alone, and the residual spread hardly moves: the models' edge errors are correlated (they hear the same onsets), so averaging cancels nothing. The ASR side is settled twice over (entry 29 for the ceiling, this entry for the edges); the loss is in span selection and span granularity.
