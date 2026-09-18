@@ -33,7 +33,7 @@ install() {
     echo "venv ok: $("$VENV/bin/python" -c 'import vllm; print(vllm.__version__)')"; return 0
   fi
   echo "installing vLLM into $VENV (local disk) ..."
-  python -m venv "$VENV" && "$VENV/bin/pip" install -q -U pip && "$VENV/bin/pip" install -q vllm requests pydantic ninja \
+  python -m venv "$VENV" && "$VENV/bin/pip" install -q -U pip && "$VENV/bin/pip" install -q "vllm==0.29.0" requests pydantic ninja \
     || { echo "install failed"; return 1; }
   echo "installed $("$VENV/bin/python" -c 'import vllm; print(vllm.__version__)')"
 }

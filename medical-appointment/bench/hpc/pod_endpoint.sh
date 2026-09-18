@@ -23,14 +23,15 @@ install() {
   fi
   # faster-whisper's ctranslate2 wheel links against CUDA 12 libraries: take them from pip, not from
   # the CUDA 13 torch in venv-vllm. fastapi/uvicorn/pydantic/requests are api.py's own needs.
-  "$VENV/bin/pip" install -q faster-whisper fastapi "uvicorn[standard]" requests pydantic numpy \
-      nvidia-cublas-cu12 nvidia-cudnn-cu12 || return 1
+  "$VENV/bin/pip" install -q "faster-whisper==1.2.1" "ctranslate2==4.8.2" fastapi "uvicorn[standard]" requests pydantic numpy \
+      nvidia-cublas-cu12 "nvidia-cudnn-cu12==9.*" || return 1   # the versions behind 0.8084; ctranslate2 4.8 links cuDNN 9
   echo "venv-api: $("$VENV/bin/python" -c 'import faster_whisper, ctranslate2; print("faster-whisper", faster_whisper.__version__, "ctranslate2", ctranslate2.__version__)')"
   if ! command -v ollama >/dev/null 2>&1; then
     curl -fsSL https://ollama.com/install.sh | sh >> "$LOGS/ollama_install.log" 2>&1 || { echo "ollama install failed"; tail -n 5 "$LOGS/ollama_install.log"; return 1; }
   fi
   ollama_up
-  ollama pull qwen3:4b >> "$LOGS/ollama.log" 2>&1 && echo "qwen3:4b pulled"
+  ollama pull qwen3:4b >> "$LOGS/ollama.log" 2>&1 && echo "qwen3:4b pulled" \
+    || echo "FALLBACK_MODEL_MISSING: ollama pull qwen3:4b failed; a vLLM hiccup would become guesses, pull it by hand"
   # turbo weights into HF_HOME (faster-whisper downloads on first construction)
   "$VENV/bin/python" - <<'PY'
 import os, time
@@ -67,8 +68,8 @@ serve() {
            REQUEST_DUMP_DIR=/workspace/request_dump
     [ -f /workspace/serve.env ] && set -a && . /workspace/serve.env && set +a
     echo "$(date -Is) supervisor: starting api.py (LLM_URL=$LLM_URL UNIT_SPLIT=$UNIT_SPLIT variant=$LLM_VARIANT fallback=$LLM_FALLBACK_MODEL)" >> "$LOGS/api.supervisor.log"
-    "$VENV/bin/python" api.py >> "$LOGS/api.log" 2>&1
-    echo "$(date -Is) supervisor: api.py exited with $?; restarting in 3 s" >> "$LOGS/api.supervisor.log"
+    "$VENV/bin/python" api.py >> "$LOGS/api.log" 2>&1; rc=$?
+    echo "$(date -Is) supervisor: api.py exited with $rc; restarting in 3 s" >> "$LOGS/api.supervisor.log"
     sleep 3
   done
 }

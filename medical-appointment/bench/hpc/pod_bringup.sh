@@ -18,16 +18,25 @@ mkdir -p /workspace/logs /workspace/hf
 echo "=== bring-up start $(date -Is)"
 nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
 
+# The snapshot that served 0.8084 (snapshots/<hash> in vllm.log, 2026-09-18). "hf download --revision <hash>"
+# writes no refs/main, and vLLM under HF_HUB_OFFLINE=1 resolves "main" through that file, so it is written here.
+REV=${QWEN_REV:-1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0}
+MODEL_DIR=/workspace/hf/hub/models--Qwen--Qwen3.8-27B
+
 # Three installs in parallel: the 27B weights (54 GB, ~3.5 min with hf_transfer), the vLLM venv, the api venv.
 ( python -m venv /opt/venv-hf && /opt/venv-hf/bin/pip install -q -U pip huggingface_hub hf_transfer \
   && HF_HOME=/workspace/hf HF_HUB_ENABLE_HF_TRANSFER=1 HF_HUB_OFFLINE=0 \
-     /opt/venv-hf/bin/hf download Qwen/Qwen3.8-27B --max-workers 16 >/dev/null \
+     /opt/venv-hf/bin/hf download Qwen/Qwen3.8-27B --revision "$REV" --max-workers 16 >/dev/null \
+  && mkdir -p "$MODEL_DIR/refs" && printf %s "$REV" > "$MODEL_DIR/refs/main" \
+  && touch /workspace/hf/.qwen3.8-27b.done \
   && echo "WEIGHTS_DONE $(date -Is)" || echo "WEIGHTS_FAILED $(date -Is)" ) & W=$!
 ( bash bench/hpc/pod_bootstrap.sh install && echo "VLLM_VENV_DONE $(date -Is)" || echo "VLLM_VENV_FAILED" ) & V=$!
 ( bash bench/hpc/pod_endpoint.sh install && echo "API_VENV_DONE $(date -Is)" || echo "API_VENV_FAILED" ) & A=$!
 wait $W $V $A
 echo "=== installs finished $(date -Is); hf: $(du -sh /workspace/hf | cut -f1)"
-[ -d /workspace/hf/hub/models--Qwen--Qwen3.8-27B ] || { echo "BRINGUP_FAILED: no 27B weights"; exit 1; }
+# a partial download leaves the directory but not the stamp
+[ -f /workspace/hf/.qwen3.8-27b.done ] && [ -d "$MODEL_DIR/snapshots/$REV" ] \
+  || { echo "BRINGUP_FAILED: 27B weights incomplete or not at $REV (re-run the hf download line with --revision $REV)"; exit 1; }
 
 MAX_LEN=16384 GPU_UTIL=0.80 bash bench/hpc/pod_bootstrap.sh serve || { echo "BRINGUP_FAILED: vLLM"; exit 1; }
 setsid nohup bash bench/hpc/pod_endpoint.sh serve > /workspace/logs/endpoint_serve.log 2>&1 < /dev/null &
@@ -39,7 +48,7 @@ bash bench/hpc/pod_endpoint.sh status
 # variant would cost 0.015 silently, so this is checked, not assumed.
 api=$(curl -sf localhost:9054/api)
 echo "$api" | grep -q '"llm_variant": *"units-fewshot-both"' && echo "$api" | grep -q '"unit_split": *"clause-and"' \
-  && echo "CONFIG_OK units-fewshot-both / clause-and" \
+  && echo "CONFIG_OK units-fewshot-both / clause-and, weights $REV, vllm $(/opt/venv-vllm/bin/python -c "import vllm; print(vllm.__version__)" 2>/dev/null)" \
   || { echo "BRINGUP_FAILED: wrong config in GET /api:"; echo "$api" | head -c 600; exit 1; }
 echo "=== BRINGUP_DONE $(date -Is)"
 [ -n "${RUNPOD_POD_ID:-}" ] && echo "submit URL: https://${RUNPOD_POD_ID}-9054.proxy.runpod.net/predict"

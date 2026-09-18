@@ -15,12 +15,16 @@ CASE="$(cd "$(dirname "$0")/../.." && pwd)"
 REMOTE=/workspace/medical-appointment
 SSH=(ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 -i "$KEY" -p "$PORT" "root@$HOST")
 EXCL=(--exclude=.git --exclude='bench/.venv*' --exclude=bench/results --exclude=transcripts
-      --exclude=request_dump --exclude=__pycache__ --exclude='*.pyc' --exclude='*.tgz' --exclude=medvoice)
+      --exclude=request_dump --exclude=__pycache__ --exclude='*.pyc' --exclude='*.tgz' --exclude=medvoice
+      --exclude=data/audio --exclude=bench/ref --exclude=bench/mine/requests.jsonl)
+# data/audio and bench/ref are never read when serving (84 MB -> 0.5 MB). Without the warm-up clip model.warm_up()
+# uses 20 s of zeros, which is how the pod that scored ran (api.log: 'Processing audio with duration 00:20.000').
 
+ssh-keygen -R "[$HOST]:$PORT" >/dev/null 2>&1 || true   # disposable pod: a reused IP:port carries a new host key
 echo "uploading $CASE -> root@$HOST:$PORT:$REMOTE"
 "${SSH[@]}" "mkdir -p $REMOTE /workspace/logs"
 tar -C "$CASE" "${EXCL[@]}" -czf - . | "${SSH[@]}" "tar -C $REMOTE -xzf -"
-"${SSH[@]}" "cd $REMOTE && find . -name '*.sh' -o -name '*.py' | xargs sed -i 's/\r\$//' && chmod +x bench/hpc/*.sh"
+"${SSH[@]}" "cd $REMOTE && find . \( -name '*.sh' -o -name '*.py' -o -name '*.json' \) -print0 | xargs -0 sed -i 's/\r\$//' && chmod +x bench/hpc/*.sh"
 
 # Verify: md5 on the pod must equal md5 of the committed blob (LF-normalised) for every serving file.
 FILES=(model.py example.py api.py dtos.py bench/llm/prompts.py bench/llm/pool/large-v3-turbo.json
