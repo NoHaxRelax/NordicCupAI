@@ -1092,7 +1092,7 @@ class Holder:
     def __init__(self, world: WorldState):
         self.world = world
 
-    def act(self, a: AgentView, slot, site: Site, avoid=()):
+    def act(self, a: AgentView, slot, site: Site, avoid=(), sprint=False):
         w = self.world
         if dist(a.p, slot) < 0.8:
             _holder_paths.pop(a.id, None)
@@ -1109,7 +1109,7 @@ class Holder:
             entry = _holder_paths[a.id] = dict(key=key, t=w.time, wps=path[1:], last=a.p)
         entry['last'] = a.p
         wp = next_waypoint(a.p, entry['wps'], reach=6.0) or slot
-        speed = a.walk * a.move_modifier
+        speed = (a.sprint_speed if sprint and a.can_sprint else a.walk) * a.move_modifier
         if dist(a.p, slot) < 12:
             speed = min(speed, dist(a.p, slot))
         return step_toward(a, wp, speed), f'holder: to slot ({dist(a.p, slot):.0f})'

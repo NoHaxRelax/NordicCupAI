@@ -469,7 +469,7 @@ class TrapManager:
                     useful = st.held or self._predator_near(world, site, held_now=set(st.held))
                     has_reserve = any(k == 1 for k in st.baits.values())
                     cands = self._bait_candidates(world, site.successor, exclude={aid}, min_life=P['bait_min_life'] + P['swap_lead_time'],
-                                                  long_hold=bool(st.held)) \
+                                                  long_hold=bool(st.held), hurry=self._life_s(a) < 45.0) \
                         if useful and st.baits.get(aid) == 0 and not has_reserve and st.successor is None and self._workers(world) > spare else []
                     walk_s = 1.3 * dist(cands[0].p, site.successor) / 100.0 if cands else 0.0
                     tired = self._life_s(a) < walk_s + P['swap_lead_time']
@@ -513,7 +513,7 @@ class TrapManager:
         walk_s = 1.5 * dist(a.p, point) / 100.0
         return (a.energy - walk_s * (self._drain(a) + 5.0)) / self._drain(a)
 
-    def _bait_candidates(self, world: WorldState, point, exclude=(), min_life=30.0, long_hold=False):
+    def _bait_candidates(self, world: WorldState, point, exclude=(), min_life=30.0, long_hold=False, hurry=False):
         """Agents to send as bait to ``point``. Speculative staffing (nothing held yet) takes senescent
         agents first (the colony loses them anyway), then the oldest, each with ``min_life`` seconds
         left after the walk (a healthy one twice that, so it can walk back to food). Once predators
@@ -532,7 +532,10 @@ class TrapManager:
             else:
                 if life < (min_life if senescent else max(2 * min_life, 60.0)):
                     continue
-                out.append(((0 if senescent else 1), -a.age, dist(a.p, point) / 100.0, a))
+                if hurry:
+                    out.append((dist(a.p, point) / 100.0, (0 if senescent else 1), a))
+                else:
+                    out.append(((0 if senescent else 1), -a.age, dist(a.p, point) / 100.0, a))
         out.sort(key=lambda t: t[:-1])
         return [t[-1] for t in out]
 
@@ -952,9 +955,10 @@ class TrapManager:
         # approach the far mouth from behind: aim at a point 30 out of it, around the front mouth crowd
         # and around loose predators on the way
         approach = add(far, mul(back, 30.0))
-        avoid = [(site.held_center(), self.P['zone_radius']), (site.front_mid, 80.0)]
-        avoid += [(q.p, 85.0) for q in world.recent_predators() if q.pid not in held_here and not is_resting(q) and dist(q.p, a.p) < 400]
-        act, why = holder.act(a, approach, site, avoid=avoid)
+        avoid = [(add(site.front_mid, mul(site.normal, 45.0)), 75.0)]
+        avoid += [(q.p, 70.0) for q in world.recent_predators() if q.pid not in held_here and not is_resting(q) and dist(q.p, a.p) < 250]
+        sprint = a.can_sprint and a.energy > 200.0 and front is not None and self._life_s(front) < 25.0
+        act, why = holder.act(a, approach, site, avoid=avoid, sprint=sprint)
         return act, why.replace('holder', 'gap route')
 
     def _wild_threat(self, world: WorldState, st: Station, a: AgentView, held_now):
