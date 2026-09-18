@@ -1,0 +1,233 @@
+[
+ {
+  "class_name": "medium_launcher",
+  "tile": "reference-f000018-x3456-y0000-L1",
+  "crop_xyxy": [
+   166,
+   42,
+   246,
+   122
+  ],
+  "mask": "medium_launcher_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "large_tower",
+  "tile": "reference-f000012-x3264-y0000-L1",
+  "crop_xyxy": [
+   144,
+   139,
+   256,
+   251
+  ],
+  "mask": "large_tower_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "medium_plane",
+  "tile": "reference-f000024-x0384-y0000-L1",
+  "crop_xyxy": [
+   44,
+   112,
+   139,
+   207
+  ],
+  "mask": "medium_plane_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "small_tower",
+  "tile": "reference-f000015-x2496-y1776-L1",
+  "crop_xyxy": [
+   51,
+   23,
+   153,
+   125
+  ],
+  "mask": "small_tower_mask.png",
+  "method": "nano_banana_pro roof mask + local low-chroma slab growth"
+ },
+ {
+  "class_name": "helicopter",
+  "tile": "reference-f000000-x2112-y0576-L1",
+  "crop_xyxy": [
+   111,
+   136,
+   240,
+   243
+  ],
+  "mask": "helicopter_mask.png",
+  "method": "higgsfield remove_background + local dark-blade growth (L at least 25 below local median, connected, inside box)"
+ },
+ {
+  "class_name": "large_launcher",
+  "tile": "reference-f000000-x3264-y0192-L1",
+  "crop_xyxy": [
+   53,
+   93,
+   212,
+   218
+  ],
+  "mask": "large_launcher_mask.png",
+  "method": "higgsfield remove_background"
+ },
+ {
+  "class_name": "jet_plane",
+  "tile": "reference-f000004-x1920-y0000-L1",
+  "crop_xyxy": [
+   143,
+   0,
+   235,
+   89
+  ],
+  "mask": "jet_plane_mask.png",
+  "method": "higgsfield remove_background"
+ },
+ {
+  "class_name": "condor",
+  "tile": "reference-f000005-x2496-y1536-L1",
+  "crop_xyxy": [
+   0,
+   0,
+   256,
+   256
+  ],
+  "mask": "condor_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context (second attempt, clearer prompt / larger crop)"
+ },
+ {
+  "class_name": "hangar",
+  "tile": "reference-f000023-x0000-y0000-L1",
+  "crop_xyxy": [
+   0,
+   0,
+   256,
+   256
+  ],
+  "mask": "hangar_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "jammer",
+  "tile": "reference-f000000-x1344-y0960-L1",
+  "crop_xyxy": [
+   40,
+   116,
+   168,
+   244
+  ],
+  "mask": "jammer_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context (second attempt, clearer prompt / larger crop)"
+ },
+ {
+  "class_name": "mine_roller",
+  "tile": "validation-f000006-x1344-y0768-L1",
+  "crop_xyxy": [
+   151,
+   76,
+   256,
+   181
+  ],
+  "mask": "mine_roller_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "small_plane",
+  "tile": "reference-f000003-x1728-y1536-L1",
+  "crop_xyxy": [
+   153,
+   166,
+   238,
+   251
+  ],
+  "mask": "small_plane_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "spacecraft",
+  "tile": "reference-f000003-x1344-y0576-L1",
+  "crop_xyxy": [
+   88,
+   86,
+   171,
+   169
+  ],
+  "mask": "spacecraft_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "ta-ta",
+  "tile": "reference-f000010-x0768-y0576-L1",
+  "crop_xyxy": [
+   128,
+   151,
+   192,
+   215
+  ],
+  "mask": "ta-ta_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "tank",
+  "tile": "validation-f000024-x1920-y0192-L1",
+  "crop_xyxy": [
+   142,
+   161,
+   237,
+   256
+  ],
+  "mask": "tank_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "small_launcher",
+  "tile": "reference-f000000-x1728-y0000-L1",
+  "crop_xyxy": [
+   38,
+   140,
+   102,
+   204
+  ],
+  "mask": "small_launcher_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context"
+ },
+ {
+  "class_name": "mine_roller",
+  "variant": "mine_roller__reference",
+  "tile": "reference-f000000-x1728-y1728-L1",
+  "crop_xyxy": [
+   102,
+   136,
+   198,
+   232
+  ],
+  "mask": "mine_roller__reference_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context (reference-frame appearance)"
+ },
+ {
+  "class_name": "large_launcher",
+  "variant": "large_launcher__validation",
+  "tile": "validation-f000005-x1728-y0960-L1",
+  "crop_xyxy": [
+   120,
+   124,
+   252,
+   256
+  ],
+  "mask": "large_launcher__validation_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context (validation-frame appearance)"
+ },
+ {
+  "class_name": "large_launcher",
+  "variant": "large_launcher__reference",
+  "tile": "reference-f000014-x3456-y0960-L1",
+  "crop_xyxy": [
+   0,
+   7,
+   249,
+   256
+  ],
+  "mask": "large_launcher__reference_mask.png",
+  "method": "nano_banana_pro magenta segmentation with multi-view context (reference-frame appearance)"
+ }
+]

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sprite Mask Review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--bg:#f4f4f2;--panel:#fff;--ink:#1c1c1a;--muted:#6b6b66;--line:#dcdcd6;--accent:#2f6fdb;--ok:#2e8b57;--bad:#c0392b;--redraw:#b7791f;--sel:#e8effc}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--panel:#1f1f1d;--ink:#ecece8;--muted:#9a9a93;--line:#34342f;--accent:#6c9cf0;--ok:#4cbb7f;--bad:#e5645a;--redraw:#e0a63c;--sel:#23324d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;display:grid;grid-template-columns:minmax(200px,260px) 1fr minmax(180px,240px);height:100vh;overflow:hidden}
+aside,section{overflow:auto}
+#list{border-right:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column}
+#filters{padding:10px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#filters label{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+select,input[type=text]{font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+#counts{padding:6px 10px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line)}
+#rows{flex:1;overflow:auto}
+.row{padding:5px 10px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:8px;align-items:center}
+.row:hover{background:var(--sel)}.row.cur{background:var(--sel);font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
+.approved .dot{background:var(--ok)}.rejected .dot{background:var(--bad)}.redrawn .dot{background:var(--redraw)}
+.row .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .z{font-variant-numeric:tabular-nums;color:var(--muted);font-size:11px}
+#main{display:flex;flex-direction:column;align-items:center;padding:12px;gap:10px}
+#toolbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center}
+button{font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);cursor:pointer}
+button.on{outline:2px solid var(--accent)}
+button.ok{background:var(--ok);color:#fff;border-color:transparent}
+button.bad{background:var(--bad);color:#fff;border-color:transparent}
+button.redraw{background:var(--redraw);color:#fff;border-color:transparent}
+#stage{position:relative;border:1px solid var(--line);background:#000;line-height:0}
+#view{cursor:crosshair;image-rendering:pixelated}
+#title{font-weight:600;font-size:14px;text-align:center}
+#sub{color:var(--muted);font-size:12px;text-align:center}
+#side{border-left:1px solid var(--line);background:var(--panel);padding:10px;display:flex;flex-direction:column;gap:10px}
+#side h3{margin:4px 0;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+#side canvas{width:100%;image-rendering:pixelated;border:1px solid var(--line)}
+kbd{font:11px ui-monospace,monospace;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+#help{font-size:11px;color:var(--muted)}
+#msg{min-height:18px;font-size:12px;color:var(--muted)}
+.range{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<aside id="list">
+  <div id="filters">
+    <label style="grid-column:1/3">Set<select id="fSet"><option value="short" selected>shortlist: 1 per object, zoom and appearance</option><option value="">everything</option></select></label>
+    <label>Kind<select id="fKind"><option value="">all</option><option value="to_draw">to draw</option><option value="library">library</option><option value="instance">instance</option></select></label>
+    <label>Zoom<select id="fZoom"><option value="">all</option><option value="0">L0</option><option value="1">L1</option><option value="2">L2</option></select></label>
+    <label>Class<select id="fClass"><option value="">all</option></select></label>
+    <label>Status<select id="fStatus"><option value="">all</option><option value="unreviewed">unreviewed</option><option value="approved">approved</option><option value="redrawn">redrawn</option><option value="rejected">rejected</option></select></label>
+    <label style="grid-column:1/3">Source<select id="fSource"><option value="">all</option><option value="reference">reference</option><option value="validation">validation</option></select></label>
+  </div>
+  <div id="counts"></div>
+  <div id="rows"></div>
+</aside>
+
+<section id="main">
+  <div id="title">Loading…</div>
+  <div id="sub"></div>
+  <div id="toolbar">
+    <button id="tBrush" title="Brush (B)">Brush</button>
+    <button id="tErase" title="Eraser (E)">Eraser</button>
+    <button id="tFill" title="Fill region (F)">Fill</button>
+    <span class="range">Size <input id="size" type="range" min="0.5" max="12" step="0.5" value="1.5"><span id="sizeV">1.5</span></span>
+    <span class="range">Overlay <input id="alpha" type="range" min="0" max="1" step="0.05" value="0.45"></span>
+    <button id="tOutline" title="Outline only (O)">Outline</button>
+    <button id="undo" title="Undo (⌘Z)">Undo</button>
+    <button id="reset" title="Back to the automatic mask">Reset</button>
+    <button id="clearMask" title="Empty the mask to draw from scratch">Clear</button>
+  </div>
+  <div id="stage"><canvas id="view"></canvas></div>
+  <div id="toolbar">
+    <button id="prev" title="Previous (←)">← Prev</button>
+    <button id="approve" class="ok" title="Approve (A). Saves as redrawn if you edited.">Approve</button>
+    <button id="save" class="redraw" title="Save redrawn mask (S)">Save redraw</button>
+    <button id="reject" class="bad" title="Reject (X)">Reject</button>
+    <button id="clear" title="Mark unreviewed (U)">Unreview</button>
+    <button id="next" title="Next (→)">Next →</button>
+  </div>
+  <div id="msg"></div>
+  <div id="help"><kbd>B</kbd> brush <kbd>E</kbd> eraser <kbd>F</kbd> fill <kbd>[</kbd><kbd>]</kbd> size <kbd>O</kbd> outline <kbd>⌘Z</kbd> undo · <kbd>A</kbd> approve <kbd>S</kbd> save <kbd>X</kbd> reject <kbd>←</kbd><kbd>→</kbd> navigate · hold <kbd>Space</kbd> to hide the mask</div>
+</section>
+
+<aside id="side">
+  <div><h3>Cutout (original pixels)</h3><canvas id="cut"></canvas></div>
+  <div><h3>Where it comes from</h3><canvas id="ctx"></canvas></div>
+  <div id="info"></div>
+</aside>
+
+<script>
+const $=id=>document.getElementById(id);
+let items=[],view=[],cur=-1,d=null,W=0,H=0,S=1,mask=null,auto=null,undo=[],tool='brush',drawing=false,last=null,dirty=false,hide=false,outline=false;
+const cropImg=new Image(),ctxImg=new Image();
+const vc=$('view'),vx=vc.getContext('2d');
+
+function b64img(img,b){return new Promise(r=>{img.onload=()=>r(img);img.src='data:image/png;base64,'+b})}
+async function b64mask(b,w,h){const im=await b64img(new Image(),b);const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(im,0,0);const p=x.getImageData(0,0,w,h).data;const m=new Uint8Array(w*h);for(let i=0;i<w*h;i++)m[i]=p[i*4]>127?1:0;return m}
+function maskPNG(){const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');const id=x.createImageData(W,H);for(let i=0;i<W*H;i++){const v=mask[i]?255:0;id.data[i*4]=v;id.data[i*4+1]=v;id.data[i*4+2]=v;id.data[i*4+3]=255}x.putImageData(id,0,0);return c.toDataURL('image/png').split(',')[1]}
+
+async function loadList(keep){
+  items=await (await fetch('/api/items')).json();
+  const cls=[...new Set(items.map(i=>i.class_name))].sort();
+  const fc=$('fClass');if(fc.options.length<=1)for(const c of cls)fc.add(new Option(c,c));
+  applyFilter(keep);
+}
+function applyFilter(keep){
+  const set=$('fSet').value,k=$('fKind').value,z=$('fZoom').value,c=$('fClass').value,s=$('fStatus').value,src=$('fSource').value;
+  view=items.filter(i=>(!set||i.shortlist)&&(!k||i.kind===k)&&(z===''||String(i.zoom)===z)&&(!c||i.class_name===c)&&(!s||i.status===s)&&(!src||i.source===src));
+  const n=t=>view.filter(i=>i.status===t).length;
+  $('counts').textContent=`${view.length} shown · ${n('approved')} approved · ${n('redrawn')} redrawn · ${n('rejected')} rejected · ${n('unreviewed')} to review`;
+  const rows=$('rows');rows.innerHTML='';
+  view.forEach((i,j)=>{const r=document.createElement('div');r.className='row '+i.status+(d&&d.item.id===i.id?' cur':'');
+    const label=i.kind==='instance'?i.tile.replace(/-L\d$/,''):(i.variant||i.class_name);
+    const lab2=i.shortlist?`${i.source}${i.needs_drawing?' · <b style="color:var(--bad)">draw</b>':''}`:label;
+    r.innerHTML=`<span class="dot"></span><span class="t"><b>${i.class_name}</b> ${lab2}</span><span class="z">${i.kind==='to_draw'?'draw':i.kind==='library'?'lib':''} L${i.zoom}</span>`;
+    r.onclick=()=>open(j);rows.appendChild(r)});
+  if(keep&&d){const j=view.findIndex(i=>i.id===d.item.id);cur=j}
+  else if(view.length&&cur<0)open(0);
+}
+async function open(j){
+  if(j<0||j>=view.length)return;
+  if(dirty&&!confirm('Discard unsaved edits?'))return;
+  cur=j;const id=view[j].id;$('msg').textContent='loading…';
+  d=await (await fetch('/api/item/'+encodeURIComponent(id))).json();
+  if(d.error){$('msg').textContent=d.error;return}
+  [W,H]=d.size;fit();
+  await b64img(cropImg,d.crop);await b64img(ctxImg,d.context);
+  mask=await b64mask(d.mask,W,H);auto=await b64mask(d.auto,W,H);undo=[];dirty=false;
+  const it=d.item;
+  $('title').textContent=`${it.class_name} · L${it.zoom} · ${it.kind.replace('_',' ')}`;
+  $('sub').textContent=`${it.tile}${it.variant?' · '+it.variant:''} · status: ${d.status}`+(d.score!=null?` · transfer score ${d.score}`:'')+(d.variant&&it.kind==='instance'?` · from ${d.variant}`:'');
+  $('info').innerHTML=`<h3>Details</h3>${it.id}<br>crop ${W}×${H} px at native resolution<br>green box = organiser annotation`;
+  $('msg').textContent=it.kind==='to_draw'&&!mask.some(v=>v)?'Paint the sprite, then Save redraw.':'';
+  document.querySelectorAll('.row').forEach((r,k)=>r.classList.toggle('cur',k===j));
+  const rr=document.querySelectorAll('.row')[j];if(rr)rr.scrollIntoView({block:'nearest'});
+  render();
+}
+function fit(){if(!W)return;const avail=Math.min($('main').clientWidth-28,window.innerHeight-230,760);S=Math.max(1,Math.floor(avail/Math.max(W,H)));vc.width=W*S;vc.height=H*S}
+window.addEventListener('resize',()=>{fit();render()});
+function render(){
+  if(!d)return;
+  vx.imageSmoothingEnabled=false;vx.drawImage(cropImg,0,0,W*S,H*S);
+  if(!hide){
+    const a=+$('alpha').value;
+    if(!outline){vx.fillStyle=`rgba(255,40,40,${a})`;for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(mask[y*W+x])vx.fillRect(x*S,y*S,S,S)}
+    vx.fillStyle='rgba(255,60,60,0.95)';
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x;if(!mask[i])continue;
+      if(x===0||!mask[i-1])vx.fillRect(x*S,y*S,Math.max(1,S/6),S);if(x===W-1||!mask[i+1])vx.fillRect((x+1)*S-Math.max(1,S/6),y*S,Math.max(1,S/6),S);
+      if(y===0||!mask[i-W])vx.fillRect(x*S,y*S,S,Math.max(1,S/6));if(y===H-1||!mask[i+W])vx.fillRect(x*S,(y+1)*S-Math.max(1,S/6),S,Math.max(1,S/6))}
+  }
+  if(d.box_in_crop){const [x0,y0,x1,y1]=d.box_in_crop;vx.strokeStyle='rgba(60,220,90,.9)';vx.lineWidth=2;vx.strokeRect(x0*S+1,y0*S+1,(x1-x0)*S-2,(y1-y0)*S-2)}
+  renderCut();renderCtx();
+}
+function renderCut(){
+  const c=$('cut'),k=Math.max(1,Math.floor(280/Math.max(W,H)));c.width=W*k;c.height=H*k;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+  for(let yy=0;yy<H*k;yy+=8)for(let xx=0;xx<W*k;xx+=8){x.fillStyle=((xx+yy)/8)%2?'#cfcfcf':'#f2f2f2';x.fillRect(xx,yy,8,8)}
+  const t=document.createElement('canvas');t.width=W;t.height=H;const tx=t.getContext('2d');tx.drawImage(cropImg,0,0);const id=tx.getImageData(0,0,W,H);
+  for(let i=0;i<W*H;i++)id.data[i*4+3]=mask[i]?255:0;tx.putImageData(id,0,0);x.drawImage(t,0,0,W*k,H*k);
+}
+function renderCtx(){const c=$('ctx');c.width=ctxImg.width;c.height=ctxImg.height;c.getContext('2d').drawImage(ctxImg,0,0)}
+
+function pos(e){const r=vc.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]}
+function stamp(px,py,val){const r=+$('size').value;const R=Math.ceil(r);
+  for(let y=Math.floor(py)-R;y<=Math.floor(py)+R;y++)for(let x=Math.floor(px)-R;x<=Math.floor(px)+R;x++){
+    if(x<0||y<0||x>=W||y>=H)continue;if((x+.5-px)**2+(y+.5-py)**2<=r*r||(r<1&&x===Math.floor(px)&&y===Math.floor(py)))mask[y*W+x]=val}}
+function line(a,b,val){const n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])*2)+1;for(let i=0;i<=n;i++)stamp(a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n,val)}
+function fill(px,py,val){const x0=Math.floor(px),y0=Math.floor(py);if(x0<0||y0<0||x0>=W||y0>=H)return;const from=mask[y0*W+x0];if(from===val)return;
+  const st=[y0*W+x0];while(st.length){const i=st.pop();if(mask[i]!==from)continue;mask[i]=val;const x=i%W,y=(i/W)|0;
+    if(x>0)st.push(i-1);if(x<W-1)st.push(i+1);if(y>0)st.push(i-W);if(y<H-1)st.push(i+W)}}
+vc.addEventListener('mousedown',e=>{if(!d)return;undo.push(mask.slice());if(undo.length>60)undo.shift();dirty=true;const p=pos(e);
+  if(tool==='fill'){fill(p[0],p[1],e.altKey?0:1);render();return}
+  drawing=true;last=p;stamp(p[0],p[1],tool==='brush'?1:0);render()});
+window.addEventListener('mousemove',e=>{if(!drawing)return;const p=pos(e);line(last,p,tool==='brush'?1:0);last=p;render()});
+window.addEventListener('mouseup',()=>drawing=false);
+
+function setTool(t){tool=t;['Brush','Erase','Fill'].forEach(n=>$('t'+n).classList.toggle('on',n.toLowerCase()===(t==='erase'?'erase':t)))}
+$('tBrush').onclick=()=>setTool('brush');$('tErase').onclick=()=>setTool('erase');$('tFill').onclick=()=>setTool('fill');
+$('tOutline').onclick=()=>{outline=!outline;$('tOutline').classList.toggle('on',outline);render()};
+$('size').oninput=()=>{$('sizeV').textContent=$('size').value};$('alpha').oninput=render;
+$('undo').onclick=()=>{if(undo.length){mask=undo.pop();dirty=true;render()}};
+$('reset').onclick=()=>{undo.push(mask.slice());mask=auto.slice();dirty=true;render()};
+$('clearMask').onclick=()=>{undo.push(mask.slice());mask=new Uint8Array(W*H);dirty=true;render()};
+
+async function post(status){
+  if(!d)return;const body={status};
+  const changed=mask.some((v,i)=>v!==auto[i]);
+  if(status==='approved'&&changed)body.status='redrawn';
+  if(body.status==='redrawn'){if(!mask.some(v=>v)){$('msg').textContent='The mask is empty; paint the sprite first.';return}body.mask=maskPNG()}
+  const r=await (await fetch('/api/item/'+encodeURIComponent(d.item.id),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+  if(r.error){$('msg').textContent='Save failed: '+r.error;return}
+  dirty=false;$('msg').textContent=`Saved as ${body.status}.`;
+  const it=items.find(i=>i.id===d.item.id);if(it)it.status=body.status;
+  const id=d.item.id;applyFilter(true);
+  let j=view.findIndex(i=>i.id===id);if(j<0)j=cur-1;open(Math.min(view.length-1,j+1));
+}
+$('approve').onclick=()=>post('approved');$('save').onclick=()=>post('redrawn');$('reject').onclick=()=>post('rejected');$('clear').onclick=()=>post('unreviewed');
+$('prev').onclick=()=>open(cur-1);$('next').onclick=()=>open(cur+1);
+['fSet','fKind','fZoom','fClass','fStatus','fSource'].forEach(f=>$(f).onchange=()=>{cur=-1;applyFilter(false)});
+window.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT'&&e.target.type==='text')return;
+  const k=e.key.toLowerCase();
+  if((e.metaKey||e.ctrlKey)&&k==='z'){e.preventDefault();$('undo').click();return}
+  if(e.metaKey||e.ctrlKey)return;
+  if(k==='b')setTool('brush');else if(k==='e')setTool('erase');else if(k==='f')setTool('fill');
+  else if(k==='['){$('size').stepDown();$('size').oninput()}else if(k===']'){$('size').stepUp();$('size').oninput()}
+  else if(k==='o')$('tOutline').click();else if(k==='a')post('approved');else if(k==='s')post('redrawn');else if(k==='x')post('rejected');else if(k==='u')post('unreviewed');
+  else if(e.key==='ArrowRight'){e.preventDefault();open(cur+1)}else if(e.key==='ArrowLeft'){e.preventDefault();open(cur-1)}
+  else if(e.key===' '){e.preventDefault();if(!hide){hide=true;render()}}});
+window.addEventListener('keyup',e=>{if(e.key===' '){hide=false;render()}});
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+setTool('brush');loadList(false);
+</script>
+</body>
+</html>

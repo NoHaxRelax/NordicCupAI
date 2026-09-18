@@ -1,0 +1,443 @@
+{
+  "source_manifest_sha256": "bb9dfb5099359035849862153a8e4dba6250be118ac66ffd146e4ed9d1eac904",
+  "entries": [
+    {
+      "class_name": "medium_launcher",
+      "variant": "medium_launcher",
+      "source_tile": "reference-f000018-x3456-y0000-L1",
+      "source_sha256": "6af3bc68f0d6e7ea6ef65f5afe3850c1a837eb6698def8beae2f8e85625e1fb1",
+      "zoom": 1,
+      "crop_xyxy": [
+        166,
+        42,
+        246,
+        122
+      ],
+      "box_in_crop": [
+        16,
+        17,
+        64,
+        62
+      ],
+      "mask_pixels": 158,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "f0cd5face4f54e7686b7a1648d3359026ff6196c22396dc910f731e7f7d1e850",
+      "mask_sha256": "ff5875b0d740c9a9cd98a108302bc41a2de8013f132c1d0a4c5b85bff13bec3c"
+    },
+    {
+      "class_name": "large_tower",
+      "variant": "large_tower",
+      "source_tile": "reference-f000012-x3264-y0000-L1",
+      "source_sha256": "67a55e46ca6183b1c7b5abda08f9cf5b32f9c1626fc9f032a682d917c3141b6b",
+      "zoom": 1,
+      "crop_xyxy": [
+        144,
+        139,
+        256,
+        251
+      ],
+      "box_in_crop": [
+        47,
+        23,
+        107,
+        89
+      ],
+      "mask_pixels": 1091,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "b9764d616f52d7cf824c24576b7a3a130b31f6371bdbee422b7059b297b4d865",
+      "mask_sha256": "8a05a10a0511032fa66ae0a10a69bb149f5acebae0d8e2eedbd85b258bcb410a"
+    },
+    {
+      "class_name": "medium_plane",
+      "variant": "medium_plane",
+      "source_tile": "reference-f000024-x0384-y0000-L1",
+      "source_sha256": "824c01f3ef388be7f7e73eef40e1508f1416f410e6ac82c08377bd75cf167a4f",
+      "zoom": 1,
+      "crop_xyxy": [
+        44,
+        112,
+        139,
+        207
+      ],
+      "box_in_crop": [
+        19,
+        23,
+        76,
+        72
+      ],
+      "mask_pixels": 518,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "f68862670779572f0d175b59029a74a99fa258085911599e42f7f8b1f305d62e",
+      "mask_sha256": "9cf47c702853df180778218f01a2ba86d8ce86ebd6d2ace6394ac028470910a0"
+    },
+    {
+      "class_name": "small_tower",
+      "variant": "small_tower",
+      "source_tile": "reference-f000015-x2496-y1776-L1",
+      "source_sha256": "7b85dd64a90313b99c124f402b410ea09884157b602016b49af84323cb2ce82e",
+      "zoom": 1,
+      "crop_xyxy": [
+        51,
+        23,
+        153,
+        125
+      ],
+      "box_in_crop": [
+        21,
+        22,
+        81,
+        80
+      ],
+      "mask_pixels": 1173,
+      "method": "nano_banana_pro roof mask + local low-chroma slab growth",
+      "sprite_sha256": "1bcd6af505c911cab9c5a2faaa7ac72fbd6bbe56d42b71c8f7a50347051e37a6",
+      "mask_sha256": "1df53d2de61e1a3aa7db941e28a094bfc4dac1744244d3757cfa40c861dc75d5"
+    },
+    {
+      "class_name": "helicopter",
+      "variant": "helicopter",
+      "source_tile": "reference-f000000-x2112-y0576-L1",
+      "source_sha256": "d1f84154cc06eab5373e3cd7556094642cd5ede4e3812e66efc2918f2fd5b3e0",
+      "zoom": 1,
+      "crop_xyxy": [
+        111,
+        136,
+        240,
+        243
+      ],
+      "box_in_crop": [
+        10,
+        10,
+        119,
+        97
+      ],
+      "mask_pixels": 940,
+      "method": "higgsfield remove_background + local dark-blade growth (L at least 25 below local median, connected, inside box)",
+      "sprite_sha256": "306beaebf4bd9ea162afd7e1bc741c65f24affee40c6485741d2a6590b0c21bf",
+      "mask_sha256": "38130ee1963b021cdefcf7f0edce0b70696be23b643b2f9e74c6bfc2e4364851"
+    },
+    {
+      "class_name": "large_launcher",
+      "variant": "large_launcher",
+      "source_tile": "reference-f000000-x3264-y0192-L1",
+      "source_sha256": "6e77b8590865879e0b748bc1ee7c36f6fbd56099f19d9945edcf43af859c56c9",
+      "zoom": 1,
+      "crop_xyxy": [
+        53,
+        93,
+        212,
+        218
+      ],
+      "box_in_crop": [
+        10,
+        10,
+        149,
+        115
+      ],
+      "mask_pixels": 2858,
+      "method": "higgsfield remove_background",
+      "sprite_sha256": "900a6cd5197c9a00789a658b1cbc3b68b283fbefaa8da6a361dec8bcd9c1257e",
+      "mask_sha256": "e9d05be758cdb883034ef4c3394718ccf8d2a7000910c5bd1269264141edd011"
+    },
+    {
+      "class_name": "jet_plane",
+      "variant": "jet_plane",
+      "source_tile": "reference-f000004-x1920-y0000-L1",
+      "source_sha256": "b2f95533832df4060406e2c363b87db3875924192800da0cabb1bdbcdb909fc1",
+      "zoom": 1,
+      "crop_xyxy": [
+        143,
+        0,
+        235,
+        89
+      ],
+      "box_in_crop": [
+        10,
+        4,
+        82,
+        79
+      ],
+      "mask_pixels": 725,
+      "method": "higgsfield remove_background",
+      "sprite_sha256": "60b1508eda0a44bde03aa142be5c36c214f8c11b277a409e8fcb5efe13b8b377",
+      "mask_sha256": "0d64ef07a0b4855fb372c76c616b85c894165ec91922b9c9118290b05469fbaf"
+    },
+    {
+      "class_name": "condor",
+      "variant": "condor",
+      "source_tile": "reference-f000005-x2496-y1536-L1",
+      "source_sha256": "2feb653127516e766d802d60c79dbc7592bb4e7943f0891b0827e0bd85dc9619",
+      "zoom": 1,
+      "crop_xyxy": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "box_in_crop": [
+        61,
+        66,
+        234,
+        236
+      ],
+      "mask_pixels": 4145,
+      "method": "nano_banana_pro magenta segmentation with multi-view context (second attempt, clearer prompt / larger crop)",
+      "sprite_sha256": "2feb653127516e766d802d60c79dbc7592bb4e7943f0891b0827e0bd85dc9619",
+      "mask_sha256": "c92468fef3a57f827c8c883e78c1b025f10843df86562473c2357009fc3f13eb"
+    },
+    {
+      "class_name": "hangar",
+      "variant": "hangar",
+      "source_tile": "reference-f000023-x0000-y0000-L1",
+      "source_sha256": "bcbc89009ea77ddb0fc70c87b637f6735c544c0e52ef6515cb3ab69aee5553fa",
+      "zoom": 1,
+      "crop_xyxy": [
+        0,
+        0,
+        256,
+        256
+      ],
+      "box_in_crop": [
+        50,
+        89,
+        238,
+        218
+      ],
+      "mask_pixels": 14538,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "bcbc89009ea77ddb0fc70c87b637f6735c544c0e52ef6515cb3ab69aee5553fa",
+      "mask_sha256": "8e0ebcf03d4eecf0cadc2ae287c2baeb9404f3b5f85dfcc96a55ca5cec800bb7"
+    },
+    {
+      "class_name": "jammer",
+      "variant": "jammer",
+      "source_tile": "reference-f000000-x1344-y0960-L1",
+      "source_sha256": "496e0b2dfe771ceb630a645baf8e3cf07cd3c2a355db02d7c4be2a4b8e63c472",
+      "zoom": 1,
+      "crop_xyxy": [
+        40,
+        116,
+        168,
+        244
+      ],
+      "box_in_crop": [
+        48,
+        43,
+        80,
+        86
+      ],
+      "mask_pixels": 532,
+      "method": "nano_banana_pro magenta segmentation with multi-view context (second attempt, clearer prompt / larger crop)",
+      "sprite_sha256": "f799dbe49d21f4aca3a4e2d6715b3c7c77c6153884e064ab6592bccbb9f76131",
+      "mask_sha256": "99a383e15c3314e1c44df69ed73b14ec37b4f7ec1f2d4a6bc12a1d2086519bf1"
+    },
+    {
+      "class_name": "mine_roller",
+      "variant": "mine_roller",
+      "source_tile": "validation-f000006-x1344-y0768-L1",
+      "source_sha256": "30ae0e9a8791289e02873e03a416e92908e740bd9b0eb3ca11cbbd44fabb6b50",
+      "zoom": 1,
+      "crop_xyxy": [
+        151,
+        76,
+        256,
+        181
+      ],
+      "box_in_crop": [
+        22.0,
+        30.0,
+        84.0,
+        74.0
+      ],
+      "mask_pixels": 691,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "3a9df880b0fd9b3b6e6eaf57c81093e9233b7a1e307b888cfa1005a5c1a13684",
+      "mask_sha256": "f5b88819a4f7d0cd89eb7ccdd38135190ffc63bcc78aef2775acda703b3f8e91"
+    },
+    {
+      "class_name": "small_plane",
+      "variant": "small_plane",
+      "source_tile": "reference-f000003-x1728-y1536-L1",
+      "source_sha256": "62916a0cd454ddfd21119cded183ba89cd084243e9f43f3820510309f0d1c49c",
+      "zoom": 1,
+      "crop_xyxy": [
+        153,
+        166,
+        238,
+        251
+      ],
+      "box_in_crop": [
+        21,
+        17,
+        64,
+        67
+      ],
+      "mask_pixels": 412,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "32b42ad35c4905064ed5b0cf99480a790924e9a2d759ac197a727383c38d6e6a",
+      "mask_sha256": "53b4483d2d16896c4963ecb0b6107f814142db1306170a8b7f7d32325a8376e7"
+    },
+    {
+      "class_name": "spacecraft",
+      "variant": "spacecraft",
+      "source_tile": "reference-f000003-x1344-y0576-L1",
+      "source_sha256": "d16fcbff076b518417d9273d9dfa4daa83c78690b9a6da033f1ffe81d781a539",
+      "zoom": 1,
+      "crop_xyxy": [
+        88,
+        86,
+        171,
+        169
+      ],
+      "box_in_crop": [
+        20,
+        17,
+        62,
+        66
+      ],
+      "mask_pixels": 724,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "c48764dc10867e585e7d0d23d8b998826525dcde85c81b902b5b0d7334a30dfc",
+      "mask_sha256": "bb8585640df0a7163aec2eaf6cb9dc0c3e434f7f1c57b66c15b7fa1a9e4b6800"
+    },
+    {
+      "class_name": "ta-ta",
+      "variant": "ta-ta",
+      "source_tile": "reference-f000010-x0768-y0576-L1",
+      "source_sha256": "1d496bc662ea91fb8f96943ab474f7f4c351633c2d94e26415cb4240ff7e0438",
+      "zoom": 1,
+      "crop_xyxy": [
+        128,
+        151,
+        192,
+        215
+      ],
+      "box_in_crop": [
+        16,
+        23,
+        48,
+        41
+      ],
+      "mask_pixels": 192,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "04d0f89d36f080e1858760f816c1501dc77beb8acba7f4cb45e24ebbd9608faa",
+      "mask_sha256": "734098f4f6315b63348b7ece24f73363915d91fbd7cda145c0a419656350fdd9"
+    },
+    {
+      "class_name": "tank",
+      "variant": "tank",
+      "source_tile": "validation-f000024-x1920-y0192-L1",
+      "source_sha256": "42c22243efd3340680f09d2bfb9892413eb0ee49878eaa083bf1d19ae4697d6d",
+      "zoom": 1,
+      "crop_xyxy": [
+        142,
+        161,
+        237,
+        256
+      ],
+      "box_in_crop": [
+        20.0,
+        35.0,
+        76.0,
+        62.0
+      ],
+      "mask_pixels": 600,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "857ee93e78e92f8aca8cd358f362663870eddcb65eb2a9f9c40d13e739bc954c",
+      "mask_sha256": "35dc549315a5896ce1bb479d875838868e27b96cadc19df441b7862a571818b0"
+    },
+    {
+      "class_name": "small_launcher",
+      "variant": "small_launcher",
+      "source_tile": "reference-f000000-x1728-y0000-L1",
+      "source_sha256": "e39ec57f03e62bf4c464b3dcefa06db114b22813b70a995b218cf843ef546816",
+      "zoom": 1,
+      "crop_xyxy": [
+        38,
+        140,
+        102,
+        204
+      ],
+      "box_in_crop": [
+        22,
+        17,
+        42,
+        47
+      ],
+      "mask_pixels": 64,
+      "method": "nano_banana_pro magenta segmentation with multi-view context",
+      "sprite_sha256": "f9110b2e928656caa9b42a8dc05ce555fe9fc14f1d81eec3dfba77b87c865111",
+      "mask_sha256": "a0a3a87dbcc4fc91c2b56879d765f55f4c566558649cd3c6850acc29611a7bd1"
+    },
+    {
+      "class_name": "mine_roller",
+      "variant": "mine_roller__reference",
+      "source_tile": "reference-f000000-x1728-y1728-L1",
+      "source_sha256": "cd4c1a0016071f7f3ec17c37ca7c1b45a2d610cf06de03e330128bf4b415fe4b",
+      "zoom": 1,
+      "crop_xyxy": [
+        102,
+        136,
+        198,
+        232
+      ],
+      "box_in_crop": [
+        21,
+        18,
+        74,
+        78
+      ],
+      "mask_pixels": 874,
+      "method": "nano_banana_pro magenta segmentation with multi-view context (reference-frame appearance)",
+      "sprite_sha256": "b299490956ab5bae6bc924776d811cd7ef1626f4ad361b8ee38d06bcceeb0c94",
+      "mask_sha256": "c9060f69bdaece3523a3c41f14c185d422809075660e4ade768cce5a1f309ac3"
+    },
+    {
+      "class_name": "large_launcher",
+      "variant": "large_launcher__validation",
+      "source_tile": "validation-f000005-x1728-y0960-L1",
+      "source_sha256": "8bca151a2519c0c8b7e29749314025825457ca96eec290535a69840b989b33cc",
+      "zoom": 1,
+      "crop_xyxy": [
+        120,
+        124,
+        252,
+        256
+      ],
+      "box_in_crop": [
+        24.25,
+        60.16000000000008,
+        106.75,
+        119.83999999999992
+      ],
+      "mask_pixels": 1102,
+      "method": "nano_banana_pro magenta segmentation with multi-view context (validation-frame appearance)",
+      "sprite_sha256": "fdb1d55e3efb70f4586619a57d9faab74f3b8dbea84ee64e732969a989d7cde3",
+      "mask_sha256": "c1d10d189fe8c201b4c20ab45bd3984ea60db2891c66e45cf36df56a2c3ffed3"
+    },
+    {
+      "class_name": "large_launcher",
+      "variant": "large_launcher__reference",
+      "source_tile": "reference-f000014-x3456-y0960-L1",
+      "source_sha256": "b5e9e0c844d0aed47768704071907dcc1626b6b9736c5d113c3a084ec028b8be",
+      "zoom": 1,
+      "crop_xyxy": [
+        0,
+        7,
+        249,
+        256
+      ],
+      "box_in_crop": [
+        27,
+        131,
+        183,
+        241
+      ],
+      "mask_pixels": 3348,
+      "method": "nano_banana_pro magenta segmentation with multi-view context (reference-frame appearance)",
+      "sprite_sha256": "9d608c88a376520588ba8203eb01f1f3e3a3775a97c92280066aa660565fa36c",
+      "mask_sha256": "3b9e6ac0472820f19ed1c131c43f23ca0b611abe5593c6a3527873de45673a5c"
+    }
+  ],
+  "note": "Masks cut from single training tiles; pixels always come from the instance being pasted."
+}

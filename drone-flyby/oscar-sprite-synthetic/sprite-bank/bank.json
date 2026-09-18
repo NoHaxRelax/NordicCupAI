@@ -1,0 +1,1657 @@
+{
+  "classes": [
+    "condor",
+    "hangar",
+    "helicopter",
+    "jammer",
+    "jet_plane",
+    "large_launcher",
+    "large_tower",
+    "medium_launcher",
+    "medium_plane",
+    "mine_roller",
+    "small_launcher",
+    "small_plane",
+    "small_tower",
+    "spacecraft",
+    "ta-ta",
+    "tank"
+  ],
+  "source_manifest_sha256": "bb9dfb5099359035849862153a8e4dba6250be118ac66ffd146e4ed9d1eac904",
+  "review": "data/drone/sprite-mask-review-20260918",
+  "note": "Reviewed training-split sprites. Original pixels; edge pixels un-mixed from the old background. box_in_sprite is the organiser annotation box in sprite coordinates (it can extend past the sprite).",
+  "sprites": [
+    {
+      "file": "jammer/inst__reference-f000000-x1152-y0960-L1__0.png",
+      "id": "inst:reference-f000000-x1152-y0960-L1:0",
+      "class_name": "jammer",
+      "class_id": 3,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1152-y0960-L1",
+      "tile_sha256": "9797da7500fe92822db3868f39da303fe53c434fb287b8bef91499f3be0d835c",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        27,
+        35
+      ],
+      "box_in_sprite": [
+        -4,
+        -6,
+        28,
+        37
+      ],
+      "sha256": "d10a194fa470096dd0758a085dd80c18b31ba0ea1352f8a97f2e45664383d0d7"
+    },
+    {
+      "file": "jammer/inst__reference-f000000-x1152-y0960-L2__0.png",
+      "id": "inst:reference-f000000-x1152-y0960-L2:0",
+      "class_name": "jammer",
+      "class_id": 3,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1152-y0960-L2",
+      "tile_sha256": "b67868f87d98a1edd22ddd3265043578778566ad40bd6ba45e047449da733920",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        29,
+        39
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        29,
+        39
+      ],
+      "sha256": "650dcd52a474ed57e657eec5daa3a7005282c6a89712fbcffcbbec02d38c5b33"
+    },
+    {
+      "file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png",
+      "id": "inst:reference-f000000-x1728-y0000-L1:0",
+      "class_name": "small_launcher",
+      "class_id": 10,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y0000-L1",
+      "tile_sha256": "e39ec57f03e62bf4c464b3dcefa06db114b22813b70a995b218cf843ef546816",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        10,
+        12
+      ],
+      "box_in_sprite": [
+        -5,
+        -10,
+        15,
+        20
+      ],
+      "sha256": "b5c7e9790861c0999030a12eafb11a671fc84a46172bf190908ac8286cd79a03"
+    },
+    {
+      "file": "small_launcher/inst__reference-f000000-x1728-y0000-L2__0.png",
+      "id": "inst:reference-f000000-x1728-y0000-L2:0",
+      "class_name": "small_launcher",
+      "class_id": 10,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y0000-L2",
+      "tile_sha256": "addabb030d13ee8fce73b0bdd4b718b1c088b72350f90d22f13d9693f700d80c",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        11,
+        14
+      ],
+      "box_in_sprite": [
+        -5,
+        -9,
+        15,
+        21
+      ],
+      "sha256": "643e0667a174f54c1150facbc96bce6df5306daa2877ef498e369b85c6ce4278"
+    },
+    {
+      "file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png",
+      "id": "inst:reference-f000000-x1728-y1728-L0:0",
+      "class_name": "mine_roller",
+      "class_id": 9,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y1728-L0",
+      "tile_sha256": "742ce441a852de130b5574caf35a1883f468fad649361d5d0c0078140cf4190c",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        49,
+        55
+      ],
+      "box_in_sprite": [
+        -3,
+        -3,
+        50,
+        57
+      ],
+      "sha256": "d0604d439cb4cbfe349d543522735eae155df33108f21fb441174a7e82f5bf70"
+    },
+    {
+      "file": "mine_roller/inst__reference-f000000-x1728-y1728-L1__0.png",
+      "id": "inst:reference-f000000-x1728-y1728-L1:0",
+      "class_name": "mine_roller",
+      "class_id": 9,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y1728-L1",
+      "tile_sha256": "cd4c1a0016071f7f3ec17c37ca7c1b45a2d610cf06de03e330128bf4b415fe4b",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        49,
+        55
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        50,
+        56
+      ],
+      "sha256": "436e9ca91899c6379cc4d6e4eb54c2dc0fc11753c5115daf182fe2e57991f4aa"
+    },
+    {
+      "file": "mine_roller/inst__reference-f000000-x1728-y1728-L2__0.png",
+      "id": "inst:reference-f000000-x1728-y1728-L2:0",
+      "class_name": "mine_roller",
+      "class_id": 9,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y1728-L2",
+      "tile_sha256": "5bf37f97106d62edc2e71f2cfd5d4d276b6ad9d7745e971f682e7bef1b6a02e2",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        49,
+        55
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        50,
+        56
+      ],
+      "sha256": "2217a788cc17383e148d86c86469a8e694b800b10cb95c0a58747e4f13b69d5e"
+    },
+    {
+      "file": "condor/inst__reference-f000000-x2496-y1152-L1__0.png",
+      "id": "inst:reference-f000000-x2496-y1152-L1:0",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x2496-y1152-L1",
+      "tile_sha256": "fa38b5316435523bbc84151dbb22fb888d3ad919b9ed03606494615dbc1107dc",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        108,
+        98
+      ],
+      "box_in_sprite": [
+        -34,
+        -23,
+        132,
+        139
+      ],
+      "sha256": "cd0f9bcec662370b37c1f0e5ed46f9bc49d6dff850e1e2a72119c9b4845e882c"
+    },
+    {
+      "file": "condor/inst__reference-f000000-x2496-y1344-L1__0.png",
+      "id": "inst:reference-f000000-x2496-y1344-L1:0",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x2496-y1344-L1",
+      "tile_sha256": "cab258f3f0857f574de4856a944720a7cbfca6d4a4c3d929c63ce041e880772b",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        108,
+        98
+      ],
+      "box_in_sprite": [
+        -34,
+        -23,
+        132,
+        139
+      ],
+      "sha256": "cd0f9bcec662370b37c1f0e5ed46f9bc49d6dff850e1e2a72119c9b4845e882c"
+    },
+    {
+      "file": "large_launcher/inst__reference-f000000-x3264-y0192-L1__0.png",
+      "id": "inst:reference-f000000-x3264-y0192-L1:0",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x3264-y0192-L1",
+      "tile_sha256": "6e77b8590865879e0b748bc1ee7c36f6fbd56099f19d9945edcf43af859c56c9",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        112,
+        72
+      ],
+      "box_in_sprite": [
+        -8,
+        -32,
+        131,
+        73
+      ],
+      "sha256": "238619515da903154154f79b9c9b43c49c4052d16795ee917d7dba9804bfc03d"
+    },
+    {
+      "file": "large_launcher/inst__reference-f000000-x3264-y0192-L2__0.png",
+      "id": "inst:reference-f000000-x3264-y0192-L2:0",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x3264-y0192-L2",
+      "tile_sha256": "eae1dcd4cbedd2a5009eaa9967c5e81cff1598f7ec4dfbf37867489e0b1e1db8",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        112,
+        72
+      ],
+      "box_in_sprite": [
+        -8,
+        -32,
+        131,
+        73
+      ],
+      "sha256": "1f6a511b80794542406225db406c4e61ab0dbfcbbc78978cfe6b7f1571071f14"
+    },
+    {
+      "file": "condor/inst__reference-f000001-x2496-y1344-L1__0.png",
+      "id": "inst:reference-f000001-x2496-y1344-L1:0",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 1,
+      "tile": "reference-f000001-x2496-y1344-L1",
+      "tile_sha256": "6b3cf70e8f1966c30a0f63abbb3c2d8a2f78a5397ac4d72a895ebcff4678e104",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        108,
+        98
+      ],
+      "box_in_sprite": [
+        -35,
+        -24,
+        133,
+        140
+      ],
+      "sha256": "190103e6d9d94aadf4e1d1e80ac295680aaf13612d1e3fdd37bcafc34c50be3c"
+    },
+    {
+      "file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png",
+      "id": "inst:reference-f000002-x1152-y1344-L0:0",
+      "class_name": "jammer",
+      "class_id": 3,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 2,
+      "tile": "reference-f000002-x1152-y1344-L0",
+      "tile_sha256": "67aec57f00d048132d7a4830c6ac00bc5091706f0c7d1d7bc2b530d58de9f618",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        27,
+        35
+      ],
+      "box_in_sprite": [
+        -4,
+        -6,
+        28,
+        37
+      ],
+      "sha256": "f79eac46ec6b36c7a691b05fd9082ee9a72ad2a10d66947c14b23ed6f1b43003"
+    },
+    {
+      "file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png",
+      "id": "inst:reference-f000003-x1344-y0576-L0:0",
+      "class_name": "spacecraft",
+      "class_id": 13,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 3,
+      "tile": "reference-f000003-x1344-y0576-L0",
+      "tile_sha256": "ef6b5b8d7e89b65f07fa19aaf988072f5ef2053525ecb8244a9c47c61921bd16",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        39,
+        39
+      ],
+      "box_in_sprite": [
+        -3,
+        -5,
+        39,
+        44
+      ],
+      "sha256": "85a29f35d68576d3a812c643f30189bf6f64fb34532c8faefd97ee0efcfd5490"
+    },
+    {
+      "file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png",
+      "id": "inst:reference-f000003-x1344-y0576-L1:0",
+      "class_name": "spacecraft",
+      "class_id": 13,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 3,
+      "tile": "reference-f000003-x1344-y0576-L1",
+      "tile_sha256": "d16fcbff076b518417d9273d9dfa4daa83c78690b9a6da033f1ffe81d781a539",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        39,
+        39
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        39,
+        45
+      ],
+      "sha256": "de5647714c5995ce6acdfb4060bb21a58321533bf23d8066ceb7f8186d16068f"
+    },
+    {
+      "file": "spacecraft/inst__reference-f000003-x1344-y0576-L2__0.png",
+      "id": "inst:reference-f000003-x1344-y0576-L2:0",
+      "class_name": "spacecraft",
+      "class_id": 13,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 3,
+      "tile": "reference-f000003-x1344-y0576-L2",
+      "tile_sha256": "1a822d1f4a3b6e59d929dfb1b310b9b436de10528034c089b3b05a54c2ac4a6a",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        39,
+        42
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        39,
+        45
+      ],
+      "sha256": "2b5db9f4d0c9696c354ff2ef42db50ecbe17a59baa1fabee09947782b59c820b"
+    },
+    {
+      "file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png",
+      "id": "inst:reference-f000003-x1728-y1536-L1:0",
+      "class_name": "small_plane",
+      "class_id": 11,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 3,
+      "tile": "reference-f000003-x1728-y1536-L1",
+      "tile_sha256": "62916a0cd454ddfd21119cded183ba89cd084243e9f43f3820510309f0d1c49c",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        32,
+        42
+      ],
+      "box_in_sprite": [
+        -5,
+        -6,
+        38,
+        44
+      ],
+      "sha256": "2f89704af4284876e7d6e3d4610dcc557195d931167077ecf1aa60b4413cc970"
+    },
+    {
+      "file": "small_plane/inst__reference-f000003-x1728-y1536-L2__0.png",
+      "id": "inst:reference-f000003-x1728-y1536-L2:0",
+      "class_name": "small_plane",
+      "class_id": 11,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 3,
+      "tile": "reference-f000003-x1728-y1536-L2",
+      "tile_sha256": "b06baa5686487004f301632ceb204222462de4c6734a1ebd4efbdbac7e59c29a",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        35,
+        44
+      ],
+      "box_in_sprite": [
+        -4,
+        -5,
+        39,
+        45
+      ],
+      "sha256": "9ce618603dd8d9423e617f6cbcb643cf9739b17ec6a6a604842a24d0f8be8b9b"
+    },
+    {
+      "file": "tank/inst__reference-f000004-x0576-y0000-L1__0.png",
+      "id": "inst:reference-f000004-x0576-y0000-L1:0",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 4,
+      "tile": "reference-f000004-x0576-y0000-L1",
+      "tile_sha256": "3136c39a237778cb3839f7d57c264f8e5f044d5efbc7973cfc6a1ef757ff7742",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        33,
+        29
+      ],
+      "box_in_sprite": [
+        -4,
+        -5,
+        44,
+        39
+      ],
+      "sha256": "f5d9c3630664d70369212d006fb69f0ce053a9b1f83c6376dd6f5a0a9c25b0bc"
+    },
+    {
+      "file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png",
+      "id": "inst:reference-f000004-x1920-y0000-L1:0",
+      "class_name": "jet_plane",
+      "class_id": 4,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 4,
+      "tile": "reference-f000004-x1920-y0000-L1",
+      "tile_sha256": "b2f95533832df4060406e2c363b87db3875924192800da0cabb1bdbcdb909fc1",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        42,
+        40
+      ],
+      "box_in_sprite": [
+        -20,
+        -17,
+        52,
+        58
+      ],
+      "sha256": "f251c27fa655e641713a42234389cd765d37379ebc82774fb43ae96044cc9eae"
+    },
+    {
+      "file": "jet_plane/inst__reference-f000004-x1920-y0000-L2__0.png",
+      "id": "inst:reference-f000004-x1920-y0000-L2:0",
+      "class_name": "jet_plane",
+      "class_id": 4,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 4,
+      "tile": "reference-f000004-x1920-y0000-L2",
+      "tile_sha256": "d7633b4e45bd7a9ea3ec3cd046ec26bf98e8ac1d6f845a2fb14f6fe0301368c0",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        42,
+        43
+      ],
+      "box_in_sprite": [
+        -20,
+        -17,
+        52,
+        58
+      ],
+      "sha256": "69be81ae6534bdc36f7e03329134563a9dcba066492e4a6856688fe2d86001e8"
+    },
+    {
+      "file": "condor/inst__reference-f000005-x2496-y1536-L0__0.png",
+      "id": "inst:reference-f000005-x2496-y1536-L0:0",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 5,
+      "tile": "reference-f000005-x2496-y1536-L0",
+      "tile_sha256": "e5813986b9bd3e78c5f4422ad3607b02402174ef1fc0ea8bfeef2671bec6cbee",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        114,
+        104
+      ],
+      "box_in_sprite": [
+        -35,
+        -23,
+        138,
+        147
+      ],
+      "sha256": "77005acb5ea0dfc809b6abc619a27e8cdcccc9cc4bedbb5b7caaa20d8ce73c95"
+    },
+    {
+      "file": "condor/inst__reference-f000005-x2496-y1536-L1__0.png",
+      "id": "inst:reference-f000005-x2496-y1536-L1:0",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 5,
+      "tile": "reference-f000005-x2496-y1536-L1",
+      "tile_sha256": "2feb653127516e766d802d60c79dbc7592bb4e7943f0891b0827e0bd85dc9619",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        114,
+        104
+      ],
+      "box_in_sprite": [
+        -35,
+        -24,
+        138,
+        146
+      ],
+      "sha256": "9d74519e3bf22528d984ed3c01967ef98fe5435592e881de99637e8e7c8f9369"
+    },
+    {
+      "file": "condor/inst__reference-f000005-x2496-y1536-L2__0.png",
+      "id": "inst:reference-f000005-x2496-y1536-L2:0",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 5,
+      "tile": "reference-f000005-x2496-y1536-L2",
+      "tile_sha256": "a351883f97ef0ae7a59bebcb13aed9d2ae70917ee4d461b8b0d9b3c3e1fbd3d1",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        114,
+        104
+      ],
+      "box_in_sprite": [
+        -35,
+        -24,
+        138,
+        146
+      ],
+      "sha256": "d88c0801240ba6f768900a1aef6979d91daebf598346e7537f1978a07a3bb7d4"
+    },
+    {
+      "file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png",
+      "id": "inst:reference-f000007-x1728-y1728-L0:0",
+      "class_name": "small_plane",
+      "class_id": 11,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 7,
+      "tile": "reference-f000007-x1728-y1728-L0",
+      "tile_sha256": "bb8e8af57481d50b36ee4e3adcb2b1391646b6a687183d8a3fbb2a1fca12bd0e",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        35,
+        44
+      ],
+      "box_in_sprite": [
+        -4,
+        -6,
+        39,
+        46
+      ],
+      "sha256": "b97d9a8e3c7b83a23562e91b1150edf171d25414633fa5d8f992fe7d8d195cd1"
+    },
+    {
+      "file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png",
+      "id": "inst:reference-f000007-x1920-y0000-L0:0",
+      "class_name": "jet_plane",
+      "class_id": 4,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 7,
+      "tile": "reference-f000007-x1920-y0000-L0",
+      "tile_sha256": "a897c320f17d047ac7c2313bdfb224b9f693fd96d13f77aa796691f642a2404c",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        40,
+        38
+      ],
+      "box_in_sprite": [
+        -22,
+        -19,
+        52,
+        58
+      ],
+      "sha256": "ae8ea57265c9705b237f3ba6cf5957adfd085196561c9f191cd9bf5bae01cf9c"
+    },
+    {
+      "file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png",
+      "id": "inst:reference-f000010-x0768-y0576-L0:0",
+      "class_name": "ta-ta",
+      "class_id": 14,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 10,
+      "tile": "reference-f000010-x0768-y0576-L0",
+      "tile_sha256": "151a2f9b14f9110e7d85186952128a28c7febdbcf4fce893fef5f96cae81292f",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        24,
+        14
+      ],
+      "box_in_sprite": [
+        -3,
+        -3,
+        29,
+        15
+      ],
+      "sha256": "e8985f82b59911a4243343a4fe1e0ec29375bea0bf0fdd1b4911f52bea0ee31c"
+    },
+    {
+      "file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png",
+      "id": "inst:reference-f000010-x0768-y0576-L1:0",
+      "class_name": "ta-ta",
+      "class_id": 14,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 10,
+      "tile": "reference-f000010-x0768-y0576-L1",
+      "tile_sha256": "1d496bc662ea91fb8f96943ab474f7f4c351633c2d94e26415cb4240ff7e0438",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        25,
+        15
+      ],
+      "box_in_sprite": [
+        -3,
+        -3,
+        29,
+        15
+      ],
+      "sha256": "48d52849ec9938f684edfbeba693786667c5ce466781930e11959ffbefb41de2"
+    },
+    {
+      "file": "ta-ta/inst__reference-f000010-x0768-y0576-L2__0.png",
+      "id": "inst:reference-f000010-x0768-y0576-L2:0",
+      "class_name": "ta-ta",
+      "class_id": 14,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 10,
+      "tile": "reference-f000010-x0768-y0576-L2",
+      "tile_sha256": "172f6a5fdb46acf4bca143f04b981d2169545025f8fff6e4df6ac4c56c424422",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        27,
+        17
+      ],
+      "box_in_sprite": [
+        -2,
+        -2,
+        30,
+        16
+      ],
+      "sha256": "93b43d1dbc6d223e9eae4f18c7b95460c92a66258d8af0bdab565cff55e2a861"
+    },
+    {
+      "file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png",
+      "id": "inst:reference-f000010-x1536-y0768-L0:0",
+      "class_name": "small_launcher",
+      "class_id": 10,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 10,
+      "tile": "reference-f000010-x1536-y0768-L0",
+      "tile_sha256": "29f217722427fd18cfa562876afd06475ce569cf441847e4881617920cca12f2",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        11,
+        10
+      ],
+      "box_in_sprite": [
+        -6,
+        -11,
+        15,
+        19
+      ],
+      "sha256": "21543e5330fab7089476ce734e0b8aa070dfd9d92f012d2ae3f2fd57e270f62e"
+    },
+    {
+      "file": "large_launcher/inst__reference-f000014-x3456-y0960-L0__0.png",
+      "id": "inst:reference-f000014-x3456-y0960-L0:0",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 14,
+      "tile": "reference-f000014-x3456-y0960-L0",
+      "tile_sha256": "ea3816cec2cd7c4006e6f1efb2ffee8449e80762fe6c052ef0eff4959f727877",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        126,
+        84
+      ],
+      "box_in_sprite": [
+        -9,
+        -26,
+        147,
+        84
+      ],
+      "sha256": "84b8c0fd40f0e34a68ce00a9b122cca4c7f5164dc78d8deb1dec7f405baff33b"
+    },
+    {
+      "file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png",
+      "id": "inst:reference-f000015-x2496-y1776-L0:0",
+      "class_name": "small_tower",
+      "class_id": 12,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 15,
+      "tile": "reference-f000015-x2496-y1776-L0",
+      "tile_sha256": "28d715edabed7f00d948b3add9c46699f8bf8224f8748510292e73893386f9d3",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        48,
+        46
+      ],
+      "box_in_sprite": [
+        -2,
+        -8,
+        58,
+        50
+      ],
+      "sha256": "e55fc80588cdd291d35c2183f983101dbac1b947167f50df94523ffe1759e429"
+    },
+    {
+      "file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png",
+      "id": "inst:reference-f000015-x2496-y1776-L1:0",
+      "class_name": "small_tower",
+      "class_id": 12,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 15,
+      "tile": "reference-f000015-x2496-y1776-L1",
+      "tile_sha256": "7b85dd64a90313b99c124f402b410ea09884157b602016b49af84323cb2ce82e",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        47,
+        46
+      ],
+      "box_in_sprite": [
+        -2,
+        -8,
+        58,
+        50
+      ],
+      "sha256": "f9febb34f11235c8d264ebd5aeba515a79795417784ed7b4eb09dc5168d61871"
+    },
+    {
+      "file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png",
+      "id": "inst:reference-f000015-x2496-y1776-L2:0",
+      "class_name": "small_tower",
+      "class_id": 12,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 15,
+      "tile": "reference-f000015-x2496-y1776-L2",
+      "tile_sha256": "c549c020085f6fec1a68ce943d66fc64463e5a39bbff01ab77de9e4cf1efa40f",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        48,
+        46
+      ],
+      "box_in_sprite": [
+        -1,
+        -9,
+        59,
+        49
+      ],
+      "sha256": "75cb88ea6c4e1b8b7a9b0d44710b1016c14d416c0d4b717a80c55be0bb174868"
+    },
+    {
+      "file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png",
+      "id": "inst:reference-f000015-x3456-y0000-L0:0",
+      "class_name": "medium_launcher",
+      "class_id": 7,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 15,
+      "tile": "reference-f000015-x3456-y0000-L0",
+      "tile_sha256": "3ffc7dc67b7eb322ca4b6bb44d4872cea23c78b59da224590c4f170c0545797b",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        14,
+        14
+      ],
+      "box_in_sprite": [
+        -20,
+        -15,
+        27,
+        29
+      ],
+      "sha256": "d54da0ed74099e3d1fa1abd55471d8bc9720758e3d497407e458590d5603c8f1"
+    },
+    {
+      "file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png",
+      "id": "inst:reference-f000018-x3456-y0000-L1:0",
+      "class_name": "medium_launcher",
+      "class_id": 7,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 18,
+      "tile": "reference-f000018-x3456-y0000-L1",
+      "tile_sha256": "6af3bc68f0d6e7ea6ef65f5afe3850c1a837eb6698def8beae2f8e85625e1fb1",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        19,
+        19
+      ],
+      "box_in_sprite": [
+        -18,
+        -13,
+        30,
+        32
+      ],
+      "sha256": "4769ae848bab040174edc79d7047dfe30937a67dd92b2f57c76199c3a4fe425f"
+    },
+    {
+      "file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png",
+      "id": "inst:reference-f000018-x3456-y0000-L2:0",
+      "class_name": "medium_launcher",
+      "class_id": 7,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 18,
+      "tile": "reference-f000018-x3456-y0000-L2",
+      "tile_sha256": "ebe9ba03e8d049bf70ab72e708f068c3bcfe74ff761423640646421d0867e3cb",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        21,
+        22
+      ],
+      "box_in_sprite": [
+        -18,
+        -10,
+        30,
+        35
+      ],
+      "sha256": "a8d53f619a5a3ff934aa658b6c5d68de92c9efa4b5e2b21b44ab8470a4b097f1"
+    },
+    {
+      "file": "tank/inst__reference-f000021-x0576-y0960-L0__0.png",
+      "id": "inst:reference-f000021-x0576-y0960-L0:0",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 21,
+      "tile": "reference-f000021-x0576-y0960-L0",
+      "tile_sha256": "83880bfe5afd3f96ac4d631c6d55ca5a741746ee37d1c86e6f62edf33d6b58f9",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        36,
+        36
+      ],
+      "box_in_sprite": [
+        -5,
+        -6,
+        48,
+        45
+      ],
+      "sha256": "8fa87cc089f53a9976b36da7d4a06e120842cf56b1c23a53a4036bd52a211c4d"
+    },
+    {
+      "file": "hangar/inst__reference-f000022-x0000-y0000-L1__0.png",
+      "id": "inst:reference-f000022-x0000-y0000-L1:0",
+      "class_name": "hangar",
+      "class_id": 1,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 22,
+      "tile": "reference-f000022-x0000-y0000-L1",
+      "tile_sha256": "91f6b2c181ec345c0703c70fb8139c34dfc595d17df2587bebfe6385ed795ae0",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        178,
+        104
+      ],
+      "box_in_sprite": [
+        -7,
+        -25,
+        179,
+        103
+      ],
+      "sha256": "08d0a55151f81e4bd7905405ada0fd3de3b9d0feb3b9d0e9d6b8799abe832102"
+    },
+    {
+      "file": "hangar/inst__reference-f000022-x0000-y0000-L2__0.png",
+      "id": "inst:reference-f000022-x0000-y0000-L2:0",
+      "class_name": "hangar",
+      "class_id": 1,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 22,
+      "tile": "reference-f000022-x0000-y0000-L2",
+      "tile_sha256": "5a5bf822ba2bcb998af8e05e1e199be5bc48593005c4be9da2e0c46861821f30",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        178,
+        104
+      ],
+      "box_in_sprite": [
+        -7,
+        -25,
+        179,
+        103
+      ],
+      "sha256": "d4568750d681538ac1098ddde6af91a5631887f4e59aa8ffb8c15ae418eec229"
+    },
+    {
+      "file": "medium_plane/inst__reference-f000022-x0384-y0000-L2__0.png",
+      "id": "inst:reference-f000022-x0384-y0000-L2:0",
+      "class_name": "medium_plane",
+      "class_id": 8,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 22,
+      "tile": "reference-f000022-x0384-y0000-L2",
+      "tile_sha256": "bba4b221eea6405cff3bccba96b2c677e05aa74f1fbbe11e90a3c4420ef0a996",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        50,
+        40
+      ],
+      "box_in_sprite": [
+        -2,
+        -4,
+        54,
+        45
+      ],
+      "sha256": "16efb99334f935162b47ce5e9feed53bfc7585cc2f0526e186a01cfd24bbd5f1"
+    },
+    {
+      "file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png",
+      "id": "inst:reference-f000024-x0000-y0000-L0:0",
+      "class_name": "hangar",
+      "class_id": 1,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 24,
+      "tile": "reference-f000024-x0000-y0000-L0",
+      "tile_sha256": "cd56303cc9e8df14c8167087856cf3270f6ea733a88abf5299bdb89301ff83f1",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        178,
+        104
+      ],
+      "box_in_sprite": [
+        -8,
+        -26,
+        181,
+        104
+      ],
+      "sha256": "66470172e620d3ab9abf3c8012a5df2a586cb964fcd420648ca3a29021e12e50"
+    },
+    {
+      "file": "medium_plane/inst__reference-f000024-x0384-y0000-L0__0.png",
+      "id": "inst:reference-f000024-x0384-y0000-L0:0",
+      "class_name": "medium_plane",
+      "class_id": 8,
+      "zoom": 0,
+      "source": "reference",
+      "frame": 24,
+      "tile": "reference-f000024-x0384-y0000-L0",
+      "tile_sha256": "3135d10fd13a39852c2946dd1c3d4d713dcac2b55bf786605cd777c5195dc77a",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        48,
+        40
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        54,
+        45
+      ],
+      "sha256": "bba0577e9e7002fe4bf7550020c772ca66258cf0de6acf3fe251c615e8a9380e"
+    },
+    {
+      "file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png",
+      "id": "inst:reference-f000024-x0384-y0000-L1:0",
+      "class_name": "medium_plane",
+      "class_id": 8,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 24,
+      "tile": "reference-f000024-x0384-y0000-L1",
+      "tile_sha256": "824c01f3ef388be7f7e73eef40e1508f1416f410e6ac82c08377bd75cf167a4f",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        48,
+        40
+      ],
+      "box_in_sprite": [
+        -3,
+        -4,
+        54,
+        45
+      ],
+      "sha256": "5bd26363d5f8799a072e9167bb483a0e0be333d0d3402fe6716baccdab8d74e1"
+    },
+    {
+      "file": "tank/inst__reference-f000024-x0384-y1344-L2__0.png",
+      "id": "inst:reference-f000024-x0384-y1344-L2:0",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 2,
+      "source": "reference",
+      "frame": 24,
+      "tile": "reference-f000024-x0384-y1344-L2",
+      "tile_sha256": "f08d31186c19c134be9f301f707ca490ca5981bcc55cc3e84f1aaec836594303",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        42,
+        41
+      ],
+      "box_in_sprite": [
+        -4,
+        -3,
+        50,
+        49
+      ],
+      "sha256": "b616d22c0a5ad7658c38cf0d77299ada3194b6edd223660be667063ed280255c"
+    },
+    {
+      "file": "large_launcher/inst__validation-f000005-x1728-y0960-L0__0.png",
+      "id": "inst:validation-f000005-x1728-y0960-L0:0",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 0,
+      "source": "validation",
+      "frame": 5,
+      "tile": "validation-f000005-x1728-y0960-L0",
+      "tile_sha256": "99f1e93d89ca018d0cc7b860c819a3d54dbdbc51284dd87fc12fb79b00087ffe",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        73,
+        32
+      ],
+      "box_in_sprite": [
+        -2,
+        -11,
+        81,
+        49
+      ],
+      "sha256": "06f942a083aa20a829ceeb47a185f9be8fa1fc73b2113f1e7e39a190ca5127bb"
+    },
+    {
+      "file": "large_launcher/inst__validation-f000005-x1728-y0960-L1__0.png",
+      "id": "inst:validation-f000005-x1728-y0960-L1:0",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 1,
+      "source": "validation",
+      "frame": 5,
+      "tile": "validation-f000005-x1728-y0960-L1",
+      "tile_sha256": "8bca151a2519c0c8b7e29749314025825457ca96eec290535a69840b989b33cc",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        73,
+        32
+      ],
+      "box_in_sprite": [
+        -2,
+        -11,
+        81,
+        49
+      ],
+      "sha256": "ba43dc8e42691e06dff174b58144d18e21c4561769216af65889d8571175a91b"
+    },
+    {
+      "file": "large_launcher/inst__validation-f000005-x1728-y0960-L2__0.png",
+      "id": "inst:validation-f000005-x1728-y0960-L2:0",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 2,
+      "source": "validation",
+      "frame": 5,
+      "tile": "validation-f000005-x1728-y0960-L2",
+      "tile_sha256": "92824761afbc1dc4238f4c62cbe5fd8521eb72168c89759062413b00b4b5a3fc",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        73,
+        32
+      ],
+      "box_in_sprite": [
+        -2,
+        -10,
+        81,
+        50
+      ],
+      "sha256": "fff97e8f23d6158338fb92fb2f5f2556142e2c9f3d7962f6c356547dcea8b85a"
+    },
+    {
+      "file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png",
+      "id": "inst:validation-f000024-x1920-y0192-L0:0",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 0,
+      "source": "validation",
+      "frame": 24,
+      "tile": "validation-f000024-x1920-y0192-L0",
+      "tile_sha256": "d9795abf082fd414470b75fd0e0996b0822c8f6dfb960107bb097659f87f12d6",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        45,
+        18
+      ],
+      "box_in_sprite": [
+        -7,
+        -4,
+        49,
+        23
+      ],
+      "sha256": "acbbc2d9640a75cacf4f36c7437612ff6d3b5e1486829801812e220f203def30"
+    },
+    {
+      "file": "tank/inst__validation-f000024-x1920-y0192-L1__0.png",
+      "id": "inst:validation-f000024-x1920-y0192-L1:0",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 1,
+      "source": "validation",
+      "frame": 24,
+      "tile": "validation-f000024-x1920-y0192-L1",
+      "tile_sha256": "42c22243efd3340680f09d2bfb9892413eb0ee49878eaa083bf1d19ae4697d6d",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        40,
+        20
+      ],
+      "box_in_sprite": [
+        -13,
+        -3,
+        43,
+        24
+      ],
+      "sha256": "359703125ac43432f8c38a74f152303e8554e4b0d153d2ccd4efd683c56a228c"
+    },
+    {
+      "file": "tank/inst__validation-f000024-x1920-y0192-L2__0.png",
+      "id": "inst:validation-f000024-x1920-y0192-L2:0",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 2,
+      "source": "validation",
+      "frame": 24,
+      "tile": "validation-f000024-x1920-y0192-L2",
+      "tile_sha256": "76c804ee46f642b67ab038bf13437633023d45cdec7e61dbd09a44cd53579a30",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        48,
+        20
+      ],
+      "box_in_sprite": [
+        -5,
+        -3,
+        51,
+        24
+      ],
+      "sha256": "e4e220178957130185e903411ac8b2e56da4835d3e0ecd9ac8eea7af8dae4d78"
+    },
+    {
+      "file": "medium_plane/inst__validation-f000066-x1920-y0192-L1__1.png",
+      "id": "inst:validation-f000066-x1920-y0192-L1:1",
+      "class_name": "medium_plane",
+      "class_id": 8,
+      "zoom": 1,
+      "source": "validation",
+      "frame": 66,
+      "tile": "validation-f000066-x1920-y0192-L1",
+      "tile_sha256": "e2d3fecde7eb92ad29c9ce325bb325fb3efc78c9e40cbcdd32fa4d01c71d22a5",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        47,
+        36
+      ],
+      "box_in_sprite": [
+        12,
+        -11,
+        54,
+        55
+      ],
+      "sha256": "74ba3280dde04d251da15a7b7e9cf42eeab5c9f146ccd1815fd521fcfc14018a"
+    },
+    {
+      "file": "medium_plane/inst__validation-f000066-x1920-y0192-L2__0.png",
+      "id": "inst:validation-f000066-x1920-y0192-L2:0",
+      "class_name": "medium_plane",
+      "class_id": 8,
+      "zoom": 2,
+      "source": "validation",
+      "frame": 66,
+      "tile": "validation-f000066-x1920-y0192-L2",
+      "tile_sha256": "755bf9423928ae391fb5eb95fa8986252acc82f4abc17109523dcf3033e5f423",
+      "split": "train",
+      "review_status": "redrawn",
+      "size": [
+        42,
+        44
+      ],
+      "box_in_sprite": [
+        6,
+        0,
+        48,
+        49
+      ],
+      "sha256": "0b63cc642baf55fb3821b66a88c76a7592ca8baa10c61ae3cf7d4e1c455159e2"
+    },
+    {
+      "file": "condor/lib__condor.png",
+      "id": "lib:condor",
+      "class_name": "condor",
+      "class_id": 0,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 5,
+      "tile": "reference-f000005-x2496-y1536-L1",
+      "tile_sha256": "2feb653127516e766d802d60c79dbc7592bb4e7943f0891b0827e0bd85dc9619",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        114,
+        105
+      ],
+      "box_in_sprite": [
+        -35,
+        -23,
+        138,
+        147
+      ],
+      "sha256": "9025df469da130a0c03a1ffbe21178d2cb83008d684f5f016beae18ad2ac9d7b"
+    },
+    {
+      "file": "hangar/lib__hangar.png",
+      "id": "lib:hangar",
+      "class_name": "hangar",
+      "class_id": 1,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 23,
+      "tile": "reference-f000023-x0000-y0000-L1",
+      "tile_sha256": "bcbc89009ea77ddb0fc70c87b637f6735c544c0e52ef6515cb3ab69aee5553fa",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        179,
+        105
+      ],
+      "box_in_sprite": [
+        -7,
+        -25,
+        181,
+        104
+      ],
+      "sha256": "43abc46769f23b7fc57eb8accea4ab90f178ffd39d2b8847b0244032edb36df3"
+    },
+    {
+      "file": "jammer/lib__jammer.png",
+      "id": "lib:jammer",
+      "class_name": "jammer",
+      "class_id": 3,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1344-y0960-L1",
+      "tile_sha256": "496e0b2dfe771ceb630a645baf8e3cf07cd3c2a355db02d7c4be2a4b8e63c472",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        28,
+        36
+      ],
+      "box_in_sprite": [
+        -3,
+        -6,
+        29,
+        37
+      ],
+      "sha256": "89094479ded2f76b9ceedce8a9d1396e1e8cd00f32480f3617feaebcc9483a45"
+    },
+    {
+      "file": "large_launcher/lib__large_launcher.png",
+      "id": "lib:large_launcher",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x3264-y0192-L1",
+      "tile_sha256": "6e77b8590865879e0b748bc1ee7c36f6fbd56099f19d9945edcf43af859c56c9",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        112,
+        72
+      ],
+      "box_in_sprite": [
+        -8,
+        -32,
+        131,
+        73
+      ],
+      "sha256": "238619515da903154154f79b9c9b43c49c4052d16795ee917d7dba9804bfc03d"
+    },
+    {
+      "file": "large_launcher/lib__large_launcher__reference.png",
+      "id": "lib:large_launcher__reference",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 14,
+      "tile": "reference-f000014-x3456-y0960-L1",
+      "tile_sha256": "b5e9e0c844d0aed47768704071907dcc1626b6b9736c5d113c3a084ec028b8be",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        127,
+        85
+      ],
+      "box_in_sprite": [
+        -8,
+        -26,
+        148,
+        84
+      ],
+      "sha256": "5c34780b00e84fbfe4b881d338d85d4f47ce6371cf22881d837837405d408deb"
+    },
+    {
+      "file": "large_launcher/lib__large_launcher__validation.png",
+      "id": "lib:large_launcher__validation",
+      "class_name": "large_launcher",
+      "class_id": 5,
+      "zoom": 1,
+      "source": "validation",
+      "frame": 5,
+      "tile": "validation-f000005-x1728-y0960-L1",
+      "tile_sha256": "8bca151a2519c0c8b7e29749314025825457ca96eec290535a69840b989b33cc",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        74,
+        33
+      ],
+      "box_in_sprite": [
+        -1,
+        -10,
+        82,
+        50
+      ],
+      "sha256": "3804b686c6ee0b8e9802f8c555d6bf1df48f0ae568b2d00c7d17027216784e7f"
+    },
+    {
+      "file": "large_tower/lib__large_tower.png",
+      "id": "lib:large_tower",
+      "class_name": "large_tower",
+      "class_id": 6,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 12,
+      "tile": "reference-f000012-x3264-y0000-L1",
+      "tile_sha256": "67a55e46ca6183b1c7b5abda08f9cf5b32f9c1626fc9f032a682d917c3141b6b",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        55,
+        59
+      ],
+      "box_in_sprite": [
+        -3,
+        -5,
+        57,
+        61
+      ],
+      "sha256": "4e131e21420c6a003592d0954efca24b840ff876d3d94462287ef7cd0293deb5"
+    },
+    {
+      "file": "medium_launcher/lib__medium_launcher.png",
+      "id": "lib:medium_launcher",
+      "class_name": "medium_launcher",
+      "class_id": 7,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 18,
+      "tile": "reference-f000018-x3456-y0000-L1",
+      "tile_sha256": "6af3bc68f0d6e7ea6ef65f5afe3850c1a837eb6698def8beae2f8e85625e1fb1",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        17,
+        18
+      ],
+      "box_in_sprite": [
+        -19,
+        -14,
+        29,
+        31
+      ],
+      "sha256": "0156ca76711d655a9cf67007349c04a083821cc6847d997025fbba44862c0125"
+    },
+    {
+      "file": "medium_plane/lib__medium_plane.png",
+      "id": "lib:medium_plane",
+      "class_name": "medium_plane",
+      "class_id": 8,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 24,
+      "tile": "reference-f000024-x0384-y0000-L1",
+      "tile_sha256": "824c01f3ef388be7f7e73eef40e1508f1416f410e6ac82c08377bd75cf167a4f",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        49,
+        41
+      ],
+      "box_in_sprite": [
+        -3,
+        -3,
+        54,
+        46
+      ],
+      "sha256": "0f8d6738ce805476dd64e0247fcdcb90a285369a9cff36fc5dc894b77bfaf50b"
+    },
+    {
+      "file": "mine_roller/lib__mine_roller.png",
+      "id": "lib:mine_roller",
+      "class_name": "mine_roller",
+      "class_id": 9,
+      "zoom": 1,
+      "source": "validation",
+      "frame": 6,
+      "tile": "validation-f000006-x1344-y0768-L1",
+      "tile_sha256": "30ae0e9a8791289e02873e03a416e92908e740bd9b0eb3ca11cbbd44fabb6b50",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        50,
+        27
+      ],
+      "box_in_sprite": [
+        -9,
+        -5,
+        53,
+        39
+      ],
+      "sha256": "f47b7202419c606913fef1402e90b3b74bc123714a35df31b336ca3f0965db2e"
+    },
+    {
+      "file": "mine_roller/lib__mine_roller__reference.png",
+      "id": "lib:mine_roller__reference",
+      "class_name": "mine_roller",
+      "class_id": 9,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y1728-L1",
+      "tile_sha256": "cd4c1a0016071f7f3ec17c37ca7c1b45a2d610cf06de03e330128bf4b415fe4b",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        50,
+        56
+      ],
+      "box_in_sprite": [
+        -2,
+        -3,
+        51,
+        57
+      ],
+      "sha256": "9def3d351f4e659fe0d5e5bd62bb2fa5dbd22e2eb79ea5c4bf1f5f11a22bb4e1"
+    },
+    {
+      "file": "small_launcher/lib__small_launcher.png",
+      "id": "lib:small_launcher",
+      "class_name": "small_launcher",
+      "class_id": 10,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 0,
+      "tile": "reference-f000000-x1728-y0000-L1",
+      "tile_sha256": "e39ec57f03e62bf4c464b3dcefa06db114b22813b70a995b218cf843ef546816",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        10,
+        12
+      ],
+      "box_in_sprite": [
+        -5,
+        -10,
+        15,
+        20
+      ],
+      "sha256": "b5c7e9790861c0999030a12eafb11a671fc84a46172bf190908ac8286cd79a03"
+    },
+    {
+      "file": "small_plane/lib__small_plane.png",
+      "id": "lib:small_plane",
+      "class_name": "small_plane",
+      "class_id": 11,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 3,
+      "tile": "reference-f000003-x1728-y1536-L1",
+      "tile_sha256": "62916a0cd454ddfd21119cded183ba89cd084243e9f43f3820510309f0d1c49c",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        33,
+        42
+      ],
+      "box_in_sprite": [
+        -4,
+        -6,
+        39,
+        44
+      ],
+      "sha256": "a7f36caba011baffa2b9c4695e2d0e9dd241b7d7199b915300fb4747a49ec9ef"
+    },
+    {
+      "file": "ta-ta/lib__ta-ta.png",
+      "id": "lib:ta-ta",
+      "class_name": "ta-ta",
+      "class_id": 14,
+      "zoom": 1,
+      "source": "reference",
+      "frame": 10,
+      "tile": "reference-f000010-x0768-y0576-L1",
+      "tile_sha256": "1d496bc662ea91fb8f96943ab474f7f4c351633c2d94e26415cb4240ff7e0438",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        27,
+        15
+      ],
+      "box_in_sprite": [
+        -2,
+        -3,
+        30,
+        15
+      ],
+      "sha256": "301de8c7259a688712da337ef5033e796ed2fc3d9f9eb4f2180d40930a8bace4"
+    },
+    {
+      "file": "tank/lib__tank.png",
+      "id": "lib:tank",
+      "class_name": "tank",
+      "class_id": 15,
+      "zoom": 1,
+      "source": "validation",
+      "frame": 24,
+      "tile": "validation-f000024-x1920-y0192-L1",
+      "tile_sha256": "42c22243efd3340680f09d2bfb9892413eb0ee49878eaa083bf1d19ae4697d6d",
+      "split": "train",
+      "review_status": "approved",
+      "size": [
+        48,
+        20
+      ],
+      "box_in_sprite": [
+        -5,
+        -3,
+        51,
+        24
+      ],
+      "sha256": "c6d70d7c9b301beb6127d5593acf636338526306cd03dd3fed229d90ddb2becb"
+    }
+  ]
+}
