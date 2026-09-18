@@ -57,12 +57,12 @@ then `python bench/mine/val_diag.py --dump bench/results/served/<tag>`.
 
 ## The whole endpoint on the pod (since 2026-09-18 14:35, the recommended topology)
 
-Pod `nordic-27b-serve` (id `v2pqefpdqwlh57`, one A100 SXM 80 GB, $1.59/h, US-MD-1, created through
+Pod `nordic-27b-serve` (id `9rf8oeyh70minl`, one A100 SXM 80 GB, $1.59/h, US-MD-1, created through
 the RunPod MCP on 2026-09-18 because EU-NL-1 had no A100 or H100 stock; the `nordic-weights` volume
 and the old H100 pod are unused). Everything runs on it, so the submitted URL is the pod's proxy
 hostname, which is stable for the life of the pod and depends on no laptop, tunnel or home network:
 
-    https://v2pqefpdqwlh57-9054.proxy.runpod.net/predict
+    https://9rf8oeyh70minl-9054.proxy.runpod.net/predict
 
 Layout: `/workspace/medical-appointment` (code, explicit-file upload: never ship `.claude/`),
 `/workspace/hf` (27B and turbo weights), `/workspace/ollama` (qwen3:4b), `/workspace/logs`,

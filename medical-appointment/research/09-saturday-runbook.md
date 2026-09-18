@@ -5,8 +5,16 @@ Deadline 16:00. One evaluation attempt. Everything below is executed, not rememb
 
 ## What is being served
 
-- URL to submit: **https://v2pqefpdqwlh57-9054.proxy.runpod.net/predict** (path included).
-- Pod `nordic-27b-serve` (RunPod, id `v2pqefpdqwlh57`, A100 80 GB, $1.59/h): turbo ASR, api.py,
+> **Pod history, 2026-09-18 afternoon.** The first pod (`v2pqefpdqwlh57`) was stopped to save money and
+> then **could not be restarted**: a pod with a host-local `/workspace` is pinned to its host, and that host
+> had no free A100. Its data is stranded; it is still EXITED and can be terminated once we no longer care.
+> A second pod drew a CUDA 12.8 host (driver 570), which cannot run the vLLM build we measured, and was
+> terminated. The pod below is the third, on a 580 driver like the original. **Do not stop this pod before
+> the attempt.**
+
+
+- URL to submit: **https://9rf8oeyh70minl-9054.proxy.runpod.net/predict** (path included).
+- Pod `nordic-27b-serve` (RunPod, id `9rf8oeyh70minl`, A100 80 GB, $1.59/h): turbo ASR, api.py,
   vLLM Qwen/Qwen3.8-27B at 80 % memory, Ollama qwen3:4b fallback. Config: `units-fewshot`,
   `UNIT_SPLIT=clause-and`, offsets -0.20/-0.02, `LLM_DEADLINE=40`, `PREDICT_DEADLINE=50`.
 - Measured Friday through that URL on the 39 training files: 0.815 / 0.812 / 0.815, 8.5-9.1 s mean,
@@ -23,8 +31,8 @@ Ollama, oracle server and laptop endpoint may stay up; they do not touch the pod
 
 1. Status, from the laptop (all read-only):
    ```
-   curl -s https://v2pqefpdqwlh57-9054.proxy.runpod.net/            # "Your endpoint is running!"
-   curl -s https://v2pqefpdqwlh57-9054.proxy.runpod.net/api         # uptime, unit_split clause-and, llm_model Qwen/Qwen3.8-27B,
+   curl -s https://9rf8oeyh70minl-9054.proxy.runpod.net/            # "Your endpoint is running!"
+   curl -s https://9rf8oeyh70minl-9054.proxy.runpod.net/api         # uptime, unit_split clause-and, llm_model Qwen/Qwen3.8-27B,
                                                                     # fewshot_pool 195 positives, breaker_open false, counts
    python bench/portal_status.py                                    # validations N, final attempts used 0, nothing in flight
    ```
@@ -34,7 +42,7 @@ Ollama, oracle server and laptop endpoint may stay up; they do not touch the pod
    RunPod Connect panel or `get-pod`) before anything else.
 2. One soak through the URL, training files only (7 minutes; never validation files here):
    ```
-   python local_evaluator.py --url https://v2pqefpdqwlh57-9054.proxy.runpod.net/predict
+   python local_evaluator.py --url https://9rf8oeyh70minl-9054.proxy.runpod.net/predict
    ```
    Go: score 0.80-0.82, 0 failed, 0 timeouts, worst round trip under 25 s.
 3. Balance and clock (Elias): RunPod balance at least $30; Oscar's pods accounted for; at least
