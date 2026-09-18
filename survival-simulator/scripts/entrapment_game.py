@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import pygame
 from src.core import SimulationCore
-from models.entrapment.entrapment_policy import EntrapmentPolicy
+from models.core import EntrapmentPolicy
 
 
 def clean(value):

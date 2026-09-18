@@ -4,4 +4,4 @@
 - `survival/` gathers food and manages the population.
 - `entrapment/` finds traps, maintains bait, and guides predators.
 
-`entrapment/entrapment_policy.py` coordinates all three modules.
+`core.py` coordinates all three modules.

@@ -33,7 +33,7 @@ ROLE_IDS = {'explorer': 0, 'gatherer': 1, 'avoiding_predator': 2,
 # structural only, so verification maps current files back to their recorded
 # names and canonicalizes the rewritten imports before hashing them.
 SOURCE_MOVES = {
-    'models/entrapment_policy.py': 'models/entrapment/entrapment_policy.py',
+    'models/entrapment_policy.py': 'models/core.py',
     'models/entrapment_sites.py': 'models/entrapment/entrapment_sites.py',
     'models/guide_pathfinding.py': 'models/entrapment/guide_pathfinding.py',
     'models/guide_steering.py': 'models/entrapment/guide_steering.py',
@@ -45,7 +45,7 @@ SOURCE_MOVES = {
 IMPORT_REWRITES = (
     (b'models.exploration', b'models.nikolaj'),
     (b'models.survival.oscar_orchard', b'models.oscar_orchard'),
-    (b'models.entrapment.entrapment_policy', b'models.entrapment_policy'),
+    (b'models.core', b'models.entrapment_policy'),
     (b'models.entrapment.entrapment_sites', b'models.entrapment_sites'),
     (b'models.entrapment.observed_trap_sites', b'models.observed_trap_sites'),
     (b'models.entrapment.my_guide', b'models.my_guide'),
@@ -182,7 +182,7 @@ def run_case(task):
     result = dict(seed=seed, baseline_commit=BASELINE_COMMIT, horizon=seconds, policy_rng_seed=0)
     try:
         from src.core import SimulationCore
-        from models.entrapment.entrapment_policy import EntrapmentPolicy
+        from models.core import EntrapmentPolicy
         core = SimulationCore(seed=seed)
         env = core.env
         policy = EntrapmentPolicy(seed=0)  # Independent of the world-generation seed.

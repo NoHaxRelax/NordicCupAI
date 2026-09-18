@@ -8,7 +8,7 @@ from unittest.mock import Mock, patch
 
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from models.entrapment.entrapment_policy import EntrapmentPolicy, remaining_life
+from models.core import EntrapmentPolicy, remaining_life
 from models.entrapment.observed_trap_sites import observed_rectangles, our_sites
 from models.exploration.world_estimator import MapGroup, EstimatedPose, EdgeLandmark
 from models.entrapment.entrapment_sites import enumerate_sites
