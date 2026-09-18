@@ -58,6 +58,7 @@ DEFAULTS = dict(
     lead_max=900.0,              # longest lead (guide to entry + corridor + run-in) worth starting
     gap_reserve=False,           # reserve bait 10 behind the front one (A/B over 32 runs: no gain)
     leash_min_energy=250.0,      # a guide with this much energy leads at close range (leash) instead
+    leash_lead_max=900.0,        # longest leash lead (guide to entry + corridor + run-in)
     hold_bait_min_life=120.0,    # life on arrival for a bait replacing one at a station that holds predators
 )
 
@@ -632,8 +633,12 @@ class TrapManager:
                     leashable = self._leashable(a, site)
                     if turn > allowance and not leashable:
                         continue
+                    if leashable and st is not None and st.staffed() and not site.extra.get('flyby_clear', True):
+                        continue        # no room to fly past a staffed mouth here
                     lead = dist(a.p, entry) + CORRIDOR + 250.0
-                    if lead > (min(1200.0, (a.energy - 120.0) / 0.25) if leashable else P['lead_max']):
+                    # a leash costs about 0.45 energy per unit of lead (its sprints, rests, hooks);
+                    # keep 150 for the endgame and the walk home
+                    if lead > (min(P['leash_lead_max'], (a.energy - 100.0) / 0.3) if leashable else P['lead_max']):
                         continue
                     lead_ticks = lead / 8.0
                     bait = None

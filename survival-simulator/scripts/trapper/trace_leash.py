@@ -13,6 +13,7 @@ from models.trapper.sites import find_gap_sites
 
 ap = argparse.ArgumentParser(); ap.add_argument('--seed', type=int, default=2); ap.add_argument('--start', type=float, default=0); ap.add_argument('--end', type=float, default=10)
 ap.add_argument('--obstacles', type=int, default=6); ap.add_argument('--staffed', type=int, default=-1); ap.add_argument('--second', type=int, default=0)
+ap.add_argument('--energy', type=float, default=500); ap.add_argument('--nosprint', type=int, default=0)
 a = ap.parse_args()
 staffed = (a.seed % 2 == 0) if a.staffed < 0 else bool(a.staffed)
 # replicate run_case setup
@@ -28,7 +29,7 @@ for _ in range(500):
     ang = rng.uniform(0, 2 * math.pi); r = rng.uniform(120, 220)
     pp = add(g, (r * math.cos(ang), r * math.sin(ang)))
     if free(pp, 14) and 30 < pp[0] < 1570 and 30 < pp[1] < 1170: break
-guide = arena.add_agent(*g, heading=rng.uniform(0, 2 * math.pi), energy=500)
+guide = arena.add_agent(*g, heading=rng.uniform(0, 2 * math.pi), energy=a.energy, **({'sprint_speed': 10.0} if a.nosprint else {}))
 chasing = rng.random() < 0.6
 heading = math.atan2(g[1] - pp[1], g[0] - pp[0]) if chasing else rng.uniform(0, 2 * math.pi)
 pred = arena.add_predator(*pp, heading=heading, energy=rng.uniform(60, 190))

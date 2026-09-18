@@ -40,7 +40,7 @@ def build(seed, n_obstacles, width=14.0, length=60.0):
     return arena, rng
 
 
-def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=500):
+def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=500, nosprint=False):
     arena, rng = build(seed, n_obstacles)
     env = arena.env
     oracle = OracleWorld(env); world = oracle.update()
@@ -58,7 +58,7 @@ def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=
         pp = add(g, (r * math.cos(ang), r * math.sin(ang)))
         if free(pp, 14) and 30 < pp[0] < 1570 and 30 < pp[1] < 1170:
             break
-    guide = arena.add_agent(*g, heading=rng.uniform(0, 2 * math.pi), energy=energy)
+    guide = arena.add_agent(*g, heading=rng.uniform(0, 2 * math.pi), energy=energy, **({'sprint_speed': 10.0} if nosprint else {}))
     chasing = rng.random() < 0.6
     heading = math.atan2(g[1] - pp[1], g[0] - pp[0]) if chasing else rng.uniform(0, 2 * math.pi)
     pred = arena.add_predator(*pp, heading=heading, energy=rng.uniform(60, 190))
@@ -130,15 +130,15 @@ if __name__ == '__main__':
     ap.add_argument('--seconds', type=float, default=60); ap.add_argument('--obstacles', type=int, default=6)
     ap.add_argument('--staffed', type=int, default=-1, help='-1 alternate, 0 empty mouth, 1 bait present')
     ap.add_argument('--verbose-seed', type=int, default=None); ap.add_argument('--start', type=int, default=0)
-    ap.add_argument('--energy', type=float, default=500)
+    ap.add_argument('--energy', type=float, default=500); ap.add_argument('--nosprint', type=int, default=0)
     a = ap.parse_args()
     if a.verbose_seed is not None:
-        r = run_case(a.verbose_seed, a.obstacles, a.staffed == 1 if a.staffed >= 0 else a.verbose_seed % 2 == 0, bool(a.second), a.seconds, verbose=True, energy=a.energy)
+        r = run_case(a.verbose_seed, a.obstacles, a.staffed == 1 if a.staffed >= 0 else a.verbose_seed % 2 == 0, bool(a.second), a.seconds, verbose=True, energy=a.energy, nosprint=bool(a.nosprint))
         print(r); sys.exit(0)
     ok = 0; fails = []
     for seed in range(a.start, a.start + a.cases):
         staffed = (seed % 2 == 0) if a.staffed < 0 else bool(a.staffed)
-        r = run_case(seed, a.obstacles, staffed, bool(a.second), a.seconds, energy=a.energy)
+        r = run_case(seed, a.obstacles, staffed, bool(a.second), a.seconds, energy=a.energy, nosprint=bool(a.nosprint))
         ok += r['ok']
         print(f"seed {seed:3d} staffed={int(staffed)} chasing={int(r['chasing'])}: {'OK   ' if r['ok'] else 'FAIL '} t={r.get('t')} {r.get('why','')} {('e_left=' + str(r.get('guide_energy'))) if r['ok'] else ('| ' + r.get('last', ''))[:110]}", flush=True)
         if not r['ok']:
