@@ -149,6 +149,59 @@ class PartModel:
     def pose_outline(self, heading, scale, sx, sy, shear, cx, cy):
         return self.outline @ self._matrix(heading, scale, sx, sy, shear).T + (cx, cy)
 
+    def sample_many(self, channel, pts_batch):
+        """Batched sample: pts_batch (K, N, 2) -> vectors (K, parts), visible (K, parts). Same medians as sample()."""
+        H, W = channel.shape
+        K = pts_batch.shape[0]
+        xi, yi = pts_batch[:, :, 0].round().astype(int), pts_batch[:, :, 1].round().astype(int)
+        inside = (xi >= 0) & (xi < W) & (yi >= 0) & (yi < H)
+        values = np.full(xi.shape, np.nan, np.float32)
+        values[inside] = channel[yi[inside], xi[inside]]
+        vectors = np.full((K, len(self.parts)), np.nan, np.float32)
+        visible = np.zeros((K, len(self.parts)), bool)
+        rows = np.arange(K)
+        for i in range(len(self.parts)):
+            sel = self.index == i
+            v = values[:, sel]
+            ok = ~np.isnan(v)
+            counts = ok.sum(1)
+            enough = counts >= max(3, .5 * sel.sum())
+            if enough.any():
+                # exact median of the valid entries: sort puts NaN last, so the middle of the first `count` entries is the median
+                sv = np.sort(v[enough], axis=1)
+                c = counts[enough]
+                lo = sv[np.arange(len(c)), (c - 1) // 2]
+                hi = sv[np.arange(len(c)), c // 2]
+                vectors[enough, i] = (lo + hi) / 2.; visible[enough, i] = True
+        return vectors, visible
+
+    def score_many(self, L, chroma, pts_batch, min_visible=.6):
+        """Batched version of score(): returns a list with a dict or None per pose, identical to calling score() per pose."""
+        vectors, visible = self.sample_many(L, pts_batch)
+        cvecs, _ = self.sample_many(chroma, pts_batch)
+        kinds = np.array(self.kinds)
+        out = []
+        for k in range(pts_batch.shape[0]):
+            vector, vis, cvec = vectors[k], visible[k], cvecs[k]
+            bars = vis & np.isin(kinds, ['fuselage', 'wing'])
+            if vis.mean() < min_visible or bars.sum() < 6:
+                out.append(None); continue
+            structural = vis & np.isin(kinds, ['fuselage', 'wing', 'spot'])
+            a, b = self.pattern[structural], vector[structural]
+            a, b = a - a.mean(), b - b.mean()
+            denominator = np.linalg.norm(a) * np.linalg.norm(b)
+            pattern_ncc = float(a @ b / denominator) if denominator > 1e-6 else 0.
+            quads = vis & (kinds == 'quadrant')
+            bar_values = vector[bars]
+            xness = float(abs(bar_values.mean() - vector[quads].mean()) / (bar_values.std() + 3.)) if quads.any() else 0.
+            spots = vis & (kinds == 'spot')
+            spot_drop = float(np.median(bar_values) - np.median(vector[spots])) if spots.any() else 0.
+            model_spot_drop = float(np.median(self.pattern[np.isin(kinds, ['fuselage', 'wing'])]) - np.median(self.pattern[kinds == 'spot'])) if (kinds == 'spot').any() else 1.
+            spot_score = float(np.clip(spot_drop / max(model_spot_drop, 1.), 0, 1))
+            bar_chroma = float(np.nanmedian(cvec[bars]))
+            out.append(dict(pattern_ncc=pattern_ncc, xness=xness, spot_score=spot_score, bar_chroma=bar_chroma, visible_fraction=float(vis.mean()), parts_visible=int(vis.sum())))
+        return out
+
     def sample(self, channel, pts):
         """Median of each part over its points inside the image; visible when at least half its points are inside."""
         H, W = channel.shape

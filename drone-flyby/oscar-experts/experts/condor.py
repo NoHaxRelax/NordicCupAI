@@ -87,43 +87,32 @@ class CondorExpert:
         return float(np.clip(.55 * part['pattern_ncc'] + .2 * min(part['xness'] / 3., 1.) + .15 * part['spot_score'] + .1 * chroma_score, 0, 1)), chroma_score
 
     def _best_pose(self, model, L, chroma, cx, cy, s, headings, scales, stretches=(1.,), shears=(0.,), offsets=(0.,)):
-        """Coordinate descent over the pose family; returns (combined, part dict, pose) or None."""
-        best = None
-        for heading, scale in product(headings, scales):
-            part = model.score(L, chroma, model.pose_points(heading, s * scale, 1., 1., 0., cx, cy), self.settings.min_visible)
-            if part is None:
-                continue
-            combined, _ = self._combined(part, model)
-            if best is None or combined > best[0]:
-                best = (combined, part, dict(heading=heading, scale=scale, stretch=1., shear=0., cx=cx, cy=cy))
+        """Coordinate descent over the pose family, each stage sampled as one batch; same result as the per-pose version."""
+        def stage(poses):
+            pts = np.stack([model.pose_points(p['heading'], s * p['scale'], p['stretch'], 1., p['shear'], p['cx'], p['cy']) for p in poses])
+            best = None
+            for pose, part in zip(poses, model.score_many(L, chroma, pts, self.settings.min_visible)):
+                if part is None:
+                    continue
+                combined, _ = self._combined(part, model)
+                if best is None or combined > best[0]:
+                    best = (combined, part, pose)
+            return best
+        best = stage([dict(heading=h, scale=sc, stretch=1., shear=0., cx=cx, cy=cy) for h in headings for sc in scales])
         if best is None:
             return None
         pose = best[2]
-        for delta in self.settings.heading_refine:
-            part = model.score(L, chroma, model.pose_points(pose['heading'] + delta, s * pose['scale'], 1., 1., 0., cx, cy), self.settings.min_visible)
-            if part is None:
-                continue
-            combined, _ = self._combined(part, model)
-            if combined > best[0]:
-                best = (combined, part, dict(pose, heading=pose['heading'] + delta))
+        refined = stage([dict(pose, heading=pose['heading'] + d) for d in self.settings.heading_refine])
+        if refined is not None and refined[0] > best[0]:
+            best = refined
         pose = best[2]
-        for stretch, shear in product(stretches, shears):
-            part = model.score(L, chroma, model.pose_points(pose['heading'], s * pose['scale'], stretch, 1., shear, cx, cy), self.settings.min_visible)
-            if part is None:
-                continue
-            combined, _ = self._combined(part, model)
-            if combined > best[0]:
-                best = (combined, part, dict(pose, stretch=stretch, shear=shear))
+        warped = stage([dict(pose, stretch=st, shear=sh) for st in stretches for sh in shears])
+        if warped is not None and warped[0] > best[0]:
+            best = warped
         pose = best[2]
-        for dx, dy in product(offsets, offsets):
-            if dx == 0 and dy == 0:
-                continue
-            part = model.score(L, chroma, model.pose_points(pose['heading'], s * pose['scale'], pose['stretch'], 1., pose['shear'], cx + dx, cy + dy), self.settings.min_visible)
-            if part is None:
-                continue
-            combined, _ = self._combined(part, model)
-            if combined > best[0]:
-                best = (combined, part, dict(pose, cx=cx + dx, cy=cy + dy))
+        shifted = stage([dict(pose, cx=cx + dx, cy=cy + dy) for dx in offsets for dy in offsets if not (dx == 0 and dy == 0)])
+        if shifted is not None and shifted[0] > best[0]:
+            best = shifted
         return best
 
     def _dedup(self, rows, s):

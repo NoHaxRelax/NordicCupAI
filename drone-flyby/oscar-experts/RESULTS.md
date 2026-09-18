@@ -103,5 +103,14 @@ the pose. Adequate for most classes; ta-ta, jet plane and medium plane have a lo
 per-class box model later. Tall objects (towers, hangar) grow down the frame; the tracker's placement
 layer handles that after first sighting.
 
-## Stage 2: verifier — pending
-## Stage 4: camera strategies — pending
+## Stage 2: verifier v0
+
+ResNet-18 (ImageNet init) fine-tuned 12 epochs on 21,915 expert-candidate crops from training tiles
+(positives by label overlap, background from unmatched candidates), held-out tiles 99.7%.
+Evaluate-only synthetic set (training sprites on dev-tile backgrounds, 795 crops): accuracy 95.1%,
+background rejection 98.4%; per-class recall condor 1.0, hangar 1.0, jammer 1.0, large_launcher 1.0,
+mine_roller 1.0, small_plane 1.0, spacecraft 1.0, small_tower .96, tank .92, medium_launcher .92,
+small_launcher .82, ta-ta .78, medium_plane .78, jet_plane .70.
+
+## Pass 3 (current code, full training set, gates v3 fitted on its own candidates) — pending
+## Stage 4: camera strategies — pending (chained after pass 3)

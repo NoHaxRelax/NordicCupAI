@@ -19,12 +19,50 @@ def load_gates(path):
     return json.loads(Path(path).read_text())['gates'] if path else {}
 
 
+class Gated:
+    """Post-filter wrapper for experts that do not apply a gate themselves (hangar, condor).
+    Candidate features are untouched; rows below the gate are marked rejected_by='gate'."""
+    def __init__(self, expert, gate, family):
+        self.expert, self.gate, self.family = expert, gate, family
+        self.class_name, self.settings = expert.class_name, expert.settings
+
+    def __getattr__(self, name):
+        return getattr(self.expert, name)
+
+    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False, **kwargs):
+        import numpy as np
+        from .fit_gates import apply_gate
+        try:
+            out = self.expert.detect(image, pixels_per_source_pixel, zoom, explain=True, **kwargs)
+        except TypeError:
+            out = self.expert.detect(image, pixels_per_source_pixel, zoom, explain=True)
+        if isinstance(out[0], dict):
+            families, candidates = out
+        else:
+            accepted, sift_rows, candidates = out
+            families = {self.family: accepted, 'sift': sift_rows}
+        z = int(zoom if zoom is not None else 2)
+        kept = []
+        for row in families[self.family]:
+            logit, passed = apply_gate(self.gate, row, z)
+            row.update(gate_logit=float(logit), gate_probability=float(1 / (1 + np.exp(-logit))), gate_pass=bool(passed))
+            row['score'] = row['gate_probability']
+            if passed:
+                kept.append(row)
+            else:
+                row['rejected_by'] = 'gate'
+        families[self.family] = kept
+        return (families, candidates) if explain else families
+
+
 def make_expert(class_name, bank, gates=None):
     gate = (gates or {}).get(class_name)
     if class_name == 'hangar':
-        return HangarExpert(bank)
+        expert = HangarExpert(bank)
+        return Gated(expert, gate, 'hangar_expert') if gate else expert
     if class_name == 'condor':
-        return CondorExpert(bank)
+        expert = CondorExpert(bank)
+        return Gated(expert, gate, 'condor_expert') if gate else expert
     if class_name in BLOBS:
         return BlobExpert(bank, BLOBS[class_name], gate=gate)
     if class_name not in SPECS:

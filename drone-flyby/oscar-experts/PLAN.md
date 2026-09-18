@@ -38,7 +38,7 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 | 1b | Iterate on weak classes | done for launchers (blob expert: 6/6 at L1/L2 vs 2/69 before). Key finding 01:05: per-class logistic gate over recorded features (`fit_gates.py`) gives out-of-fold recall 98-100% while keeping <1% of background for jammer, small plane, small tower, spacecraft, large tower (helicopter 14%) | `fit_gates.py`, `gates-v1.json` |
 | 2 | Verifier v0 trained 02:40 (`verifier-2304/model/best.pt`): 21,915 crops, held-out tiles 99.7%; evaluate-only synthetic set with dev backgrounds: accuracy 95.1%, background rejection 98.4%, weakest jet .70, ta-ta .78, medium plane .78 | `run_verifier.sh`, `eval_verifier.py` | `crops.py`, `train_verifier.py` |
 | 3 | Boxes: expert pose + organizer offset rotated with the pose; tall objects via tracker placement | measured 02:20: median IoU .81-.94 for 11 classes, ta-ta .64 (see RESULTS.md) | `live_detector.py` |
-| 4 | Camera strategies: local replays on the validation scene with `run_local_eval.py` (l1 sweep vs l2_top vs revisit), then real validation attempts | `stage4_replays.sh` ready (GPU proposer, gates v2, verifier v0); launch after the evaluate_all smoke | pod `/workspace/live/drone-flyby`, `validate_endpoint.sh` |
+| 4 | Camera strategies: local replays on the validation scene with `run_local_eval.py` (l1 sweep vs l2_top vs revisit), then real validation attempts | chained by `after_pass3.sh` (04:25): verify3 -> four replays A-D with gates v3 + verifier v0 -> verifier v1. Then `stage4_status.sh`, pick the best recording, `stage4_submit.sh` + `validate_endpoint.sh` for the real validation score | pod `/workspace/live/drone-flyby`, `validate_endpoint.sh` |
 | 5 | Use API-verified validation labels and Higgsfield synthetic data to tailor experts/verifier; watch overfitting | pending | |
 | 6 | Push branch, write handoff, update memory | milestone 1 pushed 01:45 (`508ae5f` on `drone/oscar-experts`) | `push_branch.sh` |
 
@@ -55,7 +55,9 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 - `gpu_proposer.py`: one scene FFT per view for all classes; exact match with the CPU proposer; 3 s for 12
   classes on a 1920x1080 view vs 7 s per class on CPU. `evaluate_all.py`: one process, shared proposer,
   threaded fine pose, on-disk proposal cache keyed by kernel signature, rotating stratified sample.
-- Remaining cost: fine pose ~1-5 s per class per view on CPU threads; condor's part model is the slowest expert.
+- Remaining cost: fine pose ~1-5 s per class per view on CPU threads; condor (4 s) and hangar (3 s) are the slowest experts.
+  Next cycle, BEFORE a gate-fitting pass: condor max_candidates 16->8, hangar one template per zoom and fewer angle offsets,
+  vectorise PartModel.score across poses. Never change candidate features between fitting gates and applying them.
 
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
