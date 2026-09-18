@@ -1217,13 +1217,13 @@ public:
         int mode = (int)P.oracle_trees;
         groups.each([&](const int64_t&, GroupP& g) {
             if (!g->anchored) return;
-            std::vector<P2> mem;
-            g->agents.each([&](int64_t a) { mem.push_back(M(a).pose->p); });
+            std::vector<P2> mem; std::vector<double> memr;
+            g->agents.each([&](int64_t a) { mem.push_back(M(a).pose->p); memr.push_back(in_states(a) ? st(a).vr : 0.); });
             for (size_t k = 0; k < oracle_p.size(); k++) {
                 P2 p = oracle_p[k]; TreeP t; double td = 0;
-                if (mode == 2) {
+                if (mode == 2 || mode == 4) {   // 4: within each member's own vision range (ignores cone and walls)
                     bool nearm = false;
-                    for (auto& q : mem) if (dist_lt(q, p, P.oracle_r)) { nearm = true; break; }
+                    for (size_t q = 0; q < mem.size(); q++) if (dist_lt(mem[q], p, mode == 2 ? P.oracle_r : memr[q])) { nearm = true; break; }
                     if (!nearm) continue;
                 }
                 for (auto& c : g->near_trees(p, 12)) {

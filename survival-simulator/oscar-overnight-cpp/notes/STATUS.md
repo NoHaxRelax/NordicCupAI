@@ -51,3 +51,9 @@ Log (newest last)
   from ~20 to ~10 energy/s in the last 300 s. Added late overrides l_births_per_tick/l_emergency_reserve/
   l_low_pop_reserve and age_fruit (a fruit seen by born_hi bounds its tree's birth <= born_hi-20).
   Running: c2 (oracle split + age_infer) on i/j/k/n1; q1 on n2-n5, then bc1 (late birth control + age_fruit).
+- 01:15 c2: oracle limited to trees within 400 of a member +146±21 s, within 800 +150±21, full +124±17; ages-only
+  +15±23; age_infer 20/40/60 noise. => the gap is LOCAL detection (trees near agents not seen), not ages.
+  Mean vision radius evolves 208 (t=250) -> ~350 (t>=2000), cap 400. bc1 partial: late births_per_tick=1 identical
+  (late bursts are heirs/emergency births), late cap cuts ~0 or worse, age_fruit -12±31.
+  Queued: v1 (fit_vision 1.5/2/3+heir_select, fit_hear 0.2, sweep 0.035, oracle mode 4 = own vision range only) on
+  j/n1; c3 (q_n0_60, q_sm0, q_brl450, combo) on i/k seeds 10000-10511. Spend ~ $9.5 of $100.
