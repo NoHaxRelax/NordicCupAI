@@ -69,3 +69,37 @@ on the Mac is not reproduced on an AVX-512 pod by either engine, because numpy's
 Engine step only, orchard policy actions (about 20 agents), M4 laptop: Python
 about 5.6 ms/step, native about 0.10 ms/step. End-to-end orchard runs are then
 dominated by the policy itself (about 8 ms/step).
+
+## Native orchard policy (`_orchard.hpp`)
+
+A C++ port of the tuned orchard policy (`policy/orchard_ref.py`, a frozen copy of
+`research/orchard/orchard.py`, with `policy/best-config.json`). Given the same state it
+makes bit-identical decisions to the Python policy. Policy and engine then run together
+in C++: a full 3000 s run takes about 7-12 s instead of several minutes.
+
+    sim = fastsim.SimulationCore(seed=s, predators=False)
+    sim._engine.policy_init(fastsim.seed_key(s), config_dict)   # same kwargs as OrchardPolicy
+    sim.step([])
+    steps, peak = sim._engine.run_policy(horizon, stop_at)      # loop in C++ until stop_at
+    sim._engine.policy_act()                                    # or: decisions for the current state
+
+Harness (Oscar's research workspace): `SURVIVAL_ENGINE=native` makes
+`research/society/harness.run` (and so `harness_np`, `sweep.py`, `opt.py`,
+`late_sweep.py`) run `orchard:OrchardPolicy` natively.
+The result JSON is identical to `SURVIVAL_ENGINE=fast` with the Python policy, except
+`policy_metrics` (None) and wall time. World/flee logs need the Python policy.
+
+The port reproduces Python behaviour exactly where it can change a decision:
+- CPython's `math.hypot`/`math.dist` (fma-based `vector_norm`) and `round`;
+- float `%` and `//`;
+- dict insertion order;
+- the grid lists (insertion order, remove first);
+- stable sorts;
+- `random.Random`;
+- the stale `Pose` reference `_observe` keeps after an anchoring transform.
+
+Verify with `fastsim/verify_policy.py` (lockstep, actions compared bit for bit).
+`fastsim/debug_policy.py SEED` finds the first internal divergence.
+
+**Code changes to `orchard.py` must be ported to `_orchard.hpp`.** Parameter changes need
+no port. After any code change, run `verify_policy.py` on a few full-length seeds.

@@ -28,6 +28,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <memory>
+#include <unordered_set>
 
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
@@ -1583,13 +1585,33 @@ public:
     }
 };
 
+#include "_orchard.hpp"
+
 // ----------------------------------------------------------------------------
 // Python bindings
 // ----------------------------------------------------------------------------
 struct EngineObject {
     PyObject_HEAD
     Engine* eng;
+    orchard::Policy* pol;
 };
+
+// Policy input exactly as the state dict the Python policy receives.
+std::vector<orchard::AState> policy_states(Engine* e) {
+    static const std::vector<Obs> empty;
+    std::vector<orchard::AState> out;
+    out.reserve(e->agents.size());
+    for (const Creature& a : e->agents) {
+        auto it = e->agent_observations.find(a.id);
+        orchard::AState s;
+        s.aid = a.id; s.obs = it == e->agent_observations.end() ? &empty : &it->second;
+        s.energy = a.energy; s.biome = e->biome_at(a.x, a.y); s.age = a.age; s.speed = a.speed;
+        s.sprint = a.sprint_speed; s.hear = a.hearing_radius; s.cone = a.cone_angle; s.vr = a.vision_radius;
+        s.max_energy = a.max_energy;
+        out.push_back(s);
+    }
+    return out;
+}
 
 PyObject *s_type, *s_distance, *s_angle, *s_rel_dir, *s_id, *s_coords, *s_Fruit, *s_Agent, *s_Predator, *s_Tree, *s_Edge;
 PyObject *s_agent_id, *s_observations, *s_energy, *s_biome, *s_age, *s_speed, *s_sprint_speed, *s_hearing_radius;
@@ -1715,6 +1737,153 @@ PyObject* Engine_step(EngineObject* self, PyObject* args) {
 
 PyObject* Engine_state(EngineObject* self, PyObject*) { return build_state(self->eng); }
 
+bool parse_params(PyObject* d, orchard::Params& P) {
+    if (!d || d == Py_None) return true;
+    if (!PyDict_Check(d)) { PyErr_SetString(PyExc_TypeError, "config must be a dict"); return false; }
+    struct F { const char* k; double* v; };
+    F fs[] = {{"cap_mult", &P.cap_mult}, {"cap_min", &P.cap_min}, {"cap_max", &P.cap_max}, {"n0", &P.n0},
+              {"tree_half", &P.tree_half}, {"tree_slots", &P.tree_slots}, {"breed_reserve", &P.breed_reserve},
+              {"emergency_reserve", &P.emergency_reserve}, {"ripen_wait", &P.ripen_wait}, {"sweep_rate", &P.sweep_rate},
+              {"explore_radius", &P.explore_radius}, {"fit_vision", &P.fit_vision}, {"fit_hear", &P.fit_hear},
+              {"fit_energy", &P.fit_energy}, {"births_per_tick", &P.births_per_tick}, {"fruit_reach", &P.fruit_reach},
+              {"tree_reach", &P.tree_reach}, {"site_min", &P.site_min}, {"breed_reserve_late", &P.breed_reserve_late},
+              {"reserve_t0", &P.reserve_t0}, {"reserve_t1", &P.reserve_t1}, {"dist_pen", &P.dist_pen},
+              {"vo_win_fruit", &P.vo_win_fruit}, {"vo_win_far", &P.vo_win_far}, {"vo_cap", &P.vo_cap},
+              {"heir_age", &P.heir_age}, {"heir_reserve", &P.heir_reserve}, {"explore_min", &P.explore_min},
+              {"travel_turn", &P.travel_turn}, {"heir_slack", &P.heir_slack}, {"repost_every", &P.repost_every},
+              {"switch_gain", &P.switch_gain}, {"fruit_min_wait", &P.fruit_min_wait}, {"no_eat_age", &P.no_eat_age},
+              {"late_still_t", &P.late_still_t}, {"post_radius", &P.post_radius}, {"min_stay", &P.min_stay},
+              {"hungry_margin", &P.hungry_margin}, {"fit_speed", &P.fit_speed}, {"explore_energy", &P.explore_energy},
+              {"watch_patience", &P.watch_patience}, {"watch_reach", &P.watch_reach}, {"watch_refresh", &P.watch_refresh},
+              {"select_min_young", &P.select_min_young}, {"dump_food_site", &P.dump_food_site}, {"dump_mult", &P.dump_mult},
+              {"cluster_radius", &P.cluster_radius}, {"spread_weight", &P.spread_weight}, {"low_pop_reserve", &P.low_pop_reserve},
+              {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
+              {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
+              {"nursery_bonus", &P.nursery_bonus}};
+    for (F& f : fs) {
+        PyObject* v = PyDict_GetItemString(d, f.k);
+        if (!v) continue;
+        double x = PyFloat_AsDouble(v);
+        if (x == -1.0 && PyErr_Occurred()) return false;
+        *f.v = x;
+    }
+    struct B { const char* k; bool* v; };
+    B bs[] = {{"idle_sweep", &P.idle_sweep}, {"extra_old", &P.extra_old}, {"cull", &P.cull}, {"heir_select", &P.heir_select},
+              {"heir_at_food", &P.heir_at_food}, {"old_eat_last", &P.old_eat_last}, {"heir_needs_site", &P.heir_needs_site}};
+    for (B& b : bs) {
+        PyObject* v = PyDict_GetItemString(d, b.k);
+        if (!v) continue;
+        int t = PyObject_IsTrue(v);
+        if (t < 0) return false;
+        *b.v = t;
+    }
+    PyObject* fm = PyDict_GetItemString(d, "feed_mode");
+    if (fm) {
+        const char* sv = PyUnicode_AsUTF8(fm);
+        if (!sv) return false;
+        P.feed_breed = std::string(sv) == "breed";
+    }
+    return true;
+}
+
+PyObject* Engine_policy_init(EngineObject* self, PyObject* args) {
+    PyObject *key_obj, *cfg = nullptr;
+    if (!PyArg_ParseTuple(args, "O|O", &key_obj, &cfg)) return nullptr;
+    PyObject* seq = PySequence_Fast(key_obj, "seed_key must be a sequence");
+    if (!seq) return nullptr;
+    std::vector<uint32_t> key;
+    for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(seq); i++) key.push_back((uint32_t)PyLong_AsUnsignedLong(PySequence_Fast_GET_ITEM(seq, i)));
+    Py_DECREF(seq);
+    if (PyErr_Occurred()) return nullptr;
+    if (key.empty()) key.push_back(0);
+    orchard::Params P;
+    if (!parse_params(cfg, P)) return nullptr;
+    delete self->pol;
+    self->pol = new orchard::Policy(key, P);
+    if (cfg && PyDict_Check(cfg) && PyDict_GetItemString(cfg, "_debug_merge")) self->pol->debug_merge = true;
+    Py_RETURN_NONE;
+}
+
+PyObject* acts_to_py(const std::vector<orchard::Act>& acts) {
+    PyObject* list = PyList_New((Py_ssize_t)acts.size());
+    for (size_t i = 0; i < acts.size(); i++) {
+        const orchard::Act& a = acts[i];
+        PyList_SET_ITEM(list, (Py_ssize_t)i, Py_BuildValue("(LdddN)", (long long)a.aid, a.dist, a.direction, a.turn, PyBool_FromLong(a.spawn)));
+    }
+    return list;
+}
+
+// Decisions of the native policy for the current state (does not step).
+PyObject* Engine_policy_act(EngineObject* self, PyObject*) {
+    if (!self->pol) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
+    Engine* e = self->eng;
+    auto acts = self->pol->call(policy_states(e), e->time);
+    return acts_to_py(acts);
+}
+
+// Debug view of the native policy's per-agent memory (minds in dict order).
+PyObject* Engine_policy_minds(EngineObject* self, PyObject*) {
+    if (!self->pol) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
+    PyObject* list = PyList_New(0);
+    self->pol->minds.each([&](const int64_t& aid, orchard::MindP& m) {
+        PyObject* t = Py_BuildValue("(LLdddOOOOOLddLLd)", (long long)aid, (long long)m->group, m->pose->p.x, m->pose->p.y, m->pose->theta,
+                                    m->has_post ? PyLong_FromLongLong(m->post) : (Py_INCREF(Py_None), Py_None),
+                                    m->has_fruit ? PyLong_FromLongLong(m->fruit) : (Py_INCREF(Py_None), Py_None),
+                                    m->old ? Py_True : Py_False,
+                                    m->has_explore ? Py_BuildValue("(dd)", m->explore_p.x, m->explore_p.y) : (Py_INCREF(Py_None), Py_None),
+                                    m->has_watch ? Py_BuildValue("(dd)", m->watch_p.x, m->watch_p.y) : (Py_INCREF(Py_None), Py_None),
+                                    (long long)m->edges.size(), m->best_d, m->energy_prev, (long long)m->prev_marks.size(),
+                                    (long long)m->hear_hist.size(), m->prev_pose ? m->prev_pose->theta : 0.0);
+        PyList_Append(list, t); Py_DECREF(t);
+    });
+    return list;
+}
+PyObject* Engine_policy_groups(EngineObject* self, PyObject*) {
+    if (!self->pol) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
+    PyObject* list = PyList_New(0);
+    self->pol->groups.each([&](const int64_t& gid, orchard::GroupP& g) {
+        PyObject* trees = PyList_New(0);
+        g->trees.each([&](const int64_t& tid, orchard::TreeP& t) {
+            PyObject* x = Py_BuildValue("(LddddON)", (long long)tid, t->p.x, t->p.y, t->first, t->last, t->dead ? Py_True : Py_False,
+                                        PyList_New(0));
+            PyList_Append(trees, x); Py_DECREF(x);
+        });
+        PyObject* fruits = PyList_New(0);
+        g->fruits.each([&](const int64_t& fid, orchard::FruitP& f) {
+            PyObject* x = Py_BuildValue("(Ldddd)", (long long)fid, f->p.x, f->p.y, f->born_lo, f->born_hi);
+            PyList_Append(fruits, x); Py_DECREF(x);
+        });
+        PyObject* x = Py_BuildValue("(LONNLLL)", (long long)gid, g->anchored ? Py_True : Py_False, trees, fruits,
+                                    (long long)g->cells.size(), (long long)g->next_tree, (long long)g->next_fruit);
+        PyList_Append(list, x); Py_DECREF(x);
+    });
+    return list;
+}
+
+// Native loop: while agents live and time < horizon, act + step; returns after the
+// step at which sim_time >= stop_at - 1e-6 (for sampling) or when the run ends.
+PyObject* Engine_run_policy(EngineObject* self, PyObject* args) {
+    double horizon, stop_at;
+    if (!PyArg_ParseTuple(args, "dd", &horizon, &stop_at)) return nullptr;
+    if (!self->pol) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
+    Engine* e = self->eng;
+    long steps = 0; size_t peak = e->agents.size();
+    Py_BEGIN_ALLOW_THREADS
+    while (!e->agents.empty() && e->time < horizon) {
+        auto acts = self->pol->call(policy_states(e), e->time);
+        for (const auto& a : acts) {
+            Engine::Action ea{a.aid, a.dist, true, a.direction, a.turn, a.spawn};
+            e->agent_step(ea);
+        }
+        e->non_agent_step();
+        steps++;
+        if (e->agents.size() > peak) peak = e->agents.size();
+        if (e->time >= stop_at - 1e-6) break;
+    }
+    Py_END_ALLOW_THREADS
+    return Py_BuildValue("(ln)", steps, (Py_ssize_t)peak);
+}
+
 PyObject* Engine_agents(EngineObject* self, PyObject*) {
     Engine* e = self->eng;
     PyObject* list = PyList_New((Py_ssize_t)e->agents.size());
@@ -1832,10 +2001,16 @@ PyMethodDef Engine_methods[] = {
     {"biome_map", (PyCFunction)Engine_biome_map, METH_NOARGS, "bytes, index x*height+y, 0 forest 1 swamp 2 desert 3 grassland 4 river"},
     {"rng_state", (PyCFunction)Engine_rng_state, METH_NOARGS, "random.Random.getstate() equivalent"},
     {"info", (PyCFunction)Engine_get_info, METH_NOARGS, "time, score, counters"},
+    {"policy_init", (PyCFunction)Engine_policy_init, METH_VARARGS, "policy_init(seed_key, config_dict): native orchard policy"},
+    {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
+    {"policy_minds", (PyCFunction)Engine_policy_minds, METH_NOARGS, "debug: native minds"},
+    {"policy_groups", (PyCFunction)Engine_policy_groups, METH_NOARGS, "debug: native groups"},
+    {"run_policy", (PyCFunction)Engine_run_policy, METH_VARARGS, "run_policy(horizon, stop_at) -> (steps, peak_agents); native policy + engine loop"},
     {nullptr, nullptr, 0, nullptr}};
 
 void Engine_dealloc(EngineObject* self) {
     delete self->eng;
+    delete self->pol;
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -1858,6 +2033,8 @@ int Engine_init(EngineObject* self, PyObject* args, PyObject* kwds) {
     Py_DECREF(seq);
     if (key.empty()) key.push_back(0);
     delete self->eng;
+    delete self->pol;
+    self->pol = nullptr;
     Py_BEGIN_ALLOW_THREADS
     self->eng = new Engine(w, h, cs, na, np_, nf, nt, key, dt, preds != 0);
     Py_END_ALLOW_THREADS
