@@ -1,0 +1,61 @@
+{
+  "description": "Direct visual pseudo-labels made from reconstructed validation frames. Not organizer annotations.",
+  "source_dimensions": [3840, 2160],
+  "annotations": [
+    {
+      "seed_id": "manual-large-launcher-005",
+      "frame": 5,
+      "class": "large_launcher",
+      "bbox_source_xyxy": [1935, 1218, 2020, 1258],
+      "bbox_normalized_xyxy": [0.50390625, 0.56388889, 0.52604167, 0.58240741],
+      "evidence": "manual_reference_match",
+      "label_contract": "Manually matched to the public large_launcher reference silhouette across frames 5-9; approximate visual box, not organizer ground truth.",
+      "review_status": "directly_reviewed"
+    },
+    {
+      "seed_id": "manual-large-launcher-006",
+      "frame": 6,
+      "class": "large_launcher",
+      "bbox_source_xyxy": [1935.87, 1286.95, 2021.66, 1327.41],
+      "bbox_normalized_xyxy": [0.50413316, 0.59580948, 0.52647324, 0.61453991],
+      "evidence": "manual_reference_match",
+      "label_contract": "Manually reviewed against the same large_launcher track; approximate visual box, not organizer ground truth.",
+      "review_status": "directly_reviewed"
+    },
+    {
+      "seed_id": "manual-large-launcher-007",
+      "frame": 7,
+      "class": "large_launcher",
+      "bbox_source_xyxy": [1936.25, 1357.81, 2022.88, 1398.69],
+      "bbox_normalized_xyxy": [0.50423155, 0.62861616, 0.52679167, 0.64754167],
+      "evidence": "manual_reference_match",
+      "label_contract": "Manually reviewed against the same large_launcher track; approximate visual box, not organizer ground truth.",
+      "review_status": "directly_reviewed"
+    },
+    {
+      "seed_id": "manual-large-launcher-008",
+      "frame": 8,
+      "class": "large_launcher",
+      "bbox_source_xyxy": [1936.64, 1428.47, 2024.34, 1470.04],
+      "bbox_normalized_xyxy": [0.50433333, 0.6613287, 0.52717188, 0.68057407],
+      "evidence": "manual_reference_match",
+      "label_contract": "Manually reviewed against the same large_launcher track; approximate visual box, not organizer ground truth.",
+      "review_status": "directly_reviewed"
+    },
+    {
+      "seed_id": "manual-large-launcher-009",
+      "frame": 9,
+      "class": "large_launcher",
+      "bbox_source_xyxy": [1936.63, 1428.47, 2024.33, 1470.04],
+      "bbox_normalized_xyxy": [0.50433073, 0.6613287, 0.52716927, 0.68057407],
+      "evidence": "manual_reference_match",
+      "label_contract": "Manually reviewed against the same large_launcher track; approximate visual box, not organizer ground truth.",
+      "review_status": "directly_reviewed"
+    }
+  ],
+  "limitations": [
+    "Only reviewed positives are recorded; no unlabelled area is claimed to be background.",
+    "Frames 1-4 are incomplete reconstructions and excluded.",
+    "Boxes are manual training pseudo-labels, not organizer ground truth."
+  ]
+}

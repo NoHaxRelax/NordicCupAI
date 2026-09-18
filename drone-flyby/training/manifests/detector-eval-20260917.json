@@ -1,0 +1,7110 @@
+{
+  "classes": [
+    "condor",
+    "hangar",
+    "helicopter",
+    "jammer",
+    "jet_plane",
+    "large_launcher",
+    "large_tower",
+    "medium_launcher",
+    "medium_plane",
+    "mine_roller",
+    "small_launcher",
+    "small_plane",
+    "small_tower",
+    "spacecraft",
+    "ta-ta",
+    "tank"
+  ],
+  "training_manifest_sha256": "36b6e0dd27881d5293102085d77fd076a0411ce95fc1bf067bca9d2818a288a6",
+  "seed": 170927,
+  "inputs": {
+    "data/drone/reconstructed-validation/frame_000106.png": "89ecdec1fc2c6a75bbc8e61e60d4015be35388a0201c1965a3c75d75a3ee2e33",
+    "data/drone/reconstructed-validation/frame_000109.png": "61729c62d5aaa15b5d0919ea36225cb481851e7efc313f92f051e735a4d358ca",
+    "data/drone/reconstructed-validation/frame_000112.png": "7faffd0018fcad96140c2eb1c33a5045a5109b09de1846a6f49ec3df48e272e7",
+    "data/drone/reconstructed-validation/frame_000115.png": "50b869c6adeccd5d94808b761dde16b6fcbc52eb31e3e5e5569b8e862cd15d5c",
+    "data/drone/reconstructed-validation/frame_000118.png": "bcf424acefd777fff03714a85667e140bede100092442bf7ba50941767c829c8",
+    "data/drone/reconstructed-validation/frame_000121.png": "64019637abcbb776c877e9f24b89510c05ab201f1b1eede076c6fe3c77e90340",
+    "data/drone/reconstructed-validation/frame_000124.png": "5b8ccd24a49f6eb49a4d86867c5b29cb2024e89280c36832324905deb7c2c42c",
+    "data/drone/reconstructed-validation/frame_000127.png": "5907b935e8232a90bb90c9e57380b619afa7ae2565eb8baee96875b6d0087c38",
+    "data/drone/reconstructed-validation/frame_000130.png": "d0374fa8fa0cf57a1cd2dfc61248cc5d391776634668e15b51bfa557d67ba071",
+    "data/drone/reconstructed-validation/frame_000133.png": "303d5d1c45950b4bbb55110618a2667a4f7057925085c29ac63757e9303e5ed0",
+    "data/drone/reconstructed-validation/frame_000136.png": "29bc8a74c85240ba5bb8e524b32e39bd7f2ba3378dfec8f646a62a7a7fe01417",
+    "data/drone/reconstructed-validation/frame_000139.png": "26d1a7be16205f548dc3eee8683d718f31fdc11598db1d0cab43edaad6d6c1da",
+    "data/drone/reconstructed-validation/frame_000142.png": "e21e199330bb89138b903d16573ae183ab6fa8e9b5f4ca01f3dfcf7e6a81a3b2",
+    "data/drone/reconstructed-validation/frame_000145.png": "8ebc0e4076e015eb31a4094e3465681fbe5c7490990b5e4d3394ee2806005116",
+    "data/drone/reconstructed-validation/frame_000148.png": "bcc56bf5a18c21c2db92466c79bca9424bd54070fa1b95025f7290cce1b65f98",
+    "data/drone/reconstructed-validation/frame_000043.png": "1673206aa101a6b887cbca555ec7c22d9722e1b88e9026ff5c8655e2b0e544e8",
+    "data/drone/reconstructed-validation/frame_000046.png": "9aad7c833534fe2c5fb32ccf73b13a4c2d537f291fd12183b648917d142be502",
+    "data/drone/reconstructed-validation/frame_000049.png": "08f4cac91f5eaf388ab917ef1d99d38dbeadd2baebe07b0a2da2fb2593704f66",
+    "data/drone/reconstructed-validation/frame_000052.png": "3840920768ae61014118675e73b2586c12ae18e6e9553d9f0f96134888cb94f5",
+    "data/drone/reconstructed-validation/frame_000055.png": "ce4680ffc391f22cbeab172758863c7c9a71f1420b48f0cc15f6c3f850b7f48e",
+    "data/drone/reconstructed-validation/frame_000058.png": "7f3033aa4fc6d2a96036a182872ff3882c32ea2a9dd86d035b142a1c45b76f7a",
+    "data/drone/reconstructed-validation/frame_000061.png": "3655214586279ef5c68224ff0f052518fbcaf64e7fc08b46e4b55275598bac3c",
+    "data/drone/reconstructed-validation/frame_000064.png": "00142906879aebe728e556af635edeb54e5cb151dd6ab2e7e53a1113f68baf9b",
+    "data/drone/reconstructed-validation/frame_000067.png": "a3abc4da5cc51861ba3ad9b8f23cfc11126c30bc52be94c270257b7144c2f374",
+    "data/drone/reconstructed-validation/frame_000070.png": "a8c9872a5d0494b8902c2df6b8118596faa7f2d233164179f390f17cf5d3e326",
+    "data/drone/reconstructed-validation/frame_000073.png": "6b5e0adc17bb80fec9b44fad2ad94d5291c4d1199b4d461d6ab54c9563fd14c8",
+    "data/drone/reconstructed-validation/frame_000040.png": "2b71476e42212d60931856f2dc9cb12c929ada4a52ebc7f4db8d2c4361bab789",
+    "data/drone/reconstructed-validation/frame_000076.png": "9607e9ad568d50f77212de2baf9db8866537470f48b630683062dd91d741cc98",
+    "data/drone/reconstructed-validation/frame_000079.png": "a17ee74f33ae8261584e336dee8151a4c49d4a52ea04d99270e348e26591352b",
+    "data/drone/reconstructed-validation/frame_000082.png": "5d01c98a8272e4a6fbff10c598b89fc4b6ca5473bb488e6d116922a1acd0e605",
+    "data/drone/reconstructed-validation/frame_000038.png": "9d247a3ba0876fb173640a8045f00556e0bc518606ec476d6bbd50d0c371ea02",
+    "data/drone/reconstructed-validation/frame_000041.png": "938d38ec64a156b414860f8be1ef3a3c132b8398087adf1b3580c75019111762",
+    "data/drone/reconstructed-validation/frame_000044.png": "36f8a4a0dceefd03dcfe70e17e4619ea94385b705fd1114f192183a17f808e89",
+    "data/drone/reconstructed-validation/frame_000047.png": "11cdfe4815418324a5525ffc3be78d090008438b83667c741e233db2d87069a4",
+    "data/drone/reconstructed-validation/frame_000050.png": "56b7ac23ffc890b5a561ed90ae220374e16875e0af3ddefb89d25b4a05e0935e",
+    "data/drone/reconstructed-validation/frame_000053.png": "55e08c0b557a65cfbfba72be1518fe5a030e4ad336754206c5b0549dc91e41bf",
+    "data/drone/reconstructed-validation/frame_000056.png": "f3d5fd5f50bfd656828410ff02ac7b47a4a184323afbd2912b53e6f6b3e13dcc",
+    "data/drone/reconstructed-validation/frame_000059.png": "3b0d67fdb1ab27078007d3a66e77bfc6c077e39a5e9eac3bbffc8de602429796",
+    "data/drone/reconstructed-validation/frame_000062.png": "b92d8370063c9bc3bcd57db89e7d1e402e8ef3fdc8dffea0799443a2dc39f7df",
+    "data/drone/reconstructed-validation/frame_000065.png": "291bd14bd79b755494a045e77d5eb72a113389a6b77833bc7eb89f6ab913ccd6",
+    "data/drone/reconstructed-validation/frame_000015.png": "63947f43d78f12dc9f6b90eff6c21c7e27e69a6205c710925177f90684ea685e",
+    "data/drone/reconstructed-validation/frame_000018.png": "4367b5f4941456382c73cd0266ab61871a0162d780f8d15428c0502028a6f095",
+    "data/drone/reconstructed-validation/frame_000021.png": "e2519e771ab9a2f09695f138581fcb17a556742880cb35fafd97855670aa2903",
+    "data/drone/reconstructed-validation/frame_000024.png": "7c9e6d53b1fd5497d787629863ce78835161837a37bd12150014c20b78ce8ac7",
+    "data/drone/reconstructed-validation/frame_000027.png": "8edec7f34c3879809163ca4cfb5a4f5ab3eb5196f580742f9b3ab40d306eb180",
+    "data/drone/reconstructed-validation/frame_000030.png": "24bd489e37869cd42f5c34de54afd6741708a46f507d86026c9d460980c0e90d",
+    "data/drone/reconstructed-validation/frame_000033.png": "7e4ff3880e4f07ca21cd87d2bfa5d8b121624da0af7d08669629555402e05a1a",
+    "data/drone/reconstructed-validation/frame_000036.png": "112dfffb761238eb1bb083565ccb8fd70461dc30dd96ddfabeff856ca1e238da"
+  },
+  "records": [
+    {
+      "id": "condor-103-150_000106_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000106_L0.png",
+      "sha256": "641f62603ecf550cb7181599b4d586a3cb3a42c5a287b104bbdc426590ac6334",
+      "frame": 106,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            626.0,
+            3.25,
+            646.5,
+            20.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-106",
+      "source_box": [
+        2504,
+        13,
+        2586,
+        82
+      ]
+    },
+    {
+      "id": "condor-103-150_000106_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000106_L1.png",
+      "sha256": "b094833d1b09124af4f1c66d9e884668007beca8017740a7b930988afd1110e9",
+      "frame": 106,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1541,
+        0,
+        3461,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            481.5,
+            6.5,
+            522.5,
+            41.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-106",
+      "source_box": [
+        2504,
+        13,
+        2586,
+        82
+      ]
+    },
+    {
+      "id": "condor-103-150_000106_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000106_L2.png",
+      "sha256": "e5afec0019eb229cff105d1b22be5d0cb34b5b20456a3dea77178ba82474e817",
+      "frame": 106,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2157,
+        0,
+        3117,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            347.0,
+            13.0,
+            429.0,
+            82.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-106",
+      "source_box": [
+        2504,
+        13,
+        2586,
+        82
+      ]
+    },
+    {
+      "id": "condor-103-150_000109_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000109_L0.png",
+      "sha256": "c0f6db06d8346754634b555c69ade926056d0f6d22af1ec4d9b1f29c4472be0c",
+      "frame": 109,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            642.0,
+            1.0,
+            662.0,
+            18.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-109",
+      "source_box": [
+        2568,
+        4,
+        2648,
+        72
+      ]
+    },
+    {
+      "id": "condor-103-150_000109_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000109_L1.png",
+      "sha256": "945cfde7561cf835f1e98355f3a7ac2af1bae05fb2a4233fcb75c5c2a856138f",
+      "frame": 109,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1799,
+        0,
+        3719,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            384.5,
+            2.0,
+            424.5,
+            36.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-109",
+      "source_box": [
+        2568,
+        4,
+        2648,
+        72
+      ]
+    },
+    {
+      "id": "condor-103-150_000109_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000109_L2.png",
+      "sha256": "01b5c40bc0a3aaf04ada1b548d3e361bfff63e3802f2137226eae63a80a01cf7",
+      "frame": 109,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2113,
+        0,
+        3073,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            455.0,
+            4.0,
+            535.0,
+            72.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-109",
+      "source_box": [
+        2568,
+        4,
+        2648,
+        72
+      ]
+    },
+    {
+      "id": "condor-103-150_000112_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000112_L0.png",
+      "sha256": "60a951fdbf65e5b6782a8a9f40f8b7216c9759fde4acecf05eba250070a072fd",
+      "frame": 112,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            645.5,
+            41.5,
+            665.0,
+            58.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-112",
+      "source_box": [
+        2582,
+        166,
+        2660,
+        233
+      ]
+    },
+    {
+      "id": "condor-103-150_000112_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000112_L1.png",
+      "sha256": "9b8947726ea44d9f653900e6533197d6fcc8aaf9ccffab1ffcf11f197cb8df7b",
+      "frame": 112,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1692,
+        0,
+        3612,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            445.0,
+            83.0,
+            484.0,
+            116.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-112",
+      "source_box": [
+        2582,
+        166,
+        2660,
+        233
+      ]
+    },
+    {
+      "id": "condor-103-150_000112_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000112_L2.png",
+      "sha256": "ad4b81c2efa00d917e66db8aefb3b5f3108431c99824c9f01d21b661a21f2e5c",
+      "frame": 112,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2109,
+        0,
+        3069,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            473.0,
+            166.0,
+            551.0,
+            233.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-112",
+      "source_box": [
+        2582,
+        166,
+        2660,
+        233
+      ]
+    },
+    {
+      "id": "condor-103-150_000115_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000115_L0.png",
+      "sha256": "c37386406cc1e4169642a3edec79105770102f84bbb3088b27da98ccf1ad4364",
+      "frame": 115,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            648.75,
+            83.5,
+            668.75,
+            100.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-115",
+      "source_box": [
+        2595,
+        334,
+        2675,
+        402
+      ]
+    },
+    {
+      "id": "condor-103-150_000115_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000115_L1.png",
+      "sha256": "5363db2717e3cb3ae45743952bec47601730ad350c9a7a77a29532f6274f6da1",
+      "frame": 115,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1746,
+        0,
+        3666,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            424.5,
+            167.0,
+            464.5,
+            201.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-115",
+      "source_box": [
+        2595,
+        334,
+        2675,
+        402
+      ]
+    },
+    {
+      "id": "condor-103-150_000115_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000115_L2.png",
+      "sha256": "5c687d089a11be913307b75171de939b0550f2b1341c705e1887a26c59eb740f",
+      "frame": 115,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2082,
+        83,
+        3042,
+        623
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            513.0,
+            251.0,
+            593.0,
+            319.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-115",
+      "source_box": [
+        2595,
+        334,
+        2675,
+        402
+      ]
+    },
+    {
+      "id": "condor-103-150_000118_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000118_L0.png",
+      "sha256": "27aa90d222f17a801100be7e7c8dafce463f58087bfda5db2556fc1383863a8e",
+      "frame": 118,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            652.75,
+            127.5,
+            672.75,
+            144.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-118",
+      "source_box": [
+        2611,
+        510,
+        2691,
+        578
+      ]
+    },
+    {
+      "id": "condor-103-150_000118_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000118_L1.png",
+      "sha256": "c0270cd1f3878b785bec31fbd5f076cea16578e463f3805302beb693f4b7fe7e",
+      "frame": 118,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1431,
+        0,
+        3351,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            590.0,
+            255.0,
+            630.0,
+            289.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-118",
+      "source_box": [
+        2611,
+        510,
+        2691,
+        578
+      ]
+    },
+    {
+      "id": "condor-103-150_000118_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000118_L2.png",
+      "sha256": "238a2525caddec8484b1f99a20756cfd7c182a72f5acab44b3a5f4e473471382",
+      "frame": 118,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2245,
+        211,
+        3205,
+        751
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            366.0,
+            299.0,
+            446.0,
+            367.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-118",
+      "source_box": [
+        2611,
+        510,
+        2691,
+        578
+      ]
+    },
+    {
+      "id": "condor-103-150_000121_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000121_L0.png",
+      "sha256": "a76f982139a82943f8b1794ad31c251690cdf37b9e449a329393996dd660ff69",
+      "frame": 121,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            656.0,
+            173.0,
+            677.75,
+            191.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-121",
+      "source_box": [
+        2624,
+        692,
+        2711,
+        766
+      ]
+    },
+    {
+      "id": "condor-103-150_000121_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000121_L1.png",
+      "sha256": "5fd6c7b89b5e0baf3e6b29760ec4796738adf8bf420104ec9101f0bbd93b4a0c",
+      "frame": 121,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1730,
+        138,
+        3650,
+        1218
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            447.0,
+            277.0,
+            490.5,
+            314.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-121",
+      "source_box": [
+        2624,
+        692,
+        2711,
+        766
+      ]
+    },
+    {
+      "id": "condor-103-150_000121_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000121_L2.png",
+      "sha256": "5773920ec1cef359339766894709416bb692ad9e4ce9af3ea0b775d15c3dfc7b",
+      "frame": 121,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2185,
+        490,
+        3145,
+        1030
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            439.0,
+            202.0,
+            526.0,
+            276.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-121",
+      "source_box": [
+        2624,
+        692,
+        2711,
+        766
+      ]
+    },
+    {
+      "id": "condor-103-150_000124_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000124_L0.png",
+      "sha256": "097b0763da66f7999697fa72a27c1d6cf51a1306e02ab1e9660a646b8aec3cd5",
+      "frame": 124,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            660.25,
+            221.5,
+            681.5,
+            239.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-124",
+      "source_box": [
+        2641,
+        886,
+        2726,
+        958
+      ]
+    },
+    {
+      "id": "condor-103-150_000124_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000124_L1.png",
+      "sha256": "49b809734001c37341048c52bc4e8429f7f1f413acd38d73ea590be025d00e09",
+      "frame": 124,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        432,
+        3840,
+        1512
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            360.5,
+            227.0,
+            403.0,
+            263.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-124",
+      "source_box": [
+        2641,
+        886,
+        2726,
+        958
+      ]
+    },
+    {
+      "id": "condor-103-150_000124_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000124_L2.png",
+      "sha256": "847de5683785bcc9816269447112402ab34d64f5f030a21261d2940797c1c97f",
+      "frame": 124,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2118,
+        641,
+        3078,
+        1181
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            523.0,
+            245.0,
+            608.0,
+            317.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-124",
+      "source_box": [
+        2641,
+        886,
+        2726,
+        958
+      ]
+    },
+    {
+      "id": "condor-103-150_000127_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000127_L0.png",
+      "sha256": "32e086f2b711eed616b2c924a04afde7c0b0e1395166e16b6df4231dd85aa6ce",
+      "frame": 127,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            663.75,
+            271.25,
+            686.25,
+            290.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-127",
+      "source_box": [
+        2655,
+        1085,
+        2745,
+        1162
+      ]
+    },
+    {
+      "id": "condor-103-150_000127_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000127_L1.png",
+      "sha256": "5e4a8b68214a7d7c3c76aa2fdb46f86c2a7e5e80ea237bc86d44a974f5351fbf",
+      "frame": 127,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1760,
+        550,
+        3680,
+        1630
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            447.5,
+            267.5,
+            492.5,
+            306.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-127",
+      "source_box": [
+        2655,
+        1085,
+        2745,
+        1162
+      ]
+    },
+    {
+      "id": "condor-103-150_000127_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000127_L2.png",
+      "sha256": "257bd9e7d8d204e8d2ed1c977498969d889ded11d794d739167ce6ea55d6e152",
+      "frame": 127,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2127,
+        900,
+        3087,
+        1440
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            528.0,
+            185.0,
+            618.0,
+            262.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-127",
+      "source_box": [
+        2655,
+        1085,
+        2745,
+        1162
+      ]
+    },
+    {
+      "id": "condor-103-150_000130_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000130_L0.png",
+      "sha256": "406dc4c35a1d822a35be6f09e5053e9a863e7f1933b745cb3a465a0942ebf938",
+      "frame": 130,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            667.75,
+            323.75,
+            691.25,
+            343.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-130",
+      "source_box": [
+        2671,
+        1295,
+        2765,
+        1375
+      ]
+    },
+    {
+      "id": "condor-103-150_000130_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000130_L1.png",
+      "sha256": "76d83d9f2f58d277db667e7c3666dcbb5c54050a2801b1b1ed77d127c14bedfe",
+      "frame": 130,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1716,
+        844,
+        3636,
+        1924
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            477.5,
+            225.5,
+            524.5,
+            265.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-130",
+      "source_box": [
+        2671,
+        1295,
+        2765,
+        1375
+      ]
+    },
+    {
+      "id": "condor-103-150_000130_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000130_L2.png",
+      "sha256": "4ad236568d7932927b799d8a430ff1646975af4f4265ea3dc995f7f5bcc1c7be",
+      "frame": 130,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2312,
+        1029,
+        3272,
+        1569
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            359.0,
+            266.0,
+            453.0,
+            346.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-130",
+      "source_box": [
+        2671,
+        1295,
+        2765,
+        1375
+      ]
+    },
+    {
+      "id": "condor-103-150_000133_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000133_L0.png",
+      "sha256": "b4daf39552da7ebe297155ce2b4e1ec15c75c63cd8e6943b609ccee4445354c3",
+      "frame": 133,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            672.75,
+            378.75,
+            695.75,
+            398.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-133",
+      "source_box": [
+        2691,
+        1515,
+        2783,
+        1593
+      ]
+    },
+    {
+      "id": "condor-103-150_000133_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000133_L1.png",
+      "sha256": "b6acaf8786e0ef15146c70a17c00aaff5c56cf2c93ae735cdfbedb39868125c5",
+      "frame": 133,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1831,
+        1079,
+        3751,
+        2159
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            430.0,
+            218.0,
+            476.0,
+            257.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-133",
+      "source_box": [
+        2691,
+        1515,
+        2783,
+        1593
+      ]
+    },
+    {
+      "id": "condor-103-150_000133_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000133_L2.png",
+      "sha256": "8dba81d194ed1a77b08786889318a3e90216c0a03aac32cc06306e9ec1c3ff51",
+      "frame": 133,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2209,
+        1336,
+        3169,
+        1876
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            482.0,
+            179.0,
+            574.0,
+            257.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-133",
+      "source_box": [
+        2691,
+        1515,
+        2783,
+        1593
+      ]
+    },
+    {
+      "id": "condor-103-150_000136_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000136_L0.png",
+      "sha256": "8d2498d3842beca334a40764c8f449a3a13cda1660202929e3e74dcb3d25a3a9",
+      "frame": 136,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            676.75,
+            436.0,
+            701.25,
+            456.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-136",
+      "source_box": [
+        2707,
+        1744,
+        2805,
+        1827
+      ]
+    },
+    {
+      "id": "condor-103-150_000136_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000136_L1.png",
+      "sha256": "c2e51b850ce0b3ef305ff0b84ad58005283d075130ea33cf949a1ccb3b4ca0a7",
+      "frame": 136,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1550,
+        1080,
+        3470,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            578.5,
+            332.0,
+            627.5,
+            373.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-136",
+      "source_box": [
+        2707,
+        1744,
+        2805,
+        1827
+      ]
+    },
+    {
+      "id": "condor-103-150_000136_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000136_L2.png",
+      "sha256": "69cc62f222383633e1069336126d96695b2124725cd642a237b3b9506dab21bf",
+      "frame": 136,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2167,
+        1515,
+        3127,
+        2055
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            540.0,
+            229.0,
+            638.0,
+            312.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-136",
+      "source_box": [
+        2707,
+        1744,
+        2805,
+        1827
+      ]
+    },
+    {
+      "id": "condor-103-150_000139_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000139_L0.png",
+      "sha256": "26623b85ff086c8de8da095a4db2a0b26c715ceaab878cd8eb4111c17177da19",
+      "frame": 139,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            682.25,
+            496.75,
+            706.25,
+            517.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-139",
+      "source_box": [
+        2729,
+        1987,
+        2825,
+        2068
+      ]
+    },
+    {
+      "id": "condor-103-150_000139_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000139_L1.png",
+      "sha256": "4af30f60b9636742d471fb05055618cf50da42c820782e05d45b88158d3aa6a8",
+      "frame": 139,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1559,
+        1080,
+        3479,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            585.0,
+            453.5,
+            633.0,
+            494.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-139",
+      "source_box": [
+        2729,
+        1987,
+        2825,
+        2068
+      ]
+    },
+    {
+      "id": "condor-103-150_000139_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000139_L2.png",
+      "sha256": "226671ccbe5a749784fdfa2df4a005f98df46af7775af452edc0438739aa4cfc",
+      "frame": 139,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2186,
+        1620,
+        3146,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            543.0,
+            367.0,
+            639.0,
+            448.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-139",
+      "source_box": [
+        2729,
+        1987,
+        2825,
+        2068
+      ]
+    },
+    {
+      "id": "condor-103-150_000142_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000142_L0.png",
+      "sha256": "dd04ccf1121f5c79cec28a46ddb45b17e7c37ff7da6c3820df9c41c8b77839ca",
+      "frame": 142,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            697.75,
+            514.25,
+            722.5,
+            535.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-142",
+      "source_box": [
+        2791,
+        2057,
+        2890,
+        2142
+      ]
+    },
+    {
+      "id": "condor-103-150_000142_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000142_L1.png",
+      "sha256": "fb43eecc7a006e0b641277a9591fe67d58d9fc1d63126f62e3eebf4f44a34b70",
+      "frame": 142,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1605,
+        1080,
+        3525,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            593.0,
+            488.5,
+            642.5,
+            531.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-142",
+      "source_box": [
+        2791,
+        2057,
+        2890,
+        2142
+      ]
+    },
+    {
+      "id": "condor-103-150_000142_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000142_L2.png",
+      "sha256": "3d3f382d697434dc79dcbb9868f71fef8c811706b40b60d29b08a13bba71a4a3",
+      "frame": 142,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2306,
+        1620,
+        3266,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            485.0,
+            437.0,
+            584.0,
+            522.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-142",
+      "source_box": [
+        2791,
+        2057,
+        2890,
+        2142
+      ]
+    },
+    {
+      "id": "condor-103-150_000145_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000145_L0.png",
+      "sha256": "1cea5a2d5eea842036b809b9eec9de30f5048e8ff4a5b0e0b767b6b60e00b6aa",
+      "frame": 145,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            695.25,
+            483.25,
+            721.75,
+            505.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-145",
+      "source_box": [
+        2781,
+        1933,
+        2887,
+        2023
+      ]
+    },
+    {
+      "id": "condor-103-150_000145_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000145_L1.png",
+      "sha256": "f7e307ebca58ad9460f81774351269be0dc553cd10e7bafa8fd8e5766ab9bea1",
+      "frame": 145,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1919,
+        1080,
+        3839,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            431.0,
+            426.5,
+            484.0,
+            471.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-145",
+      "source_box": [
+        2781,
+        1933,
+        2887,
+        2023
+      ]
+    },
+    {
+      "id": "condor-103-150_000145_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000145_L2.png",
+      "sha256": "447cedbdb92d2d1d3840b50d5690d554fc6d3e68815dcd2742af56f408d1afeb",
+      "frame": 145,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2401,
+        1620,
+        3361,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            380.0,
+            313.0,
+            486.0,
+            403.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-145",
+      "source_box": [
+        2781,
+        1933,
+        2887,
+        2023
+      ]
+    },
+    {
+      "id": "condor-103-150_000148_L0",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000148_L0.png",
+      "sha256": "0f2bb13c4c0de76e05fadf16cfb579f90f483a42f7d4c178967cdda3f476f19c",
+      "frame": 148,
+      "group": "condor-103-150",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            707.25,
+            482.75,
+            732.0,
+            504.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-148",
+      "source_box": [
+        2829,
+        1931,
+        2928,
+        2016
+      ]
+    },
+    {
+      "id": "condor-103-150_000148_L1",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000148_L1.png",
+      "sha256": "5eae1fcfe6bd8425625bfe59e61c1b7c99133bca18b15d5bb3038bdd43eb3218",
+      "frame": 148,
+      "group": "condor-103-150",
+      "zoom": 1,
+      "source_region": [
+        1699,
+        1080,
+        3619,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            565.0,
+            425.5,
+            614.5,
+            468.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-148",
+      "source_box": [
+        2829,
+        1931,
+        2928,
+        2016
+      ]
+    },
+    {
+      "id": "condor-103-150_000148_L2",
+      "subset": "manual_known_positives",
+      "file": "images/condor-103-150_000148_L2.png",
+      "sha256": "d2e4993f369b4a44b4138495d43020162152548a046671564c1954b9a8306b4d",
+      "frame": 148,
+      "group": "condor-103-150",
+      "zoom": 2,
+      "source_region": [
+        2331,
+        1620,
+        3291,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "condor",
+          "xyxy": [
+            498.0,
+            311.0,
+            597.0,
+            396.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-condor-a-148",
+      "source_box": [
+        2829,
+        1931,
+        2928,
+        2016
+      ]
+    },
+    {
+      "id": "hangar-103-148_000106_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000106_L0.png",
+      "sha256": "641f62603ecf550cb7181599b4d586a3cb3a42c5a287b104bbdc426590ac6334",
+      "frame": 106,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            642.75,
+            10.25,
+            683.5,
+            47.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-106",
+      "source_box": [
+        2571,
+        41,
+        2734,
+        189
+      ]
+    },
+    {
+      "id": "hangar-103-148_000106_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000106_L1.png",
+      "sha256": "66a3ad13d5485fe7464dc20516dc0f8d73a9e3541f615d3f042fb4a06a25eec6",
+      "frame": 106,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1879,
+        0,
+        3799,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            346.0,
+            20.5,
+            427.5,
+            94.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-106",
+      "source_box": [
+        2571,
+        41,
+        2734,
+        189
+      ]
+    },
+    {
+      "id": "hangar-103-148_000106_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000106_L2.png",
+      "sha256": "5cc99844e84d651ed938707f4f52f28de98f7fb9780bcbe9ac300d84b129259c",
+      "frame": 106,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2096,
+        0,
+        3056,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            475.0,
+            41.0,
+            638.0,
+            189.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-106",
+      "source_box": [
+        2571,
+        41,
+        2734,
+        189
+      ]
+    },
+    {
+      "id": "hangar-103-148_000109_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000109_L0.png",
+      "sha256": "c0f6db06d8346754634b555c69ade926056d0f6d22af1ec4d9b1f29c4472be0c",
+      "frame": 109,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            643.75,
+            23.25,
+            690.5,
+            65.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-109",
+      "source_box": [
+        2575,
+        93,
+        2762,
+        263
+      ]
+    },
+    {
+      "id": "hangar-103-148_000109_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000109_L1.png",
+      "sha256": "155467d77f0384cd69b44e98293196ea7e41d717a1127b54c213c9f3291975da",
+      "frame": 109,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        0,
+        3840,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            327.5,
+            46.5,
+            421.0,
+            131.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-109",
+      "source_box": [
+        2575,
+        93,
+        2762,
+        263
+      ]
+    },
+    {
+      "id": "hangar-103-148_000109_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000109_L2.png",
+      "sha256": "666ee29e3b00414a80f693a9fe0d25c1344879788523349aadc301caacd94ade",
+      "frame": 109,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2302,
+        0,
+        3262,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            273.0,
+            93.0,
+            460.0,
+            263.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-109",
+      "source_box": [
+        2575,
+        93,
+        2762,
+        263
+      ]
+    },
+    {
+      "id": "hangar-103-148_000112_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000112_L0.png",
+      "sha256": "60a951fdbf65e5b6782a8a9f40f8b7216c9759fde4acecf05eba250070a072fd",
+      "frame": 112,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            639.25,
+            8.5,
+            683.5,
+            48.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-112",
+      "source_box": [
+        2557,
+        34,
+        2734,
+        194
+      ]
+    },
+    {
+      "id": "hangar-103-148_000112_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000112_L1.png",
+      "sha256": "295d3e0c65802460c1ce8d51e234b91a90a1c303938b48596102593ccea53817",
+      "frame": 112,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1789,
+        0,
+        3709,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            384.0,
+            17.0,
+            472.5,
+            97.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-112",
+      "source_box": [
+        2557,
+        34,
+        2734,
+        194
+      ]
+    },
+    {
+      "id": "hangar-103-148_000112_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000112_L2.png",
+      "sha256": "e16e5c4c812acc64c298fd97c4a9fa788807d1815ee1ed8e3bdf1b2a28abdc6c",
+      "frame": 112,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2051,
+        0,
+        3011,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            506.0,
+            34.0,
+            683.0,
+            194.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-112",
+      "source_box": [
+        2557,
+        34,
+        2734,
+        194
+      ]
+    },
+    {
+      "id": "hangar-103-148_000115_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000115_L0.png",
+      "sha256": "c37386406cc1e4169642a3edec79105770102f84bbb3088b27da98ccf1ad4364",
+      "frame": 115,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            641.5,
+            48.5,
+            688.25,
+            91.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-115",
+      "source_box": [
+        2566,
+        194,
+        2753,
+        364
+      ]
+    },
+    {
+      "id": "hangar-103-148_000115_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000115_L1.png",
+      "sha256": "aa05ee8cb3150fd12e36f1347871961f27a3a93962e5fc6c430102449181766b",
+      "frame": 115,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1608,
+        0,
+        3528,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            479.0,
+            97.0,
+            572.5,
+            182.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-115",
+      "source_box": [
+        2566,
+        194,
+        2753,
+        364
+      ]
+    },
+    {
+      "id": "hangar-103-148_000115_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000115_L2.png",
+      "sha256": "8addfdb493a545d072336a238217532784f708c974177f6ecb1aa15a042db31b",
+      "frame": 115,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2292,
+        90,
+        3252,
+        630
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            274.0,
+            104.0,
+            461.0,
+            274.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-115",
+      "source_box": [
+        2566,
+        194,
+        2753,
+        364
+      ]
+    },
+    {
+      "id": "hangar-103-148_000118_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000118_L0.png",
+      "sha256": "27aa90d222f17a801100be7e7c8dafce463f58087bfda5db2556fc1383863a8e",
+      "frame": 118,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            644.75,
+            91.25,
+            692.5,
+            134.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-118",
+      "source_box": [
+        2579,
+        365,
+        2770,
+        539
+      ]
+    },
+    {
+      "id": "hangar-103-148_000118_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000118_L1.png",
+      "sha256": "f1b2283019003924f841e2ec2de6558bbcbaa8f3ca3f00cf08118b6684219e94",
+      "frame": 118,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1699,
+        0,
+        3619,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            440.0,
+            182.5,
+            535.5,
+            269.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-118",
+      "source_box": [
+        2579,
+        365,
+        2770,
+        539
+      ]
+    },
+    {
+      "id": "hangar-103-148_000118_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000118_L2.png",
+      "sha256": "5a0198698a47472cf690b51a5939114dee01825cde22e8d5ef897e0804404bf3",
+      "frame": 118,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2063,
+        157,
+        3023,
+        697
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            516.0,
+            208.0,
+            707.0,
+            382.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-118",
+      "source_box": [
+        2579,
+        365,
+        2770,
+        539
+      ]
+    },
+    {
+      "id": "hangar-103-148_000121_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000121_L0.png",
+      "sha256": "a76f982139a82943f8b1794ad31c251690cdf37b9e449a329393996dd660ff69",
+      "frame": 121,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            648.25,
+            136.0,
+            696.0,
+            179.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-121",
+      "source_box": [
+        2593,
+        544,
+        2784,
+        718
+      ]
+    },
+    {
+      "id": "hangar-103-148_000121_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000121_L1.png",
+      "sha256": "822b2c708da4e7c48a3770e0ba04bc7863c71188d17dbb07a471be6a93b2bb53",
+      "frame": 121,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1523,
+        124,
+        3443,
+        1204
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            535.0,
+            210.0,
+            630.5,
+            297.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-121",
+      "source_box": [
+        2593,
+        544,
+        2784,
+        718
+      ]
+    },
+    {
+      "id": "hangar-103-148_000121_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000121_L2.png",
+      "sha256": "af3ee07874db4d43ed3db48eeea05572ddb1e7ad0ab57accae78d790bf511915",
+      "frame": 121,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2166,
+        426,
+        3126,
+        966
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            427.0,
+            118.0,
+            618.0,
+            292.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-121",
+      "source_box": [
+        2593,
+        544,
+        2784,
+        718
+      ]
+    },
+    {
+      "id": "hangar-103-148_000124_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000124_L0.png",
+      "sha256": "097b0763da66f7999697fa72a27c1d6cf51a1306e02ab1e9660a646b8aec3cd5",
+      "frame": 124,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            651.25,
+            181.75,
+            701.0,
+            227.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-124",
+      "source_box": [
+        2605,
+        727,
+        2804,
+        908
+      ]
+    },
+    {
+      "id": "hangar-103-148_000124_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000124_L1.png",
+      "sha256": "da341f1beeb0663f6692029de55028c44de7329042406e29836b73ad8a7a41f8",
+      "frame": 124,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        416,
+        3840,
+        1496
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            342.5,
+            155.5,
+            442.0,
+            246.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-124",
+      "source_box": [
+        2605,
+        727,
+        2804,
+        908
+      ]
+    },
+    {
+      "id": "hangar-103-148_000124_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000124_L2.png",
+      "sha256": "9cc42481346ba3d1db9d754dd9e4a8f6e6c0a1ccd46bbe64d373aef5de515ea6",
+      "frame": 124,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2096,
+        547,
+        3056,
+        1087
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            509.0,
+            180.0,
+            708.0,
+            361.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-124",
+      "source_box": [
+        2605,
+        727,
+        2804,
+        908
+      ]
+    },
+    {
+      "id": "hangar-103-148_000127_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000127_L0.png",
+      "sha256": "32e086f2b711eed616b2c924a04afde7c0b0e1395166e16b6df4231dd85aa6ce",
+      "frame": 127,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            655.75,
+            231.5,
+            705.5,
+            276.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-127",
+      "source_box": [
+        2623,
+        926,
+        2822,
+        1107
+      ]
+    },
+    {
+      "id": "hangar-103-148_000127_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000127_L1.png",
+      "sha256": "769027181e22fe06782abeb38249bb3c9e534162a9f4a6b0242bc5d89830dfe5",
+      "frame": 127,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1603,
+        581,
+        3523,
+        1661
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            510.0,
+            172.5,
+            609.5,
+            263.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-127",
+      "source_box": [
+        2623,
+        926,
+        2822,
+        1107
+      ]
+    },
+    {
+      "id": "hangar-103-148_000127_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000127_L2.png",
+      "sha256": "8a49df35394b1dac0204b69e7f7bbf01fa437fced1984f398c41e78e370df883",
+      "frame": 127,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2278,
+        690,
+        3238,
+        1230
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            345.0,
+            236.0,
+            544.0,
+            417.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-127",
+      "source_box": [
+        2623,
+        926,
+        2822,
+        1107
+      ]
+    },
+    {
+      "id": "hangar-103-148_000130_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000130_L0.png",
+      "sha256": "406dc4c35a1d822a35be6f09e5053e9a863e7f1933b745cb3a465a0942ebf938",
+      "frame": 130,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            659.5,
+            281.75,
+            710.25,
+            327.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-130",
+      "source_box": [
+        2638,
+        1127,
+        2841,
+        1311
+      ]
+    },
+    {
+      "id": "hangar-103-148_000130_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000130_L1.png",
+      "sha256": "82187b026d80b7600e6afc675ee67a27fa9946fcd6e912c88b196b2f8e206fb4",
+      "frame": 130,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1620,
+        593,
+        3540,
+        1673
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            509.0,
+            267.0,
+            610.5,
+            359.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-130",
+      "source_box": [
+        2638,
+        1127,
+        2841,
+        1311
+      ]
+    },
+    {
+      "id": "hangar-103-148_000130_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000130_L2.png",
+      "sha256": "edf77b3f578055a5ba11de196274d837cfe8424ce1d820f5a5fca612c29a38a3",
+      "frame": 130,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2261,
+        922,
+        3221,
+        1462
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            377.0,
+            205.0,
+            580.0,
+            389.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-130",
+      "source_box": [
+        2638,
+        1127,
+        2841,
+        1311
+      ]
+    },
+    {
+      "id": "hangar-103-148_000133_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000133_L0.png",
+      "sha256": "b4daf39552da7ebe297155ce2b4e1ec15c75c63cd8e6943b609ccee4445354c3",
+      "frame": 133,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            664.0,
+            334.75,
+            715.75,
+            381.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-133",
+      "source_box": [
+        2656,
+        1339,
+        2863,
+        1527
+      ]
+    },
+    {
+      "id": "hangar-103-148_000133_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000133_L1.png",
+      "sha256": "e47064f367e1c68cf3c4b2e5c58efffe29269d8983dfdc4ad3acb9ca88f1a5b0",
+      "frame": 133,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        965,
+        3840,
+        2045
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            368.0,
+            187.0,
+            471.5,
+            281.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-133",
+      "source_box": [
+        2656,
+        1339,
+        2863,
+        1527
+      ]
+    },
+    {
+      "id": "hangar-103-148_000133_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000133_L2.png",
+      "sha256": "822ffaa41c49158ee5731f53730dec8d94130515bcb355d794026a3b1ecab1f7",
+      "frame": 133,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2281,
+        1222,
+        3241,
+        1762
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            375.0,
+            117.0,
+            582.0,
+            305.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-133",
+      "source_box": [
+        2656,
+        1339,
+        2863,
+        1527
+      ]
+    },
+    {
+      "id": "hangar-103-148_000136_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000136_L0.png",
+      "sha256": "8d2498d3842beca334a40764c8f449a3a13cda1660202929e3e74dcb3d25a3a9",
+      "frame": 136,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            668.0,
+            389.75,
+            721.75,
+            438.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-136",
+      "source_box": [
+        2672,
+        1559,
+        2887,
+        1754
+      ]
+    },
+    {
+      "id": "hangar-103-148_000136_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000136_L1.png",
+      "sha256": "3aafb142786c3d8a0e50ef716365984b1e550a99bb32ac8efba66220bde9f680",
+      "frame": 136,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1681,
+        1038,
+        3601,
+        2118
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            495.5,
+            260.5,
+            603.0,
+            358.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-136",
+      "source_box": [
+        2672,
+        1559,
+        2887,
+        1754
+      ]
+    },
+    {
+      "id": "hangar-103-148_000136_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000136_L2.png",
+      "sha256": "183679bebbf5c0ddf3285cd23d94c0db76c5716116aca9d5a3cc97fb5ce3555b",
+      "frame": 136,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2173,
+        1459,
+        3133,
+        1999
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            499.0,
+            100.0,
+            714.0,
+            295.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-136",
+      "source_box": [
+        2672,
+        1559,
+        2887,
+        1754
+      ]
+    },
+    {
+      "id": "hangar-103-148_000139_L0",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000139_L0.png",
+      "sha256": "26623b85ff086c8de8da095a4db2a0b26c715ceaab878cd8eb4111c17177da19",
+      "frame": 139,
+      "group": "hangar-103-148",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            673.25,
+            448.75,
+            727.0,
+            497.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-139",
+      "source_box": [
+        2693,
+        1795,
+        2908,
+        1990
+      ]
+    },
+    {
+      "id": "hangar-103-148_000139_L1",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000139_L1.png",
+      "sha256": "6182f1c69f53622c57ef7ddad797af9ee89fead12ec1bdd4777125be96a80913",
+      "frame": 139,
+      "group": "hangar-103-148",
+      "zoom": 1,
+      "source_region": [
+        1858,
+        1080,
+        3778,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            417.5,
+            357.5,
+            525.0,
+            455.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-139",
+      "source_box": [
+        2693,
+        1795,
+        2908,
+        1990
+      ]
+    },
+    {
+      "id": "hangar-103-148_000139_L2",
+      "subset": "manual_known_positives",
+      "file": "images/hangar-103-148_000139_L2.png",
+      "sha256": "480567a8dfa193f3f91e0e0248856446c9a22093fe9be70569d488cd47aeccb2",
+      "frame": 139,
+      "group": "hangar-103-148",
+      "zoom": 2,
+      "source_region": [
+        2435,
+        1620,
+        3395,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "hangar",
+          "xyxy": [
+            258.0,
+            175.0,
+            473.0,
+            370.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-hangar-d-139",
+      "source_box": [
+        2693,
+        1795,
+        2908,
+        1990
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000043_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000043_L0.png",
+      "sha256": "7d3d90fa96d5c42c26a89a740620401880de4c5893dbf29c476641a79b28d599",
+      "frame": 43,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            620.5,
+            1.0,
+            658.0,
+            28.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-043",
+      "source_box": [
+        2482,
+        4,
+        2632,
+        114
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000043_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000043_L1.png",
+      "sha256": "86649422830dd8d0342315f920903881c346cdb9b43e0dcd5f63498033447ca9",
+      "frame": 43,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1482,
+        0,
+        3402,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            500.0,
+            2.0,
+            575.0,
+            57.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-043",
+      "source_box": [
+        2482,
+        4,
+        2632,
+        114
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000043_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000043_L2.png",
+      "sha256": "8fcfa0113bada29feacac5ed59c097737cd20c19ce210425300c233ece02915f",
+      "frame": 43,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2058,
+        0,
+        3018,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            424.0,
+            4.0,
+            574.0,
+            114.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-043",
+      "source_box": [
+        2482,
+        4,
+        2632,
+        114
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000046_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000046_L0.png",
+      "sha256": "846273f0603e4f232d85da6fd4e2c9b7429365a261fea7ec8069634ad79de124",
+      "frame": 46,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            624.0,
+            41.0,
+            660.75,
+            68.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-046",
+      "source_box": [
+        2496,
+        164,
+        2643,
+        272
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000046_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000046_L1.png",
+      "sha256": "da9ac8bae2e2cc3242f481c1fba578d4f160ec9e6b138cfeb736b15b5c0a8b06",
+      "frame": 46,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1485,
+        0,
+        3405,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            505.5,
+            82.0,
+            579.0,
+            136.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-046",
+      "source_box": [
+        2496,
+        164,
+        2643,
+        272
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000046_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000046_L2.png",
+      "sha256": "cfada384f33d3aac87a504fe9caf54480620c114460a01a026212cc233044b20",
+      "frame": 46,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2112,
+        0,
+        3072,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            384.0,
+            164.0,
+            531.0,
+            272.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-046",
+      "source_box": [
+        2496,
+        164,
+        2643,
+        272
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000049_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000049_L0.png",
+      "sha256": "7f796f1dda6afbccdebe5ee86a16264dcc824af29682f830cb657806905d2aa7",
+      "frame": 49,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            626.25,
+            82.75,
+            665.25,
+            111.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-049",
+      "source_box": [
+        2505,
+        331,
+        2661,
+        445
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000049_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000049_L1.png",
+      "sha256": "19c31b7428790c0f001c631859529531c2114289200cce2f6c85f4a888fe7b3a",
+      "frame": 49,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1657,
+        0,
+        3577,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            424.0,
+            165.5,
+            502.0,
+            222.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-049",
+      "source_box": [
+        2505,
+        331,
+        2661,
+        445
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000049_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000049_L2.png",
+      "sha256": "6d7cf194373b5ca168a32a0172d62da8bd4cf370a2517a0f7506aef2a6830773",
+      "frame": 49,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2073,
+        58,
+        3033,
+        598
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            432.0,
+            273.0,
+            588.0,
+            387.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-049",
+      "source_box": [
+        2505,
+        331,
+        2661,
+        445
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000052_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000052_L0.png",
+      "sha256": "4b0051a52c092cd4909ff26216a1f4376f279b9cec89a52c84ed5645c0d50101",
+      "frame": 52,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            628.5,
+            125.75,
+            670.75,
+            156.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-052",
+      "source_box": [
+        2514,
+        503,
+        2683,
+        627
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000052_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000052_L1.png",
+      "sha256": "1f85ede2da6cf28667260b3e401ecb8d0a69f5691a0e2fc32492fbe95f79e9d4",
+      "frame": 52,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1767,
+        0,
+        3687,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            373.5,
+            251.5,
+            458.0,
+            313.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-052",
+      "source_box": [
+        2514,
+        503,
+        2683,
+        627
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000052_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000052_L2.png",
+      "sha256": "3498cac62ee7cbdcb09c781325da8a98450a925473184333482e07003c6b9eb4",
+      "frame": 52,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2251,
+        248,
+        3211,
+        788
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            263.0,
+            255.0,
+            432.0,
+            379.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-052",
+      "source_box": [
+        2514,
+        503,
+        2683,
+        627
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000055_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000055_L0.png",
+      "sha256": "331d2b11a2d649aba7bdb612e67efd02d855620f217f8e4071a66d688d435f5e",
+      "frame": 55,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            632.75,
+            172.5,
+            672.5,
+            201.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-055",
+      "source_box": [
+        2531,
+        690,
+        2690,
+        807
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000055_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000055_L1.png",
+      "sha256": "e1c2c935971386cd50999d60c733153b6cd153d4cc94fca4056a34e14bc7dc5f",
+      "frame": 55,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1568,
+        265,
+        3488,
+        1345
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            481.5,
+            212.5,
+            561.0,
+            271.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-055",
+      "source_box": [
+        2531,
+        690,
+        2690,
+        807
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000055_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000055_L2.png",
+      "sha256": "8e42207db0881592260d844734fc431d39653161668cfd80bfb82b4a70e73fb5",
+      "frame": 55,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2053,
+        430,
+        3013,
+        970
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            478.0,
+            260.0,
+            637.0,
+            377.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-055",
+      "source_box": [
+        2531,
+        690,
+        2690,
+        807
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000058_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000058_L0.png",
+      "sha256": "0454a13520a95b2479dafaa1b58d579f22ff33c6de99714b8e41725d26dfabf6",
+      "frame": 58,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            635.75,
+            219.5,
+            678.0,
+            250.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-058",
+      "source_box": [
+        2543,
+        878,
+        2712,
+        1002
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000058_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000058_L1.png",
+      "sha256": "aa2e6e16ed62d9d35cc0737f6787f0048d3455d2d1c78c275681e4c696c2b0aa",
+      "frame": 58,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1806,
+        548,
+        3726,
+        1628
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            368.5,
+            165.0,
+            453.0,
+            227.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-058",
+      "source_box": [
+        2543,
+        878,
+        2712,
+        1002
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000058_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000058_L2.png",
+      "sha256": "e058ff538ea2045ec4113c9e1c9d2c8639a81eaab70a132c48fd947bc6124425",
+      "frame": 58,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2234,
+        627,
+        3194,
+        1167
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            309.0,
+            251.0,
+            478.0,
+            375.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-058",
+      "source_box": [
+        2543,
+        878,
+        2712,
+        1002
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000061_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000061_L0.png",
+      "sha256": "4fcb6b117922efae4ba91e66ddf91499c2c439fa21ea79287753087139faf29e",
+      "frame": 61,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            639.75,
+            270.25,
+            681.25,
+            300.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-061",
+      "source_box": [
+        2559,
+        1081,
+        2725,
+        1202
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000061_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000061_L1.png",
+      "sha256": "b06872255b382e4e995dc376c040b7b4423a380e99eedc9bee3f9e10cd1c59a9",
+      "frame": 61,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1413,
+        526,
+        3333,
+        1606
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            573.0,
+            277.5,
+            656.0,
+            338.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-061",
+      "source_box": [
+        2559,
+        1081,
+        2725,
+        1202
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000061_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000061_L2.png",
+      "sha256": "c7e85a5a97d45cb2140c6e900af712311a9b63efbf974701d87f3e28e959a962",
+      "frame": 61,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2205,
+        930,
+        3165,
+        1470
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            354.0,
+            151.0,
+            520.0,
+            272.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-061",
+      "source_box": [
+        2559,
+        1081,
+        2725,
+        1202
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000064_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000064_L0.png",
+      "sha256": "0ac7fe8490939807e9083673c67332e50a80aeb8fce9e7633d5453b7e03c0744",
+      "frame": 64,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            643.25,
+            321.75,
+            686.25,
+            353.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-064",
+      "source_box": [
+        2573,
+        1287,
+        2745,
+        1413
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000064_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000064_L1.png",
+      "sha256": "88dc7811bfc17e9ce10a73c14afd8a76e8f52694abd8122ccbf72bf6b79debb4",
+      "frame": 64,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1631,
+        666,
+        3551,
+        1746
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            471.0,
+            310.5,
+            557.0,
+            373.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-064",
+      "source_box": [
+        2573,
+        1287,
+        2745,
+        1413
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000064_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000064_L2.png",
+      "sha256": "225f853a7cc9c6da838edb74d36a21a2c26d5e1c723faabce426cf15d432bbf9",
+      "frame": 64,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2042,
+        1120,
+        3002,
+        1660
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            531.0,
+            167.0,
+            703.0,
+            293.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-064",
+      "source_box": [
+        2573,
+        1287,
+        2745,
+        1413
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000067_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000067_L0.png",
+      "sha256": "5c8a2711c5f4fb3c5173756a4d4acea44fac2d5710aa5edd105c05ba8127e86b",
+      "frame": 67,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            646.5,
+            375.75,
+            691.25,
+            408.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-067",
+      "source_box": [
+        2586,
+        1503,
+        2765,
+        1634
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000067_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000067_L1.png",
+      "sha256": "92ccb8d5aeec475093a0dde93225ed7e48b64552817ce4d38a88afea540e2d97",
+      "frame": 67,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1754,
+        1009,
+        3674,
+        2089
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            416.0,
+            247.0,
+            505.5,
+            312.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-067",
+      "source_box": [
+        2586,
+        1503,
+        2765,
+        1634
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000067_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000067_L2.png",
+      "sha256": "87d9b0389a9cf4ffaa9f7f1201b2d94ee4a3bd12e723d0fe76ebd4d09cb02b81",
+      "frame": 67,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2311,
+        1373,
+        3271,
+        1913
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            275.0,
+            130.0,
+            454.0,
+            261.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-067",
+      "source_box": [
+        2586,
+        1503,
+        2765,
+        1634
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000070_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000070_L0.png",
+      "sha256": "b003b9d87b92c749a3a200e3553b66ba74b1d7a4de70b5b402d0a7f33afb24ad",
+      "frame": 70,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            651.0,
+            433.0,
+            695.75,
+            465.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-070",
+      "source_box": [
+        2604,
+        1732,
+        2783,
+        1863
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000070_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000070_L1.png",
+      "sha256": "753f4c657648b3dfde0c5dd96510f3408d46199fab067c1ed4e19aa02b9c0d5b",
+      "frame": 70,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1622,
+        1080,
+        3542,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            491.0,
+            326.0,
+            580.5,
+            391.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-070",
+      "source_box": [
+        2604,
+        1732,
+        2783,
+        1863
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000070_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000070_L2.png",
+      "sha256": "5070448c3b7d3031400244a097fe5f151c3a30c4b6020aa6b616c4d61b2e5c72",
+      "frame": 70,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2083,
+        1587,
+        3043,
+        2127
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            521.0,
+            145.0,
+            700.0,
+            276.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-070",
+      "source_box": [
+        2604,
+        1732,
+        2783,
+        1863
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000073_L0",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000073_L0.png",
+      "sha256": "c884c42d9bf297e2d2dd34f33de15ab321f4989aee639313964e206f791c551d",
+      "frame": 73,
+      "group": "helicopter-043-073",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            655.25,
+            493.5,
+            702.0,
+            527.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-073",
+      "source_box": [
+        2621,
+        1974,
+        2808,
+        2111
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000073_L1",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000073_L1.png",
+      "sha256": "61e39d64ad0ef209719330cfceed4d651efebee2b3616773564d4737f7d57c59",
+      "frame": 73,
+      "group": "helicopter-043-073",
+      "zoom": 1,
+      "source_region": [
+        1791,
+        1080,
+        3711,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            415.0,
+            447.0,
+            508.5,
+            515.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-073",
+      "source_box": [
+        2621,
+        1974,
+        2808,
+        2111
+      ]
+    },
+    {
+      "id": "helicopter-043-073_000073_L2",
+      "subset": "manual_known_positives",
+      "file": "images/helicopter-043-073_000073_L2.png",
+      "sha256": "ef7656e1bbd83b71aa2ad1c23a6c1c71e352e0cd85fb1e9b083309aa8ac85957",
+      "frame": 73,
+      "group": "helicopter-043-073",
+      "zoom": 2,
+      "source_region": [
+        2303,
+        1620,
+        3263,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "helicopter",
+          "xyxy": [
+            318.0,
+            354.0,
+            505.0,
+            491.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-helicopter-073",
+      "source_box": [
+        2621,
+        1974,
+        2808,
+        2111
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000040_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000040_L0.png",
+      "sha256": "2994080d7bbcfab730bd0833bebceac80b02c06a917139cf304f5b69e150a203",
+      "frame": 40,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            331.25,
+            52.0,
+            346.25,
+            63.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-040",
+      "source_box": [
+        1325,
+        208,
+        1385,
+        254
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000040_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000040_L1.png",
+      "sha256": "98b0ed1c41f012443067c68ec6e17b154a7a62caec2ae64adeffe8eda70fc68d",
+      "frame": 40,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        227,
+        0,
+        2147,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            549.0,
+            104.0,
+            579.0,
+            127.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-040",
+      "source_box": [
+        1325,
+        208,
+        1385,
+        254
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000040_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000040_L2.png",
+      "sha256": "b100ec69a05e57403cb6b961ec3b09841161a6105f664282a427579e9757b889",
+      "frame": 40,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        797,
+        21,
+        1757,
+        561
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            528.0,
+            187.0,
+            588.0,
+            233.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-040",
+      "source_box": [
+        1325,
+        208,
+        1385,
+        254
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000043_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000043_L0.png",
+      "sha256": "7d3d90fa96d5c42c26a89a740620401880de4c5893dbf29c476641a79b28d599",
+      "frame": 43,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            334.75,
+            34.75,
+            349.75,
+            46.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-043",
+      "source_box": [
+        1339,
+        139,
+        1399,
+        185
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000043_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000043_L1.png",
+      "sha256": "1ebf6e75c3846ab45af2bdbe0dfa75d0f94de672ab0383140c63a8b42808d435",
+      "frame": 43,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        601,
+        0,
+        2521,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            369.0,
+            69.5,
+            399.0,
+            92.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-043",
+      "source_box": [
+        1339,
+        139,
+        1399,
+        185
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000043_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000043_L2.png",
+      "sha256": "fa29a3464601a07b43bad326f77da02a7ff1f7694fe16f08541d90e9133c97e6",
+      "frame": 43,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        803,
+        0,
+        1763,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            536.0,
+            139.0,
+            596.0,
+            185.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-043",
+      "source_box": [
+        1339,
+        139,
+        1399,
+        185
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000046_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000046_L0.png",
+      "sha256": "846273f0603e4f232d85da6fd4e2c9b7429365a261fea7ec8069634ad79de124",
+      "frame": 46,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            335.25,
+            30.25,
+            351.0,
+            42.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-046",
+      "source_box": [
+        1341,
+        121,
+        1404,
+        169
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000046_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000046_L1.png",
+      "sha256": "bd7894284376b3ba796ab0941529ccadb5a27bd1fba10b9b9972c80ab96a2dea",
+      "frame": 46,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        285,
+        0,
+        2205,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            528.0,
+            60.5,
+            559.5,
+            84.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-046",
+      "source_box": [
+        1341,
+        121,
+        1404,
+        169
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000046_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000046_L2.png",
+      "sha256": "f338dade492e0bcd1412dd7e9422401c123800a4904c774ca0a6ed53f1fa7ac9",
+      "frame": 46,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        858,
+        0,
+        1818,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            483.0,
+            121.0,
+            546.0,
+            169.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-046",
+      "source_box": [
+        1341,
+        121,
+        1404,
+        169
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000049_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000049_L0.png",
+      "sha256": "7f796f1dda6afbccdebe5ee86a16264dcc824af29682f830cb657806905d2aa7",
+      "frame": 49,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            325.5,
+            17.0,
+            342.5,
+            30.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-049",
+      "source_box": [
+        1302,
+        68,
+        1370,
+        120
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000049_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000049_L1.png",
+      "sha256": "c9ed3224d160bc2ab24c108f120e40cce353c10eacfa8ff31bc1a3dc22b39628",
+      "frame": 49,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        192,
+        0,
+        2112,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            555.0,
+            34.0,
+            589.0,
+            60.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-049",
+      "source_box": [
+        1302,
+        68,
+        1370,
+        120
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000049_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000049_L2.png",
+      "sha256": "0269942d963a933ba436fc7b37b14300e822abcec84745f70937e2fec63ab11d",
+      "frame": 49,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        815,
+        0,
+        1775,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            487.0,
+            68.0,
+            555.0,
+            120.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-049",
+      "source_box": [
+        1302,
+        68,
+        1370,
+        120
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000052_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000052_L0.png",
+      "sha256": "4b0051a52c092cd4909ff26216a1f4376f279b9cec89a52c84ed5645c0d50101",
+      "frame": 52,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            325.5,
+            4.0,
+            342.5,
+            17.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-052",
+      "source_box": [
+        1302,
+        16,
+        1370,
+        68
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000052_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000052_L1.png",
+      "sha256": "34493b720c998f19f777dafb5d61d9690b11d78e89fbf20f0fe40a537d5f3ce1",
+      "frame": 52,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        208,
+        0,
+        2128,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            547.0,
+            8.0,
+            581.0,
+            34.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-052",
+      "source_box": [
+        1302,
+        16,
+        1370,
+        68
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000052_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000052_L2.png",
+      "sha256": "83b65c202ece45f9633c9cb8d04e2b7a3c3fd4da3666d6e53dcb66fdeb486b56",
+      "frame": 52,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        751,
+        0,
+        1711,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            551.0,
+            16.0,
+            619.0,
+            68.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-052",
+      "source_box": [
+        1302,
+        16,
+        1370,
+        68
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000055_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000055_L0.png",
+      "sha256": "331d2b11a2d649aba7bdb612e67efd02d855620f217f8e4071a66d688d435f5e",
+      "frame": 55,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            315.25,
+            30.0,
+            332.0,
+            42.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-055",
+      "source_box": [
+        1261,
+        120,
+        1328,
+        171
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000055_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000055_L1.png",
+      "sha256": "24ab1f5a94ed8e6107316896d8492be947ccf940542e8c09afd02760aaeed269",
+      "frame": 55,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        426,
+        0,
+        2346,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            417.5,
+            60.0,
+            451.0,
+            85.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-055",
+      "source_box": [
+        1261,
+        120,
+        1328,
+        171
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000055_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000055_L2.png",
+      "sha256": "4cf9befcf1fc4bf67d2a5b14fab8ace41d30caaae37e6ed73a76f98a9bbae81e",
+      "frame": 55,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        942,
+        0,
+        1902,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            319.0,
+            120.0,
+            386.0,
+            171.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-055",
+      "source_box": [
+        1261,
+        120,
+        1328,
+        171
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000058_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000058_L0.png",
+      "sha256": "0454a13520a95b2479dafaa1b58d579f22ff33c6de99714b8e41725d26dfabf6",
+      "frame": 58,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            312.0,
+            71.25,
+            328.75,
+            84.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-058",
+      "source_box": [
+        1248,
+        285,
+        1315,
+        336
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000058_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000058_L1.png",
+      "sha256": "015de08d4a4e4bd33a75b7e78f23fec592ba0f1103c3bc1b98586626d78412b1",
+      "frame": 58,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        209,
+        0,
+        2129,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            519.5,
+            142.5,
+            553.0,
+            168.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-058",
+      "source_box": [
+        1248,
+        285,
+        1315,
+        336
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000058_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000058_L2.png",
+      "sha256": "dfc21c58de0bf949d5c38ef28a27d468a92aa23daf484d1656e62f69e0141e4a",
+      "frame": 58,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        728,
+        79,
+        1688,
+        619
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            520.0,
+            206.0,
+            587.0,
+            257.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-058",
+      "source_box": [
+        1248,
+        285,
+        1315,
+        336
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000061_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000061_L0.png",
+      "sha256": "4fcb6b117922efae4ba91e66ddf91499c2c439fa21ea79287753087139faf29e",
+      "frame": 61,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            308.25,
+            114.25,
+            325.5,
+            127.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-061",
+      "source_box": [
+        1233,
+        457,
+        1302,
+        510
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000061_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000061_L1.png",
+      "sha256": "cad60440ce3b5f506c3c2a70c48462c845288050c26304a40b49eaee8495cb13",
+      "frame": 61,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        73,
+        0,
+        1993,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            580.0,
+            228.5,
+            614.5,
+            255.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-061",
+      "source_box": [
+        1233,
+        457,
+        1302,
+        510
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000061_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000061_L2.png",
+      "sha256": "4a3ca6aec94be24ca41392426a13db33bc63b9c1737bed016f290d40fd7c9fdc",
+      "frame": 61,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        823,
+        173,
+        1783,
+        713
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            410.0,
+            284.0,
+            479.0,
+            337.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-061",
+      "source_box": [
+        1233,
+        457,
+        1302,
+        510
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000064_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000064_L0.png",
+      "sha256": "0ac7fe8490939807e9083673c67332e50a80aeb8fce9e7633d5453b7e03c0744",
+      "frame": 64,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            305.0,
+            159.25,
+            322.25,
+            172.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-064",
+      "source_box": [
+        1220,
+        637,
+        1289,
+        690
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000064_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000064_L1.png",
+      "sha256": "fc521f1620166b129e54f65c5556bece6823e124571003a5d7f7dd4bb278579d",
+      "frame": 64,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        416,
+        0,
+        2336,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            402.0,
+            318.5,
+            436.5,
+            345.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-064",
+      "source_box": [
+        1220,
+        637,
+        1289,
+        690
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000064_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000064_L2.png",
+      "sha256": "32765b5252fd5f1f42643822bea90574df1d3f97c690ab0843b133e91719d213",
+      "frame": 64,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        635,
+        339,
+        1595,
+        879
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            585.0,
+            298.0,
+            654.0,
+            351.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-064",
+      "source_box": [
+        1220,
+        637,
+        1289,
+        690
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000067_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000067_L0.png",
+      "sha256": "5c8a2711c5f4fb3c5173756a4d4acea44fac2d5710aa5edd105c05ba8127e86b",
+      "frame": 67,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            301.0,
+            206.0,
+            319.5,
+            220.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-067",
+      "source_box": [
+        1204,
+        824,
+        1278,
+        880
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000067_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000067_L1.png",
+      "sha256": "1c60e3deca67cc68fb4629254fd387b47bad1aae7c2cd5945086c4f478e60275",
+      "frame": 67,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        227,
+        408,
+        2147,
+        1488
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            488.5,
+            208.0,
+            525.5,
+            236.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-067",
+      "source_box": [
+        1204,
+        824,
+        1278,
+        880
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000067_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000067_L2.png",
+      "sha256": "1e0444630dda37ec986adea745bb75bb8cba84152d5ac40a0a491bf2167e3a9e",
+      "frame": 67,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        790,
+        594,
+        1750,
+        1134
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            414.0,
+            230.0,
+            488.0,
+            286.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-067",
+      "source_box": [
+        1204,
+        824,
+        1278,
+        880
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000070_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000070_L0.png",
+      "sha256": "b003b9d87b92c749a3a200e3553b66ba74b1d7a4de70b5b402d0a7f33afb24ad",
+      "frame": 70,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            297.0,
+            255.0,
+            315.75,
+            269.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-070",
+      "source_box": [
+        1188,
+        1020,
+        1263,
+        1077
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000070_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000070_L1.png",
+      "sha256": "7df11fac4cf08d78a9df55f649606059857d3e06ffa97c2ae03271a721698e42",
+      "frame": 70,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        126,
+        567,
+        2046,
+        1647
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            531.0,
+            226.5,
+            568.5,
+            255.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-070",
+      "source_box": [
+        1188,
+        1020,
+        1263,
+        1077
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000070_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000070_L2.png",
+      "sha256": "efb6c614c17d5d8cc25c49dd562682db49dc9d3f2d980d6a7bc123d5bda58f65",
+      "frame": 70,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        861,
+        706,
+        1821,
+        1246
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            327.0,
+            314.0,
+            402.0,
+            371.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-070",
+      "source_box": [
+        1188,
+        1020,
+        1263,
+        1077
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000073_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000073_L0.png",
+      "sha256": "c884c42d9bf297e2d2dd34f33de15ab321f4989aee639313964e206f791c551d",
+      "frame": 73,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            292.75,
+            306.25,
+            312.0,
+            321.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-073",
+      "source_box": [
+        1171,
+        1225,
+        1248,
+        1284
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000073_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000073_L1.png",
+      "sha256": "964053f3951f0ff1d6368b04952cd16d7e7095aa17c3155e9332771fb4073a0c",
+      "frame": 73,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        389,
+        589,
+        2309,
+        1669
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            391.0,
+            318.0,
+            429.5,
+            347.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-073",
+      "source_box": [
+        1171,
+        1225,
+        1248,
+        1284
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000073_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000073_L2.png",
+      "sha256": "a113ff3ae13568fcb7a84430895cd67101441d6cc670c84352fcf5e9ede99bce",
+      "frame": 73,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        639,
+        940,
+        1599,
+        1480
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            532.0,
+            285.0,
+            609.0,
+            344.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-073",
+      "source_box": [
+        1171,
+        1225,
+        1248,
+        1284
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000076_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000076_L0.png",
+      "sha256": "d1b63aa9e20ed4869ba752bfa934c217e84f0133d9e0938ea2bcc410f6bcf839",
+      "frame": 76,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            288.5,
+            359.75,
+            308.0,
+            374.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-076",
+      "source_box": [
+        1154,
+        1439,
+        1232,
+        1499
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000076_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000076_L1.png",
+      "sha256": "2d4283d237fb88fad735b3f6320fe14f197b46b8ebd59334c7668979ba73d54b",
+      "frame": 76,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        305,
+        985,
+        2225,
+        2065
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            424.5,
+            227.0,
+            463.5,
+            257.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-076",
+      "source_box": [
+        1154,
+        1439,
+        1232,
+        1499
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000076_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000076_L2.png",
+      "sha256": "60ae489192fa2ef226916eb4fafa417b2a4fb089ce44375dde9a94b3d46965d8",
+      "frame": 76,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        641,
+        1251,
+        1601,
+        1791
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            513.0,
+            188.0,
+            591.0,
+            248.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-076",
+      "source_box": [
+        1154,
+        1439,
+        1232,
+        1499
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000079_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000079_L0.png",
+      "sha256": "014daf5920f8e57bbccf56b8d760e7998dc3b923de6d1e58043af9d9c8f71a05",
+      "frame": 79,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            284.5,
+            416.0,
+            303.75,
+            430.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-079",
+      "source_box": [
+        1138,
+        1664,
+        1215,
+        1723
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000079_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000079_L1.png",
+      "sha256": "1522a8ed7f156cbe85442b7f17ee914cfa2d4f9bca4292997b3f733904a0aa03",
+      "frame": 79,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        381,
+        1080,
+        2301,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            378.5,
+            292.0,
+            417.0,
+            321.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-079",
+      "source_box": [
+        1138,
+        1664,
+        1215,
+        1723
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000079_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000079_L2.png",
+      "sha256": "1f1539df81b5890bdcf15e257edfd946a8d4c8b14908d756c3966cb576756716",
+      "frame": 79,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        654,
+        1438,
+        1614,
+        1978
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            484.0,
+            226.0,
+            561.0,
+            285.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-079",
+      "source_box": [
+        1138,
+        1664,
+        1215,
+        1723
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000082_L0",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000082_L0.png",
+      "sha256": "d17ad4706d784cb1ed459560467951eef7bd8b2c56fb86a568adb5eb0edda642",
+      "frame": 82,
+      "group": "jet-plane-d-040-082",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            279.5,
+            474.5,
+            299.75,
+            490.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-082",
+      "source_box": [
+        1118,
+        1898,
+        1199,
+        1960
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000082_L1",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000082_L1.png",
+      "sha256": "be0198fccf498eb0db95dd08a69d08660a348c89f87d66d836312db6f47485d5",
+      "frame": 82,
+      "group": "jet-plane-d-040-082",
+      "zoom": 1,
+      "source_region": [
+        484,
+        1080,
+        2404,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            317.0,
+            409.0,
+            357.5,
+            440.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-082",
+      "source_box": [
+        1118,
+        1898,
+        1199,
+        1960
+      ]
+    },
+    {
+      "id": "jet-plane-d-040-082_000082_L2",
+      "subset": "manual_known_positives",
+      "file": "images/jet-plane-d-040-082_000082_L2.png",
+      "sha256": "54bd0772479474e655f261d970d4117bb46fbf6037ec4bfee395371524aaf483",
+      "frame": 82,
+      "group": "jet-plane-d-040-082",
+      "zoom": 2,
+      "source_region": [
+        633,
+        1620,
+        1593,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "jet_plane",
+          "xyxy": [
+            485.0,
+            278.0,
+            566.0,
+            340.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-manual-jet-plane-d-082",
+      "source_box": [
+        1118,
+        1898,
+        1199,
+        1960
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000038_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000038_L0.png",
+      "sha256": "3c412d491bbb71ce592f6f6b7fe422088efee3c0549862cc15badc8019885af7",
+      "frame": 38,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            745.75,
+            7.0,
+            781.5,
+            37.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-038",
+      "source_box": [
+        2983,
+        28,
+        3126,
+        150
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000038_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000038_L1.png",
+      "sha256": "586d5d32901c8ad84d7407ab52632794ef9da79d69c25d3b357b8b59313405e7",
+      "frame": 38,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1835,
+        0,
+        3755,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            574.0,
+            14.0,
+            645.5,
+            75.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-038",
+      "source_box": [
+        2983,
+        28,
+        3126,
+        150
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000038_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000038_L2.png",
+      "sha256": "4230173f14916238b7140b30d4c5a78c223ac4987c987d00afdac3d5a5bae49a",
+      "frame": 38,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2562,
+        0,
+        3522,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            421.0,
+            28.0,
+            564.0,
+            150.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-038",
+      "source_box": [
+        2983,
+        28,
+        3126,
+        150
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000041_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000041_L0.png",
+      "sha256": "383b7f94fb23a58d8142b4da2ea59f14b9c874891542121377a65bec6f330918",
+      "frame": 41,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            752.0,
+            48.5,
+            787.0,
+            78.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-041",
+      "source_box": [
+        3008,
+        194,
+        3148,
+        314
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000041_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000041_L1.png",
+      "sha256": "1fd45a23ce57f2472ab26b942f002fed4bc8829d0a70ae60321019a23769672d",
+      "frame": 41,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        0,
+        3840,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            544.0,
+            97.0,
+            614.0,
+            157.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-041",
+      "source_box": [
+        3008,
+        194,
+        3148,
+        314
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000041_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000041_L2.png",
+      "sha256": "bad8090093826b19a824cc67c29887022216d05e0430447cbf8c5489d8ae20ed",
+      "frame": 41,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2562,
+        0,
+        3522,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            446.0,
+            194.0,
+            586.0,
+            314.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-041",
+      "source_box": [
+        3008,
+        194,
+        3148,
+        314
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000044_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000044_L0.png",
+      "sha256": "018848c485f61bceb5c8ef2f4744c86eb0649c6aef92263c90faa38fe89df595",
+      "frame": 44,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            758.25,
+            90.75,
+            793.25,
+            120.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-044",
+      "source_box": [
+        3033,
+        363,
+        3173,
+        483
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000044_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000044_L1.png",
+      "sha256": "5ac7bc51ac18646bf7293457b0aa8b9ed9c8e62e23dd8c25df88fd37fa6b8ae9",
+      "frame": 44,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        6,
+        3840,
+        1086
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            556.5,
+            178.5,
+            626.5,
+            238.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-044",
+      "source_box": [
+        3033,
+        363,
+        3173,
+        483
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000044_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000044_L2.png",
+      "sha256": "753499edf2efce21bbd320085cf0741ec2f01dedc0fd4dfd695381d0dbe953d0",
+      "frame": 44,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2647,
+        173,
+        3607,
+        713
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            386.0,
+            190.0,
+            526.0,
+            310.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-044",
+      "source_box": [
+        3033,
+        363,
+        3173,
+        483
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000047_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000047_L0.png",
+      "sha256": "090b7297dfb2cf3d211471777a79c38db5b9a5b9d0153869a9886458cf449c76",
+      "frame": 47,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            764.25,
+            134.5,
+            800.0,
+            165.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-047",
+      "source_box": [
+        3057,
+        538,
+        3200,
+        660
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000047_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000047_L1.png",
+      "sha256": "6862928a622031f192348ccfd039a97795d419a07512418dfdc958fe0329d0ad",
+      "frame": 47,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        144,
+        3840,
+        1224
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            568.5,
+            197.0,
+            640.0,
+            258.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-047",
+      "source_box": [
+        3057,
+        538,
+        3200,
+        660
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000047_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000047_L2.png",
+      "sha256": "bf589d6e68953cff806f888664dc1afffa1be55317c7d220b7558d801c3a7d56",
+      "frame": 47,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2591,
+        326,
+        3551,
+        866
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            466.0,
+            212.0,
+            609.0,
+            334.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-047",
+      "source_box": [
+        3057,
+        538,
+        3200,
+        660
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000050_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000050_L0.png",
+      "sha256": "ee07cc8915571103a79c2a6924b502149bd1ef34b4877692adaa50504e8f179f",
+      "frame": 50,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            770.25,
+            180.75,
+            806.75,
+            212.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-050",
+      "source_box": [
+        3081,
+        723,
+        3227,
+        848
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000050_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000050_L1.png",
+      "sha256": "52dc46bb7388980072bdb1b99ec2b5f548ce379fdcb476d473e67cd80a53b732",
+      "frame": 50,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        216,
+        3840,
+        1296
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            580.5,
+            253.5,
+            653.5,
+            316.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-050",
+      "source_box": [
+        3081,
+        723,
+        3227,
+        848
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000050_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000050_L2.png",
+      "sha256": "70ff8cdd26016941f6785de4d1662bb20cedfd11102111bc81468b3bf040ceb4",
+      "frame": 50,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2717,
+        499,
+        3677,
+        1039
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            364.0,
+            224.0,
+            510.0,
+            349.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-050",
+      "source_box": [
+        3081,
+        723,
+        3227,
+        848
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000053_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000053_L0.png",
+      "sha256": "3641af5e2ee5105e7b5a19e807ac7be60b9950414e1524bdc565ca2a4b687769",
+      "frame": 53,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            775.5,
+            228.0,
+            815.0,
+            261.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-053",
+      "source_box": [
+        3102,
+        912,
+        3260,
+        1047
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000053_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000053_L1.png",
+      "sha256": "65aa5f56aac082dfd348b4bad4327165f65da9c30d23eb8b5c49432bf0645db9",
+      "frame": 53,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        374,
+        3840,
+        1454
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            591.0,
+            269.0,
+            670.0,
+            336.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-053",
+      "source_box": [
+        3102,
+        912,
+        3260,
+        1047
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000053_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000053_L2.png",
+      "sha256": "b135b51fc182ca8bff3b1cda2c9dd00702a00238c1ad34eebfb4d7c1144e99a6",
+      "frame": 53,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2636,
+        686,
+        3596,
+        1226
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            466.0,
+            226.0,
+            624.0,
+            361.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-053",
+      "source_box": [
+        3102,
+        912,
+        3260,
+        1047
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000056_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000056_L0.png",
+      "sha256": "fa26ad4cf84533330a8286e0f8f6a4aab1ed756d9a66268018280ebb634ea85e",
+      "frame": 56,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            782.75,
+            278.5,
+            822.25,
+            312.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-056",
+      "source_box": [
+        3131,
+        1114,
+        3289,
+        1249
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000056_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000056_L1.png",
+      "sha256": "5683028a7928c3e46671c63cfa17b04839efd9da953458369b8ded5d43974c7a",
+      "frame": 56,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        709,
+        3840,
+        1789
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            605.5,
+            202.5,
+            684.5,
+            270.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-056",
+      "source_box": [
+        3131,
+        1114,
+        3289,
+        1249
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000056_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000056_L2.png",
+      "sha256": "583886f28b1fe7171fb3c7cf64f57837bc0786d3240850b1cfbc13fcfcfde75d",
+      "frame": 56,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2848,
+        910,
+        3808,
+        1450
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            283.0,
+            204.0,
+            441.0,
+            339.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-056",
+      "source_box": [
+        3131,
+        1114,
+        3289,
+        1249
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000059_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000059_L0.png",
+      "sha256": "ea707287fbaa6364bf8b443ce83fd791f4357ddac19da3cab531c719fb6f9da5",
+      "frame": 59,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            789.0,
+            330.25,
+            831.75,
+            366.75
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-059",
+      "source_box": [
+        3156,
+        1321,
+        3327,
+        1467
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000059_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000059_L1.png",
+      "sha256": "03b1667d8c05da0eeb3449361adb232de36b03356db3198d5ddaf51ea7d9745f",
+      "frame": 59,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        738,
+        3840,
+        1818
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            618.0,
+            291.5,
+            703.5,
+            364.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-059",
+      "source_box": [
+        3156,
+        1321,
+        3327,
+        1467
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000059_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000059_L2.png",
+      "sha256": "578ce3d1c57e3a99b83aeae216f4e75d16e8405190dac1e8f2c86d94eb3e22f0",
+      "frame": 59,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2641,
+        1072,
+        3601,
+        1612
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            515.0,
+            249.0,
+            686.0,
+            395.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-059",
+      "source_box": [
+        3156,
+        1321,
+        3327,
+        1467
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000062_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000062_L0.png",
+      "sha256": "09aff64bf9db625cb5fe42dd47d6259c110cfbe4667f548d8f6ec03fd92acda8",
+      "frame": 62,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            796.25,
+            385.0,
+            839.75,
+            422.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-062",
+      "source_box": [
+        3185,
+        1540,
+        3359,
+        1689
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000062_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000062_L1.png",
+      "sha256": "9187d5cb5454e1b1eadef4ba7092ae407ea5102a8a0e60a7cd30be0dcdd890bf",
+      "frame": 62,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        1051,
+        3840,
+        2131
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            632.5,
+            244.5,
+            719.5,
+            319.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-062",
+      "source_box": [
+        3185,
+        1540,
+        3359,
+        1689
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000062_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000062_L2.png",
+      "sha256": "b64e53aaa018f7a0e2004ee89262558d1494e164da86f351b8eaa355a52019a4",
+      "frame": 62,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2711,
+        1279,
+        3671,
+        1819
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            474.0,
+            261.0,
+            648.0,
+            410.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-062",
+      "source_box": [
+        3185,
+        1540,
+        3359,
+        1689
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000065_L0",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000065_L0.png",
+      "sha256": "200e132465aeb1898de81c2f3c9c65fb05f2acec6440e8863292797654e87536",
+      "frame": 65,
+      "group": "large-tower-038-067",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            804.25,
+            442.75,
+            847.75,
+            480.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-065",
+      "source_box": [
+        3217,
+        1771,
+        3391,
+        1920
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000065_L1",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000065_L1.png",
+      "sha256": "f6ed6a61ab9322b6ae13b23165e585d39820c9c8c30def1ce1b1507dea1e91c8",
+      "frame": 65,
+      "group": "large-tower-038-067",
+      "zoom": 1,
+      "source_region": [
+        1920,
+        1080,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            648.5,
+            345.5,
+            735.5,
+            420.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-065",
+      "source_box": [
+        3217,
+        1771,
+        3391,
+        1920
+      ]
+    },
+    {
+      "id": "large-tower-038-067_000065_L2",
+      "subset": "manual_known_positives",
+      "file": "images/large-tower-038-067_000065_L2.png",
+      "sha256": "b98726e311b2052b55934667cc32eb0c6aefddc4efe924322c6b8c38bf6f53fc",
+      "frame": 65,
+      "group": "large-tower-038-067",
+      "zoom": 2,
+      "source_region": [
+        2841,
+        1548,
+        3801,
+        2088
+      ],
+      "boxes": [
+        {
+          "class_name": "large_tower",
+          "xyxy": [
+            376.0,
+            223.0,
+            550.0,
+            372.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-large_tower-065",
+      "source_box": [
+        3217,
+        1771,
+        3391,
+        1920
+      ]
+    },
+    {
+      "id": "tank-015-036_000015_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000015_L0.png",
+      "sha256": "38a396a0b05e726ae0af8e00faddeeadb4bd7e93b448e05e5e8c9d6dba281689",
+      "frame": 15,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            547.25,
+            1.0,
+            573.25,
+            16.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-015",
+      "source_box": [
+        2189,
+        4,
+        2293,
+        65
+      ]
+    },
+    {
+      "id": "tank-015-036_000015_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000015_L1.png",
+      "sha256": "fb97a12687aa60600d3bd7d94624c6616fa6f9cd7db7c595e7753d710c25f471",
+      "frame": 15,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1465,
+        0,
+        3385,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            362.0,
+            2.0,
+            414.0,
+            32.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-015",
+      "source_box": [
+        2189,
+        4,
+        2293,
+        65
+      ]
+    },
+    {
+      "id": "tank-015-036_000015_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000015_L2.png",
+      "sha256": "17bd5958abc4d58733de8e0e249b3124f98ba5ee4d801471672401c09a40cc8b",
+      "frame": 15,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1839,
+        0,
+        2799,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            350.0,
+            4.0,
+            454.0,
+            65.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-015",
+      "source_box": [
+        2189,
+        4,
+        2293,
+        65
+      ]
+    },
+    {
+      "id": "tank-015-036_000018_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000018_L0.png",
+      "sha256": "48916141ceee22f67be388bb02ce56df55df8bb34e5175e65a9f29fa81e4aaa6",
+      "frame": 18,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            548.5,
+            41.25,
+            575.5,
+            57.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-018",
+      "source_box": [
+        2194,
+        165,
+        2302,
+        229
+      ]
+    },
+    {
+      "id": "tank-015-036_000018_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000018_L1.png",
+      "sha256": "ed04fb05c6e366d509e0e6f0f5f639d559f91002242da2e9da2761955a4139bc",
+      "frame": 18,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1404,
+        0,
+        3324,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            395.0,
+            82.5,
+            449.0,
+            114.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-018",
+      "source_box": [
+        2194,
+        165,
+        2302,
+        229
+      ]
+    },
+    {
+      "id": "tank-015-036_000018_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000018_L2.png",
+      "sha256": "e4d592c43492333105171a3c78d9cd7a743aef3ba41b233ef2e6def08c2ff2d3",
+      "frame": 18,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1848,
+        0,
+        2808,
+        540
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            346.0,
+            165.0,
+            454.0,
+            229.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-018",
+      "source_box": [
+        2194,
+        165,
+        2302,
+        229
+      ]
+    },
+    {
+      "id": "tank-015-036_000021_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000021_L0.png",
+      "sha256": "8309aae5cb32d69b44b41f14d7e73900d8427dee17870fd571a548f2b25c60a2",
+      "frame": 21,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            549.5,
+            83.25,
+            577.0,
+            99.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-021",
+      "source_box": [
+        2198,
+        333,
+        2308,
+        398
+      ]
+    },
+    {
+      "id": "tank-015-036_000021_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000021_L1.png",
+      "sha256": "bc5606f148b9e2c09da85c3e4dbe117254ed874c8b6faac61e92b6772db5c14e",
+      "frame": 21,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1235,
+        0,
+        3155,
+        1080
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            481.5,
+            166.5,
+            536.5,
+            199.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-021",
+      "source_box": [
+        2198,
+        333,
+        2308,
+        398
+      ]
+    },
+    {
+      "id": "tank-015-036_000021_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000021_L2.png",
+      "sha256": "1d520040e7d1af4cee3a0fe2f1e26c13c22696e4d78bbd1a9460d24ac0e48d8e",
+      "frame": 21,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1890,
+        138,
+        2850,
+        678
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            308.0,
+            195.0,
+            418.0,
+            260.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-021",
+      "source_box": [
+        2198,
+        333,
+        2308,
+        398
+      ]
+    },
+    {
+      "id": "tank-015-036_000024_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000024_L0.png",
+      "sha256": "3a381ec40bfdbaf03c81dd2354cd49a0e1443e374c8a2434fe6c402a451ba182",
+      "frame": 24,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            551.25,
+            127.0,
+            578.75,
+            143.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-024",
+      "source_box": [
+        2205,
+        508,
+        2315,
+        573
+      ]
+    },
+    {
+      "id": "tank-015-036_000024_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000024_L1.png",
+      "sha256": "2859532e707a3460d2de0a0bfe369a52848071bccf6a4ca10e9474324aafd96e",
+      "frame": 24,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1140,
+        140,
+        3060,
+        1220
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            532.5,
+            184.0,
+            587.5,
+            216.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-024",
+      "source_box": [
+        2205,
+        508,
+        2315,
+        573
+      ]
+    },
+    {
+      "id": "tank-015-036_000024_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000024_L2.png",
+      "sha256": "c193526ee5f0431fa5d78af8663e5ba0ceb9e78e1959cd5d5d0920888ed1fb5f",
+      "frame": 24,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1644,
+        347,
+        2604,
+        887
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            561.0,
+            161.0,
+            671.0,
+            226.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-024",
+      "source_box": [
+        2205,
+        508,
+        2315,
+        573
+      ]
+    },
+    {
+      "id": "tank-015-036_000027_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000027_L0.png",
+      "sha256": "1803e77efed3d0a03518d3656edb261856ddd61cade942665b2131035fd5748b",
+      "frame": 27,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            553.25,
+            172.5,
+            580.25,
+            188.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-027",
+      "source_box": [
+        2213,
+        690,
+        2321,
+        754
+      ]
+    },
+    {
+      "id": "tank-015-036_000027_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000027_L1.png",
+      "sha256": "5fc7b461b84971af19dedecfb9ccad4a8761c4c3fde7f5a95c1685779aefcc7a",
+      "frame": 27,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1248,
+        321,
+        3168,
+        1401
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            482.5,
+            184.5,
+            536.5,
+            216.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-027",
+      "source_box": [
+        2213,
+        690,
+        2321,
+        754
+      ]
+    },
+    {
+      "id": "tank-015-036_000027_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000027_L2.png",
+      "sha256": "e3b1be385b2427f4118d57a827ff25c9116b001a0acceca327a947faa4fd6261",
+      "frame": 27,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1759,
+        533,
+        2719,
+        1073
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            454.0,
+            157.0,
+            562.0,
+            221.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-027",
+      "source_box": [
+        2213,
+        690,
+        2321,
+        754
+      ]
+    },
+    {
+      "id": "tank-015-036_000030_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000030_L0.png",
+      "sha256": "a8cd8b1b2b2b2f5207f4ffbe35054070ccfecb3f8a5f0cd634666b3f9305bb6c",
+      "frame": 30,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            554.75,
+            220.0,
+            582.25,
+            236.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-030",
+      "source_box": [
+        2219,
+        880,
+        2329,
+        945
+      ]
+    },
+    {
+      "id": "tank-015-036_000030_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000030_L1.png",
+      "sha256": "2e99021fe4e0ffd6cb5276b97eb4bf0dc32328a829d2972bc6b593a45b4c189e",
+      "frame": 30,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1448,
+        236,
+        3368,
+        1316
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            385.5,
+            322.0,
+            440.5,
+            354.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-030",
+      "source_box": [
+        2219,
+        880,
+        2329,
+        945
+      ]
+    },
+    {
+      "id": "tank-015-036_000030_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000030_L2.png",
+      "sha256": "43aac934b0e303f0a39e8f57a94b3b4cdbdfb304648ea2a59c9a1f664d7eda4d",
+      "frame": 30,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1786,
+        612,
+        2746,
+        1152
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            433.0,
+            268.0,
+            543.0,
+            333.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-030",
+      "source_box": [
+        2219,
+        880,
+        2329,
+        945
+      ]
+    },
+    {
+      "id": "tank-015-036_000033_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000033_L0.png",
+      "sha256": "19ba3af06e0d3b9e890a3fe2db25f743a160238d89fbc824a3e66f366c7a6dfd",
+      "frame": 33,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            556.25,
+            269.5,
+            584.75,
+            286.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-033",
+      "source_box": [
+        2225,
+        1078,
+        2339,
+        1146
+      ]
+    },
+    {
+      "id": "tank-015-036_000033_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000033_L1.png",
+      "sha256": "40132a7761acf92f47a8cc743a504733f1c3d1d03cee40d6dcf544250c1ac7cf",
+      "frame": 33,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1253,
+        707,
+        3173,
+        1787
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            486.0,
+            185.5,
+            543.0,
+            219.5
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-033",
+      "source_box": [
+        2225,
+        1078,
+        2339,
+        1146
+      ]
+    },
+    {
+      "id": "tank-015-036_000033_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000033_L2.png",
+      "sha256": "3f1c7640eaefa047c5d80488b5b573e58a2cd7a23b0f3569cf8a08960abb1082",
+      "frame": 33,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1919,
+        786,
+        2879,
+        1326
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            306.0,
+            292.0,
+            420.0,
+            360.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-033",
+      "source_box": [
+        2225,
+        1078,
+        2339,
+        1146
+      ]
+    },
+    {
+      "id": "tank-015-036_000036_L0",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000036_L0.png",
+      "sha256": "f2da53d7f0fd4ed85f6f77a923d88033756650b0828fd39efc608b7ac48a7565",
+      "frame": 36,
+      "group": "tank-015-036",
+      "zoom": 0,
+      "source_region": [
+        0,
+        0,
+        3840,
+        2160
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            557.5,
+            321.25,
+            587.75,
+            339.25
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-036",
+      "source_box": [
+        2230,
+        1285,
+        2351,
+        1357
+      ]
+    },
+    {
+      "id": "tank-015-036_000036_L1",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000036_L1.png",
+      "sha256": "cf6ccd194e86a27cef11ac91dd607990f689e4f47a19698a5f29e1cc14bd9360",
+      "frame": 36,
+      "group": "tank-015-036",
+      "zoom": 1,
+      "source_region": [
+        1242,
+        715,
+        3162,
+        1795
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            494.0,
+            285.0,
+            554.5,
+            321.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-036",
+      "source_box": [
+        2230,
+        1285,
+        2351,
+        1357
+      ]
+    },
+    {
+      "id": "tank-015-036_000036_L2",
+      "subset": "manual_known_positives",
+      "file": "images/tank-015-036_000036_L2.png",
+      "sha256": "59440f20d0c6457e8836527a142ec51fab178f811dca1d09dea5d91683583254",
+      "frame": 36,
+      "group": "tank-015-036",
+      "zoom": 2,
+      "source_region": [
+        1913,
+        1006,
+        2873,
+        1546
+      ],
+      "boxes": [
+        {
+          "class_name": "tank",
+          "xyxy": [
+            317.0,
+            279.0,
+            438.0,
+            351.0
+          ]
+        }
+      ],
+      "target_seed_id": "manual-tank-036",
+      "source_box": [
+        2230,
+        1285,
+        2351,
+        1357
+      ]
+    }
+  ],
+  "limits": [
+    "Positive-only manual development annotations, not organizer ground truth.",
+    "Targets are the frozen classifier holdout; detector trained only on organizer reference views.",
+    "Camera windows are selected using target boxes. This is visible-target recognition, not autonomous discovery.",
+    "71 appearances from six physical tracks, correlated across time and zoom; not 213 independent objects.",
+    "All unannotated detections are unknown, not false positives. No precision or mAP for this subset."
+  ]
+}

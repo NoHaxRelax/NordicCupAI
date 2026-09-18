@@ -1,0 +1,1055 @@
+{
+  "selection": {
+    "selected_at": 1789729956.225046,
+    "name": "asset-precision-20260918-v3",
+    "source_archive": "precision-v3-runtime.tar.gz",
+    "source_archive_sha256": "c9f29530a23d8caa852813605d280bb8a3f923e9b975b39608f21512e7ae1a10",
+    "settings": {
+      "cnn_threshold": 0.6,
+      "cnn_verifier_threshold": 0.95,
+      "tiny_threshold": 0.65,
+      "geometric": true,
+      "device": "0",
+      "nms_iou": 0.35,
+      "heatmap_threshold": 0.3,
+      "heatmap_classes": [
+        "small_tower"
+      ],
+      "pose_pixels": true,
+      "pixel_threshold": 0.6,
+      "calibrated_features": true,
+      "cnn_enabled": true,
+      "tiny_min_contrast": 0.8,
+      "verify_heatmap": true,
+      "heatmap_verifier_threshold": 0.4,
+      "calibrated_pixels": true,
+      "calibrated_pixel_threshold": 0.7,
+      "feature_threshold": 0.7,
+      "verify_features_below": 0.8,
+      "weak_feature_verifier_threshold": 0.3,
+      "weak_feature_pixel_threshold": 0.25,
+      "verify_tiny": true,
+      "tiny_verifier_threshold": 0.8,
+      "heatmap_enabled": true,
+      "heatmap_reclassify": false
+    },
+    "bank_sha256": "97a48ca319fc5150964ae36d3533b521529e3d6d14984a37332e12af27e3dd47",
+    "models": {
+      "weights": "d5c85a84ff2681686e5a17775ed49b09a0ec8de158fa60e3426cc3d8a548338b",
+      "verifier": "95efb7d10252f61be7d90f46c76a6ddb9f56f4e892b83d4637d8fe3526ff22b1",
+      "heatmap": "3abf14ab3fe5084de6476e7d7784e79b5e3a4e6272e582cfd1e3fd5bf8d44db7"
+    },
+    "fresh_frames": [
+      187,
+      201,
+      224,
+      247
+    ],
+    "training_calibration_validation_frames": 41,
+    "policy": "Configuration and checkpoints frozen before fresh-image visual annotation review or predictions. Remaining development and consumed-test scans may finish, but these four images cannot be used to change this candidate. Preserve a failure if acceptance gates are not met.",
+    "acceptance_gates": {
+      "reference_matched": 26,
+      "validation_matched_at_least": 16,
+      "consumed_test_matched_at_least": 12,
+      "consumed_test_proposals_at_most": 50
+    },
+    "reason": "Use crop CNN v5 with matching crop scale, wide background samples and neutral walker masks. Preserve strong geometry; require aligned pixels plus same-class CNN for weak geometry. Verify tiny shapes; use strict CNN proposals and a same-class tower gate."
+  },
+  "data_use": {
+    "training_or_calibration_frames": [
+      5,
+      7,
+      9,
+      13,
+      15,
+      17,
+      21,
+      25,
+      29,
+      33,
+      34,
+      37,
+      38,
+      40,
+      41,
+      43,
+      45,
+      49,
+      52,
+      53,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      65,
+      67,
+      69,
+      73,
+      77,
+      81,
+      82,
+      85,
+      89,
+      110,
+      150,
+      190,
+      206,
+      230,
+      245
+    ],
+    "count": 41,
+    "development_frames": [
+      100,
+      127,
+      140,
+      160
+    ],
+    "retired_test_frames": [
+      190,
+      206,
+      230,
+      245
+    ],
+    "holdout_scope": "Four image-disjoint views sharing physical tracks with calibration; five classes, seven participant labels. Configuration frozen before visual annotation review.",
+    "initial_test_result": "Selected 0/6; original hybrid 1/6; retained as historical failure",
+    "accounting": "Includes earlier templates later pruned and all context-training frames, not just rows retained in the current bank.",
+    "consumed_previous_test_frames": [
+      183,
+      198,
+      204,
+      212,
+      220,
+      228,
+      241,
+      249
+    ],
+    "fresh_test_frames": [
+      187,
+      201,
+      224,
+      247
+    ],
+    "previous_test_result": "Frozen v7: 12/13 reviewed targets, 233 proposals. These eight frames became development data for v3 only after preserving that result."
+  },
+  "first_reserved_test": {
+    "selected_matched": 0,
+    "baseline_matched": 1,
+    "targets": 6,
+    "status": "Retired into calibration after failure"
+  },
+  "runs": {
+    "selected_development": {
+      "aggregate": {
+        "validation": {
+          "matched": 16,
+          "targets": 19,
+          "proposals": 20,
+          "unmatched_proposals": 4
+        },
+        "reference": {
+          "matched": 26,
+          "targets": 26,
+          "proposals": 26,
+          "unmatched_proposals": 0
+        }
+      },
+      "frames": [
+        {
+          "frame": 5,
+          "split": "reference",
+          "targets": 11,
+          "matched": 11,
+          "proposals": 11,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 4,
+              "iou": 0.9854403712033779,
+              "score": 0.9497164834462679,
+              "predicted_class": "small_plane"
+            },
+            {
+              "target": 7,
+              "iou": 0.9776725860077337,
+              "score": 0.9493130559875415,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 5,
+              "iou": 0.9839042414069717,
+              "score": 0.946237175648029,
+              "predicted_class": "jet_plane"
+            },
+            {
+              "target": 3,
+              "iou": 0.9871330772953801,
+              "score": 0.9406173037107174,
+              "predicted_class": "condor"
+            },
+            {
+              "target": 2,
+              "iou": 0.9488303070717148,
+              "score": 0.9382151735287447,
+              "predicted_class": "spacecraft"
+            },
+            {
+              "target": 1,
+              "iou": 0.988722155538498,
+              "score": 0.9307351072934957,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.938092578288567,
+              "score": 0.9276671607677753,
+              "predicted_class": "jammer"
+            },
+            {
+              "target": 9,
+              "iou": 0.9719821198124297,
+              "score": 0.9252927903153679,
+              "predicted_class": "small_tower"
+            },
+            {
+              "target": 8,
+              "iou": 0.9865776707139818,
+              "score": 0.924525387929036,
+              "predicted_class": "helicopter"
+            },
+            {
+              "target": 6,
+              "iou": 0.6333333333333333,
+              "score": 0.8494457123241203,
+              "predicted_class": "small_launcher"
+            },
+            {
+              "target": 10,
+              "iou": 0.9220902931310088,
+              "score": 0.7653573853861202,
+              "predicted_class": "ta-ta"
+            }
+          ]
+        },
+        {
+          "frame": 12,
+          "split": "reference",
+          "targets": 9,
+          "matched": 9,
+          "proposals": 9,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 2,
+              "iou": 0.9801039827526388,
+              "score": 0.9566849296826583,
+              "predicted_class": "jet_plane"
+            },
+            {
+              "target": 1,
+              "iou": 0.9247809001014358,
+              "score": 0.9432715027836653,
+              "predicted_class": "spacecraft"
+            },
+            {
+              "target": 5,
+              "iou": 0.9367009004729248,
+              "score": 0.9368113910922637,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 0,
+              "iou": 0.9840289321346876,
+              "score": 0.934530745102809,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 7,
+              "iou": 0.9778893182634754,
+              "score": 0.9335629444664175,
+              "predicted_class": "small_tower"
+            },
+            {
+              "target": 6,
+              "iou": 0.9630964115554504,
+              "score": 0.9223322194814682,
+              "predicted_class": "helicopter"
+            },
+            {
+              "target": 4,
+              "iou": 0.6363636363636364,
+              "score": 0.8550341716024615,
+              "predicted_class": "small_launcher"
+            },
+            {
+              "target": 3,
+              "iou": 0.8925302854126056,
+              "score": 0.7814744710922241,
+              "predicted_class": "large_tower"
+            },
+            {
+              "target": 8,
+              "iou": 0.9317878045161525,
+              "score": 0.7239321091825311,
+              "predicted_class": "ta-ta"
+            }
+          ]
+        },
+        {
+          "frame": 20,
+          "split": "reference",
+          "targets": 6,
+          "matched": 6,
+          "proposals": 6,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 4,
+              "iou": 0.9620395075664183,
+              "score": 0.9453876537734812,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 1,
+              "iou": 0.968609243292603,
+              "score": 0.9448693452431605,
+              "predicted_class": "jet_plane"
+            },
+            {
+              "target": 0,
+              "iou": 0.9373762707803388,
+              "score": 0.9435608746246857,
+              "predicted_class": "spacecraft"
+            },
+            {
+              "target": 2,
+              "iou": 0.8868412495842058,
+              "score": 0.8767268061637878,
+              "predicted_class": "large_tower"
+            },
+            {
+              "target": 3,
+              "iou": 0.6086956521739131,
+              "score": 0.8723101799951037,
+              "predicted_class": "small_launcher"
+            },
+            {
+              "target": 5,
+              "iou": 0.8371868651041632,
+              "score": 0.8358974456787109,
+              "predicted_class": "ta-ta"
+            }
+          ]
+        },
+        {
+          "frame": 100,
+          "split": "validation",
+          "targets": 4,
+          "matched": 3,
+          "proposals": 3,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.7487211488329225,
+              "score": 0.9233700531179254,
+              "predicted_class": "helicopter"
+            },
+            {
+              "target": 2,
+              "iou": 0.6556666679953339,
+              "score": 0.890343364752256,
+              "predicted_class": "large_tower"
+            },
+            {
+              "target": 3,
+              "iou": 0.6949152542372882,
+              "score": 0.6270859837532043,
+              "predicted_class": "medium_launcher"
+            }
+          ]
+        },
+        {
+          "frame": 127,
+          "split": "validation",
+          "targets": 6,
+          "matched": 5,
+          "proposals": 7,
+          "unmatched_proposals": 2,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.7308253715991682,
+              "score": 0.9210143813720115,
+              "predicted_class": "jet_plane"
+            },
+            {
+              "target": 2,
+              "iou": 0.90997362704407,
+              "score": 0.9158195873824033,
+              "predicted_class": "helicopter"
+            },
+            {
+              "target": 1,
+              "iou": 0.6524470169847424,
+              "score": 0.8324173368857457,
+              "predicted_class": "hangar"
+            },
+            {
+              "target": 5,
+              "iou": 0.5870973612909189,
+              "score": 0.7435776182102765,
+              "predicted_class": "small_launcher"
+            },
+            {
+              "target": 4,
+              "iou": 0.5892255892255783,
+              "score": 0.6843147922847721,
+              "predicted_class": "small_launcher"
+            }
+          ]
+        },
+        {
+          "frame": 140,
+          "split": "validation",
+          "targets": 7,
+          "matched": 6,
+          "proposals": 8,
+          "unmatched_proposals": 2,
+          "matches": [
+            {
+              "target": 6,
+              "iou": 0.9373557147864026,
+              "score": 0.9263195195564857,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 2,
+              "iou": 0.8699944751753108,
+              "score": 0.9136331140078031,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 1,
+              "iou": 0.5743973032697295,
+              "score": 0.748324990272522,
+              "predicted_class": "hangar"
+            },
+            {
+              "target": 4,
+              "iou": 0.59215262778978,
+              "score": 0.7167293178641153,
+              "predicted_class": "small_launcher"
+            },
+            {
+              "target": 5,
+              "iou": 0.645753048619548,
+              "score": 0.683762975739141,
+              "predicted_class": "small_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.9677895254487338,
+              "score": 0.6380839198827744,
+              "predicted_class": "jet_plane"
+            }
+          ]
+        },
+        {
+          "frame": 160,
+          "split": "validation",
+          "targets": 2,
+          "matched": 2,
+          "proposals": 2,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.7530322405549046,
+              "score": 0.9040519516284649,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 1,
+              "iou": 0.5954657445817892,
+              "score": 0.30954092741012573,
+              "predicted_class": "small_tower"
+            }
+          ]
+        }
+      ],
+      "view_seconds": {
+        "median": 4.435173299996677,
+        "p95": 6.599609790000977,
+        "maximum": 7.09617359999902
+      }
+    },
+    "selected_consumed": {
+      "aggregate": {
+        "fresh_test": {
+          "matched": 13,
+          "targets": 13,
+          "proposals": 22,
+          "unmatched_proposals": 9
+        }
+      },
+      "frames": [
+        {
+          "frame": 183,
+          "split": "fresh_test",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 1,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.9579927115577815,
+              "score": 0.9205454178039845,
+              "predicted_class": "tank"
+            }
+          ]
+        },
+        {
+          "frame": 198,
+          "split": "fresh_test",
+          "targets": 3,
+          "matched": 3,
+          "proposals": 4,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 1,
+              "iou": 0.9595455288473385,
+              "score": 0.929576536141909,
+              "predicted_class": "mine_roller"
+            },
+            {
+              "target": 0,
+              "iou": 0.8959567738223647,
+              "score": 0.9223325018666008,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 2,
+              "iou": 0.9144019092403401,
+              "score": 0.9188125624106481,
+              "predicted_class": "large_launcher"
+            }
+          ]
+        },
+        {
+          "frame": 204,
+          "split": "fresh_test",
+          "targets": 3,
+          "matched": 3,
+          "proposals": 4,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.9577054913259432,
+              "score": 0.9344167100924712,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 2,
+              "iou": 0.9742513193259684,
+              "score": 0.9283595064970164,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 1,
+              "iou": 0.9242131097956215,
+              "score": 0.9261608770002018,
+              "predicted_class": "mine_roller"
+            }
+          ]
+        },
+        {
+          "frame": 212,
+          "split": "fresh_test",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 3,
+          "unmatched_proposals": 2,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.8786731273136544,
+              "score": 0.9165654479540312,
+              "predicted_class": "large_launcher"
+            }
+          ]
+        },
+        {
+          "frame": 220,
+          "split": "fresh_test",
+          "targets": 2,
+          "matched": 2,
+          "proposals": 2,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 1,
+              "iou": 0.9117828585621492,
+              "score": 0.9019574390924894,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.726900064025735,
+              "score": 0.7434288332245567,
+              "predicted_class": "large_tower"
+            }
+          ]
+        },
+        {
+          "frame": 228,
+          "split": "fresh_test",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 2,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.9364878489832792,
+              "score": 0.9199274133718931,
+              "predicted_class": "large_tower"
+            }
+          ]
+        },
+        {
+          "frame": 241,
+          "split": "fresh_test",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 4,
+          "unmatched_proposals": 3,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.9124684771558109,
+              "score": 0.8801992135047912,
+              "predicted_class": "small_tower"
+            }
+          ]
+        },
+        {
+          "frame": 249,
+          "split": "fresh_test",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 2,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.8269292016694741,
+              "score": 0.8325028464685787,
+              "predicted_class": "small_tower"
+            }
+          ]
+        }
+      ],
+      "view_seconds": {
+        "median": 4.491417650000585,
+        "p95": 6.630036945001302,
+        "maximum": 8.23553229999743
+      }
+    },
+    "selected_fresh": {
+      "aggregate": {
+        "fresh_test_v3": {
+          "matched": 7,
+          "targets": 7,
+          "proposals": 12,
+          "unmatched_proposals": 5
+        }
+      },
+      "frames": [
+        {
+          "frame": 187,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 1,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.9401330664404035,
+              "score": 0.9248914300936919,
+              "predicted_class": "tank"
+            }
+          ]
+        },
+        {
+          "frame": 201,
+          "split": "fresh_test_v3",
+          "targets": 3,
+          "matched": 3,
+          "proposals": 5,
+          "unmatched_proposals": 2,
+          "matches": [
+            {
+              "target": 2,
+              "iou": 0.9133102725385299,
+              "score": 0.9239449853163499,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.9772630380224521,
+              "score": 0.9229529628386864,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 1,
+              "iou": 0.9063974026838522,
+              "score": 0.8265777132144341,
+              "predicted_class": "mine_roller"
+            }
+          ]
+        },
+        {
+          "frame": 224,
+          "split": "fresh_test_v3",
+          "targets": 2,
+          "matched": 2,
+          "proposals": 3,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 1,
+              "iou": 0.8942992392665774,
+              "score": 0.9044232263931861,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.8745476932337393,
+              "score": 0.8302929681081038,
+              "predicted_class": "large_tower"
+            }
+          ]
+        },
+        {
+          "frame": 247,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 3,
+          "unmatched_proposals": 2,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.8682653578759582,
+              "score": 0.9029739029132403,
+              "predicted_class": "small_tower"
+            }
+          ]
+        }
+      ],
+      "view_seconds": {
+        "median": 4.092859550000867,
+        "p95": 4.287949999997909,
+        "maximum": 4.537509499998123
+      }
+    },
+    "selected_fresh_original_labels": {
+      "aggregate": {
+        "fresh_test_v3": {
+          "matched": 4,
+          "targets": 7,
+          "proposals": 12,
+          "unmatched_proposals": 8
+        }
+      },
+      "frames": [
+        {
+          "frame": 187,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 0,
+          "proposals": 1,
+          "unmatched_proposals": 1,
+          "matches": []
+        },
+        {
+          "frame": 201,
+          "split": "fresh_test_v3",
+          "targets": 3,
+          "matched": 2,
+          "proposals": 5,
+          "unmatched_proposals": 3,
+          "matches": [
+            {
+              "target": 2,
+              "iou": 0.586771957431678,
+              "score": 0.9239449853163499,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 1,
+              "iou": 0.7776455691125621,
+              "score": 0.8265777132144341,
+              "predicted_class": "mine_roller"
+            }
+          ]
+        },
+        {
+          "frame": 224,
+          "split": "fresh_test_v3",
+          "targets": 2,
+          "matched": 2,
+          "proposals": 3,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 1,
+              "iou": 0.6269020900831397,
+              "score": 0.9044232263931861,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.6016947946115008,
+              "score": 0.8302929681081038,
+              "predicted_class": "large_tower"
+            }
+          ]
+        },
+        {
+          "frame": 247,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 0,
+          "proposals": 3,
+          "unmatched_proposals": 3,
+          "matches": []
+        }
+      ],
+      "view_seconds": {
+        "median": 4.092859550000867,
+        "p95": 4.287949999997909,
+        "maximum": 4.537509499998123
+      }
+    },
+    "selected_fresh_geometric_pixel_subset": {
+      "aggregate": {
+        "fresh_test_v3": {
+          "matched": 7,
+          "targets": 7,
+          "proposals": 10,
+          "unmatched_proposals": 3
+        }
+      },
+      "frames": [
+        {
+          "frame": 187,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 1,
+          "unmatched_proposals": 0,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.9401330664404035,
+              "score": 0.9248914300936919,
+              "predicted_class": "tank"
+            }
+          ]
+        },
+        {
+          "frame": 201,
+          "split": "fresh_test_v3",
+          "targets": 3,
+          "matched": 3,
+          "proposals": 4,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 2,
+              "iou": 0.9133102725385299,
+              "score": 0.9239449853163499,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.9772630380224521,
+              "score": 0.9229529628386864,
+              "predicted_class": "tank"
+            },
+            {
+              "target": 1,
+              "iou": 0.9063974026838522,
+              "score": 0.8265777132144341,
+              "predicted_class": "mine_roller"
+            }
+          ]
+        },
+        {
+          "frame": 224,
+          "split": "fresh_test_v3",
+          "targets": 2,
+          "matched": 2,
+          "proposals": 3,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 1,
+              "iou": 0.8942992392665774,
+              "score": 0.9044232263931861,
+              "predicted_class": "large_launcher"
+            },
+            {
+              "target": 0,
+              "iou": 0.8745476932337393,
+              "score": 0.8302929681081038,
+              "predicted_class": "large_tower"
+            }
+          ]
+        },
+        {
+          "frame": 247,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 1,
+          "proposals": 2,
+          "unmatched_proposals": 1,
+          "matches": [
+            {
+              "target": 0,
+              "iou": 0.8682653578759582,
+              "score": 0.9029739029132403,
+              "predicted_class": "small_tower"
+            }
+          ]
+        }
+      ],
+      "view_seconds": {
+        "median": 4.092859550000867,
+        "p95": 4.287949999997909,
+        "maximum": 4.537509499998123
+      }
+    },
+    "baseline_fresh": {
+      "aggregate": {
+        "fresh_test_v3": {
+          "matched": 0,
+          "targets": 7,
+          "proposals": 330,
+          "unmatched_proposals": 330
+        }
+      },
+      "frames": [
+        {
+          "frame": 187,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 0,
+          "proposals": 10,
+          "unmatched_proposals": 10,
+          "matches": []
+        },
+        {
+          "frame": 201,
+          "split": "fresh_test_v3",
+          "targets": 3,
+          "matched": 0,
+          "proposals": 28,
+          "unmatched_proposals": 28,
+          "matches": []
+        },
+        {
+          "frame": 224,
+          "split": "fresh_test_v3",
+          "targets": 2,
+          "matched": 0,
+          "proposals": 199,
+          "unmatched_proposals": 199,
+          "matches": []
+        },
+        {
+          "frame": 247,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 0,
+          "proposals": 93,
+          "unmatched_proposals": 93,
+          "matches": []
+        }
+      ],
+      "view_seconds": {
+        "median": 2.4663481669995235,
+        "p95": 3.3920528684480815,
+        "maximum": 4.912001624994446
+      }
+    },
+    "baseline_fresh_original_labels": {
+      "aggregate": {
+        "fresh_test_v3": {
+          "matched": 0,
+          "targets": 7,
+          "proposals": 330,
+          "unmatched_proposals": 330
+        }
+      },
+      "frames": [
+        {
+          "frame": 187,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 0,
+          "proposals": 10,
+          "unmatched_proposals": 10,
+          "matches": []
+        },
+        {
+          "frame": 201,
+          "split": "fresh_test_v3",
+          "targets": 3,
+          "matched": 0,
+          "proposals": 28,
+          "unmatched_proposals": 28,
+          "matches": []
+        },
+        {
+          "frame": 224,
+          "split": "fresh_test_v3",
+          "targets": 2,
+          "matched": 0,
+          "proposals": 199,
+          "unmatched_proposals": 199,
+          "matches": []
+        },
+        {
+          "frame": 247,
+          "split": "fresh_test_v3",
+          "targets": 1,
+          "matched": 0,
+          "proposals": 93,
+          "unmatched_proposals": 93,
+          "matches": []
+        }
+      ],
+      "view_seconds": {
+        "median": 2.4663481669995235,
+        "p95": 3.3920528684480815,
+        "maximum": 4.912001624994446
+      }
+    }
+  },
+  "limitations": [
+    "Participant-reviewed labels, not organizer ground truth",
+    "Four new test images share physical tracks with training calibration",
+    "Test has 7 targets across five classes, not all 16",
+    "Exhaustive offline 25-view search is not a flight policy",
+    "Baseline uses laptop CPU and local library versions; selected uses mypc GPU. Timings are not directly comparable; checkpoint, bank and fixture hashes are checked.",
+    "Annotations may omit objects; unmatched proposals require visual review"
+  ]
+}

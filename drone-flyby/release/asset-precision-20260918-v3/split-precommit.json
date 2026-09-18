@@ -1,0 +1,22 @@
+{
+  "created_at": 1789727310.7983801,
+  "new_test_frames": [
+    187,
+    201,
+    224,
+    247
+  ],
+  "training_calibration_frames_unchanged": 41,
+  "prior_test_frames_now_development": [
+    183,
+    198,
+    204,
+    212,
+    220,
+    228,
+    241,
+    249
+  ],
+  "policy": "Retain frozen v7 results as measured before further changes. New test frames chosen before viewing pixels. No training added from either test set; follow-up tuning may use completed v7 error analysis.",
+  "reason": "High recall has not resolved obvious background false detections from CNN and tiny-shape branches"
+}

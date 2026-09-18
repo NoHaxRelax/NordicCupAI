@@ -1,0 +1,32 @@
+{
+  "code_commit": "6911ec2a236c545b1f4da5f3813dbbfa827e79f7",
+  "data_version": "first-run-v2",
+  "submitted_at": "2026-09-17T17:26:27+02:00",
+  "jobs": [
+    {
+      "task": "classifier",
+      "id": 29428577,
+      "queue": "gpua100",
+      "epochs": 40,
+      "state_at_submission": "PEND"
+    },
+    {
+      "task": "detector",
+      "id": 29428578,
+      "queue": "gpul40s",
+      "epochs": 50,
+      "state_at_submission": "PEND"
+    }
+  ],
+  "checkpoint_root": "hpc:~/nordic-drone/runs/",
+  "weights": {
+    "yolo26x.pt": "9fdd44a31c504547ffb81d2c6d9e6dac3493c8eaa8b0398d3f43bae6c7003e92",
+    "resnet50-11ad3fa6.pth": "11ad3fa62ca79e40addfd354a8ec4b7c75143b3038b8d2a807fbc68deab379ca"
+  },
+  "remote_data_verification": "All 1285 rendered image SHA256 values verified after extraction on application node n-62-30-8.",
+  "follow_up": {
+    "automation_id": "drone-first-training-run-follow-up",
+    "interval_minutes": 10,
+    "scope": "Check these jobs, push meaningful progress receipts, back up final checkpoints, then pause."
+  }
+}

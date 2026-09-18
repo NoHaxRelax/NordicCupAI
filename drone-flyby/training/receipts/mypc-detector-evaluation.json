@@ -1,0 +1,1872 @@
+{
+  "checkpoint_sha256": "14f34b0b97f228342f0b71c5e8fb2c603d0100abc725aa74b675458c3b7f5897",
+  "evaluation_manifest_sha256": "f6284e636f3ac0a1febbff147fa7af024127c9499d62a7950cfe899aa291245a",
+  "script_sha256": "8f934c82f6f5090262778ed68c46932471d68097b84508f549bd48dab4f8d10b",
+  "gpu": "NVIDIA GeForce RTX 4080",
+  "views": 463,
+  "elapsed_seconds": 12.003472399999737,
+  "match_iou": 0.5,
+  "primary_confidence": 0.25,
+  "thresholds": {
+    "0.1": {
+      "metrics": {
+        "manual_known_positives/L0": {
+          "views": 71,
+          "gt": 71,
+          "tp": 1,
+          "predictions": 42,
+          "localized": 1,
+          "recall": 0.014084507042253521,
+          "localization_recall": 0.014084507042253521
+        },
+        "manual_known_positives/L0/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/hangar": {
+          "gt": 12,
+          "tp": 1,
+          "localized": 1,
+          "recall": 0.08333333333333333,
+          "localization_recall": 0.08333333333333333
+        },
+        "manual_known_positives/L0/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1": {
+          "views": 71,
+          "gt": 71,
+          "tp": 3,
+          "predictions": 52,
+          "localized": 8,
+          "recall": 0.04225352112676056,
+          "localization_recall": 0.11267605633802817
+        },
+        "manual_known_positives/L1/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/hangar": {
+          "gt": 12,
+          "tp": 3,
+          "localized": 3,
+          "recall": 0.25,
+          "localization_recall": 0.25
+        },
+        "manual_known_positives/L1/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 5,
+          "recall": 0.0,
+          "localization_recall": 0.3333333333333333
+        },
+        "manual_known_positives/L1/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2": {
+          "views": 71,
+          "gt": 71,
+          "tp": 1,
+          "predictions": 115,
+          "localized": 10,
+          "recall": 0.014084507042253521,
+          "localization_recall": 0.14084507042253522
+        },
+        "manual_known_positives/L2/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/hangar": {
+          "gt": 12,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/helicopter": {
+          "gt": 11,
+          "tp": 1,
+          "localized": 1,
+          "recall": 0.09090909090909091,
+          "localization_recall": 0.09090909090909091
+        },
+        "manual_known_positives/L2/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 9,
+          "recall": 0.0,
+          "localization_recall": 0.6
+        },
+        "manual_known_positives/L2/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "reference_training_fit/L0": {
+          "views": 25,
+          "gt": 259,
+          "tp": 244,
+          "predictions": 246,
+          "localized": 244,
+          "recall": 0.9420849420849421,
+          "localization_recall": 0.9420849420849421,
+          "precision": 0.991869918699187
+        },
+        "reference_training_fit/L0/condor": {
+          "gt": 11,
+          "tp": 10,
+          "localized": 10,
+          "predictions": 11,
+          "recall": 0.9090909090909091,
+          "localization_recall": 0.9090909090909091,
+          "precision": 0.9090909090909091
+        },
+        "reference_training_fit/L0/hangar": {
+          "gt": 6,
+          "tp": 5,
+          "localized": 5,
+          "predictions": 5,
+          "recall": 0.8333333333333334,
+          "localization_recall": 0.8333333333333334,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/helicopter": {
+          "gt": 19,
+          "tp": 18,
+          "localized": 18,
+          "predictions": 18,
+          "recall": 0.9473684210526315,
+          "localization_recall": 0.9473684210526315,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/jammer": {
+          "gt": 13,
+          "tp": 12,
+          "localized": 12,
+          "predictions": 12,
+          "recall": 0.9230769230769231,
+          "localization_recall": 0.9230769230769231,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/jet_plane": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/large_launcher": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/large_tower": {
+          "gt": 19,
+          "tp": 18,
+          "localized": 18,
+          "predictions": 18,
+          "recall": 0.9473684210526315,
+          "localization_recall": 0.9473684210526315,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/medium_launcher": {
+          "gt": 10,
+          "tp": 7,
+          "localized": 7,
+          "predictions": 7,
+          "recall": 0.7,
+          "localization_recall": 0.7,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/medium_plane": {
+          "gt": 5,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.8,
+          "localization_recall": 0.8,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/mine_roller": {
+          "gt": 2,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 0.5,
+          "localization_recall": 0.5,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_launcher": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_plane": {
+          "gt": 9,
+          "tp": 8,
+          "localized": 8,
+          "predictions": 8,
+          "recall": 0.8888888888888888,
+          "localization_recall": 0.8888888888888888,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_tower": {
+          "gt": 20,
+          "tp": 19,
+          "localized": 19,
+          "predictions": 19,
+          "recall": 0.95,
+          "localization_recall": 0.95,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/spacecraft": {
+          "gt": 23,
+          "tp": 22,
+          "localized": 22,
+          "predictions": 23,
+          "recall": 0.9565217391304348,
+          "localization_recall": 0.9565217391304348,
+          "precision": 0.9565217391304348
+        },
+        "reference_training_fit/L0/ta-ta": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/tank": {
+          "gt": 25,
+          "tp": 24,
+          "localized": 24,
+          "predictions": 24,
+          "recall": 0.96,
+          "localization_recall": 0.96,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1": {
+          "views": 175,
+          "gt": 600,
+          "tp": 568,
+          "predictions": 576,
+          "localized": 568,
+          "recall": 0.9466666666666667,
+          "localization_recall": 0.9466666666666667,
+          "precision": 0.9861111111111112
+        },
+        "reference_training_fit/L1/condor": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 22,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 0.9545454545454546
+        },
+        "reference_training_fit/L1/hangar": {
+          "gt": 6,
+          "tp": 6,
+          "localized": 6,
+          "predictions": 6,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/helicopter": {
+          "gt": 58,
+          "tp": 54,
+          "localized": 54,
+          "predictions": 57,
+          "recall": 0.9310344827586207,
+          "localization_recall": 0.9310344827586207,
+          "precision": 0.9473684210526315
+        },
+        "reference_training_fit/L1/jammer": {
+          "gt": 18,
+          "tp": 18,
+          "localized": 18,
+          "predictions": 18,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/jet_plane": {
+          "gt": 74,
+          "tp": 69,
+          "localized": 69,
+          "predictions": 69,
+          "recall": 0.9324324324324325,
+          "localization_recall": 0.9324324324324325,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/large_launcher": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 23,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 0.9130434782608695
+        },
+        "reference_training_fit/L1/large_tower": {
+          "gt": 34,
+          "tp": 31,
+          "localized": 31,
+          "predictions": 31,
+          "recall": 0.9117647058823529,
+          "localization_recall": 0.9117647058823529,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/medium_launcher": {
+          "gt": 15,
+          "tp": 14,
+          "localized": 14,
+          "predictions": 14,
+          "recall": 0.9333333333333333,
+          "localization_recall": 0.9333333333333333,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/medium_plane": {
+          "gt": 6,
+          "tp": 6,
+          "localized": 6,
+          "predictions": 6,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/mine_roller": {
+          "gt": 4,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_launcher": {
+          "gt": 89,
+          "tp": 86,
+          "localized": 86,
+          "predictions": 86,
+          "recall": 0.9662921348314607,
+          "localization_recall": 0.9662921348314607,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_plane": {
+          "gt": 21,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 23,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 0.9130434782608695
+        },
+        "reference_training_fit/L1/small_tower": {
+          "gt": 53,
+          "tp": 46,
+          "localized": 46,
+          "predictions": 46,
+          "recall": 0.8679245283018868,
+          "localization_recall": 0.8679245283018868,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/spacecraft": {
+          "gt": 66,
+          "tp": 62,
+          "localized": 62,
+          "predictions": 62,
+          "recall": 0.9393939393939394,
+          "localization_recall": 0.9393939393939394,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/ta-ta": {
+          "gt": 66,
+          "tp": 66,
+          "localized": 66,
+          "predictions": 66,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/tank": {
+          "gt": 46,
+          "tp": 43,
+          "localized": 43,
+          "predictions": 43,
+          "recall": 0.9347826086956522,
+          "localization_recall": 0.9347826086956522,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2": {
+          "views": 50,
+          "gt": 77,
+          "tp": 76,
+          "predictions": 77,
+          "localized": 76,
+          "recall": 0.987012987012987,
+          "localization_recall": 0.987012987012987,
+          "precision": 0.987012987012987
+        },
+        "reference_training_fit/L2/condor": {
+          "predictions": 1,
+          "recall": null,
+          "localization_recall": null,
+          "precision": 0.0
+        },
+        "reference_training_fit/L2/hangar": {
+          "gt": 5,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.8,
+          "localization_recall": 0.8,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/helicopter": {
+          "gt": 21,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/jet_plane": {
+          "gt": 1,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/large_launcher": {
+          "gt": 3,
+          "tp": 3,
+          "localized": 3,
+          "predictions": 3,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/medium_plane": {
+          "gt": 4,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/small_tower": {
+          "gt": 23,
+          "tp": 23,
+          "localized": 23,
+          "predictions": 23,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/spacecraft": {
+          "gt": 1,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/ta-ta": {
+          "gt": 14,
+          "tp": 14,
+          "localized": 14,
+          "predictions": 14,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/tank": {
+          "gt": 5,
+          "tp": 5,
+          "localized": 5,
+          "predictions": 5,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        }
+      },
+      "confusion": {
+        "L0/condor": {
+          "missed": 15
+        },
+        "L1/condor": {
+          "missed": 15
+        },
+        "L2/condor": {
+          "missed": 15
+        },
+        "L0/hangar": {
+          "missed": 11,
+          "hangar": 1
+        },
+        "L1/hangar": {
+          "missed": 9,
+          "hangar": 3
+        },
+        "L2/hangar": {
+          "missed": 12
+        },
+        "L0/helicopter": {
+          "missed": 11
+        },
+        "L1/helicopter": {
+          "missed": 11
+        },
+        "L2/helicopter": {
+          "missed": 10,
+          "helicopter": 1
+        },
+        "L0/jet_plane": {
+          "missed": 15
+        },
+        "L1/jet_plane": {
+          "missed": 10,
+          "condor": 5
+        },
+        "L2/jet_plane": {
+          "missed": 6,
+          "condor": 9
+        },
+        "L0/large_tower": {
+          "missed": 10
+        },
+        "L1/large_tower": {
+          "missed": 10
+        },
+        "L2/large_tower": {
+          "missed": 10
+        },
+        "L0/tank": {
+          "missed": 8
+        },
+        "L1/tank": {
+          "missed": 8
+        },
+        "L2/tank": {
+          "missed": 8
+        }
+      }
+    },
+    "0.25": {
+      "metrics": {
+        "manual_known_positives/L0": {
+          "views": 71,
+          "gt": 71,
+          "tp": 0,
+          "predictions": 13,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/hangar": {
+          "gt": 12,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1": {
+          "views": 71,
+          "gt": 71,
+          "tp": 1,
+          "predictions": 18,
+          "localized": 6,
+          "recall": 0.014084507042253521,
+          "localization_recall": 0.08450704225352113
+        },
+        "manual_known_positives/L1/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/hangar": {
+          "gt": 12,
+          "tp": 1,
+          "localized": 1,
+          "recall": 0.08333333333333333,
+          "localization_recall": 0.08333333333333333
+        },
+        "manual_known_positives/L1/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 5,
+          "recall": 0.0,
+          "localization_recall": 0.3333333333333333
+        },
+        "manual_known_positives/L1/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2": {
+          "views": 71,
+          "gt": 71,
+          "tp": 0,
+          "predictions": 91,
+          "localized": 9,
+          "recall": 0.0,
+          "localization_recall": 0.1267605633802817
+        },
+        "manual_known_positives/L2/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/hangar": {
+          "gt": 12,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 9,
+          "recall": 0.0,
+          "localization_recall": 0.6
+        },
+        "manual_known_positives/L2/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "reference_training_fit/L0": {
+          "views": 25,
+          "gt": 259,
+          "tp": 243,
+          "predictions": 243,
+          "localized": 243,
+          "recall": 0.9382239382239382,
+          "localization_recall": 0.9382239382239382,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/condor": {
+          "gt": 11,
+          "tp": 9,
+          "localized": 9,
+          "predictions": 9,
+          "recall": 0.8181818181818182,
+          "localization_recall": 0.8181818181818182,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/hangar": {
+          "gt": 6,
+          "tp": 5,
+          "localized": 5,
+          "predictions": 5,
+          "recall": 0.8333333333333334,
+          "localization_recall": 0.8333333333333334,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/helicopter": {
+          "gt": 19,
+          "tp": 18,
+          "localized": 18,
+          "predictions": 18,
+          "recall": 0.9473684210526315,
+          "localization_recall": 0.9473684210526315,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/jammer": {
+          "gt": 13,
+          "tp": 12,
+          "localized": 12,
+          "predictions": 12,
+          "recall": 0.9230769230769231,
+          "localization_recall": 0.9230769230769231,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/jet_plane": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/large_launcher": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/large_tower": {
+          "gt": 19,
+          "tp": 18,
+          "localized": 18,
+          "predictions": 18,
+          "recall": 0.9473684210526315,
+          "localization_recall": 0.9473684210526315,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/medium_launcher": {
+          "gt": 10,
+          "tp": 7,
+          "localized": 7,
+          "predictions": 7,
+          "recall": 0.7,
+          "localization_recall": 0.7,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/medium_plane": {
+          "gt": 5,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.8,
+          "localization_recall": 0.8,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/mine_roller": {
+          "gt": 2,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 0.5,
+          "localization_recall": 0.5,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_launcher": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_plane": {
+          "gt": 9,
+          "tp": 8,
+          "localized": 8,
+          "predictions": 8,
+          "recall": 0.8888888888888888,
+          "localization_recall": 0.8888888888888888,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_tower": {
+          "gt": 20,
+          "tp": 19,
+          "localized": 19,
+          "predictions": 19,
+          "recall": 0.95,
+          "localization_recall": 0.95,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/spacecraft": {
+          "gt": 23,
+          "tp": 22,
+          "localized": 22,
+          "predictions": 22,
+          "recall": 0.9565217391304348,
+          "localization_recall": 0.9565217391304348,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/ta-ta": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/tank": {
+          "gt": 25,
+          "tp": 24,
+          "localized": 24,
+          "predictions": 24,
+          "recall": 0.96,
+          "localization_recall": 0.96,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1": {
+          "views": 175,
+          "gt": 600,
+          "tp": 563,
+          "predictions": 565,
+          "localized": 563,
+          "recall": 0.9383333333333334,
+          "localization_recall": 0.9383333333333334,
+          "precision": 0.9964601769911504
+        },
+        "reference_training_fit/L1/condor": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/hangar": {
+          "gt": 6,
+          "tp": 6,
+          "localized": 6,
+          "predictions": 6,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/helicopter": {
+          "gt": 58,
+          "tp": 52,
+          "localized": 52,
+          "predictions": 53,
+          "recall": 0.896551724137931,
+          "localization_recall": 0.896551724137931,
+          "precision": 0.9811320754716981
+        },
+        "reference_training_fit/L1/jammer": {
+          "gt": 18,
+          "tp": 17,
+          "localized": 17,
+          "predictions": 17,
+          "recall": 0.9444444444444444,
+          "localization_recall": 0.9444444444444444,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/jet_plane": {
+          "gt": 74,
+          "tp": 68,
+          "localized": 68,
+          "predictions": 68,
+          "recall": 0.918918918918919,
+          "localization_recall": 0.918918918918919,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/large_launcher": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 22,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 0.9545454545454546
+        },
+        "reference_training_fit/L1/large_tower": {
+          "gt": 34,
+          "tp": 31,
+          "localized": 31,
+          "predictions": 31,
+          "recall": 0.9117647058823529,
+          "localization_recall": 0.9117647058823529,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/medium_launcher": {
+          "gt": 15,
+          "tp": 13,
+          "localized": 13,
+          "predictions": 13,
+          "recall": 0.8666666666666667,
+          "localization_recall": 0.8666666666666667,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/medium_plane": {
+          "gt": 6,
+          "tp": 6,
+          "localized": 6,
+          "predictions": 6,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/mine_roller": {
+          "gt": 4,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_launcher": {
+          "gt": 89,
+          "tp": 86,
+          "localized": 86,
+          "predictions": 86,
+          "recall": 0.9662921348314607,
+          "localization_recall": 0.9662921348314607,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_plane": {
+          "gt": 21,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_tower": {
+          "gt": 53,
+          "tp": 46,
+          "localized": 46,
+          "predictions": 46,
+          "recall": 0.8679245283018868,
+          "localization_recall": 0.8679245283018868,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/spacecraft": {
+          "gt": 66,
+          "tp": 62,
+          "localized": 62,
+          "predictions": 62,
+          "recall": 0.9393939393939394,
+          "localization_recall": 0.9393939393939394,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/ta-ta": {
+          "gt": 66,
+          "tp": 66,
+          "localized": 66,
+          "predictions": 66,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/tank": {
+          "gt": 46,
+          "tp": 43,
+          "localized": 43,
+          "predictions": 43,
+          "recall": 0.9347826086956522,
+          "localization_recall": 0.9347826086956522,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2": {
+          "views": 50,
+          "gt": 77,
+          "tp": 75,
+          "predictions": 75,
+          "localized": 75,
+          "recall": 0.974025974025974,
+          "localization_recall": 0.974025974025974,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/hangar": {
+          "gt": 5,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.8,
+          "localization_recall": 0.8,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/helicopter": {
+          "gt": 21,
+          "tp": 20,
+          "localized": 20,
+          "predictions": 20,
+          "recall": 0.9523809523809523,
+          "localization_recall": 0.9523809523809523,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/jet_plane": {
+          "gt": 1,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/large_launcher": {
+          "gt": 3,
+          "tp": 3,
+          "localized": 3,
+          "predictions": 3,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/medium_plane": {
+          "gt": 4,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/small_tower": {
+          "gt": 23,
+          "tp": 23,
+          "localized": 23,
+          "predictions": 23,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/spacecraft": {
+          "gt": 1,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/ta-ta": {
+          "gt": 14,
+          "tp": 14,
+          "localized": 14,
+          "predictions": 14,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/tank": {
+          "gt": 5,
+          "tp": 5,
+          "localized": 5,
+          "predictions": 5,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        }
+      },
+      "confusion": {
+        "L0/condor": {
+          "missed": 15
+        },
+        "L1/condor": {
+          "missed": 15
+        },
+        "L2/condor": {
+          "missed": 15
+        },
+        "L0/hangar": {
+          "missed": 12
+        },
+        "L1/hangar": {
+          "missed": 11,
+          "hangar": 1
+        },
+        "L2/hangar": {
+          "missed": 12
+        },
+        "L0/helicopter": {
+          "missed": 11
+        },
+        "L1/helicopter": {
+          "missed": 11
+        },
+        "L2/helicopter": {
+          "missed": 11
+        },
+        "L0/jet_plane": {
+          "missed": 15
+        },
+        "L1/jet_plane": {
+          "missed": 10,
+          "condor": 5
+        },
+        "L2/jet_plane": {
+          "missed": 6,
+          "condor": 9
+        },
+        "L0/large_tower": {
+          "missed": 10
+        },
+        "L1/large_tower": {
+          "missed": 10
+        },
+        "L2/large_tower": {
+          "missed": 10
+        },
+        "L0/tank": {
+          "missed": 8
+        },
+        "L1/tank": {
+          "missed": 8
+        },
+        "L2/tank": {
+          "missed": 8
+        }
+      }
+    },
+    "0.5": {
+      "metrics": {
+        "manual_known_positives/L0": {
+          "views": 71,
+          "gt": 71,
+          "tp": 0,
+          "predictions": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/hangar": {
+          "gt": 12,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L0/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1": {
+          "views": 71,
+          "gt": 71,
+          "tp": 0,
+          "predictions": 11,
+          "localized": 5,
+          "recall": 0.0,
+          "localization_recall": 0.07042253521126761
+        },
+        "manual_known_positives/L1/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/hangar": {
+          "gt": 12,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 5,
+          "recall": 0.0,
+          "localization_recall": 0.3333333333333333
+        },
+        "manual_known_positives/L1/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L1/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2": {
+          "views": 71,
+          "gt": 71,
+          "tp": 0,
+          "predictions": 67,
+          "localized": 9,
+          "recall": 0.0,
+          "localization_recall": 0.1267605633802817
+        },
+        "manual_known_positives/L2/condor": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/hangar": {
+          "gt": 12,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/helicopter": {
+          "gt": 11,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/jet_plane": {
+          "gt": 15,
+          "tp": 0,
+          "localized": 9,
+          "recall": 0.0,
+          "localization_recall": 0.6
+        },
+        "manual_known_positives/L2/large_tower": {
+          "gt": 10,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "manual_known_positives/L2/tank": {
+          "gt": 8,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0
+        },
+        "reference_training_fit/L0": {
+          "views": 25,
+          "gt": 259,
+          "tp": 236,
+          "predictions": 236,
+          "localized": 236,
+          "recall": 0.9111969111969112,
+          "localization_recall": 0.9111969111969112,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/condor": {
+          "gt": 11,
+          "tp": 9,
+          "localized": 9,
+          "predictions": 9,
+          "recall": 0.8181818181818182,
+          "localization_recall": 0.8181818181818182,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/hangar": {
+          "gt": 6,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.6666666666666666,
+          "localization_recall": 0.6666666666666666,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/helicopter": {
+          "gt": 19,
+          "tp": 18,
+          "localized": 18,
+          "predictions": 18,
+          "recall": 0.9473684210526315,
+          "localization_recall": 0.9473684210526315,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/jammer": {
+          "gt": 13,
+          "tp": 12,
+          "localized": 12,
+          "predictions": 12,
+          "recall": 0.9230769230769231,
+          "localization_recall": 0.9230769230769231,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/jet_plane": {
+          "gt": 22,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 0.9545454545454546,
+          "localization_recall": 0.9545454545454546,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/large_launcher": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/large_tower": {
+          "gt": 19,
+          "tp": 17,
+          "localized": 17,
+          "predictions": 17,
+          "recall": 0.8947368421052632,
+          "localization_recall": 0.8947368421052632,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/medium_launcher": {
+          "gt": 10,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.4,
+          "localization_recall": 0.4,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/medium_plane": {
+          "gt": 5,
+          "tp": 3,
+          "localized": 3,
+          "predictions": 3,
+          "recall": 0.6,
+          "localization_recall": 0.6,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/mine_roller": {
+          "gt": 2,
+          "tp": 0,
+          "localized": 0,
+          "recall": 0.0,
+          "localization_recall": 0.0,
+          "precision": null
+        },
+        "reference_training_fit/L0/small_launcher": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_plane": {
+          "gt": 9,
+          "tp": 8,
+          "localized": 8,
+          "predictions": 8,
+          "recall": 0.8888888888888888,
+          "localization_recall": 0.8888888888888888,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/small_tower": {
+          "gt": 20,
+          "tp": 19,
+          "localized": 19,
+          "predictions": 19,
+          "recall": 0.95,
+          "localization_recall": 0.95,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/spacecraft": {
+          "gt": 23,
+          "tp": 22,
+          "localized": 22,
+          "predictions": 22,
+          "recall": 0.9565217391304348,
+          "localization_recall": 0.9565217391304348,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/ta-ta": {
+          "gt": 25,
+          "tp": 25,
+          "localized": 25,
+          "predictions": 25,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L0/tank": {
+          "gt": 25,
+          "tp": 24,
+          "localized": 24,
+          "predictions": 24,
+          "recall": 0.96,
+          "localization_recall": 0.96,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1": {
+          "views": 175,
+          "gt": 600,
+          "tp": 556,
+          "predictions": 557,
+          "localized": 556,
+          "recall": 0.9266666666666666,
+          "localization_recall": 0.9266666666666666,
+          "precision": 0.9982046678635548
+        },
+        "reference_training_fit/L1/condor": {
+          "gt": 22,
+          "tp": 20,
+          "localized": 20,
+          "predictions": 20,
+          "recall": 0.9090909090909091,
+          "localization_recall": 0.9090909090909091,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/hangar": {
+          "gt": 6,
+          "tp": 6,
+          "localized": 6,
+          "predictions": 6,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/helicopter": {
+          "gt": 58,
+          "tp": 51,
+          "localized": 51,
+          "predictions": 51,
+          "recall": 0.8793103448275862,
+          "localization_recall": 0.8793103448275862,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/jammer": {
+          "gt": 18,
+          "tp": 17,
+          "localized": 17,
+          "predictions": 17,
+          "recall": 0.9444444444444444,
+          "localization_recall": 0.9444444444444444,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/jet_plane": {
+          "gt": 74,
+          "tp": 68,
+          "localized": 68,
+          "predictions": 68,
+          "recall": 0.918918918918919,
+          "localization_recall": 0.918918918918919,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/large_launcher": {
+          "gt": 22,
+          "tp": 20,
+          "localized": 20,
+          "predictions": 21,
+          "recall": 0.9090909090909091,
+          "localization_recall": 0.9090909090909091,
+          "precision": 0.9523809523809523
+        },
+        "reference_training_fit/L1/large_tower": {
+          "gt": 34,
+          "tp": 31,
+          "localized": 31,
+          "predictions": 31,
+          "recall": 0.9117647058823529,
+          "localization_recall": 0.9117647058823529,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/medium_launcher": {
+          "gt": 15,
+          "tp": 13,
+          "localized": 13,
+          "predictions": 13,
+          "recall": 0.8666666666666667,
+          "localization_recall": 0.8666666666666667,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/medium_plane": {
+          "gt": 6,
+          "tp": 6,
+          "localized": 6,
+          "predictions": 6,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/mine_roller": {
+          "gt": 4,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_launcher": {
+          "gt": 89,
+          "tp": 85,
+          "localized": 85,
+          "predictions": 85,
+          "recall": 0.9550561797752809,
+          "localization_recall": 0.9550561797752809,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_plane": {
+          "gt": 21,
+          "tp": 21,
+          "localized": 21,
+          "predictions": 21,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/small_tower": {
+          "gt": 53,
+          "tp": 46,
+          "localized": 46,
+          "predictions": 46,
+          "recall": 0.8679245283018868,
+          "localization_recall": 0.8679245283018868,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/spacecraft": {
+          "gt": 66,
+          "tp": 60,
+          "localized": 60,
+          "predictions": 60,
+          "recall": 0.9090909090909091,
+          "localization_recall": 0.9090909090909091,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/ta-ta": {
+          "gt": 66,
+          "tp": 66,
+          "localized": 66,
+          "predictions": 66,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L1/tank": {
+          "gt": 46,
+          "tp": 42,
+          "localized": 42,
+          "predictions": 42,
+          "recall": 0.9130434782608695,
+          "localization_recall": 0.9130434782608695,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2": {
+          "views": 50,
+          "gt": 77,
+          "tp": 74,
+          "predictions": 74,
+          "localized": 74,
+          "recall": 0.961038961038961,
+          "localization_recall": 0.961038961038961,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/hangar": {
+          "gt": 5,
+          "tp": 4,
+          "localized": 4,
+          "predictions": 4,
+          "recall": 0.8,
+          "localization_recall": 0.8,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/helicopter": {
+          "gt": 21,
+          "tp": 20,
+          "localized": 20,
+          "predictions": 20,
+          "recall": 0.9523809523809523,
+          "localization_recall": 0.9523809523809523,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/jet_plane": {
+          "gt": 1,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/large_launcher": {
+          "gt": 3,
+          "tp": 3,
+          "localized": 3,
+          "predictions": 3,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/medium_plane": {
+          "gt": 4,
+          "tp": 3,
+          "localized": 3,
+          "predictions": 3,
+          "recall": 0.75,
+          "localization_recall": 0.75,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/small_tower": {
+          "gt": 23,
+          "tp": 23,
+          "localized": 23,
+          "predictions": 23,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/spacecraft": {
+          "gt": 1,
+          "tp": 1,
+          "localized": 1,
+          "predictions": 1,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/ta-ta": {
+          "gt": 14,
+          "tp": 14,
+          "localized": 14,
+          "predictions": 14,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        },
+        "reference_training_fit/L2/tank": {
+          "gt": 5,
+          "tp": 5,
+          "localized": 5,
+          "predictions": 5,
+          "recall": 1.0,
+          "localization_recall": 1.0,
+          "precision": 1.0
+        }
+      },
+      "confusion": {
+        "L0/condor": {
+          "missed": 15
+        },
+        "L1/condor": {
+          "missed": 15
+        },
+        "L2/condor": {
+          "missed": 15
+        },
+        "L0/hangar": {
+          "missed": 12
+        },
+        "L1/hangar": {
+          "missed": 12
+        },
+        "L2/hangar": {
+          "missed": 12
+        },
+        "L0/helicopter": {
+          "missed": 11
+        },
+        "L1/helicopter": {
+          "missed": 11
+        },
+        "L2/helicopter": {
+          "missed": 11
+        },
+        "L0/jet_plane": {
+          "missed": 15
+        },
+        "L1/jet_plane": {
+          "missed": 10,
+          "condor": 5
+        },
+        "L2/jet_plane": {
+          "missed": 6,
+          "condor": 9
+        },
+        "L0/large_tower": {
+          "missed": 10
+        },
+        "L1/large_tower": {
+          "missed": 10
+        },
+        "L2/large_tower": {
+          "missed": 10
+        },
+        "L0/tank": {
+          "missed": 8
+        },
+        "L1/tank": {
+          "missed": 8
+        },
+        "L2/tank": {
+          "missed": 8
+        }
+      }
+    }
+  },
+  "limits": [
+    "Positive-only manual development annotations, not organizer ground truth.",
+    "Targets are the frozen classifier holdout; detector trained only on organizer reference views.",
+    "Camera windows are selected using target boxes. This is visible-target recognition, not autonomous discovery.",
+    "71 appearances from six physical tracks, correlated across time and zoom; not 213 independent objects.",
+    "All unannotated detections are unknown, not false positives. No precision or mAP for this subset.",
+    "Reference metrics use the actual training images, not a holdout.",
+    "Confidence thresholds were specified before predictions; this run does not tune or retrain."
+  ]
+}
