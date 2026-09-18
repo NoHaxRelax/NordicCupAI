@@ -37,7 +37,7 @@ def prioritize(action, bait, edges, agent, memory, target=None):
     if '_steering_geometry' not in memory:
         fixed_edges = [(to_fixed(a), to_fixed(b)) for a, b in edges]
         memory['_steering_geometry'] = (
-            RoutePlanner(fixed_edges, clearance=5.5),
+            RoutePlanner(fixed_edges, clearance=5.5, exclusion_radius=memory.get('_trap_exclusion_radius', 0.)),
             unary_union([LineString(e) for e in fixed_edges]))
     geometry, walls = memory['_steering_geometry']
     origin = to_fixed((0., 0.))

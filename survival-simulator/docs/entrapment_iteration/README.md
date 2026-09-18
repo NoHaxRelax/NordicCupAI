@@ -20,6 +20,9 @@ stay clear. Same criteria as `docs/guide_multi_1000_results.md`.
 | Require newcomer within bait hearing before stopping | 9 | — |
 | Restrict stopping to the front approach lane | 10 | 65 |
 | Front-lane stop plus recovery into predator-width paths | — | 67 |
+| 55-unit stop, tracking plus route recovery (current default) | — | 72 |
+| Crowd-preference sacrifice guard | 9 | — |
+| Side-offset handoff | 6 | — |
 
 Each column uses identical map/encounter seeds across variants. The 12-map and
 100-map encounter lists differ. These are repeated development measurements,
@@ -95,14 +98,22 @@ http://localhost:9063 (seed 0, 600 seconds, native sprites).
 - `core.py`: surviving guides may return to normal work after ten seconds of
   observed proximity to bait. Native-game evidence for a successful release is
   still missing; close overlapping tracks can have ambiguous identities.
-- A further sacrifice guard checks that observed crowd members prefer bait to
-  the guide before bypassing survival steering. Evaluation is in progress.
+- Crowd-preference and side-offset sacrifice experiments regressed on the small
+  paired sample and are not enabled. The default retains the measured 55-unit stop.
+- `--vision-delivery` is an explicitly experimental benchmark option: route
+  outside an 85-unit bait exclusion radius and sacrifice at a distant front
+  point only with observed sight alignment and wall clearance. It is not enabled
+  by the native coordinator. Evaluation is in progress.
+- A recording-only hearing audit of the 200-second native game counted 27
+  exposed bystander agent-ticks out of 28,560, and zero hearing-exposed ticks
+  involving predators within 40 of bait. This does not audit vision or prove
+  safety; there is no matched baseline.
 
 ## Remaining experiments
 
-Compare tracking plus route recovery on 100 cases; screen delivery radii and
-walking thresholds using `guide_parameter_sweep.py`; evaluate crowd protection;
-then validate the selected combination on fresh maps. Smaller stopping distances
+Screen delivery radii and walking thresholds using `guide_parameter_sweep.py`;
+evaluate bounded waiting for an observed stationary predator and the opt-in
+sight handoff; then validate the selected combination on fresh maps. Smaller stopping distances
 and front-lane restrictions regressed and should not be promoted from intuition.
 Do not read 96.5% map-site availability as a delivery success rate.
 

@@ -179,7 +179,7 @@ def run(args):
             if active is not None and active in env.agents and not terminal:
                 inputs=dict(bait=lab.local(site['goal'],active),edges=[[lab.local(a,active),lab.local(b,active)] for a,b in env.edges],
                             agent=copy.deepcopy(env.get_agent_state(active.agent_id)),
-                            context=dict(tick=tick,dt=core.dt,time=now,handoff=lab.local(site['handoff'],active),mouth=lab.local(site['mouth'],active)))
+                            context=dict(tick=tick,dt=core.dt,time=now,vision_delivery=getattr(args,'vision_delivery',False),handoff=lab.local(site['handoff'],active),mouth=lab.local(site['mouth'],active)))
                 action=lab.validate_action(policy(**copy.deepcopy(inputs),memory=memory),active)
             evaluation=dict(phase=phase,total_predators=len(tracked),held_count=len(held),held_ids=held,
                             replacement_side_ids=sorted(rear),
@@ -266,6 +266,7 @@ if __name__=='__main__':
     parser.add_argument('--encounter-seed',type=int,default=1335789813)
     parser.add_argument('--deliveries',type=int,default=3,choices=(1,3))
     parser.add_argument('--bulk',action='store_true')
+    parser.add_argument('--vision-delivery',action='store_true',help='Experimental distant handoff with observed bait sight alignment')
     parser.add_argument('--corner-only',action='store_true',help='Opt-in short staggered corner pockets with static contact exclusion')
     parser.add_argument('--replace-bait',action='store_true',help='During final hold, walk a replacement from rear entry to bait and exhaust old bait after arrival')
     parser.add_argument('--output',type=Path,default=lab.ROOT/'logs/guide_lab')

@@ -23,6 +23,8 @@ You may call breakpoint() here, or use the runner's --break-at TICK option.
 """
 
 import math
+from shapely.geometry import LineString
+from shapely.ops import unary_union
 from models.entrapment.guide_pathfinding import fixed_frame, navigation_plan
 from models.entrapment.predator_following import predator_is_not_following
 from models.entrapment.guide_steering import prioritize, HEARING_TARGET
@@ -84,12 +86,43 @@ def guide(bait, edges, agent, context, memory):
     context = dict(context)
     if 'target_predator' not in context:
         context['target_predator'] = _select_target(bait, edges, agent, context, memory)
+    if context.get('vision_delivery') and 'mouth' in context:
+        mouth = context['mouth']
+        inward = (bait[0]-mouth[0], bait[1]-mouth[1])
+        depth = max(1e-9, math.hypot(*inward))
+        inward = tuple(v/depth for v in inward)
+        cross = (-inward[1], inward[0])
+        offset = sum((context['handoff'][k]-mouth[k])*cross[k] for k in range(2))
+        context['handoff'] = tuple(mouth[k]-90.*inward[k]+offset*cross[k] for k in range(2))
+        memory['_trap_exclusion_radius'] = 85.
     action = _guide(bait, edges, agent, context, memory)
     if isinstance(memory.get('debug'), dict) and memory['debug'].get('mode') == 'hold_at_delivery':
         # Intentional handoff: survival steering must not pull us away when
         # the following predator approaches. Being caught here is allowed.
         return action
     return prioritize(action, bait, edges, agent, memory, target=context['target_predator'])
+
+
+def _bait_visible_for_handoff(predator, bait, edges, memory):
+    """Conservative sight alignment from ordinary bearing/heading observations."""
+    p = (predator['distance']*math.cos(predator['angle']),
+         predator['distance']*math.sin(predator['angle']))
+    distance = math.dist(p, bait)
+    if distance <= 55.:
+        return True
+    if distance > 230. or 'rel_dir' not in predator:
+        return False
+    toward_guide = math.atan2(-p[1], -p[0])
+    heading = toward_guide-predator['rel_dir']
+    toward_bait = math.atan2(bait[1]-p[1], bait[0]-p[0])
+    wrap = lambda a: abs(math.atan2(math.sin(a), math.cos(a)))
+    if max(wrap(heading-toward_bait),wrap(toward_guide-toward_bait)) > math.radians(5):
+        return False
+    to_fixed, _ = fixed_frame(bait, edges)
+    if '_handoff_visibility_walls' not in memory:
+        memory['_handoff_visibility_walls'] = unary_union([
+            LineString([to_fixed(a),to_fixed(b)]) for a,b in edges])
+    return not memory['_handoff_visibility_walls'].intersects(LineString([to_fixed(p),to_fixed(bait)]))
 
 
 def _select_target(bait, edges, agent, context, memory):
@@ -147,17 +180,16 @@ def _guide(bait, edges, agent, context, memory):
         memory.pop('_recovery_navigation', None)
     memory['_lost_ticks'] = 0
 
-    predator_position = (predator['distance']*math.cos(predator['angle']),
-                         predator['distance']*math.sin(predator['angle']))
-    predator_bait_distance = math.dist(predator_position, bait)
-    if (predator_bait_distance <= HEARING_TARGET
-            and (math.hypot(*bait) <= HEARING_TARGET
-                 or math.hypot(*context['handoff']) <= DELIVERY_ARRIVAL_DISTANCE)):
+    delivery_ready = (math.hypot(*bait) <= HEARING_TARGET
+                      or math.hypot(*context['handoff']) <= DELIVERY_ARRIVAL_DISTANCE)
+    if context.get('vision_delivery'):
+        delivery_ready = (math.hypot(*context['handoff']) <= 2.
+                          and _bait_visible_for_handoff(predator, bait, edges, memory))
+    if delivery_ready:
         memory['debug'] = dict(mode='hold_at_delivery',
                                handoff_distance=math.hypot(*context['handoff']),
                                bait_distance=math.hypot(*bait),
                                predator_distance=predator['distance'],
-                               predator_bait_distance=predator_bait_distance,
                                following_check=memory['_following_debug'])
         return dict(move_distance=0., move_direction=0., turn_angle=turn)
 
