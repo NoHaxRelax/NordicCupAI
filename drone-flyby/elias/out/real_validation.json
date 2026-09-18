@@ -1,0 +1,1275 @@
+{
+ "file": "real_validation.npz",
+ "scene": "validation",
+ "source": "real",
+ "trust": "participant pseudo-labels: noisy and INCOMPLETE. Negatives are NOISY: an unlabelled region is not proof of emptiness.",
+ "n_windows": 36880,
+ "n_positives": 18440,
+ "n_negatives": 18440,
+ "negatives_not_placed": 0,
+ "frames_used": 246,
+ "frames_skipped": [
+  {
+   "frame": 1,
+   "reason": "placeholder frame"
+  },
+  {
+   "frame": 2,
+   "reason": "placeholder frame"
+  },
+  {
+   "frame": 3,
+   "reason": "placeholder frame"
+  }
+ ],
+ "parameters": {
+  "views_per_object_level": 3,
+  "partial_views_per_object_level": 1,
+  "jitter_window_px": 6,
+  "min_visible": 0.6,
+  "neg_guard_window_px": 10.0,
+  "near_frac": 0.25,
+  "neg_tries": 60,
+  "seed": 0,
+  "window": 64,
+  "max_object_px": 48,
+  "validation_clearance_src_px": 96,
+  "max_frames": null
+ },
+ "conventions": {
+  "level0": "single legal view (1920,1080): one centred window and K jittered windows per object",
+  "levels_1_2": "K legal views containing the whole box (L1 cycles the four f-grid phases), each gives one centred and one jittered window, plus partial_views view-cut samples",
+  "off": "(dx, dy) of the object centre from the window centre in window px, (0,0) when centred",
+  "annotated_box": "box_w, box_h, size_px, off and the scale s always describe the annotated box, also for view-cut samples",
+  "partial_objects": "vis < 1. View-cut objects: the window is centred on the visible part of the box; vis_w, vis_h (source px) and vis_off (window px, equal to the jitter) describe that part, off locates the centre of the annotated box and is therefore not (0,0) for a centred cut window. Frame-edge objects are annotated clipped, so their box_w, box_h, size_px are those of the clipped box and vis_w, vis_h repeat them",
+  "negatives": "label 16, track \"background\". size_px, box_w, box_h are those of the matched positive (they fixed level and scale), vis is 1.0",
+  "extra_arrays": [
+   "vis",
+   "vis_w",
+   "vis_h",
+   "vis_off",
+   "view",
+   "status",
+   "fill"
+  ]
+ },
+ "label_filters": {
+  "parameters": {
+   "exclude_file": "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\elias\\data\\validation_exclude.json",
+   "min_area_ratio": 0.5,
+   "motion_dy_src_px": [
+    40.0,
+    110.0
+   ],
+   "motion_dx_src_px": 25.0,
+   "frozen_px": 2.0,
+   "min_chain": 8,
+   "contained_fraction": 0.9,
+   "drop_contained": false
+  },
+  "boxes_before": 984,
+  "boxes_dropped": 40,
+  "dropped_by_reason": {
+   "exclude_list": 36,
+   "motion": 4
+  },
+  "dropped_by_class": {
+   "jet_plane": 14,
+   "hangar": 2,
+   "helicopter": 8,
+   "small_launcher": 8,
+   "tank": 5,
+   "large_launcher": 2,
+   "mine_roller": 1
+  },
+  "dropped_by_review_status": {
+   "directly_reviewed_track": 30,
+   "algorithmic_bottom_completion": 9,
+   "score_anchored_track_projection": 1
+  },
+  "dropped_by_track": {
+   "hangar-053-082": {
+    "motion": [
+     53
+    ]
+   },
+   "hangar-103-148": {
+    "motion": [
+     143
+    ]
+   },
+   "helicopter-b-105-149": {
+    "motion": [
+     105
+    ],
+    "exclude_list": [
+     138
+    ]
+   },
+   "helicopter-b-early-077-104": {
+    "exclude_list": [
+     77,
+     78,
+     79,
+     80,
+     81,
+     82
+    ]
+   },
+   "jet-plane-d-040-082": {
+    "exclude_list": [
+     40,
+     41,
+     42,
+     43,
+     44,
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52
+    ]
+   },
+   "jet-plane-e-109-141": {
+    "exclude_list": [
+     141
+    ]
+   },
+   "large-launcher-b-139-171": {
+    "exclude_list": [
+     171
+    ]
+   },
+   "large-launcher-d-194-227": {
+    "motion": [
+     194
+    ]
+   },
+   "mine-roller-b-197-206": {
+    "exclude_list": [
+     229
+    ]
+   },
+   "small-launcher-b-119-140": {
+    "exclude_list": [
+     143,
+     144,
+     145,
+     146,
+     147,
+     148,
+     149,
+     150
+    ]
+   },
+   "tank-b-128-160": {
+    "exclude_list": [
+     155,
+     156,
+     157,
+     158,
+     159
+    ]
+   }
+  },
+  "exclusions": [
+   {
+    "scene": "validation",
+    "track": "jet-plane-d-040-082",
+    "first": 40,
+    "last": 52,
+    "reason": "box on forest, moves against the terrain; the jet enters the frame at 53"
+   },
+   {
+    "scene": "validation",
+    "track": "jet-plane-e-109-141",
+    "first": 141,
+    "last": 141,
+    "reason": "jet has left the frame; box lies inside the hangar box on the apron edge"
+   },
+   {
+    "scene": "validation",
+    "track": "helicopter-b-early-077-104",
+    "first": 77,
+    "last": 82,
+    "reason": "box on road and trees; the helicopter enters the frame at 83"
+   },
+   {
+    "scene": "validation",
+    "track": "tank-b-128-160",
+    "first": 155,
+    "last": 159,
+    "reason": "25x15 px box beside the tank (track median box is 50x36 px)"
+   },
+   {
+    "scene": "validation",
+    "track": "small-launcher-b-119-140",
+    "first": 143,
+    "last": 150,
+    "reason": "box has slid off its launcher and lies between two launchers, touching each at a corner"
+   },
+   {
+    "scene": "validation",
+    "track": "mine-roller-b-197-206",
+    "first": 229,
+    "last": 229,
+    "reason": "leaving at the bottom: 69 % of the loose box is in the frame but only the roller tips of the object"
+   },
+   {
+    "scene": "validation",
+    "track": "large-launcher-b-139-171",
+    "first": 171,
+    "last": 171,
+    "reason": "leaving at the bottom: the visible part of the box shows forest and only the nose tip of the launcher"
+   },
+   {
+    "scene": "validation",
+    "track": "helicopter-b-105-149",
+    "first": 138,
+    "last": 138,
+    "reason": "leaving at the bottom: the visible part of the box shows two rotor blade tips, no fuselage"
+   }
+  ],
+  "flagged_but_kept": [
+   {
+    "scene": "validation",
+    "track": "tank-c-182-206",
+    "first": 182,
+    "last": 214,
+    "reason": "box about 70x49 px around a tank of about 45x35 px that sits in the lower right corner: the tank is in every window but off centre, and size_px is overstated"
+   },
+   {
+    "scene": "validation",
+    "track": "tank-e-066-075",
+    "first": 66,
+    "last": 98,
+    "reason": "loose box about 60x62 px, tank in the left half"
+   },
+   {
+    "scene": "validation",
+    "track": "small-launcher-b-119-140",
+    "first": 135,
+    "last": 142,
+    "reason": "launcher in the lower left corner of a 23x28 px box, about half outside at 141 and 142"
+   }
+  ],
+  "exclusion_boxes": 36,
+  "exclusion_boxes_the_automatic_checks_find_alone": 25,
+  "exclusion_boxes_the_automatic_checks_miss": [
+   "helicopter-b-105-149:138",
+   "large-launcher-b-139-171:171",
+   "mine-roller-b-197-206:229",
+   "small-launcher-b-119-140:143",
+   "small-launcher-b-119-140:144",
+   "small-launcher-b-119-140:145",
+   "small-launcher-b-119-140:146",
+   "small-launcher-b-119-140:147",
+   "small-launcher-b-119-140:148",
+   "small-launcher-b-119-140:149",
+   "small-launcher-b-119-140:150"
+  ],
+  "automatic_drops_that_appear_only_without_the_exclusion_list": [],
+  "repeated_frame_pairs": [
+   [
+    8,
+    9
+   ],
+   [
+    238,
+    239
+   ]
+  ],
+  "secondary_chains_kept": [],
+  "contained_boxes_flagged": [
+   {
+    "track": "jet-plane-d-040-082",
+    "frame": 53,
+    "inside": "hangar-053-082",
+    "share": 0.985,
+    "other_verdict": "kept"
+   },
+   {
+    "track": "jet-plane-e-109-141",
+    "frame": 141,
+    "inside": "hangar-103-148",
+    "share": 1.0,
+    "other_verdict": "exclude_list"
+   }
+  ]
+ },
+ "counts_class_x_level": {
+  "hangar": {
+   "L0": 256,
+   "L1": 504,
+   "L2": 504
+  },
+  "helicopter": {
+   "L0": 388,
+   "L1": 768,
+   "L2": 768
+  },
+  "jet_plane": {
+   "L0": 388,
+   "L1": 772,
+   "L2": 772
+  },
+  "large_launcher": {
+   "L0": 560,
+   "L1": 1120,
+   "L2": 1120
+  },
+  "large_tower": {
+   "L0": 380,
+   "L1": 754,
+   "L2": 754
+  },
+  "medium_launcher": {
+   "L0": 128,
+   "L1": 256,
+   "L2": 256
+  },
+  "medium_plane": {
+   "L0": 256,
+   "L1": 510,
+   "L2": 510
+  },
+  "mine_roller": {
+   "L0": 204,
+   "L1": 406,
+   "L2": 406
+  },
+  "small_launcher": {
+   "L0": 352,
+   "L1": 704,
+   "L2": 704
+  },
+  "small_plane": {
+   "L0": 0,
+   "L1": 0,
+   "L2": 0
+  },
+  "small_tower": {
+   "L0": 168,
+   "L1": 336,
+   "L2": 336
+  },
+  "ta-ta": {
+   "L0": 0,
+   "L1": 0,
+   "L2": 0
+  },
+  "tank": {
+   "L0": 620,
+   "L1": 1240,
+   "L2": 1240
+  },
+  "condor": {
+   "L0": 0,
+   "L1": 0,
+   "L2": 0
+  },
+  "jammer": {
+   "L0": 0,
+   "L1": 0,
+   "L2": 0
+  },
+  "spacecraft": {
+   "L0": 0,
+   "L1": 0,
+   "L2": 0
+  },
+  "background": {
+   "L0": 3700,
+   "L1": 7370,
+   "L2": 7370
+  }
+ },
+ "size_px_by_class_level": {
+  "hangar": {
+   "L0": {
+    "n": 256,
+    "min": 44.25,
+    "p25": 49.12,
+    "median": 52.0,
+    "p75": 55.62,
+    "max": 58.75
+   },
+   "L1": {
+    "n": 504,
+    "min": 88.5,
+    "p25": 98.25,
+    "median": 104.0,
+    "p75": 111.0,
+    "max": 117.5
+   },
+   "L2": {
+    "n": 504,
+    "min": 177.0,
+    "p25": 196.5,
+    "median": 208.0,
+    "p75": 222.0,
+    "max": 235.0
+   }
+  },
+  "helicopter": {
+   "L0": {
+    "n": 388,
+    "min": 23.0,
+    "p25": 27.5,
+    "median": 31.75,
+    "p75": 33.5,
+    "max": 39.0
+   },
+   "L1": {
+    "n": 768,
+    "min": 46.0,
+    "p25": 55.0,
+    "median": 63.5,
+    "p75": 67.0,
+    "max": 78.0
+   },
+   "L2": {
+    "n": 768,
+    "min": 92.0,
+    "p25": 110.0,
+    "median": 127.0,
+    "p75": 134.0,
+    "max": 156.0
+   }
+  },
+  "jet_plane": {
+   "L0": {
+    "n": 388,
+    "min": 14.75,
+    "p25": 18.5,
+    "median": 20.0,
+    "p75": 22.5,
+    "max": 26.5
+   },
+   "L1": {
+    "n": 772,
+    "min": 29.5,
+    "p25": 37.0,
+    "median": 40.0,
+    "p75": 45.0,
+    "max": 53.0
+   },
+   "L2": {
+    "n": 772,
+    "min": 59.0,
+    "p25": 74.0,
+    "median": 80.0,
+    "p75": 90.0,
+    "max": 106.0
+   }
+  },
+  "large_launcher": {
+   "L0": {
+    "n": 560,
+    "min": 13.5,
+    "p25": 20.94,
+    "median": 30.0,
+    "p75": 41.06,
+    "max": 48.25
+   },
+   "L1": {
+    "n": 1120,
+    "min": 27.0,
+    "p25": 41.5,
+    "median": 60.0,
+    "p75": 82.0,
+    "max": 96.5
+   },
+   "L2": {
+    "n": 1120,
+    "min": 54.0,
+    "p25": 83.0,
+    "median": 120.0,
+    "p75": 164.0,
+    "max": 193.0
+   }
+  },
+  "large_tower": {
+   "L0": {
+    "n": 380,
+    "min": 13.5,
+    "p25": 16.5,
+    "median": 17.5,
+    "p75": 22.25,
+    "max": 30.75
+   },
+   "L1": {
+    "n": 754,
+    "min": 27.0,
+    "p25": 33.0,
+    "median": 35.0,
+    "p75": 44.5,
+    "max": 61.5
+   },
+   "L2": {
+    "n": 754,
+    "min": 54.0,
+    "p25": 66.0,
+    "median": 70.0,
+    "p75": 89.0,
+    "max": 123.0
+   }
+  },
+  "medium_launcher": {
+   "L0": {
+    "n": 128,
+    "min": 11.25,
+    "p25": 11.25,
+    "median": 11.25,
+    "p75": 11.25,
+    "max": 11.25
+   },
+   "L1": {
+    "n": 256,
+    "min": 22.5,
+    "p25": 22.5,
+    "median": 22.5,
+    "p75": 22.5,
+    "max": 22.5
+   },
+   "L2": {
+    "n": 256,
+    "min": 45.0,
+    "p25": 45.0,
+    "median": 45.0,
+    "p75": 45.0,
+    "max": 45.0
+   }
+  },
+  "medium_plane": {
+   "L0": {
+    "n": 256,
+    "min": 11.0,
+    "p25": 13.94,
+    "median": 16.0,
+    "p75": 18.5,
+    "max": 23.0
+   },
+   "L1": {
+    "n": 510,
+    "min": 22.0,
+    "p25": 27.62,
+    "median": 32.0,
+    "p75": 37.0,
+    "max": 46.0
+   },
+   "L2": {
+    "n": 510,
+    "min": 44.0,
+    "p25": 55.25,
+    "median": 64.0,
+    "p75": 74.0,
+    "max": 92.0
+   }
+  },
+  "mine_roller": {
+   "L0": {
+    "n": 204,
+    "min": 13.5,
+    "p25": 15.25,
+    "median": 16.25,
+    "p75": 17.25,
+    "max": 20.25
+   },
+   "L1": {
+    "n": 406,
+    "min": 27.0,
+    "p25": 30.5,
+    "median": 32.5,
+    "p75": 34.38,
+    "max": 40.5
+   },
+   "L2": {
+    "n": 406,
+    "min": 54.0,
+    "p25": 61.0,
+    "median": 65.0,
+    "p75": 68.75,
+    "max": 81.0
+   }
+  },
+  "small_launcher": {
+   "L0": {
+    "n": 352,
+    "min": 6.5,
+    "p25": 7.0,
+    "median": 7.5,
+    "p75": 7.5,
+    "max": 8.75
+   },
+   "L1": {
+    "n": 704,
+    "min": 13.0,
+    "p25": 14.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 17.5
+   },
+   "L2": {
+    "n": 704,
+    "min": 26.0,
+    "p25": 28.0,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 35.0
+   }
+  },
+  "small_plane": {},
+  "small_tower": {
+   "L0": {
+    "n": 168,
+    "min": 15.0,
+    "p25": 16.0,
+    "median": 17.62,
+    "p75": 18.75,
+    "max": 21.75
+   },
+   "L1": {
+    "n": 336,
+    "min": 30.0,
+    "p25": 32.0,
+    "median": 35.25,
+    "p75": 37.5,
+    "max": 43.5
+   },
+   "L2": {
+    "n": 336,
+    "min": 60.0,
+    "p25": 64.0,
+    "median": 70.5,
+    "p75": 75.0,
+    "max": 87.0
+   }
+  },
+  "ta-ta": {},
+  "tank": {
+   "L0": {
+    "n": 620,
+    "min": 10.75,
+    "p25": 14.0,
+    "median": 15.5,
+    "p75": 17.5,
+    "max": 20.0
+   },
+   "L1": {
+    "n": 1240,
+    "min": 21.5,
+    "p25": 28.0,
+    "median": 31.0,
+    "p75": 35.0,
+    "max": 40.0
+   },
+   "L2": {
+    "n": 1240,
+    "min": 43.0,
+    "p25": 56.0,
+    "median": 62.0,
+    "p75": 70.0,
+    "max": 80.0
+   }
+  },
+  "condor": {},
+  "jammer": {},
+  "spacecraft": {}
+ },
+ "size_px_by_class_level_vis_eq_1": {
+  "hangar": {
+   "L0": {
+    "n": 240,
+    "min": 44.25,
+    "p25": 49.12,
+    "median": 52.0,
+    "p75": 55.5,
+    "max": 58.75
+   },
+   "L1": {
+    "n": 360,
+    "min": 88.5,
+    "p25": 98.25,
+    "median": 104.0,
+    "p75": 111.0,
+    "max": 117.5
+   },
+   "L2": {
+    "n": 360,
+    "min": 177.0,
+    "p25": 196.5,
+    "median": 208.0,
+    "p75": 222.0,
+    "max": 235.0
+   }
+  },
+  "helicopter": {
+   "L0": {
+    "n": 372,
+    "min": 23.0,
+    "p25": 28.5,
+    "median": 31.75,
+    "p75": 33.5,
+    "max": 39.0
+   },
+   "L1": {
+    "n": 558,
+    "min": 46.0,
+    "p25": 57.0,
+    "median": 63.5,
+    "p75": 67.0,
+    "max": 78.0
+   },
+   "L2": {
+    "n": 558,
+    "min": 92.0,
+    "p25": 114.0,
+    "median": 127.0,
+    "p75": 134.0,
+    "max": 156.0
+   }
+  },
+  "jet_plane": {
+   "L0": {
+    "n": 380,
+    "min": 16.0,
+    "p25": 18.75,
+    "median": 20.0,
+    "p75": 22.5,
+    "max": 26.5
+   },
+   "L1": {
+    "n": 570,
+    "min": 32.0,
+    "p25": 37.5,
+    "median": 40.0,
+    "p75": 45.0,
+    "max": 53.0
+   },
+   "L2": {
+    "n": 570,
+    "min": 64.0,
+    "p25": 75.0,
+    "median": 80.0,
+    "p75": 90.0,
+    "max": 106.0
+   }
+  },
+  "large_launcher": {
+   "L0": {
+    "n": 552,
+    "min": 13.5,
+    "p25": 21.0,
+    "median": 30.0,
+    "p75": 41.25,
+    "max": 48.25
+   },
+   "L1": {
+    "n": 834,
+    "min": 27.0,
+    "p25": 41.5,
+    "median": 60.0,
+    "p75": 82.5,
+    "max": 96.5
+   },
+   "L2": {
+    "n": 834,
+    "min": 54.0,
+    "p25": 83.0,
+    "median": 120.0,
+    "p75": 165.0,
+    "max": 193.0
+   }
+  },
+  "large_tower": {
+   "L0": {
+    "n": 372,
+    "min": 15.0,
+    "p25": 16.5,
+    "median": 17.5,
+    "p75": 22.25,
+    "max": 30.75
+   },
+   "L1": {
+    "n": 558,
+    "min": 30.0,
+    "p25": 33.0,
+    "median": 35.0,
+    "p75": 44.5,
+    "max": 61.5
+   },
+   "L2": {
+    "n": 558,
+    "min": 60.0,
+    "p25": 66.0,
+    "median": 70.0,
+    "p75": 89.0,
+    "max": 123.0
+   }
+  },
+  "medium_launcher": {
+   "L0": {
+    "n": 128,
+    "min": 11.25,
+    "p25": 11.25,
+    "median": 11.25,
+    "p75": 11.25,
+    "max": 11.25
+   },
+   "L1": {
+    "n": 192,
+    "min": 22.5,
+    "p25": 22.5,
+    "median": 22.5,
+    "p75": 22.5,
+    "max": 22.5
+   },
+   "L2": {
+    "n": 192,
+    "min": 45.0,
+    "p25": 45.0,
+    "median": 45.0,
+    "p75": 45.0,
+    "max": 45.0
+   }
+  },
+  "medium_plane": {
+   "L0": {
+    "n": 256,
+    "min": 11.0,
+    "p25": 13.94,
+    "median": 16.0,
+    "p75": 18.5,
+    "max": 23.0
+   },
+   "L1": {
+    "n": 384,
+    "min": 22.0,
+    "p25": 27.88,
+    "median": 32.0,
+    "p75": 37.0,
+    "max": 46.0
+   },
+   "L2": {
+    "n": 384,
+    "min": 44.0,
+    "p25": 55.75,
+    "median": 64.0,
+    "p75": 74.0,
+    "max": 92.0
+   }
+  },
+  "mine_roller": {
+   "L0": {
+    "n": 200,
+    "min": 13.5,
+    "p25": 15.25,
+    "median": 16.12,
+    "p75": 17.0,
+    "max": 20.25
+   },
+   "L1": {
+    "n": 300,
+    "min": 27.0,
+    "p25": 30.5,
+    "median": 32.25,
+    "p75": 34.0,
+    "max": 40.5
+   },
+   "L2": {
+    "n": 300,
+    "min": 54.0,
+    "p25": 61.0,
+    "median": 64.5,
+    "p75": 68.0,
+    "max": 81.0
+   }
+  },
+  "small_launcher": {
+   "L0": {
+    "n": 352,
+    "min": 6.5,
+    "p25": 7.0,
+    "median": 7.5,
+    "p75": 7.5,
+    "max": 8.75
+   },
+   "L1": {
+    "n": 528,
+    "min": 13.0,
+    "p25": 14.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 17.5
+   },
+   "L2": {
+    "n": 528,
+    "min": 26.0,
+    "p25": 28.0,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 35.0
+   }
+  },
+  "small_plane": {},
+  "small_tower": {
+   "L0": {
+    "n": 168,
+    "min": 15.0,
+    "p25": 16.0,
+    "median": 17.62,
+    "p75": 18.75,
+    "max": 21.75
+   },
+   "L1": {
+    "n": 252,
+    "min": 30.0,
+    "p25": 32.0,
+    "median": 35.25,
+    "p75": 37.5,
+    "max": 43.5
+   },
+   "L2": {
+    "n": 252,
+    "min": 60.0,
+    "p25": 64.0,
+    "median": 70.5,
+    "p75": 75.0,
+    "max": 87.0
+   }
+  },
+  "ta-ta": {},
+  "tank": {
+   "L0": {
+    "n": 620,
+    "min": 10.75,
+    "p25": 14.0,
+    "median": 15.5,
+    "p75": 17.5,
+    "max": 20.0
+   },
+   "L1": {
+    "n": 930,
+    "min": 21.5,
+    "p25": 28.0,
+    "median": 31.0,
+    "p75": 35.0,
+    "max": 40.0
+   },
+   "L2": {
+    "n": 930,
+    "min": 43.0,
+    "p25": 56.0,
+    "median": 62.0,
+    "p75": 70.0,
+    "max": 80.0
+   }
+  },
+  "condor": {},
+  "jammer": {},
+  "spacecraft": {}
+ },
+ "size_px_note": "size_px is the longer side of the annotated box in delivered px. The first table holds all positives (whole, view_cut and frame_edge), the second only vis == 1. View-cut samples carry the full box, so only frame_edge samples (boxes annotated clipped) can lower the first table",
+ "scale_by_class_level": {
+  "hangar": {
+   "L0": {
+    "s4": 40,
+    "s8": 216
+   },
+   "L1": {
+    "s4": 78,
+    "s8": 426
+   },
+   "L2": {
+    "s4": 504
+   }
+  },
+  "helicopter": {
+   "L0": {
+    "s4": 388
+   },
+   "L1": {
+    "s2": 32,
+    "s4": 736
+   },
+   "L2": {
+    "s2": 32,
+    "s4": 736
+   }
+  },
+  "jet_plane": {
+   "L0": {
+    "s4": 388
+   },
+   "L1": {
+    "s2": 692,
+    "s4": 80
+   },
+   "L2": {
+    "s2": 692,
+    "s4": 80
+   }
+  },
+  "large_launcher": {
+   "L0": {
+    "s4": 556,
+    "s8": 4
+   },
+   "L1": {
+    "s2": 366,
+    "s4": 746,
+    "s8": 8
+   },
+   "L2": {
+    "s2": 366,
+    "s4": 754
+   }
+  },
+  "large_tower": {
+   "L0": {
+    "s4": 380
+   },
+   "L1": {
+    "s2": 612,
+    "s4": 142
+   },
+   "L2": {
+    "s2": 612,
+    "s4": 142
+   }
+  },
+  "medium_launcher": {
+   "L0": {
+    "s4": 128
+   },
+   "L1": {
+    "s2": 256
+   },
+   "L2": {
+    "s1": 256
+   }
+  },
+  "medium_plane": {
+   "L0": {
+    "s4": 256
+   },
+   "L1": {
+    "s2": 510
+   },
+   "L2": {
+    "s1": 48,
+    "s2": 462
+   }
+  },
+  "mine_roller": {
+   "L0": {
+    "s4": 204
+   },
+   "L1": {
+    "s2": 406
+   },
+   "L2": {
+    "s2": 406
+   }
+  },
+  "small_launcher": {
+   "L0": {
+    "s4": 352
+   },
+   "L1": {
+    "s2": 704
+   },
+   "L2": {
+    "s1": 704
+   }
+  },
+  "small_plane": {},
+  "small_tower": {
+   "L0": {
+    "s4": 168
+   },
+   "L1": {
+    "s2": 336
+   },
+   "L2": {
+    "s2": 336
+   }
+  },
+  "ta-ta": {},
+  "tank": {
+   "L0": {
+    "s4": 620
+   },
+   "L1": {
+    "s2": 1240
+   },
+   "L2": {
+    "s1": 72,
+    "s2": 1168
+   }
+  },
+  "condor": {},
+  "jammer": {},
+  "spacecraft": {}
+ },
+ "per_level": {
+  "L0": {
+   "positives": 3700,
+   "negatives": 3700,
+   "unique_positive_windows": 3699,
+   "positive_scale_mix": {
+    "s4": 3480,
+    "s8": 220
+   },
+   "negative_scale_mix": {
+    "s4": 3480,
+    "s8": 220
+   },
+   "positives_with_zero_fill": 413,
+   "negatives_with_zero_fill": 332
+  },
+  "L1": {
+   "positives": 7370,
+   "negatives": 7370,
+   "unique_positive_windows": 7362,
+   "positive_scale_mix": {
+    "s2": 5154,
+    "s4": 1782,
+    "s8": 434
+   },
+   "negative_scale_mix": {
+    "s2": 5154,
+    "s4": 1782,
+    "s8": 434
+   },
+   "positives_with_zero_fill": 3210,
+   "negatives_with_zero_fill": 3125
+  },
+  "L2": {
+   "positives": 7370,
+   "negatives": 7370,
+   "unique_positive_windows": 6286,
+   "positive_scale_mix": {
+    "s1": 1080,
+    "s2": 4074,
+    "s4": 2216
+   },
+   "negative_scale_mix": {
+    "s1": 1080,
+    "s2": 4074,
+    "s4": 2216
+   },
+   "positives_with_zero_fill": 3593,
+   "negatives_with_zero_fill": 3453
+  }
+ },
+ "sample_kinds": {
+  "frame_edge": 304,
+  "negative_frame_edge": 304,
+  "negative_near_object": 4466,
+  "negative_uniform": 13670,
+  "view_cut": 3628,
+  "whole": 14508
+ },
+ "visible_fraction": {
+  "frame_edge_objects": 37,
+  "frame_edge_objects_skipped_below_min_visible": 18,
+  "frame_edge_object_vis": {
+   "n": 37,
+   "min": 0.07,
+   "p25": 0.43,
+   "median": 0.61,
+   "p75": 0.68,
+   "max": 1.0
+  },
+  "frame_edge_windows": 304,
+  "frame_edge_window_vis": {
+   "n": 304,
+   "min": 0.61,
+   "p25": 0.66,
+   "median": 0.68,
+   "p75": 0.9,
+   "max": 1.0
+  },
+  "view_cut_windows": 3628,
+  "view_cut_window_vis": {
+   "n": 3628,
+   "min": 0.6,
+   "p25": 0.68,
+   "median": 0.77,
+   "p75": 0.86,
+   "max": 0.96
+  },
+  "view_cut_failed": 0,
+  "histogram_vis_lt_1": {
+   "0.6-0.7": 1258,
+   "0.7-0.8": 1064,
+   "0.8-0.9": 986,
+   "0.9-1.0": 560
+  }
+ },
+ "zero_fill": {
+  "whole_object_windows": 14508,
+  "whole_object_windows_with_fill": 3284,
+  "whole_object_windows_fill_over_25pct": 721,
+  "fill_of_filled_whole_windows": {
+   "n": 3284,
+   "min": 0.0,
+   "p25": 0.09,
+   "median": 0.16,
+   "p75": 0.24,
+   "max": 0.52
+  }
+ },
+ "scale_fallback_windows": 434,
+ "windows_whose_scale_differs_from_the_scale_of_the_visible_part": 232,
+ "unobserved_regions": {
+  "frames_with_holes": [
+   4
+  ],
+  "positive_windows_dropped": 4
+ },
+ "negative_placement": {
+  "near_object": 4466,
+  "uniform": 13670,
+  "frame_edge": 304
+ },
+ "negatives_served_in_other_frame": 51,
+ "review_status_of_positives": {
+  "algorithmic_bottom_completion": 3084,
+  "directly_reviewed_track": 11300,
+  "score_anchored_track_projection": 3760,
+  "score_confirmed_anchor": 280,
+  "score_positive_group_projected_track": 16
+ },
+ "exactness_check": {
+  "per_level": {
+   "1": {
+    "checked": 73,
+    "two_stage_max": 0,
+    "direct_max": 1,
+    "with_fill": 48
+   },
+   "2": {
+    "checked": 84,
+    "two_stage_max": 0,
+    "direct_max": 0,
+    "with_fill": 56
+   },
+   "0": {
+    "checked": 44,
+    "two_stage_max": 0,
+    "direct_max": 1,
+    "with_fill": 18
+   }
+  },
+  "pixels_compared": 2469888,
+  "direct_pixels_off_by_one": 79874,
+  "frames_checked": 28
+ },
+ "seconds": 100.8
+}

@@ -84,3 +84,13 @@ cython_debug/
 logs/
 *.pt
 src/validation/images/
+
+# elias: generated datasets and run outputs stay local (GBs); code, sprites and reports are tracked
+elias/out/*.npz
+elias/out/*.png
+elias/out/*.jpg
+elias/out/*.npy
+elias/out/runs/*.pt
+elias/out/frame_cache/
+elias/_review/
+elias/sprites/_candidates/

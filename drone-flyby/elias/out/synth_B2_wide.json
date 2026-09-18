@@ -1,0 +1,1047 @@
+{
+ "file": "elias\\out\\synth_B2_wide.npz",
+ "source": "synthetic",
+ "generator": "elias/data/synth.py (v2)",
+ "n": 60000,
+ "counts_class_x_level": {
+  "hangar": [
+   1330,
+   1389,
+   1372
+  ],
+  "helicopter": [
+   1369,
+   1349,
+   1373
+  ],
+  "jet_plane": [
+   1341,
+   1361,
+   1389
+  ],
+  "large_launcher": [
+   1370,
+   1373,
+   1348
+  ],
+  "large_tower": [
+   1372,
+   1327,
+   1392
+  ],
+  "medium_launcher": [
+   1357,
+   1355,
+   1379
+  ],
+  "medium_plane": [
+   1335,
+   1320,
+   1436
+  ],
+  "mine_roller": [
+   1364,
+   1355,
+   1372
+  ],
+  "small_launcher": [
+   1403,
+   1351,
+   1337
+  ],
+  "small_plane": [
+   0,
+   0,
+   0
+  ],
+  "small_tower": [
+   1407,
+   1333,
+   1351
+  ],
+  "ta-ta": [
+   0,
+   0,
+   0
+  ],
+  "tank": [
+   1406,
+   1339,
+   1345
+  ],
+  "condor": [
+   0,
+   0,
+   0
+  ],
+  "jammer": [
+   0,
+   0,
+   0
+  ],
+  "spacecraft": [
+   0,
+   0,
+   0
+  ],
+  "background": [
+   5071,
+   5002,
+   4927
+  ]
+ },
+ "counts_scale": {
+  "1": 3751,
+  "2": 28777,
+  "4": 24397,
+  "8": 3075
+ },
+ "negatives": {
+  "total": 15000,
+  "pure_background": 7526,
+  "hard_off_centre": 7474
+ },
+ "classes_without_sprite": [
+  "small_plane",
+  "ta-ta",
+  "condor",
+  "jammer",
+  "spacecraft"
+ ],
+ "sprites_used": {
+  "large_launcher": [
+   {
+    "id": "inst:validation-f000005-x1728-y0960-L2:0",
+    "scene": "validation",
+    "frame": 5,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 827,
+    "positives": 1067
+   },
+   {
+    "id": "cut:validation-f000080-large-launcher-c2-080-105",
+    "scene": "validation",
+    "frame": 80,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 543,
+    "positives": 999
+   },
+   {
+    "id": "cut:validation-f000092-large-launcher-c2-080-105",
+    "scene": "validation",
+    "frame": 92,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 618,
+    "positives": 1022
+   },
+   {
+    "id": "cut:validation-f000105-large-launcher-c2-080-105",
+    "scene": "validation",
+    "frame": 105,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 772,
+    "positives": 1003
+   }
+  ],
+  "tank": [
+   {
+    "id": "inst:validation-f000024-x1920-y0192-L2:0",
+    "scene": "validation",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 491,
+    "positives": 302
+   },
+   {
+    "id": "cut:validation-f000015-tank-015-036",
+    "scene": "validation",
+    "frame": 15,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 496,
+    "positives": 346
+   },
+   {
+    "id": "cut:validation-f000025-tank-015-036",
+    "scene": "validation",
+    "frame": 25,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 588,
+    "positives": 282
+   },
+   {
+    "id": "cut:validation-f000036-tank-015-036",
+    "scene": "validation",
+    "frame": 36,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 683,
+    "positives": 332
+   },
+   {
+    "id": "cut:validation-f000129-tank-b-128-160",
+    "scene": "validation",
+    "frame": 129,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 465,
+    "positives": 316
+   },
+   {
+    "id": "cut:validation-f000145-tank-b-128-160",
+    "scene": "validation",
+    "frame": 145,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 596,
+    "positives": 303
+   },
+   {
+    "id": "cut:validation-f000160-tank-b-128-160",
+    "scene": "validation",
+    "frame": 160,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 839,
+    "positives": 320
+   },
+   {
+    "id": "cut:validation-f000183-tank-c-182-206",
+    "scene": "validation",
+    "frame": 183,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 487,
+    "positives": 296
+   },
+   {
+    "id": "cut:validation-f000195-tank-c-182-206",
+    "scene": "validation",
+    "frame": 195,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 602,
+    "positives": 297
+   },
+   {
+    "id": "cut:validation-f000206-tank-c-182-206",
+    "scene": "validation",
+    "frame": 206,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 700,
+    "positives": 323
+   },
+   {
+    "id": "cut:validation-f000030-tank-d-029-061",
+    "scene": "validation",
+    "frame": 30,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 465,
+    "positives": 290
+   },
+   {
+    "id": "cut:validation-f000046-tank-d-029-061",
+    "scene": "validation",
+    "frame": 46,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 613,
+    "positives": 340
+   },
+   {
+    "id": "cut:validation-f000061-tank-d-029-061",
+    "scene": "validation",
+    "frame": 61,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 840,
+    "positives": 343
+   }
+  ],
+  "medium_plane": [
+   {
+    "id": "inst:validation-f000066-x1920-y0192-L2:0",
+    "scene": "validation",
+    "frame": 66,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 331,
+    "positives": 4091
+   }
+  ],
+  "hangar": [
+   {
+    "id": "cut:validation-f000056-hangar-053-082",
+    "scene": "validation",
+    "frame": 56,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 12513,
+    "positives": 506
+   },
+   {
+    "id": "cut:validation-f000065-hangar-053-082",
+    "scene": "validation",
+    "frame": 65,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 15095,
+    "positives": 453
+   },
+   {
+    "id": "cut:validation-f000073-hangar-053-082",
+    "scene": "validation",
+    "frame": 73,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 18023,
+    "positives": 510
+   },
+   {
+    "id": "cut:validation-f000082-hangar-053-082",
+    "scene": "validation",
+    "frame": 82,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 22340,
+    "positives": 543
+   },
+   {
+    "id": "cut:validation-f000112-hangar-103-148",
+    "scene": "validation",
+    "frame": 112,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 12630,
+    "positives": 534
+   },
+   {
+    "id": "cut:validation-f000122-hangar-103-148",
+    "scene": "validation",
+    "frame": 122,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 15618,
+    "positives": 525
+   },
+   {
+    "id": "cut:validation-f000131-hangar-103-148",
+    "scene": "validation",
+    "frame": 131,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 19124,
+    "positives": 514
+   },
+   {
+    "id": "cut:validation-f000141-hangar-103-148",
+    "scene": "validation",
+    "frame": 141,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 23729,
+    "positives": 506
+   }
+  ],
+  "helicopter": [
+   {
+    "id": "cut:validation-f000107-helicopter-b-105-149",
+    "scene": "validation",
+    "frame": 107,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 719,
+    "positives": 579
+   },
+   {
+    "id": "cut:validation-f000117-helicopter-b-105-149",
+    "scene": "validation",
+    "frame": 117,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 813,
+    "positives": 590
+   },
+   {
+    "id": "cut:validation-f000127-helicopter-b-105-149",
+    "scene": "validation",
+    "frame": 127,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 997,
+    "positives": 563
+   },
+   {
+    "id": "cut:validation-f000137-helicopter-b-105-149",
+    "scene": "validation",
+    "frame": 137,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1427,
+    "positives": 599
+   },
+   {
+    "id": "cut:validation-f000088-helicopter-b-early-077-104",
+    "scene": "validation",
+    "frame": 88,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 757,
+    "positives": 611
+   },
+   {
+    "id": "cut:validation-f000096-helicopter-b-early-077-104",
+    "scene": "validation",
+    "frame": 96,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 857,
+    "positives": 585
+   },
+   {
+    "id": "cut:validation-f000104-helicopter-b-early-077-104",
+    "scene": "validation",
+    "frame": 104,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1079,
+    "positives": 564
+   }
+  ],
+  "jet_plane": [
+   {
+    "id": "cut:validation-f000054-jet-plane-d-040-082",
+    "scene": "validation",
+    "frame": 54,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 794,
+    "positives": 1340
+   },
+   {
+    "id": "cut:validation-f000068-jet-plane-d-040-082",
+    "scene": "validation",
+    "frame": 68,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1026,
+    "positives": 1344
+   },
+   {
+    "id": "cut:validation-f000082-jet-plane-d-040-082",
+    "scene": "validation",
+    "frame": 82,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1367,
+    "positives": 1407
+   }
+  ],
+  "large_tower": [
+   {
+    "id": "cut:validation-f000093-large-tower-b-092-123",
+    "scene": "validation",
+    "frame": 93,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 999,
+    "positives": 537
+   },
+   {
+    "id": "cut:validation-f000103-large-tower-b-092-123",
+    "scene": "validation",
+    "frame": 103,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 950,
+    "positives": 520
+   },
+   {
+    "id": "cut:validation-f000112-large-tower-b-092-123",
+    "scene": "validation",
+    "frame": 112,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1007,
+    "positives": 510
+   },
+   {
+    "id": "cut:validation-f000122-large-tower-b-092-123",
+    "scene": "validation",
+    "frame": 122,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 849,
+    "positives": 512
+   },
+   {
+    "id": "cut:validation-f000218-large-tower-c-217-239",
+    "scene": "validation",
+    "frame": 218,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 971,
+    "positives": 504
+   },
+   {
+    "id": "cut:validation-f000225-large-tower-c-217-239",
+    "scene": "validation",
+    "frame": 225,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1066,
+    "positives": 495
+   },
+   {
+    "id": "cut:validation-f000232-large-tower-c-217-239",
+    "scene": "validation",
+    "frame": 232,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1155,
+    "positives": 530
+   },
+   {
+    "id": "cut:validation-f000239-large-tower-c-217-239",
+    "scene": "validation",
+    "frame": 239,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1280,
+    "positives": 483
+   }
+  ],
+  "medium_launcher": [
+   {
+    "id": "cut:validation-f000092-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 92,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 173,
+    "positives": 476
+   },
+   {
+    "id": "cut:validation-f000096-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 96,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 199,
+    "positives": 507
+   },
+   {
+    "id": "cut:validation-f000101-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 101,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 195,
+    "positives": 487
+   },
+   {
+    "id": "cut:validation-f000105-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 105,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 158,
+    "positives": 546
+   },
+   {
+    "id": "cut:validation-f000110-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 110,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 193,
+    "positives": 532
+   },
+   {
+    "id": "cut:validation-f000114-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 114,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 223,
+    "positives": 534
+   },
+   {
+    "id": "cut:validation-f000119-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 119,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 246,
+    "positives": 522
+   },
+   {
+    "id": "cut:validation-f000123-medium-launcher-a-092-123",
+    "scene": "validation",
+    "frame": 123,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 291,
+    "positives": 487
+   }
+  ],
+  "mine_roller": [
+   {
+    "id": "cut:validation-f000197-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 197,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 474,
+    "positives": 501
+   },
+   {
+    "id": "cut:validation-f000198-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 198,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 481,
+    "positives": 489
+   },
+   {
+    "id": "cut:validation-f000200-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 200,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 490,
+    "positives": 544
+   },
+   {
+    "id": "cut:validation-f000201-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 201,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 491,
+    "positives": 517
+   },
+   {
+    "id": "cut:validation-f000202-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 202,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 504,
+    "positives": 519
+   },
+   {
+    "id": "cut:validation-f000203-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 203,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 523,
+    "positives": 503
+   },
+   {
+    "id": "cut:validation-f000205-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 205,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 528,
+    "positives": 513
+   },
+   {
+    "id": "cut:validation-f000206-mine-roller-b-197-206",
+    "scene": "validation",
+    "frame": 206,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 546,
+    "positives": 505
+   }
+  ],
+  "small_launcher": [
+   {
+    "id": "cut:validation-f000119-small-launcher-b-119-140",
+    "scene": "validation",
+    "frame": 119,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 58,
+    "positives": 453
+   },
+   {
+    "id": "cut:validation-f000129-small-launcher-b-119-140",
+    "scene": "validation",
+    "frame": 129,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 65,
+    "positives": 470
+   },
+   {
+    "id": "cut:validation-f000140-small-launcher-b-119-140",
+    "scene": "validation",
+    "frame": 140,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 68,
+    "positives": 474
+   },
+   {
+    "id": "cut:validation-f000119-small-launcher-c-119-140",
+    "scene": "validation",
+    "frame": 119,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 53,
+    "positives": 461
+   },
+   {
+    "id": "cut:validation-f000129-small-launcher-c-119-140",
+    "scene": "validation",
+    "frame": 129,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 54,
+    "positives": 411
+   },
+   {
+    "id": "cut:validation-f000140-small-launcher-c-119-140",
+    "scene": "validation",
+    "frame": 140,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 71,
+    "positives": 447
+   },
+   {
+    "id": "cut:validation-f000119-small-launcher-d-119-140",
+    "scene": "validation",
+    "frame": 119,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 58,
+    "positives": 448
+   },
+   {
+    "id": "cut:validation-f000129-small-launcher-d-119-140",
+    "scene": "validation",
+    "frame": 129,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 64,
+    "positives": 472
+   },
+   {
+    "id": "cut:validation-f000140-small-launcher-d-119-140",
+    "scene": "validation",
+    "frame": 140,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 68,
+    "positives": 455
+   }
+  ],
+  "small_tower": [
+   {
+    "id": "cut:validation-f000240-small-tower-b-240-249",
+    "scene": "validation",
+    "frame": 240,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1018,
+    "positives": 709
+   },
+   {
+    "id": "cut:validation-f000249-small-tower-b-240-249",
+    "scene": "validation",
+    "frame": 249,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1056,
+    "positives": 643
+   },
+   {
+    "id": "cut:validation-f000156-small-tower-c-155-164",
+    "scene": "validation",
+    "frame": 156,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 874,
+    "positives": 665
+   },
+   {
+    "id": "cut:validation-f000159-small-tower-c-155-164",
+    "scene": "validation",
+    "frame": 159,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1078,
+    "positives": 687
+   },
+   {
+    "id": "cut:validation-f000161-small-tower-c-155-164",
+    "scene": "validation",
+    "frame": 161,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1096,
+    "positives": 701
+   },
+   {
+    "id": "cut:validation-f000164-small-tower-c-155-164",
+    "scene": "validation",
+    "frame": 164,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1101,
+    "positives": 686
+   }
+  ]
+ },
+ "sprites_dropped": [
+  {
+   "id": "lib:large_launcher__validation",
+   "class_name": "large_launcher",
+   "scene": "validation",
+   "frame": 5,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:mine_roller",
+   "class_name": "mine_roller",
+   "scene": "validation",
+   "frame": 6,
+   "zoom": 1,
+   "reason": "track mine-roller-a-005-009: KNOWN_BAD_TRACKS of synth.py: boxy hull with a gun barrel: looks like the tank, not the organiser's mine roller (flagged by Oscar and in elias/sprites)"
+  },
+  {
+   "id": "lib:tank",
+   "class_name": "tank",
+   "scene": "validation",
+   "frame": 24,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "inst:validation-f000005-x1728-y0960-L0:0",
+   "class_name": "large_launcher",
+   "scene": "validation",
+   "frame": 5,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:validation-f000005-x1728-y0960-L1:0",
+   "class_name": "large_launcher",
+   "scene": "validation",
+   "frame": 5,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:validation-f000024-x1920-y0192-L0:0",
+   "class_name": "tank",
+   "scene": "validation",
+   "frame": 24,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:validation-f000024-x1920-y0192-L1:0",
+   "class_name": "tank",
+   "scene": "validation",
+   "frame": 24,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:validation-f000066-x1920-y0192-L1:1",
+   "class_name": "medium_plane",
+   "scene": "validation",
+   "frame": 66,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  }
+ ],
+ "ground_limits": {
+  "grey_min": 87.77008547008548,
+  "blue_share_max": 0.3326718895181756,
+  "water_share_max": 0.02,
+  "structure_share_max": 0.41129172195710306,
+  "edge_density_max": 0.22077629357430562,
+  "red_share_max": 0.2,
+  "rings_measured": 193,
+  "open_ground_share_of_cells": 0.1624
+ },
+ "background_modes_drawn": "not counted with --workers > 1",
+ "class_margins_ltrb_px": {
+  "large_launcher": [
+   1.0,
+   8.5,
+   8.0,
+   13.0
+  ],
+  "tank": [
+   15.0,
+   6.0,
+   5.0,
+   5.0
+  ],
+  "medium_plane": [
+   -4.0,
+   2.0,
+   8.0,
+   8.0
+  ],
+  "hangar": [
+   1.0,
+   3.5,
+   74.5,
+   6.0
+  ],
+  "helicopter": [
+   12.0,
+   18.0,
+   37.0,
+   9.0
+  ],
+  "jet_plane": [
+   10.0,
+   -2.0,
+   13.0,
+   4.0
+  ],
+  "large_tower": [
+   5.0,
+   6.0,
+   5.0,
+   5.0
+  ],
+  "medium_launcher": [
+   9.0,
+   16.0,
+   5.0,
+   7.5
+  ],
+  "mine_roller": [
+   7.0,
+   13.5,
+   6.5,
+   8.0
+  ],
+  "small_launcher": [
+   5.0,
+   11.0,
+   10.0,
+   8.0
+  ],
+  "small_tower": [
+   5.0,
+   3.5,
+   16.5,
+   16.0
+  ]
+ },
+ "parameters": {
+  "n": 60000,
+  "sprite_banks": [
+   "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\oscar-sprite-synthetic\\sprite-bank\\bank.json",
+   "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\elias\\sprites\\bank.json"
+  ],
+  "sprite_scenes": [
+   "validation"
+  ],
+  "background_scenes": [
+   "validation"
+  ],
+  "rot_max": 180.0,
+  "rot_max_per_class": {},
+  "seed": 1,
+  "neg_frac": 0.25,
+  "level_probs": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "center_jitter": 6.0,
+  "jitter_prob": 0.5,
+  "neg_guard": 10.0,
+  "lossless_prob": 0.25,
+  "bg_open_prob": 0.7,
+  "bg_near_frac": 0.5,
+  "warp_interp": [
+   "lanczos4",
+   "nearest"
+  ],
+  "sprite_blur_max": 0.0,
+  "distractor_prob": 0.3,
+  "strip_prob": 0.15,
+  "post_noise": 0,
+  "max_bg_frames": 48,
+  "frame_cache": "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\elias\\out\\frame_cache",
+  "recut_native": true,
+  "exclude_sprite_ids": [],
+  "exclude_tracks": [],
+  "min_recut_mask_px": 300
+ },
+ "fixed_parameters": {
+  "scale_jitter": [
+   0.92,
+   1.08
+  ],
+  "sprite_brightness": 0.08,
+  "sprite_contrast": 0.08,
+  "sprite_gamma": [
+   0.9,
+   1.1
+  ],
+  "global_brightness": 0.04,
+  "global_contrast": 0.04,
+  "global_gamma": [
+   0.95,
+   1.05
+  ],
+  "strip_max_window_px": 20,
+  "solid_alpha": 0.8,
+  "mask": "bank alpha >= solid_alpha, warped linearly, cut at 0.5, 3x3 Gaussian feather",
+  "near_ring_px": [
+   100,
+   500
+  ],
+  "ground_cell_px": 8,
+  "hard_negative_distance": "U(1, 2) x max(0.78 x longer side, (neg_guard + 0.5) window px)",
+  "keepout_px": {
+   "helsinki": 0,
+   "validation": 96
+  },
+  "reduction": "INTER_AREA by f, then INTER_AREA by s/f"
+ },
+ "throughput": {
+  "workers": 6,
+  "samples": 60000,
+  "setup_seconds": 0.0,
+  "generation_seconds": 22.517,
+  "samples_per_second": 2664.7,
+  "samples_per_second_including_setup": 2593.0,
+  "png_frames_decoded_this_run": null,
+  "note": "generation_seconds for workers > 1 includes worker start-up; for workers = 1 the first sample (sprite loading, frame cache opening) is counted as setup and generated a second time inside the timed loop"
+ },
+ "notes": [
+  "Negatives follow the real_crops.py convention: box_w, box_h and size_px are those of the object that fixed level and scale. Pure background: track 'background', off (0, 0).",
+  "Hard negatives: track 'hardneg:<sprite id>', `off` is the offset of the off-centre object (window px).",
+  "Positives record the true sub-pixel offset of the label box centre: within +-0.5 window px for the centred share, up to +-(center_jitter + 0.5) for the jittered share.",
+  "Backgrounds cut from `validation` are noisy: its labels are incomplete, so a background or negative window can contain an unlabelled object.",
+  "background_modes_drawn counts every sample_patch call of this process, the setup sample included; 'relaxed' = the wanted mode found nothing in 120 tries.",
+  "Ground limits are measured on the rings around the labelled boxes of the background scenes. Known limit: large pale flat roofs pass as open ground, so on urban frames some objects still stand on roofs."
+ ]
+}

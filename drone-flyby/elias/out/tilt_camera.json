@@ -1,0 +1,71 @@
+{
+ "helsinki_linear": {
+  "dy_at_y0": 51.52106167377202,
+  "dy_at_y2159": 80.07087360260569,
+  "dy_slope_per_px": 0.013223627572410223,
+  "dx_at_x0": -13.506490493594088,
+  "dx_at_x3839": 13.578538907669001,
+  "dx_slope_per_px": 0.0070552303728218515,
+  "dx_zero_at_x": 1914.39397154539,
+  "sqrt_dy_zero_at_y (horizon row)": -8816.095551343798,
+  "n_displacements": 218
+ },
+ "helsinki_fit": {
+  "inlier_fraction": 1.0,
+  "f_px": 3140.140407229355,
+  "pitch_deg": 18.25250143078003,
+  "yaw_deg": -0.03391370943810857,
+  "step_over_height": 0.023148148166666667,
+  "rms_px": 2.967827992618635,
+  "n_tracks": 15,
+  "n_points": 233,
+  "nadir_pixel": [
+   1920.6129865952134,
+   2115.6148378953826
+  ],
+  "hfov_deg": 62.8863694829514,
+  "vfov_deg": 37.95963692598307,
+  "ground_m_per_px_at_nadir": 0.1910742585327256,
+  "off_nadir_deg": {
+   "top_centre": 37.23231820397531,
+   "centre": 18.25250143078003,
+   "bottom_centre": 0.7110815556662239,
+   "top_left": 46.43520696379487,
+   "top_right": 46.413418871568005,
+   "bottom_left": 30.056995586442397,
+   "bottom_right": 30.022827011570907,
+   "left_middle": 35.89088617978169,
+   "right_middle": 35.86075286700212
+  },
+  "off_nadir_deg_by_row_at_x1920": {
+   "0": 37.23231820397531,
+   "270": 32.71665567501502,
+   "540": 28.010035810735573,
+   "810": 23.166900434216267,
+   "1080": 18.25250143078003,
+   "1350": 13.338102910156971,
+   "1620": 8.494969522947184,
+   "1890": 3.7883576178190372
+  }
+ },
+ "validation_linear": {
+  "dy_at_y0": 46.317262668414486,
+  "dy_at_y2159": 86.26075337534459,
+  "dx_at_x0": -13.934290369175708,
+  "dx_at_x3839": 14.097432057443372,
+  "dx_zero_at_x": 1908.3287110629915,
+  "n_displacements": 556,
+  "note": "participant pseudo-label boxes, directly_reviewed_track only; noisier than helsinki"
+ },
+ "validation_fit": {
+  "method": "trimmed line through dy(y), closed form, f fixed to the helsinki value",
+  "kept_displacements": 535,
+  "of": 556,
+  "dy_at_y0": 51.9981086289093,
+  "dy_at_y2159": 83.56122277291541,
+  "pitch_deg": 18.706623985335405,
+  "step_over_height": 0.02406236893965695,
+  "nadir_row": 2143.2835292122677,
+  "same_closed_form_on_helsinki_pitch_deg": 17.511522720449197
+ }
+}

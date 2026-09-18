@@ -1,0 +1,29 @@
+{
+ "note": "Hand-checked pseudo-label errors. Each 'exclude' entry removes the boxes of one track in an inclusive frame range from the positives of real_<scene>.npz; the boxes stay keep-out zones for negatives. The first four entries come from the review (elias/_review/out/track_jet_d.png, track_heli_early.png, frames_137_141.png, tracks_part0..3.png), the others were found by drawing every frame-edge positive and every algorithmic_bottom_completion box on the source frames. All entries are visible on elias/out/real_validation_dropped.png. 'flagged_but_kept' entries are copied to the manifest and change nothing.",
+ "exclude": [
+  {"scene": "validation", "track": "jet-plane-d-040-082", "first": 40, "last": 52,
+   "reason": "box on forest, moves against the terrain; the jet enters the frame at 53"},
+  {"scene": "validation", "track": "jet-plane-e-109-141", "first": 141, "last": 141,
+   "reason": "jet has left the frame; box lies inside the hangar box on the apron edge"},
+  {"scene": "validation", "track": "helicopter-b-early-077-104", "first": 77, "last": 82,
+   "reason": "box on road and trees; the helicopter enters the frame at 83"},
+  {"scene": "validation", "track": "tank-b-128-160", "first": 155, "last": 159,
+   "reason": "25x15 px box beside the tank (track median box is 50x36 px)"},
+  {"scene": "validation", "track": "small-launcher-b-119-140", "first": 143, "last": 150,
+   "reason": "box has slid off its launcher and lies between two launchers, touching each at a corner"},
+  {"scene": "validation", "track": "mine-roller-b-197-206", "first": 229, "last": 229,
+   "reason": "leaving at the bottom: 69 % of the loose box is in the frame but only the roller tips of the object"},
+  {"scene": "validation", "track": "large-launcher-b-139-171", "first": 171, "last": 171,
+   "reason": "leaving at the bottom: the visible part of the box shows forest and only the nose tip of the launcher"},
+  {"scene": "validation", "track": "helicopter-b-105-149", "first": 138, "last": 138,
+   "reason": "leaving at the bottom: the visible part of the box shows two rotor blade tips, no fuselage"}
+ ],
+ "flagged_but_kept": [
+  {"scene": "validation", "track": "tank-c-182-206", "first": 182, "last": 214,
+   "reason": "box about 70x49 px around a tank of about 45x35 px that sits in the lower right corner: the tank is in every window but off centre, and size_px is overstated"},
+  {"scene": "validation", "track": "tank-e-066-075", "first": 66, "last": 98,
+   "reason": "loose box about 60x62 px, tank in the left half"},
+  {"scene": "validation", "track": "small-launcher-b-119-140", "first": 135, "last": 142,
+   "reason": "launcher in the lower left corner of a 23x28 px box, about half outside at 141 and 142"}
+ ]
+}

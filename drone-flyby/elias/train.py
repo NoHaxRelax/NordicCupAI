@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -95,11 +96,20 @@ def to_tensors(d, device):
     return x, y, s
 
 
-def predict(model, heads, x, s, bs=1024):
+def predict(model, heads, x, s, bs=1024, tta=False):
+    """tta: average class probabilities over a horizontal flip and three exposures."""
     model.eval(); out = []
+    variants = [(g, f) for g in ((0.8, 1.0, 1.25) if tta else (1.0,)) for f in ((False, True) if tta else (False,))]
     with torch.no_grad(), torch.autocast('cuda', dtype=torch.float16):
         for i in range(0, len(x), bs):
-            xb = x[i:i+bs].float().div_(255.).sub_(0.45).div_(0.25)
+            x0 = x[i:i+bs].float().div_(255.)
+            if heads == 'single':
+                prob = 0
+                for g, f in variants:
+                    xv = (x0*g).clamp_(0, 1).sub_(0.45).div_(0.25)
+                    prob = prob+model(xv.flip(3) if f else xv, s[i:i+bs]).float().softmax(1)
+                out.append(prob.argmax(1)); continue
+            xb = x0.sub_(0.45).div_(0.25)
             lg = model(xb, s[i:i+bs]).float()
             if heads == 'single':
                 out.append(lg.argmax(1))
@@ -125,7 +135,13 @@ def train_one(d_train, a, device, scale_channels, only_scale=None):
         for i in range(0, len(x)-a.batch+1, a.batch):
             idx = perm[i:i+a.batch]
             xb = x[idx].float().div_(255.)
-            xb = xb*(1+0.06*(torch.rand(len(idx), 1, 1, 1, device=device)-.5))  # the only train-time jitter
+            xb = xb*(1+0.06*(torch.rand(len(idx), 1, 1, 1, device=device)-.5))
+            if a.aug:  # colour balance, gamma, saturation and a horizontal flip (never vertical: lean rule)
+                n = len(idx); r = lambda *sh: torch.rand(*sh, device=device)
+                xb = xb*torch.exp((r(n, 3, 1, 1)-.5)*2*math.log(1.2))
+                xb = xb.clamp(1e-4, 1)**torch.exp((r(n, 1, 1, 1)-.5)*2*math.log(1.25))
+                gray = xb.mean(1, keepdim=True); xb = (gray+(xb-gray)*(0.5+r(n, 1, 1, 1))).clamp(0, 1)
+                flip = r(n) < .5; xb = torch.where(flip[:, None, None, None], xb.flip(3), xb)
             xb = xb.sub_(0.45).div_(0.25).contiguous(memory_format=torch.channels_last)
             with torch.autocast('cuda', dtype=torch.float16):
                 lg = model(xb, s[idx])
@@ -138,14 +154,18 @@ def train_one(d_train, a, device, scale_channels, only_scale=None):
     return model
 
 
-def report(pred, d, tag):
+def report(pred, d, tag, trained=None):
     y, size = d['label'], d['size_px']; p = pred.cpu().numpy()
     pos = y != BG
+    shared = pos & np.isin(y, sorted(trained)) if trained is not None else pos  # classes the training set contains
     rows = {'tag': tag, 'n_test': int(len(y)), 'acc_pos': float((p[pos] == y[pos]).mean()),
+            'acc_shared': float((p[shared] == y[shared]).mean()), 'n_shared': int(shared.sum()),
+            'macro_acc_shared': float(np.mean([(p[(y == c)] == c).mean() for c in np.unique(y[shared])])),
+            'shared_classes': [CLASSES[c] for c in np.unique(y[shared])],
             'bg_false_alarm': float((p[~pos] != BG).mean()) if (~pos).any() else None,
             'objectness_recall': float((p[pos] != BG).mean()), 'by_size': [], 'by_class': {}, 'by_class_size': {}}
     for lo, hi in zip(SIZE_BINS[:-1], SIZE_BINS[1:]):
-        m = pos & (size >= lo) & (size < hi)
+        m = shared & (size >= lo) & (size < hi)
         if m.sum():
             rows['by_size'].append({'px': f'{lo:g}-{hi:g}' if hi < 1e8 else f'{lo:g}+', 'n': int(m.sum()),
                                     'acc': float((p[m] == y[m]).mean()), 'noticed': float((p[m] != BG).mean())})
@@ -168,6 +188,8 @@ def main():
     ap.add_argument('--width', type=int, default=32); ap.add_argument('--epochs', type=int, default=12)
     ap.add_argument('--batch', type=int, default=512); ap.add_argument('--lr', type=float, default=3e-3)
     ap.add_argument('--seed', type=int, default=0); ap.add_argument('--tag', default='run')
+    ap.add_argument('--aug', type=int, default=0, help='1 = GPU colour balance, gamma, saturation, horizontal flip')
+    ap.add_argument('--tta', type=int, default=0, help='1 = test-time averaging over flip and exposure')
     ap.add_argument('--out', default=str(HERE/'out'/'runs'))
     a = ap.parse_args()
     torch.manual_seed(a.seed); np.random.seed(a.seed)
@@ -180,17 +202,17 @@ def main():
         for k, sv in enumerate(SCALES):
             if (st == k).any() and (torch.from_numpy(d_train['scale']) == sv).any():
                 models[sv] = train_one(d_train, a, device, False, only_scale=k)
-                pred[st == k] = predict(models[sv], a.heads, xt[st == k], st[st == k])
+                pred[st == k] = predict(models[sv], a.heads, xt[st == k], st[st == k], tta=bool(a.tta))
         state = {str(k): m.state_dict() for k, m in models.items()}
     else:
         model = train_one(d_train, a, device, a.scale_mode == 'input')
-        pred = predict(model, a.heads, xt, st); state = model.state_dict()
-    rows = report(pred, d_test, a.tag)
+        pred = predict(model, a.heads, xt, st, tta=bool(a.tta)); state = model.state_dict()
+    rows = report(pred, d_test, a.tag, trained=set(np.unique(d_train['label']).tolist())-{BG})
     rows.update({'train': a.train, 'test': a.test, 'scale_mode': a.scale_mode, 'heads': a.heads, 'width': a.width,
-                 'epochs': a.epochs, 'n_train': int(len(d_train['label'])), 'seconds': round(time.time()-t0, 1)})
+                 'epochs': a.epochs, 'aug': a.aug, 'tta': a.tta, 'n_train': int(len(d_train['label'])), 'seconds': round(time.time()-t0, 1)})
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     (out/f'{a.tag}.json').write_text(json.dumps(rows, indent=1)); torch.save(state, out/f'{a.tag}.pt')
-    print(f"{a.tag}: acc on real positives {rows['acc_pos']:.3f}  background false alarm {rows['bg_false_alarm']}  "
+    print(f"{a.tag}: acc on shared classes {rows['acc_shared']:.3f} (macro {rows['macro_acc_shared']:.3f}, {len(rows['shared_classes'])} classes)  background false alarm {rows['bg_false_alarm']}  "
           f"noticed {rows['objectness_recall']:.3f}  ({rows['seconds']} s, train n={rows['n_train']})")
     print('  by delivered size: ' + '  '.join(f"{r['px']}:{r['acc']:.2f}(n{r['n']})" for r in rows['by_size']))
 

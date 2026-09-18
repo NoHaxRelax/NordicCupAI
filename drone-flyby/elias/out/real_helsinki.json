@@ -1,0 +1,1295 @@
+{
+ "file": "real_helsinki.npz",
+ "scene": "helsinki",
+ "source": "real",
+ "trust": "organiser ground truth",
+ "n_windows": 17202,
+ "n_positives": 8601,
+ "n_negatives": 8601,
+ "negatives_not_placed": 0,
+ "frames_used": 25,
+ "frames_skipped": [],
+ "parameters": {
+  "views_per_object_level": 6,
+  "partial_views_per_object_level": 1,
+  "jitter_window_px": 6,
+  "min_visible": 0.6,
+  "neg_guard_window_px": 10.0,
+  "near_frac": 0.25,
+  "neg_tries": 60,
+  "seed": 0,
+  "window": 64,
+  "max_object_px": 48,
+  "validation_clearance_src_px": 96,
+  "max_frames": null
+ },
+ "conventions": {
+  "level0": "single legal view (1920,1080): one centred window and K jittered windows per object",
+  "levels_1_2": "K legal views containing the whole box (L1 cycles the four f-grid phases), each gives one centred and one jittered window, plus partial_views view-cut samples",
+  "off": "(dx, dy) of the object centre from the window centre in window px, (0,0) when centred",
+  "annotated_box": "box_w, box_h, size_px, off and the scale s always describe the annotated box, also for view-cut samples",
+  "partial_objects": "vis < 1. View-cut objects: the window is centred on the visible part of the box; vis_w, vis_h (source px) and vis_off (window px, equal to the jitter) describe that part, off locates the centre of the annotated box and is therefore not (0,0) for a centred cut window. Frame-edge objects are annotated clipped, so their box_w, box_h, size_px are those of the clipped box and vis_w, vis_h repeat them",
+  "negatives": "label 16, track \"background\". size_px, box_w, box_h are those of the matched positive (they fixed level and scale), vis is 1.0",
+  "extra_arrays": [
+   "vis",
+   "vis_w",
+   "vis_h",
+   "vis_off",
+   "view",
+   "status",
+   "fill"
+  ]
+ },
+ "label_filters": null,
+ "counts_class_x_level": {
+  "hangar": {
+   "L0": 28,
+   "L1": 54,
+   "L2": 54
+  },
+  "helicopter": {
+   "L0": 126,
+   "L1": 252,
+   "L2": 252
+  },
+  "jet_plane": {
+   "L0": 147,
+   "L1": 294,
+   "L2": 294
+  },
+  "large_launcher": {
+   "L0": 175,
+   "L1": 340,
+   "L2": 340
+  },
+  "large_tower": {
+   "L0": 126,
+   "L1": 252,
+   "L2": 252
+  },
+  "medium_launcher": {
+   "L0": 49,
+   "L1": 94,
+   "L2": 94
+  },
+  "medium_plane": {
+   "L0": 35,
+   "L1": 68,
+   "L2": 68
+  },
+  "mine_roller": {
+   "L0": 14,
+   "L1": 28,
+   "L2": 28
+  },
+  "small_launcher": {
+   "L0": 175,
+   "L1": 350,
+   "L2": 350
+  },
+  "small_plane": {
+   "L0": 63,
+   "L1": 126,
+   "L2": 126
+  },
+  "small_tower": {
+   "L0": 133,
+   "L1": 266,
+   "L2": 266
+  },
+  "ta-ta": {
+   "L0": 175,
+   "L1": 350,
+   "L2": 350
+  },
+  "tank": {
+   "L0": 168,
+   "L1": 336,
+   "L2": 336
+  },
+  "condor": {
+   "L0": 70,
+   "L1": 138,
+   "L2": 138
+  },
+  "jammer": {
+   "L0": 91,
+   "L1": 180,
+   "L2": 180
+  },
+  "spacecraft": {
+   "L0": 154,
+   "L1": 308,
+   "L2": 308
+  },
+  "background": {
+   "L0": 1729,
+   "L1": 3436,
+   "L2": 3436
+  }
+ },
+ "size_px_by_class_level": {
+  "hangar": {
+   "L0": {
+    "n": 28,
+    "min": 46.0,
+    "p25": 46.38,
+    "median": 46.75,
+    "p75": 47.06,
+    "max": 47.25
+   },
+   "L1": {
+    "n": 54,
+    "min": 92.0,
+    "p25": 93.0,
+    "median": 94.0,
+    "p75": 94.38,
+    "max": 94.5
+   },
+   "L2": {
+    "n": 54,
+    "min": 184.0,
+    "p25": 186.0,
+    "median": 188.0,
+    "p75": 188.75,
+    "max": 189.0
+   }
+  },
+  "helicopter": {
+   "L0": {
+    "n": 126,
+    "min": 27.25,
+    "p25": 28.0,
+    "median": 29.0,
+    "p75": 30.0,
+    "max": 31.0
+   },
+   "L1": {
+    "n": 252,
+    "min": 54.5,
+    "p25": 56.0,
+    "median": 58.0,
+    "p75": 60.0,
+    "max": 62.0
+   },
+   "L2": {
+    "n": 252,
+    "min": 109.0,
+    "p25": 112.0,
+    "median": 116.0,
+    "p75": 120.0,
+    "max": 124.0
+   }
+  },
+  "jet_plane": {
+   "L0": {
+    "n": 147,
+    "min": 18.75,
+    "p25": 19.5,
+    "median": 20.5,
+    "p75": 21.25,
+    "max": 22.25
+   },
+   "L1": {
+    "n": 294,
+    "min": 37.5,
+    "p25": 39.0,
+    "median": 41.0,
+    "p75": 42.5,
+    "max": 44.5
+   },
+   "L2": {
+    "n": 294,
+    "min": 75.0,
+    "p25": 78.0,
+    "median": 82.0,
+    "p75": 85.0,
+    "max": 89.0
+   }
+  },
+  "large_launcher": {
+   "L0": {
+    "n": 175,
+    "min": 28.5,
+    "p25": 35.5,
+    "median": 37.25,
+    "p75": 38.75,
+    "max": 40.75
+   },
+   "L1": {
+    "n": 340,
+    "min": 57.0,
+    "p25": 71.0,
+    "median": 74.5,
+    "p75": 77.5,
+    "max": 81.5
+   },
+   "L2": {
+    "n": 340,
+    "min": 114.0,
+    "p25": 142.0,
+    "median": 149.0,
+    "p75": 155.0,
+    "max": 163.0
+   }
+  },
+  "large_tower": {
+   "L0": {
+    "n": 126,
+    "min": 15.75,
+    "p25": 16.25,
+    "median": 16.5,
+    "p75": 17.0,
+    "max": 17.25
+   },
+   "L1": {
+    "n": 252,
+    "min": 31.5,
+    "p25": 32.5,
+    "median": 33.0,
+    "p75": 34.0,
+    "max": 34.5
+   },
+   "L2": {
+    "n": 252,
+    "min": 63.0,
+    "p25": 65.0,
+    "median": 66.0,
+    "p75": 68.0,
+    "max": 69.0
+   }
+  },
+  "medium_launcher": {
+   "L0": {
+    "n": 49,
+    "min": 11.5,
+    "p25": 11.75,
+    "median": 11.75,
+    "p75": 12.0,
+    "max": 12.0
+   },
+   "L1": {
+    "n": 94,
+    "min": 23.0,
+    "p25": 23.5,
+    "median": 23.5,
+    "p75": 24.0,
+    "max": 24.0
+   },
+   "L2": {
+    "n": 94,
+    "min": 46.0,
+    "p25": 47.0,
+    "median": 47.0,
+    "p75": 48.0,
+    "max": 48.0
+   }
+  },
+  "medium_plane": {
+   "L0": {
+    "n": 35,
+    "min": 13.75,
+    "p25": 13.75,
+    "median": 14.0,
+    "p75": 14.0,
+    "max": 14.25
+   },
+   "L1": {
+    "n": 68,
+    "min": 27.5,
+    "p25": 27.5,
+    "median": 28.0,
+    "p75": 28.0,
+    "max": 28.5
+   },
+   "L2": {
+    "n": 68,
+    "min": 55.0,
+    "p25": 55.0,
+    "median": 56.0,
+    "p75": 56.0,
+    "max": 57.0
+   }
+  },
+  "mine_roller": {
+   "L0": {
+    "n": 14,
+    "min": 15.0,
+    "p25": 15.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15.0
+   },
+   "L1": {
+    "n": 28,
+    "min": 30.0,
+    "p25": 30.0,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 30.0
+   },
+   "L2": {
+    "n": 28,
+    "min": 60.0,
+    "p25": 60.0,
+    "median": 60.0,
+    "p75": 60.0,
+    "max": 60.0
+   }
+  },
+  "small_launcher": {
+   "L0": {
+    "n": 175,
+    "min": 7.25,
+    "p25": 7.5,
+    "median": 7.5,
+    "p75": 7.5,
+    "max": 7.75
+   },
+   "L1": {
+    "n": 350,
+    "min": 14.5,
+    "p25": 15.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15.5
+   },
+   "L2": {
+    "n": 350,
+    "min": 29.0,
+    "p25": 30.0,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 31.0
+   }
+  },
+  "small_plane": {
+   "L0": {
+    "n": 63,
+    "min": 12.0,
+    "p25": 12.25,
+    "median": 12.5,
+    "p75": 12.75,
+    "max": 13.0
+   },
+   "L1": {
+    "n": 126,
+    "min": 24.0,
+    "p25": 24.5,
+    "median": 25.0,
+    "p75": 25.5,
+    "max": 26.0
+   },
+   "L2": {
+    "n": 126,
+    "min": 48.0,
+    "p25": 49.0,
+    "median": 50.0,
+    "p75": 51.0,
+    "max": 52.0
+   }
+  },
+  "small_tower": {
+   "L0": {
+    "n": 133,
+    "min": 14.5,
+    "p25": 14.75,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15.5
+   },
+   "L1": {
+    "n": 266,
+    "min": 29.0,
+    "p25": 29.5,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 31.0
+   },
+   "L2": {
+    "n": 266,
+    "min": 58.0,
+    "p25": 59.0,
+    "median": 60.0,
+    "p75": 60.0,
+    "max": 62.0
+   }
+  },
+  "ta-ta": {
+   "L0": {
+    "n": 175,
+    "min": 7.25,
+    "p25": 7.75,
+    "median": 8.0,
+    "p75": 8.5,
+    "max": 9.0
+   },
+   "L1": {
+    "n": 350,
+    "min": 14.5,
+    "p25": 15.5,
+    "median": 16.0,
+    "p75": 17.0,
+    "max": 18.0
+   },
+   "L2": {
+    "n": 350,
+    "min": 29.0,
+    "p25": 31.0,
+    "median": 32.0,
+    "p75": 34.0,
+    "max": 36.0
+   }
+  },
+  "tank": {
+   "L0": {
+    "n": 168,
+    "min": 11.5,
+    "p25": 12.0,
+    "median": 12.5,
+    "p75": 13.25,
+    "max": 13.5
+   },
+   "L1": {
+    "n": 336,
+    "min": 23.0,
+    "p25": 24.0,
+    "median": 25.0,
+    "p75": 26.5,
+    "max": 27.0
+   },
+   "L2": {
+    "n": 336,
+    "min": 46.0,
+    "p25": 48.0,
+    "median": 50.0,
+    "p75": 53.0,
+    "max": 54.0
+   }
+  },
+  "condor": {
+   "L0": {
+    "n": 70,
+    "min": 41.5,
+    "p25": 42.25,
+    "median": 43.12,
+    "p75": 44.0,
+    "max": 44.75
+   },
+   "L1": {
+    "n": 138,
+    "min": 83.0,
+    "p25": 84.5,
+    "median": 86.0,
+    "p75": 88.0,
+    "max": 89.5
+   },
+   "L2": {
+    "n": 138,
+    "min": 166.0,
+    "p25": 169.0,
+    "median": 172.0,
+    "p75": 176.0,
+    "max": 179.0
+   }
+  },
+  "jammer": {
+   "L0": {
+    "n": 91,
+    "min": 8.75,
+    "p25": 10.75,
+    "median": 10.75,
+    "p75": 11.0,
+    "max": 11.0
+   },
+   "L1": {
+    "n": 180,
+    "min": 17.5,
+    "p25": 21.5,
+    "median": 21.5,
+    "p75": 22.0,
+    "max": 22.0
+   },
+   "L2": {
+    "n": 180,
+    "min": 35.0,
+    "p25": 43.0,
+    "median": 43.0,
+    "p75": 44.0,
+    "max": 44.0
+   }
+  },
+  "spacecraft": {
+   "L0": {
+    "n": 154,
+    "min": 12.0,
+    "p25": 12.25,
+    "median": 12.25,
+    "p75": 12.5,
+    "max": 12.5
+   },
+   "L1": {
+    "n": 308,
+    "min": 24.0,
+    "p25": 24.5,
+    "median": 24.5,
+    "p75": 25.0,
+    "max": 25.0
+   },
+   "L2": {
+    "n": 308,
+    "min": 48.0,
+    "p25": 49.0,
+    "median": 49.0,
+    "p75": 50.0,
+    "max": 50.0
+   }
+  }
+ },
+ "size_px_by_class_level_vis_eq_1": {
+  "hangar": {
+   "L0": {
+    "n": 21,
+    "min": 46.5,
+    "p25": 46.5,
+    "median": 47.0,
+    "p75": 47.25,
+    "max": 47.25
+   },
+   "L1": {
+    "n": 36,
+    "min": 93.0,
+    "p25": 93.0,
+    "median": 94.0,
+    "p75": 94.5,
+    "max": 94.5
+   },
+   "L2": {
+    "n": 36,
+    "min": 186.0,
+    "p25": 186.0,
+    "median": 188.0,
+    "p75": 189.0,
+    "max": 189.0
+   }
+  },
+  "helicopter": {
+   "L0": {
+    "n": 126,
+    "min": 27.25,
+    "p25": 28.0,
+    "median": 29.0,
+    "p75": 30.0,
+    "max": 31.0
+   },
+   "L1": {
+    "n": 216,
+    "min": 54.5,
+    "p25": 56.0,
+    "median": 58.0,
+    "p75": 60.0,
+    "max": 62.0
+   },
+   "L2": {
+    "n": 216,
+    "min": 109.0,
+    "p25": 112.0,
+    "median": 116.0,
+    "p75": 120.0,
+    "max": 124.0
+   }
+  },
+  "jet_plane": {
+   "L0": {
+    "n": 147,
+    "min": 18.75,
+    "p25": 19.5,
+    "median": 20.5,
+    "p75": 21.25,
+    "max": 22.25
+   },
+   "L1": {
+    "n": 252,
+    "min": 37.5,
+    "p25": 39.0,
+    "median": 41.0,
+    "p75": 42.5,
+    "max": 44.5
+   },
+   "L2": {
+    "n": 252,
+    "min": 75.0,
+    "p25": 78.0,
+    "median": 82.0,
+    "p75": 85.0,
+    "max": 89.0
+   }
+  },
+  "large_launcher": {
+   "L0": {
+    "n": 147,
+    "min": 34.75,
+    "p25": 36.25,
+    "median": 37.75,
+    "p75": 39.0,
+    "max": 40.75
+   },
+   "L1": {
+    "n": 252,
+    "min": 69.5,
+    "p25": 72.5,
+    "median": 75.5,
+    "p75": 78.0,
+    "max": 81.5
+   },
+   "L2": {
+    "n": 252,
+    "min": 139.0,
+    "p25": 145.0,
+    "median": 151.0,
+    "p75": 156.0,
+    "max": 163.0
+   }
+  },
+  "large_tower": {
+   "L0": {
+    "n": 126,
+    "min": 15.75,
+    "p25": 16.25,
+    "median": 16.5,
+    "p75": 17.0,
+    "max": 17.25
+   },
+   "L1": {
+    "n": 216,
+    "min": 31.5,
+    "p25": 32.5,
+    "median": 33.0,
+    "p75": 34.0,
+    "max": 34.5
+   },
+   "L2": {
+    "n": 216,
+    "min": 63.0,
+    "p25": 65.0,
+    "median": 66.0,
+    "p75": 68.0,
+    "max": 69.0
+   }
+  },
+  "medium_launcher": {
+   "L0": {
+    "n": 42,
+    "min": 11.75,
+    "p25": 11.75,
+    "median": 11.88,
+    "p75": 12.0,
+    "max": 12.0
+   },
+   "L1": {
+    "n": 72,
+    "min": 23.5,
+    "p25": 23.5,
+    "median": 23.75,
+    "p75": 24.0,
+    "max": 24.0
+   },
+   "L2": {
+    "n": 72,
+    "min": 47.0,
+    "p25": 47.0,
+    "median": 47.5,
+    "p75": 48.0,
+    "max": 48.0
+   }
+  },
+  "medium_plane": {
+   "L0": {
+    "n": 28,
+    "min": 13.75,
+    "p25": 13.94,
+    "median": 14.0,
+    "p75": 14.06,
+    "max": 14.25
+   },
+   "L1": {
+    "n": 48,
+    "min": 27.5,
+    "p25": 27.88,
+    "median": 28.0,
+    "p75": 28.12,
+    "max": 28.5
+   },
+   "L2": {
+    "n": 48,
+    "min": 55.0,
+    "p25": 55.75,
+    "median": 56.0,
+    "p75": 56.25,
+    "max": 57.0
+   }
+  },
+  "mine_roller": {
+   "L0": {
+    "n": 14,
+    "min": 15.0,
+    "p25": 15.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15.0
+   },
+   "L1": {
+    "n": 24,
+    "min": 30.0,
+    "p25": 30.0,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 30.0
+   },
+   "L2": {
+    "n": 24,
+    "min": 60.0,
+    "p25": 60.0,
+    "median": 60.0,
+    "p75": 60.0,
+    "max": 60.0
+   }
+  },
+  "small_launcher": {
+   "L0": {
+    "n": 175,
+    "min": 7.25,
+    "p25": 7.5,
+    "median": 7.5,
+    "p75": 7.5,
+    "max": 7.75
+   },
+   "L1": {
+    "n": 300,
+    "min": 14.5,
+    "p25": 15.0,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15.5
+   },
+   "L2": {
+    "n": 300,
+    "min": 29.0,
+    "p25": 30.0,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 31.0
+   }
+  },
+  "small_plane": {
+   "L0": {
+    "n": 63,
+    "min": 12.0,
+    "p25": 12.25,
+    "median": 12.5,
+    "p75": 12.75,
+    "max": 13.0
+   },
+   "L1": {
+    "n": 108,
+    "min": 24.0,
+    "p25": 24.5,
+    "median": 25.0,
+    "p75": 25.5,
+    "max": 26.0
+   },
+   "L2": {
+    "n": 108,
+    "min": 48.0,
+    "p25": 49.0,
+    "median": 50.0,
+    "p75": 51.0,
+    "max": 52.0
+   }
+  },
+  "small_tower": {
+   "L0": {
+    "n": 133,
+    "min": 14.5,
+    "p25": 14.75,
+    "median": 15.0,
+    "p75": 15.0,
+    "max": 15.5
+   },
+   "L1": {
+    "n": 228,
+    "min": 29.0,
+    "p25": 29.5,
+    "median": 30.0,
+    "p75": 30.0,
+    "max": 31.0
+   },
+   "L2": {
+    "n": 228,
+    "min": 58.0,
+    "p25": 59.0,
+    "median": 60.0,
+    "p75": 60.0,
+    "max": 62.0
+   }
+  },
+  "ta-ta": {
+   "L0": {
+    "n": 175,
+    "min": 7.25,
+    "p25": 7.75,
+    "median": 8.0,
+    "p75": 8.5,
+    "max": 9.0
+   },
+   "L1": {
+    "n": 300,
+    "min": 14.5,
+    "p25": 15.5,
+    "median": 16.0,
+    "p75": 17.0,
+    "max": 18.0
+   },
+   "L2": {
+    "n": 300,
+    "min": 29.0,
+    "p25": 31.0,
+    "median": 32.0,
+    "p75": 34.0,
+    "max": 36.0
+   }
+  },
+  "tank": {
+   "L0": {
+    "n": 168,
+    "min": 11.5,
+    "p25": 12.0,
+    "median": 12.5,
+    "p75": 13.25,
+    "max": 13.5
+   },
+   "L1": {
+    "n": 288,
+    "min": 23.0,
+    "p25": 24.0,
+    "median": 25.0,
+    "p75": 26.5,
+    "max": 27.0
+   },
+   "L2": {
+    "n": 288,
+    "min": 46.0,
+    "p25": 48.0,
+    "median": 50.0,
+    "p75": 53.0,
+    "max": 54.0
+   }
+  },
+  "condor": {
+   "L0": {
+    "n": 63,
+    "min": 41.5,
+    "p25": 42.25,
+    "median": 43.0,
+    "p75": 43.75,
+    "max": 44.5
+   },
+   "L1": {
+    "n": 108,
+    "min": 83.0,
+    "p25": 84.5,
+    "median": 86.0,
+    "p75": 87.5,
+    "max": 89.0
+   },
+   "L2": {
+    "n": 108,
+    "min": 166.0,
+    "p25": 169.0,
+    "median": 172.0,
+    "p75": 175.0,
+    "max": 178.0
+   }
+  },
+  "jammer": {
+   "L0": {
+    "n": 84,
+    "min": 10.75,
+    "p25": 10.75,
+    "median": 10.88,
+    "p75": 11.0,
+    "max": 11.0
+   },
+   "L1": {
+    "n": 144,
+    "min": 21.5,
+    "p25": 21.5,
+    "median": 21.75,
+    "p75": 22.0,
+    "max": 22.0
+   },
+   "L2": {
+    "n": 144,
+    "min": 43.0,
+    "p25": 43.0,
+    "median": 43.5,
+    "p75": 44.0,
+    "max": 44.0
+   }
+  },
+  "spacecraft": {
+   "L0": {
+    "n": 154,
+    "min": 12.0,
+    "p25": 12.25,
+    "median": 12.25,
+    "p75": 12.5,
+    "max": 12.5
+   },
+   "L1": {
+    "n": 264,
+    "min": 24.0,
+    "p25": 24.5,
+    "median": 24.5,
+    "p75": 25.0,
+    "max": 25.0
+   },
+   "L2": {
+    "n": 264,
+    "min": 48.0,
+    "p25": 49.0,
+    "median": 49.0,
+    "p75": 50.0,
+    "max": 50.0
+   }
+  }
+ },
+ "size_px_note": "size_px is the longer side of the annotated box in delivered px. The first table holds all positives (whole, view_cut and frame_edge), the second only vis == 1. View-cut samples carry the full box, so only frame_edge samples (boxes annotated clipped) can lower the first table",
+ "scale_by_class_level": {
+  "hangar": {
+   "L0": {
+    "s4": 28
+   },
+   "L1": {
+    "s4": 54
+   },
+   "L2": {
+    "s4": 54
+   }
+  },
+  "helicopter": {
+   "L0": {
+    "s4": 126
+   },
+   "L1": {
+    "s4": 252
+   },
+   "L2": {
+    "s4": 252
+   }
+  },
+  "jet_plane": {
+   "L0": {
+    "s4": 147
+   },
+   "L1": {
+    "s2": 294
+   },
+   "L2": {
+    "s2": 294
+   }
+  },
+  "large_launcher": {
+   "L0": {
+    "s4": 175
+   },
+   "L1": {
+    "s4": 340
+   },
+   "L2": {
+    "s4": 340
+   }
+  },
+  "large_tower": {
+   "L0": {
+    "s4": 126
+   },
+   "L1": {
+    "s2": 252
+   },
+   "L2": {
+    "s2": 252
+   }
+  },
+  "medium_launcher": {
+   "L0": {
+    "s4": 49
+   },
+   "L1": {
+    "s2": 94
+   },
+   "L2": {
+    "s1": 94
+   }
+  },
+  "medium_plane": {
+   "L0": {
+    "s4": 35
+   },
+   "L1": {
+    "s2": 68
+   },
+   "L2": {
+    "s2": 68
+   }
+  },
+  "mine_roller": {
+   "L0": {
+    "s4": 14
+   },
+   "L1": {
+    "s2": 28
+   },
+   "L2": {
+    "s2": 28
+   }
+  },
+  "small_launcher": {
+   "L0": {
+    "s4": 175
+   },
+   "L1": {
+    "s2": 350
+   },
+   "L2": {
+    "s1": 350
+   }
+  },
+  "small_plane": {
+   "L0": {
+    "s4": 63
+   },
+   "L1": {
+    "s2": 126
+   },
+   "L2": {
+    "s1": 14,
+    "s2": 112
+   }
+  },
+  "small_tower": {
+   "L0": {
+    "s4": 133
+   },
+   "L1": {
+    "s2": 266
+   },
+   "L2": {
+    "s2": 266
+   }
+  },
+  "ta-ta": {
+   "L0": {
+    "s4": 175
+   },
+   "L1": {
+    "s2": 350
+   },
+   "L2": {
+    "s1": 350
+   }
+  },
+  "tank": {
+   "L0": {
+    "s4": 168
+   },
+   "L1": {
+    "s2": 336
+   },
+   "L2": {
+    "s1": 112,
+    "s2": 224
+   }
+  },
+  "condor": {
+   "L0": {
+    "s4": 70
+   },
+   "L1": {
+    "s4": 138
+   },
+   "L2": {
+    "s4": 138
+   }
+  },
+  "jammer": {
+   "L0": {
+    "s4": 91
+   },
+   "L1": {
+    "s2": 180
+   },
+   "L2": {
+    "s1": 180
+   }
+  },
+  "spacecraft": {
+   "L0": {
+    "s4": 154
+   },
+   "L1": {
+    "s2": 308
+   },
+   "L2": {
+    "s1": 14,
+    "s2": 294
+   }
+  }
+ },
+ "per_level": {
+  "L0": {
+   "positives": 1729,
+   "negatives": 1729,
+   "unique_positive_windows": 1729,
+   "positive_scale_mix": {
+    "s4": 1729
+   },
+   "negative_scale_mix": {
+    "s4": 1729
+   },
+   "positives_with_zero_fill": 262,
+   "negatives_with_zero_fill": 272
+  },
+  "L1": {
+   "positives": 3436,
+   "negatives": 3436,
+   "unique_positive_windows": 3107,
+   "positive_scale_mix": {
+    "s2": 2652,
+    "s4": 784
+   },
+   "negative_scale_mix": {
+    "s2": 2652,
+    "s4": 784
+   },
+   "positives_with_zero_fill": 1312,
+   "negatives_with_zero_fill": 1340
+  },
+  "L2": {
+   "positives": 3436,
+   "negatives": 3436,
+   "unique_positive_windows": 2616,
+   "positive_scale_mix": {
+    "s1": 1114,
+    "s2": 1538,
+    "s4": 784
+   },
+   "negative_scale_mix": {
+    "s1": 1114,
+    "s2": 1538,
+    "s4": 784
+   },
+   "positives_with_zero_fill": 1450,
+   "negatives_with_zero_fill": 1413
+  }
+ },
+ "sample_kinds": {
+  "frame_edge": 341,
+  "negative_frame_edge": 341,
+  "negative_near_object": 1977,
+  "negative_uniform": 6283,
+  "view_cut": 944,
+  "whole": 7316
+ },
+ "visible_fraction": {
+  "frame_edge_objects": 23,
+  "frame_edge_objects_skipped_below_min_visible": 12,
+  "frame_edge_object_vis": {
+   "n": 23,
+   "min": 0.05,
+   "p25": 0.33,
+   "median": 0.47,
+   "p75": 0.74,
+   "max": 1.0
+  },
+  "frame_edge_windows": 341,
+  "frame_edge_window_vis": {
+   "n": 341,
+   "min": 0.63,
+   "p25": 0.64,
+   "median": 0.74,
+   "p75": 0.91,
+   "max": 1.0
+  },
+  "view_cut_windows": 944,
+  "view_cut_window_vis": {
+   "n": 944,
+   "min": 0.6,
+   "p25": 0.7,
+   "median": 0.79,
+   "p75": 0.88,
+   "max": 0.95
+  },
+  "view_cut_failed": 0,
+  "histogram_vis_lt_1": {
+   "0.6-0.7": 329,
+   "0.7-0.8": 357,
+   "0.8-0.9": 364,
+   "0.9-1.0": 173
+  }
+ },
+ "zero_fill": {
+  "whole_object_windows": 7316,
+  "whole_object_windows_with_fill": 1739,
+  "whole_object_windows_fill_over_25pct": 388,
+  "fill_of_filled_whole_windows": {
+   "n": 1739,
+   "min": 0.0,
+   "p25": 0.09,
+   "median": 0.17,
+   "p75": 0.24,
+   "max": 0.57
+  }
+ },
+ "scale_fallback_windows": 0,
+ "windows_whose_scale_differs_from_the_scale_of_the_visible_part": 50,
+ "unobserved_regions": {
+  "frames_with_holes": [],
+  "positive_windows_dropped": 0
+ },
+ "negative_placement": {
+  "uniform": 6283,
+  "near_object": 1977,
+  "frame_edge": 341
+ },
+ "negatives_served_in_other_frame": 0,
+ "review_status_of_positives": {
+  "": 8601
+ },
+ "exactness_check": {
+  "per_level": {
+   "0": {
+    "checked": 46,
+    "two_stage_max": 0,
+    "direct_max": 0,
+    "with_fill": 29
+   },
+   "1": {
+    "checked": 75,
+    "two_stage_max": 0,
+    "direct_max": 1,
+    "with_fill": 49
+   },
+   "2": {
+    "checked": 75,
+    "two_stage_max": 0,
+    "direct_max": 0,
+    "with_fill": 43
+   }
+  },
+  "pixels_compared": 2408448,
+  "direct_pixels_off_by_one": 106105,
+  "frames_checked": 25
+ },
+ "seconds": 32.3
+}
