@@ -21,6 +21,11 @@
 ###     MODELS="Qwen/Qwen3.8-27B openai/gpt-oss-20b" bsub < bench/hpc/llm_bench.lsf
 ###     ASR_TAGS="large-v3 parakeet-tdt-0.6b-v2" VARIANTS="units units-claim words" bsub < ...
 ###     LIMIT=3 bsub < ...        # first 3 conversations per bench run (smoke)
+###     SUFFIX=.clause UNIT_SPLIT=clause bsub < ...   # result name <short>.<V>.<ASR>.clause.json,
+###                               # units built in clause mode (model.py UNIT_SPLIT)
+### NOTE (2026-09-18): the DTU bsub does not pass the submitter's environment to the job;
+### put the overrides in a wrapper script that exports them and then runs this file
+### (nordic/logs/submit_pending27b.lsf is the template).
 ###
 ### Model ids: every id below answered https://huggingface.co/api/models/<id>
 ### with gated=false on 2026-09-17. Not existing: mistralai/Ministral-3-14B-Instruct
@@ -62,6 +67,7 @@ VENVS=$BH/venvs
 JOB=${LSB_JOBID:-local}
 FORCE=${FORCE:-0}
 LIMIT=${LIMIT:-0}
+SUFFIX=${SUFFIX:-}                    # appended to every result name (bench.py --suffix)
 PORT=${PORT:-8000}
 MAX_LEN=${MAX_LEN:-8192}
 GPU_UTIL=${GPU_UTIL:-0.95}            # one exclusive GPU per job; 0.95 is what the vLLM gpt-oss recipe uses for TP=1
@@ -133,7 +139,7 @@ echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}  LSB_HOSTS=${LSB_HOSTS
 nvidia-smi || echo "nvidia-smi failed: no GPU visible?"
 [ -x "$PY" ] && [ -x "$VLLM_BIN" ] || { echo "venv-vllm missing ($VLLM_BIN): run bench/hpc/env.sh venvs"; exit 1; }
 "$PY" -c "import importlib.metadata as m; print('vllm', m.version('vllm'), 'torch', m.version('torch'), 'transformers', m.version('transformers'))"
-echo "models: $MODELS"; echo "asr tags: $ASR_TAGS"; echo "variants: $VARIANTS"
+echo "models: $MODELS"; echo "asr tags: $ASR_TAGS"; echo "variants: $VARIANTS"; echo "suffix: '$SUFFIX'  UNIT_SPLIT=${UNIT_SPLIT:-sentence}"
 for ASR in $ASR_TAGS; do echo "  transcripts for $ASR: $(ls transcripts/*."$ASR".json 2>/dev/null | wc -l)"; done
 
 # Same "short" rule as bench/llm/serve_vllm.sh, so its log/pid files and our
@@ -171,7 +177,7 @@ for MODEL in $MODELS; do
     SUMMARY+=("SKIP   $MODEL (not cached)"); continue
   fi
   todo=0
-  for ASR in $ASR_TAGS; do for V in $VARIANTS; do done_result "bench/results/llm/$SHORT.$V.$ASR.json" || todo=1; done; done
+  for ASR in $ASR_TAGS; do for V in $VARIANTS; do done_result "bench/results/llm/$SHORT.$V.$ASR$SUFFIX.json" || todo=1; done; done
   if [ "$todo" = 0 ] && [ "$FORCE" != 1 ]; then echo "  every result exists: skip"; SUMMARY+=("DONE   $MODEL (results existed)"); continue; fi
 
   t0=$SECONDS
@@ -193,9 +199,9 @@ for MODEL in $MODELS; do
     n=$(ls transcripts/*."$ASR".json 2>/dev/null | wc -l)
     if [ "$n" = 0 ]; then echo "  no transcripts for tag $ASR: skip"; SUMMARY+=("SKIP   $SHORT * $ASR (no transcripts)"); continue; fi
     for V in $VARIANTS; do
-      OUT="bench/results/llm/$SHORT.$V.$ASR.json"
+      OUT="bench/results/llm/$SHORT.$V.$ASR$SUFFIX.json"
       if done_result "$OUT" && [ "$FORCE" != 1 ]; then echo "  done: $OUT"; continue; fi
-      LOG="bench/results/logs/llm_bench.$JOB.$SHORT.$V.$ASR.log"
+      LOG="bench/results/logs/llm_bench.$JOB.$SHORT.$V.$ASR$SUFFIX.log"
       BENCH_ARGS=(); [ -n "${BENCH_FOR[$MODEL]:-}" ] && read -r -a BENCH_ARGS <<< "${BENCH_FOR[$MODEL]}"
       T_BENCH=${TIMEOUT_FOR[$MODEL]:-$BENCH_TIMEOUT}
       echo "  --- [$(date -Is)] bench variant=$V asr=$ASR ($n transcripts, timeout ${T_BENCH}s${BENCH_ARGS[*]:+, extra: ${BENCH_ARGS[*]}}) -> $OUT"
