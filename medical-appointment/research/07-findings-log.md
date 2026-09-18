@@ -868,3 +868,47 @@ above is of that exact text, so fixing the article means re-measuring.
 
 This is the only change since the validated freeze, decided on training, with the mechanism verified
 case by case rather than inferred from a score.
+
+### 58. The acted-upon line reverses its verdict at 27B, and stacking it with the spelling line gives 0.8261 training / 0.8084 validation (2026-09-18 evening)
+
+Entry 43 measured "prefer the utterance where the fact is confirmed or acted upon" on **Sonnet**
+with sentence units and the joint-demo prompt and rejected it: 0.786 -> 0.771. Re-measured on the
+**27B** with clause units and the few-shot prompt, the same idea **gains**: +0.0081 +- 0.0035 against
+the plain prompt (z = 2.3), six spans better and one worse. This is the clearest instance so far of
+Elias's rule that a negative result is scoped to the model and setup it was measured on, and it is
+why every rejected idea in this log now carries its model name.
+
+The two lines act on different halves of the score, so they were stacked (`units-fewshot-both`).
+All four benched on the same pod within the hour, paired over the 39 training conversations:
+
+| prompt | training | accuracy | mean tIoU | paired vs plain |
+|---|---:|---:|---:|---|
+| `units-fewshot` (plain) | 0.8138 | 0.990 | 0.696 | |
+| `+ ASR spelling line` | 0.8208 | 0.997 | 0.703 | +0.0070 +- 0.0039 |
+| `+ acted-upon line` | 0.8219 | 0.990 | 0.710 | +0.0081 +- 0.0035 |
+| **both stacked** | **0.8261** | 0.997 | 0.712 | **+0.0123 +- 0.0062** |
+
+The spelling line buys binaries (0.990 -> 0.997) and the acted-upon line buys boundaries
+(0.696 -> 0.710); stacked they add almost cleanly and also remove one wrong-sentence case (17 -> 16).
+
+**Validation, one run each on the submission URL** (confirmation, never selection; the pipeline is
+deterministic so these are exact):
+
+| served prompt | validation |
+|---|---:|
+| plain | 0.8074, twice |
+| spelling line alone | 0.8044 |
+| **both stacked** | **0.8084** |
+
+The stack is best on both sets. The spelling line alone looked negative on validation (-0.0030) and
+an earlier note in this log blamed a broken near-miss; that was wrong. The hand label for the one
+binary it flipped ("Was Brentan also tried earlier?", sample_8 q3) is **yes**, so the flip was
+correct and worth +0.002; the -0.005 came from seven spans shifting. Sonnet independently made the
+same Brenton/Brentan call.
+
+Caveat kept honestly: four prompts were compared on training, so the winner carries roughly
+0.002-0.003 of selection optimism. Both lines were predicted from a named mechanism before being
+measured and each moved the half of the score it was predicted to move, which is why the stack is
+served rather than merely best-scoring.
+
+**Now serving** `units-fewshot-both` with clause-and units on the pod.

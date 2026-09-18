@@ -373,6 +373,19 @@ _ASR_NOTE = ('\nThe transcript is automatic speech recognition output, so names 
              'frequency, body part, direction of change, or a genuinely different medicine is still a "no".')
 
 
+# When several utterances establish the same fact, the annotators favour the one where the doctor
+# acts on it over the one where anybody states or hedges it (entry 55: the gold is the doctor's
+# utterance in 69 % of positives; the sample_6 candidiasis case, where the gold is the fluconazole
+# prescription and not the 'possible candidiasis' the model cited and then rejected as hedged).
+# A similar line was measured on SONNET with sentence units and the joint-demo prompt and HURT
+# (entry 43, -0.015); this is the same idea re-measured on the 27B with clause units and few-shot,
+# per the rule that a negative result is scoped to the model and setup it was measured on.
+_ACT_NOTE = ('\nWhen more than one utterance would establish the statement, prefer the one where the fact is\n'
+             'acted on or concluded (the prescription, the plan, the result, the decision) over one where it\n'
+             'is merely raised, suspected, requested or hedged. A hedge such as "possible" or "not confirmed"\n'
+             'does not make the answer "no" when the consultation then acts on it.')
+
+
 # For clause-level units (model.py UNIT_SPLIT): of the 12 positives that lost tIoU when the 27B moved
 # from sentence to clause-and units, 9 cited fewer pieces than the gold covers (findings log entry 48).
 _CLAUSE_NOTE = ('\nA long sentence may appear in the list as several consecutive pieces (its clauses). When the\n'
@@ -667,6 +680,10 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units-fewshot': FewShot('units'),
     'units-fewshot-cl': FewShot('units', note_extra=_CLAUSE_NOTE),   # for UNIT_SPLIT=clause-*: explains the pieces
     'units-fewshot-asr': FewShot('units', note_extra=_ASR_NOTE),    # + the ASR-misspelling line (entry 57)
+    'units-fewshot-act': FewShot('units', note_extra=_ACT_NOTE),    # + the acted-upon line (entry 43 re-test at 27B)
+    # the two act on different halves of the score: the ASR line on binaries (0.990 -> 0.997),
+    # the acted-upon line on spans (tIoU 0.696 -> 0.710), so they are stacked and measured together
+    'units-fewshot-both': FewShot('units', note_extra=_ASR_NOTE + _ACT_NOTE),
     'words-fewshot': FewShot('words'),
     'units-joint': Joint(),
     'units-joint-demo': JointDemo(2),
