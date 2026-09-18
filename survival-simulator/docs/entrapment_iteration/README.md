@@ -23,6 +23,8 @@ stay clear. Same criteria as `docs/guide_multi_1000_results.md`.
 | 55-unit stop, tracking plus route recovery (current default) | — | 72 |
 | Crowd-preference sacrifice guard | 9 | — |
 | Side-offset handoff | 6 | — |
+| Bounded wait for observed stationary predator | — | 63 |
+| Distant, sight-checked sacrifice (opt-in) | 5 | — |
 
 Each column uses identical map/encounter seeds across variants. The 12-map and
 100-map encounter lists differ. These are repeated development measurements,
@@ -110,7 +112,8 @@ logs/entrapment-iteration/track-rejoin-100 --port 9064` from the simulator folde
 - `--vision-delivery` is an explicitly experimental benchmark option: route
   outside an 85-unit bait exclusion radius and sacrifice at a distant front
   point only with observed sight alignment and wall clearance. It is not enabled
-  by the native coordinator. Evaluation is in progress.
+  by the native coordinator. It passed only 5/12 versus 10/12 for tracked
+  ordinary delivery, so it is not recommended.
 - A recording-only hearing audit of the 200-second native game counted 27
   exposed bystander agent-ticks out of 28,560, and zero hearing-exposed ticks
   involving predators within 40 of bait. This does not audit vision or prove
@@ -118,9 +121,10 @@ logs/entrapment-iteration/track-rejoin-100 --port 9064` from the simulator folde
 
 ## Remaining experiments
 
-Screen delivery radii and walking thresholds using `guide_parameter_sweep.py`;
-evaluate bounded waiting for an observed stationary predator and the opt-in
-sight handoff; then validate the selected combination on fresh maps. Smaller stopping distances
+The nine-way delivery-radius/walking-threshold screen found no improvement over
+its 17/20 control. Bounded waiting regressed to 63/100 and is not enabled.
+Fresh-map validation, paired physical bait replacement, central-site ranking,
+and a native game of the selected default are being recorded. Smaller stopping distances
 and front-lane restrictions regressed and should not be promoted from intuition.
 Do not read 96.5% map-site availability as a delivery success rate.
 
