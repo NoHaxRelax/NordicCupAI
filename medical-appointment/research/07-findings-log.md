@@ -688,3 +688,13 @@ Live soak: the laptop endpoint (api.py under the supervisor, real turbo ASR on t
 Also measured today on the Qwen3.6-27B: many-shot 0.7935 and joint-demo-fewshot 0.7954 against its few-shot 0.7970, so on both 27Bs the worked-conversation prompts do not add to few-shot lines (scoped to these two models).
 
 Next: the whole endpoint on the pod behind its stable proxy hostname (`bench/hpc/pod_endpoint.sh`: faster-whisper, api.py, Ollama fallback on the same card), so the submitted URL depends neither on the laptop nor on a quick tunnel (committee report 02, finding 10; no tunnel is running today).
+
+### 50. Committee of 2026-09-18, salvaged measurements: self-consistency and a learned span re-ranker do not beat greedy on the 27B (2026-09-18 15:10)
+
+The afternoon committee (one Opus verifier, five Fable proposers, launched 14:20) ran into the account's session limit before writing its reports; scratch results were scored directly. All numbers: Qwen3.8-27B, `units-fewshot`, clause-and units, training set, leave-one-conversation-out examples.
+
+**Self-consistency (proposer 5's run, 19 conversations, 190 questions, 8 samples at temperature 0.7, top-p 0.95, against the stored greedy answers):** greedy 0.8158 (A100) / 0.8099 (H100); majority vote over 8 sampled spans 0.8106; vote plus the greedy answer weighted 4 gives 0.8132; modal span 0.8113; longest sampled span 0.8157; shortest 0.7864. The best-of-samples oracle is 0.8556, so better spans are sampled about one time in ten (19 positives where some sample beats greedy by more than 0.1), but no vote finds them (the vote picks such a span once). Sample agreement is a usable confidence signal (all 8 agree: mean greedy tIoU 0.81 over 49 positives; agreement 0.5 to 0.75: 0.55 to 0.62), which no policy turned into score. Eight times the LLM compute for nothing at this size. Proposer 3's MBR variant (8 samples, temperature 0.8) was cut off after 23 conversations at 11 to 36 s per conversation and was not scored.
+
+**Learned re-ranking of span edits (proposer 4):** for every positive, candidate edits of the model's span (as is, drop first or last piece, add previous or next unit, shift) with 55 features (word overlap with the question, durations, discourse markers, commas, question marks, position), scored by ridge regression and gradient-boosted trees, leave-one-conversation-out: base mean tIoU 0.694, oracle over the candidates 0.801, learned pickers 0.688 to 0.694. Nothing to learn from 195 golds that the model does not already do.
+
+Both are scoped to this model and setup; the verifier's report follows separately.
