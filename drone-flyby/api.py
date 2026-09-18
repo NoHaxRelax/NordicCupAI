@@ -10,6 +10,7 @@ rather than just the host.
 
 import datetime
 import logging
+import os
 import time
 
 import uvicorn
@@ -19,8 +20,8 @@ from dtos import DroneFlybyPredictRequestDto, DroneFlybyPredictResponseDto
 from example import predict
 from utils import validate_response
 
-HOST = '0.0.0.0'
-PORT = 9053
+HOST = os.environ.get('DRONE_HOST', '0.0.0.0')
+PORT = int(os.environ.get('DRONE_PORT', '9053'))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

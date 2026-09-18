@@ -1,0 +1,4 @@
+# Detector stack for DRONE_DETECTOR=ultralytics. Install the torch build that
+# matches the machine's CUDA first (https://pytorch.org/get-started/locally/),
+# then this file. Verified with ultralytics 8.4.155 and torch 2.6 / 2.8.
+ultralytics>=8.4,<9

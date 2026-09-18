@@ -1,211 +1,187 @@
-"""A baseline that answers the protocol correctly and detects almost nothing.
+"""Live drone endpoint: detector, perspective tracker and upper-band camera sweep.
 
-The point of this file is the plumbing, not the accuracy: it shows you how to
-decode a view, lift boxes out of that view into the frame-global coordinates
-the evaluator expects, and drive the camera without ever sending an illegal
-command. Replace ``detect`` with your model and ``choose_next_view`` with your
-camera policy.
+Each sequence gets its own workflow: two full-frame overviews calibrate the
+scene motion, then the camera cycles L1 left, L0, L1 right, L0 across the
+upper band. Every detection is placed in the organizer's box convention,
+tracked while the camera looks elsewhere and refreshed whenever it is seen
+whole again. The response always covers the whole source frame.
 
-It is stateless. Each response contains the detections made on the view that
-arrived with that request, so at Level 1 and Level 2 it reports only the region
-the camera is pointed at, while a frame's ground truth covers the whole source
-frame.
+Configuration is by environment variables (defaults in brackets):
 
-Run ``python local_evaluator.py`` to see what it scores. It will be close to
-zero, which is the honest starting point.
+  DRONE_DETECTOR            ultralytics | none | oracle | module:factory  [ultralytics if DRONE_WEIGHTS]
+  DRONE_WEIGHTS             local checkpoint path
+  DRONE_DEVICE              cpu | cuda:0 | mps                             [cpu]
+  DRONE_IMGSZ, DRONE_CONF   detector input size and confidence floor        [960, 0.25]
+  DRONE_DETECT_EVERY        run the detector on every k-th frame            [1]
+  DRONE_EXTENT_POLICY       detector | blend | prior                        [blend]
+  DRONE_EMIT_PARTIALS, DRONE_ENTRY_TRACKS, DRONE_CLIP_LAST_INDEX            [1, 1, 1]
+  DRONE_BIRTH_CONFIDENCE, DRONE_UPDATE_CONFIDENCE                           [0.6, 0.4]
+  DRONE_VERTICAL_FRACTION   band of the L1 crops, 0 = top                   [0]
+  DRONE_OVERVIEW_BETWEEN_SIDES  L0 between the L1 sides (0 = L1 centre)     [1]
+  DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
+  DRONE_LOG_DIR             per-sequence diagnostics JSONL                  [unset]
 """
-
+import json
 import logging
-from typing import Dict, List, Optional, Tuple
+import os
+import threading
+import time
+from collections import OrderedDict
+from pathlib import Path
 
-import cv2
 import numpy as np
 
-from dtos import (
-    MAXIMUM_CENTER_DELTA_PIXELS,
-    DroneFlybyPredictionDto,
-    DroneFlybyPredictRequestDto,
-    DroneFlybyPredictResponseDto,
-    RequestedViewDto,
-)
-from utils import clip_bbox_to_frame, decode_view, view_bbox_to_global
+from dtos import (DroneFlybyPredictionDto, DroneFlybyPredictRequestDto,
+                  DroneFlybyPredictResponseDto, RequestedViewDto)
+from utils import decode_view
+from tracking import Detection, DroneTrackingWorkflow, RevisitConfig, ViewGeometry
+from tracking.revisit import frame_rows
+from tracking.tracker import OBJECT_CLASSES as _CLASSES
+from detectors import build_detector
 
 logger = logging.getLogger(__name__)
 
 
-### CALL YOUR CUSTOM MODEL VIA THIS FUNCTION ###
+def _flag(name, default):
+    return os.environ.get(name, '1' if default else '0').strip() not in ('0', '', 'false', 'no')
+
+
+SETTINGS = {
+    'detect_every': max(1, int(os.environ.get('DRONE_DETECT_EVERY', '1'))),
+    'vertical_fraction': float(os.environ.get('DRONE_VERTICAL_FRACTION', '0')),
+    'overview_between_sides': _flag('DRONE_OVERVIEW_BETWEEN_SIDES', True),
+    'observe_motion': _flag('DRONE_OBSERVE_MOTION', True),
+    'log_dir': os.environ.get('DRONE_LOG_DIR') or None,
+    'max_sessions': 4,
+}
+CONFIG = RevisitConfig(
+    extent_policy=os.environ.get('DRONE_EXTENT_POLICY', 'blend'),
+    emit_partials=_flag('DRONE_EMIT_PARTIALS', True),
+    entry_tracks=_flag('DRONE_ENTRY_TRACKS', True),
+    clip_last_index=_flag('DRONE_CLIP_LAST_INDEX', True),
+    birth_confidence=float(os.environ.get('DRONE_BIRTH_CONFIDENCE', '0.6')),
+    update_confidence=float(os.environ.get('DRONE_UPDATE_CONFIDENCE', '0.4')),
+)
+DETECTOR = build_detector()
+logger.info('Detector: %s; config: %s; settings: %s', getattr(DETECTOR, 'name', type(DETECTOR).__name__), CONFIG, SETTINGS)
+
+
+class Session:
+    def __init__(self, sequence_id):
+        self.sequence_id = sequence_id
+        self.lock = threading.Lock()
+        self.workflow = self.new_workflow()
+        self.prior = self.workflow.prior
+        self.frames = 0
+        self.failures = 0
+        self.log = None
+        if SETTINGS['log_dir']:
+            directory = Path(SETTINGS['log_dir']); directory.mkdir(parents=True, exist_ok=True)
+            safe = ''.join(c if c.isalnum() or c in '-_' else '_' for c in sequence_id)[:80]
+            self.log = (directory/f'{safe}.jsonl').open('a')
+
+    @staticmethod
+    def new_workflow():
+        return DroneTrackingWorkflow(CONFIG, observe_motion=SETTINGS['observe_motion'],
+                                     vertical_fraction=SETTINGS['vertical_fraction'],
+                                     overview_between_sides=SETTINGS['overview_between_sides'])
+
+    def record(self, row):
+        if self.log:
+            self.log.write(json.dumps(row, allow_nan=False, default=str)+'\n'); self.log.flush()
+
+
+_sessions = OrderedDict()
+_sessions_lock = threading.Lock()
+
+
+def _session(sequence_id):
+    with _sessions_lock:
+        session = _sessions.get(sequence_id)
+        if session is None:
+            session = _sessions[sequence_id] = Session(sequence_id)
+            while len(_sessions) > SETTINGS['max_sessions']:
+                _, old = _sessions.popitem(last=False)
+                if old.log:
+                    old.log.close()
+        _sessions.move_to_end(sequence_id)
+        return session
+
+
+def _detections(image, request, view):
+    """Run the detector and convert its rows; never raise into the frame."""
+    if request['frame_index'] % SETTINGS['detect_every']:
+        return [], False, 0.
+    started = time.perf_counter()
+    try:
+        rows = DETECTOR(image, request)
+    except Exception:
+        logger.exception('Detector failed on frame %s', request['frame'])
+        return [], False, (time.perf_counter()-started)*1000
+    width, height = view.image_size
+    detections = []
+    for row in rows:
+        try:
+            box = np.clip(np.asarray(row['box'], float), 0, [width, height, width, height])
+            if np.any(box[2:]-box[:2] < 1) or row['label'] not in _CLASSES:
+                continue
+            detections.append(Detection(row['label'], tuple(box.tolist()), float(min(1., max(0., row['confidence'])))))
+        except (KeyError, TypeError, ValueError):
+            continue
+    return detections, True, (time.perf_counter()-started)*1000
+
+
+def _fallback(request, detections, session, view):
+    """A valid answer from this frame's detections alone, holding the camera."""
+    rows = frame_rows(detections, view, CONFIG, session.prior)
+    size = np.tile(view.source_size, 2)
+    return {'request_id': request['request_id'], 'frame': request['frame'],
+            'annotations': [{'object_id': r['object_id'], 'confidence': r['confidence'],
+                             'bbox': (np.array(r['bbox_source_xyxy'])/size).tolist()} for r in rows][:500],
+            'requested_view': None}
+
 
 def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDto:
-    """Answer one frame: report detections and pick the next camera position."""
-    # The evaluator tells you when it ignored your last camera command. Reading
-    # this beats wondering why the camera never moved.
-    if request.camera_command_feedback is not None:
-        feedback = request.camera_command_feedback
-        logger.warning(
-            'Camera command from frame %s was ignored: %s',
-            feedback.frame,
-            feedback.reason,
-        )
-
-    image = decode_view(request.view)
-
-    # Never let a modelling error cost you the frame. An empty list still
-    # scores the frame; an exception loses it and every detection in it.
-    try:
-        annotations = detect(image, request)
-    except Exception:
-        logger.exception('Detector failed on frame %s', request.frame)
-        annotations = []
-
-    return DroneFlybyPredictResponseDto(
-        # These two must come straight back from the request, unchanged.
-        request_id=request.request_id,
-        frame=request.frame,
-        annotations=annotations,
-        requested_view=choose_next_view(request),
-    )
-
-
-### DUMMY MODEL ###
-
-# A placeholder class for the proposals below. Anything you report has to be
-# one of the names in dtos.OBJECT_CLASSES, spelled exactly.
-PLACEHOLDER_CLASS = 'jammer'
-
-MINIMUM_BOX_PIXELS = 8
-MAXIMUM_BOX_PIXELS = 320
-MAXIMUM_PROPOSALS = 20
-
-
-def detect(
-    image: np.ndarray,
-    request: DroneFlybyPredictRequestDto,
-) -> List[DroneFlybyPredictionDto]:
-    """Propose boxes around whatever stands out from the ground.
-
-    This is edge detection, not object detection: it has no idea what it is
-    looking at, so it labels everything ``jammer`` with low confidence. It exists
-    to show the coordinate conversion on real data. Swap it out.
-
-    It takes the request as well as the image because a detection is made in
-    view coordinates and has to be answered in frame-global ones, and the
-    geometry for that conversion lives on the request.
-    """
-    height, width = image.shape[:2]
-    source_region = request.view.source_region_xyxy
-    grey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(cv2.GaussianBlur(grey, (3, 3), 0), 60, 180)
-    edges = cv2.dilate(edges, np.ones((3, 3), np.uint8), iterations=1)
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-    proposals: List[Tuple[float, Tuple[int, int, int, int]]] = []
-    for contour in contours:
-        x, y, box_width, box_height = cv2.boundingRect(contour)
-        longest = max(box_width, box_height)
-        if longest < MINIMUM_BOX_PIXELS or longest > MAXIMUM_BOX_PIXELS:
-            continue
-        # Compactness stands in for "looks like a thing" here.
-        area_ratio = cv2.contourArea(contour) / float(box_width * box_height or 1)
-        proposals.append((area_ratio, (x, y, box_width, box_height)))
-
-    proposals.sort(key=lambda item: item[0], reverse=True)
-
-    annotations: List[DroneFlybyPredictionDto] = []
-    for area_ratio, (x, y, box_width, box_height) in proposals[:MAXIMUM_PROPOSALS]:
-        # Boxes leave your model in the pixels of this 960x540 image. Two
-        # steps put them in response coordinates: normalize to the view, then
-        # lift that through source_region_xyxy into frame-global coordinates.
-        view_bbox = (
-            x / width,
-            y / height,
-            (x + box_width) / width,
-            (y + box_height) / height,
-        )
-        bbox = clip_bbox_to_frame(
-            view_bbox_to_global(
-                view_bbox,
-                source_region,
-                request.original_width,
-                request.original_height,
-            )
-        )
-        # clip_bbox_to_frame returns None when nothing survives clipping. Drop
-        # those: one degenerate box invalidates the entire response.
-        if bbox is None:
-            continue
-        annotations.append(
-            DroneFlybyPredictionDto(
-                object_id=PLACEHOLDER_CLASS,
-                bbox=list(bbox),
-                confidence=round(min(0.30, 0.05 + 0.25 * area_ratio), 4),
-            )
-        )
-    return annotations
-
-
-### DUMMY CAMERA POLICY ###
-
-# Where the sweep goes next, per sequence. The evaluator sends the camera's
-# real position in every request, so this only needs to remember intent.
-_sweep_direction: Dict[str, int] = {}
-
-
-def choose_next_view(
-    request: DroneFlybyPredictRequestDto,
-) -> Optional[RequestedViewDto]:
-    """Sweep sideways at the deepest zoom the camera can reach right now.
-
-    Everything here is read from ``request.camera_constraints`` rather than
-    hardcoded, which is the whole trick: honour the constraints you are handed
-    and your commands cannot be rejected. Return ``None`` to hold position.
-    """
-    constraints = request.camera_constraints
-    current = request.view
-    allowed = [level for level in constraints.allowed_resolution_levels if level > 0]
-    if not allowed:
-        return None
-
-    # Zoom in one step at a time; L0 cannot reach L2 directly.
-    target_level = min(max(allowed), current.resolution_level + 1)
-    bounds = constraints.bounds_for_level(target_level)
-    if bounds is None:
-        return None
-
-    # Coming from the full view there is only one legal centre to start from.
-    if current.resolution_level == 0:
-        centre_x = (bounds.minimum_center_x + bounds.maximum_center_x) // 2
-        centre_y = (bounds.minimum_center_y + bounds.maximum_center_y) // 2
-        return RequestedViewDto(
-            resolution_level=target_level,
-            center_x=int(centre_x),
-            center_y=int(centre_y),
-        )
-
-    direction = _sweep_direction.setdefault(request.sequence_id, 1)
-
-    # Move as far as this response is allowed to, and no further. The limit
-    # belongs to the level the camera is on now, not the one we are going to.
-    limit = constraints.maximum_center_delta or MAXIMUM_CENTER_DELTA_PIXELS[
-        current.resolution_level
-    ]
-    step = int(limit * 0.9)
-
-    centre_x = current.center_x + direction * step
-    if centre_x > bounds.maximum_center_x or centre_x < bounds.minimum_center_x:
-        # Turn around at the edge and drop down a row.
-        direction = -direction
-        _sweep_direction[request.sequence_id] = direction
-        centre_x = current.center_x + direction * step
-
-    centre_y = current.center_y
-
-    # Clamp into the legal window. int() matters: these fields are strict ints
-    # on the evaluator, so a float here is a validation error.
-    centre_x = int(min(max(centre_x, bounds.minimum_center_x), bounds.maximum_center_x))
-    centre_y = int(min(max(centre_y, bounds.minimum_center_y), bounds.maximum_center_y))
-
-    return RequestedViewDto(
-        resolution_level=target_level,
-        center_x=centre_x,
-        center_y=centre_y,
-    )
+    started = time.perf_counter()
+    req = request.model_dump()
+    session = _session(req['sequence_id'])
+    with session.lock:
+        session.frames += 1
+        if request.camera_command_feedback is not None:
+            logger.warning('Camera command from frame %s was ignored: %s',
+                           request.camera_command_feedback.frame, request.camera_command_feedback.reason)
+        view = ViewGeometry.from_request(req)
+        image = decode_view(request.view)
+        detections, ran, detector_ms = _detections(image, req, view)
+        tracking_started = time.perf_counter()
+        try:
+            answer = session.workflow.process(req, detections, image=image, detector_ran=ran)
+            session.failures = 0
+            diagnostics = session.workflow.diagnostics
+        except Exception:
+            session.failures += 1
+            logger.exception('Workflow failed on frame %s (failure %d)', req['frame'], session.failures)
+            answer = _fallback(req, detections, session, view)
+            diagnostics = {'status': 'fallback'}
+            if session.failures >= 3:
+                logger.error('Resetting workflow for sequence %s after repeated failures', req['sequence_id'])
+                session.workflow = session.new_workflow(); session.failures = 0
+        tracking_ms = (time.perf_counter()-tracking_started)*1000
+        requested = answer.get('requested_view')
+        response = DroneFlybyPredictResponseDto(
+            request_id=req['request_id'], frame=req['frame'],
+            annotations=[DroneFlybyPredictionDto(object_id=a['object_id'], bbox=list(a['bbox']),
+                                                 confidence=float(a['confidence'])) for a in answer['annotations']],
+            requested_view=RequestedViewDto(**requested) if requested else None)
+        total_ms = (time.perf_counter()-started)*1000
+        session.record({'frame': req['frame'], 'frame_index': req['frame_index'], 'level': req['view']['resolution_level'],
+                        'region': req['view']['source_region_xyxy'], 'detections': len(detections), 'detector_ran': ran,
+                        'annotations': len(response.annotations), 'requested_view': requested,
+                        'detector_ms': round(detector_ms, 1), 'tracking_ms': round(tracking_ms, 1), 'total_ms': round(total_ms, 1),
+                        'status': diagnostics.get('status'), 'timing': diagnostics.get('timing'),
+                        'calibration_error': diagnostics.get('calibration_error'), 'events': diagnostics.get('events'),
+                        'tracks': len(diagnostics.get('tracks') or [])})
+        logger.info('frame %s L%s: %d detections, %d annotations, detector %.0f ms, tracking %.0f ms, total %.0f ms',
+                    req['frame'], req['view']['resolution_level'], len(detections), len(response.annotations),
+                    detector_ms, tracking_ms, total_ms)
+    return response

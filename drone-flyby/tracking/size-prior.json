@@ -1,0 +1,299 @@
+{
+  "version": 1,
+  "provenance": {
+    "annotation_directory": "/Users/bumblebee/Github_repos/Projects/nordic-ai-cup-2026/data/drone/reference/helsinki/annotations",
+    "files": 25,
+    "annotations_sha256": "10bce6f2779bc43ebe58b8d787eb40bc997c3de70f8b0ceb4b0f2e7718fc3283",
+    "policy": "Unclipped organizer boxes only; one physical instance per class; slope fitted against box centre row when at least three views exist."
+  },
+  "classes": {
+    "jammer": {
+      "w": {
+        "intercept": 27.88343006979977,
+        "slope": 0.002931080062357098,
+        "minimum": 32.0,
+        "maximum": 34.0,
+        "median": 32.5,
+        "count": 12
+      },
+      "h": {
+        "intercept": 41.57421479897943,
+        "slope": 0.0011598786595185082,
+        "minimum": 43.0,
+        "maximum": 44.0,
+        "median": 43.5,
+        "count": 12
+      }
+    },
+    "large_launcher": {
+      "w": {
+        "intercept": 131.1905449523669,
+        "slope": 0.01939970944473091,
+        "minimum": 139.0,
+        "maximum": 163.0,
+        "median": 150.0,
+        "count": 20
+      },
+      "h": {
+        "intercept": 102.28345821604094,
+        "slope": 0.006479987758558096,
+        "minimum": 105.0,
+        "maximum": 113.0,
+        "median": 108.5,
+        "count": 20
+      }
+    },
+    "mine_roller": {
+      "w": {
+        "intercept": 53.0,
+        "slope": 0.0,
+        "minimum": 53.0,
+        "maximum": 53.0,
+        "median": 53.0,
+        "count": 2
+      },
+      "h": {
+        "intercept": 60.0,
+        "slope": 0.0,
+        "minimum": 60.0,
+        "maximum": 60.0,
+        "median": 60.0,
+        "count": 2
+      }
+    },
+    "spacecraft": {
+      "w": {
+        "intercept": 37.357312043687365,
+        "slope": 0.005406918713628745,
+        "minimum": 41.0,
+        "maximum": 49.0,
+        "median": 44.0,
+        "count": 22
+      },
+      "h": {
+        "intercept": 48.1627199532003,
+        "slope": 0.0007957244892412561,
+        "minimum": 48.0,
+        "maximum": 50.0,
+        "median": 49.0,
+        "count": 22
+      }
+    },
+    "condor": {
+      "w": {
+        "intercept": 138.53624557119778,
+        "slope": 0.019191600704723123,
+        "minimum": 166.0,
+        "maximum": 178.0,
+        "median": 172.0,
+        "count": 9
+      },
+      "h": {
+        "intercept": 131.05752100645697,
+        "slope": 0.021441554256158003,
+        "minimum": 162.0,
+        "maximum": 175.0,
+        "median": 168.0,
+        "count": 9
+      }
+    },
+    "small_plane": {
+      "w": {
+        "intercept": 33.63297365946429,
+        "slope": 0.004833647460751615,
+        "minimum": 41.0,
+        "maximum": 44.0,
+        "median": 43.0,
+        "count": 9
+      },
+      "h": {
+        "intercept": 38.451467273376714,
+        "slope": 0.006396050013080765,
+        "minimum": 48.0,
+        "maximum": 52.0,
+        "median": 50.0,
+        "count": 9
+      }
+    },
+    "small_launcher": {
+      "w": {
+        "intercept": 19.80076784217004,
+        "slope": 0.0022054199702680323,
+        "minimum": 20.0,
+        "maximum": 24.0,
+        "median": 22.0,
+        "count": 25
+      },
+      "h": {
+        "intercept": 30.45511937230977,
+        "slope": -0.0006401358826018538,
+        "minimum": 29.0,
+        "maximum": 31.0,
+        "median": 30.0,
+        "count": 25
+      }
+    },
+    "helicopter": {
+      "w": {
+        "intercept": 97.41740927867554,
+        "slope": 0.012761348899033508,
+        "minimum": 109.0,
+        "maximum": 124.0,
+        "median": 116.0,
+        "count": 18
+      },
+      "h": {
+        "intercept": 75.98643169527008,
+        "slope": 0.01271437001758822,
+        "minimum": 87.0,
+        "maximum": 102.0,
+        "median": 94.5,
+        "count": 18
+      }
+    },
+    "small_tower": {
+      "w": {
+        "intercept": 47.72825402869424,
+        "slope": 0.006757043326624474,
+        "minimum": 53.0,
+        "maximum": 62.0,
+        "median": 57.0,
+        "count": 19
+      },
+      "h": {
+        "intercept": 62.53176324299078,
+        "slope": -0.0026599587419052274,
+        "minimum": 57.0,
+        "maximum": 60.0,
+        "median": 59.0,
+        "count": 19
+      }
+    },
+    "ta-ta": {
+      "w": {
+        "intercept": 27.842685153920446,
+        "slope": 0.00439199996731001,
+        "minimum": 29.0,
+        "maximum": 36.0,
+        "median": 32.0,
+        "count": 25
+      },
+      "h": {
+        "intercept": 20.420956288729702,
+        "slope": -0.003412509433647218,
+        "minimum": 14.0,
+        "maximum": 19.0,
+        "median": 17.0,
+        "count": 25
+      }
+    },
+    "tank": {
+      "w": {
+        "intercept": 46.20994754967754,
+        "slope": 0.0057609020440318095,
+        "minimum": 46.0,
+        "maximum": 54.0,
+        "median": 50.0,
+        "count": 24
+      },
+      "h": {
+        "intercept": 43.027800834329014,
+        "slope": 0.006253214147790488,
+        "minimum": 43.0,
+        "maximum": 52.0,
+        "median": 47.0,
+        "count": 24
+      }
+    },
+    "jet_plane": {
+      "w": {
+        "intercept": 71.99991237279043,
+        "slope": 0.009180879185513172,
+        "minimum": 72.0,
+        "maximum": 83.0,
+        "median": 77.0,
+        "count": 21
+      },
+      "h": {
+        "intercept": 74.56839362490891,
+        "slope": 0.011364174424407797,
+        "minimum": 75.0,
+        "maximum": 89.0,
+        "median": 82.0,
+        "count": 21
+      }
+    },
+    "large_tower": {
+      "w": {
+        "intercept": 57.002256640931876,
+        "slope": 0.010580554975154264,
+        "minimum": 58.0,
+        "maximum": 69.0,
+        "median": 62.5,
+        "count": 18
+      },
+      "h": {
+        "intercept": 69.14132898755534,
+        "slope": -0.00971574573795044,
+        "minimum": 58.0,
+        "maximum": 68.0,
+        "median": 64.5,
+        "count": 18
+      }
+    },
+    "medium_launcher": {
+      "w": {
+        "intercept": 46.54309813730672,
+        "slope": 0.005517719656749938,
+        "minimum": 47.0,
+        "maximum": 48.0,
+        "median": 47.0,
+        "count": 5
+      },
+      "h": {
+        "intercept": 43.86025255602726,
+        "slope": 0.007339004790552071,
+        "minimum": 44.0,
+        "maximum": 46.0,
+        "median": 45.0,
+        "count": 5
+      }
+    },
+    "medium_plane": {
+      "w": {
+        "intercept": 54.42755566165216,
+        "slope": 0.011083308111702841,
+        "minimum": 55.0,
+        "maximum": 57.0,
+        "median": 56.0,
+        "count": 4
+      },
+      "h": {
+        "intercept": 47.96740654852996,
+        "slope": 0.005516077190978271,
+        "minimum": 48.0,
+        "maximum": 49.0,
+        "median": 49.0,
+        "count": 4
+      }
+    },
+    "hangar": {
+      "w": {
+        "intercept": 183.39803675020715,
+        "slope": 0.027748406824222163,
+        "minimum": 186.0,
+        "maximum": 189.0,
+        "median": 188.0,
+        "count": 3
+      },
+      "h": {
+        "intercept": 126.15131597748125,
+        "slope": 0.018517989312148028,
+        "minimum": 128.0,
+        "maximum": 130.0,
+        "median": 129.0,
+        "count": 3
+      }
+    }
+  }
+}
