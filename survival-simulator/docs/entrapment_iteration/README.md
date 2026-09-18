@@ -1,55 +1,118 @@
 # Crowded trap iteration
 
-Branch: `survival-simulator/lucas-experimental`. Total authorized Runpod budget:
-$10 for this research session; spent so far $0 (local experiments only).
+Working branch: `survival-simulator/lucas-experimental`. Oscar's survival module
+is unchanged. Policy changes use ordinary observations and known/observed walls;
+only benchmark fixtures/evaluation read native world state.
 
-## First paired probe
+## Measured delivery results
 
-Native 30-preloaded + one newcomer benchmark; 12 maps/encounters per strategy.
-All strategies use identical seeds. Full-energy fixture bait, normal-energy
-full-start guide, native predator sensing/movement; all other criteria unchanged
-from `docs/guide_multi_1000_results.md`. These are development cases, not a
-reliability estimate. All ticks remain in `logs/entrapment-iteration/`.
+Native 30-preloaded + one newcomer benchmark. Full-energy fixture bait,
+normal-energy full-start guide, native predator sensing/movement. All original
+30 must remain held, the newcomer must settle, and the replacement side must
+stay clear. Same criteria as `docs/guide_multi_1000_results.md`.
 
-| Strategy | Passed / 12 |
-| --- | ---: |
-| Existing 55-unit stop, nearest-predator selection | 9 |
-| 40-unit stop, nearest-predator selection | 4 |
-| Existing stop, observed-motion target association | 10 |
-| 40-unit stop, observed-motion target association | 7 |
+| Development variant | Passed / 12 | Passed / 100 |
+| --- | ---: | ---: |
+| Existing 55-unit stop, nearest-predator selection | 9 | 68 |
+| 40-unit stop, nearest-predator selection | 4 | — |
+| 55-unit stop, observed-motion target association | 10 | 72 |
+| 40-unit stop, observed-motion target association | 7 | — |
+| Require newcomer within bait hearing before stopping | 9 | — |
+| Restrict stopping to the front approach lane | 10 | 65 |
+| Front-lane stop plus recovery into predator-width paths | — | 67 |
 
-Do not promote the 40-unit stop: geometric hearing-range arithmetic alone
-misses crowd interference. The tracking candidate retains the 55-unit stop.
-Its target association uses ordinary observations, no engine IDs or hidden
-positions. It can still confuse overlapping predators and loses association
-after long occlusions. A paired 100-case evaluation is in progress.
+Each column uses identical map/encounter seeds across variants. The 12-map and
+100-map encounter lists differ. These are repeated development measurements,
+not independent estimates of general reliability. The tracking change won
+seven cases and lost three versus baseline. Four of the 100 maps had no site.
+The historical 1,000-case result remains unchanged; it does not evaluate these
+new policies. No 95% delivery reliability is claimed.
 
-An ordinary inside corner does not exclude a predator's contact radius:
-native corner probe caught bait in 16/16 approaches, versus 0/16 for the
-15-unit channel control over 30 seconds. This does not reject all compound
-corner pockets. Candidate corners still need exclusion and replacement access.
+The larger tracking-only benchmark is preserved as tag
+`entrapment-20260918-track55-100`; `source-tags.json` records its exact commit.
+Every batch now freezes its source before running, so live edits cannot alter
+later cases. All tick traces and frozen source remain under the ignored
+`logs/entrapment-iteration/` directory. Summaries/seeds/hashes are versioned here.
 
-## Reproduction and source control
+## Corners and replacement
 
-`trap_corner_probe.py --output NEW_DIRECTORY` saves all native probe ticks.
-`guide_batch.py --multi --maps N --workers W --output NEW_DIRECTORY` now archives
-its Python/config/viewer source and executes that frozen source. Reusing output
-with different source, seeds, or simulation settings is rejected. This avoids
-mixing iterations while editing policies during a batch.
+An ordinary inside corner caught bait in 16/16 native approaches; the 15-unit
+crevice control caught it in 0/16 over 30 seconds. Plain corners are unsafe.
 
-The benchmark source paths were repaired after the folder split (`f212fde`).
-Gap limits are 10.1–19.9 (`b027919`). The original 1,000-case evaluation remains
-unchanged historical evidence, not a measurement of this candidate.
+The new corner selector finds short staggered pockets (overlap 8–10.3 units)
+and requires the distance from bait to **every collision-valid predator centre**
+to be at least 15.05 units. It also requires rear access and a usable handoff.
+A 100-map survey found candidates on three maps, all already having ordinary
+crevices. After shifting the final approach around supporting walls, native
+trials on seeds 1, 11, and 49 all retained their original 30 predators and all
+three replacement agents arrived and survived. Only seed 11 delivered the
+newcomer. This is not a delivery reliability estimate for corners.
 
-## Remaining work
+`available_sites` uses corners only as fallback when crevices are unavailable.
+An occupied corner remains eligible during revalidation even if exploration
+later discovers a crevice; discovering one must not evict existing bait.
+The four missing-site maps in the 100-case development sample still have no
+qualifying site with this fallback.
 
-- Complete the larger paired comparison; inspect retention losses separately
-  from delivery failures, with actual replacement-agent access.
-- Evaluate compound corner pockets, and rank crowded arrival space as well as
-  gap geometry. Plain corners are not automatically safe.
-- Test bystander avoidance and live bait handoffs in native games. Avoidance is
-  a coordinator wrapper; Oscar's survival module is unchanged.
-- No measured 95% delivery reliability is claimed. The earlier 96.5% number is
-  map-site availability, not delivery success.
-- Account usage remaining is not exposed by the available tools; the 20% stop
-  cannot be automatically measured in this session.
+`guide_multi.py --replace-bait` starts an actual full-energy replacement at the
+rear staging point during final hold. It walks into the channel; after arrival,
+the old bait is explicitly exhausted and retention is measured against the new
+bait. This isolates physical handoff access. It does not test travel from a
+random location, candidate scheduling, or natural old-bait life estimation.
+Those are exercised separately by native games. Replacement position/energy/
+alive status are retained in the tick trace.
+
+## Native game checks
+
+- Seed 0, 600 native seconds: 13 agents alive, 6 predators, maximum 5 near bait,
+  maximum 4 continuously nearby for 30 seconds, 14 overlapping replacements,
+  zero **estimated** bait-gap seconds after first arrival. This used an earlier
+  tracking/40-unit candidate and the initial bystander-avoidance wrapper.
+- Seed 3, 200 native seconds: 22 agents alive, 3 predators, maximum 3 near bait,
+  5 overlapping replacements, zero estimated bait gaps. Includes sharing fresh
+  teammate predator observations into the avoidance wrapper.
+- Seed 3, 300 native seconds: 21 agents alive, 4 predators, maximum 3 near bait,
+  9 overlapping replacements, zero estimated bait gaps. Survivor release logic
+  was exercised without errors but no guide met its release condition in this
+  game, so successful release is not demonstrated by this run.
+
+These are short integration games, not whole-game guarantees or matched-policy
+score comparisons. Proximity is a proxy for capture, and bait occupancy is based
+on the policy's estimated localization. Every native tick is recorded. Replay:
+http://localhost:9063 (seed 0, 600 seconds, native sprites).
+
+## Implementation and limits
+
+- `my_guide.py`: associates the newcomer by observed motion rather than always
+  choosing the nearest crowd member. Identity remains ambiguous at overlap and
+  after long occlusions; native observations have no predator IDs.
+- `guide_pathfinding.py`: if collision/survival steering puts a guide inside the
+  predator-width margin, take a clear agent-width step back into a reachable
+  predator corridor. A previously stuck case (development index 25) then passed.
+- `bystander_avoidance.py` plus `core.py`: avoid known hearing/vision exposure and
+  occupied bait areas, including fresh shared sightings in an aligned frame.
+  Unknown predators and motion/localization error prevent an absolute guarantee.
+- `core.py`: surviving guides may return to normal work after ten seconds of
+  observed proximity to bait. Native-game evidence for a successful release is
+  still missing; close overlapping tracks can have ambiguous identities.
+- A further sacrifice guard checks that observed crowd members prefer bait to
+  the guide before bypassing survival steering. Evaluation is in progress.
+
+## Remaining experiments
+
+Compare tracking plus route recovery on 100 cases; screen delivery radii and
+walking thresholds using `guide_parameter_sweep.py`; evaluate crowd protection;
+then validate the selected combination on fresh maps. Smaller stopping distances
+and front-lane restrictions regressed and should not be promoted from intuition.
+Do not read 96.5% map-site availability as a delivery success rate.
+
+## Compute budget
+
+Authorized Runpod cap: **$10 total**. **$0 spent** and no resources created.
+Four creation requests (CPU3 32-vCPU twice, CPU5 32-vCPU once, CPU3 16-vCPU once)
+returned HTTP 400, "no longer any instances available with the requested
+specifications." Existing team pods were not changed. All completed experiments
+ran locally. `runpod-budget.json` records this separately from other team work.
+
+Account usage remaining is not exposed by the available tools. The requested
+20% account-usage stopping threshold cannot be measured automatically here.

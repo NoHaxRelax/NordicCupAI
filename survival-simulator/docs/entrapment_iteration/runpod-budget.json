@@ -1,0 +1,23 @@
+{
+  "budget_usd": 10,
+  "created_pods": [],
+  "estimated_spend_usd": 0,
+  "creation_attempts": [
+    {
+      "cpu": "cpu3c",
+      "vcpus": 32,
+      "attempts": 2
+    },
+    {
+      "cpu": "cpu5c",
+      "vcpus": 32,
+      "attempts": 1
+    },
+    {
+      "cpu": "cpu3c",
+      "vcpus": 16,
+      "attempts": 1
+    }
+  ],
+  "result": "All creation requests returned HTTP 400: no instances available; no billable resources created"
+}
