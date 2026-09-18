@@ -227,6 +227,8 @@ class Client:
         if self.no_think == 'vllm':
             # https://docs.vllm.ai/en/latest/features/reasoning_outputs/  extra_body -> top-level key
             b['chat_template_kwargs'] = {'enable_thinking': False}
+        elif self.no_think == 'think':
+            b['chat_template_kwargs'] = {'enable_thinking': True}     # overrides a server-side default of false
         elif self.no_think == 'ollama':
             # https://docs.ollama.com/api/openai-compatibility  reasoning_effort: "none"
             b['reasoning_effort'] = 'none'
@@ -490,8 +492,9 @@ def main() -> int:
     ap.add_argument('--model', default='', help='model name as the server knows it (default: first of /models)')
     ap.add_argument('--workers', type=int, default=10, help='concurrent questions per conversation')
     ap.add_argument('--limit', type=int, default=0, help='only the first N conversations')
-    ap.add_argument('--no-think', default='auto', choices=['auto', 'vllm', 'ollama', 'none'],
-                    help='how to switch thinking off; auto = ollama when --url has port 11434, else vllm')
+    ap.add_argument('--no-think', default='auto', choices=['auto', 'vllm', 'ollama', 'none', 'think'],
+                    help='how to switch thinking off; auto = ollama when --url has port 11434, else vllm; '
+                         'think = ask vLLM for thinking ON (chat_template_kwargs enable_thinking true; raise --max-tokens)')
     ap.add_argument('--json-mode', default='schema', choices=['schema', 'object'])
     ap.add_argument('--max-tokens', type=int, default=200)
     ap.add_argument('--temperature', type=float, default=0.0)
