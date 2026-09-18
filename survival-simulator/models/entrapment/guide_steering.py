@@ -4,7 +4,7 @@ import math
 from shapely.geometry import LineString, Point
 from shapely.ops import unary_union
 
-from models.guide_pathfinding import RoutePlanner, fixed_frame
+from models.entrapment.guide_pathfinding import RoutePlanner, fixed_frame
 
 HEARING_TARGET = 55.0  # Five units inside the native 60-unit hearing circle.
 VISION_TARGET = 235.0

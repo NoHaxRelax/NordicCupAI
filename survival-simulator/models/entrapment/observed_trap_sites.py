@@ -1,7 +1,7 @@
 """Adapt observed geometry to OUR existing trap detector, never hidden map data."""
 import math
 
-from models.entrapment_sites import _Geometry, enumerate_sites
+from models.entrapment.entrapment_sites import _Geometry, enumerate_sites
 
 
 def observed_rectangles(group, tolerance=1.5):

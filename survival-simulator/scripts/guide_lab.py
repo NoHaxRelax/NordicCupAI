@@ -1,4 +1,4 @@
-"""Run models/my_guide.py on native random maps; retain every tick and image.
+"""Run models/entrapment/my_guide.py on native random maps; retain every tick and image.
 
 From the repository root:
   .venv/bin/python survival-simulator/scripts/guide_lab.py --seed 10224 --serve
@@ -283,7 +283,7 @@ def main():
     parser.add_argument('--site',type=int,default=0,help='Choose another eligible bait site on the map')
     parser.add_argument('--seconds',type=float,default=60)
     parser.add_argument('--hold',type=float,default=10,help='Continuous seconds near bait for delivery proxy')
-    parser.add_argument('--policy',type=Path,default=ROOT/'models/my_guide.py')
+    parser.add_argument('--policy',type=Path,default=ROOT/'models/entrapment/my_guide.py')
     parser.add_argument('--output',type=Path,default=ROOT/'logs/guide_lab')
     parser.add_argument('--width',type=int,default=640,help='Native replay image width')
     parser.add_argument('--break-at',type=int,help='Pause in pdb before policy call at this tick')

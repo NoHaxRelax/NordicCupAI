@@ -12,11 +12,11 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from scipy.spatial import cKDTree
 
-from models.nikolaj.exploration import _path_clear
-from models.nikolaj.coverage import CoverageConfig, CoverageCoordinator
-from models.nikolaj.navigation import Navigator
-from models.nikolaj.policy_inputs import HarvestHint, ReproductionHint, observed_edges
-from models.nikolaj.world_estimator import rotate
+from models.exploration.exploration import _path_clear
+from models.exploration.coverage import CoverageConfig, CoverageCoordinator
+from models.exploration.navigation import Navigator
+from models.exploration.policy_inputs import HarvestHint, ReproductionHint, observed_edges
+from models.exploration.world_estimator import rotate
 
 
 class HarvestConfig(BaseModel):

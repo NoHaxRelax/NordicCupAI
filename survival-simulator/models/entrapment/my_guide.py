@@ -23,9 +23,9 @@ You may call breakpoint() here, or use the runner's --break-at TICK option.
 """
 
 import math
-from models.guide_pathfinding import fixed_frame, navigation_plan
-from models.predator_following import predator_is_not_following
-from models.guide_steering import prioritize, HEARING_TARGET
+from models.entrapment.guide_pathfinding import fixed_frame, navigation_plan
+from models.entrapment.predator_following import predator_is_not_following
+from models.entrapment.guide_steering import prioritize, HEARING_TARGET
 
 
 LOST_WAIT_TICKS = 5  # Hold for 0.5 seconds before returning to last contact.

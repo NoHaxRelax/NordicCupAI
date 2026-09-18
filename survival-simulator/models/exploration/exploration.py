@@ -6,8 +6,8 @@ import math
 import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
-from models.nikolaj.policy_inputs import ExplorationHint, observed_edges
-from models.nikolaj.world_estimator import rotate, wrap
+from models.exploration.policy_inputs import ExplorationHint, observed_edges
+from models.exploration.world_estimator import rotate, wrap
 
 
 class RapidMappingConfig(BaseModel):

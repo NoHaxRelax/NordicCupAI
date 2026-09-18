@@ -11,7 +11,7 @@ from typing import Annotated
 import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
-from models.nikolaj.boundary_anchor import (
+from models.exploration.boundary_anchor import (
     infer_boundary_frame, infer_directed_boundary_axes, infer_single_boundary_frame,
 )
 

@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from models.my_guide import guide
+from models.entrapment.my_guide import guide
 
 EDGES = [((-400,-400),(400,-400)), ((400,-400),(400,400)),
          ((400,400),(-400,400)), ((-400,400),(-400,-400))]

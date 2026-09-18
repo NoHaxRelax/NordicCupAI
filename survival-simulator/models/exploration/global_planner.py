@@ -8,10 +8,10 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 from scipy.optimize import linear_sum_assignment
 
-from models.nikolaj.biome_estimator import BiomeEstimator, BiomeInferenceConfig
-from models.nikolaj.exploration import ExplorationConfig, ExplorationCoordinator
-from models.nikolaj.policy_inputs import SectionHint
-from models.nikolaj.world_estimator import EstimatorConfig, WorldEstimator, rotate
+from models.exploration.biome_estimator import BiomeEstimator, BiomeInferenceConfig
+from models.exploration.exploration import ExplorationConfig, ExplorationCoordinator
+from models.exploration.policy_inputs import SectionHint
+from models.exploration.world_estimator import EstimatorConfig, WorldEstimator, rotate
 
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "config" / "global_planner.json"

@@ -5,7 +5,7 @@ import math
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from models.nikolaj.policy_inputs import ReproductionHint
+from models.exploration.policy_inputs import ReproductionHint
 
 
 TRAITS = ("speed", "sprint_speed", "hearing_radius", "vision_angle", "vision_range", "max_energy")

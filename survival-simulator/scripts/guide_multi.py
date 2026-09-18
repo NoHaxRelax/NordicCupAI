@@ -15,7 +15,7 @@ import shutil
 import time
 
 import guide_lab as lab
-from models.my_guide import guide as policy
+from models.entrapment.my_guide import guide as policy
 
 
 def replacement_side(point, site):
@@ -82,7 +82,7 @@ def run(args):
                     'bait full energy and no aging; ambient predator additions disabled to isolate exactly 33',
                     'policy gets native observations and known map edges, never hidden predator state'],
                  success_rule='Newcomer near bait (<=40) and sensing it for 10s; all original predators retained; final 30s hold with replacement side clear',
-                 policy_sha256=hashlib.sha256((lab.ROOT/'models/my_guide.py').read_bytes()).hexdigest())
+                 policy_sha256=hashlib.sha256((lab.ROOT/'models/entrapment/my_guide.py').read_bytes()).hexdigest())
     lab.write_json(folder/'summary.json',summary)
     phase='settle';phase_start=0.;delivery=None;active=None;memory={};held_since=None;dead_since=None
     guides=[];events=[];departed=set();outside_hearing=set();min_initial=30;final_min=None;all_since=None

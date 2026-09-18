@@ -10,7 +10,7 @@ import math
 
 import numpy as np
 
-from models.nikolaj.exploration import _path_clear
+from models.exploration.exploration import _path_clear
 
 
 @dataclass

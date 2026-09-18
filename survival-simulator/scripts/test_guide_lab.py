@@ -33,7 +33,7 @@ class ContractTests(unittest.TestCase):
     def test_policy_error_preserves_failing_input_and_frame(self):
         pygame.init()
         args = argparse.Namespace(output=lab.ROOT/'logs/guide_lab',
-                                  policy=lab.ROOT/'models/my_guide.py',site=0,
+                                  policy=lab.ROOT/'models/entrapment/my_guide.py',site=0,
                                   width=160,seconds=.5,hold=10.,break_at=None)
         with patch.object(lab,'validate_action',side_effect=ValueError('deliberate contract-test error')):
             summary,folder=lab.run(args,10224,20224)
@@ -47,7 +47,7 @@ class ContractTests(unittest.TestCase):
     def test_replay_is_deterministic_and_energy_is_native(self):
         pygame.init()
         args = argparse.Namespace(output=lab.ROOT/'logs/guide_lab',
-                                  policy=lab.ROOT/'models/my_guide.py',site=0,
+                                  policy=lab.ROOT/'models/entrapment/my_guide.py',site=0,
                                   width=160,seconds=.5,hold=10.,break_at=None)
         first,folder_a = lab.run(args,10224,20224)
         second,folder_b = lab.run(args,10224,20224)

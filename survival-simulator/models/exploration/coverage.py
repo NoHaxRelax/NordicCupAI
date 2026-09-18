@@ -7,9 +7,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from scipy.ndimage import distance_transform_edt
 from scipy.spatial import cKDTree
 
-from models.nikolaj.world_estimator import rotate
-from models.nikolaj.survey_gaps import SurveyGaps
-from models.nikolaj.territories import allocate, corridor_graph
+from models.exploration.world_estimator import rotate
+from models.exploration.survey_gaps import SurveyGaps
+from models.exploration.territories import allocate, corridor_graph
 
 
 class CoverageConfig(BaseModel):
@@ -276,7 +276,7 @@ class CoverageCoordinator:
         return float(np.mean(self.seen[self.surveyable] >= 0)) if self.surveyable.any() else 0.
 
     def hint(self, agent_id, pose):
-        from models.nikolaj.policy_inputs import HarvestHint
+        from models.exploration.policy_inputs import HarvestHint
         destination = self.destination(agent_id)
         if destination is None:
             return None

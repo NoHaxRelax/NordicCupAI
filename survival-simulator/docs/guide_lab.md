@@ -1,6 +1,6 @@
 # Write your own predator guide
 
-Edit **`survival-simulator/models/my_guide.py`**, specifically:
+Edit **`survival-simulator/models/entrapment/my_guide.py`**, specifically:
 
 ```python
 def guide(bait, edges, agent, context, memory):
@@ -12,7 +12,7 @@ def guide(bait, edges, agent, context, memory):
 ```
 
 The guide follows a cached **A\*** route to the handoff point while looking toward
-the nearest sensed predator. `models/guide_pathfinding.py` keeps routes 11 units
+the nearest sensed predator. `models/entrapment/guide_pathfinding.py` keeps routes 11 units
 from walls (predator radius 10 plus margin), so agent-only gaps are excluded.
 It smooths grid turns only along collision-clear segments. Its fixed internal
 frame survives changes in the guide's position and facing direction.
@@ -31,7 +31,7 @@ its heading. Delivery resumes when the following check permits it. This uses no
 hidden predator tracking. No-route cases hold. This is not a proven
 capture strategy; the remaining guidance logic is yours to improve.
 
-`models/guide_steering.py` applies a local movement selector to every observed-
+`models/entrapment/guide_steering.py` applies a local movement selector to every observed-
 predator action, including recovery. It prioritizes survival, then staying in
 the predator's hearing circle or unobstructed vision cone, then the requested
 route movement. It samples walking, sprinting, and stationary alternatives;
@@ -46,7 +46,7 @@ limitations. If contact and survival conflict, survival wins; if no safe sampled
 move exists, it favors affordable movement with the greatest separation.
 Replay debug includes `steering.safe`, `clearance`, and `contact_error`.
 
-`models/predator_following.py` implements `predator_is_not_following`, imported
+`models/entrapment/predator_following.py` implements `predator_is_not_following`, imported
 by `my_guide.py`. It compares consecutive observed predator poses to the moves
 the native chase code could produce toward the guide. It accounts for direct
 chase, watched pivots, the 11/15 energy-dependent speed caps, all four terrain

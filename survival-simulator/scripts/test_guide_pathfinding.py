@@ -5,8 +5,8 @@ from pathlib import Path
 import unittest
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from models.guide_pathfinding import RoutePlanner, navigation_plan
-from models.my_guide import guide, LOST_WAIT_TICKS
+from models.entrapment.guide_pathfinding import RoutePlanner, navigation_plan
+from models.entrapment.my_guide import guide, LOST_WAIT_TICKS
 
 
 def rectangle(x,y,w,h):
@@ -54,7 +54,7 @@ class PathfindingTests(unittest.TestCase):
     def test_arrived_at_missing_predator_holds_heading(self):
         edges=rectangle(0,0,400,300)
         bait=(365,160)
-        from models.guide_pathfinding import fixed_frame
+        from models.entrapment.guide_pathfinding import fixed_frame
         to_fixed,_=fixed_frame(bait,edges)
         memory=dict(_last_predator_fixed=to_fixed((5,0)),
                     _last_contact_position_fixed=to_fixed((0,0)),_lost_ticks=LOST_WAIT_TICKS)

@@ -5,7 +5,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from models.guide_steering import prioritize
+from models.entrapment.guide_steering import prioritize
 
 EDGES = [((-400,-400),(400,-400)), ((400,-400),(400,400)),
          ((400,400),(-400,400)), ((-400,400),(-400,-400))]

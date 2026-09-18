@@ -9,13 +9,13 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from src.utils.DTOs import ActionRequest
-from models.nikolaj.expert_policy import ExpertPolicy, load_config
-from models.nikolaj.global_planner import load_planner_config
-from models.nikolaj.navigation import Navigator
-from models.nikolaj.world_estimator import rotate
-from models.oscar_orchard import OrchardPolicy, MOVE_PENALTY
-from models.observed_trap_sites import observed_rectangles, our_sites
-from models.my_guide import guide
+from models.exploration.expert_policy import ExpertPolicy, load_config
+from models.exploration.global_planner import load_planner_config
+from models.exploration.navigation import Navigator
+from models.exploration.world_estimator import rotate
+from models.survival.oscar_orchard import OrchardPolicy, MOVE_PENALTY
+from models.entrapment.observed_trap_sites import observed_rectangles, our_sites
+from models.entrapment.my_guide import guide
 
 
 def action_for(aid, **kwargs):

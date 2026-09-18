@@ -5,7 +5,7 @@ import math
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from models.nikolaj.policy_inputs import RememberedNeighbor
+from models.exploration.policy_inputs import RememberedNeighbor
 
 
 class CrowdConfig(BaseModel):

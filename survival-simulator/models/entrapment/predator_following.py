@@ -5,7 +5,7 @@ this module. A compatible move is evidence of possibility, not proof of intent.
 """
 import math
 
-from models.guide_pathfinding import fixed_frame, RoutePlanner
+from models.entrapment.guide_pathfinding import fixed_frame, RoutePlanner
 
 POSITION_TOLERANCE = 0.75
 HEADING_TOLERANCE = 0.05

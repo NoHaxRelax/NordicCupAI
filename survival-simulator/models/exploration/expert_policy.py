@@ -8,12 +8,12 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field
 
 from src.utils.DTOs import ActionRequest
-from models.nikolaj.crowd_memory import CrowdConfig, CrowdTracker, crowd_direction
-from models.nikolaj.exploration import avoid_edges, _path_clear
-from models.nikolaj.global_planner import GlobalPlanner, PlannerConfig
-from models.nikolaj.harvest import HarvestConfig, HarvestCoordinator
-from models.nikolaj.policy_inputs import ExplorationHint, PolicyInputs, ReproductionHint, SectionHint, prepare_inputs
-from models.nikolaj.population import PopulationConfig, PopulationTracker
+from models.exploration.crowd_memory import CrowdConfig, CrowdTracker, crowd_direction
+from models.exploration.exploration import avoid_edges, _path_clear
+from models.exploration.global_planner import GlobalPlanner, PlannerConfig
+from models.exploration.harvest import HarvestConfig, HarvestCoordinator
+from models.exploration.policy_inputs import ExplorationHint, PolicyInputs, ReproductionHint, SectionHint, prepare_inputs
+from models.exploration.population import PopulationConfig, PopulationTracker
 
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "config" / "expert_policy.json"

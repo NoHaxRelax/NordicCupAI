@@ -29,6 +29,31 @@ BASELINE_COMMIT = '9b0c3e8'
 ROLE_IDS = {'explorer': 0, 'gatherer': 1, 'avoiding_predator': 2,
             'guide': 3, 'bait': 4, 'replacement_bait': 5, 'retired_bait': 6}
 
+# The benchmark manifest records the original 9059 layout. These moves are
+# structural only, so verification maps current files back to their recorded
+# names and canonicalizes the rewritten imports before hashing them.
+SOURCE_MOVES = {
+    'models/entrapment_policy.py': 'models/entrapment/entrapment_policy.py',
+    'models/entrapment_sites.py': 'models/entrapment/entrapment_sites.py',
+    'models/guide_pathfinding.py': 'models/entrapment/guide_pathfinding.py',
+    'models/guide_steering.py': 'models/entrapment/guide_steering.py',
+    'models/my_guide.py': 'models/entrapment/my_guide.py',
+    'models/observed_trap_sites.py': 'models/entrapment/observed_trap_sites.py',
+    'models/predator_following.py': 'models/entrapment/predator_following.py',
+    'models/oscar_orchard.py': 'models/survival/oscar_orchard.py',
+}
+IMPORT_REWRITES = (
+    (b'models.exploration', b'models.nikolaj'),
+    (b'models.survival.oscar_orchard', b'models.oscar_orchard'),
+    (b'models.entrapment.entrapment_policy', b'models.entrapment_policy'),
+    (b'models.entrapment.entrapment_sites', b'models.entrapment_sites'),
+    (b'models.entrapment.observed_trap_sites', b'models.observed_trap_sites'),
+    (b'models.entrapment.my_guide', b'models.my_guide'),
+    (b'models.entrapment.guide_pathfinding', b'models.guide_pathfinding'),
+    (b'models.entrapment.guide_steering', b'models.guide_steering'),
+    (b'models.entrapment.predator_following', b'models.predator_following'),
+)
+
 
 def clean(value):
     if isinstance(value, dict): return {str(k): clean(v) for k, v in value.items()}
@@ -47,7 +72,12 @@ def write_json(path, value):
 def verify_sources():
     manifest = json.loads((ROOT/'docs/entrapment_native_seed0/manifest.json').read_text())
     for name, expected in manifest['sources'].items():
-        if hashlib.sha256((ROOT/name).read_bytes()).hexdigest() != expected:
+        current_name = (name.replace('models/nikolaj/', 'models/exploration/')
+                        if name.startswith('models/nikolaj/') else SOURCE_MOVES.get(name, name))
+        source = (ROOT/current_name).read_bytes()
+        for current, recorded in IMPORT_REWRITES:
+            source = source.replace(current, recorded)
+        if hashlib.sha256(source).hexdigest() != expected:
             raise RuntimeError(f'Frozen 9059 source mismatch: {name}')
     return manifest
 
@@ -55,7 +85,7 @@ def verify_sources():
 class Observer:
     """Evaluator-only state; nothing from here is passed to EntrapmentPolicy."""
     def __init__(self, env):
-        from models.observed_trap_sites import our_sites
+        from models.entrapment.observed_trap_sites import our_sites
         self.static = dict(width=env.width, height=env.height,
                            obstacles=[(o.x, o.y, o.width, o.height) for o in env.obstacles])
         self.true_sites = our_sites(self.static)
@@ -152,7 +182,7 @@ def run_case(task):
     result = dict(seed=seed, baseline_commit=BASELINE_COMMIT, horizon=seconds, policy_rng_seed=0)
     try:
         from src.core import SimulationCore
-        from models.entrapment_policy import EntrapmentPolicy
+        from models.entrapment.entrapment_policy import EntrapmentPolicy
         core = SimulationCore(seed=seed)
         env = core.env
         policy = EntrapmentPolicy(seed=0)  # Independent of the world-generation seed.

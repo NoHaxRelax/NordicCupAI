@@ -8,8 +8,8 @@ import unittest
 
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from models.guide_pathfinding import RoutePlanner
-from models.predator_following import possible_follow_moves, predator_is_not_following, wrap
+from models.entrapment.guide_pathfinding import RoutePlanner
+from models.entrapment.predator_following import possible_follow_moves, predator_is_not_following, wrap
 from src.elements.predator import Predator
 from src.elements.environment import Environment
 
