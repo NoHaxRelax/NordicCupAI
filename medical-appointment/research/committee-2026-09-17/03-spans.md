@@ -175,10 +175,12 @@ the idea file says, so the visible id space does not double.
 `does`, `did`, `has`, `the`, `were`, `will`, `are`), by tag question against plain, by one, two or
 three cited units, and by clause-joined against simple units, every group with n at least 8 has the
 same residual median within 0.06 s at the start and 0.06 s at the end. The apparent residual in the
-stored runs (start -0.04, end -0.14) is the `ASR_MODEL` bug and nothing else; a grid search over the
-realised spans lands on start -0.20 and end 0.00, which is turbo's fitted pair. After lever 1 the
-edges are unbiased in every grouping. Entry 5's conclusion still holds: the remaining edge error is
-inside Whisper's own boundaries and no formula gets at it.
+stored runs (start -0.04, end -0.14) is the `ASR_MODEL` bug and nothing else. A grid search on the 0.02 s annotation grid over
+the realised spans of the best run puts the optimum at start -0.22 and end 0.00, worth 0.6700 against
+0.6692 for turbo's LOCO-fitted -0.20 and -0.02, so re-fitting the pair on the realised spans buys
+0.0008 and is not worth a commit. After lever 1 the edges are unbiased in every grouping. Entry 5's
+conclusion still holds: the remaining edge error is inside Whisper's own boundaries and no formula
+gets at it.
 
 **(f) From the ideas file, supported by this analysis.** The clause units of idea 7 are lever 3 and
 should be built. The "later, more explicit statement" prompt line is new and follows from the
