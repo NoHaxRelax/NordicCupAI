@@ -4,6 +4,14 @@ Active research, started 2026-09-17 after the user authorized all remaining usag
 
 Current targets: a frozen controller reaching >95% single-encounter delivery reliability; preserve rear access for replacement bait; count boundary-wall gaps. Prepared33 retention through a full game now has a native-map proof. Sequential delivery of33 from random encounters remains unproven.
 
+## Final usage-stop status
+
+The authorized usage allowance reached0 on2026-09-17 at23:05 UTC. No95% delivery claim is established. Best completed single-guide fresh batches: v30 wide-route7/8 and conservative viability7/8. V34 wide-route emergency reserves finishes6/8. Static multi-site finishes5/8. V27 extension has12 successes,2 substantive failures, and2 usage-stopped partial horizons in its planned16; do not describe the stopped cases as observed controller failures or12/14 as an unbiased full-cohort rate.
+
+Single-leader reserves repaired2/2 fitted failures. Fresh validation has only2 full300s runs (1 pass,1 fail),2 partial runs stopped at70.0s and57.4s, and4 unstarted cases. The machine summary's1/8 is a fixed-denominator accounting floor, **not** an observed12.5% delivery rate. A subprocess returning a receipt is not the same as completing the required horizon. V35 parallel reserves also remains incomplete; use its explicit per-case durations and stop reasons.
+
+Completed independent results: prepared33 original predators retained across all30001 native frames through3000s with rear bait replacement; expanded static geometry510/512 fresh maps,371 boundary options, median3 distinct corridors. These do not establish random delivery of33 or general whole-game strategy success. The next authorized phase is specified in HONEST_PLAYTHROUGH_NEXT.md, conditional on reliable guiding; it has not started.
+
 ## Latest checkpoint — 2026-09-17 22:30 UTC
 
 This section supersedes the older in-progress notes below. **95% reliability has not been established.** The strongest single-guide fresh batch is root v30 wide-route, 7/8 at300s (maps10220–10227). Root v27 emergency reserves passed4/4 fresh maps10208–10211; a frozen16-map extension10320–10335 is now being launched. Keep the separate batch denominators and disclose the cost of native reserve births.
