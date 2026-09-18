@@ -52,6 +52,12 @@ class RevisitConfig:
     duplicate_iou: float = .7
     crop_margin_pixels: float = 1.
     visible_misses_before_retirement: int = 3
+    # 'any': a silent detector counts as a miss whenever the predicted box lies whole inside the view
+    # (the original rule). 'seen': only when the view also gives the object at least
+    # miss_size_fraction of the smallest delivered size at which this track was ever detected whole.
+    # An L0 overview is not a fair opportunity to see an object that was only ever recognised at L1.
+    miss_rule: str = 'any'
+    miss_size_fraction: float = .9
     max_history: int = 6
     adapt_edges: bool = False
     # Placement rules for the organizer's scoring convention (all off by default).
@@ -70,6 +76,8 @@ class RevisitConfig:
                      'ambiguity_margin', 'duplicate_iou', 'partial_confidence_scale', 'forecast_decay'):
             if not 0 <= float(finite(getattr(self, name), name)) <= 1:
                 raise ValueError(f'{name} must lie in [0,1]')
+        if self.miss_rule not in ('any', 'seen') or not 0 < self.miss_size_fraction <= 1:
+            raise ValueError("miss_rule must be 'any' or 'seen' and miss_size_fraction in (0,1]")
         if self.extent_policy not in EXTENT_POLICIES:
             raise ValueError(f'extent_policy must be one of {EXTENT_POLICIES}')
         if self.prior_weight is not None and not 0 <= float(finite(self.prior_weight, 'prior_weight')) <= 1:
@@ -149,6 +157,7 @@ class RevisitedTrack:
     edge_slopes: list | None = None
     adaptation_checked: bool = False
     provisional: bool = False
+    seen_pixels: float = 0.  # smallest delivered longer side of a whole detection of this track; 0 = never
 
 
 def edge_slopes(model, history):
@@ -309,6 +318,8 @@ class RevisitTracker:
             if complete:
                 before = predictions[identity]
                 self._accept(track, box, tick, frame_index, d.confidence)
+                side = float(np.max((box[2:]-box[:2])/np.asarray(view.scale, float)))
+                track.seen_pixels = side if track.seen_pixels <= 0 else min(track.seen_pixels, side)
                 self.events.append({'event': 'refresh', 'track_id': identity, 'prior_iou': overlap(before, box),
                                     'adapted': track.edge_slopes is not None})
             else:
@@ -354,6 +365,7 @@ class RevisitTracker:
             identity = f'track-{self.next_id:05d}'; self.next_id += 1
             self.tracks[identity] = RevisitedTrack(identity, d.label, [[tick, box.tolist()]],
                                                  d.confidence, tick, frame_index)
+            self.tracks[identity].seen_pixels = float(np.max((box[2:]-box[:2])/np.asarray(view.scale, float)))
             matched_tracks.add(identity)
             self.events.append({'event': 'birth', 'track_id': identity, 'label': d.label})
         ambiguous_tracks = {identity for _, index, identity in candidates if index not in matched_detections}
@@ -364,7 +376,12 @@ class RevisitTracker:
                 # Only a full opportunity to see an object can count as a miss.
                 margin = self.config.crop_margin_pixels*np.tile(view.scale, 2)
                 if np.all(predicted[:2] > region[:2]+margin[:2]) and np.all(predicted[2:] < region[2:]-margin[2:]):
-                    track = self.tracks[identity]; track.visible_misses += 1
+                    track = self.tracks[identity]
+                    if self.config.miss_rule == 'seen' and track.seen_pixels > 0:
+                        side = float(np.max((predicted[2:]-predicted[:2])/np.asarray(view.scale, float)))
+                        if side < self.config.miss_size_fraction*track.seen_pixels:
+                            continue  # too few pixels at this zoom: not a fair opportunity
+                    track.visible_misses += 1
                     # A provisional entry track has never been seen whole; one clear miss retires it.
                     if track.visible_misses >= (1 if track.provisional else self.config.visible_misses_before_retirement):
                         self.events.append({'event': 'visible_misses_retired', 'track_id': identity})
