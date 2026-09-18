@@ -328,7 +328,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0.;
+    double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
@@ -774,9 +774,9 @@ public:
                 return false;
             };
             for (auto& t : g.near_trees(mp, v))
-                if (!vis_t.count(t->id) && in_view(*m.pose, h, c, v, t->p, 20.) && !occluded(t->p)) vis_t.insert(t->id);
+                if (!vis_t.count(t->id) && in_view(*m.pose, h, c, v, t->p, P.vis_margin_tree) && !occluded(t->p)) vis_t.insert(t->id);
             for (auto& f : g.near_fruits(mp, v))
-                if (!vis_f.count(f->id) && in_view(*m.pose, h, c, v, f->p, 8.) && !occluded(f->p)) vis_f.insert(f->id);
+                if (!vis_f.count(f->id) && in_view(*m.pose, h, c, v, f->p, P.vis_margin_fruit) && !occluded(f->p)) vis_f.insert(f->id);
         });
         for (int64_t tid : g.trees.key_list()) {
             TreeP t = g.trees.at(tid);
