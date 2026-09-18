@@ -623,3 +623,21 @@ Entry 42 gave the annotator-omniscient ceiling (perfect word range for every gol
 | served 4B joint-demo | 0.566 | 0.629 (0.774) | 0.769 (0.857) | 29 |
 
 Readings. (1) With the sentence choice fixed, the practical ceiling is tIoU about 0.83 to 0.85, score about 0.90, for every model from the 27B up; the annotator's two-statement coin flips cost the remaining 0.10 against entry 42's 0.946, and that part is not recoverable by any model we can run. (2) Between where the 27B stands (0.669) and that ceiling lies 0.165 of tIoU, all of it extent: 0.118 inside the cited unit (the clause cases, and starts that include a lead-in) and 0.047 from including or dropping one neighbour. Clause-level units are therefore the right next lever, and a rule that reaches a third of the inside-unit headroom is worth about +0.024 score. (3) The 4B's ceiling is 0.05 lower than the 27B's at every step because it picks the wrong sentence twice as often (29 zeros against 17), which is the model-size effect, separate from the extent problem.
+
+### 45. The extent loss priced by mechanism: clauses are systematic, neighbours are a coin flip (2026-09-18 17:30)
+
+Elias: how do we get from 0.81 to the 0.90 of entry 44? Every overlapping-but-imperfect span of the 27B few-shot run and the Opus 38-demo run, classified by which edge is wrong and whether the extra or missing stretch lies inside the cited unit (a clause) or is a neighbouring unit; each bucket priced as the mean-tIoU gain if that edge were perfect (0.4 s tolerance; 87 spans of 195 are already at or above 0.9).
+
+| mechanism | 27B spans | 27B gain (score) | Opus spans | Opus gain (score) |
+|---|---:|---:|---:|---:|
+| extra clause after the gold, same unit | 23 | +0.030 | 22 | +0.029 |
+| extra clause before the gold, same unit | 14 | +0.018 | 13 | +0.017 |
+| missing clause, same unit | 4 | +0.003 | 4 | +0.003 |
+| extra neighbour unit before | 16 | +0.026 | 9 | +0.014 |
+| extra neighbour unit after | 8 | +0.011 | 15 | +0.021 |
+| missing neighbour unit before | 11 | +0.021 | 13 | +0.021 |
+| missing neighbour unit after | 13 | +0.019 | 12 | +0.016 |
+| edge jitter under 0.4 s | 13 | +0.006 | 13 | +0.006 |
+| zero overlap (entry 43) | 17 | (+0.052, not resolvable) | 18 | (+0.055, not resolvable) |
+
+Readings. (1) **Clauses are systematic and recoverable**: 37 spans on the 27B where the annotator stopped at a clause boundary inside the sentence the model correctly cited, worth +0.048 score with perfect trimming. The annotators always cut there; the model cannot, because our units are sentences. Clause-level units, with the model citing the clause, are the lever; a deterministic comma rule got a third of it on replay (committee report 03), so +0.02 to +0.04 score is the realistic range. (2) **Neighbours are a coin flip against the annotators**: the 27B includes a neighbour the annotator left out on 24 spans and omits one the annotator included on 24; Opus with all 38 worked conversations shows the same balance (24 against 25). Whether the prompting question or the confirming reply belongs to the evidence is decided inconsistently in the gold (entry 40: 20 of 57 multi-unit golds include the question, 28 end on a short reply), so no rule and no amount of examples moves it, which is what the committee measured when every neighbour rule came out dead. Hedging does not help either: for two candidates with probabilities p and 1-p, returning the union or the inner span never beats returning the likelier one in expected IoU. (3) Entry 44's 0.90 assumed perfect neighbour calls; with the neighbour buckets treated as noise the reachable ceiling is about 0.85, and the realistic target with clause units is 0.82 to 0.83 on training for the 27B.
