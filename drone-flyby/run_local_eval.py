@@ -76,7 +76,7 @@ def main():
         env['DRONE_DETECTOR'] = args.detector
     server = subprocess.Popen([args.python, 'api.py'], cwd=HERE, env=env)
     try:
-        for _ in range(120):
+        for _ in range(int(os.environ.get('DRONE_STARTUP_WAIT_S', '600'))):
             if server.poll() is not None:
                 raise SystemExit('Server exited during startup')
             try:
