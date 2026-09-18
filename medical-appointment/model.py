@@ -531,6 +531,28 @@ class _Breaker:
 
 
 _breaker = _Breaker()
+_stats_lock = __import__('threading').Lock()
+_stats = {'conversations': 0, 'questions': 0, 'primary_ok': 0, 'primary_failed': 0, 'fallback_ok': 0,
+          'guessed': 0, 'last_wall_s': None, 'worst_wall_s': 0.0, 'last_primary_error': None}
+
+
+def _count(key: str, n: int = 1) -> None:
+    with _stats_lock:
+        _stats[key] += n
+
+
+def status() -> dict:
+    """What is configured and what has happened since start, for GET /api and the pre-flight."""
+    v = _prompts_mod.VARIANTS.get(LLM_VARIANT) if _prompts_mod else None
+    pool = getattr(v, '_pool', None) or []
+    with _stats_lock:
+        counts = dict(_stats)
+    return {'asr_model': ASR_MODEL, 'start_rule': START_RULE, 'start_offset': START_OFFSET, 'end_offset': END_OFFSET,
+            'unit_split': UNIT_SPLIT, 'span_on_no': SPAN_ON_NO, 'llm_backend': LLM_BACKEND, 'llm_url': LLM_URL,
+            'llm_model': LLM_MODEL or _resolved_model, 'llm_variant': LLM_VARIANT, 'llm_deadline_s': LLM_DEADLINE,
+            'fallback_model': LLM_FALLBACK_MODEL or None, 'breaker_open': _breaker.open(),
+            'fewshot_pool': {'examples': len(pool), 'positives': sum(1 for e in pool if e.get('yes') and e.get('text'))},
+            'counts': counts}
 _FALLBACK_RESERVE = 12.0      # seconds kept for the local fallback when the primary is tried
 _FALLBACK_GRACE = 12.0        # the fallback may run this long past LLM_DEADLINE (still < 60 s)
 
@@ -542,24 +564,33 @@ def ask_primary(p, deadline: float) -> dict:
     is open or when that budget is under two seconds."""
     remaining = deadline - time.time()
     if LLM_BACKEND != 'vllm':
-        return _chat_ollama(LLM_URL, LLM_MODEL, p.system, p.user, p.schema, min(LLM_TIMEOUT, max(3.0, remaining)))
+        out = _chat_ollama(LLM_URL, LLM_MODEL, p.system, p.user, p.schema, min(LLM_TIMEOUT, max(3.0, remaining)))
+        _count('primary_ok')
+        return out
     budget = min(LLM_TIMEOUT, remaining - (_FALLBACK_RESERVE if LLM_FALLBACK_MODEL else 0.0))
     if _breaker.open():
         raise TimeoutError('primary LLM skipped: breaker open after a transport failure')
     if budget < 2.0:
         raise TimeoutError(f'primary LLM skipped: {remaining:.1f} s left before the deadline')
     try:
-        return _chat_openai(p.system, p.user, p.schema, getattr(p, 'demos', None), budget)
+        out = _chat_openai(p.system, p.user, p.schema, getattr(p, 'demos', None), budget)
+        _count('primary_ok')
+        return out
     except Exception as exc:
         _breaker.trip(exc)
+        _count('primary_failed')
+        with _stats_lock:
+            _stats['last_primary_error'] = f'{time.strftime("%H:%M:%S")} {type(exc).__name__}: {str(exc)[:160]}'
         raise
 
 
 def ask_fallback(p, deadline: float) -> dict:
     """The local Ollama fallback model on the same prompt, allowed to run a
     little past the LLM deadline (still inside the 60 s of the endpoint)."""
-    return _chat_ollama(LLM_FALLBACK_URL, LLM_FALLBACK_MODEL, p.system, p.user, p.schema,
-                        max(3.0, deadline + _FALLBACK_GRACE - time.time()), num_ctx=max(LLM_NUM_CTX, 4096))
+    out = _chat_ollama(LLM_FALLBACK_URL, LLM_FALLBACK_MODEL, p.system, p.user, p.schema,
+                       max(3.0, deadline + _FALLBACK_GRACE - time.time()), num_ctx=max(LLM_NUM_CTX, 4096))
+    _count('fallback_ok')
+    return out
 
 
 def ask(p, deadline: float) -> dict:
@@ -697,6 +728,7 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
             return finish(ask(p, deadline), p)
         except Exception:
             logger.exception('question failed, guessing: %s', q)
+            _count('guessed')
             return True, None
 
     def one_fallback(q: str) -> Tuple[bool, Optional[Span]]:
@@ -706,6 +738,7 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
             return finish(ask_fallback(p, deadline), p)
         except Exception:
             logger.exception('fallback question failed, guessing: %s', q)
+            _count('guessed')
             return True, None
 
     if getattr(v, 'joint', False):
@@ -718,6 +751,7 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
                 with ThreadPoolExecutor(max_workers=len(questions) or 1) as ex:
                     results = list(ex.map(one_fallback, questions))
             else:
+                _count('guessed', len(questions))
                 results = [(True, None)] * len(questions)
     else:
         with ThreadPoolExecutor(max_workers=len(questions) or 1) as ex:
@@ -725,6 +759,11 @@ def answer_all(audio_bytes: bytes, audio_filename: str, questions: List[str]
 
     answers = [a for a, _ in results]
     spans = [s for _, s in results]
+    with _stats_lock:
+        _stats['conversations'] += 1
+        _stats['questions'] += len(questions)
+        _stats['last_wall_s'] = round(time.time() - t0, 1)
+        _stats['worst_wall_s'] = max(_stats['worst_wall_s'], _stats['last_wall_s'])
     logger.info('%s: total %.1fs (ASR %.1fs, LLM %.1fs), yes=%d/%d',
                 audio_filename, time.time() - t0, t_asr, time.time() - t0 - t_asr,
                 sum(answers), len(answers))

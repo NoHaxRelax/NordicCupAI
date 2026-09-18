@@ -43,9 +43,15 @@ def predict_endpoint(request: ASRQuestionRequestDto):
 
 @app.get('/api')
 def hello():
+    import example
+    import model
     return {
         'service': 'medical-appointment-usecase',
         'uptime': '{}'.format(datetime.timedelta(seconds=time.time() - start_time)),
+        # live configuration and counters, read by the pre-flight (research/committee-2026-09-17/02)
+        'predict_deadline_s': example.PREDICT_DEADLINE,
+        'timed_out_conversations': example.timed_out,
+        'model': model.status(),
     }
 
 

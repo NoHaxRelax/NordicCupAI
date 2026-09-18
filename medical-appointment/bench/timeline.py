@@ -73,6 +73,7 @@ VARIANT_NOTE = {
     'units-fewshot': 'few-shot lines (12 nearest examples)', 'units-joint': 'joint: 10 questions per request',
     'units-joint-demo': 'joint + 2 worked conversations', 'units-joint-demo-fewshot': 'joint + 2 worked + few-shot lines',
     'units-joint-demo-all': 'joint + all 38 other worked conversations',
+    'units-joint-demo-x1': "joint + 2 worked + the 'confirmed or acted upon' line",
 }
 
 
@@ -80,6 +81,8 @@ def run_label(path: Path, cfg: dict) -> tuple[str, str]:
     """(short model name, notes) for the menu."""
     model = (cfg.get('model') or '?').split('/')[-1]
     notes = [VARIANT_NOTE.get(cfg.get('variant'), '')]
+    if (cfg.get('unit_split') or 'sentence') != 'sentence':
+        notes.append(f"units cut: {cfg['unit_split']}")
     if cfg.get('source', '').startswith('dump_prompts'):
         if cfg.get('variant') == 'units-joint-demo-all' or '.clean' in path.name:
             notes.append('1 agent per conversation')
