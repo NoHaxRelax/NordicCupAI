@@ -16,6 +16,7 @@ from models.exploration.world_estimator import rotate
 from models.survival.oscar_orchard import OrchardPolicy, MOVE_PENALTY
 from models.entrapment.observed_trap_sites import observed_rectangles, our_sites
 from models.entrapment.my_guide import guide
+from models.entrapment.bystander_avoidance import avoid_predators
 
 
 def action_for(aid, **kwargs):
@@ -296,10 +297,13 @@ class EntrapmentPolicy:
             else:
                 role = 'explorer' if self.site is None else 'gatherer'
                 action = exploration[aid] if self.site is None else orchard[aid]
-                # Gathering is overridden by ordinary observed-predator escape,
-                # including predators currently following another guide.
-                if any(o['type'] == 'Predator' and o['distance'] < 130 for o in s['observations']):
-                    action = exploration[aid]
+                bait_local = None
+                if self.site is not None and self.bait is not None:
+                    pose = self.estimator.poses.get(aid)
+                    if pose is not None and pose.group_id == self.site_group:
+                        bait_local = local(pose, self.site['goal'])
+                action, avoiding = avoid_predators(action, s, bait_local)
+                if avoiding:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
             # Reproduction belongs to fit young gatherers/explorers, not bait.
