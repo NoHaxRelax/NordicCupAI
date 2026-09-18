@@ -60,7 +60,7 @@ def main():
         target = started+i/a.rate
         while time.perf_counter() < target:
             for item in pool.drain():
-                done.append(item)
+                done.append((time.perf_counter(),)+item)
             time.sleep(.005)
         submitted[i] = (level, time.perf_counter())
         pool.submit('bench', i, meta, png)

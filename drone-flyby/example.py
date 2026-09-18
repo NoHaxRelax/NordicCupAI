@@ -198,7 +198,7 @@ def _detect_now(image, request, view, raw):
     return _rows_to_detections(rows, view, raw), True, (time.perf_counter()-started)*1000
 
 
-def _apply_late_results(current_session):
+def _apply_late_results(current_session, now_index=None):
     """Feed finished background detections into their sessions' trackers."""
     applied = []
     for sequence_id, frame_index, rows, error, ms in POOL.drain():
@@ -216,12 +216,17 @@ def _apply_late_results(current_session):
             if view is None:
                 session.late['unknown_frame'] += 1; continue
             detections = _rows_to_detections(rows, view)
-            result = session.workflow.late_detections(frame_index, detections)
+            try:
+                result = session.workflow.late_detections(frame_index, detections)
+            except Exception:  # a bad late observation must never cost the current frame
+                logger.exception('Late detections for frame index %s could not be applied', frame_index)
+                session.late['errors'] += 1; continue
             if result is None:
                 session.late['not_ready'] += 1; continue
             births, refreshes = result
             session.late['births'] += births; session.late['refreshes'] += refreshes; session.late['frames'] += 1
-            applied.append({'frame_index': frame_index, 'lag_frames': session.frames-1-frame_index, 'detections': len(detections),
+            lag = (now_index-frame_index) if (now_index is not None and session is current_session) else None
+            applied.append({'frame_index': frame_index, 'lag_frames': lag, 'detections': len(detections),
                             'births': births, 'refreshes': refreshes, 'detector_ms': round(ms, 1)})
         finally:
             if held:
@@ -257,7 +262,7 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
         raw_rows = []
         late = []
         if POOL is not None:
-            late = _apply_late_results(session)
+            late = _apply_late_results(session, req['frame_index'])
             meta = {k: v for k, v in req.items() if k != 'view'}
             meta['view'] = {k: v for k, v in req['view'].items() if k != 'image'}
             POOL.submit(req['sequence_id'], req['frame_index'], meta, base64.b64decode(request.view.image))

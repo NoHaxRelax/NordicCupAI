@@ -300,6 +300,12 @@ def replay(
     timeout = RESPONSE_TIMEOUT_SECONDS
     started = time.monotonic()
     frame_index = 0
+    # DRONE_EVAL_PACED=1: the frame clock counts only the server's round trips
+    # (not this script's own frame decoding and rendering), and frames are
+    # sent one interval apart in wall time. Models a service that has the
+    # views ready and drops frames only when the server itself is slow.
+    paced = os.environ.get('DRONE_EVAL_PACED', '0') not in ('0', '')
+    clock = 0.0
 
     while frame_index < len(frames):
         frame = frames[frame_index]
@@ -407,8 +413,16 @@ def replay(
 
         # The clock owns the sequence: frame i exists at start + i * interval,
         # and only the newest emitted frame is ever sent.
-        elapsed = time.monotonic() - started
-        next_index = max(frame_index + 1, int(elapsed / interval))
+        if paced:
+            clock += statistics.round_trip_ms[-1] / 1000.0
+            next_index = max(frame_index + 1, int(clock / interval))
+            clock = max(clock, next_index * interval)
+            delay = sent_at + (next_index - frame_index) * interval - time.monotonic()
+            if delay > 0:
+                time.sleep(delay)
+        else:
+            elapsed = time.monotonic() - started
+            next_index = max(frame_index + 1, int(elapsed / interval))
         # Only count frames that actually exist; the last jump can overshoot.
         counted = min(next_index, len(frames))
         statistics.frames_skipped += max(0, counted - (frame_index + 1))

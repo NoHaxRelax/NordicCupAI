@@ -22,6 +22,7 @@ from utils import validate_response
 
 HOST = os.environ.get('DRONE_HOST', '0.0.0.0')
 PORT = int(os.environ.get('DRONE_PORT', '9053'))
+ROUTE = os.environ.get('DRONE_ROUTE', '').strip('/')  # optional secret path prefix for a public tunnel
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -62,6 +63,14 @@ def hello():
 @app.get('/')
 def index():
     return "Your endpoint is running!"
+
+
+if ROUTE:
+    # The evaluation service uses the submitted URL verbatim, so serve the
+    # same handlers under the prefix as well.
+    app.post(f'/{ROUTE}/predict', response_model=DroneFlybyPredictResponseDto)(predict_endpoint)
+    app.get(f'/{ROUTE}/api')(hello)
+    app.get(f'/{ROUTE}/')(index)
 
 
 if __name__ == '__main__':

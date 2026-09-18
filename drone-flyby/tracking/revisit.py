@@ -190,6 +190,8 @@ class RevisitTracker:
     tick can be an independently measured cumulative motion clock; repeated
     image positions may have equal ticks, but frame_index must increase.
     """
+    LATE_ORIGIN_SLACK = 2.5  # ticks (about frames) a late observation may precede the calibration origin
+
     def __init__(self, model, sequence_id, config=None):
         if not sequence_id:
             raise ValueError('A sequence ID is required')
@@ -385,7 +387,13 @@ class RevisitTracker:
         if view.source_size != self.model.source_size:
             raise ValueError('Wrong source dimensions')
         if tick < self.model.origin_tick:
-            raise ValueError('Late observation predates the calibration origin')
+            # Warm-up frames precede the calibration origin. A frame or two of
+            # drone motion is small next to a box, so treat those detections
+            # as taken at the origin; anything older is dropped rather than
+            # extrapolated backwards past what the model was fitted on.
+            if self.model.origin_tick-tick > self.LATE_ORIGIN_SLACK:
+                return 0, 0
+            tick = self.model.origin_tick
         incoming = []
         for detection in detections:
             d = detection if isinstance(detection, Detection) else Detection(**detection)
