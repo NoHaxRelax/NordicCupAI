@@ -93,6 +93,13 @@ Entries are appended as milestones complete; each names the commit and the evide
   fails, so deliveries stay on. Resting predators at a mouth now count as held on the estimator
   too (still-track based). Final state pushed; see the summary at the top of `docs/trapper.md`.
 
+- **09:00-14:00 (Oscar back, review)** Oscar: leading must reach 100 %, start with full-sprint
+  guides, second predators just join, then the no-sprint case. Built the close-range "leash"
+  (see `docs/trapper.md`): arranged arenas 129/129, 63/64 with a second predator; games 85-90 %
+  of leashes delivered, held 14-17 %, score +6 mean. Energy per lead measured (table in
+  `docs/trapper.md`); walking lead parked at Oscar's request. Bait replacement via the reserve
+  slot: fixture 8/8 under stress; game batches `leash-v8`/`v9` measure it.
+
 ### Where to pick up
 
 1. Holds are the value: on the oracle 8.7 % of predator-time, on the estimator 2 %. Both end

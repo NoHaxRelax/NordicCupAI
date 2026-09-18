@@ -114,7 +114,46 @@ Narrow gaps are the primary trap; walls stay in the code as a backup (`site_kind
 - **Planner**: biome movement modifiers are path costs (river 3.3x, swamp 2x, desert 1.25x),
   cached per grid cell; grids are keyed on geometry; failed searches are cached for 2 s.
 
-## Gap-first results (18 September, 600-second games, oracle world unless noted)
+## The leash: close-range lead (18 September, after Oscar's review)
+
+A guide with sprint energy keeps 40-55 in front of the predator with its back turned. Inside 60 the
+predator hears it through anything and never loses it; with the agent's back turned it charges
+straight at 15 per tick, turning at most 0.3 rad per tick, which the exact model reproduces
+(`Lure._charge_step`). Each tick the guide picks heading and speed jointly from the predicted gap
+after both move (`_leash_choose`: 36 headings x 6 speeds, window 40-53, every other nearby predator
+kept beyond 30, no step onto slower ground), follows an A* path with clearance for the predator,
+runs the last 200 straight down the mouth axis so the predator lines up behind it, then either
+walks into an empty passage (it becomes the bait) or sprints aside at a staffed mouth so the
+predator takes the bait. While the predator rests the guide sits at ~42 and does not move on the
+tick it wakes (it wakes deaf to anything beyond 60; with the guide behind it, it first runs away
+while turning, so the chooser follows it). Second predators simply join the chase.
+
+Arranged arenas (`scripts/trapper/test_leash.py`, random obstacle fields, random predator
+placement, 60 % already chasing): **129/129** with one predator, **63/64** with a second predator
+loose, **40/40** with ten obstacles. Energy used per delivery (16 cases per band, guide starts at
+500): 142/215/289 (mean/p90/max) for leads of 150-300, up to 214/275/360 for 750-900, i.e. about
+200 + 0.09 x lead at p90, plus the 100 the guide must keep to sprint at the end. Leash entry
+threshold: 330 energy; lead budget (energy - 300) / 0.09.
+
+Real games (16 seeds x 2, oracle): leash deliveries 70-98 per 32 games delivered at 85-90 %
+(`leash-v6`: 89/99; `leash-v7`: 70/82), held predator-time 14-17 %, up to 5 predators at one
+mouth, score +6 to +7 mean and about 0 median against the society, no colony lost. The failures
+that remain in games: guides that started with too little energy for the lead (now gated),
+crowded mouths (the flyby point moves out to 62 when predators already sit there) and a few
+pockets in the terrain.
+
+## Bait replacement (reserve slot)
+
+A replacement walks in through the far mouth to the reserve slot 10 behind the bait while the bait
+still lives, and moves up the moment it dies; the predators hear both and never lose a target.
+Fixture `scripts/trapper/test_swap.py` drives the real manager: 8/8 with one, two and three
+predators, with the replacement 400 away, and with a bait that dies after 15 s. In games the
+replacement is often assigned but not yet in place when the bait dies (74 of 96 lost holds in
+`leash-v8`): the walk in was blocked by loose predators near the far mouth and by held predators
+on short passages being counted as loose; both fixed, trigger moved 15 s earlier, successors now
+route around loose predators.
+
+## Gap-first results before the leash (18 September, 600-second games, oracle world unless noted)
 
 A/B over seeds 1–16, two repeats each (`results/trapper/batches/ab-*.json`, compare with
 `scripts/trapper/compare_labels.py results/trapper/remote ab-society ab-v5 ab-v6 ab-noreserve`):
