@@ -50,6 +50,7 @@ DEFAULTS = dict(
     site_kinds=('gap',),         # narrow gaps first; walls are the backup ('wall', 'gap')
     prestaff=False,              # speculative staffing (senescent baits walking in) cost more than it held
     bait_idle_time=40.0,         # an unheld gap bait leaves after this long without any predator near
+    n_traps=2,                   # designated traps: 1 near the map centre, or 2 on opposite sides
     bait_min_life=30.0,          # seconds of life a bait must have left when it arrives
     swap_lead_time=40.0,         # call the replacement when the bait's life falls below walk time + this
     swap_force_life=8.0,         # swap even while predators are awake when the bait has this little life left
@@ -99,6 +100,7 @@ class TrapManager:
     def __init__(self, **params):
         self.P = dict(DEFAULTS, **params)
         self.sites: list[Site] = []
+        self.designated: list[Site] = []       # the one or two traps everything is lured to
         self.stations: dict[str, Station] = {}
         self.deliveries: dict[int, Delivery] = {}       # pid -> delivery
         self.roles: dict[int, tuple] = {}               # aid -> (role, key)
@@ -262,6 +264,7 @@ class TrapManager:
         if not self._sites_done and world.complete_map:
             self.sites = self._usable_sites(world, find_sites(world.rects, world.width, world.height, kinds=self.P['site_kinds']))
             self._sites_done = True
+            self._designate(world)
             self.event('sites', walls=sum(s.kind == 'wall' for s in self.sites), gaps=sum(s.kind == 'gap' for s in self.sites))
         elif not world.complete_map and len(world.rects) != getattr(self, '_rects_seen', -1) and int(world.time * 10) % 20 == 0:
             # estimated map: refresh sites every 2 s while rectangles keep appearing; keep stations whose site persists
@@ -269,6 +272,7 @@ class TrapManager:
             fresh = self._usable_sites(world, find_sites(world.rects, world.width, world.height, kinds=self.P['site_kinds']))
             known = {s.key: s for s in self.sites}
             self.sites = fresh
+            self._designate(world)
             for key, st in list(self.stations.items()):
                 match = next((s for s in fresh if dist(s.holder, st.site.holder) < 3.0 and s.kind == st.site.kind), None)
                 if match is not None:
@@ -402,13 +406,42 @@ class TrapManager:
             self.event('guide_transferred', pid=pid, key=d.site.key, old=old, new=target, gap=round(dist(new.p, p.p)))
 
     # ------------------------------------------------------------------ staffing
+    def _designate(self, world: WorldState):
+        """Pick the traps the colony will use: with one, the best site nearest the map centre; with
+        two, a second one at least 500 from the first (on the other side). Sites already in use
+        (staffed or holding) keep their designation on a refreshed (estimated) map."""
+        n = int(self.P['n_traps'])
+        cands = [s for s in self.sites if s.kind == 'gap']
+        if not cands:
+            self.designated = []
+            return
+        keep = [s for s in cands if s.key in self.stations and (self.stations[s.key].staffed() or self.stations[s.key].held)]
+        centre = (world.width / 2, world.height / 2)
+        chosen = list(keep[:n])
+        while len(chosen) < n:
+            best = None
+            for s in cands:
+                if any(s.key == c.key for c in chosen):
+                    continue
+                if chosen and min(dist(s.front_mid, c.front_mid) for c in chosen) < 500.0:
+                    continue
+                cost = s.score + 0.06 * dist(s.front_mid, centre)
+                if best is None or cost < best[0]:
+                    best = (cost, s)
+            if best is None:
+                break
+            chosen.append(best[1])
+        if [s.key for s in chosen] != [s.key for s in self.designated]:
+            self.designated = chosen
+            self.event('traps_designated', keys=[s.key for s in chosen])
+
     def _best_site(self, world: WorldState, exclude_keys=()):
         if not self.sites or not world.agents:
             return None
         cx = sum(a.x for a in world.agents.values()) / len(world.agents)
         cy = sum(a.y for a in world.agents.values()) / len(world.agents)
         best = None
-        for s in self.sites:
+        for s in (getattr(self, 'designated', None) or self.sites):
             if s.key in exclude_keys:
                 continue
             d = dist((cx, cy), s.holder)
@@ -620,7 +653,7 @@ class TrapManager:
                 allowance = P['max_turn'] + min(1.0, max(0.0, (a.energy - a.max_energy / 5 - 40.0) / 160.0)) * P['turn_bonus']
                 if gap > 200:
                     allowance += math.radians(30)     # a far predator leaves room to swing first
-                for site in self.sites:
+                for site in (getattr(self, 'designated', None) or self.sites):
                     st = self.stations.get(site.key)
                     if st is not None and (a.id in st.baits or a.id == st.successor):
                         continue
@@ -1022,7 +1055,7 @@ class TrapManager:
             if danger and not is_resting(p) and self._refuge_tried.get(a.id, -1.0) <= world.time - 0.4:
                 self._refuge_tried[a.id] = world.time
                 held = {pid for st in self.stations.values() for pid in st.held}
-                best = plan_refuge(world, a, p, self.sites, held)
+                best = plan_refuge(world, a, p, getattr(self, 'designated', None) or self.sites, held)
                 if best is not None:
                     site, wps, is_front, cost = best
                     st = self._station(site)

@@ -23,7 +23,9 @@ Energy gate: the dodge can start from any energy that still affords one sprint t
 """
 from __future__ import annotations
 
+import inspect
 import math
+import textwrap
 
 import numpy as np
 
@@ -34,8 +36,8 @@ from .motion import next_waypoint
 from .world import PRED_HEARING as PRED_HEAR, PRED_VISION, PRED_CONE, PRED_WALK, PRED_SPRINT, PREDATOR_RADIUS, AGENT_RADIUS
 
 HALF_CONE = PRED_CONE / 2
-W = dict(cost=3., goal=1., unseen=40., band=1., band_gap=58., far=5., far_gap=80., margin=16.,
-         dodged_angle=1.0, undodged_penalty=12., other_hard=30., other_soft=60., slow=8., local=380.)
+W = dict(cost=3., goal=1., unseen=40., band=1.5, band_gap=52., far=10., far_gap=60., margin=16.,
+         dodged_angle=1.0, undodged_penalty=12., other_hard=30., other_soft=60., slow=8., local=380., sprint_away=20., clear_cap=50., clear_reward=.5, goal_ramp=(18., 33.))
 
 
 def wrap_np(a):
@@ -126,9 +128,12 @@ class DodgeLure(Lure):
 
     # ---- the two leash entry points that choose an approach movement
     def _leash_choose(self, a, p, desired, gap, v_pred, gap_target, cap, others=(), run=False, ceil=None):
-        if run or gap_target not in (LEASH_GAP, 110.0) or self._d is None:
-            return super()._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others, run=run, ceil=ceil)
         d = self._d
+        # the run down the mouth axis stays the stock speed-matched lead only when the guide must
+        # enter the passage itself (the predator has to stay behind it); at a staffed mouth the
+        # predator overshooting the dodging guide toward the bait is exactly the delivery
+        if d is None or gap_target not in (LEASH_GAP, 110.0) or (run and d.become_bait):
+            return super()._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others, run=run, ceil=ceil)
         if gap_target == 110.0:
             # the leash wanted to open the gap for its walk lead; the dodge just keeps towing
             wp = next_waypoint(a.p, d.path, reach=8.0) if d.path else None
@@ -151,6 +156,15 @@ class DodgeLure(Lure):
             real = min(real, dist(a.p, goal))
         d.decision = f'dodge-lead (low budget): gap {gap:.0f}->{g2:.0f}, v {real:.0f}, wp {tuple(round(v) for v in wp)}, e {a.energy:.0f}'
         return self._move_heading(a, h, real) if real > 0.05 else self._facing(d, a, p, _lure.hold(a))
+
+    def _flyby(self, d, a, p, gap):
+        """Stock flyby sprints 14 ticks along the face; once the predator sits at the mouth on the
+        bait, walking clear is enough. Sprint only while it could still lunge at us."""
+        act = super()._flyby(d, a, p, gap)
+        if act is not None and gap > 45.0 and act.get('move_distance', 0.) > a.walk:
+            act['move_distance'] = float(a.walk)
+            d.decision = d.decision.replace('sprinting aside', 'walking aside')
+        return act
 
     # ---- the dodge chooser
     def _dodge_choose(self, a, p, desired, gap, others=()):
@@ -183,12 +197,23 @@ class DodgeLure(Lure):
         pts = pts if pts is not None and len(pts) else None
         clear, first, p1 = self._clearance(pp, ph, q, facing, speed, speed, rects, world, walk, sprint if can_sprint else walk, pts)
         score = cost * W['cost'] + np.maximum(W['margin'] - clear, 0) ** 2 * 100 + (first < 0) * W['unseen']
+        # prefer real room over skimming the kill radius: a dodge that makes it overshoot and circle
+        # earns clearance of 30-50, hugging the margin earns none
+        score -= np.minimum(clear, W['clear_cap']) * W['clear_reward']
         d1 = np.linalg.norm(q - p1, axis=1)
-        score += np.maximum(d1 - W['band_gap'], 0) * W['band'] + np.maximum(d1 - W['far_gap'], 0) * W['far']
+        # keep it inside hearing, but never chase an approaching predator to do so
+        closing = d1 < gap - 2.0
+        score += np.maximum(d1 - W['band_gap'], 0) * W['band'] * (~closing) + np.maximum(d1 - W['far_gap'], 0) * W['far'] * (~closing)
+        # sprint only to dodge, never to outrun: a sprint directed away from it is the leash's
+        # speed matching, which a finite horizon would otherwise postpone the dodge for forever
+        away = heading_of(sub(a.p, p.p))
+        score += (length > a.walk + 1e-6) * np.maximum(np.cos(wrap_np(facing - away)), 0) * W['sprint_away']
         # progress toward the waypoint heading
         dev = np.abs(wrap_np(facing - desired))
         progress = np.where(length > 1e-6, np.linalg.norm(vec, axis=1) * np.cos(dev), 0.)
-        score -= progress * W['goal']
+        # inside the dodge range progress does not matter: the move that makes it overshoot wins
+        lo, hi = W['goal_ramp']
+        score -= progress * W['goal'] * min(1., max(0., (gap - lo) / (hi - lo)))
         # slower ground ahead costs (river, swamp)
         if w.slow_key is not None:
             here = w.biome_at(a.p)
@@ -238,6 +263,36 @@ class DodgeLure(Lure):
         g3 = np.where(aimed, g3 - W['undodged_penalty'], g3).reshape(n, k2, k3).max(axis=2)
         value = np.minimum(g2.reshape(n, k2), g3).max(axis=1)
         return np.minimum(g1, value), t1, p1
+
+
+# Three lines of the stock leash body do not suit a walking dodge: its sprint-budget fallback
+# (118 energy), its rest distance (42: a walker cannot dodge a wake-up lunge from there near a
+# mouth) and the truncation of the last move to the distance left to the goal (which cut dodge
+# steps to a few units at the flyby point). They are patched from the stock source at import
+# time; every replacement must apply exactly once, so a change in lure.py fails loudly here.
+_LEASH_PATCHES = [
+    ("if (not a.can_sprint or a.energy < 118.0) and not (d.become_bait and dist(a.p, site.holder) < 60):",
+     "if (not a.can_sprint or a.energy < a.max_energy / 5 + 12.0) and not (d.become_bait and dist(a.p, site.holder) < 60):"),
+    ("if gap > 48:\n", "if gap > 56:\n"),
+    ("return step_toward(a, p.p, min(a.walk * a.move_modifier, gap - 42.0))", "return step_toward(a, p.p, min(a.walk * a.move_modifier, gap - 50.0))"),
+    ("if gap < 36:\n", "if gap < 44:\n"),
+    ("return self._move_heading(a, h, min(a.walk * a.move_modifier, 42.0 - gap))", "return self._move_heading(a, h, min(a.walk * a.move_modifier, 50.0 - gap))"),
+    ("if wp is goal or dist(wp, goal) < 1e-6:\n", "if (wp is goal or dist(wp, goal) < 1e-6) and d.become_bait:\n"),
+]
+
+
+def _patched_leash():
+    src = textwrap.dedent(inspect.getsource(Lure._leash))
+    for old, new in _LEASH_PATCHES:
+        if src.count(old) != 1:
+            raise RuntimeError(f'dodge.py: stock Lure._leash changed; patch not found once: {old[:60]!r}')
+        src = src.replace(old, new)
+    ns = dict(vars(_lure))
+    exec(src, ns)
+    return ns['_leash']
+
+
+DodgeLure._leash = _patched_leash()
 
 
 def install(manager_module=None):
