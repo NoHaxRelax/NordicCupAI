@@ -193,8 +193,10 @@ def find_gap_sites(rects, width, height, depth=None, min_overlap=GAP_MIN_OVERLAP
                     tng = perp(normal)
                     flyby_clear = any(free_point(add(fly, mul(tng, sgn * 60.0)), AGENT_RADIUS, rects, width, height)
                                       and path_clear(fly, add(fly, mul(tng, sgn * 60.0)), AGENT_RADIUS, rects) for sgn in (1.0, -1.0))
+                    boundary = _is_boundary(a, width, height) or _is_boundary(b, width, height)
                     score = (max(0.0, 60.0 - length) + (0.0 if far_open else 40.0) + abs(gap - 14.0) * 3.0
-                             + (CORRIDOR + 100.0 - m['corridor']) * 0.3 + (0.0 if flyby_clear else 60.0))
+                             + (CORRIDOR + 100.0 - m['corridor']) * 0.3 + (0.0 if flyby_clear else 60.0)
+                             + (80.0 if boundary else 0.0))       # a passage along the map edge pins the predator
                     key = f'gap{i}-{j}{orient}{"+" if normal == mul(axis, 1.0) else "-"}'
                     # replacement baits stage outside the far mouth, off the axis, so the old bait
                     # can walk out past them to the exit point on the other side

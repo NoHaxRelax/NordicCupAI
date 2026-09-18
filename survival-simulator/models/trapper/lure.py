@@ -75,6 +75,7 @@ class Delivery:
     path: list | None = None
     path_t: float = -1e9
     stage: str = 'approach'       # leash: 'approach' (to the run-in start) or 'run' (down the axis)
+    p_hist: list = field(default_factory=list)   # leash: recent predator positions (stall detection)
     done: str | None = None       # 'delivered' | 'guide_captured' | 'failed:<reason>'
     decision: str = ''
 
@@ -370,10 +371,22 @@ class Lure:
         of sight do not matter; other predators that join the chase are welcome."""
         w = self.world
         site = d.site
+        # a second predator that charges us and is nearer is the one to lead for now: it joins
+        attacker = min((q for q in w.recent_predators() if q.pid != p.pid and q.pid not in self.held
+                        and predator_target(w, q) == a.id and not (bool(q.resting) if q.resting is not None else is_resting(q))),
+                       key=lambda q: dist(q.p, a.p), default=None)
+        if attacker is not None and dist(attacker.p, a.p) < dist(p.p, a.p) - 10.0:
+            p = attacker
         gap = dist(a.p, p.p)
         target = predator_target(w, p)
         following = target == a.id
         d.phase = 'LEASH'
+        # stall detection: it can be pinned against an obstacle, oscillating without advancing
+        d.p_hist.append((p.pid, p.p))
+        if len(d.p_hist) > 8:
+            d.p_hist.pop(0)
+        stalled = (len(d.p_hist) >= 8 and all(h[0] == p.pid for h in d.p_hist)
+                   and dist(d.p_hist[0][1], p.p) < 8.0 and not (bool(p.resting) if p.resting is not None else is_resting(p)))
         if int(round(w.time * 10)) % 10 == 0:
             d.trace.append((round(w.time, 1), 'S', round(gap), target, 1, round(a.energy), round(p.speed, 1), 0))
             if len(d.trace) > 150:
@@ -526,13 +539,14 @@ class Lure:
 
 
         # ---- move: heading and speed chosen jointly on the predicted gap after both move
-        v_pred = pred_next_speed(p) * w.biome_at(p.p)
+        v_pred = 0.0 if stalled else pred_next_speed(p) * w.biome_at(p.p)
         gap_target = LEASH_GAP
         cap = a.sprint_speed if a.can_sprint else a.walk
         desired = heading_of(sub(wp, a.p))
         others = [q for q in w.recent_predators() if q.pid != p.pid and dist(q.p, a.p) < 140
                   and (q.pid in self.held or not (bool(q.resting) if q.resting is not None else is_resting(q)))]
-        h, real, g2 = self._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others, run=(d.stage == 'run'))
+        h, real, g2 = self._leash_choose(a, p, desired, gap, v_pred, gap_target, cap, others, run=(d.stage == 'run'),
+                                         ceil=(90.0 if stalled else None))
         if wp is goal or dist(wp, goal) < 1e-6:
             real = min(real, dist(a.p, goal))
         d.decision = (f'leash: gap {gap:.0f}->{g2:.0f}, v {real:.0f} (pred {v_pred:.0f}), dev {math.degrees(wrap(h - away)):.0f}, '

@@ -331,7 +331,7 @@ class TrapManager:
                         self.roles.pop(d.guide, None)
                         self.agent_cooldown[d.guide] = self.time + 8.0
                     del self.deliveries[pid]
-                elif self.time - d.ended > 4.0:
+                elif self.time - d.ended > 12.0:
                     # the predator did not settle on the bait
                     self.metrics['failed'] += 1
                     self.event('delivery_failed', pid=pid, key=d.site.key, reason=d.done, max_phase=d.max_phase, trace=d.trace[-8:])
@@ -667,7 +667,7 @@ class TrapManager:
                             bait_cost = eta / 10.0
                     else:
                         bait_cost = 0.0
-                    cost = attract_cost + lead / 10.0 + 60.0 * (turn / math.pi) ** 2 + bait_cost
+                    cost = attract_cost + lead / 10.0 + 60.0 * (turn / math.pi) ** 2 + bait_cost + 0.5 * site.score
                     if best is None or cost < best[0]:
                         best = (cost, site, a, bait, round(math.degrees(turn)))
             if best is None:
