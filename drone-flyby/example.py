@@ -22,6 +22,7 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_REVISIT_EVERY, DRONE_REVISIT_MIN_AGE  every k-th frame aim L2 at the oldest reachable track [0, 6]
   DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
   DRONE_LOG_DIR             per-sequence diagnostics JSONL                  [unset]
+  DRONE_CV_THREADS          cap OpenCV/torch CPU threads per process (0 = default) [0]
 """
 import json
 import logging
@@ -67,6 +68,17 @@ CONFIG = RevisitConfig(
     birth_confidence=float(os.environ.get('DRONE_BIRTH_CONFIDENCE', '0.6')),
     update_confidence=float(os.environ.get('DRONE_UPDATE_CONFIDENCE', '0.4')),
 )
+# Several replays share one machine: cap the per-process thread pools so
+# concurrent processes do not thrash (0 keeps the library defaults).
+_THREADS = int(os.environ.get('DRONE_CV_THREADS', '0'))
+if _THREADS > 0:
+    import cv2
+    cv2.setNumThreads(_THREADS)
+    try:
+        import torch
+        torch.set_num_threads(_THREADS)
+    except ImportError:
+        pass
 DETECTOR = build_detector()
 logger.info('Detector: %s; config: %s; settings: %s', getattr(DETECTOR, 'name', type(DETECTOR).__name__), CONFIG, SETTINGS)
 
