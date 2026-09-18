@@ -34,6 +34,26 @@ P2 predators (after 02:00) — ONE problem at a time, nail it, then build on it 
   (trap_mode=2), scenario hooks (dbg_*), perfect-trap model (test_pred_life), escape.py, trapsite.py.
   Crevice (narrow gap) baits only; never wall/corner baits.
 
+## P2 step 1 design (02:00): walk ONE predator into a narrow-gap crevice
+Engine facts used: predators kill any agent whose centre is < 15 away after the predator's move (agents move
+first, then predators); agents never collide with agents or predators; a predator (r=10) cannot put its centre
+within 10 of any wall face, so in a 10.1-19.9 gap it stays >= 10 outside the mouth line => a bait 9 deep is >= 19
+away (safe); an agent at the mouth line can be 10 away (killed). Predator senses: hearing 60 through walls,
+vision 250 in a pi/3 cone with line of sight; it chases the CLOSEST sensed agent. Direct chase (15/tick,
+turn cap 0.3) when the agent faces away or is < 90 away; otherwise a 45-degree pivot approach closing ~10.6/tick.
+Predator energy 200 max, sprint 2.55/tick, walk 0.55/tick, at <= 0 it rests ~3.4 s (no move, no kill).
+Guide (trap_mode >= 3, one per trap, prefers old/high-energy/fast agents):
+  ACQUIRE: approach the predator to < 60 (hearing) so it locks on; LEAD: face it, walk BACKWARDS along the
+  straight line to the lane point 60 outside the mouth, keep 40-90 distance (sprint backwards if < 40; wait
+  if > 120; use its rest windows); DELIVER: continue backwards through the mouth without stopping (never
+  linger at the mouth), pass the bait, exit through the rear (rear_ok) or stop 8 deeper than the bait and
+  become a second bait. Success = predator within 25 of the mouth with the bait alive, guide alive.
+Test (nightsim/guide.py, hooks dbg_keep_agents / dbg_load_walls / dbg_freeze): true wall map loaded into
+the policy (isolates guiding from site finding), bait frozen at the goal, guide at 150/300/500 units from
+the lane with a clear line, predator at 100-250 from the guide, awake or resting; guide walk speed 10/13/16.
+Measure delivery rate, guide survival, ticks, energy. Baseline to beat: Lucas 794/1000 single deliveries,
+guides almost always die.
+
 ## Rules of thumb
 - Judge by paired means on >=500 seeds (per-run sd ~330 s). Report survival relative to trees left.
 - Every accepted change: BEST.md + git commit in teamrepo branch survival-simulator/oscar-overnight-cpp.
