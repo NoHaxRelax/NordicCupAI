@@ -51,7 +51,7 @@ DEFAULTS = dict(
     prestaff=False,              # speculative staffing (senescent baits walking in) cost more than it held
     bait_idle_time=40.0,         # an unheld gap bait leaves after this long without any predator near
     bait_min_life=30.0,          # seconds of life a bait must have left when it arrives
-    swap_lead_time=25.0,         # call the replacement when the bait's life falls below walk time + this
+    swap_lead_time=40.0,         # call the replacement when the bait's life falls below walk time + this
     swap_force_life=8.0,         # swap even while predators are awake when the bait has this little life left
     staff_range=230.0,           # staff a station in advance only with a loose predator this close to its mouth
     turn_bonus=math.radians(50), # extra steering allowance for a guide with spare sprint energy
@@ -207,7 +207,7 @@ class TrapManager:
                 if st.site.in_front_zone(p.p, margin=15.0):
                     target = predator_target(world, p)
                     in_place = {b for b, k in st.baits.items() if b in world.agents and k < len(st.slots)
-                                and dist(world.agents[b].p, st.slots[k]) < 3.0}
+                                and (dist(world.agents[b].p, st.slots[k]) < 3.0 or dist(world.agents[b].p, st.slots[0]) < 14.0)}
                     # a predator resting at the mouth (including the tick it wakes on) still holds
                     resting = bool(p.resting) if p.resting is not None else is_resting(p)
                     if target in in_place or (target is None and resting and in_place):
@@ -938,7 +938,10 @@ class TrapManager:
         loose = [p for p in world.recent_predators() if dist(p.p, far) < 75 and not is_resting(p)
                  and p.pid not in held_here and dot(sub(p.p, site.front_mid), site.normal) < 5.0]
         d_far = dist(a.p, far)
-        if loose:
+        st = self.stations.get(site.key)
+        front = world.agents.get(next((b for b, k in (st.baits.items() if st else []) if k == 0), -1)) if st else None
+        urgent = front is not None and self._life_s(front) < 10.0
+        if loose and not urgent:
             wait_pt = add(far, mul(back, 110.0))
             if dist(a.p, wait_pt) < 8.0:
                 return hold(a), 'gap: waiting back, a loose predator is at the far mouth'
@@ -947,8 +950,11 @@ class TrapManager:
         if d_far < 45.0 and path_clear(a.p, far, AGENT_RADIUS + 0.5, world.rects):
             return step_toward(a, far, min(a.walk * a.move_modifier, d_far + 2.0), face=far), 'gap: entering the far mouth'
         # approach the far mouth from behind: aim at a point 30 out of it, around the front mouth crowd
+        # and around loose predators on the way
         approach = add(far, mul(back, 30.0))
-        act, why = holder.act(a, approach, site, avoid=[(site.held_center(), self.P['zone_radius']), (site.front_mid, 80.0)])
+        avoid = [(site.held_center(), self.P['zone_radius']), (site.front_mid, 80.0)]
+        avoid += [(q.p, 85.0) for q in world.recent_predators() if q.pid not in held_here and not is_resting(q) and dist(q.p, a.p) < 400]
+        act, why = holder.act(a, approach, site, avoid=avoid)
         return act, why.replace('holder', 'gap route')
 
     def _wild_threat(self, world: WorldState, st: Station, a: AgentView, held_now):

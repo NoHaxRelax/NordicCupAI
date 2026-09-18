@@ -33,8 +33,15 @@ def run_case(seed, bait_energy, succ_dist, n_pred, seconds, verbose=False, **par
         preds.append(arena.add_predator(*pp, heading=math.atan2(-site.normal[1], -site.normal[0]), energy=rng.uniform(60, 190)))
     # replacement candidate(s) behind the far mouth, plus a few idle agents far away (workers)
     back = mul(site.normal, -1.0)
-    sp = add(site.far_mouth, mul(back, succ_dist))
-    sp = (sp[0] + rng.uniform(-60, 60), sp[1])
+    sp = None
+    for _ in range(500):
+        ang = rng.uniform(-1.2, 1.2)
+        cand = add(site.far_mouth, (succ_dist * math.sin(ang) * 1.0, succ_dist * math.cos(ang) * back[1] if back[1] != 0 else succ_dist * math.cos(ang)))
+        cand = add(site.far_mouth, mul((math.sin(ang) * back[1] if back[1] != 0 else math.sin(ang), math.cos(ang) * (back[1] if back[1] != 0 else 1.0)), succ_dist)) if False else cand
+        if 40 < cand[0] < 1560 and 40 < cand[1] < 1160 and tl.free_point(cand, 12, world.rects, env.width, env.height):
+            sp = cand; break
+    if sp is None:
+        sp = add(site.far_mouth, mul(back, 100.0))
     succ = arena.add_agent(*sp, heading=0.0, energy=400)
     idle = [arena.add_agent(200 + 100 * i, 150, heading=0.0, energy=300) for i in range(4)]
     state = arena.step([]); world = oracle.update(state['observations'])
