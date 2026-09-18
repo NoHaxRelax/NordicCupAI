@@ -177,11 +177,18 @@ class DroneTrackingWorkflow:
     detections refresh boxes automatically; crop absence never removes a track.
     No class-conditioned shape model is enabled.
     """
-    def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False, camera_mode='l1'):
+    def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False, camera_mode='l1',
+                 revisit_every=0, revisit_min_age=6.):
         self.config = config or RevisitConfig()
         self.prior = self.config.load_prior()
         self.observe_motion = observe_motion
         self.camera = LevelOneSweep(vertical_fraction, overview_between_sides=overview_between_sides, mode=camera_mode)
+        # Optional native revisits: every k-th tracking frame, aim the camera at
+        # the reachable track that has gone longest without a fresh observation.
+        if revisit_every < 0 or revisit_min_age < 0:
+            raise ValueError('Revisit settings must be nonnegative')
+        self.revisit_every = int(revisit_every)
+        self.revisit_min_age = float(revisit_min_age)
         self.sequence_id = None
         self.tracker = None
         self.warmup = None
@@ -249,6 +256,8 @@ class DroneTrackingWorkflow:
         else:
             self.warmup = None
             self.tracker.update(detections, view, motion, frame, detector_ran=detector_ran)
+            if focus_box is None and self.revisit_every and frame % self.revisit_every == 0:
+                focus_box = self.stale_track(request, motion)
             response = self.tracker.response(request, tick=motion,
                 requested_view=self.camera.next_view(request, focus_box=focus_box))
             events = self.tracker.events
@@ -261,12 +270,37 @@ class DroneTrackingWorkflow:
                             'tracks': self.tracker.predictions(motion) if self.tracker else []}
         return response
 
+    def stale_track(self, request, tick):
+        """Box of the oldest-anchored track a one-step L2 move can reach, or None."""
+        constraints = request['camera_constraints']; view = request['view']
+        if 2 not in constraints['allowed_resolution_levels']:
+            return None
+        bounds = next((b for b in constraints['center_bounds'] if b['resolution_level'] == 2), None)
+        if bounds is None:
+            return None
+        current = np.array([view['center_x'], view['center_y']], float)
+        limit = float(constraints['maximum_center_delta'])
+        best = None
+        for row in self.tracker.predictions(tick):
+            age = tick-row['anchor_tick']
+            if row.get('provisional') or age < self.revisit_min_age:
+                continue
+            box = np.array(row['bbox_source_xyxy']); centre = (box[:2]+box[2:])/2
+            centre = np.clip(centre, [bounds['minimum_center_x'], bounds['minimum_center_y']],
+                             [bounds['maximum_center_x'], bounds['maximum_center_y']])
+            if np.linalg.norm(centre-current) > limit:
+                continue
+            if best is None or age > best[0]:
+                best = (age, box.tolist())
+        return best[1] if best else None
+
     def to_dict(self):
         if self.tracker is None:
             raise ValueError('Save the workflow after calibration completes')
         return {'version': 1, 'tracker': self.tracker.to_dict(), 'config': asdict(self.config),
                 'observe_motion': self.observe_motion, 'camera_waypoint': self.camera.waypoint,
                 'overview_between_sides': self.camera.overview_between_sides, 'camera_mode': self.camera.mode,
+                'revisit_every': self.revisit_every, 'revisit_min_age': self.revisit_min_age,
                 'vertical_fraction': self.camera.vertical_fraction, 'last_frame': self.last_frame,
                 'motion_tick': self.motion_tick, 'last_request_id': self.last_request_id,
                 'last_response': self.last_response}
@@ -278,7 +312,8 @@ class DroneTrackingWorkflow:
         result = cls(RevisitConfig(**data['config']), observe_motion=data['observe_motion'],
                      vertical_fraction=data['vertical_fraction'],
                      overview_between_sides=data.get('overview_between_sides', False),
-                     camera_mode=data.get('camera_mode', 'l1'))
+                     camera_mode=data.get('camera_mode', 'l1'),
+                     revisit_every=data.get('revisit_every', 0), revisit_min_age=data.get('revisit_min_age', 6.))
         result.tracker = RevisitTracker.from_dict(data['tracker']); result.sequence_id = result.tracker.sequence_id
         result.camera.waypoint = data['camera_waypoint']; result.last_frame = data['last_frame']
         result.motion_tick = data['motion_tick']; result.last_request_id = data['last_request_id']

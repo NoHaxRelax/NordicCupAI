@@ -199,6 +199,30 @@ class CameraModeTests(unittest.TestCase):
         self.assertTrue(all(h <= 551 for h in hops))
         self.assertEqual(max(hops), 480)
 
+    def test_stale_track_revisit_picks_oldest_reachable_track(self):
+        from .workflow import DroneTrackingWorkflow
+        a = np.zeros((3, 3)); a[1, 2] = 10
+        model = MotionModel(a, (3840, 2160), 0., 1.)
+        workflow = DroneTrackingWorkflow(camera_mode='l2_top', revisit_every=1, revisit_min_age=3)
+        workflow.tracker = RevisitTracker(model, 's')
+        full = ViewGeometry((3840, 2160), (0, 0, 3840, 2160), (960, 540))
+        workflow.tracker.update([Detection('tank', tuple(full.box_from_source([1000, 300, 1040, 360])), .9)], full, 1, 1)
+        workflow.tracker.update([Detection('jammer', tuple(full.box_from_source([3000, 300, 3030, 340])), .9)], full, 5, 5)
+        request = {'original_width': 3840, 'original_height': 2160,
+                   'view': {'resolution_level': 2, 'center_x': 960, 'center_y': 270},
+                   'camera_constraints': {'maximum_center_delta': 551., 'allowed_resolution_levels': [1, 2],
+                                          'center_bounds': [{'resolution_level': 2, 'minimum_center_x': 480, 'maximum_center_x': 3360,
+                                                             'minimum_center_y': 270, 'maximum_center_y': 1890}]}}
+        # The tank is 9 ticks old and within one L2 move; the jammer is younger and far away.
+        box = workflow.stale_track(request, 10)
+        self.assertIsNotNone(box); self.assertAlmostEqual(box[0], 1000)
+        workflow.revisit_min_age = 20
+        self.assertIsNone(workflow.stale_track(request, 10))  # nothing old enough yet
+        workflow.revisit_min_age = 3
+        requested = workflow.camera.next_view(request, focus_box=box)
+        self.assertEqual(requested['resolution_level'], 2)
+        self.assertLessEqual(abs(requested['center_x']-960)+abs(requested['center_y']-270), 551)
+
 
 if __name__ == '__main__':
     unittest.main()

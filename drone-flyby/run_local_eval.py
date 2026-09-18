@@ -32,6 +32,8 @@ def main():
     parser.add_argument('--overview-between-sides', default='1')
     parser.add_argument('--vertical-fraction', default='0')
     parser.add_argument('--camera-mode', default='l1')
+    parser.add_argument('--revisit-every', default='0')
+    parser.add_argument('--revisit-min-age', default='6')
     parser.add_argument('--device', default='cpu')
     parser.add_argument('--imgsz', default='960')
     parser.add_argument('--conf', default='0.25')
@@ -49,6 +51,8 @@ def main():
     env['DRONE_OVERVIEW_BETWEEN_SIDES'] = args.overview_between_sides
     env['DRONE_VERTICAL_FRACTION'] = args.vertical_fraction
     env['DRONE_CAMERA_MODE'] = args.camera_mode
+    env['DRONE_REVISIT_EVERY'] = args.revisit_every
+    env['DRONE_REVISIT_MIN_AGE'] = args.revisit_min_age
     if args.weights:
         env['DRONE_WEIGHTS'] = args.weights
     if args.bundle:

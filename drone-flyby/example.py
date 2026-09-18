@@ -19,6 +19,7 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_VERTICAL_FRACTION   band of the L1 crops, 0 = top                   [0]
   DRONE_OVERVIEW_BETWEEN_SIDES  L0 between the L1 sides (0 = L1 centre)     [1]
   DRONE_CAMERA_MODE         l1 (upper L1 sweep) | l2_top (native L2 sweep of the top row) [l1]
+  DRONE_REVISIT_EVERY, DRONE_REVISIT_MIN_AGE  every k-th frame aim L2 at the oldest reachable track [0, 6]
   DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
   DRONE_LOG_DIR             per-sequence diagnostics JSONL                  [unset]
 """
@@ -53,6 +54,8 @@ SETTINGS = {
     'overview_between_sides': _flag('DRONE_OVERVIEW_BETWEEN_SIDES', True),
     'observe_motion': _flag('DRONE_OBSERVE_MOTION', True),
     'camera_mode': os.environ.get('DRONE_CAMERA_MODE', 'l1'),
+    'revisit_every': int(os.environ.get('DRONE_REVISIT_EVERY', '0')),
+    'revisit_min_age': float(os.environ.get('DRONE_REVISIT_MIN_AGE', '6')),
     'log_dir': os.environ.get('DRONE_LOG_DIR') or None,
     'max_sessions': 4,
 }
@@ -87,7 +90,8 @@ class Session:
         return DroneTrackingWorkflow(CONFIG, observe_motion=SETTINGS['observe_motion'],
                                      vertical_fraction=SETTINGS['vertical_fraction'],
                                      overview_between_sides=SETTINGS['overview_between_sides'],
-                                     camera_mode=SETTINGS['camera_mode'])
+                                     camera_mode=SETTINGS['camera_mode'],
+                                     revisit_every=SETTINGS['revisit_every'], revisit_min_age=SETTINGS['revisit_min_age'])
 
     def record(self, row):
         if self.log:
