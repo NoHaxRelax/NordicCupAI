@@ -792,3 +792,31 @@ is a one-sided split such as 12 against 1, which is not what the verified data s
 Note the reference transcripts feed no part of the served pipeline: it reads the Whisper JSONs, not
 `bench/ref`. Recommendation: no more oracling for the sake of this question; finishing the other 22
 files would roughly double a sample whose signal is already two-sided and small.
+
+### 56. First validation of the 27B pipeline: 0.8074, no gap to training (2026-09-18 16:47)
+
+Validation run 394, the exact URL that will be submitted (`https://9rf8oeyh70minl-9054.proxy.runpod.net/predict`,
+27B on the pod, `units-fewshot`, clause-and units): **score 0.8074**, 19 conversations in 2 min 42 s
+(about 8.5 s each, the same as training), 0 fallbacks, 0 guesses, 0 timeouts on the endpoint's own
+counters. The previous best for an honest pipeline was 0.6759 (run F, the Ollama 4B, entry 26), so
+this is **+0.132**.
+
+It also refutes the estimate in this log. I predicted about 0.785, extrapolating the 4B's
+training-to-validation gap of -0.030 (0.706 -> 0.676) onto the 27B's 0.812. The measured gap is
+-0.005, i.e. none beyond noise. The 4B's gap was therefore its own weakness, not a property of the
+validation set: it picks the wrong sentence twice as often (entry 44, zero-overlap floor 29 against
+17), and wrong-sentence errors are what a harder or differently-annotated set punishes. The longer
+validation golds (+1.1 s, committee finding d) cost the 27B nothing measurable, presumably because
+clause units let it cover the extra length when the annotator marked it.
+
+Method note: the pipeline was frozen before this run and nothing was tuned on the result, per the
+standing rule. The number is a go/no-go and a sanity check on the served path, not a knob.
+
+Pod history for the record: the first pod was stopped to save money and could not restart (a
+host-local `/workspace` pins a pod to its host, and that host had no free A100); a second drew a
+CUDA 12.8 driver, which cannot run the cu130 vLLM build, and was terminated after a one-minute
+driver check; `9rf8oeyh70minl` is the third, brought up from bare metal in 12 minutes by
+`/workspace/bringup.sh` (parallel weight download and both venv installs, then vLLM, then the
+endpoint) and reproducing training at 0.812. Also fixed: `warm_llm` gave the Ollama fallback 30 s,
+but cold-loading it into VRAM takes 51 s, so the warm-up "failed" and left the first real fallback
+call to pay that 51 s; the budget is now 150 s and the log reads `fallback qwen3:4b warm in 1.2s`.
