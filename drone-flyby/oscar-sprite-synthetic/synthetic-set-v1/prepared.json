@@ -1,0 +1,5479 @@
+{
+  "bank": "data/drone/sprite-bank-reviewed-20260918",
+  "bank_sha256": "52bf88ba7661d55cb0276d25ac6da2d730a618459f8eadb5500b520de52a43be",
+  "seed": 1918,
+  "count": 180,
+  "zoom_weights": [
+    0.25,
+    0.5,
+    0.25
+  ],
+  "max_objects": 3,
+  "scale": [
+    0.9,
+    1.1
+  ],
+  "band_px": 4,
+  "images": [
+    {
+      "id": "synth-1918-00000",
+      "zoom": 0,
+      "background": "reference-f000007-x2496-y0384-L0",
+      "background_sha256": "4b537625bae9a61384cff21faac821102e38b2a83b563cabddcc3264a8abd07c",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            31.4,
+            58.0,
+            197.3,
+            174.5
+          ],
+          "sprite": "inst:reference-f000014-x3456-y0960-L0:0",
+          "sprite_file": "large_launcher/inst__reference-f000014-x3456-y0960-L0__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            186.9,
+            175.1,
+            230.6,
+            215.9
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            150.0,
+            16.0,
+            180.0,
+            37.0
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00001",
+      "zoom": 0,
+      "background": "reference-f000007-x3264-y1344-L0",
+      "background_sha256": "84cfcbb5717df5c65dc6ffad75d25838ffc6ae29c4551eb59f59e891372df6b1",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            132.0,
+            130.8,
+            159.0,
+            188.1
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L0:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            115.9,
+            48.5,
+            193.6,
+            127.5
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00002",
+      "zoom": 2,
+      "background": "reference-f000017-x2688-y0384-L2",
+      "background_sha256": "6d3021fede4af5603dd1b7e9afa1e98feb6ecdd95d51d1a1eaa259d115f15075",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            52.1,
+            150.1,
+            101.2,
+            202.7
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00003",
+      "zoom": 1,
+      "background": "reference-f000021-x2688-y0576-L1",
+      "background_sha256": "f1286707c5aa4a6e98df0e3b72d97aaa4f52dfd51dc5e1525ed8256ab5374635",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            102.3,
+            98.1,
+            166.5,
+            139.3
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L1:1",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L1__1.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            101.3,
+            11.3,
+            148.8,
+            62.1
+          ],
+          "sprite": "lib:medium_launcher",
+          "sprite_file": "medium_launcher/lib__medium_launcher.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            172.8,
+            1.9,
+            233.0,
+            30.2
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L1:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00004",
+      "zoom": 1,
+      "background": "validation-f000037-x1536-y0000-L1",
+      "background_sha256": "763b262ade33733ff537411483625e880a434819f07c70ad77124e5dc2f6144a",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            132.2,
+            178.6,
+            171.6,
+            240.9
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L1:1",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L1__1.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00005",
+      "zoom": 2,
+      "background": "reference-f000000-x1920-y0000-L2",
+      "background_sha256": "6b08f2bed5ab7ac4f4cec1b437566d5d9b380e7b3beca068f6540734f499b555",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            135.2,
+            102.9,
+            163.7,
+            118.8
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L2:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L2__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            144.1,
+            186.2,
+            198.9,
+            211.8
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L2:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L2__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            127.0,
+            31.0,
+            173.3,
+            65.2
+          ],
+          "sprite": "inst:reference-f000000-x1152-y0960-L2:0",
+          "sprite_file": "jammer/inst__reference-f000000-x1152-y0960-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00006",
+      "zoom": 2,
+      "background": "reference-f000024-x2112-y0192-L2",
+      "background_sha256": "f2e7d9de62ceb30d1c313291100ea2ede7a2955b32cba6e3f295a7fb5e7edb53",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            105.9,
+            6.2,
+            121.8,
+            34.7
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L2:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L2__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            27.8,
+            97.8,
+            91.1,
+            154.1
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L2:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00007",
+      "zoom": 0,
+      "background": "reference-f000000-x0960-y1728-L0",
+      "background_sha256": "677c40b13121f96c50a4cf68bf35ca0f18b14f0c84e5843f1452b743f6c5d98c",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            20.4,
+            140.7,
+            98.9,
+            196.9
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L0:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00008",
+      "zoom": 1,
+      "background": "reference-f000010-x2304-y0768-L1",
+      "background_sha256": "8342fa9d41742227eba256a5f27bcf52c722cfb61879eee30277d13ff7b34ddc",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            79.2,
+            85.3,
+            131.5,
+            130.6
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            114.8,
+            153.8,
+            186.4,
+            218.1
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00009",
+      "zoom": 1,
+      "background": "validation-f000073-x0000-y0000-L1",
+      "background_sha256": "477216be2816b463b4ea99afe4136472d8f3e9ea7ccc1440b98a0bcda6408386",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            38.5,
+            87.1,
+            240.1,
+            225.9
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            122.3,
+            2.1,
+            199.4,
+            80.9
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            69.5,
+            0,
+            122.3,
+            45.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00010",
+      "zoom": 2,
+      "background": "validation-f000025-x2880-y1536-L2",
+      "background_sha256": "0ba392a60a8895e1af403c62a6cdf7485802d02ffcedaa261331093b28b452ff",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            200.6,
+            98.0,
+            243.5,
+            146.0
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            185.1,
+            4.4,
+            241.4,
+            82.9
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L2:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00011",
+      "zoom": 1,
+      "background": "validation-f000037-x2496-y0000-L1",
+      "background_sha256": "00d4a32260c1945d4e583bb75dd8617f2568e5fae22c2e04c2a92306b4a63e94",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            156.9,
+            135.8,
+            219.1,
+            204.1
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00012",
+      "zoom": 0,
+      "background": "reference-f000024-x3072-y1152-L0",
+      "background_sha256": "adb62f139a9b7b4a97e0cbf3bb899e22d10bdbb517a461c6df9187a39e9056fd",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            0,
+            115.0,
+            56.0,
+            142.0
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L0:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00013",
+      "zoom": 1,
+      "background": "reference-f000003-x0000-y0384-L1",
+      "background_sha256": "6e697fba9f75f3f87d42f1a7012811ce9bdbf9a11c5187d48d6c723f593cd011",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            39.1,
+            50.7,
+            104.2,
+            113.7
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            88.9,
+            185.8,
+            145.2,
+            249.1
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L1:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00014",
+      "zoom": 0,
+      "background": "batch2-validation-f000065-x3456-y1536-L0",
+      "background_sha256": "5fdaec64a00ebed5bc19b323bc062a05bf110acb83f9eacb3c061c75376bd2be",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            101.5,
+            31.1,
+            124.4,
+            64.1
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            181.1,
+            118.1,
+            222.8,
+            149.0
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            106.8,
+            88.3,
+            171.8,
+            151.3
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L0:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00015",
+      "zoom": 1,
+      "background": "reference-f000021-x2688-y0576-L1",
+      "background_sha256": "f1286707c5aa4a6e98df0e3b72d97aaa4f52dfd51dc5e1525ed8256ab5374635",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            32.9,
+            49.2,
+            149.6,
+            220.4
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00016",
+      "zoom": 1,
+      "background": "reference-f000014-x0000-y1152-L1",
+      "background_sha256": "37d38fce43dcb24f6118df95bc813e50800ef1286e17b932a5360090591f3e49",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            172.0,
+            86.0,
+            234.1,
+            141.1
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            119.0,
+            191.0,
+            149.0,
+            211.0
+          ],
+          "sprite": "lib:small_launcher",
+          "sprite_file": "small_launcher/lib__small_launcher.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            26.3,
+            77.3,
+            73.9,
+            117.6
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00017",
+      "zoom": 1,
+      "background": "reference-f000024-x0960-y0768-L1",
+      "background_sha256": "e8c0b6e8fc3debd6c2ac8b7398c4cc515e7d8f48b96f51204f2c6047f1953a8e",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            141.0,
+            46.0,
+            189.0,
+            91.0
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            41.9,
+            178.8,
+            98.1,
+            242.1
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00018",
+      "zoom": 0,
+      "background": "validation-f000013-x0384-y0576-L0",
+      "background_sha256": "b5ce7975db072fe63183c6ad3694327643ab193327ee52143e9dede7cb7934ee",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            222.8,
+            147.6,
+            242.1,
+            182.2
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L0:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            171.8,
+            115.6,
+            217.2,
+            171.1
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            5.0,
+            32.0,
+            26.0,
+            62.0
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00019",
+      "zoom": 1,
+      "background": "validation-f000025-x2688-y1344-L1",
+      "background_sha256": "22f73b11a762387a53dd1348027cef9213d89b6ef0bf1b496e50eb8870a019c5",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            9.4,
+            12.1,
+            194.1,
+            198.8
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L1:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00020",
+      "zoom": 1,
+      "background": "reference-f000021-x1920-y1728-L1",
+      "background_sha256": "ca5f4380833bcd09faadc9a668c8b1b4dccf1b8582745287b417f6f159102e08",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            50.1,
+            62.5,
+            79.8,
+            101.9
+          ],
+          "sprite": "lib:jammer",
+          "sprite_file": "jammer/lib__jammer.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            4.3,
+            172.5,
+            59.8,
+            229.9
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00021",
+      "zoom": 1,
+      "background": "validation-f000013-x1536-y0768-L1",
+      "background_sha256": "96011bce32fb5ddbce8f1eaa3b6fa356693af3a4397d48740c81320ac407a857",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            20.0,
+            1.3,
+            144.0,
+            181.9
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00022",
+      "zoom": 1,
+      "background": "reference-f000000-x0384-y0768-L1",
+      "background_sha256": "46ad0b340d82f0fee47cd10a171c7f1c8549e416ae59157c7f5b3a4a80e7087b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            60.0,
+            187.0,
+            103.0,
+            219.0
+          ],
+          "sprite": "lib:jammer",
+          "sprite_file": "jammer/lib__jammer.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            134.1,
+            119.8,
+            179.3,
+            162.3
+          ],
+          "sprite": "lib:medium_launcher",
+          "sprite_file": "medium_launcher/lib__medium_launcher.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00023",
+      "zoom": 2,
+      "background": "validation-f000013-x3456-y1536-L2",
+      "background_sha256": "f749eb591875059de04a3461b022021bf99072faa5769f54a7fdd47dd2f120e5",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            130.0,
+            88.5,
+            150.0,
+            116.4
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L2:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L2__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            169.4,
+            30.9,
+            233.1,
+            119.5
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L2:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L2__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            106.0,
+            129.0,
+            178.0,
+            204.0
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L2:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00024",
+      "zoom": 0,
+      "background": "reference-f000007-x1344-y0384-L0",
+      "background_sha256": "0f89bcea20b62df7fd91057529e6b29790cd332fbfe2ae0ab893c53d71d5f9f9",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            82.1,
+            60.9,
+            132.4,
+            108.1
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            39.7,
+            110.6,
+            86.3,
+            166.1
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00025",
+      "zoom": 1,
+      "background": "validation-f000085-x0384-y0576-L1",
+      "background_sha256": "cffbb1b5537ae36050f4399900cbb378024ce2e7e6b1e4f6b8ed32737bfcbd8e",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            81.9,
+            42.1,
+            203.6,
+            219.6
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00026",
+      "zoom": 2,
+      "background": "reference-f000007-x0192-y0576-L2",
+      "background_sha256": "dccdc98aaed9aa3706279da83d56e6cf9a388275eb9f3b6f97bacac79804a814",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            103.9,
+            57.8,
+            158.4,
+            114.4
+          ],
+          "sprite": "inst:reference-f000024-x0384-y1344-L2:0",
+          "sprite_file": "tank/inst__reference-f000024-x0384-y1344-L2__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            154.0,
+            185.0,
+            214.0,
+            243.0
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00027",
+      "zoom": 1,
+      "background": "reference-f000021-x1152-y0384-L1",
+      "background_sha256": "8b562f1d6551b8967fad018c8b0fc3ac246e97ab9c83d07dcb55a67e96381111",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            81.9,
+            21.0,
+            132.2,
+            64.1
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            193.2,
+            163.2,
+            247.9,
+            209.9
+          ],
+          "sprite": "lib:medium_plane",
+          "sprite_file": "medium_plane/lib__medium_plane.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00028",
+      "zoom": 1,
+      "background": "reference-f000007-x2880-y1344-L1",
+      "background_sha256": "4628aadad09b3d4a7bcc9a4060c7feaf03668e3a7d5da75061047b5e921f57f8",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            146.5,
+            172.3,
+            196.7,
+            196.6
+          ],
+          "sprite": "lib:tank",
+          "sprite_file": "tank/lib__tank.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            152.7,
+            8.5,
+            180.2,
+            26.5
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L1:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00029",
+      "zoom": 1,
+      "background": "batch2-validation-f000065-x2688-y0384-L1",
+      "background_sha256": "a299f387362e2a7f064b84e5134117503da1c7e05269479b628c215e4bbe5ddc",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            162.0,
+            128.8,
+            213.1,
+            173.2
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            86.0,
+            96.0,
+            135.0,
+            138.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00030",
+      "zoom": 0,
+      "background": "reference-f000010-x2496-y0192-L0",
+      "background_sha256": "4f6c6bacb2a59192b4d77cfe9300863d38d157c853106c822f5c808d9a1d65cf",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            28.9,
+            29.5,
+            187.5,
+            191.9
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L0:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00031",
+      "zoom": 2,
+      "background": "reference-f000017-x2688-y0384-L2",
+      "background_sha256": "6d3021fede4af5603dd1b7e9afa1e98feb6ecdd95d51d1a1eaa259d115f15075",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            21.1,
+            72.8,
+            198.6,
+            247.7
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L2:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00032",
+      "zoom": 1,
+      "background": "reference-f000024-x0000-y1728-L1",
+      "background_sha256": "d798dd96587ee4709c876505bdd0121b4173e1ac095bff046b8f72734d087fad",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            57.6,
+            98.7,
+            103.1,
+            141.3
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        },
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            120.0,
+            28.1,
+            245.5,
+            211.0
+          ],
+          "sprite": "inst:reference-f000022-x0000-y0000-L1:0",
+          "sprite_file": "hangar/inst__reference-f000022-x0000-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00033",
+      "zoom": 0,
+      "background": "validation-f000061-x0768-y1728-L0",
+      "background_sha256": "f45fdb4b24f2540d8a8437babaf15ac17e5bd241da2fb0313d591bfb2e64a924",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            76.6,
+            52.9,
+            99.5,
+            85.9
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            115.3,
+            173.1,
+            170.8,
+            229.4
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L0:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00034",
+      "zoom": 2,
+      "background": "reference-f000007-x2112-y1728-L2",
+      "background_sha256": "5794f69eb6a8ff5c3f3f6c74627e1be578054a6f063044d23367da4291274f7c",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            50.9,
+            155.0,
+            110.2,
+            217.5
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00035",
+      "zoom": 0,
+      "background": "validation-f000049-x2880-y1536-L0",
+      "background_sha256": "79273e15b51d5bb15103377d0677ddd1539068abb6ce5de4152a19e4e85c97af",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            38.2,
+            122.1,
+            87.8,
+            173.7
+          ],
+          "sprite": "inst:reference-f000021-x0576-y0960-L0:0",
+          "sprite_file": "tank/inst__reference-f000021-x0576-y0960-L0__0.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            155.1,
+            128.5,
+            182.1,
+            147.6
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00036",
+      "zoom": 2,
+      "background": "validation-f000005-x0576-y0192-L2",
+      "background_sha256": "f0446536d5f0859dac616018ce7e3c2e8a1d2103bf9ebf796998df043ad5151a",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            3.4,
+            175.0,
+            42.0,
+            203.7
+          ],
+          "sprite": "inst:reference-f000000-x1152-y0960-L2:0",
+          "sprite_file": "jammer/inst__reference-f000000-x1152-y0960-L2__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            43.2,
+            26.9,
+            106.3,
+            91.9
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00037",
+      "zoom": 1,
+      "background": "validation-f000085-x2496-y0000-L1",
+      "background_sha256": "2b6d015f93d05e3272d369430fad53af7d4b010095e3dcda906d701b225089c5",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            123.9,
+            74.9,
+            188.2,
+            131.1
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            29.7,
+            135.5,
+            57.2,
+            153.5
+          ],
+          "sprite": "lib:small_launcher",
+          "sprite_file": "small_launcher/lib__small_launcher.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00038",
+      "zoom": 0,
+      "background": "reference-f000014-x1920-y0768-L0",
+      "background_sha256": "df60f7ee26c180a89ba88a6d585860eb230560eb0e9d9e6aa90a782e88511194",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            66.7,
+            40.2,
+            128.5,
+            105.2
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L0:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00039",
+      "zoom": 2,
+      "background": "reference-f000003-x3264-y1536-L2",
+      "background_sha256": "6c161f95a3d514e1dfbd9c2a2ee62e281b98d518bfd8761d62e1e21fff50c2ac",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            75.0,
+            51.4,
+            132.5,
+            106.9
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00040",
+      "zoom": 0,
+      "background": "reference-f000010-x2304-y0768-L0",
+      "background_sha256": "15b4b4d4e28adb8e12bd737d578a2e566bf6f0be7e30ef52d9050490b4e47845",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            14.3,
+            101.0,
+            185.2,
+            218.5
+          ],
+          "sprite": "inst:reference-f000024-x0000-y0000-L0:0",
+          "sprite_file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            107.7,
+            11.1,
+            176.1,
+            84.0
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            188.4,
+            59.4,
+            218.4,
+            120.4
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L0:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00041",
+      "zoom": 1,
+      "background": "validation-f000005-x0384-y0000-L1",
+      "background_sha256": "6faa5a6905110f5c5e9ba97d6d44b240c11242aa8ff6010e186ca92f5fbe42ef",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            140.7,
+            25.9,
+            201.2,
+            88.5
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            114.2,
+            178.2,
+            168.9,
+            224.8
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            74.7,
+            24.8,
+            127.1,
+            70.4
+          ],
+          "sprite": "lib:small_plane",
+          "sprite_file": "small_plane/lib__small_plane.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00042",
+      "zoom": 2,
+      "background": "reference-f000014-x0960-y1536-L2",
+      "background_sha256": "c3b3afe956f38f30f76c573391066855e6921243edcf02e49ec564b7399501cc",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            86.2,
+            128.4,
+            111.8,
+            179.8
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L2:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00043",
+      "zoom": 2,
+      "background": "reference-f000003-x0000-y0384-L2",
+      "background_sha256": "4071ff638257f467b5f485628932e8a43949d05a5688391a2a5847c87ad1eccb",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            102.9,
+            192.8,
+            160.1,
+            221.2
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L2:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00044",
+      "zoom": 0,
+      "background": "reference-f000003-x3264-y1536-L0",
+      "background_sha256": "b0107626d7ce616a2b5df3b85224aad8e4c6acdba95f543c3fa4a97021793ca9",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            182.0,
+            37.0,
+            203.0,
+            67.0
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00045",
+      "zoom": 0,
+      "background": "reference-f000021-x0960-y0960-L0",
+      "background_sha256": "0a2ec9a0d62db55b64503889fc77ab0fcd832bfb8c5e0173e888610ba5673190",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            147.3,
+            6.5,
+            186.7,
+            53.8
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00046",
+      "zoom": 1,
+      "background": "validation-f000085-x0384-y0576-L1",
+      "background_sha256": "cffbb1b5537ae36050f4399900cbb378024ce2e7e6b1e4f6b8ed32737bfcbd8e",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            44.0,
+            76.1,
+            102.9,
+            141.0
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00047",
+      "zoom": 1,
+      "background": "batch2-validation-f000065-x2688-y0384-L1",
+      "background_sha256": "a299f387362e2a7f064b84e5134117503da1c7e05269479b628c215e4bbe5ddc",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            22.7,
+            124.3,
+            103.3,
+            201.4
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00048",
+      "zoom": 2,
+      "background": "validation-f000073-x0000-y0000-L2",
+      "background_sha256": "e42889f23c06306f8e17cb4b3b3f5f42a816813eb9e842343293c20f203a0721",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            155.0,
+            31.4,
+            220.1,
+            99.4
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L2:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L2__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            182.4,
+            189.1,
+            229.5,
+            239.4
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            130.6,
+            187.4,
+            152.5,
+            219.5
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L2:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00049",
+      "zoom": 1,
+      "background": "reference-f000017-x0000-y0768-L1",
+      "background_sha256": "d15c1dd28aa8cdbacca40b12f308317d646ff3e66d48ad96679d59a56737bb47",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            52.0,
+            86.7,
+            235.8,
+            212.0
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            11.4,
+            18.5,
+            52.1,
+            76.8
+          ],
+          "sprite": "lib:mine_roller",
+          "sprite_file": "mine_roller/lib__mine_roller.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00050",
+      "zoom": 1,
+      "background": "validation-f000013-x2304-y1776-L1",
+      "background_sha256": "36d083333841cedde4c864f1ac566e98151f5d3ef98a2fcee8e2a73d615b1a6b",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            72.8,
+            135.8,
+            92.0,
+            169.1
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L1:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            199.1,
+            77.1,
+            246.8,
+            118.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00051",
+      "zoom": 1,
+      "background": "reference-f000010-x3072-y1776-L1",
+      "background_sha256": "2beb722533f7e33090463480f81ab97ec60225c50fbd525b6664af5e9248e123",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            130.7,
+            184.9,
+            176.4,
+            238.4
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00052",
+      "zoom": 1,
+      "background": "reference-f000007-x2496-y1344-L1",
+      "background_sha256": "9783fc066c68efd39b52961bd59c3ee41aaa038df355874b96838a57caca6266",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            86.8,
+            160.6,
+            138.2,
+            221.2
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00053",
+      "zoom": 0,
+      "background": "reference-f000024-x0960-y0768-L0",
+      "background_sha256": "aae3b85c3d48957baf318bb567d398dab46a88e9b348cf757df8919c06915eae",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            82.1,
+            100.2,
+            136.8,
+            146.8
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L0:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L0__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            185.1,
+            98.2,
+            236.7,
+            147.8
+          ],
+          "sprite": "inst:reference-f000021-x0576-y0960-L0:0",
+          "sprite_file": "tank/inst__reference-f000021-x0576-y0960-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00054",
+      "zoom": 1,
+      "background": "validation-f000085-x2880-y1776-L1",
+      "background_sha256": "45363dc19ae367f69f61fd5888105fe51885b3bb3d22cf2a9894f72e0d6615da",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            49.4,
+            86.9,
+            89.6,
+            129.8
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            108.7,
+            201.6,
+            151.3,
+            247.1
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00055",
+      "zoom": 0,
+      "background": "reference-f000024-x3264-y1536-L0",
+      "background_sha256": "88314f5e529a455b12261e65f55ca2e77a3bdce6f9e21ad8b2b47f7baeace75b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            224.5,
+            196.0,
+            247.4,
+            226.0
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            53.0,
+            55.0,
+            97.0,
+            102.0
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            162.9,
+            38.8,
+            197.3,
+            85.5
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00056",
+      "zoom": 1,
+      "background": "batch2-validation-f000065-x1920-y1152-L1",
+      "background_sha256": "f11d11e27bfb1adc099a0d8bcaf5db42199dae492b6be350fa772a3c608fcb31",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            71.4,
+            112.2,
+            95.7,
+            163.6
+          ],
+          "sprite": "lib:tank",
+          "sprite_file": "tank/lib__tank.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00057",
+      "zoom": 0,
+      "background": "validation-f000013-x2304-y1776-L0",
+      "background_sha256": "96507a8563b08951bfe22143b2daf36ef6e99c7fb16288b48b8ec351df692c90",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            17.5,
+            94.7,
+            64.2,
+            129.1
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            189.9,
+            70.9,
+            245.0,
+            133.1
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L0:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            55.1,
+            12.9,
+            95.9,
+            56.6
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00058",
+      "zoom": 1,
+      "background": "validation-f000013-x0768-y1152-L1",
+      "background_sha256": "152c23774b8e47fb739ad3fc6716b381cc192d195875861806adc851be3e76d6",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            46.6,
+            67.6,
+            245.1,
+            203.9
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        },
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            194.7,
+            21.0,
+            229.2,
+            40.2
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L1:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            108.7,
+            1.8,
+            178.1,
+            65.1
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00059",
+      "zoom": 0,
+      "background": "batch2-validation-f000065-x2688-y0768-L0",
+      "background_sha256": "ebccadc20e407ec705ff2504b3b96520cb851a42cfb879b4d5dfc24e337b7d96",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            76.1,
+            36.1,
+            117.0,
+            83.9
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L0:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00060",
+      "zoom": 0,
+      "background": "reference-f000024-x2112-y0192-L0",
+      "background_sha256": "caf37a2ec9fc6dcd35c1873eb6b5dd933ee267aef06efbd2ff0400a58691f248",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            76.5,
+            113.9,
+            99.4,
+            146.9
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00061",
+      "zoom": 2,
+      "background": "reference-f000017-x0000-y0768-L2",
+      "background_sha256": "a7270f749c580aabe89e470b11981ef913ec9e63af388e0b17a254594a6531fd",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            43.8,
+            31.7,
+            222.0,
+            213.8
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L2:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00062",
+      "zoom": 1,
+      "background": "reference-f000007-x2880-y1344-L1",
+      "background_sha256": "4628aadad09b3d4a7bcc9a4060c7feaf03668e3a7d5da75061047b5e921f57f8",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            143.6,
+            209.3,
+            187.6,
+            247.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00063",
+      "zoom": 0,
+      "background": "reference-f000000-x1728-y0960-L0",
+      "background_sha256": "1e95f7af4c07526ea99e18493c09b0c14d2d7d22d75fd97094899ae4c0ea7dd6",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            162.1,
+            46.2,
+            219.6,
+            101.7
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L0:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            130.3,
+            174.2,
+            181.9,
+            223.8
+          ],
+          "sprite": "inst:reference-f000021-x0576-y0960-L0:0",
+          "sprite_file": "tank/inst__reference-f000021-x0576-y0960-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00064",
+      "zoom": 0,
+      "background": "validation-f000025-x2688-y1536-L0",
+      "background_sha256": "1d7357f79b8cd9eaa169640968b9cf719dbe7ecde47a45093cf8203a40de8d85",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            179.8,
+            126.6,
+            225.0,
+            179.4
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L0:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00065",
+      "zoom": 1,
+      "background": "reference-f000024-x0000-y1728-L1",
+      "background_sha256": "d798dd96587ee4709c876505bdd0121b4173e1ac095bff046b8f72734d087fad",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            150.7,
+            144.8,
+            213.7,
+            209.9
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00066",
+      "zoom": 1,
+      "background": "validation-f000013-x0384-y0576-L1",
+      "background_sha256": "7e710ff55d295de418f0d4e555f628b6a0c1af9c44e72a74f938f7f0457c090e",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            185.2,
+            165.4,
+            231.8,
+            218.8
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            9.1,
+            103.0,
+            80.6,
+            148.6
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L1:1",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L1__1.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            87.3,
+            61.1,
+            145.5,
+            141.8
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L1:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00067",
+      "zoom": 1,
+      "background": "validation-f000073-x2688-y1152-L1",
+      "background_sha256": "062b11faef373687934582184b3883b48ad122c3f876fd6a737bb2386b4c9b26",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            69.7,
+            121.3,
+            114.8,
+            162.3
+          ],
+          "sprite": "inst:reference-f000004-x0576-y0000-L1:0",
+          "sprite_file": "tank/inst__reference-f000004-x0576-y0000-L1__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            39.0,
+            7.1,
+            170.6,
+            106.2
+          ],
+          "sprite": "lib:large_launcher",
+          "sprite_file": "large_launcher/lib__large_launcher.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            38.2,
+            194.3,
+            91.8,
+            247.3
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00068",
+      "zoom": 0,
+      "background": "batch2-validation-f000065-x1920-y1152-L0",
+      "background_sha256": "8c3283790242d63b3e4e50d814fae02053fa426c1bc139323ec94c608d177905",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            4.0,
+            34.0,
+            47.0,
+            66.0
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00069",
+      "zoom": 0,
+      "background": "reference-f000007-x0576-y1776-L0",
+      "background_sha256": "e5e73ebb251c0cc2062466e44ea41e93e63b75d7f43dcfcc67d1760a15fdc8e6",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            71.0,
+            9.1,
+            111.9,
+            56.9
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L0:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00070",
+      "zoom": 0,
+      "background": "validation-f000013-x2304-y0000-L0",
+      "background_sha256": "6bf52005e91d4187cd5eadab00e1fd556dcbb2517d535d661e9dfda23de3c86b",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            22.2,
+            52.6,
+            88.8,
+            123.5
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            169.3,
+            110.5,
+            208.7,
+            157.8
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            51.0,
+            6.0,
+            98.0,
+            50.0
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00071",
+      "zoom": 0,
+      "background": "validation-f000061-x0000-y0000-L0",
+      "background_sha256": "5491a5b3619be2ec7b09dab69cdd9fbb8a064931a4f4569b432b1b73619a54c9",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            144.1,
+            45.1,
+            196.0,
+            104.0
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L0:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            29.1,
+            107.1,
+            78.8,
+            163.8
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L0:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00072",
+      "zoom": 0,
+      "background": "reference-f000003-x0384-y0960-L0",
+      "background_sha256": "fa991ef9db10e4189accc10c0853f38845be654e919d2cf18dd71ffc483806ff",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            208.1,
+            105.5,
+            241.1,
+            128.4
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00073",
+      "zoom": 1,
+      "background": "validation-f000049-x1920-y1344-L1",
+      "background_sha256": "e1989eccdb7cf43452a68f29c5ce59f783e49af305a55a3bc6526f21125a9fe6",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            214.7,
+            83.5,
+            242.2,
+            101.5
+          ],
+          "sprite": "lib:small_launcher",
+          "sprite_file": "small_launcher/lib__small_launcher.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            160.1,
+            115.4,
+            206.6,
+            155.7
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            0.9,
+            66.1,
+            159.6,
+            221.8
+          ],
+          "sprite": "inst:reference-f000001-x2496-y1344-L1:0",
+          "sprite_file": "condor/inst__reference-f000001-x2496-y1344-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00074",
+      "zoom": 0,
+      "background": "reference-f000014-x2496-y0576-L0",
+      "background_sha256": "6bf2ea7d7603f6f7e2f23f60081b694d98742cd9815f90157a4178db223388b0",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            93.5,
+            6.5,
+            231.0,
+            207.2
+          ],
+          "sprite": "inst:reference-f000024-x0000-y0000-L0:0",
+          "sprite_file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00075",
+      "zoom": 0,
+      "background": "validation-f000073-x1344-y1776-L0",
+      "background_sha256": "9086a75b4159d9fbb66ee8090a9ceeb2a12e7b2c36905c5f9ab9c927eae5a4ac",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            35.9,
+            66.8,
+            224.1,
+            253.1
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L0:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00076",
+      "zoom": 2,
+      "background": "batch2-validation-f000065-x1920-y1536-L2",
+      "background_sha256": "6491abb830986621ebe0a920cf04453d652b0a5be4b45fe0f83d183894e8efca",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            30.0,
+            10.6,
+            216.3,
+            200.3
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L2:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00077",
+      "zoom": 2,
+      "background": "validation-f000061-x0576-y1536-L2",
+      "background_sha256": "d79bd6037557a6740ff9b48ee865b177eaadbf4ae72b23a2b7df0fcf69c747d8",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            24.0,
+            170.0,
+            66.0,
+            219.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L2:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L2__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            17.0,
+            101.1,
+            71.9,
+            148.9
+          ],
+          "sprite": "inst:reference-f000022-x0384-y0000-L2:0",
+          "sprite_file": "medium_plane/inst__reference-f000022-x0384-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00078",
+      "zoom": 1,
+      "background": "reference-f000017-x3072-y0768-L1",
+      "background_sha256": "a406ee712c2d5412d79c24fbc9d9baf4a3ca8efe5a03794408f9258af7a8ab7e",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            109.0,
+            100.2,
+            157.9,
+            141.8
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            187.0,
+            152.3,
+            225.8,
+            197.5
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00079",
+      "zoom": 1,
+      "background": "validation-f000013-x3456-y1536-L1",
+      "background_sha256": "90938fd193b62815096dcc4a71b8ea714f62d79b370cb2898b6cbc66d700eaba",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            40.1,
+            1.2,
+            158.1,
+            172.4
+          ],
+          "sprite": "lib:hangar",
+          "sprite_file": "hangar/lib__hangar.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            175.0,
+            0,
+            202.0,
+            53.9
+          ],
+          "sprite": "lib:tank",
+          "sprite_file": "tank/lib__tank.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00080",
+      "zoom": 0,
+      "background": "validation-f000005-x0000-y1776-L0",
+      "background_sha256": "88329cc239eeb101391a69bea5552d35c7904d6128ddee8260550d2299209abc",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            8.3,
+            64.8,
+            213.3,
+            206.0
+          ],
+          "sprite": "inst:reference-f000024-x0000-y0000-L0:0",
+          "sprite_file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            31.1,
+            12.1,
+            80.7,
+            53.9
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            116.8,
+            7.0,
+            161.1,
+            40.1
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00081",
+      "zoom": 0,
+      "background": "reference-f000024-x0000-y1728-L0",
+      "background_sha256": "74ec68e4b7e25ae0cc17f42cbdc2816ee69e2f41d89920872ee2239c4b026a6d",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            61.1,
+            53.2,
+            109.8,
+            107.7
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L0:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00082",
+      "zoom": 0,
+      "background": "batch2-validation-f000065-x2688-y0384-L0",
+      "background_sha256": "2a69cdf9483e60871603d89d3619fd3b0e6af6292da54212ec22f19777a1316f",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            21.0,
+            109.7,
+            54.1,
+            155.1
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            76.2,
+            127.4,
+            115.5,
+            155.9
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00083",
+      "zoom": 2,
+      "background": "reference-f000007-x2496-y1344-L2",
+      "background_sha256": "8e66eb90a5503b5ee418cf38f80ea7d81cc912d1083e00183205c3ca4a826f66",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            86.9,
+            59.8,
+            131.1,
+            112.0
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L2:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L2__0.png"
+        },
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            30.9,
+            44.1,
+            47.9,
+            73.8
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L2:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00084",
+      "zoom": 0,
+      "background": "reference-f000010-x1344-y1344-L0",
+      "background_sha256": "0ee5d82ed7c93cd852b6791e19dfcbc906254f19ab5282fb751091bde191549a",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            39.0,
+            187.9,
+            100.2,
+            247.2
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L0:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00085",
+      "zoom": 1,
+      "background": "validation-f000037-x1536-y0000-L1",
+      "background_sha256": "763b262ade33733ff537411483625e880a434819f07c70ad77124e5dc2f6144a",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            53.0,
+            79.0,
+            235.9,
+            204.5
+          ],
+          "sprite": "inst:reference-f000022-x0000-y0000-L1:0",
+          "sprite_file": "hangar/inst__reference-f000022-x0000-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00086",
+      "zoom": 1,
+      "background": "reference-f000024-x0000-y1728-L1",
+      "background_sha256": "d798dd96587ee4709c876505bdd0121b4173e1ac095bff046b8f72734d087fad",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            32.0,
+            64.0,
+            77.0,
+            112.0
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            89.0,
+            112.0,
+            149.0,
+            170.0
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00087",
+      "zoom": 1,
+      "background": "reference-f000014-x0000-y0960-L1",
+      "background_sha256": "21748f91cccc3d3a2854a4e11b4ff745a063d781413fdebcb972f7ee078ca67a",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            129.8,
+            88.6,
+            175.4,
+            153.1
+          ],
+          "sprite": "lib:mine_roller",
+          "sprite_file": "mine_roller/lib__mine_roller.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            0.9,
+            77.8,
+            34.0,
+            122.0
+          ],
+          "sprite": "lib:jammer",
+          "sprite_file": "jammer/lib__jammer.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00088",
+      "zoom": 2,
+      "background": "reference-f000024-x3264-y1536-L2",
+      "background_sha256": "6422f1834ef664c281feb0954d37e1c3d47e83166df01a0b32fb8f1f640421d6",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            51.7,
+            202.8,
+            105.1,
+            248.2
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L2:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00089",
+      "zoom": 1,
+      "background": "validation-f000061-x0000-y0192-L1",
+      "background_sha256": "0eb1622c1aa3015c9b1cc62a3e92d8fb54ddfbc4db3ccf9be239a7c4a06c12d4",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            115.8,
+            43.0,
+            187.1,
+            111.5
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00090",
+      "zoom": 0,
+      "background": "validation-f000073-x1536-y0576-L0",
+      "background_sha256": "03c74425218558915a98b095f0e74b91ac867711df343a5fccb678926f01b1db",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            19.8,
+            72.0,
+            223.6,
+            212.0
+          ],
+          "sprite": "inst:reference-f000024-x0000-y0000-L0:0",
+          "sprite_file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00091",
+      "zoom": 1,
+      "background": "batch2-validation-f000065-x3456-y1536-L1",
+      "background_sha256": "83a8bf4ffa5f567bbb42d5d83f2cae344c54680285f34c3f531cc546df86fb00",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            4.8,
+            107.6,
+            70.3,
+            179.2
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            160.0,
+            57.0,
+            220.0,
+            123.0
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00092",
+      "zoom": 1,
+      "background": "reference-f000007-x2496-y0384-L1",
+      "background_sha256": "aebd0daff202bee2e100ebb69cfedb0fdd6ea179b859e7c0c4c23f1f45478437",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            13.1,
+            51.0,
+            43.8,
+            67.8
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L1:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            49.8,
+            139.7,
+            94.0,
+            191.2
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00093",
+      "zoom": 0,
+      "background": "validation-f000073-x1152-y0576-L0",
+      "background_sha256": "bf536773c8810a6067a439b87a7c6acef27c146446464aa9a84775660b536232",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            25.1,
+            0,
+            65.7,
+            28.7
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        },
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            38.5,
+            59.1,
+            166.0,
+            244.9
+          ],
+          "sprite": "inst:reference-f000024-x0000-y0000-L0:0",
+          "sprite_file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            171.4,
+            213.3,
+            219.9,
+            252.7
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00094",
+      "zoom": 1,
+      "background": "validation-f000013-x1536-y0768-L1",
+      "background_sha256": "96011bce32fb5ddbce8f1eaa3b6fa356693af3a4397d48740c81320ac407a857",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            103.1,
+            37.1,
+            144.0,
+            84.8
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            184.0,
+            170.0,
+            211.0,
+            226.0
+          ],
+          "sprite": "lib:tank",
+          "sprite_file": "tank/lib__tank.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00095",
+      "zoom": 1,
+      "background": "reference-f000007-x1344-y0576-L1",
+      "background_sha256": "70c764e3a8bfd90768b80a069eb20db1e4f23bbfb8029e90612dfefba9212bf9",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            42.0,
+            21.8,
+            61.2,
+            55.1
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L1:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00096",
+      "zoom": 0,
+      "background": "validation-f000005-x2880-y0000-L0",
+      "background_sha256": "89d4683829131a49e21b9ac6cdb48ad2002eb5027c0ed7569215ab31bb906d24",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            42.9,
+            2.8,
+            77.3,
+            49.5
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            162.3,
+            206.3,
+            215.8,
+            231.8
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L0:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            82.4,
+            116.4,
+            143.4,
+            146.4
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L0:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00097",
+      "zoom": 0,
+      "background": "validation-f000073-x1152-y0576-L0",
+      "background_sha256": "bf536773c8810a6067a439b87a7c6acef27c146446464aa9a84775660b536232",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            197.0,
+            151.0,
+            241.0,
+            198.0
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            64.0,
+            92.6,
+            136.9,
+            162.9
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00098",
+      "zoom": 2,
+      "background": "validation-f000037-x2496-y0000-L2",
+      "background_sha256": "b1a69ffd58097916d641235250485e010427ea4a279cf0b41e0dc7ec5c623ea0",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            206.2,
+            54.3,
+            246.8,
+            100.9
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L2:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L2__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            173.3,
+            187.8,
+            237.1,
+            249.6
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            167.9,
+            125.1,
+            218.0,
+            168.1
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L2:0",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00099",
+      "zoom": 0,
+      "background": "reference-f000021-x1920-y1728-L0",
+      "background_sha256": "456fc2f519385386a300de922184121d15d272cd553c194a5455624041ed87c3",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            189.0,
+            66.7,
+            233.2,
+            118.3
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L0:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            3.6,
+            0.7,
+            172.1,
+            165.8
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L0:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00100",
+      "zoom": 0,
+      "background": "reference-f000024-x3264-y1536-L0",
+      "background_sha256": "88314f5e529a455b12261e65f55ca2e77a3bdce6f9e21ad8b2b47f7baeace75b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            5.6,
+            186.9,
+            40.2,
+            206.2
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L0:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            157.5,
+            11.0,
+            211.5,
+            57.3
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L0:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00101",
+      "zoom": 1,
+      "background": "reference-f000021-x0576-y0768-L1",
+      "background_sha256": "9820c22948fe6dfff2163ffaf03cc04c241ec7f5f9625ed48c3cf751912bc27b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            213.0,
+            24.1,
+            229.8,
+            54.9
+          ],
+          "sprite": "lib:ta-ta",
+          "sprite_file": "ta-ta/lib__ta-ta.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00102",
+      "zoom": 1,
+      "background": "validation-f000013-x1152-y1536-L1",
+      "background_sha256": "8c60071eea4d646b5919c51db3abd2702c0e057d18a7b289edca24171d0e70e7",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            57.4,
+            137.9,
+            97.6,
+            180.8
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00103",
+      "zoom": 0,
+      "background": "reference-f000003-x1344-y0000-L0",
+      "background_sha256": "fb9299729069b086111dbe0eb816de505abc8e0aafb789996363d87687a37794",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            175.0,
+            172.0,
+            218.0,
+            224.0
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            72.0,
+            88.0,
+            119.0,
+            132.0
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00104",
+      "zoom": 1,
+      "background": "reference-f000021-x0192-y1728-L1",
+      "background_sha256": "4dfc1164b3e34ccb53b00de418d36cfb8ece80eaf9ab1b909eefdcca1b1c8246",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            201.5,
+            114.7,
+            219.5,
+            142.2
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L1:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            112.6,
+            55.7,
+            189.7,
+            136.3
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            42.9,
+            182.9,
+            105.1,
+            251.2
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00105",
+      "zoom": 1,
+      "background": "reference-f000024-x0000-y1728-L1",
+      "background_sha256": "d798dd96587ee4709c876505bdd0121b4173e1ac095bff046b8f72734d087fad",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            162.9,
+            118.0,
+            222.2,
+            179.2
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00106",
+      "zoom": 1,
+      "background": "validation-f000025-x0576-y1776-L1",
+      "background_sha256": "2174020622678307484b8e7b9cc256b5e149ea3f6d11d294df04546bb082a486",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            47.2,
+            84.0,
+            88.9,
+            114.9
+          ],
+          "sprite": "inst:reference-f000000-x1152-y0960-L1:0",
+          "sprite_file": "jammer/inst__reference-f000000-x1152-y0960-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00107",
+      "zoom": 2,
+      "background": "batch2-validation-f000085-x2688-y1344-L2",
+      "background_sha256": "e2031511b738613ea41a1c548d0041145a1a87caa8593950739e7e15b21c2236",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            5.1,
+            133.6,
+            85.8,
+            191.7
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L2:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L2__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            86.1,
+            37.9,
+            251.5,
+            201.4
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L2:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00108",
+      "zoom": 2,
+      "background": "reference-f000024-x3264-y1152-L2",
+      "background_sha256": "d1e5ab35e37f8e6ae81e48e7d7d62e7018e83075bb681da70067eff4221e05fc",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            102.0,
+            199.0,
+            151.0,
+            241.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L2:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00109",
+      "zoom": 0,
+      "background": "validation-f000005-x2304-y1728-L0",
+      "background_sha256": "60162cb8cfef5afa6b962c50e451404b1907e5aceeca64468b17ff0ac5612f1b",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            67.9,
+            16.7,
+            246.1,
+            198.8
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L0:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L0__0.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            73.5,
+            202.0,
+            96.4,
+            232.0
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00110",
+      "zoom": 1,
+      "background": "validation-f000061-x0576-y1536-L1",
+      "background_sha256": "55d7076ef03cd866596d12fffaf62ffd9127a26f8eabb1bc9f98c31122b14683",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            203.1,
+            72.2,
+            242.5,
+            101.9
+          ],
+          "sprite": "lib:jammer",
+          "sprite_file": "jammer/lib__jammer.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            62.2,
+            19.0,
+            199.9,
+            124.0
+          ],
+          "sprite": "inst:reference-f000000-x3264-y0192-L1:0",
+          "sprite_file": "large_launcher/inst__reference-f000000-x3264-y0192-L1__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            56.9,
+            139.9,
+            114.2,
+            204.2
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00111",
+      "zoom": 1,
+      "background": "validation-f000073-x3456-y1152-L1",
+      "background_sha256": "93e67194eb9a0baeae7f955aa7f220abc0a7b10f9da6d3bed7165e5a93a5171b",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            153.3,
+            207.2,
+            182.9,
+            246.5
+          ],
+          "sprite": "inst:reference-f000000-x1152-y0960-L1:0",
+          "sprite_file": "jammer/inst__reference-f000000-x1152-y0960-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00112",
+      "zoom": 2,
+      "background": "reference-f000017-x1344-y0192-L2",
+      "background_sha256": "cc95f069cfaf0c3bfd53f62e4bf8161f3f3ba241ae46b2163abf151c33caa75f",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            21.9,
+            2.2,
+            65.3,
+            43.1
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00113",
+      "zoom": 1,
+      "background": "validation-f000049-x1536-y0768-L1",
+      "background_sha256": "8f89bc39e00fa7b1465f42ea8cff01a72aae6b79c83f3d27250c1ffde51afdc7",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            86.7,
+            27.5,
+            147.2,
+            90.1
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00114",
+      "zoom": 1,
+      "background": "reference-f000024-x1920-y0576-L1",
+      "background_sha256": "e8ca33ee96aedf21d98b6463f761d3bde87d177ecc513bffafd9f379ec4b6b76",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            139.4,
+            31.1,
+            179.8,
+            78.7
+          ],
+          "sprite": "lib:small_plane",
+          "sprite_file": "small_plane/lib__small_plane.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            82.4,
+            104.9,
+            146.0,
+            193.5
+          ],
+          "sprite": "lib:large_launcher__validation",
+          "sprite_file": "large_launcher/lib__large_launcher__validation.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            186.0,
+            123.9,
+            241.1,
+            187.2
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00115",
+      "zoom": 1,
+      "background": "reference-f000021-x0960-y0960-L1",
+      "background_sha256": "07c60ba8bebe5145c806bbd4469abafaf9373509daba5f3ac02c2bb3c7c2a8ef",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            177.5,
+            108.7,
+            240.1,
+            169.2
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            44.0,
+            149.0,
+            128.1,
+            209.0
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L1:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00116",
+      "zoom": 1,
+      "background": "reference-f000024-x3072-y1152-L1",
+      "background_sha256": "3c766335ab351170e0257ebf1f56c5992c564da4cfc99aca8e80f770788e7d18",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            94.9,
+            6.6,
+            155.4,
+            45.0
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L1:1",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L1__1.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            98.8,
+            162.8,
+            150.1,
+            222.1
+          ],
+          "sprite": "lib:medium_plane",
+          "sprite_file": "medium_plane/lib__medium_plane.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00117",
+      "zoom": 0,
+      "background": "reference-f000014-x0000-y0960-L0",
+      "background_sha256": "13f0493c62960782d7c0cda1fc113135db0079cae51f2c3b2ab5c0d92a9a85a6",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            17.5,
+            125.3,
+            92.5,
+            197.4
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            190.7,
+            89.8,
+            243.7,
+            144.8
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L0:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00118",
+      "zoom": 2,
+      "background": "reference-f000003-x3072-y0960-L2",
+      "background_sha256": "e09060efeb1e839054e8ed6ca5c9a332e57c35f8da2eb33ae4cfefcaa95510fe",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            97.3,
+            188.2,
+            143.9,
+            228.8
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L2:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L2__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            146.9,
+            197.8,
+            206.2,
+            249.2
+          ],
+          "sprite": "inst:reference-f000022-x0384-y0000-L2:0",
+          "sprite_file": "medium_plane/inst__reference-f000022-x0384-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00119",
+      "zoom": 2,
+      "background": "reference-f000021-x2304-y0192-L2",
+      "background_sha256": "8443147df4a1b488e3e5b36b7769b5ccee7a206981a1db9358ad595a28cbe34b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            86.0,
+            49.3,
+            209.0,
+            228.0
+          ],
+          "sprite": "inst:reference-f000022-x0000-y0000-L2:0",
+          "sprite_file": "hangar/inst__reference-f000022-x0000-y0000-L2__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            0,
+            171.0,
+            49.0,
+            213.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L2:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00120",
+      "zoom": 1,
+      "background": "validation-f000085-x1920-y0000-L1",
+      "background_sha256": "c6cbdffd59302b79bcf040f6b4c32bd4173b85325af5270d43388aed63e77bf8",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            137.5,
+            116.2,
+            182.7,
+            155.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00121",
+      "zoom": 0,
+      "background": "reference-f000024-x3072-y1152-L0",
+      "background_sha256": "adb62f139a9b7b4a97e0cbf3bb899e22d10bdbb517a461c6df9187a39e9056fd",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            9.5,
+            137.3,
+            61.7,
+            162.8
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L0:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00122",
+      "zoom": 1,
+      "background": "reference-f000014-x1536-y0000-L1",
+      "background_sha256": "7488b842936f242a8fa544b3d341fd9dc4e9708153f266d9cc5a6d61e6aec457",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            8.4,
+            4.5,
+            63.2,
+            51.4
+          ],
+          "sprite": "lib:small_plane",
+          "sprite_file": "small_plane/lib__small_plane.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00123",
+      "zoom": 1,
+      "background": "reference-f000010-x0768-y0960-L1",
+      "background_sha256": "effde40ae4ebf3ba9dbc4269e93bdf788994fb117fb1c626fc6e4c74e1cccc20",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            51.9,
+            48.5,
+            86.2,
+            95.1
+          ],
+          "sprite": "lib:jammer",
+          "sprite_file": "jammer/lib__jammer.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00124",
+      "zoom": 1,
+      "background": "batch2-validation-f000065-x3456-y1536-L1",
+      "background_sha256": "83a8bf4ffa5f567bbb42d5d83f2cae344c54680285f34c3f531cc546df86fb00",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            7.8,
+            57.6,
+            81.5,
+            134.4
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00125",
+      "zoom": 0,
+      "background": "validation-f000037-x3456-y0384-L0",
+      "background_sha256": "6ea9b9f5586f05d85bb26ed9542f0a89f4e1813b9adc7bf6804e0291f629757f",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            131.1,
+            145.1,
+            186.9,
+            192.9
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L0:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L0__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            186.2,
+            53.3,
+            226.8,
+            102.9
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00126",
+      "zoom": 1,
+      "background": "reference-f000021-x2496-y0768-L1",
+      "background_sha256": "fbe26a78d58bd10d3d52835dd58ca8a4ba3cae22f7d84d4a5015bc9db48d9de4",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            66.4,
+            157.9,
+            106.6,
+            200.8
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            204.1,
+            36.1,
+            251.8,
+            77.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00127",
+      "zoom": 0,
+      "background": "reference-f000010-x1344-y1344-L0",
+      "background_sha256": "0ee5d82ed7c93cd852b6791e19dfcbc906254f19ab5282fb751091bde191549a",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            160.1,
+            97.1,
+            209.8,
+            153.8
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L0:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00128",
+      "zoom": 1,
+      "background": "reference-f000007-x0576-y1776-L1",
+      "background_sha256": "d64bd4ab68430c1bd4c682383625f115fc1dcf242d7e52c406bca02386afa343",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            25.0,
+            93.0,
+            97.0,
+            168.0
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            169.1,
+            83.9,
+            234.5,
+            173.6
+          ],
+          "sprite": "lib:large_launcher__validation",
+          "sprite_file": "large_launcher/lib__large_launcher__validation.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00129",
+      "zoom": 2,
+      "background": "reference-f000017-x1344-y0960-L2",
+      "background_sha256": "88eddbb9b943ef0df2be5db538dc30925088a58fadd5d360813a293015ae8e8f",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            64.3,
+            132.3,
+            114.5,
+            156.6
+          ],
+          "sprite": "inst:validation-f000024-x1920-y0192-L2:0",
+          "sprite_file": "tank/inst__validation-f000024-x1920-y0192-L2__0.png"
+        },
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            3.0,
+            58.0,
+            45.0,
+            107.0
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L2:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L2__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            53.2,
+            3.9,
+            188.5,
+            106.0
+          ],
+          "sprite": "inst:reference-f000000-x3264-y0192-L2:0",
+          "sprite_file": "large_launcher/inst__reference-f000000-x3264-y0192-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00130",
+      "zoom": 2,
+      "background": "validation-f000013-x2304-y0000-L2",
+      "background_sha256": "36069c87bb4c6bbf1cd0a6eb713f87d88868adbcfb919f7d9a59973e21f1272c",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            121.9,
+            66.9,
+            178.2,
+            131.3
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L2:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00131",
+      "zoom": 1,
+      "background": "batch2-validation-f000065-x3456-y0384-L1",
+      "background_sha256": "61b6f153f16295d352e6bee1fc35aee8b155bdd4eb9d3740b4e825bb47bf5e39",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            21.8,
+            199.8,
+            41.0,
+            234.1
+          ],
+          "sprite": "lib:ta-ta",
+          "sprite_file": "ta-ta/lib__ta-ta.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            58.9,
+            13.0,
+            130.2,
+            81.5
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            153.0,
+            120.0,
+            209.0,
+            147.0
+          ],
+          "sprite": "lib:tank",
+          "sprite_file": "tank/lib__tank.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00132",
+      "zoom": 1,
+      "background": "validation-f000061-x1344-y1776-L1",
+      "background_sha256": "0f6266024b0bbf1bf55e68ee5ff5548e97e841aabda4c2259c9c5f37661e9b98",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            190.0,
+            35.0,
+            220.0,
+            55.0
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L1:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            79.8,
+            57.6,
+            252.1,
+            234.9
+          ],
+          "sprite": "inst:reference-f000001-x2496-y1344-L1:0",
+          "sprite_file": "condor/inst__reference-f000001-x2496-y1344-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00133",
+      "zoom": 2,
+      "background": "validation-f000085-x1920-y0000-L2",
+      "background_sha256": "ca8fb797e8fe7f37c096c4742e786d9c5e4f1c16d70809f34d471d7a09c317b1",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            37.8,
+            73.7,
+            194.8,
+            234.5
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L2:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L2__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            123.1,
+            9.2,
+            178.7,
+            58.9
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L2:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L2__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            43.5,
+            14.0,
+            86.4,
+            62.0
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00134",
+      "zoom": 0,
+      "background": "validation-f000073-x1344-y1776-L0",
+      "background_sha256": "9086a75b4159d9fbb66ee8090a9ceeb2a12e7b2c36905c5f9ab9c927eae5a4ac",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            151.0,
+            81.0,
+            198.0,
+            125.0
+          ],
+          "sprite": "inst:reference-f000015-x3456-y0000-L0:0",
+          "sprite_file": "medium_launcher/inst__reference-f000015-x3456-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00135",
+      "zoom": 0,
+      "background": "validation-f000061-x1344-y1776-L0",
+      "background_sha256": "f75c67e8534cbf205ccd8a2d2e828cdf5d4cae0ef58095fc3d17683b888c5f75",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            182.5,
+            180.9,
+            205.4,
+            213.9
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            87.7,
+            132.9,
+            133.1,
+            167.3
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00136",
+      "zoom": 1,
+      "background": "reference-f000021-x0576-y0768-L1",
+      "background_sha256": "9820c22948fe6dfff2163ffaf03cc04c241ec7f5f9625ed48c3cf751912bc27b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            73.6,
+            36.5,
+            118.8,
+            75.4
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        },
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            30.8,
+            121.0,
+            65.1,
+            140.2
+          ],
+          "sprite": "lib:ta-ta",
+          "sprite_file": "ta-ta/lib__ta-ta.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            68.8,
+            92.1,
+            232.7,
+            254.0
+          ],
+          "sprite": "lib:condor",
+          "sprite_file": "condor/lib__condor.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00137",
+      "zoom": 1,
+      "background": "validation-f000013-x0384-y1344-L1",
+      "background_sha256": "a8b5b6d3fdfd3cccc7af63c8eca709d7b2a3c7406106c5c23a032e6e953dc245",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            5.1,
+            68.1,
+            46.0,
+            115.8
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L1:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00138",
+      "zoom": 1,
+      "background": "validation-f000037-x1920-y0768-L1",
+      "background_sha256": "cb2473d4aee5aa242197be076d268582196ea3ad4cc13c1e805173b7a9d4d365",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            6.4,
+            71.1,
+            46.8,
+            118.7
+          ],
+          "sprite": "lib:small_plane",
+          "sprite_file": "small_plane/lib__small_plane.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00139",
+      "zoom": 2,
+      "background": "batch2-validation-f000085-x2688-y1344-L2",
+      "background_sha256": "e2031511b738613ea41a1c548d0041145a1a87caa8593950739e7e15b21c2236",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            6.9,
+            106.2,
+            23.9,
+            135.9
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L2:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00140",
+      "zoom": 1,
+      "background": "reference-f000017-x3264-y1776-L1",
+      "background_sha256": "a4e7d4480aaaf62222bd6e6d5020331724e4f8c5b754477d3373d69675e89cde",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            174.3,
+            167.2,
+            228.8,
+            227.6
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            54.0,
+            23.0,
+            114.0,
+            89.0
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            21.0,
+            132.0,
+            81.0,
+            185.0
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00141",
+      "zoom": 1,
+      "background": "validation-f000037-x1920-y0768-L1",
+      "background_sha256": "cb2473d4aee5aa242197be076d268582196ea3ad4cc13c1e805173b7a9d4d365",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            183.1,
+            71.1,
+            238.9,
+            118.9
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            14.5,
+            80.4,
+            181.9,
+            251.5
+          ],
+          "sprite": "inst:reference-f000001-x2496-y1344-L1:0",
+          "sprite_file": "condor/inst__reference-f000001-x2496-y1344-L1__0.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            113.8,
+            1.7,
+            177.1,
+            72.1
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00142",
+      "zoom": 0,
+      "background": "reference-f000024-x2304-y1776-L0",
+      "background_sha256": "b81dba7ed74436be67a178fe356b3e40b2041bbbbc2c25e6cebf07fd3a2ebc56",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            56.4,
+            76.1,
+            75.5,
+            103.1
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00143",
+      "zoom": 2,
+      "background": "validation-f000025-x2688-y1344-L2",
+      "background_sha256": "ddfcba2f32dd2279ef07fafba64fefdc9139f486550ad4fc83197aa7e6e2f1cc",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            15.0,
+            60.0,
+            58.0,
+            92.0
+          ],
+          "sprite": "inst:reference-f000000-x1152-y0960-L2:0",
+          "sprite_file": "jammer/inst__reference-f000000-x1152-y0960-L2__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            216.4,
+            42.0,
+            254.4,
+            86.5
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L2:0",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L2__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            95.8,
+            49.7,
+            153.1,
+            114.1
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L2:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00144",
+      "zoom": 2,
+      "background": "reference-f000010-x0768-y0960-L2",
+      "background_sha256": "c852b5c46740b8df9cbfdb0962d972c09dd38da09dc2c0196638fa92a3e19c97",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            133.4,
+            49.1,
+            184.8,
+            98.6
+          ],
+          "sprite": "inst:reference-f000024-x0384-y1344-L2:0",
+          "sprite_file": "tank/inst__reference-f000024-x0384-y1344-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00145",
+      "zoom": 0,
+      "background": "batch2-validation-f000065-x2304-y0768-L0",
+      "background_sha256": "a1a1289388622d209e4311e3f9bd9f2c62efa5499f6b2af86717bd6af9d86899",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            49.0,
+            99.5,
+            152.5,
+            246.8
+          ],
+          "sprite": "inst:reference-f000014-x3456-y0960-L0:0",
+          "sprite_file": "large_launcher/inst__reference-f000014-x3456-y0960-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            213.1,
+            180.5,
+            241.6,
+            219.8
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            159.2,
+            49.1,
+            225.8,
+            118.0
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00146",
+      "zoom": 1,
+      "background": "reference-f000010-x1920-y0960-L1",
+      "background_sha256": "47877b1c7fe738ddd95c66ab703b706715bcb19579f37c9c2978780645241a7a",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            77.4,
+            36.3,
+            233.7,
+            190.0
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L1:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00147",
+      "zoom": 0,
+      "background": "reference-f000007-x1920-y0384-L0",
+      "background_sha256": "f5dfde04210d4f8d20384185cfd94fc6ee27c56d598772ff03ff71f2b95756c7",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            160.9,
+            103.0,
+            194.2,
+            121.0
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L0:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            1.5,
+            13.7,
+            160.1,
+            174.5
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L0:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L0__0.png"
+        },
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            128.0,
+            187.0,
+            160.0,
+            205.0
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L0:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00148",
+      "zoom": 0,
+      "background": "reference-f000021-x2496-y0768-L0",
+      "background_sha256": "62645ada487b0599fcecd4571641a4b18d80a5013e63f349078ad6e560940d7e",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            94.1,
+            46.3,
+            208.0,
+            207.3
+          ],
+          "sprite": "inst:reference-f000014-x3456-y0960-L0:0",
+          "sprite_file": "large_launcher/inst__reference-f000014-x3456-y0960-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00149",
+      "zoom": 1,
+      "background": "validation-f000085-x2880-y1776-L1",
+      "background_sha256": "45363dc19ae367f69f61fd5888105fe51885b3bb3d22cf2a9894f72e0d6615da",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            159.3,
+            109.2,
+            206.9,
+            150.8
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00150",
+      "zoom": 1,
+      "background": "reference-f000014-x0576-y1152-L1",
+      "background_sha256": "bdb036a9b38e14d2f26bc7ece0e7ecb066296c9dfdcbcdf41fee7db9d183ef5b",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            20.5,
+            83.4,
+            67.6,
+            138.2
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        },
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            137.1,
+            154.1,
+            200.8,
+            211.9
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00151",
+      "zoom": 2,
+      "background": "reference-f000014-x0576-y1776-L2",
+      "background_sha256": "829ec5e80e0de4c1bfe5a9364b4756eb756334372cdd6c30c7c3681ddf44525a",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            181.1,
+            191.8,
+            233.7,
+            240.9
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00152",
+      "zoom": 1,
+      "background": "reference-f000024-x1920-y0576-L1",
+      "background_sha256": "e8ca33ee96aedf21d98b6463f761d3bde87d177ecc513bffafd9f379ec4b6b76",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            132.1,
+            150.2,
+            162.8,
+            167.0
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L1:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00153",
+      "zoom": 0,
+      "background": "batch2-validation-f000065-x3456-y0384-L0",
+      "background_sha256": "3b5cbec802849760df4e3ffc13c34138ac6b4944a57b81197a67aa452d225f7e",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 13,
+          "class_name": "spacecraft",
+          "bbox_xyxy": [
+            81.6,
+            24.0,
+            134.4,
+            69.2
+          ],
+          "sprite": "inst:reference-f000003-x1344-y0576-L0:0",
+          "sprite_file": "spacecraft/inst__reference-f000003-x1344-y0576-L0__0.png"
+        },
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            217.2,
+            60.2,
+            233.9,
+            90.9
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L0:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00154",
+      "zoom": 2,
+      "background": "reference-f000003-x0384-y0960-L2",
+      "background_sha256": "d56c3380f8b22f2db7658015973f7c5d5c7d36b030b14211f7f4e16b7622e828",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            17.2,
+            164.7,
+            93.3,
+            219.1
+          ],
+          "sprite": "inst:validation-f000005-x1728-y0960-L2:0",
+          "sprite_file": "large_launcher/inst__validation-f000005-x1728-y0960-L2__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            112.4,
+            25.3,
+            161.2,
+            72.2
+          ],
+          "sprite": "inst:reference-f000024-x0384-y1344-L2:0",
+          "sprite_file": "tank/inst__reference-f000024-x0384-y1344-L2__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            54.0,
+            39.0,
+            102.0,
+            84.0
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00155",
+      "zoom": 1,
+      "background": "validation-f000073-x2688-y1152-L1",
+      "background_sha256": "062b11faef373687934582184b3883b48ad122c3f876fd6a737bb2386b4c9b26",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            4.9,
+            108.7,
+            50.4,
+            151.3
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L1:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00156",
+      "zoom": 1,
+      "background": "reference-f000007-x2496-y1344-L1",
+      "background_sha256": "9783fc066c68efd39b52961bd59c3ee41aaa038df355874b96838a57caca6266",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            75.1,
+            19.3,
+            228.7,
+            128.0
+          ],
+          "sprite": "lib:large_launcher__reference",
+          "sprite_file": "large_launcher/lib__large_launcher__reference.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            112.8,
+            142.7,
+            141.2,
+            202.2
+          ],
+          "sprite": "lib:tank",
+          "sprite_file": "tank/lib__tank.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            148.6,
+            150.7,
+            225.7,
+            231.3
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00157",
+      "zoom": 1,
+      "background": "validation-f000013-x0384-y1344-L1",
+      "background_sha256": "a8b5b6d3fdfd3cccc7af63c8eca709d7b2a3c7406106c5c23a032e6e953dc245",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            1.5,
+            14.4,
+            163.9,
+            174.6
+          ],
+          "sprite": "inst:reference-f000005-x2496-y1536-L1:0",
+          "sprite_file": "condor/inst__reference-f000005-x2496-y1536-L1__0.png"
+        },
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            191.0,
+            5.0,
+            236.0,
+            53.0
+          ],
+          "sprite": "lib:medium_launcher",
+          "sprite_file": "medium_launcher/lib__medium_launcher.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            187.4,
+            174.5,
+            232.7,
+            226.8
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00158",
+      "zoom": 2,
+      "background": "reference-f000007-x1344-y0576-L2",
+      "background_sha256": "64c6ac89e0c834640082544d1fe1fc174ee2512fbbac975965babcff2f2ccfe2",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            68.0,
+            76.7,
+            168.7,
+            210.7
+          ],
+          "sprite": "inst:reference-f000000-x3264-y0192-L2:0",
+          "sprite_file": "large_launcher/inst__reference-f000000-x3264-y0192-L2__0.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            27.0,
+            10.0,
+            77.0,
+            53.0
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L2:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00159",
+      "zoom": 1,
+      "background": "validation-f000005-x2880-y0000-L1",
+      "background_sha256": "868f2c013d6f2559fd96a7be1913b34d3a89e279e39034b88bd281b1f8f357de",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            48.9,
+            67.5,
+            139.8,
+            132.9
+          ],
+          "sprite": "lib:large_launcher__validation",
+          "sprite_file": "large_launcher/lib__large_launcher__validation.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00160",
+      "zoom": 0,
+      "background": "validation-f000013-x1536-y0768-L0",
+      "background_sha256": "223b1480a23667316e4c14e85e2516aa2ef40b1f97bc536e5435a9b0cceb0890",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            230.0,
+            154.0,
+            248.0,
+            186.0
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L0:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L0__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            47.5,
+            48.5,
+            122.5,
+            120.7
+          ],
+          "sprite": "inst:reference-f000007-x1920-y0000-L0:0",
+          "sprite_file": "jet_plane/inst__reference-f000007-x1920-y0000-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00161",
+      "zoom": 2,
+      "background": "validation-f000013-x2304-y0000-L2",
+      "background_sha256": "36069c87bb4c6bbf1cd0a6eb713f87d88868adbcfb919f7d9a59973e21f1272c",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            109.8,
+            69.8,
+            163.1,
+            125.1
+          ],
+          "sprite": "inst:reference-f000024-x0384-y1344-L2:0",
+          "sprite_file": "tank/inst__reference-f000024-x0384-y1344-L2__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            114.1,
+            141.8,
+            179.1,
+            203.6
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        },
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            39.9,
+            158.8,
+            99.2,
+            220.0
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L2:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00162",
+      "zoom": 1,
+      "background": "validation-f000013-x0384-y1344-L1",
+      "background_sha256": "a8b5b6d3fdfd3cccc7af63c8eca709d7b2a3c7406106c5c23a032e6e953dc245",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 6,
+          "class_name": "large_tower",
+          "bbox_xyxy": [
+            125.1,
+            130.1,
+            187.7,
+            186.8
+          ],
+          "sprite": "lib:large_tower",
+          "sprite_file": "large_tower/lib__large_tower.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00163",
+      "zoom": 0,
+      "background": "reference-f000014-x1920-y0768-L0",
+      "background_sha256": "df60f7ee26c180a89ba88a6d585860eb230560eb0e9d9e6aa90a782e88511194",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 1,
+          "class_name": "hangar",
+          "bbox_xyxy": [
+            20.9,
+            62.5,
+            213.1,
+            195.0
+          ],
+          "sprite": "inst:reference-f000024-x0000-y0000-L0:0",
+          "sprite_file": "hangar/inst__reference-f000024-x0000-y0000-L0__0.png"
+        },
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            133.4,
+            198.0,
+            152.5,
+            228.0
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00164",
+      "zoom": 0,
+      "background": "validation-f000061-x1728-y1536-L0",
+      "background_sha256": "90f1d6304c69bb6fd03663fb1f5fa572a175e9c95991fe640aeb745935e51d9f",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            100.6,
+            114.9,
+            123.5,
+            147.9
+          ],
+          "sprite": "inst:reference-f000010-x1536-y0768-L0:0",
+          "sprite_file": "small_launcher/inst__reference-f000010-x1536-y0768-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00165",
+      "zoom": 1,
+      "background": "reference-f000003-x3072-y1152-L1",
+      "background_sha256": "fa4b62008b89be835d3cce2d6579a14638f13139dce184ba2e426dc80804ca72",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 12,
+          "class_name": "small_tower",
+          "bbox_xyxy": [
+            120.5,
+            45.3,
+            177.9,
+            100.8
+          ],
+          "sprite": "inst:reference-f000015-x2496-y1776-L1:0",
+          "sprite_file": "small_tower/inst__reference-f000015-x2496-y1776-L1__0.png"
+        },
+        {
+          "class_id": 15,
+          "class_name": "tank",
+          "bbox_xyxy": [
+            207.7,
+            127.7,
+            248.7,
+            172.8
+          ],
+          "sprite": "inst:reference-f000004-x0576-y0000-L1:0",
+          "sprite_file": "tank/inst__reference-f000004-x0576-y0000-L1__0.png"
+        },
+        {
+          "class_id": 4,
+          "class_name": "jet_plane",
+          "bbox_xyxy": [
+            98.8,
+            163.0,
+            170.1,
+            231.5
+          ],
+          "sprite": "inst:reference-f000004-x1920-y0000-L1:0",
+          "sprite_file": "jet_plane/inst__reference-f000004-x1920-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00166",
+      "zoom": 0,
+      "background": "reference-f000017-x3264-y1776-L0",
+      "background_sha256": "485365e5ebbac7aa9b293f4eccbc5a9e2efb333021c50d9a6c79515f935fa2ad",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            155.8,
+            44.7,
+            221.3,
+            103.1
+          ],
+          "sprite": "inst:reference-f000000-x1728-y1728-L0:0",
+          "sprite_file": "mine_roller/inst__reference-f000000-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00167",
+      "zoom": 1,
+      "background": "validation-f000005-x0000-y1776-L1",
+      "background_sha256": "51b41f37ae9251b5838cf15dbb9ff2add81f37d3579ec6107680c7c8e9b761fa",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 14,
+          "class_name": "ta-ta",
+          "bbox_xyxy": [
+            173.0,
+            113.9,
+            191.0,
+            147.2
+          ],
+          "sprite": "inst:reference-f000010-x0768-y0576-L1:0",
+          "sprite_file": "ta-ta/inst__reference-f000010-x0768-y0576-L1__0.png"
+        },
+        {
+          "class_id": 0,
+          "class_name": "condor",
+          "bbox_xyxy": [
+            0,
+            81.1,
+            148.1,
+            235.1
+          ],
+          "sprite": "inst:reference-f000001-x2496-y1344-L1:0",
+          "sprite_file": "condor/inst__reference-f000001-x2496-y1344-L1__0.png"
+        },
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            161.0,
+            168.0,
+            218.9,
+            218.9
+          ],
+          "sprite": "lib:mine_roller__reference",
+          "sprite_file": "mine_roller/lib__mine_roller__reference.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00168",
+      "zoom": 1,
+      "background": "reference-f000010-x1344-y1344-L1",
+      "background_sha256": "ea91ecf2111109eee40a6b5a5c4d8f8821f077f88318cf898df26861e53a051f",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            132.6,
+            54.2,
+            194.9,
+            93.6
+          ],
+          "sprite": "inst:validation-f000066-x1920-y0192-L1:1",
+          "sprite_file": "medium_plane/inst__validation-f000066-x1920-y0192-L1__1.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00169",
+      "zoom": 2,
+      "background": "reference-f000014-x0576-y1776-L2",
+      "background_sha256": "829ec5e80e0de4c1bfe5a9364b4756eb756334372cdd6c30c7c3681ddf44525a",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 7,
+          "class_name": "medium_launcher",
+          "bbox_xyxy": [
+            182.6,
+            130.5,
+            232.9,
+            177.6
+          ],
+          "sprite": "inst:reference-f000018-x3456-y0000-L2:0",
+          "sprite_file": "medium_launcher/inst__reference-f000018-x3456-y0000-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00170",
+      "zoom": 0,
+      "background": "validation-f000049-x2688-y0384-L0",
+      "background_sha256": "9020aa6b0433f5a1d084421f505572abe13e3f00bd090ac7296421f4d5c31716",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            160.9,
+            91.8,
+            215.3,
+            137.2
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        },
+        {
+          "class_id": 3,
+          "class_name": "jammer",
+          "bbox_xyxy": [
+            29.0,
+            190.1,
+            61.0,
+            231.8
+          ],
+          "sprite": "inst:reference-f000002-x1152-y1344-L0:0",
+          "sprite_file": "jammer/inst__reference-f000002-x1152-y1344-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00171",
+      "zoom": 0,
+      "background": "reference-f000007-x0576-y1776-L0",
+      "background_sha256": "e5e73ebb251c0cc2062466e44ea41e93e63b75d7f43dcfcc67d1760a15fdc8e6",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            192.3,
+            174.1,
+            241.9,
+            215.9
+          ],
+          "sprite": "inst:reference-f000007-x1728-y1728-L0:0",
+          "sprite_file": "small_plane/inst__reference-f000007-x1728-y1728-L0__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00172",
+      "zoom": 1,
+      "background": "reference-f000003-x2112-y1536-L1",
+      "background_sha256": "d1adbf52461e9483ba78641b415ca8dfb8f41e795262711a4251f2b40b2eef91",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            193.0,
+            229.0,
+            223.0,
+            249.0
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L1:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png"
+        },
+        {
+          "class_id": 8,
+          "class_name": "medium_plane",
+          "bbox_xyxy": [
+            145.9,
+            57.8,
+            205.2,
+            109.2
+          ],
+          "sprite": "inst:reference-f000024-x0384-y0000-L1:0",
+          "sprite_file": "medium_plane/inst__reference-f000024-x0384-y0000-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00173",
+      "zoom": 2,
+      "background": "validation-f000025-x2688-y1536-L2",
+      "background_sha256": "e71359da62a748e08f08d4aee009eb24c1137eaed30f7d88005c3260d1389750",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            47.1,
+            1.9,
+            199.8,
+            117.1
+          ],
+          "sprite": "inst:reference-f000000-x3264-y0192-L2:0",
+          "sprite_file": "large_launcher/inst__reference-f000000-x3264-y0192-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00174",
+      "zoom": 2,
+      "background": "validation-f000005-x0768-y0192-L2",
+      "background_sha256": "29caad74643ed8422d1c88bfd0fc0e6548e5fd918a533d8ce2de9b6c4b6c04ae",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            91.0,
+            33.0,
+            196.0,
+            172.0
+          ],
+          "sprite": "inst:reference-f000000-x3264-y0192-L2:0",
+          "sprite_file": "large_launcher/inst__reference-f000000-x3264-y0192-L2__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00175",
+      "zoom": 1,
+      "background": "reference-f000021-x2688-y0576-L1",
+      "background_sha256": "f1286707c5aa4a6e98df0e3b72d97aaa4f52dfd51dc5e1525ed8256ab5374635",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 9,
+          "class_name": "mine_roller",
+          "bbox_xyxy": [
+            92.2,
+            63.9,
+            149.3,
+            104.6
+          ],
+          "sprite": "lib:mine_roller",
+          "sprite_file": "mine_roller/lib__mine_roller.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            189.0,
+            79.8,
+            240.1,
+            124.2
+          ],
+          "sprite": "inst:reference-f000003-x1728-y1536-L1:0",
+          "sprite_file": "small_plane/inst__reference-f000003-x1728-y1536-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00176",
+      "zoom": 1,
+      "background": "validation-f000085-x0960-y0576-L1",
+      "background_sha256": "e6b416e2560c2caea038a014a82eb936e1864ba9d513b37e567782f29e85225a",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            4.0,
+            125.3,
+            24.0,
+            157.8
+          ],
+          "sprite": "lib:small_launcher",
+          "sprite_file": "small_launcher/lib__small_launcher.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00177",
+      "zoom": 1,
+      "background": "reference-f000000-x1728-y0960-L1",
+      "background_sha256": "fd5135654a98abe63ab7dedce75f5d2c0529482c002bcc072591ab258e7f0845",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            128.5,
+            150.2,
+            150.5,
+            182.7
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L1:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png"
+        },
+        {
+          "class_id": 5,
+          "class_name": "large_launcher",
+          "bbox_xyxy": [
+            19.4,
+            34.0,
+            152.2,
+            134.7
+          ],
+          "sprite": "inst:reference-f000000-x3264-y0192-L1:0",
+          "sprite_file": "large_launcher/inst__reference-f000000-x3264-y0192-L1__0.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00178",
+      "zoom": 1,
+      "background": "reference-f000017-x2304-y0192-L1",
+      "background_sha256": "dc4f7689286547bcc2e16fb79f742a3efdd5edf66645550a3d4f5fba0f3f2b68",
+      "background_supervision": "complete_boxes",
+      "annotations": [
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            50.9,
+            206.8,
+            103.3,
+            251.1
+          ],
+          "sprite": "lib:small_plane",
+          "sprite_file": "small_plane/lib__small_plane.png"
+        },
+        {
+          "class_id": 11,
+          "class_name": "small_plane",
+          "bbox_xyxy": [
+            100.4,
+            98.1,
+            140.8,
+            145.7
+          ],
+          "sprite": "lib:small_plane",
+          "sprite_file": "small_plane/lib__small_plane.png"
+        }
+      ]
+    },
+    {
+      "id": "synth-1918-00179",
+      "zoom": 1,
+      "background": "validation-f000061-x1344-y1776-L1",
+      "background_sha256": "0f6266024b0bbf1bf55e68ee5ff5548e97e841aabda4c2259c9c5f37661e9b98",
+      "background_supervision": "human_verified_empty",
+      "annotations": [
+        {
+          "class_id": 10,
+          "class_name": "small_launcher",
+          "bbox_xyxy": [
+            114.5,
+            211.7,
+            132.5,
+            239.2
+          ],
+          "sprite": "inst:reference-f000000-x1728-y0000-L1:0",
+          "sprite_file": "small_launcher/inst__reference-f000000-x1728-y0000-L1__0.png"
+        }
+      ]
+    }
+  ]
+}
