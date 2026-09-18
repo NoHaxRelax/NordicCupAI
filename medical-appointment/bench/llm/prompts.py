@@ -358,6 +358,21 @@ _FEWSHOT_NOTE = ('\nEXAMPLES below show, for other consultations, the exact stre
                  'utterances too; otherwise it is the single utterance that states the fact.')
 
 
+# The transcript is ASR output, so medicine names come through mis-heard: on the training set all four
+# of the 27B's wrong binaries were this (Activelle->'Activel', Esomeprazole->'Isomeprazole',
+# Airomir->'Aromir', and 'fungal infection in the mouth' stated as 'candidiasis'). Each was a false
+# negative on a positive, so it also zeroed that question's span credit: about 0.013 of score.
+# The second sentence is the guardrail: the task's hard negatives change a DETAIL, and leniency
+# must not leak into those.
+_ASR_NOTE = ('\nThe transcript is automatic speech recognition output, so names of medicines, tests and\n'
+             'conditions are often mis-heard: a name may lose or change letters, be split in two, or be\n'
+             'written as a everyday synonym of the medical term. When the question names something and the\n'
+             'transcript plainly contains that same thing under a mis-transcribed or equivalent name, treat\n'
+             'them as the same and answer on the substance.\n'
+             'This leniency covers ONLY how a word was written down. A different dose, number, duration,\n'
+             'frequency, body part, direction of change, or a genuinely different medicine is still a "no".')
+
+
 # For clause-level units (model.py UNIT_SPLIT): of the 12 positives that lost tIoU when the 27B moved
 # from sentence to clause-and units, 9 cited fewer pieces than the gold covers (findings log entry 48).
 _CLAUSE_NOTE = ('\nA long sentence may appear in the list as several consecutive pieces (its clauses). When the\n'
@@ -651,6 +666,7 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'words': words,
     'units-fewshot': FewShot('units'),
     'units-fewshot-cl': FewShot('units', note_extra=_CLAUSE_NOTE),   # for UNIT_SPLIT=clause-*: explains the pieces
+    'units-fewshot-asr': FewShot('units', note_extra=_ASR_NOTE),    # + the ASR-misspelling line (entry 57)
     'words-fewshot': FewShot('words'),
     'units-joint': Joint(),
     'units-joint-demo': JointDemo(2),

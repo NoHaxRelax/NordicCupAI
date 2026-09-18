@@ -828,3 +828,43 @@ driver check; `9rf8oeyh70minl` is the third, brought up from bare metal in 12 mi
 endpoint) and reproducing training at 0.812. Also fixed: `warm_llm` gave the Ollama fallback 30 s,
 but cold-loading it into VRAM takes 51 s, so the warm-up "failed" and left the first real fallback
 call to pay that 51 s; the budget is now 150 s and the log reads `fallback qwen3:4b warm in 1.2s`.
+
+### 57. Elias's catch: the model was failing on ASR misspellings of drug names, worth +0.007 (2026-09-18 evening)
+
+Elias noticed that a question naming `Esomeprazole` gets a "no" because Whisper wrote
+`Isomeprazole`. All four of the 27B's wrong binaries on training were exactly this, and each was a
+**false negative on a positive**, so it also zeroed that question's span credit:
+
+| the question names | the transcript says | the model's own quote |
+|---|---|---|
+| Activelle | Activel | "which you are taking Activel for." |
+| Esomeprazole | Isomeprazole | "Activel, Aromir, and Isomeprazole. All three renewed." |
+| Airomir | Aromir | "Activel, Aromir, and Isomeprazole." |
+| a fungal infection in the mouth | "a possible candidiasis" | that same utterance |
+
+In every case the model located the right utterance and quoted it, then answered no on the spelling.
+Total cost about 0.013 of score, comparable to the entire clause-units gain.
+
+`units-fewshot-asr` adds two sentences: speech recognition mis-hears names of medicines, tests and
+conditions, so treat a plainly mis-transcribed or equivalent name as the same thing; **and the
+guardrail**, that the leniency covers only how a word was written down, never a changed dose,
+number, duration, frequency, body part, direction or a genuinely different medicine. The guardrail
+is the whole risk of this change: 142 of the 390 training questions are near-misses that turn on
+exactly such a detail.
+
+Both variants benched on the same pod, same hardware, paired over the 39 conversations:
+
+| | score | accuracy | mean tIoU | wrong binaries |
+|---|---:|---:|---:|---|
+| served `units-fewshot` | 0.8138 | 0.9897 | 0.696 | 4, all false negatives on positives |
+| `units-fewshot-asr` | 0.8208 | 0.9974 | 0.703 | 1 |
+
+Paired **+0.0070 ± 0.0039** (z = 1.8). The three drug-name cases are fixed and **no hard negative
+broke: false positives stay at zero**, so the guardrail held. The one remaining miss is the
+synonym-plus-hedge case ("a possible candidiasis" for "a fungal infection in the mouth"), which is a
+different problem and arguably a defensible no. Latency is unchanged (4.0 s mean per conversation
+against 3.8 s). Note for anyone editing: the line contains "a everyday synonym"; the measurement
+above is of that exact text, so fixing the article means re-measuring.
+
+This is the only change since the validated freeze, decided on training, with the mechanism verified
+case by case rather than inferred from a score.
