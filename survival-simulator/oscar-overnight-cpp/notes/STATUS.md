@@ -33,3 +33,10 @@ Log (newest last)
   no evasion 79% killed; evasion v0 32%; kill rate by walking speed 10/15/20 about 60%/20%/8% (D>=80).
   => select for walking speed (heritable, cap 20). Added fit_speed_cap (fitness speed cap, default 1.5 => 15).
   Added no_spawn (tests only) and dbg_* engine hooks + nightsim/escape.py. sp1 (speed selection x predators) on n3.
+- 00:55 P2 prep parked per Oscar (01:00: "optimise survival time now; the rest waits until after 2 am; narrow-gap
+  baits only, never wall baits"). Parked code (all behind switches, default off): evasion+dodge+shared sightings,
+  crevice site finder with median wall clustering (ts4: valid site in top-3 on 26/48 maps; every graded hold test
+  kept the bait alive, predator closest ~19.5), bait role with replacement (untested). Perfect-trap model tv1:
+  trapped within 100 s => +922 s; 30 s => +1167 s (the P2 prize).
+- 00:55 c1 partial (~160 seeds): oracle tree knowledge +99±30 s (discovery headroom); merge_anchored 0;
+  speed selection without predators -100 s; parameter candidates within noise.

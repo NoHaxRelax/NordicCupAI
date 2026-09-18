@@ -50,6 +50,8 @@ def one(job):
             elif kind == 'predator': pd += 1; pen += energy/100
             else: sd += 1
     events()
+    kw = dict(kw); pl = kw.pop('test_pred_life', 0.)
+    eng.dbg_pred_life(float(pl))   # tests only: perfect-trap model (0 = off)
     eng.policy_init(nightsim.seed_key(seed), kw)
     peak = state['num_agents']; nxt = sample; last = None; traj = []; FD = {}; fates = []
     while True:

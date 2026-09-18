@@ -1590,6 +1590,7 @@ public:
 // ----------------------------------------------------------------------------
 // Python bindings
 // ----------------------------------------------------------------------------
+double g_pred_life = 0.;   // nightsim test: a predator older than this is 'trapped' (parked asleep in a corner)
 struct EngineObject {
     PyObject_HEAD
     Engine* eng;
@@ -1759,7 +1760,7 @@ bool parse_params(PyObject* d, orchard::Params& P) {
               {"cluster_radius", &P.cluster_radius}, {"spread_weight", &P.spread_weight}, {"low_pop_reserve", &P.low_pop_reserve},
               {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
               {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
-              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}};
+              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"oracle_trees", &P.oracle_trees}, {"trap_mode", &P.trap_mode}, {"wall_min_n", &P.wall_min_n}, {"trap_depth", &P.trap_depth}, {"wall_tol", &P.wall_tol}, {"wall_min_obs", &P.wall_min_obs}, {"trap_start", &P.trap_start}, {"bait_margin", &P.bait_margin}, {"bait_min_life", &P.bait_min_life}, {"bait_young_pen", &P.bait_young_pen}, {"trap_keepout", &P.trap_keepout}, {"test_freeze", &P.test_freeze}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"pred_share", &P.pred_share}, {"pred_dodge_r", &P.pred_dodge_r}, {"pred_dodge_ang", &P.pred_dodge_ang}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}};
     for (F& f : fs) {
         PyObject* v = PyDict_GetItemString(d, f.k);
         if (!v) continue;
@@ -1870,12 +1871,22 @@ PyObject* Engine_run_policy(EngineObject* self, PyObject* args) {
     long steps = 0; size_t peak = e->agents.size();
     Py_BEGIN_ALLOW_THREADS
     while (!e->agents.empty() && e->time < horizon) {
+        if (self->pol->P.oracle_trees > 0.) {
+            self->pol->oracle_p.clear(); self->pol->oracle_age.clear();
+            for (const Tree& t : e->trees) { self->pol->oracle_p.push_back(orchard::P2{t.x, t.y}); self->pol->oracle_age.push_back(t.age); }
+        }
         auto acts = self->pol->call(policy_states(e), e->time);
         for (const auto& a : acts) {
             Engine::Action ea{a.aid, a.dist, true, a.direction, a.turn, a.spawn};
             e->agent_step(ea);
         }
         e->non_agent_step();
+        if (g_pred_life > 0.) {
+            for (auto& pr : e->predators) {
+                pr.age += e->dt;
+                if (pr.age > g_pred_life && pr.energy > -1e11) { pr.resting = true; pr.energy = -1e12; pr.x = 12.; pr.y = 12.; e->predators_dirty = true; }
+            }
+        }
         steps++;
         if (e->agents.size() > peak) peak = e->agents.size();
         if (e->time >= stop_at - 1e-6) break;
@@ -1997,6 +2008,32 @@ PyObject* Engine_dbg_free(EngineObject* self, PyObject* args) {
     double x, y, sz; if (!PyArg_ParseTuple(args, "ddd", &x, &y, &sz)) return nullptr;
     if (self->eng->is_position_free(x, y, sz, sz)) Py_RETURN_TRUE; Py_RETURN_FALSE;
 }
+PyObject* Engine_dbg_pred_life(EngineObject* self, PyObject* args) {
+    double v; if (!PyArg_ParseTuple(args, "d", &v)) return nullptr; g_pred_life = v; Py_RETURN_NONE;
+}
+PyObject* Engine_dbg_sites(EngineObject* self, PyObject*) {
+    // policy trap sites of anchored groups: [(gid, goal_x, goal_y, mouth_x, mouth_y, out_x, out_y, overlap, gap, rear_ok, n_walls)]
+    PyObject* L = PyList_New(0);
+    if (!self->pol) return L;
+    self->pol->groups.each([&](const int64_t& gid, orchard::GroupP& g) {
+        for (auto& st : g->sites) {
+            int64_t conf = 0; for (auto& w : g->walls) if (self->pol->confirmed(w)) conf++;
+            PyObject* t = Py_BuildValue("(LdddddddddL)", (long long)gid, st.goal.x, st.goal.y, st.mouth.x, st.mouth.y, st.out.x, st.out.y,
+                                        st.overlap, st.gap, st.rear_ok ? 1.0 : 0.0, (long long)conf);
+            PyList_Append(L, t); Py_DECREF(t);
+        }
+    });
+    return L;
+}
+PyObject* Engine_dbg_pred_blocked(EngineObject* self, PyObject* args) {
+    // True if a predator (r=10) cannot stand at (x, y)
+    double x, y; if (!PyArg_ParseTuple(args, "dd", &x, &y)) return nullptr;
+    Engine* e = self->eng;
+    for (auto& o : e->obstacles) {
+        if ((o.x - 10 < x) && (x < o.x + o.w + 10) && (o.y - 10 < y) && (y < o.y + o.h + 10)) Py_RETURN_TRUE;
+    }
+    Py_RETURN_FALSE;
+}
 PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
     // counters from the policy's predator layer
     if (!self->pol) Py_RETURN_NONE;
@@ -2054,6 +2091,9 @@ PyMethodDef Engine_methods[] = {
     {"dbg_add_predator", (PyCFunction)Engine_dbg_add_predator, METH_VARARGS, "tests: add predator"},
     {"dbg_free", (PyCFunction)Engine_dbg_free, METH_VARARGS, "tests: is position free"},
     {"dbg_eval", (PyCFunction)Engine_dbg_eval, METH_NOARGS, "tests: policy predator counters"},
+    {"dbg_pred_life", (PyCFunction)Engine_dbg_pred_life, METH_VARARGS, "tests: park predators older than T (perfect-trap model)"},
+    {"dbg_sites", (PyCFunction)Engine_dbg_sites, METH_NOARGS, "tests: policy trap sites"},
+    {"dbg_pred_blocked", (PyCFunction)Engine_dbg_pred_blocked, METH_VARARGS, "tests: predator cannot stand here"},
     {"policy_init", (PyCFunction)Engine_policy_init, METH_VARARGS, "policy_init(seed_key, config_dict): native orchard policy"},
     {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
     {"policy_minds", (PyCFunction)Engine_policy_minds, METH_NOARGS, "debug: native minds"},
