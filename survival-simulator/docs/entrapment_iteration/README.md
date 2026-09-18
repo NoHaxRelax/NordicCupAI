@@ -154,10 +154,12 @@ Do not read 96.5% map-site availability as a delivery success rate.
 
 ## Compute budget
 
-Authorized Runpod cap: **$10 total**. **$0 spent** and no resources created.
+Authorized Runpod cap: **$10 total**. The completed first iteration spent $0.
+The overnight extension now has a 16-vCPU pod at $0.48/hour; see the live ledger
+in `runpod-budget.json` and the plan in `overnight_plan.md`.
 Four creation requests (CPU3 32-vCPU twice, CPU5 32-vCPU once, CPU3 16-vCPU once)
 returned HTTP 400, "no longer any instances available with the requested
-specifications." Existing team pods were not changed. All completed experiments
+specifications." Existing team pods were not changed. Those first-iteration experiments
 ran locally. `runpod-budget.json` records this separately from other team work.
 
 Correction: account usage is available in local Codex session rate-limit events.

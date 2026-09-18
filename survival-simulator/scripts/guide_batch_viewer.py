@@ -83,6 +83,10 @@ def main():
             command = [sys.executable,str(root/'source/scripts/guide_multi.py'),'--deliveries','1',
                        '--seed',str(case['seed']),'--encounter-seed',str(case['encounter_seed']),
                        '--output',str(folder)]
+            if case.get('site_index'):
+                command.extend(['--site',str(case['site_index'])])
+            if case.get('corner_only'):
+                command.append('--corner-only')
             for option in ('replace_bait','vision_delivery'):
                 if manifest['config'].get(option):
                     command.append('--'+option.replace('_','-'))
@@ -136,7 +140,8 @@ def main():
                 for index,r in sorted(cases.items()):
                     item={k:r.get(k) for k in ('index','seed','encounter_seed','outcome','seconds','frames',
                           'final','guide_caught','eligible_sites','contact_metrics','site','error',
-                          'outcome_rear_at_end_only','deliveries','initial_min_held','final_hold_min','replacement_side_final_period')}
+                          'outcome_rear_at_end_only','deliveries','initial_min_held','final_hold_min','replacement_side_final_period',
+                          'site_index','corner_only','phase','map_index')}
                     trace=next((root/'retries'/f'case-{index:04}').glob('map-*/ticks.jsonl.gz'),None)
                     if trace is None:
                         trace=next((root/f'case-{index:04}').glob(run_glob+'/ticks.jsonl.gz'),None)
