@@ -284,11 +284,12 @@ class Lure:
                 progress = real * math.cos(dev) if real > 0.05 else 0.0
                 ok = floor <= g2 <= ceil and seen and d_other >= 95.0
                 if ok:
-                    cost = -progress + 0.15 * abs(g2 - 128.0)
+                    # while it sprints the band shrinks 0.6 per tick whatever we do: gap first
+                    cost = (-0.3 * progress + 0.5 * abs(g2 - 128.0)) if v_pred >= 14.0 else (-progress + 0.15 * abs(g2 - 128.0))
                     if best is None or cost < best[0]:
                         best = (cost, h, real, g2)
-                miss = (floor - g2) if g2 < floor else (g2 - ceil if g2 > ceil else 0.0)
-                miss += (0.0 if seen else 30.0) + max(0.0, 95.0 - d_other) * 2.0
+                miss = 2.0 * (floor - g2) if g2 < floor else (g2 - ceil if g2 > ceil else 0.0)
+                miss += (0.0 if seen else 12.0) + max(0.0, 95.0 - d_other) * 2.0
                 if nearest is None or miss < nearest[0]:
                     nearest = (miss, h, real, g2)
         if best is not None:

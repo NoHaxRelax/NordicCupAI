@@ -40,7 +40,7 @@ def build(seed, n_obstacles, width=14.0, length=60.0):
     return arena, rng
 
 
-def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=500, nosprint=False):
+def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=500, nosprint=False, dmin=350, dmax=700):
     arena, rng = build(seed, n_obstacles)
     env = arena.env
     oracle = OracleWorld(env); world = oracle.update()
@@ -51,7 +51,7 @@ def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=
     # guide somewhere in the open, 350-700 from the mouth
     for _ in range(500):
         g = (rng.uniform(80, 1520), rng.uniform(80, 760))
-        if 350 <= dist(g, site.front_mid) <= 700 and free(g, 12):
+        if dmin <= dist(g, site.front_mid) <= dmax and free(g, 12):
             break
     for _ in range(500):
         ang = rng.uniform(0, 2 * math.pi); r = rng.uniform(120, 220)
@@ -74,7 +74,7 @@ def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=
         arena.add_predator(*p2, heading=rng.uniform(0, 2 * math.pi), energy=rng.uniform(60, 190))
     d = Delivery(site=site, guide=guide.agent_id, pid=0, become_bait=not staffed, created=0.0, leash=True)
     state = arena.step([]); world = oracle.update(state['observations'])
-    held_ticks = 0; first_hold = None; ticks = int(seconds * 10); last = ''
+    held_ticks = 0; first_hold = None; ticks = int(seconds * 10); last = ''; e_done = None
     for t in range(ticks):
         lure = Lure(world, held=set(), baits={bait.agent_id} if bait else set())
         holder = Holder(world)
@@ -102,6 +102,8 @@ def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=
         p = world.predator(0)
         if p is None:
             break
+        if e_done is None and d.done == 'delivered' and guide.agent_id in world.agents:
+            e_done = world.agents[guide.agent_id].energy
         target = predator_target(world, p)
         bait_ids = {bait.agent_id} if bait else ({guide.agent_id} if d.done == 'delivered' else set())
         held = target in bait_ids and site.in_front_zone(p.p, margin=15)
@@ -119,7 +121,7 @@ def run_case(seed, n_obstacles, staffed, second, seconds, verbose=False, energy=
             print(f"  t={state['sim_time']:5.1f} gap={dist(ga.p, p.p) if ga else -1:5.0f} pe={p.energy:4.0f} rest={p.resting} target={target} held={held} | {last}")
         if held_ticks >= 50:
             ga = world.agents.get(guide.agent_id)
-            return dict(seed=seed, ok=True, t=first_hold, guide_alive=ga is not None, guide_energy=round(ga.energy) if ga else None, chasing=chasing, why='')
+            return dict(seed=seed, ok=True, t=first_hold, guide_alive=ga is not None, guide_energy=round(ga.energy) if ga else None, chasing=chasing, why='', dist0=round(dist(g, site.front_mid)), used=round(energy - (e_done if e_done is not None else (ga.energy if ga else energy))))
     ga = world.agents.get(guide.agent_id)
     return dict(seed=seed, ok=False, why='not held', t=None, last=last, chasing=chasing, guide_alive=ga is not None, phase=d.phase, done=d.done)
 
@@ -131,16 +133,21 @@ if __name__ == '__main__':
     ap.add_argument('--staffed', type=int, default=-1, help='-1 alternate, 0 empty mouth, 1 bait present')
     ap.add_argument('--verbose-seed', type=int, default=None); ap.add_argument('--start', type=int, default=0)
     ap.add_argument('--energy', type=float, default=500); ap.add_argument('--nosprint', type=int, default=0)
+    ap.add_argument('--dmin', type=float, default=350); ap.add_argument('--dmax', type=float, default=700)
     a = ap.parse_args()
     if a.verbose_seed is not None:
         r = run_case(a.verbose_seed, a.obstacles, a.staffed == 1 if a.staffed >= 0 else a.verbose_seed % 2 == 0, bool(a.second), a.seconds, verbose=True, energy=a.energy, nosprint=bool(a.nosprint))
         print(r); sys.exit(0)
-    ok = 0; fails = []
+    ok = 0; fails = []; results = []
     for seed in range(a.start, a.start + a.cases):
         staffed = (seed % 2 == 0) if a.staffed < 0 else bool(a.staffed)
-        r = run_case(seed, a.obstacles, staffed, bool(a.second), a.seconds, energy=a.energy, nosprint=bool(a.nosprint))
-        ok += r['ok']
+        r = run_case(seed, a.obstacles, staffed, bool(a.second), a.seconds, energy=a.energy, nosprint=bool(a.nosprint), dmin=a.dmin, dmax=a.dmax)
+        ok += r['ok']; results.append(r)
         print(f"seed {seed:3d} staffed={int(staffed)} chasing={int(r['chasing'])}: {'OK   ' if r['ok'] else 'FAIL '} t={r.get('t')} {r.get('why','')} {('e_left=' + str(r.get('guide_energy'))) if r['ok'] else ('| ' + r.get('last', ''))[:110]}", flush=True)
         if not r['ok']:
             fails.append(seed)
     print(f'success {ok}/{a.cases}; failed seeds {fails}')
+    used = sorted(r['used'] for r in results if r.get('ok') and r.get('used') is not None)
+    if used:
+        print(f'energy used: mean {sum(used)/len(used):.0f}, median {used[len(used)//2]}, p90 {used[int(len(used)*0.9)]}, max {used[-1]}; '
+              f'time to hold: median {sorted(r["t"] for r in results if r.get("ok"))[len(used)//2]}')
