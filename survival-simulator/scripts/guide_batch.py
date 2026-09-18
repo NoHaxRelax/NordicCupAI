@@ -35,7 +35,7 @@ def main():
     rng = random.Random(args.seed)
     seeds = rng.sample(range(2**31), args.maps)
     jobs = [dict(index=i, seed=s, encounter_seed=rng.randrange(2**31)) for i,s in enumerate(seeds)]
-    sources = list((ROOT/'src').rglob('*.py')) + [ROOT/'models'/name for name in
+    sources = list((ROOT/'src').rglob('*.py')) + [ROOT/'models/entrapment'/name for name in
                ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py')]
     if args.multi:
         sources += [ROOT/'scripts'/name for name in ('guide_multi.py','guide_lab.py','guide_lab_sites.py','guide_batch.py')]

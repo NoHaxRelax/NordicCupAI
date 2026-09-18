@@ -50,7 +50,7 @@ def run(args):
     write_viewer(folder)
     shutil.copy2(__file__,folder/'multi_runner.py')
     for name in ('my_guide.py','guide_pathfinding.py','guide_steering.py','predator_following.py'):
-        shutil.copy2(lab.ROOT/'models'/name,folder/('policy.py' if name=='my_guide.py' else name))
+        shutil.copy2(lab.ROOT/'models/entrapment'/name,folder/('policy.py' if name=='my_guide.py' else name))
     core,site,site_count,bait,unused_guide,unused_predator=lab.setup(args.seed,args.encounter_seed,0)
     env=core.env
     geometry=lab._Geometry(env.width,env.height,[(o.x,o.y,o.width,o.height) for o in env.obstacles])

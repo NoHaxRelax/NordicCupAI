@@ -140,7 +140,7 @@ def run(args, seed, encounter_seed):
     (folder/'ticks').mkdir()
     shutil.copy2(args.policy, folder/'policy.py')
     for name in ('guide_pathfinding.py','predator_following.py','guide_steering.py'):
-        helper = ROOT/'models'/name
+        helper = ROOT/'models/entrapment'/name
         if helper.exists():
             shutil.copy2(helper, folder/name)
     shutil.copy2(__file__, folder/'runner.py')
