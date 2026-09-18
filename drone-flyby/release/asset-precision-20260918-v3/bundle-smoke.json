@@ -1,0 +1,56 @@
+{
+  "predictions": [
+    {
+      "object_id": "tank",
+      "confidence": 0.98,
+      "bbox": [
+        0.37838541666666664,
+        0.6912037037037037,
+        0.3927083333333333,
+        0.7111111111111111
+      ]
+    }
+  ],
+  "seconds": 6.370707374997437,
+  "settings": {
+    "cnn_threshold": 0.6,
+    "cnn_verifier_threshold": 0.95,
+    "tiny_threshold": 0.65,
+    "geometric": true,
+    "device": "cpu",
+    "nms_iou": 0.35,
+    "heatmap_threshold": 0.3,
+    "heatmap_classes": [
+      "small_tower"
+    ],
+    "pose_pixels": true,
+    "pixel_threshold": 0.6,
+    "calibrated_features": true,
+    "cnn_enabled": true,
+    "tiny_min_contrast": 0.8,
+    "verify_heatmap": true,
+    "heatmap_verifier_threshold": 0.4,
+    "calibrated_pixels": true,
+    "calibrated_pixel_threshold": 0.7,
+    "feature_threshold": 0.7,
+    "verify_features_below": 0.8,
+    "weak_feature_verifier_threshold": 0.3,
+    "weak_feature_pixel_threshold": 0.25,
+    "verify_tiny": true,
+    "tiny_verifier_threshold": 0.8,
+    "heatmap_enabled": true,
+    "heatmap_reclassify": false
+  },
+  "source_region": [
+    1453.0,
+    1493.0,
+    1508.0,
+    1536.0
+  ],
+  "checkpoint_sha256": "d5c85a84ff2681686e5a17775ed49b09a0ec8de158fa60e3426cc3d8a548338b",
+  "image_sha256": "5226533981941d2b3cf511333381ad670cee5ea8beb3438628d93265a018f54e",
+  "feature_bank_sha256": "97a48ca319fc5150964ae36d3533b521529e3d6d14984a37332e12af27e3dd47",
+  "verifier_sha256": "95efb7d10252f61be7d90f46c76a6ddb9f56f4e892b83d4637d8fe3526ff22b1",
+  "heatmap_sha256": "3abf14ab3fe5084de6476e7d7784e79b5e3a4e6272e582cfd1e3fd5bf8d44db7",
+  "bundle_sha256": "63bc164d44bf9499843db74f9c06145277f2c308088967242449db04ffb96c2c"
+}

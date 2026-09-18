@@ -1,0 +1,56 @@
+{
+  "selected_at": 1789729956.225046,
+  "name": "asset-precision-20260918-v3",
+  "source_archive": "precision-v3-runtime.tar.gz",
+  "source_archive_sha256": "c9f29530a23d8caa852813605d280bb8a3f923e9b975b39608f21512e7ae1a10",
+  "settings": {
+    "cnn_threshold": 0.6,
+    "cnn_verifier_threshold": 0.95,
+    "tiny_threshold": 0.65,
+    "geometric": true,
+    "device": "0",
+    "nms_iou": 0.35,
+    "heatmap_threshold": 0.3,
+    "heatmap_classes": [
+      "small_tower"
+    ],
+    "pose_pixels": true,
+    "pixel_threshold": 0.6,
+    "calibrated_features": true,
+    "cnn_enabled": true,
+    "tiny_min_contrast": 0.8,
+    "verify_heatmap": true,
+    "heatmap_verifier_threshold": 0.4,
+    "calibrated_pixels": true,
+    "calibrated_pixel_threshold": 0.7,
+    "feature_threshold": 0.7,
+    "verify_features_below": 0.8,
+    "weak_feature_verifier_threshold": 0.3,
+    "weak_feature_pixel_threshold": 0.25,
+    "verify_tiny": true,
+    "tiny_verifier_threshold": 0.8,
+    "heatmap_enabled": true,
+    "heatmap_reclassify": false
+  },
+  "bank_sha256": "97a48ca319fc5150964ae36d3533b521529e3d6d14984a37332e12af27e3dd47",
+  "models": {
+    "weights": "d5c85a84ff2681686e5a17775ed49b09a0ec8de158fa60e3426cc3d8a548338b",
+    "verifier": "95efb7d10252f61be7d90f46c76a6ddb9f56f4e892b83d4637d8fe3526ff22b1",
+    "heatmap": "3abf14ab3fe5084de6476e7d7784e79b5e3a4e6272e582cfd1e3fd5bf8d44db7"
+  },
+  "fresh_frames": [
+    187,
+    201,
+    224,
+    247
+  ],
+  "training_calibration_validation_frames": 41,
+  "policy": "Configuration and checkpoints frozen before fresh-image visual annotation review or predictions. Remaining development and consumed-test scans may finish, but these four images cannot be used to change this candidate. Preserve a failure if acceptance gates are not met.",
+  "acceptance_gates": {
+    "reference_matched": 26,
+    "validation_matched_at_least": 16,
+    "consumed_test_matched_at_least": 12,
+    "consumed_test_proposals_at_most": 50
+  },
+  "reason": "Use crop CNN v5 with matching crop scale, wide background samples and neutral walker masks. Preserve strong geometry; require aligned pixels plus same-class CNN for weak geometry. Verify tiny shapes; use strict CNN proposals and a same-class tower gate."
+}

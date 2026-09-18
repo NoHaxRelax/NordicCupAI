@@ -1,0 +1,49 @@
+test_blank_and_unrelated_background_rejected (drone.template_matching.test_detector.DetectorTests.test_blank_and_unrelated_background_rejected) ... ok
+test_blind_discovery_two_instances_and_coordinates (drone.template_matching.test_detector.DetectorTests.test_blind_discovery_two_instances_and_coordinates) ... ok
+test_classwise_nms_preserves_distinct_instances (drone.template_matching.test_detector.DetectorTests.test_classwise_nms_preserves_distinct_instances) ... ok
+test_corrupt_bank_rejected (drone.template_matching.test_detector.DetectorTests.test_corrupt_bank_rejected) ... ok
+test_delivered_half_scale (drone.template_matching.test_detector.DetectorTests.test_delivered_half_scale) ... ok
+test_masked_bank_background_transfer (drone.template_matching.test_detector.DetectorTests.test_masked_bank_background_transfer) ... ok
+test_one_to_one_scoring (drone.template_matching.test_detector.DetectorTests.test_one_to_one_scoring) ... ok
+test_reviewed_truth_excludes_projection_and_resolves_alias (drone.template_matching.test_detector.DetectorTests.test_reviewed_truth_excludes_projection_and_resolves_alias) ... ok
+test_rotation_and_scale (drone.template_matching.test_detector.DetectorTests.test_rotation_and_scale) ... ok
+test_small_view_and_invalid_scales (drone.template_matching.test_detector.DetectorTests.test_small_view_and_invalid_scales) ... ok
+test_affine_foreshortening (drone.template_matching.test_features.FeatureTests.test_affine_foreshortening) ... ok
+test_aligned_pixels_verify_geometric_transform (drone.template_matching.test_features.FeatureTests.test_aligned_pixels_verify_geometric_transform) ... ok
+test_background_rejection (drone.template_matching.test_features.FeatureTests.test_background_rejection) ... ok
+test_calibration_annotation_extent_is_not_padded_twice (drone.template_matching.test_features.FeatureTests.test_calibration_annotation_extent_is_not_padded_twice) ... ok
+test_calibration_fallback_fills_gaps_without_moving_primary_boxes (drone.template_matching.test_features.FeatureTests.test_calibration_fallback_fills_gaps_without_moving_primary_boxes) ... ok
+test_downsampled_template_coordinate_mapping (drone.template_matching.test_features.FeatureTests.test_downsampled_template_coordinate_mapping) ... ok
+test_ensemble_deduplicates_and_exports_coordinates (drone.template_matching.test_features.FeatureTests.test_ensemble_deduplicates_and_exports_coordinates) ... ok
+test_foreground_geometry_removes_background_margin (drone.template_matching.test_features.FeatureTests.test_foreground_geometry_removes_background_margin) ... ok
+test_fractional_upsampling_keeps_native_coordinates (drone.template_matching.test_features.FeatureTests.test_fractional_upsampling_keeps_native_coordinates) ... ok
+test_fusion_handles_nested_extents_without_merging_neighbors (drone.template_matching.test_features.FeatureTests.test_fusion_handles_nested_extents_without_merging_neighbors) ... ok
+test_global_index_multiple_instances_and_repeatability (drone.template_matching.test_features.FeatureTests.test_global_index_multiple_instances_and_repeatability) ... ok
+test_invalid_settings (drone.template_matching.test_features.FeatureTests.test_invalid_settings) ... ok
+test_multiple_instances_and_repeatability (drone.template_matching.test_features.FeatureTests.test_multiple_instances_and_repeatability) ... ok
+test_output_annotation_extent_can_differ_from_matching_crop (drone.template_matching.test_features.FeatureTests.test_output_annotation_extent_can_differ_from_matching_crop) ... ok
+test_weaker_hypotheses_cannot_move_strong_localizations (drone.template_matching.test_features.FeatureTests.test_weaker_hypotheses_cannot_move_strong_localizations) ... ok
+test_fixed_shape_survives_brightness_and_rotation (drone.template_matching.test_tiny_shapes.TinyShapeTests.test_fixed_shape_survives_brightness_and_rotation) ... ok
+test_occluded_asset_and_native_launcher_scale (drone.template_matching.test_pose_pixels.PosePixelTests.test_occluded_asset_and_native_launcher_scale) ... ok
+test_blank_has_no_nan_or_positive_similarity (drone.template_matching.test_calibrated_pixels.FFTTests.test_blank_has_no_nan_or_positive_similarity) ... ok
+test_complete_detector_finds_blind_translation_and_rejects_blank (drone.template_matching.test_calibrated_pixels.FFTTests.test_complete_detector_finds_blind_translation_and_rejects_blank) ... ok
+test_valid_masked_correlation_matches_opencv (drone.template_matching.test_calibrated_pixels.FFTTests.test_valid_masked_correlation_matches_opencv) ... ok
+test_partial_object_regions_are_not_negative_examples (drone.asset_heatmap.test_model.AssetHeatmapTests.test_partial_object_regions_are_not_negative_examples) ... ok
+test_stride_and_finite_gradients (drone.asset_heatmap.test_model.AssetHeatmapTests.test_stride_and_finite_gradients) ... ok
+test_bundle_rejects_changed_checkpoint_before_model_loading (drone.scratch_objects.test_pipeline.PipelineTests.test_bundle_rejects_changed_checkpoint_before_model_loading) ... ok
+test_cnn_source_coordinate_adapter (drone.scratch_objects.test_pipeline.PipelineTests.test_cnn_source_coordinate_adapter) ... ok
+test_fixed_asset_heatmap_verifier_reclassifies_and_rejects_background (drone.scratch_objects.test_pipeline.PipelineTests.test_fixed_asset_heatmap_verifier_reclassifies_and_rejects_background) ... ok
+test_hybrid_keeps_distinct_instances_and_feature_priority (drone.scratch_objects.test_pipeline.PipelineTests.test_hybrid_keeps_distinct_instances_and_feature_priority) ... ok
+test_one_to_one_and_confusion (drone.scratch_objects.test_pipeline.PipelineTests.test_one_to_one_and_confusion) ... ok
+test_pixel_refinement_preserves_confidence_and_rejects_blank (drone.scratch_objects.test_pipeline.PipelineTests.test_pixel_refinement_preserves_confidence_and_rejects_blank) ... ok
+test_proposal_training_crop_tracks_foreground_extent (drone.scratch_objects.test_pipeline.PipelineTests.test_proposal_training_crop_tracks_foreground_extent) ... ok
+test_rotation_keeps_visible_mask (drone.scratch_objects.test_pipeline.PipelineTests.test_rotation_keeps_visible_mask) ... ok
+test_tile_coverage_and_class_nms (drone.scratch_objects.test_pipeline.PipelineTests.test_tile_coverage_and_class_nms) ... ok
+test_verification_only_bundle_does_not_require_disabled_models (drone.scratch_objects.test_pipeline.PipelineTests.test_verification_only_bundle_does_not_require_disabled_models) ... ok
+test_verifier_thresholds_never_promote_rejected_proposals (drone.scratch_objects.test_pipeline.PipelineTests.test_verifier_thresholds_never_promote_rejected_proposals) ... ok
+test_weak_geometry_requires_both_pixel_and_cnn_agreement (drone.scratch_objects.test_pipeline.PipelineTests.test_weak_geometry_requires_both_pixel_and_cnn_agreement) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 2.327s
+
+OK
