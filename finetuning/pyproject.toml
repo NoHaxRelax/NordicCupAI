@@ -1,0 +1,33 @@
+[project]
+name = "nordic-med-finetune"
+version = "0.1.0"
+description = "Extractive QA fine-tuning on the Nordic AI Cup medical-appointment case"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.11",
+    "transformers>=4.44",
+    "sentencepiece>=0.2.0",
+    "protobuf>=4.25",
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+# only needed for --optim adamw8bit
+bnb = ["bitsandbytes>=0.43"]
+
+# The venv lives outside OneDrive: ~4 GB of CUDA DLLs should not sync.
+# run.cmd sets UV_PROJECT_ENVIRONMENT to the same path.
+[tool.uv]
+package = false
+
+# CUDA build, not the CPU default. cu128 is what torch 2.11 ships for py3.13
+# on Windows; cu124 no longer carries it.
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

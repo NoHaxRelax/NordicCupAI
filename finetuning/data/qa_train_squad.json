@@ -1,0 +1,3710 @@
+{
+ "version": "medical-appointment-v1",
+ "data": [
+  {
+   "title": "sample_10",
+   "paragraphs": [
+    {
+     "context": "Good morning. I am Dr. Norgard. We have not met before. Could I have your name, please? Good morning. Birta Rees. Welcome, Birta. Please have a seat. What can I help you with today? I need my prescriptions renewed. The asthma medicine and the one for stomach acid. Of course. Before we do that, has anything new turned up? Any new symptoms? No. Nothing new. Should there be? I do worry about the asthma sometimes. That is a fair thing to wonder about. Nothing you have described today points to something new. It is the allergic kind of asthma I have. Is that right? Yes. Allergic asthma. That is the condition we are treating. I just want to be sure it is not quietly getting worse. Then let us listen to your chest and your heart, and we will know more about today. Yes. Please do. Breathe normally for me. And once more. Is everything all right? Your lungs and your heart both sound normal. Nothing abnormal on life. That is a relief to hear. I would describe this as a stable situation. You do need to continue the treatment you are on. So I carry on with everything exactly as before? Exactly as before. And I will renew both prescriptions today. Which ones will that be? Dimista and esomeprazole for the stomach acid. Both renewed. Thank you. That is what I was hoping for. Did you notice the first frost this morning? I did. The car windows were completely white. Autumn has made its point rather firmly. It has. Right, so I only need to collect the medicine. That is all. Anything else before you go? No. I think that is everything. Thank you, doctor. Take care, Birta. Goodbye. The End",
+     "qas": [
+      {
+       "id": "sample_10_hard_no_q01",
+       "question": "Has the doctor found the condition to be unstable?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_10_hard_no_q04",
+       "question": "Did the patient report new breathing symptoms?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_10_yes_q01",
+       "question": "Does the patient need continued treatment?",
+       "answers": [
+        {
+         "text": "You do need to continue the treatment you",
+         "answer_start": 991
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_10_off_topic_q02",
+       "question": "Did the patient mention owning a specific pet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_10_off_topic_q01",
+       "question": "Was any problem with housing discussed?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_10_hard_no_q05",
+       "question": "Is the stomach acid medication being discontinued?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_10_hard_no_q03",
+       "question": "Were abnormal sounds heard over the lungs?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_10_yes_q02",
+       "question": "Were the lungs and heart normal on auscultation?",
+       "answers": [
+        {
+         "text": "Your lungs and your heart both sound normal. Nothing abnormal on life. That",
+         "answer_start": 849
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_10_yes_q03",
+       "question": "Are the patient's complaints unchanged, with nothing new reported?",
+       "answers": [
+        {
+         "text": "No. Nothing new.",
+         "answer_start": 341
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_10_hard_no_q02",
+       "question": "Does the plan include a referral to a lung specialist?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_17",
+   "paragraphs": [
+    {
+     "context": "Good morning. I'm Dr. Skov. We have not met before. You are Suzanne Hjort? Yes. Good morning. Welcome. Please sit down. Did you get here all right? The bus was delayed, but I still made it in time. Then the day is off to a decent start. You are here for the answer on the swab from your mouth. Yes. That is why I came. I have it in front of me. The swab shows yeast fungi. So it is a fungal infection. It is. A fungal infection in the mouth, and it is one that needs treating. What does the treatment involve? Sporanox. 100 mg daily for 2 weeks. You take it after a meal. After a meal every day for 2 weeks. Exactly right. Always after food. All right. That is clear. Any questions about it? No. I do not think so. Good. Have you been baking anything new lately? I tried a rye loaf at the weekend. It turned out better than I expected. That is a fine result. Take care, Suzanne. Thank you. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_17_yes_q03",
+       "question": "Is the medicine to be taken after a meal?",
+       "answers": [
+        {
+         "text": "You take it after a meal.",
+         "answer_start": 546
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_17_hard_no_q06",
+       "question": "Has the patient been told that the condition needs no treatment?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_yes_q02",
+       "question": "Should the daily dose be 100 mg?",
+       "answers": [
+        {
+         "text": "100 mg daily for",
+         "answer_start": 520
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_17_hard_no_q05",
+       "question": "Were bacteria identified in the sample?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_hard_no_q03",
+       "question": "Did the swab come from the throat?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_hard_no_q02",
+       "question": "Was the prescribed dose 200 mg daily?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_off_topic_q01",
+       "question": "Is there any mention of attending a concert?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_hard_no_q01",
+       "question": "The treatment is planned to run for six weeks, right?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_hard_no_q04",
+       "question": "Should the tablets be taken on an empty stomach?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_17_yes_q01",
+       "question": "Will the treatment last two weeks?",
+       "answers": [
+        {
+         "text": "After a meal every day for 2 weeks.",
+         "answer_start": 572
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_18",
+   "paragraphs": [
+    {
+     "context": "Morning, Dr. Scove. Thanks for fitting me in. Morning, Jens. Always good to see you. Busy out there with the school holidays? Very. The whole town seems to be on the move. It is like that every summer. So, what can I do for you? I need my ibumetin renewed. All right. And you are still taking pantoprazole alongside it? Yes, every day with it. Good. Now, one thing I want to be open with you about. You have used anti-inflammatory painkillers heavily and for a long time. Is that harming me? It means we should monitor your blood pressure and your kidney function. That is the sensible step. How do we go about that? I would like you to measure your blood pressure at home over three days. I can do that. And the kidneys? Blood tests. Please book a time for those. We check kidneys, cholesterol, and blood sugar. And you will still renew the ibumetin today? Yes. The prescription is created. Does that plan sound workable to you? It does. Home readings for three days, then the blood tests. That is it. Have you read anything good lately? I finished a crime novel last night. It kept me up far too late. The good ones tend to. Take care, Jens. Thanks. See you. Subtitles by the Amara.org community",
+     "qas": [
+      {
+       "id": "sample_18_yes_q04",
+       "question": "Should kidney function be monitored?",
+       "answers": [
+        {
+         "text": "we should monitor your blood pressure and your kidney function.",
+         "answer_start": 501
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_18_off_topic_q01",
+       "question": "Is there any reference to the patient planning a specific fitness challenge?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_18_yes_q02",
+       "question": "Did the patient ask for a renewal of the Ibumetin prescription?",
+       "answers": [
+        {
+         "text": "I need my ibumetin renewed.",
+         "answer_start": 229
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_18_yes_q01",
+       "question": "Has the Ibumetin prescription been issued?",
+       "answers": [
+        {
+         "text": "Yes. The prescription is created.",
+         "answer_start": 858
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_18_yes_q07",
+       "question": "Is the patient also taking Pantoprazole?",
+       "answers": [
+        {
+         "text": "And you are still taking pantoprazole alongside it? Yes, every day with it. Good.",
+         "answer_start": 268
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_18_hard_no_q01",
+       "question": "Were liver values the focus of the planned blood tests?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_18_hard_no_q02",
+       "question": "Should the blood pressure readings be taken at the clinic instead of at home?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_18_yes_q06",
+       "question": "Will the blood tests include cholesterol and blood sugar?",
+       "answers": [
+        {
+         "text": "We check kidneys, cholesterol, and blood sugar.",
+         "answer_start": 765
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_18_yes_q03",
+       "question": "Does the doctor consider the NSAID use long-standing and high?",
+       "answers": [
+        {
+         "text": "You have used anti-inflammatory painkillers heavily and for a long time.",
+         "answer_start": 399
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_18_yes_q05",
+       "question": "Was blood pressure to be measured at home over three days?",
+       "answers": [
+        {
+         "text": "I would like you to measure your blood pressure at home over three days.",
+         "answer_start": 617
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_19",
+   "paragraphs": [
+    {
+     "context": "Good afternoon. My name is Signa Everson. I have not been here before. Welcome. I'm Dr. Fabricius. Please sit down. Did you get away from work easily? Yes, thank you. It has been a busy day, but I managed. Good. What do you need today? Two prescriptions renewed. Activel and Aromir, if that is all right. That is fine. Anything else? I am still being treated for asthma and for reflux. Noted. Both are ongoing. Is it a problem that I have been on them for so long? No. Your medication is stable. Stable meaning it is doing what it should? Yes. Nothing suggests a change is needed. All right. I do worry about the asthma sometimes. Understandable. Today we continue your treatment. So you are not concerned about anything? Not from what you have told me. Your medication is stable. Right. Sorry for asking twice. It is no trouble at all. Which prescriptions will I get? Activel, Aromir, and Isomeprazole. All three renewed. The Isomeprazole is the one for the reflux? Yes, that is right. Good. That is what I take. Anything else before you go? No, that is everything. The supermarket was packed this morning, so I am glad to sit down. Everyone seems to show interest. I am glad to see that you are going to the shop at the same hour. Take care, Cigna. Thank you, doctor. Goodbye. Thank you, doctor. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_19_yes_q04",
+       "question": "Is the patient still being treated for asthma?",
+       "answers": [
+        {
+         "text": "I am still being treated for asthma and",
+         "answer_start": 334
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_19_off_topic_q01",
+       "question": "Did the patient discuss baking a cake in the conversation?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_19_hard_no_q03",
+       "question": "Does the doctor describe the medication as unstable and in need of change?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_19_hard_no_q01",
+       "question": "Alongside asthma, is the patient treated for diabetes?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_19_yes_q01",
+       "question": "Were three prescriptions renewed in total?",
+       "answers": [
+        {
+         "text": "Activel, Aromir, and Isomeprazole. All three renewed.",
+         "answer_start": 869
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_19_off_topic_q02",
+       "question": "Did the conversation mention anything about the patient planning a trip?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_19_yes_q02",
+       "question": "Has Esomeprazole been renewed as well?",
+       "answers": [
+        {
+         "text": "Activel, Aromir, and Isomeprazole. All three renewed.",
+         "answer_start": 869
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_19_yes_q03",
+       "question": "Is Airomir among the renewed medicines?",
+       "answers": [
+        {
+         "text": "Activel, Aromir, and Isomeprazole. All three renewed.",
+         "answer_start": 869
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_19_hard_no_q04",
+       "question": "Were the prescriptions stopped rather than renewed?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_19_hard_no_q02",
+       "question": "Was Pantoprazole the acid-reducing drug that was renewed?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_20",
+   "paragraphs": [
+    {
+     "context": "Good morning. My name is Niels Everson. I hope this is the right room. The corridor out there is a bit of a maze. You found it. I am Dr. Polson. Good to meet you. Please take a seat, and we will go through things in order. Thank you. Since we have not met before, I will start from the beginning, if that suits you. Please do. Tell me what brings you here today, and afterwards I will explain my assessment and the plan. Well, it is quite simple, really. I have almost run out of my painkillers, and I was hoping to have the prescriptions renewed. Which painkillers are we talking about? I would like to hear you name them yourself. PAMOL and IBUMETIN. Those are the two I use, and I have been taking them for a good while now. Thank you. PAMOL is paracetamol, and IBUMETIN belongs to the anti-inflammatory painkillers. Does that match? It does, more or less. In my head, one of them is the mild everyday one, and the other is the stronger one for inflammation. That is a fair way to put it. And the pain itself, where would you say it sits? That is the awkward part. It is not one spot at all. It is a general, widespread sort of pain, spread around the body rather than in one place. General or widespread pain is exactly what you are talking about. That is exactly the heading I would use for it. Has anything about it changed recently? No, not really. It is much the same as it has been. Steady, I suppose, is the word. Nothing new has turned up to alarm me. Good. Then we are looking at a stable pain problem, with a continued need for pain relief. That is a relief to hear. Oh, before I forget, have you seen anything worth watching lately? I finally finished a series of books. It was a series my neighbor kept pushing on me. I have little time for television, but I watched a film last weekend that was worth the evening. How was your series? Slow to begin with, honestly. But it grew on me, and by the end, I was recommending it to everyone. Patience pays off, apparently. Patience is a rare commodity. Let us come back to the medication side of things. Yes, of course. Of course. Do you want to examine me first? I half expected that. Not today. Today is about the medication, so there is no examination to record from this visit. All right. I will admit I am not sorry about that. So, what is your conclusion, then? That your pain problem is stable, and that you still need pain-relieving medication. Nothing about the treatment needs changing. So, what is your conclusion? So, I simply carry on exactly as I have been doing? Yes. I am creating prescriptions for both PAMEL and ibumedin now, and they will be waiting for you at the pharmacy. That is a weight off my mind. I was down to the last few tablets in the box, and I did not fancy running out over a weekend. Then the timing is good. Is there any part of the plan you would like me to go over again? No, I think it is clear. No, I think it is clear. Renewed prescriptions for both, and nothing else changes. One practical thing, though. I came by bicycle and left it against the railing at the front. There is a proper rack around the side of the building, a little more sheltered. Most people leave theirs there. I will move it on my way out, then. Thank you very much for your time. You are welcome, Niels. Take care.",
+     "qas": [
+      {
+       "id": "sample_20_hard_no_q03",
+       "question": "Will the patient be referred to a pain clinic?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_20_off_topic_q02",
+       "question": "Was a specific recipe or cooking activity discussed?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_20_off_topic_q01",
+       "question": "At any point does the patient talk about their experiences with a hobby?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_20_yes_q01",
+       "question": "Was Ibumetin renewed as well?",
+       "answers": [
+        {
+         "text": "I am creating prescriptions for both PAMEL and ibumedin now,",
+         "answer_start": 2542
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_20_hard_no_q01",
+       "question": "Did the patient ask for morphine to be renewed?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_20_hard_no_q02",
+       "question": "Does the pain affect the lower back alone?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_20_yes_q05",
+       "question": "Is Pamol one of the medicines requested?",
+       "answers": [
+        {
+         "text": "I am creating prescriptions for both PAMEL and",
+         "answer_start": 2542
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_20_yes_q02",
+       "question": "Has the pain problem been described as stable?",
+       "answers": [
+        {
+         "text": "Then we are looking at a stable pain problem,",
+         "answer_start": 1469
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_20_yes_q04",
+       "question": "Does the patient still need pain relief?",
+       "answers": [
+        {
+         "text": "a continued need for pain relief.",
+         "answer_start": 1520
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_20_yes_q03",
+       "question": "Were both prescriptions issued?",
+       "answers": [
+        {
+         "text": "I am creating prescriptions for both PAMEL",
+         "answer_start": 2542
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_23",
+   "paragraphs": [
+    {
+     "context": "Morning, Jens. You came through that downpour, I see. I did. It went sideways the last hundred meters. I nearly turned back. Glad you did not. What brings you in? Some skin changes that keep bothering me. One under my right breast, a couple on my stomach, and one on my left lower leg. I want them gone. Let me look at them. The one under your right breast is a skin wart, about one centimeter. And you can tell that just by looking at it? Yes, it has the appearance of one. The others on your abdomen and lower leg are 0.6 centimeters, scaly and brownish. Scaly and brownish covers a lot of ground. What do you think they are? They look like seborrheic keratoses. That is a common harmless growth. Look like, so you are not certain? I am describing what I see. My assessment is that these are benign skin changes. Benign, all of them? Including the one under the breast? Yes, that is my assessment of all of them. Fair enough. Then can we get on with removing them? We can. I will arrange an appointment for the removal. And what am I signing up for? I would rather hear the downside now. There will be a scar where each one is removed, and there is a risk of infection afterwards. You should know both before we book it. Right, a scar and an infection risk. I would still rather have them off than keep catching them. Understood. Then the appointment for removal is the plan. Good. Any idea whether this weather holds through the weekend? The forecast says it clears by Saturday. Take care, Jens.",
+     "qas": [
+      {
+       "id": "sample_23_yes_q03",
+       "question": "Was a skin wart found under the right breast?",
+       "answers": [
+        {
+         "text": "The one under your right breast is a skin wart,",
+         "answer_start": 325
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_23_yes_q05",
+       "question": "Has the patient been informed about the risk of scarring and infection?",
+       "answers": [
+        {
+         "text": "There will be a scar where each one is removed, and there is a risk of infection afterwards.",
+         "answer_start": 1090
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_23_yes_q02",
+       "question": "Does the patient want the skin changes removed?",
+       "answers": [
+        {
+         "text": "I would still rather have them off than keep catching them.",
+         "answer_start": 1260
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_23_off_topic_q02",
+       "question": "Is there any mention of the patient's pet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_23_hard_no_q01",
+       "question": "Has the patient been told that the procedure carries no risk of scarring?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_23_yes_q04",
+       "question": "Is an appointment for the removal going to be arranged?",
+       "answers": [
+        {
+         "text": "Then the appointment for removal is the plan.",
+         "answer_start": 1332
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_23_yes_q06",
+       "question": "Do the changes on the abdomen and lower leg resemble seborrheic keratoses?",
+       "answers": [
+        {
+         "text": "They look like seborrheic keratoses.",
+         "answer_start": 628
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_23_yes_q01",
+       "question": "Were the skin changes judged to be benign?",
+       "answers": [
+        {
+         "text": "My assessment is that these are benign skin changes.",
+         "answer_start": 762
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_23_off_topic_q01",
+       "question": "Does the patient talk about needing a new vehicle?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_23_hard_no_q02",
+       "question": "Are the elements on the abdomen about 2 cm across?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_33",
+   "paragraphs": [
+    {
+     "context": "Good morning. My name is Morton Reese. I have an appointment. Good morning, Morton. I'm Dr. Bang. Please have a seat. Thank you. I was not sure I had found the right room. You have. This is your follow-up for allergic rhinitis. Yes. I have been worrying about whether it is really under control. Let us go through it together. How has the medication been? It has helped. I do not have any symptoms right now. No symptoms at all at the moment? None. And that is partly what makes me uneasy. Say a little more about that if you can. It feels too easy. I keep thinking something is being missed. I understand. The examination I have done is normal. Normal in all of it? Yes. Nothing abnormal was found on examination. All right. So the medicine is genuinely working? Yes. The antihistamine is having a good effect. So I feel well because of the antihistamine. That is my assessment. Do I stop taking it now? The plan is to continue it as needed. As needed? So only when the symptoms come back? Yes. You take it when you need it. Right. That is clearer now. Good. I noticed you looking at the plants when you came in. I was. They look a great deal healthier than mine at home. The room was rearranged recently, too, in case it looked unfamiliar. It did, a little. Thank you for explaining everything so patiently. You are welcome, Morton. Take care.",
+     "qas": [
+      {
+       "id": "sample_33_yes_q06",
+       "question": "The visit is a follow-up on allergic rhinitis, correct?",
+       "answers": [
+        {
+         "text": "This is your follow-up for allergic rhinitis. Yes.",
+         "answer_start": 182
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_33_hard_no_q01",
+       "question": "Does the doctor plan to refer the patient to an allergy specialist?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_33_hard_no_q02",
+       "question": "Were daily doses made mandatory going forward?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_33_off_topic_q01",
+       "question": "Is there any talk about the patient's recent purchase of a vehicle?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_33_yes_q02",
+       "question": "Is the patient free of symptoms at the moment?",
+       "answers": [
+        {
+         "text": "I do not have any symptoms right now. No symptoms at all at the moment?",
+         "answer_start": 371
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_33_yes_q04",
+       "question": "Did the antihistamine work well?",
+       "answers": [
+        {
+         "text": "The antihistamine is having a good effect.",
+         "answer_start": 769
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_33_yes_q03",
+       "question": "Has the medication helped the patient?",
+       "answers": [
+        {
+         "text": "So the medicine is genuinely working? Yes.",
+         "answer_start": 726
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_33_yes_q05",
+       "question": "Are the findings unremarkable?",
+       "answers": [
+        {
+         "text": "The examination I have done is normal. Normal in all of it? Yes. Nothing abnormal was found on examination.",
+         "answer_start": 607
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_33_yes_q01",
+       "question": "Should the patient carry on with the treatment as needed?",
+       "answers": [
+        {
+         "text": "The plan is to continue it as needed.",
+         "answer_start": 905
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_33_hard_no_q03",
+       "question": "Was anything abnormal picked up at the examination?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_37",
+   "paragraphs": [
+    {
+     "context": "Morning, Dr. Norgaard. Good to see you again. Morning, Rasmus. Come in. What brings you today? I found a tick attached to my leg. I removed it, and I wanted the bite looked at. Right. A tick bite. Any redness around the site? No redness at all. Any swelling? No swelling either. The area looks unchanged to me. Let me have a look at it. Of course. The skin is intact. There is no erythema migrans. So no expanding ring-shaped rash around the bite? Correct. No erythema migrans. And how do you rate the risk of Borrelia? Low. The risk of Borrelia here is low. What are you basing that on? Intact skin. No redness, no swelling, and no rash at the site. Then what is the plan? Observation. No treatment is needed. So no antibiotics today? No. This is an insect bite without complication. Understood. The mornings have turned properly autumnal, haven't they? They have. The light goes quickly at this time of year. I have already dug out the winter jacket. Sensible. Anything else on your mind today? No, that was the only thing. Good. Big plans for the rest of the day? Just a couple of errands, then some reading at home. Sounds calm. Take care, Rasmus. Thanks, Dr. Norgard. Goodbye. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_37_yes_q05",
+       "question": "Is the skin intact?",
+       "answers": [
+        {
+         "text": "The skin is intact.",
+         "answer_start": 348
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_37_hard_no_q01",
+       "question": "Was erythema migrans seen around the bite?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_37_hard_no_q03",
+       "question": "Is the risk of Borrelia considered high?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_37_yes_q03",
+       "question": "Was erythema migrans absent?",
+       "answers": [
+        {
+         "text": "There is no erythema migrans.",
+         "answer_start": 368
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_37_yes_q04",
+       "question": "Are redness and swelling absent?",
+       "answers": [
+        {
+         "text": "No redness at all. Any swelling? No swelling either.",
+         "answer_start": 226
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_37_yes_q06",
+       "question": "The plan involves no treatment, right?",
+       "answers": [
+        {
+         "text": "No treatment is needed.",
+         "answer_start": 687
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_37_off_topic_q01",
+       "question": "Does the conversation indicate the patient discussed their employment as a freelancer?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_37_hard_no_q02",
+       "question": "Has the bite area become red and swollen?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_37_yes_q01",
+       "question": "Did the patient get a tick bite?",
+       "answers": [
+        {
+         "text": "A tick bite.",
+         "answer_start": 184
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_37_yes_q02",
+       "question": "Has the patient been told simply to keep an eye on the area?",
+       "answers": [
+        {
+         "text": "Then what is the plan? Observation.",
+         "answer_start": 651
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_39",
+   "paragraphs": [
+    {
+     "context": "Good morning. I am Dr. Anderson. I do not think we have met before. No, we have not. I am Mikel Ries. Welcome, Mikel. Did you notice the waiting area? It was repainted a few weeks ago. I did. It looks a lot brighter than I expected. It does. Right. Tell me what brings you in today. Pain in my lower back. It feels muscular. Does the pain travel anywhere? Down into a leg, for example? No, it stays in the lower back. Thank you. I would like to examine your back and see how it moves. Of course. I can feel tight, tender bands in the muscles. We call those muscle knots. That would explain the tightness. Your movement is also reduced when you bend and turn. Yes, it feels stiff. Putting it together, this is nonspecific muscle and joint pain in the back, without pain. Without radiation. Right. That makes sense. For treatment, I recommend pain relief and an exercise program. Painkillers and exercises. Exactly. The exercises are the part that keeps the back moving. Is that clear? Yes, that is clear. Good. Take care, Mikel. Thank you. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_39_yes_q02",
+       "question": "Does the patient have pain in the lower back?",
+       "answers": [
+        {
+         "text": "Pain in my lower back.",
+         "answer_start": 283
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_39_hard_no_q04",
+       "question": "Has the patient been referred for surgery?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_39_off_topic_q02",
+       "question": "Is the patient discussing their pet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_39_off_topic_q01",
+       "question": "At any point does the patient express interest in learning digital photography techniques?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_39_yes_q04",
+       "question": "Was reduced mobility found during the examination?",
+       "answers": [
+        {
+         "text": "Your movement is also reduced when you bend and turn. Yes, it feels stiff.",
+         "answer_start": 605
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_39_yes_q03",
+       "question": "Were painkillers part of the treatment plan?",
+       "answers": [
+        {
+         "text": "For treatment, I recommend pain relief and",
+         "answer_start": 814
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_39_hard_no_q01",
+       "question": "Does the pain radiate down the leg?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_39_yes_q01",
+       "question": "The pain was assessed as nonspecific musculoskeletal pain, right?",
+       "answers": [
+        {
+         "text": "this is nonspecific muscle and joint pain in the back, without pain. Without radiation.",
+         "answer_start": 701
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_39_hard_no_q03",
+       "question": "Did the doctor conclude that the pain came from a herniated disc?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_39_hard_no_q02",
+       "question": "Was the patient's mobility completely unaffected?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_4",
+   "paragraphs": [
+    {
+     "context": "Morning, Dr Fabricius. Christian, come in. Good to see you. You too. I see the magazines in the waiting room have finally been refreshed. They had been there so long, I was starting to recognise the covers. I read one all the way through, which tells you something. It tells me we are running on time for once. So, this is your annual follow-up. It is, for the asthma. Exactly that. Let me listen to your chest and your heart, and then we will talk. Go ahead. Breathe normally for me. And again. Is it alright? Your chest and heart both sound normal. Nothing abnormal to report. Good. I had half convinced myself something would turn up this year. Nothing has. This is what a stable annual check looks like. So, what happened? What happens with my treatment? No changes. You carry on exactly as you are. Nothing at all. I suppose I expected some adjustment. There is nothing to adjust. When the follow-up is clear, leaving things alone is the right call. That is reassuring to hear said plainly. Then that is the whole of it. Asthma follow-up done. No changes. Shorter than I had booked out for? The good ones usually are. Everything busier at your end with the school holidays. Considerably. The roads at eight in the morning are a different world. It is the same here. The mornings fill up the moment term ends. Then I will let you get on. Thank you. Take care, Christian. Same time next year.",
+     "qas": [
+      {
+       "id": "sample_4_yes_q03",
+       "question": "Did the patient attend for an annual asthma follow-up?",
+       "answers": [
+        {
+         "text": "So, this is your annual follow-up. It is, for the asthma. Exactly",
+         "answer_start": 311
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_yes_q07",
+       "question": "Is the heart examination without abnormal findings?",
+       "answers": [
+        {
+         "text": "Nothing abnormal to report.",
+         "answer_start": 551
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_yes_q06",
+       "question": "Was the patient listened to with a stethoscope?",
+       "answers": [
+        {
+         "text": "Let me listen to your chest and your heart, and then we will talk. Go ahead. Breathe normally for me. And again. Is it alright? Your chest and heart both sound normal.",
+         "answer_start": 383
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_yes_q05",
+       "question": "Were the lungs found to be normal on auscultation?",
+       "answers": [
+        {
+         "text": "Your chest and heart both sound normal. Nothing abnormal to report.",
+         "answer_start": 511
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_yes_q02",
+       "question": "Are the patient's asthma findings stable at this visit?",
+       "answers": [
+        {
+         "text": "This is what a stable annual check looks like.",
+         "answer_start": 661
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_hard_no_q01",
+       "question": "Should the asthma medication dose be increased?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_4_yes_q01",
+       "question": "Will the current treatment continue unchanged?",
+       "answers": [
+        {
+         "text": "what happened? What happens with my treatment? No changes. You carry on exactly as you are. Nothing",
+         "answer_start": 712
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_yes_q04",
+       "question": "Does the visit concern asthma?",
+       "answers": [
+        {
+         "text": "It is, for the asthma. Exactly",
+         "answer_start": 346
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_4_off_topic_q01",
+       "question": "Is there any discussion about cooking?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_4_hard_no_q02",
+       "question": "Has an irregular heart rhythm been found?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_42",
+   "paragraphs": [
+    {
+     "context": "Good morning, Camilla. Come in and sit down. Thank you. It is nice to be back. I always forget how calm it is in here compared with everything going on outside. It has its moments. This is your preventive health check today. Yes, that is right. And I have to say, I feel perfectly well. No complaints at all, which almost feels like cheating. That is worth noting. Feeling well is part of the picture. Good. I did wonder whether coming in when nothing is actually wrong was a waste of your time. Not at all. That is exactly what these checks are for. Fair enough. So what did you find? Your blood pressure is 135 over 88. 135 over 88. I will be honest, those figures mean very little to me on their own. That is the reading I measured today. Right. And was there anything else you measured? Your body mass index is 28. 28. And what does that tell you? It puts you in the mildly overweight range. Mildly overweight. I suspected as much, honestly. Clothes tell you before the scales do. That is my assessment. And I would not put it more strongly than that. I appreciate that. I have had people be far more dramatic about far less. There is no need for drama here. So what happens next? Is there something I should be doing? The plan is advice on diet and on exercise. Diet and exercise. The two words everybody expects to hear, and yet here we are. They are the plan for today. That is fine by me. I would far rather have advice than a prescription. Understood. The seasons are turning already. I notice the light is different in the mornings now, and everything smells like the end of summer. It does come round quickly. It does. I always mean to make more of the summer, and then, quite suddenly, it is gone. Most of us do exactly the same. That is comforting. Now, back to my results for a moment. Of course. The mildly overweight assessment, that was based on the body mass index? Yes, on the body mass index of 28. Understood. And that is everything for today? What I have for you today is the blood pressure, the body mass index, and the advice. Right. Well, that is manageable enough. What are your plans for the rest of the day? Nothing dramatic. I might walk home the long way, seeing as we have been talking about exercise. That sounds like a good start. Take care, Camilla. Thank you. See you next time.",
+     "qas": [
+      {
+       "id": "sample_42_yes_q02",
+       "question": "Was the blood pressure measured at 135/88?",
+       "answers": [
+        {
+         "text": "Your blood pressure is 135 over 88.",
+         "answer_start": 586
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_yes_q07",
+       "question": "Did the doctor assess the patient as slightly overweight?",
+       "answers": [
+        {
+         "text": "It puts you in the mildly overweight range.",
+         "answer_start": 852
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_yes_q06",
+       "question": "Were exercise recommendations also part of the plan?",
+       "answers": [
+        {
+         "text": "The plan is advice on diet and on exercise.",
+         "answer_start": 1223
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_yes_q05",
+       "question": "Does the patient have a BMI of 28?",
+       "answers": [
+        {
+         "text": "Your body mass index is 28.",
+         "answer_start": 791
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_yes_q03",
+       "question": "Has the patient been given advice about diet?",
+       "answers": [
+        {
+         "text": "The plan is advice on diet and",
+         "answer_start": 1223
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_hard_no_q02",
+       "question": "Did the doctor consider the patient severely obese?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_42_yes_q01",
+       "question": "Is the patient feeling well?",
+       "answers": [
+        {
+         "text": "feel perfectly well.",
+         "answer_start": 266
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_yes_q04",
+       "question": "The visit was a preventive health check, correct?",
+       "answers": [
+        {
+         "text": "This is your preventive health check today.",
+         "answer_start": 181
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_42_hard_no_q01",
+       "question": "Was the blood pressure 155/98?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_42_off_topic_q01",
+       "question": "Does the patient talk about wanting to work part-time?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_43",
+   "paragraphs": [
+    {
+     "context": "Hello, Trini. Good to see you. Have a seat. Thanks. My throat has been really sore. A sore throat. Let us take it in order. First, I did a test on your throat. A test? What sort of test is that? A strep test. It looks for one particular bacterium that can cause a sore throat. And what did it say? It was negative. That means that bacterium was not found. So negative is the good one here? In this case, yes. I also looked at your throat and there was no pus. No pus. That is the yellow stuff you sometimes get? That is right. There was none of it. So what is making it hurt then? My assessment is that this is a viral infection. A virus. Not bacteria then. Exactly. Does that difference make sense to you? I think so. So do I need antibiotics for it? No. No. The plan is no antibiotics because they do not work against a virus. All right. So what do I do instead? We treat the symptoms, so we ease the discomfort while it passes. Just making it feel better, basically. Yes. That is a good way to put it. The roadworks nearly made me late getting here, by the way. They have caught a lot of people out this week. They have. Is the weekend meant to be any good? No. No. No. No. No. It's decent from what I have seen. That is something. Thanks for explaining it all so clearly. You are welcome, Trini. Take care of that throat.",
+     "qas": [
+      {
+       "id": "sample_43_yes_q02",
+       "question": "Does the patient have a sore throat?",
+       "answers": [
+        {
+         "text": "My throat has been really sore.",
+         "answer_start": 52
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_43_hard_no_q03",
+       "question": "Is the infection thought to be bacterial?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_43_yes_q05",
+       "question": "Did the examination find no pus in the throat?",
+       "answers": [
+        {
+         "text": "I also looked at your throat and there was no pus.",
+         "answer_start": 409
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_43_off_topic_q01",
+       "question": "Are the speakers discussing the patient's pet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_43_yes_q04",
+       "question": "Was the strep test negative?",
+       "answers": [
+        {
+         "text": "It was negative.",
+         "answer_start": 298
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_43_yes_q01",
+       "question": "Is the infection considered to be viral?",
+       "answers": [
+        {
+         "text": "My assessment is that this is a viral infection.",
+         "answer_start": 581
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_43_hard_no_q01",
+       "question": "Does the patient describe abdominal pain as the main problem?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_43_hard_no_q02",
+       "question": "Were the tonsils covered in coatings?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_43_yes_q03",
+       "question": "Has the doctor decided against antibiotics?",
+       "answers": [
+        {
+         "text": "The plan is no antibiotics because they do not work against a virus.",
+         "answer_start": 760
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_43_hard_no_q04",
+       "question": "Did the doctor see pus in the throat?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_47",
+   "paragraphs": [
+    {
+     "context": "Hello, Dr. Iverson. Thank you for squeezing me in today. Not at all, Sophie. Come and sit down. What is troubling you? My throat. It is really sore and it hurts when I swallow. A sore throat and pain on swallowing. Thank you. It has been worrying me a bit, if I am honest. Let us have a proper look and we can go from there. Yes, please do. Your tonsils are red and there is coating on them. Coating. That sounds unpleasant. What is it exactly? It is a whitish layer sitting on the surface of the tonsils. And the redness? Is that part of the same thing? Yes. The redness and the coating on the tonsils go together here. Right. So what do you think it is? My assessment is tonsillitis. Tonsillitis. So an infection of the tonsils. That is exactly what it means. All right. I had convinced myself it was something worse. I understand. The findings fit tonsillitis. Good. And what happens about treating it? I am starting you on penicillin treatment. Penicillin. Starting from today? Yes. From today. That is reassuring. I like knowing that something is being done. Did you have to wait long out there? Not too long. Although I did get through most of a magazine in the waiting room. They are older than any of us would like to admit. I did notice the dates on them. Still, it passed the time. That is their purpose. Is there anything else about your throat? Just one thing. The coating you saw, is that what the treatment is for? The treatment is directed at the tonsillitis. That is what we are addressing today. That is fair. I did not want to promise. Only a clear idea. Of course. The queue at the pharmacy next door looked enormous when I walked past. It builds up around this hour. It usually thins out later on. Then I will take my time walking over. Thank you for everything. You are welcome, Sophie. Take care of yourself.",
+     "qas": [
+      {
+       "id": "sample_47_yes_q03",
+       "question": "Has penicillin treatment been started?",
+       "answers": [
+        {
+         "text": "I am starting you on penicillin treatment. Penicillin. Starting from today? Yes. From today.",
+         "answer_start": 906
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_47_hard_no_q04",
+       "question": "Is the patient able to swallow without any discomfort?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_47_hard_no_q03",
+       "question": "Did the doctor prescribe erythromycin?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_47_hard_no_q01",
+       "question": "Does the patient complain of hoarseness as the main symptom?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_47_hard_no_q05",
+       "question": "Was the patient told to manage with symptom relief only?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_47_off_topic_q01",
+       "question": "Does the conversation indicate the patient discussed their desire to learn digital photography techniques?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_47_yes_q01",
+       "question": "Were coatings seen on the tonsils?",
+       "answers": [
+        {
+         "text": "Your tonsils are red and there is coating on them. Coating.",
+         "answer_start": 341
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_47_hard_no_q06",
+       "question": "Has the throat problem been assessed as a viral infection?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_47_yes_q02",
+       "question": "Does the patient have a sore throat?",
+       "answers": [
+        {
+         "text": "My throat. It is really sore and it hurts when I swallow.",
+         "answer_start": 119
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_47_hard_no_q02",
+       "question": "Were the tonsils pale and free of coatings?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_48",
+   "paragraphs": [
+    {
+     "context": "Hello, Kirsten. Come in and sit down. Thank you. I have been a little nervous about today, I will admit. Let us take it in order, and it will make more sense. You came about tiredness. Yes, it has been going on and on. It simply does not lift. Persistent fatigue. That is what we were investigating. That is it exactly. And I keep thinking there must be a reason for it. We tested two things. The first was your thyroid-stimulating hormone. The thyroid. I had wondered about that one. It came back normal. Normal. And the other one? Your glucose, which is your blood sugar. That was normal as well. Both normal. So nothing was found at all. Correct. My assessment is that there is no hormonal cause for the tiredness. No hormonal cause. Does that mean nothing serious is going on? No. It just tells us the thyroid and the glucose results are normal. That is what these tests can say. I see. But I am still tired, so something must be causing it. I understand that is frustrating. What the tests show is that these results are normal. Right. So what is the plan then? No specific treatment is needed on the basis of these results. Nothing at all? That feels strange when I still feel like this. I know. But what is the plan today, based on what we have found? Does that make sense? I think so. It is just not what I had expected to hear. That is completely understandable. Sorry. I have been dwelling on it rather a lot since the tests. Not at all. The seasons are turning now, which everybody seems to be noticing. They are. It is getting dark so much earlier already. And the school holidays have made everything busier as well. They have. The whole town seems full at the moment. Take care, Kirsten. Thank you, Dr. Bruhn.",
+     "qas": [
+      {
+       "id": "sample_48_hard_no_q02",
+       "question": "Does the doctor attribute the fatigue to a thyroid disorder?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_48_off_topic_q01",
+       "question": "Does the doctor ask about the patient's experience with specific technology?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_48_yes_q03",
+       "question": "Was the TSH normal?",
+       "answers": [
+        {
+         "text": "The first was your thyroid-stimulating hormone. The thyroid. I had wondered about that one. It came back normal.",
+         "answer_start": 393
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_48_yes_q06",
+       "question": "Did the glucose test come back normal too?",
+       "answers": [
+        {
+         "text": "Your glucose, which is your blood sugar. That was normal as well.",
+         "answer_start": 533
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_48_yes_q05",
+       "question": "Were both blood tests within normal limits?",
+       "answers": [
+        {
+         "text": "That was normal as well. Both normal.",
+         "answer_start": 574
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_48_hard_no_q01",
+       "question": "Is the tiredness described as brief and occasional?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_48_yes_q04",
+       "question": "Has the patient been left without any specific treatment?",
+       "answers": [
+        {
+         "text": "No specific treatment is needed on the basis of these results.",
+         "answer_start": 1067
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_48_yes_q02",
+       "question": "Is the patient's tiredness persistent?",
+       "answers": [
+        {
+         "text": "You came about tiredness. Yes, it has been going on and on. It simply does not lift. Persistent fatigue.",
+         "answer_start": 159
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_48_yes_q07",
+       "question": "Does the doctor rule out an endocrine cause?",
+       "answers": [
+        {
+         "text": "My assessment is that there is no hormonal cause for the tiredness.",
+         "answer_start": 650
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_48_yes_q01",
+       "question": "The thyroid test gave a normal result, right?",
+       "answers": [
+        {
+         "text": "The first was your thyroid-stimulating hormone. The thyroid. I had wondered about that one. It came back normal.",
+         "answer_start": 393
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_5",
+   "paragraphs": [
+    {
+     "context": "Come in. I am Dr. Villidsen. We have not met before, I think. No, we have not. Louise Dahl. Lovely to meet you. I was just saying to the lady outside that the waiting room went far quicker than I expected. That is good to hear. Take a seat. There is a lot on your list today, so I would like to go through it with you rather than at you. I appreciate that. Where would you like to start? Probably the back, since that is the oldest of it. The back, yes. This is the chronic pain since your neck operation. That is right, the cervical disc prolapse, operated in 2017. And honestly, the pain has just carried on regardless. Despite taking the ibumetin and the panadil regularly? Despite both, and I do take them properly. That is the frustrating part. And then the anti-inflammatory gave me reflux on top. Which is why you are on pantoprazole for that. Exactly, yes. Yes. So one thing patching up the other, if you see what I mean. I do. And your asthma is being followed at the pulmonary outpatient clinic. It is, and that side of things is genuinely fine. They keep an eye on it, and I have no complaints there. Good. Then the menopausal symptoms, which you are taking Activel for. Yes, and my hands have started aching as well, which is newer. I did wonder about arthritis. Osteoarthritis is what is suspected there, yes. Anything else troubling you? Constipation, I am afraid. And I should be honest and say I still smoke. Thank you for saying so. Let me examine you, and then I will tell you what I find. Please do. You seem generally unaffected. Your gait and standing are normal. I can feel muscle tension in your neck and shoulders. That tension is exactly where it always sits. Right across there. So, to summarize. Chronic pain, stable asthma, chronic reflux, and you are perimenopausal with a need for treatment. And the hands, and the constipation, and the smoking. Osteoarthritis, constipation, and nicotine, yes. All noted. Now, what would you like to do about the neck and shoulder tension? If you are about to say physiotherapy, I would rather not. I have thought about it, and it is not for me. Then we will not refer to it. It is for you. For the pain, you continue the anti-inflammatory with the stomach protection alongside it. And is there anything I need to come back for? An annual check of your blood pressure. Does that plan sit right with you? It does. And I will say, that check-in screen at reception nearly defeated me on the way in. You are not the first to tell me that today. Well, I got there in the end. Thank you, Dr. Villidsen.",
+     "qas": [
+      {
+       "id": "sample_5_yes_q01",
+       "question": "Does the patient take pantoprazole for reflux?",
+       "answers": [
+        {
+         "text": "And then the anti-inflammatory gave me reflux on top. Which is why you are on pantoprazole for that.",
+         "answer_start": 750
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_5_hard_no_q02",
+       "question": "Did the back pain begin after surgery for a lumbar disc prolapse?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_5_hard_no_q01",
+       "question": "Have the pains in the hands been attributed to gout?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_5_yes_q05",
+       "question": "Is the patient still in pain despite regular Ibumetin and Panodil?",
+       "answers": [
+        {
+         "text": "pain has just carried on regardless. Despite taking the ibumetin and the panadil regularly?",
+         "answer_start": 585
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_5_yes_q02",
+       "question": "Will the NSAID treatment be continued under cover of a proton pump inhibitor?",
+       "answers": [
+        {
+         "text": "For the pain, you continue the anti-inflammatory with the stomach protection alongside it.",
+         "answer_start": 2155
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_5_yes_q06",
+       "question": "Did the patient undergo surgery for a cervical disc prolapse in 2017?",
+       "answers": [
+        {
+         "text": "cervical disc prolapse, operated in 2017.",
+         "answer_start": 525
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_5_off_topic_q02",
+       "question": "Does the conversation mention the patient owning a digital camera?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_5_yes_q03",
+       "question": "Was muscle tension found in the neck and shoulders?",
+       "answers": [
+        {
+         "text": "I can feel muscle tension in your neck and shoulders.",
+         "answer_start": 1585
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_5_yes_q04",
+       "question": "Are the menopausal symptoms treated with Activelle?",
+       "answers": [
+        {
+         "text": "the menopausal symptoms, which you are taking Activel for.",
+         "answer_start": 1123
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_5_off_topic_q01",
+       "question": "Is the patient discussing owning a cat?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_50",
+   "paragraphs": [
+    {
+     "context": "Good morning. I am Dr. Anderson. Could you tell me your name, please? Hannah Reese. Nice to meet you. Likewise. Did you have to wait long at the desk? A little. The queue was quite long this morning. It often is at this hour. Let us get started. Have you noticed anything wrong lately? No, nothing at all. I feel completely normal. No symptoms, then. Your body mass index is 29. What does that number mean? It compares your weight with your height. 29 is above the healthy range. All right. Your fasting blood sugar was 7.0 millimoles per liter. Your long-term sugar value was 47 millimoles per mole. Is that high? I do not know much about these things. Both are above normal. Together, they raise a suspicion of type 2 diabetes. Diabetes. So I have it? It is not confirmed. It is a suspicion. Further tests have been arranged to settle it. And those will tell us for certain? That is why they are being done. Nothing changes for you until we have them. Okay. I understand. Good. You had the holiday off, I take it. It is only just finished. Yes. It was quiet and nice, but it went by fast. They always do. Anything else you want to ask? No. Thank you, doctor. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_50_yes_q04",
+       "question": "Are further tests needed before the diagnosis can be settled?",
+       "answers": [
+        {
+         "text": "Further tests have been arranged to settle it. And those will tell us for certain? That is why they are being done. Nothing changes for you until we have them.",
+         "answer_start": 794
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_50_hard_no_q01",
+       "question": "Does the fasting blood sugar lie at 5.0 mmol/L?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_50_off_topic_q01",
+       "question": "Are the speakers discussing the patient's recent college experience?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_50_yes_q01",
+       "question": "The HbA1c came out at 47 mmol/mol, right?",
+       "answers": [
+        {
+         "text": "Your long-term sugar value was 47 millimoles per mole.",
+         "answer_start": 546
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_50_yes_q03",
+       "question": "Was the patient's BMI recorded as 29?",
+       "answers": [
+        {
+         "text": "Your body mass index is 29.",
+         "answer_start": 351
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_50_hard_no_q03",
+       "question": "Has metformin treatment been started at this visit?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_50_off_topic_q02",
+       "question": "Was the patient talking about their recent weekend?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_50_yes_q05",
+       "question": "Is the patient free of any symptoms at this visit?",
+       "answers": [
+        {
+         "text": "I feel completely normal. No symptoms,",
+         "answer_start": 306
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_50_yes_q02",
+       "question": "Does the patient have a fasting blood sugar of 7.0 mmol/L?",
+       "answers": [
+        {
+         "text": "Your fasting blood sugar was 7.0 millimoles per liter.",
+         "answer_start": 491
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_50_hard_no_q02",
+       "question": "Were the results enough to confirm type 2 diabetes already?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_52",
+   "paragraphs": [
+    {
+     "context": "Good morning. I am Dr. Winther, and you are? Gita Nagel. Good morning. Welcome. Let us start with what has happened since your last appointment. I attended the diabetes education course. Good. Tell me how you found it. Thorough. A lot of it I had already read, but hearing it explained properly helped. That is often how it works. May I ask what you took away from it? Mainly a clearer picture of the condition and why the treatment is what it is. That is exactly the aim of the course. So what are you assessing today? This feels more like a conversation than a check. A fair question. With type 2 diabetes, your own understanding of it is part of the treatment. And you can judge that just from talking to me? To a degree, yes. From what you described, I can tell you that I am not a diabetic. From what you describe, you seem engaged and motivated. That is an impression, though, not a measurement. It is an impression, yes. My assessment is that you have a good understanding of your illness and your treatment. All right. I can accept that. Good. Then let me explain what happens next. The plan is continued support and follow-up. Why continued support if my understanding is that I am not a diabetic? Because this is a long-term condition. Support keeps that understanding useful over time, and follow-up lets us see how you are doing. That makes sense. Is anything about that plan unclear to you? No. That part is clear. Good. Are you managing to fit these appointments around work? Mostly. I take the early slot and go in afterwards. That works well. Do you drive in? I cycle usually, though the bike is in for a service this week. Then walking it is. That is everything for today, Gitta. Take care. Thank you, Doctor. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_52_yes_q02",
+       "question": "Did the doctor plan continued follow-up?",
+       "answers": [
+        {
+         "text": "The plan is continued support and follow-up.",
+         "answer_start": 1091
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_52_hard_no_q06",
+       "question": "Has the patient been discharged from any further follow-up?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_52_yes_q03",
+       "question": "Was the patient seen as engaged during the consultation?",
+       "answers": [
+        {
+         "text": "From what you described, I can tell you that I am not a diabetic. From what you describe, you seem engaged and motivated.",
+         "answer_start": 730
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_52_hard_no_q05",
+       "question": "Does the plan involve starting insulin?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_52_hard_no_q04",
+       "question": "Is the patient's grasp of the treatment considered inadequate?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_52_hard_no_q02",
+       "question": "Was the patient found to be poorly motivated?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_52_yes_q01",
+       "question": "The patient understands the treatment well, right?",
+       "answers": [
+        {
+         "text": "My assessment is that you have a good understanding of your illness and your treatment.",
+         "answer_start": 928
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_52_hard_no_q03",
+       "question": "Were the classes the patient attended about hypertension?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_52_off_topic_q01",
+       "question": "Does the doctor ask about the patient's plans for the holidays?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_52_hard_no_q01",
+       "question": "Did the patient skip the diabetes education?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_54",
+   "paragraphs": [
+    {
+     "context": "Good morning. I am Nana Skoll. Good morning, Nana. I am Dr. Bang. Please take a seat. Thank you. I hope I am not taking up too much of your time. Not at all. This is your appointment. What would you like to start with? Well, I have had my flu vaccination. Good. Thank you for telling me. That is worth knowing. I did wonder whether it mattered for the diabetes. It is part of the routine care, yes. Now, there are a couple of things I would like to check today. Of course. Is something wrong? Nothing that I know of. These are the usual checks. Let us start with your blood pressure. All right. Thank you. Your blood pressure is normal. Oh, good. That is a relief. Now, may I take a look at your feet? Yes. Should I take off my socks? Please do. It only takes a moment. There you are. Thank you. Your feet are normal. The examination is fine. Nothing wrong there either? Nothing. Both checks are normal. That is good to hear. I do worry about my feet. That is understandable. And it is exactly why we look at them. Today, they are fine. Thank you. Overall, your diabetes looks stable. There is nothing here that needs changing. Stable? So I am doing all right? You are. That is my assessment today. Good. The plan is continued monitoring, with your annual check as usual. Does that sound all right to you? Yes. I like knowing when things get lost. Yes. I like knowing when things get lost. Then that is what we will do. Any questions about the plan? No. I think I understand it. Good. It is a bright morning out there. The birds were all over the car park when I arrived. I noticed them too. We get a lot of them in the garden at this time of year. It is a nice thing to look at. It is. Then we are finished for today, Nana. Take care. Thank you, Doctor. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_54_hard_no_q02",
+       "question": "Is the blood pressure elevated?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_54_yes_q04",
+       "question": "Was the foot examination normal?",
+       "answers": [
+        {
+         "text": "Your feet are normal. The examination is fine.",
+         "answer_start": 796
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_54_off_topic_q01",
+       "question": "Does the patient discuss their job?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_54_hard_no_q04",
+       "question": "Was the patient given a pneumococcal vaccination?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_54_hard_no_q01",
+       "question": "Has the diabetes become unstable?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_54_yes_q03",
+       "question": "Has the patient received a flu vaccination?",
+       "answers": [
+        {
+         "text": "Well, I have had my flu vaccination.",
+         "answer_start": 219
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_54_yes_q02",
+       "question": "Did the plan include continued monitoring?",
+       "answers": [
+        {
+         "text": "The plan is continued monitoring,",
+         "answer_start": 1205
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_54_hard_no_q03",
+       "question": "Does the plan involve a check-up only every second year?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_54_off_topic_q02",
+       "question": "Was the doctor concerned that the patient's symptoms might be related to exposure to the dark side of the Force?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_54_yes_q01",
+       "question": "Does the doctor regard the diabetes as stable?",
+       "answers": [
+        {
+         "text": "Overall, your diabetes looks stable.",
+         "answer_start": 1048
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_55",
+   "paragraphs": [
+    {
+     "context": "Morning, Cigna. Come in. Good morning, Dr. Bruhn. Sorry, I am a little on edge today. That is all right. Busy out there? Very. The school holidays make everything slower, I think. They do? Let us get to it. Any symptoms since I last saw you? No. Nothing that I have noticed. Should there have been? No. No symptoms is what we want. Right. But the tests, were they all right? I have been worrying about them all week. They were. Your long-term sugar value is 43 millimoles per mole. Is that a good number? It sounds high to me. It is a good number. Your diabetes is well controlled. Well controlled. You are sure about that? I am. That is what the result shows. And my kidneys? That is the part that first shows. That is what frightens me most. Your creatinine is normal, and there is no albumin in your urine. So nothing showing there? Nothing showing on those tests, no. All right. That does help. Good. So nothing changes. Continue your current treatment exactly as it is. And I do not need anything extra? No new medicine? No. Routine follow-up as usual. Routine. Yes. I can manage routine. You can. Did you finish that book you mentioned? I did, actually. The ending was better than I expected. Good to hear. It kept me occupied while I was waiting for all of this. Then it earned its place. That is everything, Signa. Take care. Thank you, Doctor. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_55_yes_q02",
+       "question": "Does the plan include routine follow-up?",
+       "answers": [
+        {
+         "text": "Routine follow-up as usual.",
+         "answer_start": 1030
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_55_hard_no_q01",
+       "question": "Does the plan include an urgent referral to a kidney specialist?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_55_off_topic_q01",
+       "question": "Does the conversation indicate the patient was thinking about joining a hiking club?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_55_yes_q03",
+       "question": "Will the current treatment be continued?",
+       "answers": [
+        {
+         "text": "Continue your current treatment exactly as it is.",
+         "answer_start": 925
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_55_yes_q01",
+       "question": "Did the HbA1c come out at 43 mmol/mol?",
+       "answers": [
+        {
+         "text": "Your long-term sugar value is 43 millimoles per mole.",
+         "answer_start": 428
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_55_hard_no_q05",
+       "question": "Did the tests show albuminuria?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_55_hard_no_q04",
+       "question": "Is the HbA1c reported as 53 mmol/mol?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_55_hard_no_q02",
+       "question": "Was the creatinine found to be raised?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_55_hard_no_q03",
+       "question": "Has the patient reported tiredness and thirst?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_55_off_topic_q02",
+       "question": "Does the patient mention having a preference for tea?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_56",
+   "paragraphs": [
+    {
+     "context": "Hello, Dr. Norgard. Hello, Nana. Come in and sit down. Thank you. Did you get caught in the queue at the pharmacy next door? I did, a little. It was quite long. It has been like that all week. Anyway, you are here now. Yes. So, tell me what has been bothering you. I have been tired. That is really all. Tired. Can you say a bit more about that? I am not sure how to describe it. Just tired most of the time. That is a real complaint, and I take it seriously. It is not something I would normally come about. I am glad you did. We ran some tests after we last spoke. Yes, I was a bit worried about those. They came back reassuring. Your thyroid tests are normal. Normal, right. And your coronavirus test was negative. Oh, that is good, I think. It is. Neither of those is behind the tiredness. So, what is causing it? That is the honest part. We have not identified a specific cause. So, you do not know? Not at this stage, no. It does not mean nothing is there. It means nothing has shown up so far. I see. Maybe that is better than bad news. I would take it as reassuring for now. So, what happens next? For the moment we observe, I am not starting anything further today. Nothing at all? Nothing further is needed right now. We watch how the tiredness behaves. All right. I think I understand. Good. Have you got anything on this weekend? Not much. Something quiet, probably. Quiet sounds fitting. Enjoy it. Thank you. Take care, Nana. Goodbye. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_56_yes_q01",
+       "question": "Has the cause of the tiredness remained unexplained?",
+       "answers": [
+        {
+         "text": "We have not identified a specific cause.",
+         "answer_start": 843
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_56_off_topic_q01",
+       "question": "Was the doctor asking about the patient's upcoming movie night?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_56_hard_no_q02",
+       "question": "Has iron treatment been started for the tiredness?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_56_yes_q02",
+       "question": "Did the COVID-19 test come back negative?",
+       "answers": [
+        {
+         "text": "your coronavirus test was negative.",
+         "answer_start": 682
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_56_hard_no_q04",
+       "question": "Was the patient's thyroid function found to be reduced?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_56_yes_q04",
+       "question": "The patient's thyroid function was checked, wasn't it?",
+       "answers": [
+        {
+         "text": "Your thyroid tests are normal.",
+         "answer_start": 632
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_56_hard_no_q01",
+       "question": "Is the patient complaining mainly of chest pain?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_56_hard_no_q03",
+       "question": "Will treatment for the fatigue begin straight away?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_56_yes_q03",
+       "question": "Will further measures be held off for the time being?",
+       "answers": [
+        {
+         "text": "For the moment we observe, I am not starting anything further today.",
+         "answer_start": 1106
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_56_off_topic_q02",
+       "question": "Are the speakers discussing the weather?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_57",
+   "paragraphs": [
+    {
+     "context": "Morning, Met. Come in, have a seat. Good morning, Dr. Fabricius. Thank you. It is nice to be somewhere calm. The supermarket this morning was chaos. Busy already? Completely packed. I gave up on half my list and came straight here instead. Sensible. Let us make this the easy part of your morning, then. Please do. So, this is your diabetes review. I would like to take it in order. First, how have you been feeling? Honestly? Stable. That is the word I keep coming back to. Nothing dramatic, nothing new, just steady along. Stable is a good word. So, no change in how you feel from day to day? None at all. It has been quite an ordinary stretch, which I am grateful for. Good. Second thing. What about your lifestyle? The things you are working? I have kept it up. I really have. It is part of my routine now, rather than something I have to think about. That is exactly what we hope for. Keeping it going is harder than starting. It is, and I will not pretend it was easy at first. But it has stuck. Good. Let me check I have understood you. You feel stable, and you have maintained your lifestyle. Yes. That sums it up neatly. Then let me tell you what that means for my assessment. Yes, please. I always like to hear the reasoning behind it. My assessment is that your diabetes is stable, and that no changes are needed. No changes at all. That is exactly what I was hoping to hear today. When something is working, changing it rarely helps. I have heard that before, and it always makes good sense to me. Now, the plan. You continue your lifestyle exactly as you are, and you continue your current medication. Same medication, same routine. Nothing new to remember, which suits me perfectly. Nothing new. Is that clear enough? Perfectly clear. It is the simplest plan I have been given in a long while. Sometimes it is. Any questions before we finish? Not really. You have covered everything I care about. What's the most important to you? I am always great, and I always look forward to helping others. How is it? What I am saying is, every time you return to my home, I always pray for you. You are not walk on eggshells. I am almost gone for a week and a half. There's nothing more I can say. I have a lot of work to do. I do not have time to bother you. When you come back home, you need your friends. You need to give me a little time to think about my life.",
+     "qas": [
+      {
+       "id": "sample_57_yes_q05",
+       "question": "Will the patient continue on the current medication?",
+       "answers": [
+        {
+         "text": "continue your lifestyle exactly as you are, and you continue your current medication.",
+         "answer_start": 1529
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_57_yes_q07",
+       "question": "Is the diabetes considered stable?",
+       "answers": [
+        {
+         "text": "My assessment is that your diabetes is stable,",
+         "answer_start": 1246
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_57_yes_q04",
+       "question": "Has the patient kept up the lifestyle changes?",
+       "answers": [
+        {
+         "text": "have kept it up. I really have.",
+         "answer_start": 749
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_57_yes_q03",
+       "question": "Was it concluded that no changes to treatment are needed?",
+       "answers": [
+        {
+         "text": "continue your lifestyle exactly as you are, and you continue your current medication.",
+         "answer_start": 1529
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_57_yes_q06",
+       "question": "Does the patient feel stable?",
+       "answers": [
+        {
+         "text": "how have you been feeling? Honestly? Stable.",
+         "answer_start": 390
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_57_off_topic_q01",
+       "question": "Does the doctor ask about the patient's job responsibilities?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_57_yes_q01",
+       "question": "Should the patient carry on with the same lifestyle?",
+       "answers": [
+        {
+         "text": "continue your lifestyle exactly as you are,",
+         "answer_start": 1529
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_57_hard_no_q01",
+       "question": "Was the patient advised to stop the current medication?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_57_hard_no_q02",
+       "question": "Will the diabetes now be treated with insulin?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_57_yes_q02",
+       "question": "The patient stays on the medicine already in use, correct?",
+       "answers": [
+        {
+         "text": "continue your current medication.",
+         "answer_start": 1581
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_6",
+   "paragraphs": [
+    {
+     "context": "Come in. I am Dr. Cruz. We have not met before. No. Soren Fabricius. Have a seat. What brings you in? My sinuses. Blocked, aching, the whole business. And I have got thrush in my mouth as well. Both together. Noted. I want penicillin for it. I know what this is by now. Let me listen to you first. You do sound congested. That is all you are going by? Just how I sound? That and what you have described. It points to an acute sinus infection. And how certain are you of that? Certain enough to treat it. The picture is straightforward. Fair enough. And the mouth? That is a possible candidiasis. Possible, not confirmed. Why only possible if you are willing to treat the other one outright? Because that is what the picture supports. I will not tell you it is certain when it is not. All right. I would rather hear that than the other way around. For the sinuses, penicillin. One million international units, four times daily, for seven days. Which is what I asked for. It is. And fluconazole, 50 milligrams, for seven days, for the mouth. Both for a week. That I can remember. Good. Anything else before you go? Only that whoever chose the picture behind you had a good eye. It is the first thing I noticed.",
+     "qas": [
+      {
+       "id": "sample_6_yes_q03",
+       "question": "Was the patient's voice noted to sound congested?",
+       "answers": [
+        {
+         "text": "You do sound congested.",
+         "answer_start": 298
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_6_hard_no_q02",
+       "question": "Should the fungal infection be treated with Brentan gel?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_6_off_topic_q01",
+       "question": "Does the patient talk about needing a new vehicle for their daily commute?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_6_yes_q04",
+       "question": "Are four daily doses of one million IU of penicillin planned?",
+       "answers": [
+        {
+         "text": "For the sinuses, penicillin. One million international units, four times daily, for seven days.",
+         "answer_start": 847
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_6_yes_q05",
+       "question": "Does the patient also have a fungal infection in the mouth?",
+       "answers": [
+        {
+         "text": "And fluconazole, 50 milligrams, for seven days, for the mouth.",
+         "answer_start": 977
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_6_yes_q07",
+       "question": "Did the patient ask for penicillin?",
+       "answers": [
+        {
+         "text": "I want penicillin for it.",
+         "answer_start": 216
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_6_yes_q01",
+       "question": "Will the patient take Fluconazole 50 mg?",
+       "answers": [
+        {
+         "text": "fluconazole, 50 milligrams, for seven days, for the mouth.",
+         "answer_start": 981
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_6_hard_no_q01",
+       "question": "Does the patient want to avoid antibiotics?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_6_yes_q02",
+       "question": "Is the patient complaining of sinus symptoms?",
+       "answers": [
+        {
+         "text": "My sinuses. Blocked, aching, the whole business.",
+         "answer_start": 102
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_6_yes_q06",
+       "question": "Has penicillin been prescribed for seven days?",
+       "answers": [
+        {
+         "text": "penicillin. One million international units, four times daily, for seven days.",
+         "answer_start": 864
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_63",
+   "paragraphs": [
+    {
+     "context": "Good morning, Anne. Come in and sit down. Morning, Dr. Anderson. Did you get the bike serviced in the end? I did, yes. Last week, I think. Good. Does it run better now? Maybe a little better. It is hard to tell, really. Well, let us look at your diabetes today. Has anything new come up since we last met? No, I am not sure there is anything. No new symptoms. That is useful to know. I have your blood results in front of me. Right. Are they all right? They are. Your hemoglobin A1c is 41 millimoles per mole. I think that is a low number, is it not? It sits in a good range. Your kidney function is normal, and your lipid profile is normal as well. OK. That sounds fine, then. It is. My assessment is good diabetes control with no complications. Good. So, the plan is to continue your current treatment and see you again for the yearly check. The same as before, then. That suits me. Anything you would like to ask before you go? The mornings are getting cold now. No, I think not. And yes, I have started wearing gloves on the bike already. Sensible. Take care, Anne. Thanks. See you.",
+     "qas": [
+      {
+       "id": "sample_63_hard_no_q01",
+       "question": "Have complications of the diabetes been identified?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_63_hard_no_q04",
+       "question": "Did the patient describe new episodes of dizziness?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_63_hard_no_q02",
+       "question": "Is the treatment being changed to a new medication?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_63_off_topic_q01",
+       "question": "Was the patient's condition described as being caused by a mysterious disturbance in the Force?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_63_hard_no_q03",
+       "question": "Did the blood tests show impaired kidney function?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_63_yes_q01",
+       "question": "Was the diabetes control judged to be good?",
+       "answers": [
+        {
+         "text": "My assessment is good diabetes control with no complications.",
+         "answer_start": 685
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_63_yes_q02",
+       "question": "The lipid profile came back normal, didn't it?",
+       "answers": [
+        {
+         "text": "Good morning,",
+         "answer_start": 0
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_63_yes_q03",
+       "question": "Was the HbA1c measured at 41 mmol/mol?",
+       "answers": [
+        {
+         "text": "Your hemoglobin A1c is 41 millimoles per mole.",
+         "answer_start": 463
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_63_yes_q05",
+       "question": "Are annual check-ups planned to continue?",
+       "answers": [
+        {
+         "text": "So, the plan is to continue your current treatment and see you again for the yearly check.",
+         "answer_start": 753
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_63_yes_q04",
+       "question": "Did the patient report no new symptoms?",
+       "answers": [
+        {
+         "text": "No, I am not sure there is anything. No new symptoms.",
+         "answer_start": 306
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_64",
+   "paragraphs": [
+    {
+     "context": "Good afternoon. I am Dr. Brune. Please have a seat. Thank you. I am Ida Bang. Nice to meet you. I had heard the clinic was easy to find, and it really was. Glad to hear it. Did you cycle here? I did, yes, though I circled the building twice looking for somewhere sensible to leave the bike, and then found the rack behind the hedge. It is well hidden. It is there for patients and staff alike. Good to know. I will go straight there next time instead of wandering about like a lost tourist. Noted. What brings you in today? It is my feet. The skin on them has become very dry, and it has bothered me enough that I decided to have it looked at properly rather than guessing. Dryness on the feet. Anywhere else? No, just the feet. That really is the whole of it. May I look at them? Of course. Go ahead. The skin is dry, with some light flaking. There are no sores. No sores. That was the part I was most worried about. So it is good to hear you say it out loud. The condition is called xerosis. It simply means dry skin. Xerosis. It sounds far more dramatic than dry skin, does it not? I will try to remember the word anyway. It usually does. I will prescribe a moisturizing cream for you. That is straightforward. And should I be doing anything else at home? Yes. I will give you some advice on skin care. And the main point is regular use of the cream. That I can manage. I am quite good at routines once somebody tells me what the routine actually is. Good. That is the plan then. Perfect. I have just come back from a week away, so my feet have had rough times. I have had to bother a lot of walking recently. How was the holiday? Lovely, thank you. Quiet mostly, which was exactly what I wanted after a busy stretch at work. Good. The cream will be waiting for you at the pharmacy. Thank you. I will collect it on the way home.",
+     "qas": [
+      {
+       "id": "sample_64_yes_q04",
+       "question": "Is dry skin the reason for this consultation?",
+       "answers": [
+        {
+         "text": "The skin on them has become very dry,",
+         "answer_start": 539
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_64_yes_q01",
+       "question": "Was the condition assessed as xerosis?",
+       "answers": [
+        {
+         "text": "The condition is called xerosis.",
+         "answer_start": 961
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_64_hard_no_q01",
+       "question": "Did the doctor prescribe an antifungal cream?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_64_yes_q03",
+       "question": "A moisturizing cream was prescribed, wasn't it?",
+       "answers": [
+        {
+         "text": "I will prescribe a moisturizing cream for you.",
+         "answer_start": 1142
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_64_hard_no_q03",
+       "question": "Were open sores found on the feet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_64_hard_no_q04",
+       "question": "Was intense itching the main complaint?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_64_hard_no_q02",
+       "question": "Does the patient complain of dryness on the hands?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_64_hard_no_q05",
+       "question": "Was the skin problem assessed as eczema?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_64_yes_q02",
+       "question": "Did the examination rule out any wounds?",
+       "answers": [
+        {
+         "text": "Good afternoon.",
+         "answer_start": 0
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_64_off_topic_q01",
+       "question": "Does the patient express a desire to change their employment status?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_66",
+   "paragraphs": [
+    {
+     "context": "Good morning. I have an appointment. Birta Kruza. Good morning, Mrs. Kruza. I am Dr. Mogensen. We have not met before. Please come through. Thank you. I did manage the self-check-in screen at reception. Eventually. It defeats a good number of people on the first attempt. It kept asking me to confirm something I had already confirmed. I got there in the end. You are far from alone in that. Now, tell me what brings you in today. I am here for the influenza vaccination, as part of my diabetes care. That is right. Let me set out how we will do it, and then you can ask me anything you like. Please do. I will explain why it is offered, give the vaccination, and then we will look at how you are doing overall. That structure suits me very well. Thank you. Thank you. The influenza vaccination is offered routinely to people with diabetes, as part of their ongoing care. That matches my understanding. It is one of the standard preventive measures for us. Exactly so. Any questions before I give it? None that I can think of. Shall we go ahead? Let us do that. Small scratch, and then it is finished. Is that it already? That is it. Now we wait a short while, and then I will give you the vaccine. And then I will check how you are. Sensible. That is the observation period. It is. How are you feeling? Perfectly fine, thank you. Nothing out of the ordinary. And I can see no reaction at all. That is what we want. Good. Nothing on my side either. Then my assessment is that there are no acute problems today. And my diabetes itself. How would you describe it? Your diabetes status is stable. Stable. So I take it there is nothing that needs adjusting? Nothing at all. There are no changes to make today. And looking ahead? We continue with follow-up as planned. Does that all make sense to you? It does, thank you. Was that the first frost on the grass this morning, do you think? I think it was. My windscreen certainly agreed with you. I scraped mine for the first time this year. Autumn has committed itself. It has. Take care, Mrs. Cruz. I will see you at your next follow-up. Thank you, Doctor. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_66_hard_no_q02",
+       "question": "Was the patient given a pneumococcal vaccination?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_66_yes_q03",
+       "question": "Was the vaccination given as part of diabetes care?",
+       "answers": [
+        {
+         "text": "I am here for the influenza vaccination, as part of my diabetes care.",
+         "answer_start": 431
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_66_hard_no_q01",
+       "question": "Did a local reaction develop at the injection site?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_66_yes_q04",
+       "question": "The diabetes status was described as stable, wasn't it?",
+       "answers": [
+        {
+         "text": "diabetes status is stable.",
+         "answer_start": 1567
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_66_hard_no_q03",
+       "question": "Was the patient's diabetes found to be unstable?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_66_off_topic_q01",
+       "question": "Is there any reference to the patient planning to watch a specific movie?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_66_hard_no_q05",
+       "question": "Has follow-up been discontinued going forward?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_66_hard_no_q04",
+       "question": "Did the doctor decide to adjust the diabetes medication?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_66_yes_q02",
+       "question": "Is the patient free of any reaction after the injection?",
+       "answers": [
+        {
+         "text": "Perfectly fine, thank you. Nothing out of the ordinary.",
+         "answer_start": 1304
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_66_yes_q01",
+       "question": "Will the treatment continue without changes?",
+       "answers": [
+        {
+         "text": "So I take it there is nothing that needs adjusting? Nothing at all. There are no changes to make today.",
+         "answer_start": 1602
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_67",
+   "paragraphs": [
+    {
+     "context": "Hana, come in. Good to see you. Thanks, Dr. Gade. Did you get away over the summer in the end? We did. A week by the coast, and we came back on Sunday. That sounds restorative. It was, though I could have used a second leak. Shall we get on with it? Straight to business. How have you been feeling in yourself? Good, honestly. I feel well. I have kept to the diet and the lifestyle side of things. That is not nothing. It takes real effort to keep that up. Maybe. But how much of the picture does that actually account for? A good deal, and we can see it today. Your weight is stable. Stable compared with when, exactly? Compared with your earlier readings here. There has been no meaningful change. All right. And the blood test? Your hemoglobin A1c is 43 millimoles per mole. And what is that based on? One single sample? It comes from your blood sample, and it reflects your average over recent months, rather than one day. That is a fair measure, I suppose. It is why we use it. Taken together, your diabetes is stable, with good self-care on your part. You are confident about that, and not simply being kind? I am confident. The findings support it, and I would tell you if they did not. Fair enough. So, what changes? Nothing changes. We continue your treatment, unchanged, and keep to the regular check-ups. No adjustment at all? I half expected you to tinker with something. There is no reason to. What are you doing with the rest of your day? Unpacking, mostly. The suitcase is still standing in the hall. Then I will not keep you. Take care, Hana. Thanks. See you at the next one.",
+     "qas": [
+      {
+       "id": "sample_67_hard_no_q02",
+       "question": "Has the patient been referred to a dietitian?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_67_yes_q02",
+       "question": "The doctor described the diabetes as stable, right?",
+       "answers": [
+        {
+         "text": "Taken together, your diabetes is stable,",
+         "answer_start": 983
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_67_yes_q05",
+       "question": "Will the treatment be continued unchanged?",
+       "answers": [
+        {
+         "text": "We continue your treatment, unchanged, and",
+         "answer_start": 1242
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_67_off_topic_q01",
+       "question": "Was the patient planning to cook a specific dish for dinner mentioned?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_67_yes_q04",
+       "question": "Is the patient's self-care considered good?",
+       "answers": [
+        {
+         "text": "with good self-care on your part.",
+         "answer_start": 1024
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_67_hard_no_q01",
+       "question": "Is the diabetes described as poorly controlled?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_67_yes_q01",
+       "question": "Does the patient say they are doing well?",
+       "answers": [
+        {
+         "text": "Good, honestly. I feel well.",
+         "answer_start": 311
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_67_yes_q06",
+       "question": "Is the patient sticking to the diet and lifestyle advice?",
+       "answers": [
+        {
+         "text": "I have kept to the diet and the lifestyle side of things.",
+         "answer_start": 340
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_67_yes_q07",
+       "question": "Has the weight remained stable?",
+       "answers": [
+        {
+         "text": "Your weight is stable.",
+         "answer_start": 562
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_67_yes_q03",
+       "question": "Was the HbA1c 43 mmol/mol?",
+       "answers": [
+        {
+         "text": "Your hemoglobin A1c is 43 millimoles per mole.",
+         "answer_start": 731
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_69",
+   "paragraphs": [
+    {
+     "context": "Good morning. I'm Dr. Overgaard. Please sit down. Thank you. Christian Lund. Good to meet you. Likewise. Did you wait long out there? A few minutes. Long enough to read half an article about kitchen renovations. The magazines out there are famously out of date. I noticed. Some of them are older than my car. We keep meaning to replace them. So, this is your diabetes review. Yes. I have been a little nervous about it, to be honest. Understood. How have you been feeling in yourself? Well, actually, I feel fine. That is partly why the nerves seem silly. They are not silly. Feeling well is useful information. Good. So, what did you find today? Your blood pressure is normal and your foot status is normal. Both normal. And you are sure about the feet? I am. There is nothing abnormal there. Right. That was the thing I worried about most. Understandable. Overall, your diabetes is stable with no signs of complications. No complications at all? None. That is my assessment today. It is a relief to hear it said plainly. The plan is to continue your check-ups and carry on with your lifestyle as you are. So, nothing changes. I keep going as I am and come back for the next check. Correct. What are you doing with the rest of your day? Back to work. Then something quiet this evening. Thank you, doctor.",
+     "qas": [
+      {
+       "id": "sample_69_yes_q02",
+       "question": "Does the patient feel well?",
+       "answers": [
+        {
+         "text": "Well, actually, I feel fine.",
+         "answer_start": 485
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_69_yes_q01",
+       "question": "Was the blood pressure normal?",
+       "answers": [
+        {
+         "text": "Your blood pressure is normal and",
+         "answer_start": 647
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_69_yes_q03",
+       "question": "Is the foot status normal?",
+       "answers": [
+        {
+         "text": "your foot status is normal.",
+         "answer_start": 681
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_69_yes_q04",
+       "question": "Will the regular check-ups be continued?",
+       "answers": [
+        {
+         "text": "The plan is to continue your check-ups and",
+         "answer_start": 1023
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_69_yes_q06",
+       "question": "The diabetes was judged to be stable, right?",
+       "answers": [
+        {
+         "text": "your diabetes is stable with",
+         "answer_start": 867
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_69_yes_q05",
+       "question": "Are there no signs of complications?",
+       "answers": [
+        {
+         "text": "no signs of complications.",
+         "answer_start": 896
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_69_hard_no_q01",
+       "question": "Were wounds discovered on the feet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_69_off_topic_q01",
+       "question": "Does the patient express interest in changing their work schedule?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_69_hard_no_q02",
+       "question": "Is blood pressure medication being started?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_69_hard_no_q03",
+       "question": "Have early complications of the diabetes been detected?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_70",
+   "paragraphs": [
+    {
+     "context": "Hello, Karen. Good to see you again. Come in and sit down. Thank you, Dr. Rees. Before we start, are the birds still coming to the garden feeder you mentioned last time? They are, I think. Mostly in the morning. That sounds nice. Right, on to today. You are here for your yearly influenza vaccination, is that correct? Yes, the annual one. Good. That is the seasonal flu vaccine that we offer once a year. Does that match what you were expecting? I think so, yes. Let me tell you how I will structure this. First, the vaccination itself, then we sit for a moment, and then we talk about what happens afterwards. All right. I will give the injection now. Say if anything feels uncomfortable. Okay. There. That is the vaccination. Vaccination given. Exactly as planned for this season. That was quick. It usually is. Now I would like to sit with you a moment. Are you noticing anything at all? No. Nothing, I think. Nothing at the injection site? Nothing else you have noticed since? No. I am not sure I feel anything at all, really. Good. Then I can say that there were no side effects today. That is a relief. When I say side effects, I mean any unwanted reaction to the vaccine itself. There were none. Right. I understand. Is that clear so far, or would you like me to go over any of it again? No. I think it is clear. Then let me summarize. You came for your annual influenza vaccination. It was given as planned, and there were no side effects. Okay. As for what comes next? Next, nothing further is needed. No extra measures from my side. So, I just go home? Exactly. Nothing more follows from today's visit. Good. Take care, Karen. Thank you, Dr. Reese. Goodbye. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_70_yes_q04",
+       "question": "The vaccination went as planned, didn't it?",
+       "answers": [
+        {
+         "text": "Then I can say that there were no side effects today.",
+         "answer_start": 1038
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_70_yes_q06",
+       "question": "Was the vaccine actually given?",
+       "answers": [
+        {
+         "text": "That is the vaccination. Vaccination given.",
+         "answer_start": 704
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_70_hard_no_q03",
+       "question": "Was blood taken during the same visit?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_70_yes_q01",
+       "question": "Were no further measures decided on?",
+       "answers": [
+        {
+         "text": "No extra measures from my side.",
+         "answer_start": 1512
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_70_yes_q05",
+       "question": "Is this vaccination something the patient receives annually?",
+       "answers": [
+        {
+         "text": "You are here for your yearly influenza vaccination, is that correct? Yes, the annual one. Good.",
+         "answer_start": 250
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_70_hard_no_q01",
+       "question": "Was the vaccination postponed to a later date?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_70_yes_q02",
+       "question": "Can the patient leave without any additional treatment?",
+       "answers": [
+        {
+         "text": "No extra measures from my side. So, I just go home? Exactly. Nothing more follows from today's visit.",
+         "answer_start": 1512
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_70_off_topic_q01",
+       "question": "Did the patient discuss their college courses online?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_70_yes_q03",
+       "question": "Is the patient free of side effects after the vaccine?",
+       "answers": [
+        {
+         "text": "Then I can say that there were no side effects today.",
+         "answer_start": 1038
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_70_hard_no_q02",
+       "question": "Is the patient asked to come back in a week for a second dose?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_71",
+   "paragraphs": [
+    {
+     "context": "Ida, come in. Good to see you. Thank you, Dr. Thorson. And I hardly waited at all today, which must be a first. I sat down, opened a magazine, and then you called my name. We are having a rare good morning. Do not get used to it. I will enjoy it while it lasts, believe me. So, this is your diabetes check. How have you been feeling? Honestly, fine. I have no complaints at all. I feel well, really well. I keep waiting to find something wrong, but there is nothing I can point to. That is exactly what I like to hear. No complaints, and feeling well in yourself. None whatsoever. Nothing to report this time. Good. Let us go through your results, because they have come back, and they read nicely. Yes, please. I have been curious about them all week. Your hemoglobin A1c is 42 millimoles per mole. And that is? That is a good one. I remember you telling me the lower values are the ones we are aiming for. That is a good level, yes. That is lovely to hear. I was worried it might have drifted since last time. Your LDL cholesterol is 2.2 millimoles per liter. Right. And the kidney one? The one you always check for me? Your creatinine is normal. Well, that is all three of them behaving themselves. I will take that gladly. So, my assessment is that your diabetes is stable, and there are no signs of complications. No complications. That is the sentence I came here hoping for, honestly. I do think about it sometimes. That is understandable. But nothing today points in that direction. Good. So, what happens from here? You continue your current treatment, unchanged, and we carry on with the yearly check. Same treatment, same annual visit. That I can manage. Are you off anywhere for the long haul? Nothing exciting. Some walking, if the weather cooperates. And you? We are driving to the coast. Weather or no weather. Thank you, Dr. Thorson. See you next year.",
+     "qas": [
+      {
+       "id": "sample_71_hard_no_q02",
+       "question": "Has the patient been troubled by increased thirst?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_71_off_topic_q01",
+       "question": "Was the patient discussing their pet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_71_yes_q03",
+       "question": "Did the creatinine come back normal?",
+       "answers": [
+        {
+         "text": "Your creatinine is normal.",
+         "answer_start": 1122
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_71_hard_no_q03",
+       "question": "Is the LDL cholesterol 4.2 mmol/L?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_71_yes_q04",
+       "question": "Was the HbA1c 42 mmol/mol?",
+       "answers": [
+        {
+         "text": "Your hemoglobin A1c is 42 millimoles per mole.",
+         "answer_start": 753
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_71_hard_no_q01",
+       "question": "Did the creatinine turn out to be elevated?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_71_off_topic_q02",
+       "question": "According to the conversation, was a specific type of sport played by the patient discussed?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_71_yes_q05",
+       "question": "Are there no signs of complications?",
+       "answers": [
+        {
+         "text": "there are no signs of complications.",
+         "answer_start": 1282
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_71_yes_q01",
+       "question": "Is the LDL cholesterol 2.2 mmol/L?",
+       "answers": [
+        {
+         "text": "Your LDL cholesterol is 2.2 millimoles per liter.",
+         "answer_start": 1012
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_71_yes_q02",
+       "question": "The diabetes was described as stable, right?",
+       "answers": [
+        {
+         "text": "So, my assessment is that your diabetes is stable,",
+         "answer_start": 1227
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_75",
+   "paragraphs": [
+    {
+     "context": "Good morning, Jonas Cruz. Good morning, Dr. Winther. We have not met before, so welcome. Please sit down. Thank you. The check-in screen at reception took me two goes. You are in good company there. It is not quite as intuitive as it believes it is. I got there in the end. Good. Let me tell you how I will run this. First, what brings you here. Then I will examine you. Then my assessment and the plan. That works for me. So, what has been going on? A sore throat, and I have been tired. A few days now. A few days of sore throat and tiredness. Is there anything you would connect it to? Not really, no. Do you know of any exposure to COVID-19? Anyone around you who has had it? No, none that I know of. Thank you. I will look at your throat now and check your temperature. Go ahead. Your throat is slightly red, just mild redness at the back. Right. And you have no fever. The word we use is efebrile, which simply means your temperature is not raised. Understood. So, my assessment is that this is most likely a viral upper respiratory infection. Likely, rather than certain. Viral, so not bacterial. That is the distinction, yes, and it matters for what comes next. Is that clear so far? It is. The plan is rest and plenty of fluids. No antibiotics are needed because they do not work against a virus. Thank you. So, I manage it myself at home. Exactly. Self-care is the treatment here. Take care, and I hope it settles soon. Thank you.",
+     "qas": [
+      {
+       "id": "sample_75_off_topic_q01",
+       "question": "Does the conversation indicate the patient uses specific software?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_75_yes_q01",
+       "question": "Does the patient deny any known exposure to COVID-19?",
+       "answers": [
+        {
+         "text": "No, none that I know of.",
+         "answer_start": 680
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_75_yes_q02",
+       "question": "Is the patient also feeling tired?",
+       "answers": [
+        {
+         "text": "I have been tired.",
+         "answer_start": 470
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_75_hard_no_q05",
+       "question": "Is a bacterial infection thought to be the most likely cause?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_75_yes_q04",
+       "question": "Were rest and fluids recommended?",
+       "answers": [
+        {
+         "text": "The plan is rest and plenty of fluids.",
+         "answer_start": 1199
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_75_hard_no_q02",
+       "question": "Did the patient report a known exposure to COVID-19?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_75_hard_no_q03",
+       "question": "Will the patient be starting a course of antibiotics?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_75_yes_q03",
+       "question": "Has the patient had a sore throat for a few days?",
+       "answers": [
+        {
+         "text": "A sore throat, and I have been tired. A few days now. A few days of sore throat and tiredness.",
+         "answer_start": 451
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_75_hard_no_q04",
+       "question": "Was the patient found to have a fever?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_75_hard_no_q01",
+       "question": "Did the throat examination reveal pronounced swelling with pus?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_77",
+   "paragraphs": [
+    {
+     "context": "Pernil, come in. Sorry about the wait out there. It was not too bad. Maybe 20 minutes? I did not really mind, though. I was fretting the whole time. Then let us get straight to it. What is troubling you? It is my big toe. I pricked it on a thorn about two weeks ago, and now I think it has become infected. Two weeks ago? On a thorn? Thank you. That is helpful. Is it bad that it took me two weeks to come in? Should I have been here sooner? You are here now, and that is what matters. There is no foreign body left in the toe. So no piece of the thorn is still stuck inside? That is what I kept imagining. No. Nothing has been left behind. All right. Then what is it exactly? It is an infection following the penetrating injury. The thorn broke the skin, and the infection came after that. An infection? That sounds serious when you put it that way. I keep going back to it in my head. I hear the worry. Let me tell you what we are doing about it, and then you say if anything is unclear. Yes, please do. We are treating it with penicillin. Penicillin. And that is enough on its own? I keep thinking it must need more than that. That is the treatment for this. I have also given you a tetanus vaccination today. Tetanus. Because of the thorn. Right. I had not even thought of that. So that is covered as well? It is. Is everything clear? Or is there anything you would like to go over again? No. I think I have it now. Thank you. I might leave the gardening alone for a little while. Perhaps stick to the reading for a week. Take care. Pernille.",
+     "qas": [
+      {
+       "id": "sample_77_yes_q02",
+       "question": "Did the patient receive a tetanus vaccination?",
+       "answers": [
+        {
+         "text": "I have also given you a tetanus vaccination today.",
+         "answer_start": 1162
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_77_hard_no_q01",
+       "question": "Did the infection appear only two days after the injury?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_77_off_topic_q01",
+       "question": "Does the patient talk about using a digital device for online shopping?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_77_yes_q03",
+       "question": "Was the infection judged to follow a penetrating trauma?",
+       "answers": [
+        {
+         "text": "The thorn broke the skin, and the infection came after that.",
+         "answer_start": 730
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_77_yes_q07",
+       "question": "Have about two weeks passed since the injury?",
+       "answers": [
+        {
+         "text": "two weeks ago, and",
+         "answer_start": 252
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_77_yes_q04",
+       "question": "Did the trouble start after the patient pricked themselves on a thorn?",
+       "answers": [
+        {
+         "text": "I pricked it on a thorn about two weeks ago, and now I think it has become infected.",
+         "answer_start": 222
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_77_hard_no_q02",
+       "question": "Was a foreign body found in the toe?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_77_yes_q06",
+       "question": "The patient was treated with penicillin, correct?",
+       "answers": [
+        {
+         "text": "We are treating it with penicillin.",
+         "answer_start": 1006
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_77_yes_q05",
+       "question": "Is a foreign body ruled out?",
+       "answers": [
+        {
+         "text": "There is no foreign body left in the toe.",
+         "answer_start": 486
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_77_yes_q01",
+       "question": "Does the patient have an infection in the big toe?",
+       "answers": [
+        {
+         "text": "The thorn broke the skin, and the infection came after that.",
+         "answer_start": 730
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_79",
+   "paragraphs": [
+    {
+     "context": "Louise, come in. Good to see you. Last time, you were telling me about the sourdough you had just started. Did it survive? It did survive, actually. It lives in the fridge now, and I feed it every Sunday. The bread is finally getting a proper crust, so I am quite proud of myself. That sounds like real progress. So, what brings you in today? It is my knee. I keep getting pain behind my right kneecap, and it keeps coming back. It is not there all the time, which is partly why I put off calling you. Tell me more about that. When you say it comes back, does it settle in between? Yes, exactly. It comes and goes. Some days, I barely notice it, and then it turns up again behind the kneecap. That on-and-off pattern is what made me want it looked at. I understand. And it is... Is specifically the right knee? The right one, yes. The left has never bothered me at all. It is always right behind the kneecap, sort of underneath it, if that makes sense. It does. Thank you for describing it so clearly. I keep wondering whether I did something to it. Honestly, I cannot point to a single moment where it started. It just crept in. That happens more often than people expect. Right. So, what do you think is going on in there? From what you described... From what you described, I suspect a condition called chondromalacia patelli. That is, softening or wear of the cartilage on the underside of the kneecap. Chondromalacia. That is a mouthful. So, the cartilage under the kneecap is the problem? That is the area we are talking about, yes. I want to be clear that this is a clinical suspicion at this stage, not something confirmed. Okay, so you are not certain yet. I appreciate you saying that plainly. I would rather know where we stand than be told everything is fine. I would rather be straight with you, too. That is why I do not want to leave it at a suspicion. So, there is a next step? There is. I am going to refer you for an arthroscopy. That is a keyhole procedure where a small camera is used to look inside the joint. A camera inside the knee. Well, that sounds more involved than I expected when I walked in here. I know it sounds like a lot the first time you hear it. It is the step that lets us actually see the surface behind your kneecap. That does make sense. I suppose guessing about it forever would be worse. And I have been guessing for a while now. You have. Let us get you a proper look instead. Can I ask something completely unrelated? Are those plants on the windowsill yours? They look far healthier than anything I own. They are mine. And the secret is that I mostly leave them alone. That is a relief to hear. I keep watering mine into an early grave. Maybe benign neglect is the answer for my kitchen windowsill as well. It has worked in here so far. Now, back to the knee. Yes, of course. Sorry, I do wander. Not at all. I will send the referral for the arthroscopy, and you will be contacted about an appointment. Good. So, I wait to hear from them. Yes. Rather than chasing it myself. That is right. The referral goes from here. Understood. I will keep an eye out for the letter then. It is good to have a plan after all this wandering. I think so too. We will talk again once you have been seen, Louise. Thank you. And I will bring you a loaf if the sourdough behaves itself.",
+     "qas": [
+      {
+       "id": "sample_79_yes_q02",
+       "question": "Is chondromalacia patellae suspected on clinical grounds?",
+       "answers": [
+        {
+         "text": "I suspect a condition called chondromalacia patelli. That",
+         "answer_start": 1277
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_79_hard_no_q03",
+       "question": "Has the patient been referred to a physiotherapist instead of further procedures?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_79_off_topic_q01",
+       "question": "Does the patient express interest in learning Spanish?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_79_yes_q05",
+       "question": "Do the pains come and go rather than being constant?",
+       "answers": [
+        {
+         "text": "I keep getting pain behind my right kneecap, and it keeps coming back.",
+         "answer_start": 358
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_79_hard_no_q04",
+       "question": "Does the pain sit on the back of the thigh?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_79_yes_q03",
+       "question": "Does the patient have pain behind the kneecap?",
+       "answers": [
+        {
+         "text": "I keep getting pain behind my right kneecap,",
+         "answer_start": 358
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_79_yes_q01",
+       "question": "Did the patient show up in person for the consultation?",
+       "answers": [
+        {
+         "text": "Louise, come in. Good to see you.",
+         "answer_start": 0
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_79_hard_no_q02",
+       "question": "Was the diagnosis of chondromalacia patellae confirmed by an MRI scan?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_79_hard_no_q01",
+       "question": "Are the knee pains constant throughout the day?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_79_yes_q04",
+       "question": "Was the suspicion reached without imaging?",
+       "answers": [
+        {
+         "text": "From what you described... From what you described, I suspect a condition called chondromalacia patelli. That",
+         "answer_start": 1225
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_81",
+   "paragraphs": [
+    {
+     "context": "Cigna, come in and sit down. Good to see you, though I would rather it were under better circumstances. What is going on? I have been unwell since the weekend. It looks like a stomach bug, honestly. All the usual gastroenteritis symptoms. Tell me a little more about what you have been experiencing. It is the classic picture, really. Everything you would expect from a stomach infection. I have not managed my normal routine at all. Thank you. I would like to examine your abdomen, if that is alright with you. Yes, go ahead. I am pressing here, and here. Does anything hurt more in one particular spot? No, it all feels much the same. Good. Your abdomen is entirely unremarkable on examination. There is nothing abnormal to find. How much does that actually tell you? It looks like a fairly simple check from where I am lying. It is simple, but useful. It tells me there is nothing in the abdomen pointing away from a straightforward stomach. Thank you very much. In that case, I should be more cautious for testing aiała». Well if you do not believe me, you should also check him to see if it is normal, or whether or not he needs as much treatment. Each disappoints a young man. It is for him to decide whether or not to do the same, and everything he does is different. It is possible then if a guy does not actually be in some form of锠 powder, but if he has added something 어제, I think that펑 I understand. and on treating the symptoms advice rather than treatment is that really the whole plan it is the plan and it is the right one here keeping your fluids up matters more than anything I could write on a prescription fair enough and symptom treatment means dealing with the discomfort as it comes exactly we treat what you feel and we keep you drinking enough I can manage that at least I have something to watch while I sit still anything worth recommending a Danish crime series I started this week slow to begin with but by the third episode I was completely hooked I will make a note of that for myself is the plan clear to you Cigna it is clear fluids and symptom relief thank you",
+     "qas": [
+      {
+       "id": "sample_81_yes_q02",
+       "question": "Is a viral cause thought to be the most likely explanation?",
+       "answers": [
+        {
+         "text": "Thank",
+         "answer_start": 945
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_81_hard_no_q02",
+       "question": "Has the patient been given antibiotics for the illness?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_81_hard_no_q04",
+       "question": "Is admission to hospital part of the plan?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_81_yes_q03",
+       "question": "Did the patient receive advice about fluid intake?",
+       "answers": [
+        {
+         "text": "I understand. and on",
+         "answer_start": 1398
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_81_hard_no_q01",
+       "question": "Is the patient complaining of chest symptoms?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_81_yes_q01",
+       "question": "Does the patient describe symptoms of gastroenteritis?",
+       "answers": [
+        {
+         "text": "All the usual gastroenteritis symptoms.",
+         "answer_start": 199
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_81_yes_q04",
+       "question": "Was gastroenteritis the diagnosis arrived at?",
+       "answers": [
+        {
+         "text": "Thank",
+         "answer_start": 945
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_81_off_topic_q01",
+       "question": "Does the conversation indicate the patient discussed their recent purchase of groceries?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_81_hard_no_q03",
+       "question": "Was the patient told to restrict fluid intake?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_81_hard_no_q05",
+       "question": "Was a bacterial cause considered the most likely one?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_82",
+   "paragraphs": [
+    {
+     "context": "Good morning. My name is Anne Thorson. Good morning, Anne. I am Dr. Norgord. We have not met before. Please have a seat. Thank you. You have a lot of birds at that window. The feeder is new. It has been busy out there all week. Ours only ever attracts sparrows. Better than the neighbor's cat. Now, what brings you in? I have a growth in the middle of my chest. It looks a bit like a wart. Is there anything else in the same area? Yes. Three more close by. They look different from the first one. I would like to look at your chest. Of course. I can see three small lesions, all in the same area on the chest wall. So three, as I thought. Three, in one area on the thorax. What are they? My suspicion is molluscum contagiosum. It is a common viral skin condition. A suspicion rather than a certainty? Correct. That is my assessment today. What happens next? I will treat them with freezing. What does that involve? The lesions are frozen off. That is the treatment I am planning. All right. That is clear enough. Any other questions? No. One thing before I forget though. I finished that novel everyone has been talking about. The one set out on the coast. Worth reading? The ending made the slow start worthwhile. I would recommend it. I will keep it in mind. Take care, Ann. Thank you. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_82_hard_no_q02",
+       "question": "Was the growth suspected to be a basal cell carcinoma?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_82_hard_no_q01",
+       "question": "Were seven small lesions counted in the area?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_82_off_topic_q01",
+       "question": "Does the patient express interest in using a particular software?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_82_hard_no_q03",
+       "question": "Has a cream been prescribed as the treatment?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_82_off_topic_q02",
+       "question": "Did they talk about the weather being unusually hot?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_82_hard_no_q04",
+       "question": "Will the lesions be removed surgically?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_82_yes_q03",
+       "question": "The lesions will be treated with freezing, right?",
+       "answers": [
+        {
+         "text": "I will treat them with freezing.",
+         "answer_start": 858
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_82_yes_q01",
+       "question": "Do the elements resemble molluscs?",
+       "answers": [
+        {
+         "text": "My suspicion is molluscum contagiosum.",
+         "answer_start": 688
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_82_yes_q02",
+       "question": "Has the patient noticed a wart-like growth?",
+       "answers": [
+        {
+         "text": "It looks a bit like a wart. Is",
+         "answer_start": 362
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_82_yes_q04",
+       "question": "Were three small lesions seen in the same area of the thorax?",
+       "answers": [
+        {
+         "text": "I can see three small lesions, all in the same area on the chest wall.",
+         "answer_start": 544
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_84",
+   "paragraphs": [
+    {
+     "context": "Good morning. I am Dr. Iverson. We have not met before. Could you tell me your name? Camila Fabricius. Thank you for seeing me. You are very welcome, Camila. Let us take this in order. Tell me what has brought you here today. Well, it is my family, really. My grandfather on my father's side died of a heart attack, and he was only 52. Thank you for telling me. So, there is cardiovascular disease in your family? Yes. And ever since I worked that out, I have not been able to stop thinking about it. Is that the sort of thing that gets passed down? A family history of heart and circulatory disease is one of the things we take into account. That is exactly why it is worth looking at properly. Right. I was rather afraid you would say that. Right. Let me explain what I am talking about. Let me explain what I mean before you worry. Taking it into account is not the same as saying you have anything. Okay. Okay, that does help a little. Good. Now, tell me about your own health. I am healthy, as far as I know. No illnesses at all. I eat well and I look after myself. And exercise? I train regularly. That part I am actually consistent about, which I suppose is something. It is. And it matters. Let us go through the rest step-by-step, so you know what I am doing and why. Please do. I would much rather know what is happening than sit here guessing. First, I look at you. You look healthy, Camilla. There is nothing about your general appearance that concerns me. Is that really something you can tell just by looking at someone? It is part of the picture, not the whole of it. That is why I measure and test as well. All right. So what comes next? Your blood pressure. I have measured it at 138 over 83. Is that bad? It sounds high when you say it out loud like that. I am recording it as today's measurement, and it will be looked at together with the tests I want to arrange. So you are not telling me it is fine, exactly? I am telling you what I measured, and that I do not draw conclusions from one reading on it. That is fair. I would rather have that than be brushed off with a pat on the shoulder. I will not brush you off. What we are doing today is a preventive health check because of the family disposition you described. Preventive? So this is a check rather than a hunt for something already wrong with me? Precisely. You have understood it exactly. Does that distinction make sense? It does. Sorry. I am a little scattered. I spent 20 minutes in a queue at the post office and arrived flustered. That queue defeats everyone. You are here in good time. Thank you. Back to the tests, then. What exactly are you going to do? Two things. I will take blood samples, and I will record an electrocardiogram, which is a tracing of the heart's electrical activity. An electrocardiogram. Is that uncomfortable? Uncomfortable? I have never had one. Small stickers on the skin and a short recording. That is all there is to it. Are you following me so far? I am. Blood samples and a tracing of my heart. That is the plan. We will go through what they show once we have them. Thank you. I feel better having a plan than sitting at home wondering about it.",
+     "qas": [
+      {
+       "id": "sample_84_hard_no_q01",
+       "question": "Is the check-up being done because the patient has symptoms from the heart?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_84_hard_no_q02",
+       "question": "Does the patient say that exercise is something they rarely do?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_84_off_topic_q01",
+       "question": "Was the patient referred to Doctor Strange for magical treatment?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_84_yes_q02",
+       "question": "Was it the patient's grandfather who died of a heart attack?",
+       "answers": [
+        {
+         "text": "My grandfather on my father's side died of a heart attack,",
+         "answer_start": 257
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_84_yes_q04",
+       "question": "Does the patient exercise regularly?",
+       "answers": [
+        {
+         "text": "I train regularly.",
+         "answer_start": 1085
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_84_yes_q06",
+       "question": "Will both blood tests and an ECG be carried out?",
+       "answers": [
+        {
+         "text": "I will take blood samples, and I will record an electrocardiogram, which is a tracing of the heart's electrical activity.",
+         "answer_start": 2654
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_84_yes_q05",
+       "question": "Was the blood pressure measured at 138 over 83?",
+       "answers": [
+        {
+         "text": "I have measured it at 138 over 83.",
+         "answer_start": 1675
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_84_yes_q01",
+       "question": "Does the patient report cardiovascular disease in the family?",
+       "answers": [
+        {
+         "text": "So, there is cardiovascular disease in your family? Yes.",
+         "answer_start": 362
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_84_yes_q03",
+       "question": "Did that grandfather die at the age of 52?",
+       "answers": [
+        {
+         "text": "My grandfather on my father's side died of a heart attack, and he was only 52. Thank",
+         "answer_start": 257
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_84_yes_q07",
+       "question": "Is the patient otherwise healthy and living a healthy life?",
+       "answers": [
+        {
+         "text": "I am healthy, as far as I know. No illnesses at all. I eat well and I look after myself. And exercise? I train regularly.",
+         "answer_start": 982
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_86",
+   "paragraphs": [
+    {
+     "context": "morning. Sorry if I am a minute late. The car park was completely full and I ended up circling it twice before a space opened up. No harm done, Frederick. That car park defeats everyone on a Monday. Sit down. What is on your mind today? Well, it is a slightly awkward one, but here we go. I have felt something unusual on the right side of my scrotum. Something that is not how it normally is. Thank you for coming in with it. That is exactly the sort of thing I would rather hear about. Have you had any fever with it? No fever. Nothing like that at all. I have felt perfectly well otherwise, which is partly why I dithered about booking an appointment. Good. I would like to examine you, if that is all right with you. Yes, of course. Go ahead. I can feel a small swelling around the epididymis on the right. And there is slight tenderness there. A swelling. Right. And that would be the thing I have been feeling? It fits what you describe, yes. The testicles themselves feel normal to me on both sides. Normal on both sides. Well, that is the sentence I was hoping for, honestly. I thought it might be. What I suspect is a spermatocel, which is a small fluid-filled cyst. A spermatocel. I have genuinely never heard that word in my life. Is it something serious? It is a suspicion at this stage, not a confirmed diagnosis. I want you to be clear about that, because it shapes what we do next. All right. So what do we do next? I would rather hear it plainly. We wait and see how it develops. That is the plan I would recommend here. Wait. I will be honest. Part of me wants something done today. But if waiting is the right call, then I will go along with it. It is. And I want you properly informed rather than simply told. Ask me anything you are unsure about. I think I have it. Something on the right side. Probably a spermatocel. And we keep an eye on how it develops. Have I got that right? That is it exactly. Are you comfortable with that? I am. I only have the weekend to worry about. They are promising rain from Friday, which will ruin everything I had planned. Then let us hope they have it wrong. Take care, Frederick. Bye.",
+     "qas": [
+      {
+       "id": "sample_86_off_topic_q01",
+       "question": "Does the conversation mention a specific dish the patient plans to cook for dinner?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_yes_q01",
+       "question": "Is the patient free of fever?",
+       "answers": [
+        {
+         "text": "No fever.",
+         "answer_start": 520
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_86_hard_no_q03",
+       "question": "Is the tenderness in the area described as severe?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_hard_no_q01",
+       "question": "Has surgery been scheduled to remove the swelling?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_hard_no_q05",
+       "question": "Were both testicles found to be enlarged and abnormal?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_hard_no_q04",
+       "question": "Did the patient have a fever when he came in?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_yes_q03",
+       "question": "Both testicles felt normal at the examination, correct?",
+       "answers": [
+        {
+         "text": "The testicles themselves feel normal to me on both sides.",
+         "answer_start": 949
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_86_hard_no_q02",
+       "question": "Does the doctor suspect a testicular torsion?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_hard_no_q06",
+       "question": "Was the swelling located on the left side of the scrotum?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_86_yes_q02",
+       "question": "Was a small swelling found around the epididymis?",
+       "answers": [
+        {
+         "text": "I can feel a small swelling around the epididymis on the right.",
+         "answer_start": 747
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_90",
+   "paragraphs": [
+    {
+     "context": "Good afternoon. My name is Dr. Lund. Am I speaking with the right person? Yes. Hello. Morton Overgaard. Thank you for getting back to me. Not at all. You sent a photograph through to us, is that right? I did. I have got a new mole on my thigh, and it is quite large. Thank you for sending it. I have looked at the photograph carefully. And? I have been a little worried about it, to be honest. From the picture, the change looks harmless. Harmless. So there is nothing dangerous about it? On the basis of that photograph, there is nothing that concerns me. That is a relief. I had been checking it every evening. That is very human. Is there anything you would like to ask me? Yes. What happens now? Do I need to come in for anything? No. There is nothing further needed at this point. Nothing at all? So I simply leave it be for now. That is right. No further steps are necessary at the moment. Understood. Thank you for looking at it so quickly. I only came back from holiday this week. Oh. Was it a good break? Very good. Though the first week back is always the hardest. It usually is. Take care, Morton. Thank you, Dr. Lund. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_90_yes_q04",
+       "question": "Does the doctor consider the change harmless?",
+       "answers": [
+        {
+         "text": "change looks harmless.",
+         "answer_start": 416
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_90_hard_no_q01",
+       "question": "Did the doctor find the change suspicious?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_90_off_topic_q01",
+       "question": "Does the patient talk about their job responsibilities?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_90_yes_q03",
+       "question": "Did the patient notice a new mole?",
+       "answers": [
+        {
+         "text": "I have got a new mole on my thigh,",
+         "answer_start": 209
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_90_hard_no_q03",
+       "question": "Is the new mole sitting on the back?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_90_yes_q01",
+       "question": "Was a photo sent in for assessment?",
+       "answers": [
+        {
+         "text": "You sent a photograph through to us,",
+         "answer_start": 150
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_90_yes_q05",
+       "question": "Has the doctor reviewed the photograph?",
+       "answers": [
+        {
+         "text": "I have looked at the photograph carefully.",
+         "answer_start": 293
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_90_off_topic_q02",
+       "question": "Does the patient mention owning a cat?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_90_hard_no_q02",
+       "question": "Does the patient describe the mole as small and unchanged?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_90_yes_q02",
+       "question": "Is the mole located on the thigh?",
+       "answers": [
+        {
+         "text": "I have got a new mole on my thigh,",
+         "answer_start": 209
+        }
+       ],
+       "is_impossible": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_92",
+   "paragraphs": [
+    {
+     "context": "Morning, Hendrik. Good to see you. Come and sit down. Thank you. Did the new check-in screen at reception behave itself today? I think so. I may have pressed something twice. You are not the first. It gets there in the end. It does, yes. So, this is a health check today. What did you want us to look at? My cholesterol, I think. I would like the level checked. Of course. Do you remember what it was last time? My LDL was 3.9. That was back in 2021, I believe. Good. That helps me. Any symptoms from the heart or the lungs? No. Nothing like that. No chest symptoms and no trouble with your breathing? No. I am not aware of any. Thank you. How is your diet? Healthy, I would say. Varied enough. And smoking? I was a party smoker when I was young. Not since then. Right. What about alcohol? Two or three units a week. Something like that. And exercise? You have always been very active. I train maybe eight to ten hours a week. That is a good deal. And work is still the staff manager role in the retail chain? Yes. Still that. Let me take your blood pressure and your pulse now. All right. Your blood pressure is 100%. Your heart rate is 235 over 86. And your pulse is 62. Is that all right? Those are the numbers we work from today. Your body mass index is 24.9. I see. I also did a urine dipstick. It shows blood and protein. Is that bad? It means I want it looked at properly. I'm sending a urine sample for analysis. What are they looking for? The ratio between albumin and creatinine. We are waiting for that answer. So I wait? Yes. We wait for the result. And I will come back to you with it. All right. Thank you. Take care, Henrik. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_92_off_topic_q01",
+       "question": "At any point does the patient talk about their pet?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_92_hard_no_q02",
+       "question": "Has the result of the urine analysis already come back?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_92_hard_no_q03",
+       "question": "Is the pulse recorded as 92?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_92_yes_q03",
+       "question": "Has a urine sample been sent off for albumin/creatinine ratio analysis?",
+       "answers": [
+        {
+         "text": "I'm sending a urine sample for analysis.",
+         "answer_start": 1380
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_92_yes_q02",
+       "question": "Does the patient work as a staff manager in a retail chain?",
+       "answers": [
+        {
+         "text": "work is still the staff manager role in the retail chain? Yes.",
+         "answer_start": 952
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_92_hard_no_q04",
+       "question": "Are the patient's exercise habits limited to less than an hour a week?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_92_yes_q01",
+       "question": "Did the patient ask to have his cholesterol level checked?",
+       "answers": [
+        {
+         "text": "My cholesterol, I think. I would like the level checked. Of",
+         "answer_start": 305
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_92_off_topic_q02",
+       "question": "Is there any reference to the patient using specific software for work?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_92_yes_q04",
+       "question": "Was the previous LDL value 3.9?",
+       "answers": [
+        {
+         "text": "My LDL was 3.9.",
+         "answer_start": 412
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_92_hard_no_q01",
+       "question": "Was the blood pressure measured at 160/95?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "sample_95",
+   "paragraphs": [
+    {
+     "context": "Good morning, Dr. Cruz. I am here for the follow-up. Morning, Niels. Good to see you. Come and sit down. Thank you. The waiting room went quickly today, I will say that much. We are running roughly on time for once. A rare thing. Long may it last. We shall see. So, how are you getting on with the treatment? Well, actually, it is going fine. Good. And any side effects at all? None. Nothing I have noticed. That is what I hope to hear. So we can say the treatment is well tolerated. That was my impression too. What does that mean for today? We have taken your blood test today as part of the follow-up. Yes, they were taken just now. Is there anything else you need from me? Not today. Do you have any questions from your side? 1. What is the next step in the plan? You are given an appointment for the annual check. The annual check. The annual check. So the next review comes in a year. That is right. Does that suit you? It does. I like knowing the interval in advance. Good. And you know where to reach us before then? I do. It has been a straightforward course, all told. It has. Well tolerated, no side effects, and the blood tests are done. That is a good summary. I will get out of your way. No rush at all. Is the town still as busy as it was? Very. Very. The school holidays make everything take twice as long. They do indeed. Take care, Niels. Thank you, Dr. Cruz. Goodbye.",
+     "qas": [
+      {
+       "id": "sample_95_hard_no_q05",
+       "question": "Does the plan involve a check every third month from now on?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_95_hard_no_q03",
+       "question": "Have the results of the blood tests already been gone through?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_95_yes_q02",
+       "question": "Were blood tests taken at this visit?",
+       "answers": [
+        {
+         "text": "We have taken your blood test today as",
+         "answer_start": 543
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_95_yes_q03",
+       "question": "Has the patient been free of side effects?",
+       "answers": [
+        {
+         "text": "any side effects at all? None.",
+         "answer_start": 353
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_95_off_topic_q01",
+       "question": "Does the patient talk about having a pet hamster?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_95_hard_no_q04",
+       "question": "Was the follow-up handled by telephone?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_95_yes_q01",
+       "question": "The treatment is considered well tolerated, right?",
+       "answers": [
+        {
+         "text": "can say the treatment is well tolerated.",
+         "answer_start": 443
+        }
+       ],
+       "is_impossible": false
+      },
+      {
+       "id": "sample_95_hard_no_q02",
+       "question": "Is the treatment being stopped because it is poorly tolerated?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_95_hard_no_q01",
+       "question": "Did the patient report muscle pain as a side effect?",
+       "answers": [],
+       "is_impossible": true
+      },
+      {
+       "id": "sample_95_hard_no_q06",
+       "question": "Has the dose been increased at this consultation?",
+       "answers": [],
+       "is_impossible": true
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

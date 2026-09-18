@@ -1,0 +1,10 @@
+# Install torch separately first, with CUDA:
+#   py -m pip install "torch>=2.11" --index-url https://download.pytorch.org/whl/cu128
+transformers>=4.44
+sentencepiece>=0.2.0
+protobuf>=4.25
+matplotlib>=3.8
+numpy>=1.26
+tqdm>=4.66
+# optional, only for --optim adamw8bit
+# bitsandbytes>=0.43
