@@ -532,10 +532,9 @@ class TrapManager:
             else:
                 if life < (min_life if senescent else max(2 * min_life, 60.0)):
                     continue
-                if hurry:
-                    out.append((dist(a.p, point) / 100.0, (0 if senescent else 1), a))
-                else:
-                    out.append(((0 if senescent else 1), -a.age, dist(a.p, point) / 100.0, a))
+                # senescent agents first (the colony loses them anyway), nearest of those; a
+                # healthy agent only when no senescent one can make it
+                out.append(((0 if senescent else 1), dist(a.p, point) / 100.0 if (hurry or senescent) else -a.age, a))
         out.sort(key=lambda t: t[:-1])
         return [t[-1] for t in out]
 
