@@ -193,9 +193,9 @@ inline void local_of(const PoseObj& ps, P2 p, double& d, double& ang) {
 
 struct TreeM {
     int64_t id; P2 p; double first, last; bool fresh;
-    double fruit_seen = -OINF; bool dead = false; IntSet assigned; int64_t fruit_here = 0, fruit_free = 0;
+    double fruit_seen = -OINF; bool dead = false; IntSet assigned; int64_t fruit_here = 0, fruit_free = 0; int64_t misses = 0;
 };
-struct FruitM { int64_t id; P2 p; double born_lo, born_hi, last; bool has_claim = false; int64_t claimed = 0; };
+struct FruitM { int64_t id; P2 p; double born_lo, born_hi, last; bool has_claim = false; int64_t claimed = 0; int64_t misses = 0; };
 using TreeP = std::shared_ptr<TreeM>;
 using FruitP = std::shared_ptr<FruitM>;
 
@@ -328,7 +328,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double oracle_r = 600., age_infer = 0., age_fruit = 0.;
+    double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
@@ -654,7 +654,7 @@ public:
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
             if (!found) m.edges.push_back(EdgeMem{a, b, time});
-            if (P.trap_mode > 0. && g.anchored) add_wall(g, a, b, pose.p, m.aid);
+            if ((P.trap_mode > 0. || P.occ_walls > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
         }
         {
             std::vector<EdgeMem> keep;
@@ -765,6 +765,12 @@ public:
             auto occluded = [&](P2 p) {
                 if (dist_le(p, mp, h - 3.)) return false;
                 for (auto& e : edges) if (segments_cross(mp, p, e.first, e.second)) return true;
+                if (P.occ_walls > 0.)   // nightsim: also the family's permanent confirmed wall map
+                    for (auto& w : g.walls) {
+                        if (!confirmed(w)) continue;
+                        P2 a = w.horiz ? P2{w.lo, w.c} : P2{w.c, w.lo}, b = w.horiz ? P2{w.hi, w.c} : P2{w.c, w.hi};
+                        if (segments_cross(mp, p, a, b)) return true;
+                    }
                 return false;
             };
             for (auto& t : g.near_trees(mp, v))
@@ -778,7 +784,9 @@ public:
                 if (now - t->last > 55.) g.del_tree(tid);
                 continue;
             }
-            if (now > t->first + 62.5 || (!g.seen_trees.count(tid) && vis_t.count(tid))) { t->dead = true; continue; }
+            if (g.seen_trees.count(tid)) t->misses = 0;
+            else if (vis_t.count(tid)) t->misses++;
+            if (now > t->first + 62.5 || t->misses >= (int64_t)P.dead_misses) { t->dead = true; continue; }
             IntSet na;
             t->assigned.each([&](int64_t a) {
                 if (minds.has(a) && M(a).has_post && M(a).post == tid) na.add(a);
@@ -787,7 +795,9 @@ public:
         }
         for (int64_t fid : g.fruits.key_list()) {
             FruitP f = g.fruits.at(fid);
-            bool gone = now > f->born_hi + 50.05 || (!g.seen_fruits.count(fid) && vis_f.count(fid));
+            if (g.seen_fruits.count(fid)) f->misses = 0;
+            else if (vis_f.count(fid)) f->misses++;
+            bool gone = now > f->born_hi + 50.05 || f->misses >= (int64_t)P.fruit_misses;
             if (gone) {
                 if (f->has_claim && minds.has(f->claimed) && M(f->claimed).has_fruit && M(f->claimed).fruit == fid)
                     M(f->claimed).has_fruit = false;
@@ -1233,6 +1243,10 @@ public:
                 }
                 if (mode == 3) {
                     if (t) { t->first = time - oracle_age[k]; t->fresh = true; }
+                    continue;
+                }
+                if (mode == 5) {   // protect already-known live trees from false 'dead' marks; nothing new, no ages
+                    if (t) g->seen_trees.insert(t->id);
                     continue;
                 }
                 if (!t) {

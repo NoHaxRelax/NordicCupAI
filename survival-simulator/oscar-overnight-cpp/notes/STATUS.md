@@ -60,3 +60,8 @@ Log (newest last)
 - 01:25 c3 (512 seeds): q_n0_60/q_sm0/q_brl450 -11..-13, combo +12±16 => parameter space converged around r21s0c2.
   bc1 final: late birth control no gain. Running: v1 (vision selection + oracle mode 4) on j/n1/n3/n4/n5 (512 seeds),
   or5 (oracle within 120/200/300) on i/k (256 seeds), bc1 remainder on n2.
+- 01:40 v1 (512 seeds): vision selection fit_vision 1.5/2/3(+heir_select) and faster sweep all within +-17 s => no gain;
+  oracle mode 4 (own vision range only) +59±19. or5: oracle radius 120/200/300/400/800 = +48/+17/+85/+122/+129 =>
+  missing knowledge is trees 200-400 away. dm1: protect known live trees from false 'dead' marks (oracle 5) +54±27;
+  simple miss thresholds don't capture it (dm3 -57). Hypothesis: occlusion check forgets walls after 40 s => new
+  occ_walls option uses the permanent confirmed wall map; ow1 running on j/n1/n2/n3/n4/n5 (512 seeds).
