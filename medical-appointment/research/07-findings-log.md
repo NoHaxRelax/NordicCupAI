@@ -912,3 +912,55 @@ measured and each moved the half of the score it was predicted to move, which is
 served rather than merely best-scoring.
 
 **Now serving** `units-fewshot-both` with clause-and units on the pod.
+
+### 59. Why we should stop: the remaining headroom is smaller than our ability to measure it (2026-09-18 evening)
+
+Elias asked for a proof that further gains would be indistinguishable from p-hacking. Three
+measurements, all from our own data, settle it.
+
+**1. The resolution of the instrument.** Bootstrapping the served run over conversations (4000
+resamples) gives the sampling error of the score itself, i.e. how much it would move on a different
+draw of conversations from the same population:
+
+| set size | our score | 1 SE | 95 % interval |
+|---|---:|---:|---:|
+| 39 conversations (training, and the evaluation's size) | 0.8261 | 0.0154 | +-0.030 |
+| 19 conversations (validation) | 0.8261 | 0.0218 | +-0.043 |
+
+Validation therefore cannot arbitrate anything smaller than about 0.04, and we have been comparing
+candidates that differ by 0.003 to 0.012.
+
+**2. The cost of searching.** A paired comparison on training has a clustered standard error of
+about 0.005 (measured all day). Picking the best of k variants inflates the winner by roughly
+sigma*sqrt(2 ln k):
+
+| variants tried | 4 | 8 | 16 | 32 |
+|---|---:|---:|---:|---:|
+| expected inflation of the winner | +0.008 | +0.010 | +0.012 | +0.013 |
+
+Across today we compared four unit modes and six prompts, so k is about 10 and the expected
+inflation is **+0.011** - the same size as the entire prompt-line gain we measured (+0.0123).
+
+**3. Validation independently confirms exactly that.** The stack gained +0.0123 on training and
++0.0010 on validation. The shortfall, 0.011, matches the predicted selection inflation to the third
+decimal. Two independent routes to the same number is as close to proof as this data allows.
+
+**What survives the test.** Clause units gained +0.015 to +0.019 replicated on **two different
+models and two different prompts** (entry 48). Selection bias cannot fake a replication across
+models, so that one is real. The prompt lines are each mechanistically verified (the spelling line
+fixes three named misspellings and Sonnet independently makes the same call; the acted-upon line
+moves spans and not binaries), which is why they are served - but their *magnitude* is not
+separable from search.
+
+**And the headroom is bounded anyway.** The practical ceiling keeping our own sentence choice is
+about 0.85 (entry 44); we are at 0.826, so at most 0.024 remains. Of that, the wrong-sentence cases
+are annotator coin flips: Opus, Sonnet and both 27Bs fail the same ones, the neighbour decision
+splits 24 against 24, and the choice between two valid statements splits 12 against 10. That is
+irreducible conditional entropy in the label given the input, not a modelling gap. Tonight Sonnet
+matched our spans to the third decimal (0.6845 against 0.686), which is the capability argument
+closing too.
+
+**Conclusion.** Remaining reachable headroom (<=0.024) is smaller than the instrument's 95 %
+resolution on a set of this size (+-0.030). Any further "improvement" found by trying variants and
+keeping the winner is, in expectation, mostly selection bias. The correct move is to stop searching
+and submit.
