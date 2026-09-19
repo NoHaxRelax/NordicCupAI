@@ -2,7 +2,8 @@
 import argparse
 from functools import lru_cache
 import gzip
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from threading import Lock
 import io
 import json
 import os
@@ -73,6 +74,7 @@ def main():
     args = parser.parse_args()
     pygame.font.init()
     replay = Replay(args.folder)
+    render_lock = Lock()
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args): pass
@@ -87,7 +89,9 @@ def main():
                     mime = 'application/json'
                 elif url.path in ('/frame', '/tick'):
                     tick = int(parse_qs(url.query)['tick'][0])
-                    if url.path == '/frame': payload, mime = replay.png(tick), 'image/png'
+                    if url.path == '/frame':
+                        with render_lock:
+                            payload, mime = replay.png(tick), 'image/png'
                     else:
                         row = replay.row(tick)
                         payload = json.dumps({k: v for k, v in row.items() if k != 'world'}).encode()
@@ -103,7 +107,7 @@ def main():
             except BrokenPipeError: pass
 
     print(f'Native game replay: http://localhost:{args.port}', flush=True)
-    HTTPServer(('127.0.0.1', args.port), Handler).serve_forever()
+    ThreadingHTTPServer(('127.0.0.1', args.port), Handler).serve_forever()
 
 
 if __name__ == '__main__': main()
