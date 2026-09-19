@@ -371,3 +371,12 @@ Log (newest last)
   agent "within 100 of the mouth" is usually on the far side of the obstacle and runs into walls with the predator
   behind. Next narrow test ref4: refuge_clear (straight run to the pre-point and mouth must not cross known walls)
   and refuge_sprint (sprint the whole run), radius 60/100, all vs slow-only.
+- 08:05 ref4 (96 seeds): the clear-path check cuts refuge attempts 113 -> 20-36 per game and route deaths
+  92 -> 8-16; with sprint the cost drops to -28+-33 (rg_100c_sprint), -44 (r 60), -59 (slow-only); without sprint
+  -125. Still not positive. Remaining defects: (1) 7-12 refugees per game die WHILE HOLDING (0 in the scenario);
+  (2) refugees never exit (0.4 per game): they hold until they starve because the predator never leaves.
+  Geometry finding for (1): a predator (r=10) only has to clear the face END points, so it can push its centre to
+  sqrt(100-(gap/2)^2) outside the mouth line: 8.7 for gap 10 but only 1 unit for gap 19.9 => "9 deep" is
+  within 15 of it for gaps wider than ~16 (the scenario site had gap 18.6 and the predator got to 17). Same at an
+  open rear end when the gap is short. ref5: site_safe=4 (hold depth = 15 - xmin + 4, open-rear sites need length
+  >= 2 x depth), radius 60/100/150, slow-only variant.
