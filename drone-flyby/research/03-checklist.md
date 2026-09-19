@@ -90,6 +90,15 @@ The deployed F3 measured small_launcher 0.34 from Oslo against 0.56 in the night
 The harness's small_tower and tank labels are off the organisers' convention (the portal says F5 beats F3 on both), so
 cross-checkpoint routing still comes from same-day portal runs; the harness ranks policies on one checkpoint.
 
+## The served config, same host and hour (Oslo pod, Sunday 00:00 to 00:50)
+
+Nine concealed thirds interleaved per window (`measure_pod2.log`, tags P3_*), every run 249 to 257 frames with 0 to 3
+gaps: plain F3 0.265 + 0.322 + 0.110 = **0.697**; deploy (cluster births + launcher box 0.85) 0.292 + (rerun queued) +
+0.116; routed (deploy + ta-ta on F5 through `elias.ensemble`) 0.320 + 0.362 + 0.116 = **0.797**. Against Oscar's 0.727
+(Saturday afternoon, public full runs). The ensemble costs 8 to 12 ms per frame (median 62 to 74 ms). The portal keeps
+one queued attempt per team and runs it with the last url submitted, so `portal.py` re-submits every 4 s until our run
+starts (22 to 31 re-submits per run against Oscar's probe loop).
+
 ## Loss decomposition of the best harness run (`elias/miss_analysis.py`, 00:20 Sunday)
 
 `python elias/miss_analysis.py --log elias/out/harness/W_combo_ref/local.jsonl` puts every labelled box of every answered

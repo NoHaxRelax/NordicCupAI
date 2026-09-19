@@ -1,6 +1,9 @@
 # For Oscar: what Elias's branch has that your server can use today
 
-Your pipeline scores 0.705 to 0.727 on the portal this afternoon (full public runs from the Swedish pod). Ours peaks at 0.679 same-day for the deployed checkpoint, so yours is the one to submit. Below is everything on
+Your pipeline scored 0.705 to 0.727 on the portal Saturday afternoon (full public runs from the Swedish pod). Ours was
+0.679 same-day on Saturday; with the switches below and ta-ta routed to F5 it measures **0.797** as concealed thirds
+from an Oslo pod on Sunday 00:00 to 00:50 (plain F3 on the same host and hour 0.697), so the plan is now our endpoint
+with yours as the fallback (`04-sunday-runbook.md`). Below is everything on
 `drone/elias-verifier` that measured better than our own baseline per class, or that plugs into your server as it
 is, plus the things we learned the hard way (section 6). **Read 5b and 5c first: two switches confirmed on the organiser truth tonight,
 worth about +0.05 together, that plug into your tracker without touching the detector.** All numbers are portal validation, organiser truth, one class per

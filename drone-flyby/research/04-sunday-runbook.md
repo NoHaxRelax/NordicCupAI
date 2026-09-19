@@ -30,9 +30,9 @@ mixed per class), zoom on cue off (rejected).
 | config | 0:83 | 83:166 | 166:end | sum | source |
 |---|---:|---:|---:|---:|---|
 | F3 plain, Saturday afternoon | 0.262 | 0.302 | 0.114 | 0.679 | `measure_f5.log` |
-| F3 plain, Saturday night | 0.265 | | | | `measure_pod2.log` P2_PLAIN / P3_PLAIN |
-| deploy | | | | | P3_DEPLOY |
-| routed | | | | | P3_FINAL |
+| F3 plain, Sunday 00:00 to 00:50 | 0.265 | 0.322 | 0.110 | 0.697 | `measure_pod2.log` P2_PLAIN / P3_PLAIN |
+| deploy (F3 + cluster births + launcher box) | 0.292 | rerun queued | 0.116 | | P3_DEPLOY |
+| **routed (deploy + ta-ta on F5)** | **0.320** | **0.362** | **0.116** | **0.797** | P3_FINAL |
 
 ## Pre-flight, BEFORE the final start
 

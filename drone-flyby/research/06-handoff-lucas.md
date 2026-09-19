@@ -6,8 +6,9 @@ First written Saturday 2026-09-19 about 17:00, updated about midnight. Deadline 
 ## Where things stand
 
 - Oscar's pipeline, served from his Swedish pod, scores 0.705 to 0.727 on full public validations this afternoon
-  (the portal history shows every run and the leaderboard shows the team best, 0.7269). Submit his unless something
-  beats it on the same day.
+  (the portal history shows every run and the leaderboard shows the team best, 0.7269). Superseded Sunday 00:50: the routed config from the Oslo pod measures 0.797 as concealed thirds against 0.697 for plain
+  F3 on the same host and hour (`research/03-checklist.md`, "The served config"), so the attempt is our endpoint and his is
+  the fallback (`04-sunday-runbook.md`).
 - This branch: the deployed checkpoint `elias/release/both_m1280.pt` (F3) measured 0.694 on the night pod and 0.679 same-day from an Oslo pod (thirds 0.262 + 0.302 + 0.114). A corrected-data retrain (F5, `elias/release/F5_fixed_m1280.pt`)
   measured 0.614 but is the only checkpoint that sees the 13th class, ta-ta (0.50). The planned deployment routes F3
   for every class and F5 for ta-ta (expected about 0.716, not yet measured: the routed thirds were queued when Oscar's
