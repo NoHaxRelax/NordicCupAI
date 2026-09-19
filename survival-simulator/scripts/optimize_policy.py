@@ -574,6 +574,20 @@ def search(args, protocol, state, baseline, specs, features, control, deadline):
         raise RuntimeError('A saved control run failed. Inspect its error; fix it and start a new output directory.')
     initial = initial_trials(baseline, features)
     numeric_specs = [s for s in specs if s['tunable'] and not s['path'].startswith('features.')]
+    # Only mutate settings the family under test actually reads. OrchardEvasionPolicy
+    # consumes the orchard/evasion blocks (models.notrap_config.orchard_kwargs) and
+    # never looks at expert/planner, so probing those is a guaranteed no-op: the
+    # first campaign spent roughly three quarters of its trials on parameters that
+    # could not change a decision, and every "best" config it returned turned out to
+    # be behaviourally identical to the defaults.
+    if getattr(args, 'family', 'all') != 'all':
+        live = [s for s in numeric_specs if s.get('family', args.family) == args.family]
+        if not live:
+            raise RuntimeError(f'No tunable settings belong to family {args.family}')
+        if len(live) != len(numeric_specs):
+            print(f'Family {args.family}: searching {len(live)} of {len(numeric_specs)} tunable '
+                  f'settings; the rest belong to another family and cannot affect it.', flush=True)
+        numeric_specs = live
     # Prioritize survival/role behavior before expensive mapping refinements.
     order = {'evasion': 0, 'bystander': 0, 'safety': 1, 'trapping_orchard': 2, 'orchard': 2,
              'guide': 3, 'navigator': 4, 'expert': 5, 'planner': 6}
