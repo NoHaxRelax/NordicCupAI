@@ -92,7 +92,7 @@ class Node:
 
 
 def search(action,bait,agent,memory,positions,target_index,geometry,walls,
-           predator_geometry,to_fixed,to_local):
+           predator_geometry,to_fixed,to_local,*,_project_lag=False):
     modifier = TERRAIN[agent['biome']]
     current_modifier = modifier
     debug = memory.get('debug')
@@ -118,19 +118,19 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
     initial_headings = [wrap(math.atan2(-p[1],-p[0])-o.get('rel_dir',0.))
                         for p,o in zip(positions,observations)]
     forecast = list(positions)
-    target = positions[target_index]
-    tick = memory.get('_following_call_tick',0)
-    previous = memory.get('_forecast_observation')
-    memory['_forecast_observation'] = (tick,to_fixed(target))
-    lag_known = False
-    if previous is not None and tick-previous[0]==1:
-        old = to_local(previous[1])
-        velocity = (target[0]-old[0],target[1]-old[1])
-        q = (target[0]+velocity[0],target[1]+velocity[1])
-        if math.hypot(*velocity)<=16. and predator_geometry.free(to_fixed(q)):
-            forecast[target_index] = q
-            lag_known = True
-
+    velocity_estimated = False
+    if not _project_lag:
+        tick = memory.get('_following_call_tick',0)
+        target = positions[target_index]
+        previous = memory.get('_forecast_observation')
+        memory['_forecast_observation'] = (tick,to_fixed(target))
+        if previous is not None and tick-previous[0]==1:
+            old = to_local(previous[1])
+            velocity = (target[0]-old[0],target[1]-old[1])
+            q = (target[0]+velocity[0],target[1]+velocity[1])
+            if math.hypot(*velocity)<=16. and predator_geometry.free(to_fixed(q)):
+                forecast[target_index] = q
+                velocity_estimated = True
     def clear(a,b):
         fa,fb = to_fixed(a),to_fixed(b)
         if geometry.clear(fa,fb):
@@ -152,7 +152,27 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
         return (distance<=250. and abs(wrap(math.atan2(g[1]-p[1],g[0]-p[0])-h))<=math.pi/6
                 and not walls.intersects(LineString([to_fixed(p),to_fixed(g)])))
 
-    nodes = [Node((0.,0.),0.,agent['energy'],forecast,initial_headings,None,
+    # DTO sightings precede the predator's last move. Repeating its previous
+    # velocity is wrong when it turns toward the guide's updated position.
+    # Project that missing move with the same public chase rules as future
+    # moves; sample resting and slower outcomes in the safety checks below.
+    # The standalone lab's tick-zero sighting is explicitly fresh.
+    lagged = memory.get('_following_call_tick',1) > 0
+
+    def initial_predators(cap=15., terrain=1., bias=0.):
+        if not lagged:
+            return list(positions),list(initial_headings)
+        projected = [predator_step(p,h,(0.,0.),0.,bait,free,visible,cap,bias,terrain)
+                     for p,h in zip(positions,initial_headings)]
+        return [p for p,h in projected],[h for p,h in projected]
+
+    # Preserve ordinary route/contact choices until the physics-based guard
+    # finds an immediate capture risk. Replacing every nominal forecast also
+    # changed distant guiding behaviour and regressed the full-game pilot.
+    forecast_headings = list(initial_headings)
+    if _project_lag:
+        forecast, forecast_headings = initial_predators()
+    nodes = [Node((0.,0.),0.,agent['energy'],forecast,forecast_headings,None,
                   [(0.,0.)],[0.],[[p] for p in forecast],[])]
     expanded = 0
     for depth in range(HORIZON):
@@ -221,7 +241,7 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
     # The nominal search avoids a full branching game-tree explosion.
     checked = []
     contact_forecast = bool(memory.get('_contact_forecast',False))
-    motion_scenarios = PREDATOR_MOTION + (((0.,1.),) if contact_forecast else ())
+    motion_scenarios = PREDATOR_MOTION + (((0.,1.),) if _project_lag or contact_forecast else ())
     for order,node in enumerate(nodes):
         captures = 0; worst_tick = HORIZON+1; minimum = math.inf; scenarios = 0; contact_losses=0
         for cap,terrain in motion_scenarios:
@@ -230,7 +250,8 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
                 # while the predator remains on faster ground. Replay actual
                 # commands with that slowdown, rather than nominal endpoints.
                 for slow_at in (HORIZON,1,2):
-                    preds,headings = list(forecast),list(initial_headings)
+                    preds,headings = (initial_predators(cap,terrain,bias) if _project_lag
+                                     else (list(forecast),list(initial_headings)))
                     q=(0.,0.); captured=False; lost_contact=False
                     for depth,(length,angle) in enumerate(node.commands):
                         factor = .3 if depth>=slow_at else terrain_at(q)
@@ -251,12 +272,32 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
         checked.append(((captures>0,-worst_tick,captures,contact_losses if contact_forecast else 0,order),
                         node,captures,scenarios,minimum,contact_losses))
     _,winner,captures,scenarios,minimum,contact_losses = min(checked,key=lambda x:x[0])
+    if not _project_lag:
+        first = winner.first
+        q = (first['move_distance']*current_modifier*math.cos(first['move_direction']),
+             first['move_distance']*current_modifier*math.sin(first['move_direction']))
+        danger = False
+        for cap,terrain in PREDATOR_MOTION+((0.,1.),):
+            for bias in (-1.,0.,1.):
+                preds,headings = initial_predators(cap,terrain,bias)
+                for p,h in zip(preds,headings):
+                    next_p,_ = predator_step(p,h,q,first['turn_angle'],bait,free,visible,cap,bias,terrain)
+                    if math.dist(next_p,q)<CAPTURE_RADIUS:
+                        danger = True
+                        break
+                if danger: break
+            if danger: break
+        if danger:
+            return search(action,bait,agent,memory,positions,target_index,geometry,walls,
+                          predator_geometry,to_fixed,to_local,_project_lag=True)
     return winner.first,dict(horizon_ticks=HORIZON,horizon_seconds=.3,
         capture_radius=CAPTURE_RADIUS,extra_predator_clearance=0.,preferred_distance=[preferred_min,preferred_max],
         reacquiring_contact=reacquiring,following_distance=list(following_distance),
         predicted_safe=captures==0,capture_scenarios=captures,sampled_scenarios=scenarios,
         contact_forecast=contact_forecast,contact_loss_scenarios=contact_losses,
-        minimum_separation=round(minimum,2),observation_lag_estimated=lag_known,expanded=expanded,
+        minimum_separation=round(minimum,2),observation_lag_estimated=lagged if _project_lag else velocity_estimated,
+        observation_lag_method='public_chase_with_sampled_speed_and_rest' if _project_lag else 'velocity_with_public_chase_capture_guard',
+        lag_guard_triggered=_project_lag,expanded=expanded,
         terrain_samples=len(samples),terrain_scenarios=['observed_samples','river_next_tick','river_in_two_ticks'],
         guide_path=winner.path,predator_path=winner.predator_paths[target_index],
         note='Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain.')

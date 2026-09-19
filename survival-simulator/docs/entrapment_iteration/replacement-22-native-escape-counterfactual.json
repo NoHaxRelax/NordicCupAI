@@ -1,0 +1,39 @@
+{
+  "seed": 1883894846,
+  "source_replay": "survival-simulator/logs/entrapment-iteration/guide-public-lag-20260919",
+  "changed_source_sha256": "5a6469a9c1bb0fe2ebfe44dbb9b01ff5d164d7fedf5d6b31d74c8996360aa48e",
+  "note": "Single native tick. Local DTO and estimated corridors only; no future-survival claim.",
+  "cases": [
+    {
+      "agent": 22,
+      "time": 156.1999999999954,
+      "original": {
+        "agent_id": 22,
+        "move_distance": 10.0,
+        "move_direction": 2.9640334134285133e-15,
+        "turn_angle": 2.9640334134285133e-15,
+        "spawn_agent": false
+      },
+      "changed": {
+        "agent_id": 22,
+        "move_distance": 20,
+        "move_direction": 3.926990816987241,
+        "turn_angle": 0.7555447776069357,
+        "spawn_agent": false
+      },
+      "original_alive_after_tick": false,
+      "original_deaths": [
+        [
+          "predator",
+          156.1999999999954,
+          22,
+          62.50000000000062,
+          177.29849447135163
+        ]
+      ],
+      "maximum_replay_position_error": 0.0,
+      "changed_alive_after_tick": true,
+      "changed_deaths": []
+    }
+  ]
+}

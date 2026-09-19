@@ -1,0 +1,39 @@
+{
+  "seed": 730951,
+  "source_replay": "logs/sprint-failure-730951-frames",
+  "changed_source_sha256": "5a6469a9c1bb0fe2ebfe44dbb9b01ff5d164d7fedf5d6b31d74c8996360aa48e",
+  "note": "Single native tick. Local DTO and estimated corridors only; no future-survival claim.",
+  "cases": [
+    {
+      "agent": 36,
+      "time": 172.89999999999446,
+      "original": {
+        "agent_id": 36,
+        "move_distance": 18.31822000696458,
+        "move_direction": -0.04809775,
+        "turn_angle": -1.527715177254641,
+        "spawn_agent": false
+      },
+      "changed": {
+        "agent_id": 36,
+        "move_distance": 18.31822000696458,
+        "move_direction": 2.8797932657906435,
+        "turn_angle": -0.3193929608357644,
+        "spawn_agent": false
+      },
+      "original_alive_after_tick": false,
+      "original_deaths": [
+        [
+          "predator",
+          172.89999999999446,
+          36,
+          49.000000000000426,
+          475.5542123148984
+        ]
+      ],
+      "maximum_replay_position_error": 0.0,
+      "changed_alive_after_tick": true,
+      "changed_deaths": []
+    }
+  ]
+}
