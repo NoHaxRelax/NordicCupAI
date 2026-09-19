@@ -1,0 +1,30 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 5036,
+  "sim_time": 503.600000000046,
+  "runtime_seconds": 155.4328867009899,
+  "score": 503.22966878463916,
+  "final_agents": 0,
+  "peak_agents": 38,
+  "total_agents_seen": 134,
+  "predators": 6,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 2,
+  "maximum_predators_continuously_near_bait_30s": 2,
+  "estimated_bait_gap_seconds_after_first_arrival": 95.29999999999886,
+  "longest_estimated_bait_gap_seconds": 68.90000000000036,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 39,
+    "guide_deaths": 33,
+    "guide_releases": 0,
+    "delivery_arrivals": 3,
+    "bait_arrivals": 5,
+    "overlapping_replacements": 2,
+    "estimated_unbaited_seconds": 97.80000000002168,
+    "no_viable_bait_ticks": 2810
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "policy_commit": "af647be"
+}

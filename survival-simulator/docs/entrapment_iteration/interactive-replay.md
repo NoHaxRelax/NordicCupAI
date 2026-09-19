@@ -49,3 +49,9 @@ The same-seed replay is stored locally at
 Every frame is retained. Its manifest includes the JSON survival configuration
 as well as Python and C++ source hashes. This single game is for visual inspection,
 not a reliability benchmark.
+
+Completed inspection run (`af647be`): 5,036 frames, extinction at 503.6 seconds,
+score 503.23 (previous same-seed baseline 632.18). Five bait arrivals included
+two overlapping replacements, but estimated bait gaps still totalled 95.3
+seconds, longest 68.9 seconds. Bait continuity remains unresolved. Runtime was
+155.4 seconds. Saved summary and source manifest accompany this document.
