@@ -30,8 +30,8 @@ import numpy as np
 class Ensemble:
     name = 'elias-ensemble'
 
-    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None, context=1.0, route_l2=None):
-        self.route = dict(route or {}); self.context = float(context)
+    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None, context=1.0, route_l2=None, augment=False):
+        self.route = dict(route or {}); self.context = float(context); self.augment = bool(augment)   # flip and scale test-time augmentation
         self.route_l2 = dict(route_l2) if route_l2 else None   # a separate table for native (L2) views
         sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
         import cv2
@@ -48,7 +48,7 @@ class Ensemble:
         if not hasattr(m, 'predict'):                          # a hook detector: rows of label, box, confidence
             return [(r['label'], np.array(r['box'], float), float(r['confidence'])) for r in (m(image, request) or [])]
         with redirect_stdout(sys.stderr):
-            r = m.predict(image, imgsz=size, device=self.device, conf=self.conf, half=self.half, verbose=False)[0]
+            r = m.predict(image, imgsz=size, device=self.device, conf=self.conf, half=self.half, verbose=False, augment=self.augment)[0]
         return [(m.names[int(c)], np.array([x1, y1, x2, y2]), float(s)) for x1, y1, x2, y2, s, c in r.boxes.data.cpu().tolist()]
 
     def __call__(self, image, request):
@@ -105,4 +105,5 @@ def build():
     route = json.loads(os.environ.get('ELIAS_ROUTE', '{}') or '{}')
     route_l2 = json.loads(os.environ.get('ELIAS_ROUTE_L2', '') or 'null')
     return Ensemble(weights, sizes, device=os.environ.get('DRONE_DEVICE', 'cuda:0'), conf=float(os.environ.get('ELIAS_CONF', '0.03')), route=route,
-                    context=float(os.environ.get('ELIAS_CONTEXT', '1.0') or 1.0), route_l2=route_l2)
+                    context=float(os.environ.get('ELIAS_CONTEXT', '1.0') or 1.0), route_l2=route_l2,
+                    augment=os.environ.get('ELIAS_AUGMENT', '0') == '1')

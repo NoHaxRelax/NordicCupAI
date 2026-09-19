@@ -52,6 +52,11 @@ class RevisitConfig:
     duplicate_iou: float = .7
     crop_margin_pixels: float = 1.
     visible_misses_before_retirement: int = 3
+    # A track retired on misses keeps being forecast for retired_ticks more ticks at confidence x retired_scale
+    # (0 = off): a low-confidence extra costs almost nothing under AP, and a real object the detector lost for
+    # three views keeps its frames. Never for tracks that left the frame.
+    retired_ticks: float = 0.
+    retired_scale: float = .3
     # 'any': a silent detector counts as a miss whenever the predicted box lies whole inside the view
     # (the original rule). 'seen': only when the view also gives the object at least
     # miss_size_fraction of the smallest delivered size at which this track was ever detected whole.
@@ -99,6 +104,8 @@ class RevisitConfig:
             raise ValueError('Crop margin must be finite and nonnegative')
         if self.visible_misses_before_retirement < 1 or self.max_history < 4:
             raise ValueError('Need positive retirement count and at least four history slots')
+        if self.retired_ticks < 0 or not 0 <= self.retired_scale <= 1:
+            raise ValueError('retired_ticks must be nonnegative and retired_scale in [0,1]')
 
     @property
     def needs_prior(self):
@@ -211,6 +218,7 @@ class RevisitTracker:
         self.config = config or RevisitConfig()
         self.prior = self.config.load_prior()
         self.tracks = {}
+        self.retired = []      # (track, tick retired) still forecast at low confidence, see retired_ticks
         self.next_id = 1
         self.last_frame = None
         self.last_tick = None
@@ -391,6 +399,8 @@ class RevisitTracker:
                     # A provisional entry track has never been seen whole; one clear miss retires it.
                     if track.visible_misses >= (1 if track.provisional else self.config.visible_misses_before_retirement):
                         self.events.append({'event': 'visible_misses_retired', 'track_id': identity})
+                        if self.config.retired_ticks > 0 and not track.provisional:
+                            self.retired.append((track, tick))
                         del self.tracks[identity]
         self.last_frame, self.last_tick = int(frame_index), tick
         return self.predictions(tick)
@@ -417,6 +427,24 @@ class RevisitTracker:
                          'last_seen_frame': track.last_seen_frame, 'anchor_tick': track.history[-1][0],
                          'observations': len(track.history), 'adapted': track.edge_slopes is not None,
                          'provisional': track.provisional})
+        if self.retired:
+            keep = []
+            for track, retired_at in self.retired:
+                if tick-retired_at > self.config.retired_ticks:
+                    continue
+                keep.append((track, retired_at))
+                try:
+                    full = self._box(track, tick)
+                except ProjectionError:
+                    continue
+                clipped = clip_box(full, self.model.source_size, self.config.clip_last_index)
+                if clipped is None:
+                    continue
+                rows.append({'track_id': track.track_id, 'object_id': track.label, 'bbox': (clipped/size).tolist(),
+                             'bbox_source_xyxy': clipped.tolist(), 'confidence': float(track.confidence*self.config.retired_scale),
+                             'last_seen_frame': track.last_seen_frame, 'anchor_tick': track.history[-1][0],
+                             'observations': len(track.history), 'adapted': False, 'provisional': True, 'retired': True})
+            self.retired = keep
         if self.config.emit_partials and self.last_tick is not None and tick == self.last_tick:
             for row in self.transients:
                 clipped = clip_box(row['bbox_source_xyxy'], self.model.source_size, self.config.clip_last_index)

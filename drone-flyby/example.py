@@ -24,6 +24,8 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_CUE_EVERY, DRONE_CUE_PX, DRONE_CUE_CONF, DRONE_CUE_COOLDOWN  zoom on cue: at most one native look per k
                             frames at the most urgent unconfirmed, small (< px delivered) or weak (< conf) track,
                             one look per track per cooldown frames; 0 = off                [0, 40, 0.4, 12]
+  DRONE_RETIRED_TICKS, DRONE_RETIRED_SCALE  keep forecasting a track retired on misses for k more ticks at
+                            confidence x scale (0 = off)                                    [0, 0.3]
   DRONE_CUE_KIND, DRONE_CUE_CLASSES  'unconfirmed' cues only never-confirmed tracks; a comma list limits cues to
                             those classes (empty = any)                                     [all, empty]
   DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
@@ -80,6 +82,9 @@ CONFIG = RevisitConfig(
     birth_confidence=float(os.environ.get('DRONE_BIRTH_CONFIDENCE', '0.6')),
     update_confidence=float(os.environ.get('DRONE_UPDATE_CONFIDENCE', '0.4')),
     class_extent=json.loads(os.environ.get('DRONE_CLASS_EXTENT', '{}')) or None,
+    # Tracks retired on misses keep being forecast for this many ticks at confidence x scale (0 = off).
+    retired_ticks=float(os.environ.get('DRONE_RETIRED_TICKS', '0')),
+    retired_scale=float(os.environ.get('DRONE_RETIRED_SCALE', '0.3')),
     # A miss is counted whenever a predicted box lies inside the view and the detector stays silent,
     # whatever the zoom. An L0 overview therefore counts against a small object no detector can
     # see at L0. Raise this to study how many points that rule costs.
