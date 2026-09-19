@@ -11,6 +11,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 from nightsim.run import parse_seeds
 from nightsim.trapsite import grade
 
+HELD = int(__import__('os').environ.get('NIGHT_HELD', '0'))
+
 def one(job):
     label, kw, seed, dg, dp, bear, sp, T = job
     import nightsim
@@ -47,6 +49,12 @@ def one(job):
     eng.dbg_set_agent(bait, gx, gy, math.atan2(-ay, -ax) + math.pi, 400., 10., 20., 500., 100., 400., 1.57, 1000.)
     eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), 300., float(sp), float(min(40, 2 * sp)), 800., 100., 400., 1.57, 1000.)
     if not eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px), 200., False): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='pred_pos')
+    # step 2: K predators already held at the mouth (awake, full energy), spread across the lane just outside the mouth
+    held_ok = 0
+    for k in range(HELD):
+        off = (k % 5 - 2) * 4.0; back = 12. + 8. * (k // 5)
+        hx, hy = mx + ax * back - ay * off, my + ay * back + ax * off
+        if eng.dbg_add_predator(hx, hy, math.atan2(gy - hy, gx - hx), 200., False): held_ok += 1
     # settle after teleporting: observations refresh and the policy's poses are re-synced twice (odometry/VO would drift)
     eng.dbg_freeze([bait, guide])
     for _ in range(3):
@@ -60,14 +68,16 @@ def one(job):
         pr = eng.predators()
         if pr:
             dmin = min(dmin, math.hypot(pr[0][0] - gx, pr[0][1] - gy))
-            dm = math.hypot(pr[0][0] - mx, pr[0][1] - my)
+            dm = math.hypot(pr[0][0] - mx, pr[0][1] - my)   # pr[0] is the delivered predator (added first)
             near = near + 0.5 if dm < 25 else 0.
             if near >= 3. and t_del is None and bait not in killed: t_del = round(eng.info()['time'] - t0, 1)
         r = eng.dbg_roles(); states.append(r[0][5] if r else -1)
         if bait in killed: break
         if t_del is not None and eng.info()['time'] - t0 > t_del + 10: break
     ag = {a[0]: a for a in eng.agents()}
+    prs = eng.predators(); held_end = sum(1 for p_ in prs if math.hypot(p_[0] - mx, p_[1] - my) < 30)
     return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, delivered=int(t_del is not None and bait not in killed), t_deliver=t_del,
+                held0=HELD, held_placed=held_ok, held_end=held_end, npred=len(prs),
                 guide_alive=int(guide in ag), t_guide_died=killed.get(guide), bait_alive=int(bait in ag), used=round(e0 - ag[guide][5], 1) if guide in ag else None,
                 dmin_bait=round(dmin, 1), states=''.join(str(x) for x in states[::4]), site=[round(gx), round(gy), round(ov), rear], phi=phi)
 

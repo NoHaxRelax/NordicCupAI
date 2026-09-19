@@ -98,3 +98,10 @@ Log (newest last)
 - 02:50 g7: band 45-70 stays best (78%); 40-60 77%, 35-55 75% (more guides killed before the handoff); blocked
   sprint angle 2.9 and acquire stop 75 slightly worse. Remaining failures at 45-70: guide killed early 14%,
   predator lost 8%; bearing 180 (predator between guide and trap) 54%.
+- 03:00 g8: removing the beyond-band slow-down HURTS (73% vs 78%: the predator in pivot mode closes only 10.6/tick, so
+  a guide walking off at 13 loses it); handoff distance 35/40/45/55 all equal; acquire sprint no gain. Best stays
+  near 45 / far 70 / slow-down on (78%). g9 tests 'fastclose': keep walking instead of waiting when the predator
+  charges in at > 8-12 units/tick (traced early kills came from waiting while it closed 15/tick).
+- 02:35 STEP 1 NAILED to the scenario limit: 78% overall, 96% with the predator behind the guide (GUIDE.md).
+  Guide selection now penalises candidates with the predator between them and the trap. Step 2 started: K
+  predators already held at the mouth (K=0,1,3,6,10) + one delivered; measure holding and delivery (runs m0..m10).

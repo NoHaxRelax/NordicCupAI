@@ -55,5 +55,5 @@ for k in range(60):
     if g and p:
         print(f"t{eng.info()['time']-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} | d {d:.0f} d_mouth {dm:.0f} d_bait {dbait:.0f} state {r[0][5] if r else None} | pred sees {pi[0][0]:.0f} look {pi[0][1]:.2f} mode {pi[0][3]} {ev}")
     else:
-        print(f"t{eng.info()['time']-t0:5.1f} guide dead | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} d_mouth {dm:.0f} d_bait {dbait} bait alive {b_ is not None} {ev}" if p else 'no predator')
+        print(f"t{eng.info()['time']-t0:5.1f} guide dead | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} d_mouth {dm:.0f} d_bait {dbait:.0f} bait alive {b_ is not None} | pred sees {pi[0][0]:.0f} mode {pi[0][3]} {ev}" if p else 'no predator')
     if not b_: break
