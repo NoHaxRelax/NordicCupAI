@@ -470,3 +470,8 @@ Log (newest last)
   rf_trap_wc_lane300 -145+-36; held 0.07/0.07/0.18, handoffs 0.3 per game, 20 baits born per game in all three.
   The map was not what broke Lucas's trap in full games; delivery (guide episodes ending in death or loss before
   the handoff) and the bait cost are. Pod n7 stopped; all pods idle. ~$45 of $100 spent. Branch pushed.
+- 08:53 Tick, my call: one last narrow trap test that the refuge work suggests. Guides die "far" and "slow":
+  the scenario always had a straight clear lane, full games do not, and for refugees a clear-path requirement cut
+  route deaths 92 -> 8-16 per game. guide_clear=1: a guide is only chosen if its straight walk to the lane point
+  crosses no known wall, and is released if that stops being true while leading (the corrected map makes this
+  check meaningful now). f40 on n7 (96 seeds): rf_ref, rf_trap_wc, rf_trap_clear, rf_trap_clear_lane300.
