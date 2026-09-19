@@ -20,6 +20,7 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_VERTICAL_FRACTION   band of the L1 crops, 0 = top                   [0]
   DRONE_OVERVIEW_BETWEEN_SIDES  L0 between the L1 sides (0 = L1 centre)     [1]
   DRONE_CAMERA_MODE         l1 (upper L1 sweep) | l2_top (native L2 sweep of the top row) [l1]
+  DRONE_L1_WAYPOINTS        4 = left, centre, right, centre; 2 = the two sides only (full width every two frames) [4]
   DRONE_REVISIT_EVERY, DRONE_REVISIT_MIN_AGE  every k-th frame aim L2 at the oldest reachable track [0, 6]
   DRONE_CUE_EVERY, DRONE_CUE_PX, DRONE_CUE_CONF, DRONE_CUE_COOLDOWN  zoom on cue: at most one native look per k
                             frames at the most urgent unconfirmed, small (< px delivered) or weak (< conf) track,
@@ -67,6 +68,7 @@ SETTINGS = {
     'overview_between_sides': _flag('DRONE_OVERVIEW_BETWEEN_SIDES', True),
     'observe_motion': _flag('DRONE_OBSERVE_MOTION', True),
     'camera_mode': os.environ.get('DRONE_CAMERA_MODE', 'l1'),
+    'l1_waypoints': int(os.environ.get('DRONE_L1_WAYPOINTS', '4')),
     'revisit_every': int(os.environ.get('DRONE_REVISIT_EVERY', '0')),
     'revisit_min_age': float(os.environ.get('DRONE_REVISIT_MIN_AGE', '6')),
     'cue_every': int(os.environ.get('DRONE_CUE_EVERY', '0')),
@@ -201,7 +203,8 @@ class Session:
                                      camera_mode=SETTINGS['camera_mode'],
                                      revisit_every=SETTINGS['revisit_every'], revisit_min_age=SETTINGS['revisit_min_age'],
                                      cue_every=SETTINGS['cue_every'], cue_px=SETTINGS['cue_px'], cue_conf=SETTINGS['cue_conf'],
-                                     cue_cooldown=SETTINGS['cue_cooldown'], cue_kind=SETTINGS['cue_kind'], cue_classes=SETTINGS['cue_classes'])
+                                     cue_cooldown=SETTINGS['cue_cooldown'], cue_kind=SETTINGS['cue_kind'], cue_classes=SETTINGS['cue_classes'],
+                                     l1_waypoints=SETTINGS['l1_waypoints'])
 
     def record(self, row):
         if self.log:

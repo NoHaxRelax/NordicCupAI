@@ -21,14 +21,17 @@ class LevelOneSweep:
     move limit, so every column is delivered at native resolution about
     every six frames. Level changes step one level at a time.
     """
-    def __init__(self, vertical_fraction=0., *, overview_between_sides=False, mode='l1'):
+    def __init__(self, vertical_fraction=0., *, overview_between_sides=False, mode='l1', waypoints=4):
         if not 0 <= vertical_fraction <= 1:
             raise ValueError('Vertical fraction must be in [0,1]')
         if mode not in ('l1', 'l2_top'):
             raise ValueError("Camera mode must be 'l1' or 'l2_top'")
+        if waypoints not in (2, 4):
+            raise ValueError('waypoints must be 2 (the two sides, which already cover the full width) or 4 (sides and centre)')
         self.vertical_fraction = vertical_fraction
         self.overview_between_sides = overview_between_sides
         self.mode = mode
+        self.waypoints = waypoints
         self.waypoint = 0
         self.side = None      # 'left' or 'right': a vertical band at that edge when the ground moves sideways
 
@@ -73,13 +76,16 @@ class LevelOneSweep:
                 points = [(x, yy) for yy in ys]
             else:
                 points = [(xx, y) for xx in xs]
+            if self.waypoints == 2:
+                points = [points[0], points[2]]     # the two edges only: full coverage every two frames
             def destination(waypoint):
                 if self.overview_between_sides and waypoint % 2:
                     return 0, np.array([request['original_width']/2, request['original_height']/2])
                 return 1, np.array(points[waypoint], float)
+            self.waypoint %= len(points)
             level, target = destination(self.waypoint)
             if view['resolution_level'] == level and np.linalg.norm(current-target) < 1:
-                self.waypoint = (self.waypoint+1) % 4
+                self.waypoint = (self.waypoint+1) % len(points)
                 level, target = destination(self.waypoint)
             if level not in bounds:
                 # A level-2 detour must return through level 1 before overview.
@@ -213,11 +219,11 @@ class DroneTrackingWorkflow:
 
     def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False, camera_mode='l1',
                  revisit_every=0, revisit_min_age=6., cue_every=0, cue_px=40., cue_conf=0.4, cue_cooldown=12,
-                 cue_kind='all', cue_classes=()):
+                 cue_kind='all', cue_classes=(), l1_waypoints=4):
         self.config = config or RevisitConfig()
         self.prior = self.config.load_prior()
         self.observe_motion = observe_motion
-        self.camera = LevelOneSweep(vertical_fraction, overview_between_sides=overview_between_sides, mode=camera_mode)
+        self.camera = LevelOneSweep(vertical_fraction, overview_between_sides=overview_between_sides, mode=camera_mode, waypoints=l1_waypoints)
         # Optional native revisits: every k-th tracking frame, aim the camera at
         # the reachable track that has gone longest without a fresh observation.
         if revisit_every < 0 or revisit_min_age < 0:
