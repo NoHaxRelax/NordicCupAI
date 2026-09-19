@@ -154,3 +154,5 @@ Log (newest last)
   Trend continues: flee less. f11: radius 50-80, sprint radius 40/60, face radius 80, dodge off.
 - 03:27 f11: flee radius optimum ~80 (50/60/70 worse by 20-40 s); sprint radius 40/60 +20; dodge off -97.
   Best with predators now e_r80_ns_spr40: 1262 s / score 1283. f12 tunes the dodge (radius 40-100, angle) and facing.
+- 03:32 f12: dodge angle 1.2 rad (sidestep 69 degrees off the predator's heading): +102 s -> 1364 s / score
+  1385; dodge radius 80 +36; angle 0.5 or radius 40 -90..-100. f13 continues (radius 80/100, angle 1.0/1.4, combos).
