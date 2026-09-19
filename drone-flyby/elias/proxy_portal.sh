@@ -9,8 +9,11 @@ VP="$HOME/venvs/nordic-drone/Scripts/python.exe"; OUT=elias/out/portal/$TAG; mkd
 curl -sf -m 10 "$TARGET/" > /dev/null || { echo "target $TARGET does not answer"; exit 1; }
 PROXY_TARGET=$TARGET PROXY_CLASSES=$CLASSES PROXY_PORT=$PORT "$VP" elias/class_proxy.py > "$OUT/proxy.log" 2>&1 &
 PROXY_PID=$!
-cloudflared tunnel --url http://localhost:$PORT --no-autoupdate > "$OUT/tunnel.log" 2>&1 &
+CF="/c/Users/edlun/AppData/Local/Temp/claude/c--Users-edlun-Desktop-lucky-shots-NordicCupAI/bf48d8ae-2b16-4039-be3b-c570527b37ee/scratchpad/cloudflared.exe"
+[ -x "$CF" ] || CF=cloudflared
+"$CF" tunnel --url http://localhost:$PORT --no-autoupdate > "$OUT/tunnel.log" 2>&1 &
 TUN_PID=$!
+trap 'kill $PROXY_PID $TUN_PID 2>/dev/null; taskkill //F //IM cloudflared.exe > /dev/null 2>&1' EXIT
 for _ in $(seq 1 40); do
   URL=$(grep -oE "https://[a-z0-9-]+\.trycloudflare\.com" "$OUT/tunnel.log" | head -1)
   [ -n "$URL" ] && curl -sf -m 8 "http://localhost:$PORT/" > /dev/null && grep -q "Registered tunnel connection" "$OUT/tunnel.log" && break
