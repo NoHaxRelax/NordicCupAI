@@ -37,12 +37,10 @@ def body(i):
 def restart():
     print(time.strftime('%FT%T'), 'restarting api.py', flush=True)
     subprocess.call('pkill -f "[a]pi.py"; sleep 2', shell=True)
-    env = dict(os.environ)
-    for line in open(ENV):
-        line = line.strip()
-        if line.startswith('declare -x ') and '=' in line:
-            k, v = line[11:].split('=', 1); env[k] = v.strip('"')
-    subprocess.Popen(f'cd /root/work/drone-flyby && exec python api.py >> {LOG} 2>&1', shell=True, env=env, start_new_session=True)
+    # serve.env is the output of bash `export -p`: JSON values carry escaped quotes (DRONE_BOX_SCALE="{\"medium_launcher\": 0.85}"),
+    # so let bash read it back instead of parsing it here (a naive strip of the outer quotes leaves the backslashes
+    # and example.py then fails in json.loads at import).
+    subprocess.Popen(['bash', '-c', f'. {ENV}; cd /root/work/drone-flyby && exec python api.py >> {LOG} 2>&1'], start_new_session=True)
 
 
 def main():

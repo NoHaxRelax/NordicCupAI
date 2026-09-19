@@ -1,9 +1,8 @@
 # For Oscar: what Elias's branch has that your server can use today
 
-Your pipeline scores 0.705 to 0.727 on the portal this afternoon (full public runs from the Swedish pod). Ours peaks at
-0.678 same-day for the deployed checkpoint, so yours is the one to submit. Below is everything on
+Your pipeline scores 0.705 to 0.727 on the portal this afternoon (full public runs from the Swedish pod). Ours peaks at 0.679 same-day for the deployed checkpoint, so yours is the one to submit. Below is everything on
 `drone/elias-verifier` that measured better than our own baseline per class, or that plugs into your server as it
-is, plus three things we learned the hard way. **Read 5b and 5c first: two switches confirmed on the organiser truth tonight,
+is, plus the things we learned the hard way (section 6). **Read 5b and 5c first: two switches confirmed on the organiser truth tonight,
 worth about +0.05 together, that plug into your tracker without touching the detector.** All numbers are portal validation, organiser truth, one class per
 concealed run (score x 13 = class AP), unless marked otherwise.
 
@@ -26,14 +25,14 @@ concealed run (score x 13 = class AP), unless marked otherwise.
 | ta-ta | 0 | 0 | **0.50** |
 | condor, jammer, spacecraft | absent from validation | | |
 
-Totals: F3 0.694 (night), 0.678 (same day); F5 0.614. If your per-class table has a class under ours, route that class
+Totals: F3 0.694 (night), 0.679 (same day, Oslo); F5 0.614. If your per-class table has a class under ours, route that class
 to our checkpoint (section 3). Helicopter is the one you said was weak for you.
 
 ## 1b. Your endpoint measured per class tonight (organiser truth)
 
 Saturday from 23:12 your server (`/api` says checkpoint 02) was validated through a class-filtering proxy on Elias's
 laptop (`elias/proxy_portal.sh`: only that class's boxes reach the portal, score x 13 = your AP on the class). The proxy
-adds a laptop hop and a tunnel; how much that costs your pipeline is not known yet, see the caveat under the table.
+adds a laptop hop and a tunnel; the calibration under the table puts the cost at a factor of about 2.3.
 
 | class | yours (checkpoint 02, via proxy) | ours (F3, night pod) | gain from routing the class to F3 |
 |---|---:|---:|---:|
@@ -44,8 +43,7 @@ adds a laptop hop and a tunnel; how much that costs your pipeline is not known y
 
 **Caveat, read before acting on the table.** The four numbers add up to 0.52 of 13; with your 0.727 total the other nine
 classes would have to average 0.99, which no pipeline of ours reaches. So the proxy path (Helsinki to a Cloudflare tunnel
-to a home laptop to Sweden and back) costs your pipeline far more than the tenth it costs ours. The cause is not measured; every one of the four runs carried
-an ignored camera request, and your notes mention replay divergence when answers arrive late. Treat the table as a lower
+to a home laptop to Sweden and back) costs your pipeline far more than the tenth it costs ours. The calibration below measured the cause: half the frames never reach your server in time. Every one of the four runs also carried an ignored camera request, which your notes put down to replay divergence when answers arrive late. Treat the table as a lower
 bound on your classes. ta-ta is exactly 0.0 where the other three classes keep a score through the same path, which is
 what our checkpoint without walker sprites does. **Calibration, 23:47:** your endpoint through the same proxy with no class filter scores 0.309 against your native 0.705
 to 0.727, a factor of about 2.3. The proxy forwarded only 133 of the 249 frames: one forwarded frame took 307 ms median
@@ -84,27 +82,25 @@ accepts your own detector as one of its models:
     ELIAS_CONF=0.05 DRONE_CLASS_EXTENT='{"ta-ta":"detector","medium_launcher":"detector"}' python api.py
 
 Each class is answered by exactly one model at that model's own confidence (list every class: an unlisted class is
-merged across models at the mean confidence, which halves a lone detection). Two YOLO26m passes cost about 25 ms
-each on a 4090 at 1280. `ELIAS_ROUTE_L2` gives a separate table for native views. `python elias/route_from_log.py`
-builds the table from one-class portal runs (`DRONE_ANSWER_CLASSES=<class>` in our `example.py`, commits ccb13ac
+merged across models at the mean confidence, so a detection only one model makes is divided by the number of models, three here). Two YOLO26m passes cost about 25 ms
+each on a 4090 at 1280. `ELIAS_ROUTE_L2` gives a separate table for native views. `python elias/route_from_log.py` builds the table for OUR two checkpoints only (F3 = 0, F5 = 1, paths under `/root/out/`); with your detector in slot 0 every index shifts by one, so write your table by hand. It reads one-class portal runs (`DRONE_ANSWER_CLASSES=<class>` in our `example.py`, commits ccb13ac
 and b96a1ee; `DRONE_ANSWER_WINDOWS="0:83"` for concealed thirds, which add up to the full score within 0.015).
 
 Weights are under Git LFS in `elias/release/`.
 
-## 4. Your runs waste a frame each time the camera request is illegal
+## 4. Your runs lose a camera move each time the request is illegal
 
 Four of your eight runs between 16:35 and 16:52 carry errors like
 `Frame 169: ignored camera request L2 (536, 270) from L1 (1920, 540)` and
 `Frame 75: ignored camera request L1 (960, 540) from L2 (2270, 650)`: a move longer than the level's limit (1102 px
 at L1, 551 at L2) or a level change of two steps. The server keeps the old view for that frame. Our
 `LevelOneSweep.next_view` (`tracking/workflow.py`) clips the target to the legal circle by bisection and returns
-through L1, so it never issues one; the same code is in your branch, so the illegal requests come from the newer
-policy. Cheap check: `grep "ignored camera" api.log` after a run.
+through L1, so it never issues one; the same code is in your branch, so the illegal requests come either from the newer policy or, as your notes say, from replay divergence when answers arrive late. Cheap check: the `errors` list of the portal result, or `grep -i "was ignored" api.log` (the server logs the feedback as `Camera command from frame N was ignored`).
 
 ## 5. Objects never stand on water or in trees
 
 Measured on 564 labelled objects against 896 random windows (`elias/backdrop_study.py`): random ground is 24 % forest
-and 15 % water; objects are 6 % tree cover and 0 % water, 51 % paved or bare. Two uses, both implemented: the
+and 15 % water; objects are 6 % tree cover, 51 % paved or bare, and none stands in water (the 5 % the colour rules call water are a beach next to it, mostly the tank). Two uses, both implemented: the
 generator refuses paste positions on water or forest (`SYNTH_TERRAIN=1`), and `ELIAS_CONTEXT=0.5` halves the
 confidence of a box whose surroundings are water or forest (`elias/data/terrain.py`, colour rules, works on delivered
 pixels). The context prior is untested on the portal; the terrain-trained checkpoint matched its sibling on the
@@ -123,10 +119,10 @@ against 0.360 with the 0.85 box, everything else equal. If your launcher AP is i
 ## 5c. The second object of a same-class pair is dropped as ambiguous
 
 The team labels hold two medium_planes parked 70 px apart (files 57 to 90). Our tracker emits one box that alternates
-between them: the run log shows 11 medium_plane, 12 small_plane and 10 small_launcher detections discarded by the
+between them: the diagnostics JSONL of the run (`DRONE_LOG_DIR`) shows 11 medium_plane, 12 small_plane and 10 small_launcher detections discarded by the
 `ambiguous_detection` rule in `tracking/revisit.py` (an unmatched detection that had a same-class track nearby).
 Our portal medium_plane AP is 0.50 and small_plane 0.66, both consistent with one of a pair. Your branch carries the
-same rule; `grep -c ambiguous_detection` on your run log tells you whether it bites. `DRONE_CLUSTER_BIRTHS=1`
+same rule; `grep -o ambiguous_detection <DRONE_LOG_DIR>/*.jsonl | wc -l` tells you whether it bites (the events are in the per-sequence JSONL, not in `api.log`). `DRONE_CLUSTER_BIRTHS=1`
 restricts the rule to detections that actually overlap a same-class forecast. On the harness it moves medium_plane from
 0.485 to 0.941 and nothing else (0.600 to 0.641 overall). The flag is three lines in `RevisitTracker.update`
 (commit 284a066 on our branch, `cluster_births` in `RevisitConfig`); your branch has the rule without the flag. A
@@ -144,7 +140,7 @@ over to your server as they are: `DRONE_CLUSTER_BIRTHS=1 DRONE_BOX_SCALE='{"medi
   launchers in the band lose their births. Implemented behind `DRONE_CUE_EVERY` if you want to try it on your policy.
 - Training at batch 2 on an 8 GB card regressed the same recipe by 0.10 (normalisation starvation); batch 16 on a
   4090 trains yolo26m at 1280 in 27 minutes.
-- The extra data of F5 (keep-outs, second-instance sprites, aerial tiles) won ta-ta, small_tower and tank but lost
+- The extra data of F5 (keep-outs, second-instance sprites, shadow-free walker sprites) won ta-ta, and small_tower and tank against the night F3 (no same-day F3 run of those two exists), but lost
   0.106 on the middle third on classes we did not isolate; hence the routing instead of a single new checkpoint.
 - The deployed checkpoint's small_launcher moved from 0.56 (night) to 0.34 (afternoon) with byte-identical code and
   the same band; whatever moved is on the portal or host side, so compare models on same-day runs only.
@@ -158,6 +154,5 @@ over to your server as they are: `DRONE_CLUSTER_BIRTHS=1 DRONE_BOX_SCALE='{"medi
 ## 7. Where everything is
 
 Branch `drone/elias-verifier` (head pushed 2026-09-19 evening). `research/03-checklist.md` has every idea with its
-status and number; `research/02-night-report.md` the ceiling decomposition (1.00 to 0.92 with a perfect detector on
-the sweep, to about 0.85 for the classes the sweep cannot reach at L1); `elias/visualize_run.py` renders any served
+status and number; `research/02-night-report.md` the oracle sweep (a perfect detector on the L1 sweep scores 0.92, falling to 0.75, 0.52 and 0.38 when the recogniser needs 16, 24 and 32 delivered pixels); `elias/visualize_run.py` renders any served
 run (real frames, labels, the delivered view in red, our answers) to MP4 or a self-contained HTML page.
