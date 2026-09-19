@@ -43,6 +43,7 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 | 6 | Push branch, write handoff, update memory | milestone 1 pushed 01:45 (`508ae5f` on `drone/oscar-experts`) | `push_branch.sh` |
 
 ## Pod and paths
+- Pod 2 `c28v8wlbm25ots` (oscar-claude-experts-2, A100 EUR-IS-1, $1.59/h, created 05:01) for replays and speed work; cloned from pod 1 with `clone_pod.sh` (pod 1 holds a transfer key). Stop it when idle.
 - Pod 1 `ypuawkayl3px8t` A100, `root@157.157.221.29:17494`, helper `pod.sh`. Code+data `/workspace/experts/project`,
   runs `/workspace/experts/runs`. Live endpoint stack `/workspace/live/drone-flyby` (scene `validation` linked to
   the 249 reconstructed frames). Two idle servers from the earlier session (api.py 9305/9306 + cloudflared) hold
@@ -58,6 +59,33 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 - Remaining cost: fine pose ~1-5 s per class per view on CPU threads; condor (4 s) and hangar (3 s) are the slowest experts.
   Next cycle, BEFORE a gate-fitting pass: condor max_candidates 16->8, hangar one template per zoom and fewer angle offsets,
   vectorise PartModel.score across poses. Never change candidate features between fitting gates and applying them.
+
+## Root causes found 05:20-05:50
+- Proposal heading was the fitted bar angle of the rotated mask, not the rotation applied; square objects flipped
+  90 degrees and every box landed off the object at L0/L1 (pass 4 collapse). Now heading = applied rotation.
+- Template selection by largest mask dropped the reference tank sprite from the sweep; zoom-matched sprites can
+  be poor views (frame-24 tank .39 vs frame-4 .86). Now: same zoom first, then other zooms' reference sprites.
+- Efficiency work is owned by the speed session (nordic-ai-cup-2026-07) from 05:35; its exact-output batches
+  land in artifacts/drone-speed-20260919/READY/ and are applied between passes.
+
+## Root cause of passes 4-6 (06:30): shared proposer used the first class's scene settings
+- `SharedProposer.propose_all` blurred/downscaled the scene with `rows[0]`'s settings (condor: downscale .5, blur 1.0)
+  and correlated every class's full-resolution kernels against it. Once condor joined the shared proposer (pass 4)
+  every generic class lost its true peak (tank .77 -> .69, true location gone from the top 24). Single-class spot
+  checks could not see it. Fixed: one scene per (downscale, blur) group; verified single == all16 == CPU on three
+  tank tiles. Proposal cache now keyed on PROPOSER_VERSION; stale caches on both pods deleted.
+- Lesson: any shared/batched replacement must be checked against the per-class path on the SAME multi-class run.
+- `evaluate_all.run_expert` now catches expert exceptions per (class, tile) and records them instead of killing a shard.
+- Passes 4, 5 (pod 2) and 6 (pod 1, one shard crashed on an IndexError in colour_ncc) are invalid; pass 7 = first valid
+  full pass with the fixed proposer + cross-zoom templates.
+
+## Template choice is not the mine-roller problem (06:55)
+- Four template orderings (same-zoom / cross-zoom for proposer and fine pose) give identical recall on a random
+  sample of 7 classes x 18 tiles. The mine-roller "2/6" spot checks sampled tiles of track mine-roller-a-005-009,
+  which Oscar's label review excludes (14 of 19 mine-roller records per zoom); the passes skip those tiles.
+  Nothing to fix there; the expert does put a box on that instance but at IoU .37-.39 (different view, box too large).
+- Fair-share proposal capping (`GenericExpert._fair_share`: merge per template, interleave by rank, cap) is under
+  test as V4; kept only if it changes recall.
 
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).

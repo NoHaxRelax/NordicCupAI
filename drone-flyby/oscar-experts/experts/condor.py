@@ -26,7 +26,7 @@ ZOOM_FOR_SCALE = {.25: 0, .5: 1, 1.: 2}
 class CondorSettings:
     heading_step: int = 15
     proposer_threshold: float = .2
-    max_candidates: int = 16
+    max_candidates: int = 12
     duplicate_fraction: float = .33         # same object only if fitted centres are this close, in fuselage lengths
     heading_sweep: int = 30                  # the part model resolves heading itself over 360 degrees
     heading_refine: tuple = (-15., -7.5, 7.5, 15.)
@@ -115,6 +115,23 @@ class CondorExpert:
             best = shifted
         return best
 
+    @staticmethod
+    def _match_window(padded, tg, th, tmask, cx, cy, radius):
+        gray_p, high_p, margin = padded
+        h, w = tmask.shape
+        x0 = int(round(cx - w / 2 - radius)) + margin; y0 = int(round(cy - h / 2 - radius)) + margin
+        x1, y1 = x0 + w + 2 * radius, y0 + h + 2 * radius
+        if x0 < 0 or y0 < 0 or x1 > gray_p.shape[1] or y1 > gray_p.shape[0]:
+            return None
+        mask = tmask.astype(np.uint8)
+        if mask.sum() < 8:
+            return None
+        g = cv2.matchTemplate(gray_p[y0:y1, x0:x1], tg, cv2.TM_CCOEFF_NORMED, mask=mask)
+        hh = cv2.matchTemplate(high_p[y0:y1, x0:x1], th, cv2.TM_CCOEFF_NORMED, mask=mask)
+        response = np.nan_to_num(.45 * g + .55 * hh, nan=-1., posinf=-1., neginf=-1.)
+        _, peak, _, (px, py) = cv2.minMaxLoc(response)
+        return float(peak), x0 + px - margin, y0 + py - margin
+
     def _dedup(self, rows, s):
         """Merge only true duplicates: one object seen at several headings has one centre. Neighbours survive."""
         kept = []
@@ -137,6 +154,8 @@ class CondorExpert:
         L, chroma = lab[:, :, 0], np.hypot(lab[:, :, 1] - 128, lab[:, :, 2] - 128)
         gray, high = features(image)
         templates = self.templates_for(zoom)
+        margin = int(self.model.fuselage_length * s * 1.5) + 16
+        padded = (cv2.copyMakeBorder(gray, margin, margin, margin, margin, cv2.BORDER_REFLECT), cv2.copyMakeBorder(high, margin, margin, margin, margin, cv2.BORDER_REFLECT), margin)
         raw = proposals if proposals is not None else self.proposer.propose(image, s, self.proposer_templates_for(zoom))
         proposals = self.proposer.merge(raw, radius=.3 * self.model.fuselage_length * s)[:cfg.max_candidates]
         rows, pixel_rows, candidates = [], [], []
@@ -166,14 +185,19 @@ class CondorExpert:
             candidate['competitor_margin'] = float(combined - max(relevant)) if relevant else 1.
             # the exact-look branch, for comparison: masked correlation with the sprite at this heading
             best_pixel = None
-            for template in templates:
+            for template in templates[:1]:
                 for base_angle in {(pose['heading'] - self.sprite_angles[template.id]) % 360, (self.sprite_angles[template.id] - pose['heading']) % 360}:
-                    for flip_offset in {f + o for f in (0., 180.) for o in cfg.pixel_angle_offsets}:
+                    for flip_offset in (0., 180.):
                         tbgr, tmask = template.posed(base_angle + flip_offset, s)
                         tg, th = features(tbgr)
-                        hit = local_masked_match(gray, high, tg, th, tmask, pose['cx'], pose['cy'], radius=6, step=2, min_visible=cfg.min_visible)
-                        if hit and (best_pixel is None or hit[0] > best_pixel[0]):
-                            best_pixel = (hit[0], hit[1], hit[2], hit[3], template, tmask.shape)
+                        hit = self._match_window(padded, tg, th, tmask, pose['cx'], pose['cy'], 6)
+                        if hit is None:
+                            continue
+                        peak, px1, py1 = hit
+                        th_, tw_ = tmask.shape
+                        vis = (max(0, min(W, px1 + tw_) - max(0, px1)) * max(0, min(H, py1 + th_) - max(0, py1))) / float(tw_ * th_)
+                        if vis >= cfg.min_visible and (best_pixel is None or peak > best_pixel[0]):
+                            best_pixel = (peak, px1, py1, vis, template, tmask.shape)
             candidate['pixel_correlation'] = float(best_pixel[0]) if best_pixel else 0.
             outline = self.model.pose_outline(pose['heading'], s * pose['scale'], pose['stretch'], 1., pose['shear'], pose['cx'], pose['cy'])
             low, high_ = outline.min(0), outline.max(0)

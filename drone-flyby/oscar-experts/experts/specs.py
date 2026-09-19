@@ -152,7 +152,9 @@ SPECS = {
     'jammer': ClassSpec('jammer', signatures=(rectangle_panel, green_paint), competitors=('small_tower', 'tank'),
                         colour_blob=dict(probability=.4, min_fraction=.4, max_fraction=1.5)),
     'jet_plane': ClassSpec('jet_plane', signatures=(bright_fraction, dark_fraction), competitors=('small_plane', 'condor', 'medium_plane'), sift=True),
-    'large_launcher': ClassSpec('large_launcher', signatures=(camo_texture, barrel_line), competitors=('tank', 'large_tower', 'mine_roller'), sift=True),
+    # articulated (tube up/down) and seen from several sides: every reviewed sprite of the zoom takes part (5/12 -> 7/12 at L1)
+    'large_launcher': ClassSpec('large_launcher', signatures=(camo_texture, barrel_line), competitors=('tank', 'large_tower', 'mine_roller'), sift=True,
+                                fine_templates=6, proposer_templates=6),
     'large_tower': ClassSpec('large_tower', signatures=(camo_texture, bright_fraction), competitors=('large_launcher', 'tank'), sift=True),
     'medium_launcher': ClassSpec('medium_launcher', signatures=(dark_fraction, camo_texture), competitors=('small_launcher', 'ta-ta'),
                                  colour_blob=dict(probability=.35, min_fraction=.4, max_fraction=1.6), size_window=(.5, 1.8)),

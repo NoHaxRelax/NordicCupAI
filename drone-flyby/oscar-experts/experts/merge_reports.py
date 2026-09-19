@@ -32,12 +32,15 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     a = p.parse_args()
     a.output.mkdir(parents=True, exist_ok=False)
-    classes = sorted({d.name for s in a.shards for d in s.iterdir() if (d / 'report.json').exists()})
+    a.shards = [s for s in a.shards if s.is_dir()]
+    classes = sorted({d.name for s in a.shards for d in s.iterdir() if d.is_dir() and (d / 'report.json').exists()})
     seconds = 0.
     for c in classes:
         rows, empties, base = [], [], None
         for s in a.shards:
             rp = s / c / 'report.json'
+            if not s.is_dir():
+                continue
             if not rp.exists():
                 continue
             r = json.loads(rp.read_text()); base = base or r

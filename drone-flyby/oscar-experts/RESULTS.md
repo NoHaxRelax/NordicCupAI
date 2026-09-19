@@ -114,3 +114,71 @@ small_launcher .82, ta-ta .78, medium_plane .78, jet_plane .70.
 
 ## Pass 3 (current code, full training set, gates v3 fitted on its own candidates) — pending
 ## Stage 4: camera strategies — pending (chained after pass 3)
+
+
+## Proposer fix and fair-share capping (19 Sep 06:30-07:00)
+
+Passes 4-6 were invalid: `SharedProposer` prepared the scene with the first class's blur/downscale (condor's:
+half resolution, blur 1.0) for every class. Fixed (one scene per setting group); verified single-class ==
+all-16 == CPU proposer. Pass 7 = first valid full pass.
+
+Fair-share proposal capping (`GenericExpert._fair_share`): merge per template, interleave templates by rank,
+then cap at 24. Random 6 training tiles per zoom (seed 7, exclusions not applied), single-class proposer:
+
+| class | current L0/L1/L2 | fair share L0/L1/L2 |
+|---|---|---|
+| jet_plane | 3/6 5/6 5/6 | 5/6 5/6 5/6 |
+| tank | 3/6 6/6 6/6 | 4/6 6/6 6/6 |
+| large_launcher | 2/6 4/6 3/6 | 3/6 4/6 3/6 |
+| medium_plane | 4/6 6/6 6/6 | 3/6 6/6 6/6 |
+| jammer, small_tower | 6/6 6/6 5-6/6 | same |
+| mine_roller | 0/6 2/6 1/6 | same (tiles of the excluded track mine-roller-a-005-009; not a pass target) |
+
+Same candidate counts (22-35 per tile). Template ordering (same-zoom vs cross-zoom, proposer vs fine pose) made
+no difference at all on the same sample.
+
+Per-template robust z-score ranking (alternative to the interleave) on the same sample: identical except tank L2
+5/6 vs 6/6. Interleave kept (simpler). Giving the large launcher all its same-zoom sprites (fine/proposer templates
+6): miss audit L1 5/12 -> 7/12, L0 8/12; remaining misses are validation-scene launchers whose proposals score
+only .21-.44 (different articulation/side), a sprite-coverage problem, not a ranking one.
+
+## Box size refinement (07:30)
+
+Miss audit (12-16 random training targets per class and zoom, seed 11, exclusions applied). The dominant L0 loss
+was box size: the candidate sits on the object (correlation .6-.7) but the box is 1.3-1.5x too large (IoU .44-.49).
+
+| class / zoom | scale 1 only | full sweep (.8, 1, 1.25) x all poses | refinement at the winning pose only |
+|---|---|---|---|
+| jet_plane L0 | 11/12 | 12/12 | 12/12 |
+| medium_plane L0 | 6/16 | 10/16 | 10/16 |
+| medium_plane L1 | - | 12/16 | 12/16 |
+| tank L0 | 9/12 | 10/12 | 9/12 |
+| large_launcher L1 | 7/12 | - | 7/12 |
+
+The refinement (`ClassSpec.box_scales = (.8, 1.25)`, two extra masked correlations per candidate) captures the
+sweep's gain at ~10% of its cost; it goes into pass 8. Remaining medium-plane L0 misses are at IoU .49 with the
+.8 pose scoring below the 1.0 pose, and two reference-frame tiles whose proposal (score .57) falls outside the cap.
+
+## Pass 7 (07:40): first valid full training pass with the fixed shared proposer, 1108 s on 12 shards, no expert errors
+
+| class | found | L0 / L1 / L2 | cand/tile | gate v7 oof recall / background kept |
+|---|---|---|---|---|
+| condor | 42/42 | 14/14 14/14 14/14 | 11.1 | .98 / .196 |
+| hangar | 9/9 (+3/24 partial) | 3/3 each | 1.2 | 1.00 / .000 |
+| helicopter | 43/48 | 14/16 15/16 14/16 | 26.8 | .98 / .193 |
+| jammer | 65/72 | 24/24 24/24 17/24 | 20.2 | .99 / .001 |
+| jet_plane | 61/75 | 13/25 24/25 24/25 | 17.0 | .99 / .031 |
+| large_launcher | 57/102 | 22/34 17/34 18/34 | 22.3 | .98 / .152 |
+| large_tower | 48/57 | 16/19 16/19 16/19 | 18.4 | 1.00 / .000 |
+| medium_launcher | 17/18 | 5/6 6/6 6/6 | 42.7 | 1.00 / .040 |
+| medium_plane | 25/48 | 6/16 7/16 12/16 | 26.6 | 1.00 / .002 |
+| mine_roller | 15/15 | 5/5 each | 18.5 | 1.00 / .000 |
+| small_launcher | 54/69 | 8/23 23/23 23/23 | 20.7 | 1.00 / .001 |
+| small_plane | 63/63 | 21/21 each | 18.6 | .98 / .008 |
+| small_tower | 45/51 | 11/17 17/17 17/17 | 28.5 | 1.00 / .000 |
+| spacecraft | 57/57 | 19/19 each | 30.5 | .98 / .003 |
+| ta-ta | 67/69 | 22/23 23/23 22/23 | 30.4 | .99 / .019 |
+| tank | 135/171 | 37/57 47/57 51/57 | 17.7 | .99 / .000 |
+
+Weak spots: medium_plane (box size, L0/L1), large_launcher (validation-scene articulation), jet_plane L0, tank L0,
+small_launcher L0 (2-3 px objects). Pass 8 adds fair-share capping, all large-launcher sprites and the size refinement.

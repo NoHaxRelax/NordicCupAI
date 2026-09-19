@@ -294,7 +294,8 @@ class CorrelationProposer:
                     if peak < self.threshold:
                         break
                     cx, cy = (x - px + w / 2) / self.downscale, (y - py + h / 2) / self.downscale
-                    rows.append(dict(cx=float(cx), cy=float(cy), heading=float(angle), proposer_score=float(peak), template_id=template.id,
+                    # heading = the rotation applied to the sprite (what the fine pose must reproduce); bar_angle = fitted axis, for part models
+                    rows.append(dict(cx=float(cx), cy=float(cy), heading=float(heading), bar_angle=float(angle), proposer_score=float(peak), template_id=template.id,
                                      size=(w / self.downscale, h / self.downscale)))
                     response[max(0, y - h // 3):y + h // 3 + 1, max(0, x - w // 3):x + w // 3 + 1] = -1.
         return sorted(rows, key=lambda r: -r['proposer_score'])

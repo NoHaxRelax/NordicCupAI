@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 
 import cv2
 import numpy as np
+from itertools import zip_longest
 
 from .common import CorrelationProposer, SiftMatcher, features, fit_bars, load_templates, local_masked_match, masked_ncc
 
@@ -26,14 +27,15 @@ class ClassSpec:
     heading_step: int = 15
     proposer_threshold: float = .2
     proposer_downscale: float = 1.     # full resolution: half resolution lost 40-50 px objects among ground peaks
-    proposer_single_template: bool = True  # sweep one template per zoom; every template still competes in the fine pose
-    fine_templates: int = 3                # at most this many templates per zoom in the fine pose (largest masks)
+    proposer_templates: int = 3            # templates per zoom in the heading sweep (reference views first); all fine templates still compete
+    fine_templates: int = 4                # templates in the fine pose: same zoom first, then other zooms' reference views
     proposer_blur: float = .8
     max_candidates: int = 24
-    max_colour_candidates: int = 16
+    max_colour_candidates: int = 12
     size_window: tuple = (.6, 1.6)         # accepted long side relative to the sprite, native px
     fine_offsets: tuple = (-8., 0., 8.)
     scales: tuple = (1.,)                  # altitude fixes the object's size; the gate sees any residual mismatch
+    box_scales: tuple = (.8, 1.25)         # size refinement at the winning pose only (foreshortened or closer objects keep heading, not size)
     min_visible: float = .35
     colour_blob: dict | None = None        # dict(chroma_threshold, min_area_fraction) to enable the colour proposer
     signatures: tuple = ()                 # callables (ctx, candidate) -> dict of scores
@@ -83,13 +85,14 @@ class GenericExpert:
         self._posed = {}
 
     def templates_for(self, zoom):
-        matching = [t for t in self.templates if t.zoom == zoom] or self.templates
-        return sorted(matching, key=lambda t: -t.mask.sum())[:self.spec.fine_templates]
+        """Same-zoom sprites first, then the other zooms' reference sprites: a different frame's view of the asset can
+        match better than the zoom-matched crop (the frame-24 tank sprite correlates .39 where the frame-4 one gives .86)."""
+        order = lambda t: (0 if t.zoom == zoom else 1, 0 if 'reference' in t.id else 1, -t.mask.sum())
+        return sorted(self.templates, key=order)[:self.spec.fine_templates]
 
     def proposer_templates_for(self, zoom):
         """One template per zoom for the heading sweep (the largest mask); the fine pose still tries all."""
-        matching = self.templates_for(zoom)
-        return [max(matching, key=lambda t: t.mask.sum())] if self.spec.proposer_single_template else matching
+        return self.templates_for(zoom)[:self.spec.proposer_templates]
 
     def posed(self, template, angle, scale):
         key = (template.id, round(angle, 1), round(scale, 4))
@@ -122,9 +125,29 @@ class GenericExpert:
             pts = np.column_stack(np.where(component))[:, ::-1].astype(np.float32)
             (_, _), (rw, rh), rangle = cv2.minAreaRect(pts)
             heading = (rangle if rw >= rh else rangle + 90.) % 180.
-            rows.append(dict(cx=float(centroids[label][0]), cy=float(centroids[label][1]), heading=float(heading), proposer_score=float(probability[component].mean()),
+            # the blob's axis minus the sprite's axis approximates the rotation the sprite underwent (180-degree ambiguity handled by the fine pose)
+            rotation = (heading - self.angles[self.templates_for(zoom)[0].id]) % 360.
+            rows.append(dict(cx=float(centroids[label][0]), cy=float(centroids[label][1]), heading=float(rotation), bar_angle=float(heading), proposer_score=float(probability[component].mean()),
                              template_id='colour', size=(float(w), float(h)), source='colour', component_area=int(area)))
         return rows
+
+    def _fair_share(self, raw, radius):
+        """Merge proposals per template, then interleave the templates by rank before the global merge, so a sharp
+        template's wall of mid-score peaks can never push another template's true peak out of the candidate cap
+        (the mine roller's L0 view sat at rank 300 of 864 behind the L1 sprites' peaks)."""
+        by_template = {}
+        for p in raw:
+            by_template.setdefault(p.get('template_id'), []).append(p)
+        merged = [self.proposer.merge(sorted(v, key=lambda p: -p['proposer_score']), radius=radius) for v in by_template.values()]
+        kept = []
+        for p in (p for group in zip_longest(*merged) for p in group if p is not None):
+            for k in kept:
+                if np.hypot(p['cx'] - k['cx'], p['cy'] - k['cy']) <= radius:
+                    k['alternative_headings'].extend([p['heading']] + p['alternative_headings'])
+                    break
+            else:
+                kept.append(dict(p, alternative_headings=list(p['alternative_headings'])))
+        return kept
 
     @staticmethod
     def _pad(gray, high, margin):
@@ -175,8 +198,43 @@ class GenericExpert:
                         best = (peak, x1, y1, visible, template, angle, scale, tmask)
         return best
 
-    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False, proposals=None):
-        """proposals: optional precomputed correlation proposals (SharedProposer), skipping this expert's own sweep."""
+    def _gpu_fine_all(self, scene_gpu, proposals, templates, s, H, W):
+        """Batched fine pose for every proposal: per template, all (candidate, heading-offset, scale) poses in one call.
+        Returns a list aligned with proposals of (corr, x1, y1, visible, template, angle, scale, mask) or None."""
+        from .gpu_fine import fine_pose_batch
+        if not proposals:
+            return []
+        centres = np.array([[p['cx'], p['cy']] for p in proposals], np.float32)
+        best = [None] * len(proposals)
+        for template in templates:
+            # pose set per candidate differs by heading; build the union of headings and evaluate all for all candidates
+            headings = sorted({round((p['heading'] + f + o) % 360., 1) for p in proposals for f in (0., 180.) for o in self.spec.fine_offsets})
+            allowed = [set(round((p['heading'] + f + o) % 360., 1) for f in (0., 180.) for o in self.spec.fine_offsets) for p in proposals]
+            poses, kernels, masks = [], [], []
+            for angle in headings:
+                for scale in self.spec.scales:
+                    _, tg, th, tmask, _ = self.posed(template, angle, s * scale)
+                    m = tmask
+                    values = np.stack([tg, th]).astype(np.float32)
+                    kernels.append(values); masks.append(m); poses.append((angle, scale))
+            corr, tl, sizes = fine_pose_batch(scene_gpu, kernels, masks, centres, 6, (.45, .55))
+            for k, p in enumerate(proposals):
+                for j, (angle, scale) in enumerate(poses):
+                    if angle not in allowed[k]:
+                        continue
+                    h, w = sizes[j]
+                    x1 = int(round(p['cx'] + tl[k, j, 0])); y1 = int(round(p['cy'] + tl[k, j, 1]))
+                    vis = (max(0, min(W, x1 + w) - max(0, x1)) * max(0, min(H, y1 + h) - max(0, y1))) / float(w * h)
+                    if vis < self.spec.min_visible:
+                        continue
+                    c = float(corr[k, j])
+                    if best[k] is None or c > best[k][0]:
+                        best[k] = (c, x1, y1, vis, template, angle, scale, masks[j])
+        return best
+
+    def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False, proposals=None, scene_gpu=None):
+        """proposals: optional precomputed correlation proposals (SharedProposer), skipping this expert's own sweep.
+        scene_gpu: optional gpu_fine.SceneGPU of this image; the fine pose then runs as batched GPU convolutions."""
         if image is None or image.ndim != 3 or image.shape[2] != 3 or image.dtype != np.uint8:
             raise ValueError('Expected uint8 BGR image')
         s = float(pixels_per_source_pixel)
@@ -194,27 +252,45 @@ class GenericExpert:
         # colour proposals are never crowded out by a wall of weak correlation peaks.
         radius = spec.dedup_fraction * self.long_side * s
         raw = proposals if proposals is not None else [dict(p, source='correlation') for p in self.proposer.propose(image, s, self.proposer_templates_for(zoom))]
-        proposals = self.proposer.merge(raw, radius=radius)[:spec.max_candidates]
+        proposals = self._fair_share(raw, radius)[:spec.max_candidates]
         if spec.colour_blob:
             colour = self.proposer.merge(sorted(self.colour_proposals(lab, s, zoom), key=lambda p: -p['proposer_score']), radius=radius)[:spec.max_colour_candidates]
             proposals = self.proposer.merge(proposals + colour, radius=radius)
         ctx = dict(image=image, lab=lab, L=L, chroma=chroma, gray=gray, high=high, scale=s, zoom=zoom, expert=self)
         rows, candidates = [], []
-        for prop in proposals:
+        gpu_best = self._gpu_fine_all(scene_gpu, proposals, templates, s, H, W) if scene_gpu is not None else None
+        for pi, prop in enumerate(proposals):
             cx, cy = prop['cx'], prop['cy']
             half = .5 * self.long_side * s
             partial = cx < half or cy < half or cx > W - half or cy > H - half
             candidate = dict(cx=cx, cy=cy, proposer_score=prop['proposer_score'], proposer_source=prop['source'], proposer_heading=prop['heading'], partial=bool(partial))
-            headings = sorted({prop['heading'] % 360., (prop['heading'] + 180.) % 360.} | {h % 360. for h in prop.get('alternative_headings', [])[:1]})
+            # the proposer's heading is the rotation it applied to the sprite: search around it (and its mirror pose)
+            headings = sorted({prop['heading'] % 360.} | {h % 360. for h in prop.get('alternative_headings', [])[:1]})
             best = None
-            for template in templates:
-                hit = self.fine_pose(padded, (H, W), template, cx, cy, s, [h - self.angles[template.id] for h in headings] + [h - self.angles[template.id] + 180. for h in headings], partial)
-                if hit and (best is None or hit[0] > best[0]):
-                    best = hit
+            if gpu_best is not None:
+                best = gpu_best[pi]
+            else:
+                for template in templates:
+                    hit = self.fine_pose(padded, (H, W), template, cx, cy, s, headings + [h + 180. for h in headings], partial)
+                    if hit and (best is None or hit[0] > best[0]):
+                        best = hit
             if best is None:
                 candidate['rejected_by'] = 'not_visible'; candidates.append(candidate); continue
             correlation, x1, y1, visible, template, angle, scale, tmask = best
             th_, tw_ = tmask.shape
+            # Size refinement at the winning pose: two extra masked correlations (smaller, larger) where a full
+            # scale sweep is too costly. Planes at L0 in the miss audit: 6/16 -> 10/16 with the full sweep.
+            for extra in spec.box_scales:
+                _, tg2, th2, tmask2, _ = self.posed(template, angle, s * scale * extra)
+                hit2 = self._match_window(padded, tg2, th2, tmask2, x1 + tw_ / 2., y1 + th_ / 2., 3)
+                if hit2 is None or hit2[0] <= correlation:
+                    continue
+                h2, w2 = tmask2.shape
+                vis2 = (max(0, min(W, hit2[1] + w2) - max(0, hit2[1])) * max(0, min(H, hit2[2] + h2) - max(0, hit2[2]))) / float(w2 * h2)
+                if vis2 < spec.min_visible:
+                    continue
+                correlation, x1, y1, visible, scale, tmask = hit2[0], hit2[1], hit2[2], vis2, scale * extra, tmask2
+                th_, tw_ = tmask.shape
             fitted_long = max(th_, tw_) / s / scale
             # size gate: the only physical exclusion
             ratio = max(th_, tw_) / (self.long_side * s)
@@ -243,8 +319,8 @@ class GenericExpert:
             for name, others in self.competitors.items():
                 others_z = [t for t in others if t.zoom == zoom] or others
                 best_other = None
-                for t in others_z[:2]:
-                    for base in range(0, 360, 45):
+                for t in others_z[:1]:
+                    for base in range(0, 360, 90):
                         _, tg, th, om, _ = self.posed(t, base, s)
                         hit = self._match_window(padded, tg, th, om, cx, cy, 4)
                         if hit and (best_other is None or hit[0] > best_other):

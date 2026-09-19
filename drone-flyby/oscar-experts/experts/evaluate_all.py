@@ -7,6 +7,7 @@ that changes only signatures, gates or the fine pose skips the proposer entirely
 import argparse
 import hashlib
 import json
+import sys
 import os
 import time
 from collections import Counter, defaultdict
@@ -24,9 +25,14 @@ from .registry import make_expert, families as class_families, CLASSES, load_gat
 
 def run_expert(expert, family, image, zoom, proposals):
     try:
-        out = expert.detect(image, 1., zoom, explain=True, proposals=proposals) if proposals is not None else expert.detect(image, 1., zoom, explain=True)
-    except TypeError:
-        out = expert.detect(image, 1., zoom, explain=True)
+        try:
+            out = expert.detect(image, 1., zoom, explain=True, proposals=proposals) if proposals is not None else expert.detect(image, 1., zoom, explain=True)
+        except TypeError:
+            out = expert.detect(image, 1., zoom, explain=True)
+    except Exception:  # one broken candidate must never take a whole shard down: record it, keep going
+        import traceback
+        print(f'EXPERT_ERROR {family} zoom={zoom}\n{traceback.format_exc()}', file=sys.stderr, flush=True)
+        return {family: [], 'sift': []}, [dict(error=traceback.format_exc()[-400:])]
     if isinstance(out[0], dict):
         by_family, candidates = out
     else:
@@ -67,8 +73,9 @@ def main():
     if a.verifier:
         from .verifier import Verifier
         verifier = Verifier(a.verifier, a.gpu)
-    signature = hashlib.sha256(json.dumps({n: [(t.id, t.zoom) for t in e.proposer_templates_for(z)] + [list(e.proposer.headings), e.proposer.downscale, e.proposer.blur, e.proposer.threshold]
-                                            for n, e in shared.experts.items() for z in (0, 1, 2)}, sort_keys=True, default=str).encode()).hexdigest()[:12]
+    from .gpu_proposer import PROPOSER_VERSION
+    signature = hashlib.sha256(json.dumps(dict(version=PROPOSER_VERSION, kernels={n: [(t.id, t.zoom) for t in e.proposer_templates_for(z)] + [list(e.proposer.headings), e.proposer.downscale, e.proposer.blur, e.proposer.threshold]
+                                            for n, e in shared.experts.items() for z in (0, 1, 2)}), sort_keys=True, default=str).encode()).hexdigest()[:12]
     a.cache.mkdir(parents=True, exist_ok=True)
     a.output.mkdir(parents=True, exist_ok=False)
     for c in a.classes:

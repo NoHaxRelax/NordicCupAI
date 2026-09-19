@@ -5,11 +5,16 @@ peaks per pose), but all classes and headings run as one batched FFT product on 
 the scene transform is computed once per view instead of once per class per heading. The scene
 is reflection-padded by the largest kernel half-size so objects cut by the view edge still peak.
 """
+import itertools
 import numpy as np
 import torch
 import cv2
 
 from .common import features, fit_bars
+
+# Bump when the proposer's numerics change: evaluate_all keys its on-disk proposal cache on it, so
+# stale proposals from an older proposer are never reused.
+PROPOSER_VERSION = 2
 
 
 class SharedProposer:
@@ -34,10 +39,13 @@ class SharedProposer:
                     mask = tmask.astype(np.float32)
                     values = np.stack([tg, th]).astype(np.float32)
                     centered = (values - values[:, mask > 0].mean(1)[:, None, None]) * mask
-                    rows.append(dict(name=name, heading=heading, angle=angle, kernel=centered, mask=mask, count=float(mask.sum()),
+                    rows.append(dict(name=name, template=template.id, heading=heading, angle=angle, kernel=centered, mask=mask, count=float(mask.sum()),
                                      energy=(centered ** 2).sum((1, 2)), h=mask.shape[0], w=mask.shape[1],
                                      threshold=proposer.threshold, peaks=proposer.peaks_per_pose, weights=proposer.weights,
                                      downscale=proposer.downscale, blur=proposer.blur))
+        # Each class's proposer has its own scene settings (blur, downscale); kernels are grouped by
+        # them so every class is correlated against a scene prepared exactly as its CPU proposer does.
+        rows.sort(key=lambda r: (r['downscale'], r['blur']))
         self.kernels[key] = rows
         return rows
 
@@ -46,7 +54,13 @@ class SharedProposer:
         rows = self._kernels(zoom, scale)
         if not rows:
             return {}
-        downscale, blur = rows[0]['downscale'], rows[0]['blur']
+        out = {n: [] for n in self.experts}
+        # one scene per distinct (downscale, blur): the first class's settings must never leak into the others
+        for (downscale, blur), group_rows in itertools.groupby(rows, key=lambda r: (r['downscale'], r['blur'])):
+            self._propose_group(image, scale, zoom, list(group_rows), downscale, blur, out)
+        return {n: sorted(v, key=lambda p: -p['proposer_score']) for n, v in out.items()}
+
+    def _propose_group(self, image, scale, zoom, rows, downscale, blur, out):
         small = image if downscale == 1. else cv2.resize(image, None, fx=downscale, fy=downscale, interpolation=cv2.INTER_AREA)
         small = cv2.GaussianBlur(small, (0, 0), blur)
         gray, high = features(small)
@@ -57,12 +71,11 @@ class SharedProposer:
         scene = torch.as_tensor(np.stack([gray, high]), device=self.device)  # (2, H, W)
         sf = torch.fft.rfft2(scene)
         sqf = torch.fft.rfft2(scene.square())
-        out = {n: [] for n in self.experts}
         for first in range(0, len(rows), self.chunk):
             group = [r for r in rows[first:first + self.chunk] if r['h'] <= H and r['w'] <= W]
             if not group:
                 continue
-            cache_key = (zoom, round(scale, 4), H, W, first)
+            cache_key = (zoom, round(scale, 4), downscale, blur, H, W, first)
             if cache_key not in self.fft_cache:
                 k = np.zeros((len(group), 2, H, W), np.float32)
                 m = np.zeros((len(group), 1, H, W), np.float32)
@@ -72,7 +85,7 @@ class SharedProposer:
                 self.fft_cache[cache_key] = (torch.fft.rfft2(torch.as_tensor(k, device=self.device)), torch.fft.rfft2(torch.as_tensor(m, device=self.device)),
                                              torch.as_tensor([r['count'] for r in group], device=self.device)[:, None, None, None],
                                              torch.as_tensor(np.array([r['energy'] for r in group]), device=self.device)[:, :, None, None])
-                if len(self.fft_cache) > 40:
+                if len(self.fft_cache) > 12:
                     self.fft_cache.pop(next(iter(self.fft_cache)))
             kf, mf, count, energy = self.fft_cache[cache_key]
             numerator = torch.fft.irfft2(sf * kf.conj(), s=(H, W))
@@ -80,8 +93,8 @@ class SharedProposer:
             total2 = torch.fft.irfft2(sqf * mf.conj(), s=(H, W))
             denominator = ((total2 - total.square() / count).clamp_min(0) * energy).sqrt()
             maps = torch.where(denominator > 1e-6, numerator / denominator.clamp_min(1e-6), torch.zeros_like(numerator)).clamp(-1, 1)
-            w0, w1 = group[0]['weights']
-            response = w0 * maps[:, 0] + w1 * maps[:, 1]  # (n, H, W), valid positions are top-left corners
+            weights = torch.as_tensor(np.array([r['weights'] for r in group], np.float32), device=self.device)[:, :, None, None]
+            response = (weights * maps).sum(1)  # (n, H, W), valid positions are top-left corners
             local_max = torch.nn.functional.max_pool2d(response[:, None], 5, 1, 2)[:, 0]
             for i, r in enumerate(group):
                 valid = response[i, :H - r['h'] + 1, :W - r['w'] + 1]
@@ -95,6 +108,5 @@ class SharedProposer:
                 for y, x, sc in zip(ys, xs, scores):
                     cx = (x - pad + r['w'] / 2) / downscale
                     cy = (y - pad + r['h'] / 2) / downscale
-                    out[r['name']].append(dict(cx=float(cx), cy=float(cy), heading=float(r['angle']), proposer_score=float(sc), template_id='gpu',
+                    out[r['name']].append(dict(cx=float(cx), cy=float(cy), heading=float(r['heading']), bar_angle=float(r['angle']), proposer_score=float(sc), template_id=r['template'],
                                                size=(r['w'] / downscale, r['h'] / downscale), source='correlation'))
-        return {n: sorted(v, key=lambda p: -p['proposer_score']) for n, v in out.items()}

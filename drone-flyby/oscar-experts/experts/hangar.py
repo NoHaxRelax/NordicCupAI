@@ -35,7 +35,7 @@ class HangarSettings:
     min_partial_fill: float = 0.      # a hangar cut by a straight edge is still rectangular (.56-.94); edge shade is ragged (.43-.60)
     min_rim_contrast: float = 0.      # ring L median minus interior L median, OpenCV 0-255 scale; sprite measures 140
     max_interior_chroma: float = 255.
-    angle_offsets: tuple = (-10., 0., 10.)
+    angle_offsets: tuple = (0.,)
     partial_heading_step: int = 30     # coarse heading sweep for edge-cut components
     partial_step: int = 8             # slide step along a cut axis, image px
     local_radius: int = 8
