@@ -95,3 +95,26 @@ Runpod v3 paired comparison uses 12 workers and these 12 seeds:
 Source bundle frozen at 36d731e; Python 3.13.14, NumPy 2.5.3, Pydantic 2.13.5,
 SciPy 1.18.1, Shapely 2.1.2 and pygame 2.6.1. The portable pinned native
 extension imports and steps successfully on the CPU pod.
+
+## Nursery food reservation experiment (v4)
+
+A read-only instrumented replay of normal observations found child 27 starving
+without a fruit assignment. At t=125, Orchard fruit 278 was ready but claimed
+by retired bait 17. V4 lets an under-175-energy nursery child take otherwise
+unclaimed ready fruit, claims held by trap roles that cannot collect them, or
+a nursery parent's claim when that parent has 120 more energy. Ordinary
+gatherer claims remain intact. Candidates stay in the nursery food area and
+outside the trap's 110-unit food exclusion. Orchard's existing observed-age
+readiness test is reused; no fruit is generated or moved. A new full local
+pilot is running; the Runpod paired comparison remains frozen at v3.
+
+V3 size screen on the development seed:
+
+| Parents | Score | End time | Nursery children reaching bait |
+|---:|---:|---:|---:|
+| 1 | 643.84 | 606.3 | 1 / 1 |
+| 2 | 1095.08 | 1056.9 | 1 / 2 |
+| 3 | 782.87 | 735.0 | 0 / 5 |
+| 4 | 650.99 | 612.1 | 0 / 5 |
+
+This is a tuning screen on one map, not a cross-map estimate.

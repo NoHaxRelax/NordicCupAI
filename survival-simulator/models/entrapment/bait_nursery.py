@@ -22,10 +22,12 @@ class BaitNursery:
         self.children = set()
         self.pending_birth = None
         self.known_agents = set()
+        self.states = {}
 
     def update(self, policy, states, active_life):
         self.spawn_parent = None
         self.known_agents = set(states)
+        self.states = states
         if self.pending_birth is not None:
             parent, when, known = self.pending_birth
             parent_state = states.get(parent)
@@ -84,6 +86,8 @@ class BaitNursery:
         if self.center is None or pose.group_id != policy.site_group or pose.uncertainty > 8.:
             return None
         mind = policy.orchard.minds[aid]; group = policy.orchard.groups[mind.group]
+        if aid in self.children and state['energy'] < 175.:
+            self._feed_child(policy, aid, state, pose, mind, group)
         target = self.center
         # Reuse Orchard's ripe-fruit assignment, bounded to the nursery area.
         if mind.fruit in group.fruits:
@@ -106,6 +110,41 @@ class BaitNursery:
                 turn = max(-.3,min(.3,direction))
         return ActionRequest(agent_id=aid,move_distance=move,move_direction=direction,
                              turn_angle=turn,spawn_agent=aid == self.spawn_parent)
+
+    def _feed_child(self, policy, aid, state, pose, mind, group):
+        """A stationary bait's fruit reservation must not starve a donor.
+
+        Reuse Orchard's observed fruit ages and claims. Only take unclaimed
+        fruit, fruit reserved by trap roles, or a well-fed nursery parent's
+        claim. Ordinary gatherers keep their meals.
+        """
+        if mind.fruit in group.fruits:
+            return
+        trap_roles = policy.retired_baits | {policy.bait, policy.incoming}
+        trap_roles |= {t.guide_id for t in policy.tracks.values()}
+        options = []
+        for fruit in group.near_fruits(mind.pose.p, policy.orchard.P['fruit_reach']):
+            owner = fruit.claimed
+            rich_parent = (owner in self.members and owner in self.states
+                           and self.states[owner]['energy'] > state['energy']+120.)
+            if owner is not None and owner not in trap_roles and not rich_parent:
+                continue
+            if not policy.orchard._ready(fruit, state['energy'], False):
+                continue
+            distance, angle = mind.pose.local(fruit.p)
+            point = pose.position+rotate((distance*math.cos(angle), distance*math.sin(angle)), pose.heading)
+            if (np.linalg.norm(point-self.center) > 160.
+                    or np.linalg.norm(point-np.asarray(policy.site['goal'])) < 110.):
+                continue
+            options.append((distance, fruit.id))
+        if options:
+            fruit = group.fruits[min(options)[1]]
+            if fruit.claimed in policy.orchard.minds:
+                previous = policy.orchard.minds[fruit.claimed]
+                if previous.fruit == fruit.id:
+                    previous.fruit = None
+            fruit.claimed = aid
+            mind.fruit = fruit.id
 
     def record_birth(self, policy, aid, state):
         """Called only after avoidance and the final energy/spawn check."""
