@@ -16,6 +16,7 @@ export DRONE_DETECTOR="${DETECTOR:-ultralytics}" DRONE_WEIGHTS="$W" DRONE_AUTO_B
        DRONE_OVERVIEW_BETWEEN_SIDES=0 DRONE_MISS_RULE=seen DRONE_CONF=0.05 DRONE_BIRTH_CONFIDENCE=0.25 DRONE_UPDATE_CONFIDENCE=0.15 \
        DRONE_ANSWER_WINDOWS="$WIN" DRONE_ANSWER_CLASSES="${ANSWER_CLASSES:-}" \
        DRONE_CLASS_EXTENT="${CLASS_EXTENT:-{\}}" DRONE_HEDGE_FACTOR="${HEDGE:-0}" DRONE_BOX_SCALE="${BOX_SCALE:-{\}}"
+export -p | grep -E '^declare -x (DRONE_|ELIAS_)' > /root/logs/serve.env   # the watchdog restarts api.py with this
 nohup python api.py > /root/logs/api.log 2>&1 &
 if [ -n "${DIRECT_URL:-}" ]; then
   # the pod's own public TCP port (RunPod maps it straight to 9053): no tunnel, no Cloudflare in the path

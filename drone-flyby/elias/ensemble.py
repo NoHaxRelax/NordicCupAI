@@ -23,8 +23,9 @@ import numpy as np
 class Ensemble:
     name = 'elias-ensemble'
 
-    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None, context=1.0):
+    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None, context=1.0, route_l2=None):
         self.route = dict(route or {}); self.context = float(context)
+        self.route_l2 = dict(route_l2) if route_l2 else None   # a separate table for native (L2) views
         sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
         import cv2
         threads = cv2.getNumThreads()
@@ -42,9 +43,15 @@ class Ensemble:
                 r = m.predict(image, imgsz=size, device=self.device, conf=self.conf, half=self.half, verbose=False)[0]
             per.append([(m.names[int(c)], np.array([x1, y1, x2, y2]), float(s)) for x1, y1, x2, y2, s, c in r.boxes.data.cpu().tolist()])
         rows, n = [], len(self.models)
-        for lab, k in self.route.items():                      # routed classes: one model answers, its own confidence
+        route = self.route
+        try:
+            if self.route_l2 is not None and int((request or {}).get('view', {}).get('resolution_level', 0)) == 2:
+                route = self.route_l2
+        except (TypeError, ValueError, AttributeError):
+            pass
+        for lab, k in route.items():                           # routed classes: one model answers, its own confidence
             rows += [{'label': l, 'box': b.tolist(), 'confidence': s} for l, b, s in per[k] if l == lab]
-        pool = sorted([(lab, box, s, k) for k, dets in enumerate(per) for lab, box, s in dets if lab not in self.route], key=lambda d: -d[2])
+        pool = sorted([(lab, box, s, k) for k, dets in enumerate(per) for lab, box, s in dets if lab not in route], key=lambda d: -d[2])
         used = [False]*len(pool)
         for i, (lab, box, s, k) in enumerate(pool):
             if used[i]:
@@ -79,5 +86,6 @@ def build():
     sizes = (sizes*len(weights))[:len(weights)]
     import json
     route = json.loads(os.environ.get('ELIAS_ROUTE', '{}') or '{}')
+    route_l2 = json.loads(os.environ.get('ELIAS_ROUTE_L2', '') or 'null')
     return Ensemble(weights, sizes, device=os.environ.get('DRONE_DEVICE', 'cuda:0'), conf=float(os.environ.get('ELIAS_CONF', '0.03')), route=route,
-                    context=float(os.environ.get('ELIAS_CONTEXT', '1.0') or 1.0))
+                    context=float(os.environ.get('ELIAS_CONTEXT', '1.0') or 1.0), route_l2=route_l2)
