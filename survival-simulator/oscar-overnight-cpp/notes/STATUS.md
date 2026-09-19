@@ -145,3 +145,8 @@ Log (newest last)
   dies in 60-100 s), then the predators are released. Full-game trap integration parked; the tooling and the
   funnel/attribution counters stay in the branch. Now step 3 (not losing agents in general): f9 evasion variants
   (flee radius 100/150/200/300, dodge on/off, shared sightings, sprint radius).
+- 03:18 STEP 3 first result (f9, 192 games with predators): flee radius 100 instead of 200: +198±21 s
+  (923 -> 1120 s, score +189); 150: +138; no shared sightings: +102; sprint radius 60: +42; dodge off -46;
+  radius 300: -61. More agents get eaten (94 vs 60 per game) but the colony forages instead of fleeing: the
+  economy matters more than the kills. f10 pushes further (60/80, no share, combos). Spend since 23:00 CEST:
+  ~$20 on my CPU pods (well within the $100).
