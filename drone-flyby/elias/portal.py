@@ -50,16 +50,16 @@ def show(d, n=8):
     return rows
 
 
-def validate(url, wait_s=900, tries=6):
+def validate(url, wait_s=900, tries=14):
     """Queue ONE validation for `url` and return ITS result. The portal answers a queue request made while a
     teammate's run is in progress with THAT attempt, so a result only counts if its service_url is ours;
     otherwise wait for the other run to finish and queue again."""
     for attempt in range(tries):
         rows = sorted(status().get('validations', []), key=lambda a: a.get('submitted_at') or '')
         if any(not a.get('finished_at') for a in rows):
-            print('a teammate validation is running: waiting'); time.sleep(45); continue
+            print('a teammate validation is running: waiting', flush=True); time.sleep(8); continue
         r = requests.post(f'{BASE}/validate/queue', headers={'x-token': key()}, json={'url': url}, timeout=30)
-        print('queue ->', r.status_code, r.text[:200]); r.raise_for_status()
+        print('queue ->', r.status_code, r.text[:200], flush=True); r.raise_for_status()
         t0 = time.time()
         while time.time()-t0 < wait_s:
             time.sleep(15)

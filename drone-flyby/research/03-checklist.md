@@ -2,8 +2,8 @@
 
 Deadline Sunday 2026-09-20 16:00 CEST; top five submit code by 20:00. One evaluation attempt, only Elias queues it.
 Every item is measured the same way: concealed validation runs, one class per run (score x 13 = that class's AP)
-and the three thirds (0:83, 83:166, 166:100000, which add up to the full score). Public best stays 0.511 unless we
-decide otherwise. Update the status column as things happen; do not delete rows, rejected ideas stay so nobody
+and the three thirds (0:83, 83:166, 166:100000, which add up to the full score). Public best was 0.511 until Oscar's full validations from his Swedish pod on Saturday 16:30 to 16:47 scored 0.705 to 0.716
+(team best now 0.7162, visible to every team); his runs take the single per-team portal slot every two minutes. Update the status column as things happen; do not delete rows, rejected ideas stay so nobody
 repeats them. Started 2026-09-19 13:25 by Claude at Elias's request.
 
 Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOCKED (with what on).
