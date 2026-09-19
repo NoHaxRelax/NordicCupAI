@@ -68,11 +68,36 @@ def _excluded_boxes(store, scene, frame):
         t = p.get('track_id', '')
         if t in BAD_TRACKS or any(r['track'] == t and r['first'] <= frame <= r['last'] for r in ranges):
             out.append(a['bbox'])
+    hidden = _G.setdefault('hidden', json.loads((HERE/'validation_hidden.json').read_text())['zones'] if (HERE/'validation_hidden.json').exists() else {})
+    if str(frame) in hidden:
+        out.append(hidden[str(frame)])
     return np.array(out, float).reshape(-1, 4)
 
 
 def _overlaps(box, others, pad=6.0):
     return any(box[0] < o[2]+pad and box[2] > o[0]-pad and box[1] < o[3]+pad and box[3] > o[1]-pad for o in others)
+
+
+def _extra_canvas(rng, files, width, height, metres_per_px=0.3):
+    """A native-resolution background made of public aerial tiles (UC Merced, 0.3 m/px, 256 px).
+    Our native frames are about 0.19 m/px, so the mosaic is built at the tiles' own scale and enlarged
+    by 0.3/0.19; it is only used for L0 and L1 views, where the later INTER_AREA reduction by 4 or 2
+    removes the softness of that enlargement. Most mosaics use one land-use folder for coherence."""
+    k = metres_per_px/0.19; tw, th = int(np.ceil(width/k)), int(np.ceil(height/k))
+    folders = sorted({str(Path(f).parent) for f in files})
+    pool = [f for f in files if str(Path(f).parent) == folders[int(rng.integers(len(folders)))]] if rng.random() < 0.7 else files
+    canvas = np.zeros((th, tw, 3), np.uint8); y = 0
+    while y < th:
+        x = 0; rowh = 0
+        while x < tw:
+            t = cv2.imread(pool[int(rng.integers(len(pool)))], cv2.IMREAD_COLOR)
+            if t is None:
+                continue
+            t = np.rot90(t, int(rng.integers(4))); t = t[:, ::-1] if rng.random() < .5 else t
+            hh, ww = min(t.shape[0], th-y), min(t.shape[1], tw-x)
+            canvas[y:y+hh, x:x+ww] = t[:hh, :ww]; x += t.shape[1]; rowh = max(rowh, t.shape[0])
+        y += rowh
+    return cv2.resize(canvas, (width, height), interpolation=cv2.INTER_LINEAR)
 
 
 def make_view(win, rng, real_only=False):
@@ -90,13 +115,15 @@ def make_view(win, rng, real_only=False):
         region = np.array([rx, ry, rx+960*f, ry+540*f], float)
         if not _overlaps(region, _excluded_boxes(store, scene, frame), pad=0):
             break
-    patch = np.ascontiguousarray(store.frame(scene, frame)[ry:ry+540*f, rx:rx+960*f])
+    extra = _G.get('extra') if (not real_only and level < 2 and rng.random() < _G.get('extra_prob', 0.)) else None
+    patch = (_extra_canvas(rng, extra, 960*f, 540*f) if extra else
+             np.ascontiguousarray(store.frame(scene, frame)[ry:ry+540*f, rx:rx+960*f]))
     blo, bhi = _env_range('SYNTH_BG_GAIN', 1.0, 1.0)
     if bhi > blo and not real_only:
         patch = cv2.LUT(patch, make_lut(float(np.exp(rng.uniform(np.log(blo), np.log(bhi)))),
                                         rng.uniform(0.85, 1.18), rng.uniform(0.85, 1.18), 0.45))
     labels, taken = [], []
-    for a in store.annotations(scene, frame):                       # real labelled objects in the region
+    for a in ([] if extra else store.annotations(scene, frame)):    # real labelled objects in the region
         b = np.array(a['bbox'], float)-np.array([rx, ry, rx, ry])
         if b[2] > 0 and b[3] > 0 and b[0] < 960*f and b[1] < 540*f:
             taken.append(b); labels.append((CLASSES.index(a['object_id']), b))
@@ -120,9 +147,12 @@ def make_view(win, rng, real_only=False):
     return image, rows
 
 
-def _init(kw):
+def _init(kw, extra_dir=None, extra_prob=0.):
     cv2.setNumThreads(1)
     win = SynthWindows(1, **kw); win._setup(); _G['win'] = win
+    if extra_dir:
+        files = sorted(str(f) for f in Path(extra_dir).rglob('*') if f.suffix.lower() in ('.tif', '.tiff', '.jpg', '.jpeg', '.png'))
+        _G['extra'], _G['extra_prob'] = files, float(extra_prob)
 
 
 def _work(job):
@@ -137,7 +167,7 @@ def _work(job):
     return len(rows)
 
 
-def build(out, n, split, kw, workers, seed, real_only=False):
+def build(out, n, split, kw, workers, seed, real_only=False, extra_dir=None, extra_prob=0.):
     for d in ('images', 'labels'):
         (Path(out)/d/split).mkdir(parents=True, exist_ok=True)
     jobs = [(i, seed, split, str(out), real_only) for i in range(n)]
@@ -146,7 +176,7 @@ def build(out, n, split, kw, workers, seed, real_only=False):
         warm.store.frame(*key)
     del warm
     t0 = time.time()
-    with Pool(workers, initializer=_init, initargs=(kw,)) as pool:
+    with Pool(workers, initializer=_init, initargs=(kw, extra_dir, extra_prob)) as pool:
         counts = list(pool.imap_unordered(_work, jobs, chunksize=16))
     print(f'[{split}] {n} views, {sum(counts)} boxes ({np.mean(counts):.1f} per view, {sum(c == 0 for c in counts)} empty), '
           f'{n/(time.time()-t0):.1f} views/s')
@@ -161,6 +191,8 @@ def main():
     ap.add_argument('--n-val', type=int, default=600); ap.add_argument('--workers', type=int, default=6)
     ap.add_argument('--seed', type=int, default=0); ap.add_argument('--max-bg-frames', type=int, default=60)
     ap.add_argument('--free-rotation', action='store_true', help='ignore the lean limits of tall classes')
+    ap.add_argument('--extra-bg', default=None, help='folder of public aerial tiles used as extra backgrounds for L0/L1 views')
+    ap.add_argument('--extra-bg-prob', type=float, default=0.4)
     ap.add_argument('--sprite-blur-max', type=float, default=0.0, help='Gaussian sigma upper bound on the warped sprite')
     a = ap.parse_args()
     kw = dict(sprite_scenes=tuple(a.sprite_scenes), background_scenes=tuple(a.background_scenes), rot_max=180.0,
@@ -168,7 +200,7 @@ def main():
               sprite_blur_max=a.sprite_blur_max,
               max_bg_frames=a.max_bg_frames, exclude_tracks=tuple(BAD_TRACKS))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
-    build(out, a.n, 'train', kw, a.workers, a.seed)
+    build(out, a.n, 'train', kw, a.workers, a.seed, extra_dir=a.extra_bg, extra_prob=a.extra_bg_prob)
     val_scenes = a.real_val_scenes or a.background_scenes
     build(out, a.n_val, 'val', dict(kw, background_scenes=tuple(val_scenes), max_bg_frames=200), a.workers, a.seed+1, real_only=True)
     (out/'data.yaml').write_text(f'path: {out.resolve().as_posix()}\ntrain: images/train\nval: images/val\nnames:\n'
