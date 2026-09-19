@@ -24,7 +24,7 @@ from models.entrapment.guide_lookahead import chase_step
 from models.entrapment.guide_coordinator import GuideCoordinator
 from models.entrapment.bait_travel import ObservedBaitTravel
 from models.entrapment.foraging_safety import ForagingSafety
-from models.entrapment.guide_assignment import detectable_observer
+from models.entrapment.guide_assignment import detectable_observer, recover_guide_contacts
 
 
 def action_for(aid, **kwargs):
@@ -73,7 +73,8 @@ class EntrapmentPolicy:
                  guide_lookahead_ticks=3, share_guide_paths=True,
                  guide_preferred_distance=(100.,120.), guide_reacquire_close=False,
                  guide_contact_forecast=False, guide_orbit_recovery=False, guide_coordination=False,
-                 bait_terrain_estimate=False, safe_foraging=False, guide_chased_only=False):
+                 bait_terrain_estimate=False, safe_foraging=False, guide_chased_only=False,
+                 guide_contact_recovery=False):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -84,6 +85,7 @@ class EntrapmentPolicy:
         self.bait_terrain_estimate = bait_terrain_estimate
         self.safe_foraging = safe_foraging
         self.guide_chased_only = guide_chased_only
+        self.guide_contact_recovery = guide_contact_recovery
         self.foraging_safety = ForagingSafety()
         self.bait_travel = ObservedBaitTravel()
         self.guide_corridors = []
@@ -344,9 +346,10 @@ class EntrapmentPolicy:
                 used.add(track.key)
                 track.observers[aid] = obs
         if self.site is None or self.bait is None or not self._arrival(self.bait): return
+        released = recover_guide_contacts(self,states,local) if self.guide_contact_recovery else set()
         if self.guide_coordination:
             self.guide_coordinator.update(self.estimator.groups[self.site_group],states,self.now,self.tracks.values())
-        assigned = {t.guide_id for t in self.tracks.values() if t.guide_id is not None}
+        assigned = {t.guide_id for t in self.tracks.values() if t.guide_id is not None} | released
         for track in self.tracks.values():
             if track.group != self.site_group: continue
             near_bait = math.dist(track.position, self.site['goal']) <= 40.
@@ -713,6 +716,7 @@ class EntrapmentPolicy:
                     bait_terrain_estimate=self.bait_terrain_estimate,
                     safe_foraging=self.safe_foraging,foraging_safety=self.foraging_safety.snapshot() if self.safe_foraging else None,
                     guide_chased_only=self.guide_chased_only,
+                    guide_contact_recovery=self.guide_contact_recovery,
                     guide_lookahead_ticks=self.guide_lookahead_ticks, share_guide_paths=self.share_guide_paths,
                     guide_preferred_distance=self.guide_preferred_distance,
                     guide_reacquire_close=self.guide_reacquire_close,
