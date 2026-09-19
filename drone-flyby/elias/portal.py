@@ -51,29 +51,39 @@ def show(d, n=8):
 
 
 def validate(url, wait_s=900, tries=14):
-    """Queue ONE validation for `url` and return ITS result. The portal answers a queue request made while a
-    teammate's run is in progress with THAT attempt, so a result only counts if its service_url is ours;
-    otherwise wait for the other run to finish and queue again."""
+    """Queue ONE validation for `url` and return ITS result.
+
+    The portal keeps one queued attempt per team and runs it with the LAST url submitted before it starts, so a
+    teammate's queue request made after ours replaces our url (Saturday night a probe loop did that every two
+    minutes). Hence: while our attempt has not started and no run of ours is in flight, re-submit the url every few
+    seconds so that ours is the latest one when the attempt starts. A result counts only if its history row is new
+    since our first request (a pod's fixed url repeats across runs)."""
     for attempt in range(tries):
         rows = sorted(status().get('validations', []), key=lambda a: a.get('submitted_at') or '')
         if any(not a.get('finished_at') for a in rows):
-            print('a teammate validation is running: waiting', flush=True); time.sleep(8); continue
-        # A fixed URL (a pod's own port) repeats across runs, so a result only counts if its row is NEW: a run of
-        # our URL that was already in the history before this queue request is an earlier run, not this one.
+            print('a teammate validation is running: waiting', flush=True); time.sleep(3); continue
         seen = {((a.get('service_url') or '').rstrip('/'), a.get('submitted_at')) for a in rows}
         r = requests.post(f'{BASE}/validate/queue', headers={'x-token': key()}, json={'url': url}, timeout=30)
-        print('queue ->', r.status_code, r.text[:700], flush=True); r.raise_for_status()
-        t0 = time.time()
+        print('queue ->', r.status_code, r.text[:300], flush=True); r.raise_for_status()
+        t0 = time.time(); last_post = time.time(); reposts = 0
         while time.time()-t0 < wait_s:
-            time.sleep(15)
-            rows = status().get('validations', [])
-            rows = sorted(rows, key=lambda a: a.get('submitted_at') or '')
+            time.sleep(3)
+            rows = sorted(status().get('validations', []), key=lambda a: a.get('submitted_at') or '')
             mine = [a for a in rows if (a.get('service_url') or '').rstrip('/') == url.rstrip('/')
                     and ((a.get('service_url') or '').rstrip('/'), a.get('submitted_at')) not in seen]
             if mine and mine[-1].get('finished_at'):
-                a = mine[-1]; print(f"RESULT score {a.get('score')}  errors {str(a.get('errors'))[:120]}  url {a.get('service_url')}"); return a
-            if not mine and all(a.get('finished_at') for a in rows) and time.time()-t0 > 600:
-                print('our URL never appeared in the history: the queue request was absorbed by another run; retrying'); break
+                a = mine[-1]
+                print(f"RESULT score {a.get('score')}  errors {str(a.get('errors'))[:120]}  url {a.get('service_url')}  (re-submitted {reposts} times)")
+                return a
+            if mine:
+                continue                      # ours is running: never post while it runs
+            if all(a.get('finished_at') for a in rows) and time.time()-last_post > 4:
+                try:
+                    requests.post(f'{BASE}/validate/queue', headers={'x-token': key()}, json={'url': url}, timeout=30)
+                    reposts += 1; last_post = time.time()
+                except requests.RequestException as exc:
+                    print('re-submit failed:', type(exc).__name__, flush=True)
+        print('no run of our url within the wait; queueing again', flush=True)
     sys.exit('could not get a validation of our own URL')
 
 
