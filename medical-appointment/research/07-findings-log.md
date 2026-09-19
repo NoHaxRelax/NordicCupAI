@@ -1142,3 +1142,39 @@ Simulated prompt change, adding the unit in front of the citation:
 the perfect trigger is worth +0.021 tIoU and research/10 measured that a learned previous-utterance
 classifier captures 0.009 of it. The 16 whole misses are a different failure (a valid passage cited, the
 annotators marked another mention; two golds sit on the greeting).
+
+
+## 64. Leave-one-conversation-out test of edge edits to the citation (follow-up to 63)
+
+Elias asked for a leave-one-out check of entry 63. `bench/context_loco.py`, results in
+`research/14-context-loco.md`. Four edits of the served citation: add one unit in front (the "it came
+back normal" fix), drop the first unit of a citation of two or more (its mirror image), add one unit
+behind, drop the last. Features from the citation text, the question and the neighbouring units only,
+never the gold. Two fitted policies per edit, logistic (apply when P x mean gain exceeds (1 - P) x mean
+loss, both from the fold) and ridge on the tIoU change (apply when positive), each fitted on 38
+conversations and applied to the 39th, pooled over 39 folds, with a conversation-clustered bootstrap.
+
+| edit | applicable | helps | fitted policy (LOCO) | fires | wins | losses | change in mean tIoU | 95 % CI | held-out AUC |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| add-front | 194 | 17 | logistic | 4 | 0 | 1 | -0.0015 | -0.005 to +0.000 | 0.541 |
+| add-front | 194 | 17 | ridge | 7 | 0 | 5 | -0.0066 | -0.014 to -0.000 | 0.541 |
+| drop-front | 83 | 19 | logistic | 12 | 6 | 5 | -0.0006 | -0.016 to +0.015 | 0.773 |
+| drop-front | 83 | 19 | ridge | 13 | 9 | 3 | +0.0091 | -0.005 to +0.024 | 0.773 |
+| add-back | 195 | 18 | logistic | 8 | 2 | 6 | -0.0026 | -0.013 to +0.008 | 0.395 |
+| add-back | 195 | 18 | ridge | 8 | 1 | 7 | -0.0051 | -0.013 to +0.001 | 0.395 |
+| drop-back | 83 | 10 | logistic | 3 | 0 | 2 | -0.0040 | -0.011 to +0.000 | 0.500 |
+| drop-back | 83 | 10 | ridge | 3 | 0 | 2 | -0.0031 | -0.008 to +0.000 | 0.500 |
+| any edit | 195 | | ridge, largest predicted change | 26 | 8 | 14 | -0.0051 | -0.024 to +0.015 | |
+
+Perfect triggers (in-sample upper bounds, not policies): +0.021, +0.036, +0.028, +0.015.
+
+**Reading.** Elias's direction, add-front, has a held-out AUC of 0.54, chance, and both fitted policies
+lose. The only edge with a signal is the mirror image, dropping the model's first unit (AUC 0.77), and
+its best policy is +0.009 with an interval that includes zero. The signal is the doctor's question
+standing first in the citation, and the twelve such cases show the annotators' rule: keep the question
+when the answer alone is bare ("Yes.", "Observation.", "Stable."), drop it when the answer restates the
+fact ("It was negative.", "No fever.", "They look like seborrheic keratoses."). Applied blindly, dropping
+a question-first unit fires 12 times, wins 5, loses 6 (-0.011); dropping a lead-in clause ending in a
+comma fires 25, wins 9, loses 16 (-0.021). A prompt line that encoded the annotators' distinction would
+be worth about +0.01 tIoU (+0.006 score) at best, below anything measurable on 39 conversations.
+**The verdict of entry 63 stands: no prompt change, the pipeline stays frozen.**
