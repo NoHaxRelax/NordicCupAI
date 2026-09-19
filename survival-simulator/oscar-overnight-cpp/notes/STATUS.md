@@ -1,6 +1,6 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (n7 at 08:30; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again).
+STATE: IDLE. All pods stopped (n7 at 08:55 after f39; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again). Spend ~$45 of $100.
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
@@ -40,7 +40,9 @@ face; a thin wall's twins pair into a "crevice" inside the wall. Fix (add_wall, 
 map-building modes): opposite-side observations count as conflicts on the existing face. Result: phantom 19%,
 missed 28%, sites valid 49%, top-1 valid 35% (52% with wall_min_n 20). The shipped configs build no map, so they
 are unchanged. Every trap/bait/guide/refuge result of the night before 08:45 ran on the broken map; the guide and
-bait SCENARIOS loaded true walls and never saw it.
+bait SCENARIOS loaded true walls and never saw it. Re-run on the corrected map (f39, 96 seeds): the guide trap is
+still -180 +- 37 (lane-restricted -145), 0.07-0.18 predators held, 0.3 handoffs per game: the trap fails on
+delivery, not on the map. The refuge becomes +13 +- 32 at radius 60 (noise). Nothing changes the shipped configs.
 
 **What the full-game trap funnel says (per game, f35/f37):** 17-26 guide episodes, 7-11 guide deaths (classes: far
 from the trap and slow walk dominate; several predators near is rare), 0.26-0.29 handoffs, 0.04-0.09 predators
@@ -464,3 +466,7 @@ Log (newest last)
   returns from confirmation knobs; the remaining errors are faces recorded inside solid (observer position error).
   f39 on n7: does the corrected map rescue Lucas's guide trap? rf_ref vs rf_trap_old (map as before) vs
   rf_trap_wc (wall_conflict + wall_min_n 20) vs the same with guides only for predators within 300 of the trap.
+- 08:52 f39 (96 seeds, guide trap on the corrected map): rf_trap_old -183+-39, rf_trap_wc -180+-37,
+  rf_trap_wc_lane300 -145+-36; held 0.07/0.07/0.18, handoffs 0.3 per game, 20 baits born per game in all three.
+  The map was not what broke Lucas's trap in full games; delivery (guide episodes ending in death or loss before
+  the handoff) and the bait cost are. Pod n7 stopped; all pods idle. ~$45 of $100 spent. Branch pushed.
