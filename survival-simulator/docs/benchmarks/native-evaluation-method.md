@@ -13,11 +13,11 @@ explicitly; there is deliberately no default:
 ```bash
 cd survival-simulator/native_policy
 PYTHONPATH=. python evaluate.py \
-  --config configs/FINAL.json \
-  --config-name FINAL_VARIANT \
-  --seed-start FROZEN_FRESH_SEED_START \
+  --config configs/entrapment-final.json \
+  --config-name entrapment_final \
+  --seed-start 2026091900 \
   --games 100 --workers 10 --horizon 3000 \
-  --out-dir ../docs/benchmarks/FINAL_OUTPUT
+  --out-dir ../logs/native-final-reproduction
 ```
 
 Each completed game is appended and synced to `games.jsonl`. Repeating the same
@@ -34,6 +34,36 @@ events. Controller diagnostics are read from `engine.evaluation()` when the
 compiled engine provides it. Metrics absent from that API remain explicitly
 `unknown`. In particular, arrival or proximity is never reported as a predator
 capture or confirmed retention.
+
+## Final frozen comparison
+
+Controller and evaluator commit: `04173f8ee9d957ff947e6f7d5e73f76ef27750b0`.
+Both configurations use the same 100 seeds, `2026091900..2026091999`, with a
+3000-second horizon, predators, normal energy, aging and reproduction. The
+control uses `configs/with-predators-best.json`; trapping is disabled there.
+The final comparison uses one Runpod environment for both configurations.
+The independent PC baseline is retained separately and is not pooled with it.
+
+On the 32-core pod, four disjoint 25-game shards use eight workers each. Their
+first seeds are 2026091900, 2026091925, 2026091950 and 2026091975. Each completed
+entrapment shard frees its eight worker slots for the matching baseline shard.
+No strategy changes or seed substitutions are made during the batch.
+
+`scripts/aggregate_native_evaluation.py` requires exactly the declared 100
+seeds, verifies result hashes and source/config hashes against frozen Git
+blobs, and rejects mixed builds or runtimes. Original shard manifests are
+preserved. The pod's minimal checkout marks Git dirty because unrelated root
+files are absent and build products are untracked; `source-provenance.json`
+records this and verifies every tracked native input against the frozen commit.
+
+`scripts/compare_native_evaluations.py BASELINE_DIR ENTRAPMENT_DIR` compares
+each seed with its counterpart and reports a deterministic paired bootstrap
+interval for the mean score difference. The two presets also differ in
+exploration and avoidance settings, so this compares the complete strategies,
+not the isolated causal effect of turning trapping on.
+
+Raw top-level guide counters are legacy debug fields. Use the authoritative
+`native_evaluation` fields and aggregate summary for handoff counts.
 
 ## Frozen run on `pc`
 

@@ -42,8 +42,9 @@
       "status": "running",
       "data_center": "EUR-IS-1",
       "purpose": "Frozen C++ final100 and matched orchard baseline100; four25-game shards pervariant",
-      "incremental_budget_usd": 1.5,
-      "delete_by_utc": "2026-09-19T13:28:00Z"
+      "incremental_budget_usd": 3.5,
+      "delete_by_utc": "2026-09-19T15:30:00Z",
+      "budget_revision_note": "Actual full-game throughput was below pilot estimate. Raised self-imposed final-pod allowance from1.50 to3.50 while staying under original user total10; announced at12:40UTC. No policy or seed changes."
     }
   ],
   "estimated_spend_usd": 5.2511,
@@ -64,7 +65,7 @@
       "attempts": 1
     }
   ],
-  "result": "Final C++ benchmark pod is running; prior conservative spend5.2511 plus accrued pod uptime. New pod budget1.50, below total10.",
+  "result": "Final C++ benchmark running; prior conservative spend5.2511 plus current pod. Revised final allowance3.50 gives total upper allowance8.7511, below user total10.",
   "estimate_updated_at_utc": "2026-09-19T08:44:22Z",
   "confirmed_spend_usd_before_nursery": 4.891723719847505
 }
