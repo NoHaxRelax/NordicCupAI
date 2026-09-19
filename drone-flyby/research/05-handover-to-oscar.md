@@ -79,6 +79,17 @@ confidence of a box whose surroundings are water or forest (`elias/data/terrain.
 pixels). The context prior is untested on the portal; the terrain-trained checkpoint matched its sibling on the
 in-scene check (0.916 against 0.915).
 
+## 5b. The medium_launcher box is too big (probably in your tracker too)
+
+On the local harness the deployed checkpoint's launcher answers are centred within 4 px of the label but measure
+52 x 52 on a 30 x 45 vehicle, so 18 of 31 right-class answers land at IoU 0.3 to 0.5 and count as misses. The
+Helsinki size prior and the Helsinki-trained detector both expect the bigger Helsinki launcher; the validation
+instance is smaller. Shrinking only that class about its centre, `DRONE_BOX_SCALE='{"medium_launcher": 0.75}'`
+in `example.py` (a single factor, or `[width, height]`), moves the harness from 0.600 to 0.640 with medium_launcher
+0.29 to 0.73 and every other class unchanged. Our portal medium_launcher AP is 0.14; if yours is in that region the
+same fix applies. A concealed one-class portal run of it is queued from the laptop; the number will be in
+`research/03-checklist.md` row C0b.
+
 ## 6. Things not to repeat
 
 - Zoom on cue (an L2 look at unconfirmed, small or weak tracks) costs 0.02 to 0.14 on the local harness at every
