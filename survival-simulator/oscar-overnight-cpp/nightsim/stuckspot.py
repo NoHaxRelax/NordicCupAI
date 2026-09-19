@@ -87,6 +87,8 @@ def one(job):
         drops = drop_test(seed, sinks, int(os.environ.get('STUCK_DROPS', '8')), float(os.environ.get('STUCK_DROP_T', '300')))
         return dict(label=label, seed=seed, mode=mode, obst=obst, sinks=[s + [d] for s, d in zip(sinks, drops)], probe=info,
                     wall=round(time.perf_counter() - t0w, 1))
+    if mode == 'spec':
+        return dict(label=label, seed=seed, mode=mode, specs=kill_specs(eng, seed, SINKS.get(seed, [])), wall=round(time.perf_counter() - t0w, 1))
     eng.policy_init(nightsim.seed_key(seed), kw)
     apos = []
     horizon = T
@@ -104,70 +106,170 @@ def one(job):
 
 
 def probe(eng, seed, npred, T, settle=None):
-    """engine-truth sink detector: npred awake predators at uniform random free spots, no agents, T seconds; a sink is a
-    cluster (30) of predators that stayed within R of their end point for the last `settle` s. -> [[x, y, n_captured]]"""
-    settle = settle or min(300., T / 2)
+    """engine-truth sink detector: npred awake predators at uniform random free spots, no agents, T seconds, then 40
+    single ticks; a predator is captured when its awake positions repeat exactly with period <= 12 (a limit cycle of the
+    deterministic edge-avoid + collision-deflection rule). Sinks = clusters (30) of captured predators' cycles.
+    -> [[x, y, n_captured, period, heading_at_vertex, biome, walls_within_25, boundary]] (x, y = a real cycle vertex)"""
     eng.dbg_keep_agents(0)
     rng = random.Random(seed * 7919 + 3); placed = 0
     for _ in range(npred * 50):
         if placed >= npred: break
         x, y = rng.uniform(20, 1580), rng.uniform(20, 1180)
         if eng.dbg_add_predator(x, y, rng.uniform(0, 2 * math.pi), rng.uniform(100, 200), False): placed += 1
-    n0 = len(eng.predators()); t = eng.info()['time']; tend = t + T; hist = []
-    while t < tend - 1e-6:
-        eng.dbg_step(50); t = eng.info()['time']
-        hist.append([(p[0], p[1]) for p in eng.predators()[:n0]])
-    k = int(settle / 5.); end = hist[-1]; pts = []
+    n0 = len(eng.predators())
+    eng.dbg_step(int(T * 10) - 40); tr = []
+    for _ in range(40):
+        eng.dbg_step(1); tr.append(eng.predators()[:n0])
+    ob = eng.obstacles(); cyc = []
     for i in range(n0):
-        ex, ey = end[i]
-        if all(math.hypot(h[i][0] - ex, h[i][1] - ey) <= R for h in hist[-k:]):
-            if all(math.hypot(h[i][0] - ex, h[i][1] - ey) < 1. for h in hist): continue   # never moved: embedded start, not a sink
-            pts.append((ex, ey))
+        seq = [t[i] for t in tr if not t[i][4]]
+        if len(seq) < 20: continue
+        for p in range(1, 13):
+            if all(abs(seq[j][0] - seq[j - p][0]) < 1e-9 and abs(seq[j][1] - seq[j - p][1]) < 1e-9 for j in range(p, len(seq))):
+                cyc.append((p, seq[-p:])); break
     sinks = []
-    for x, y in pts:
+    for p, vs in cyc:
+        cx = sum(v[0] for v in vs) / p; cy = sum(v[1] for v in vs) / p
         for s in sinks:
-            if math.hypot(s[0] - x, s[1] - y) < 30.: s[3].append((x, y)); break
-        else: sinks.append([x, y, 0, [(x, y)]])
+            if math.hypot(s[0] - cx, s[1] - cy) < 30.: s[2].append((p, vs)); break
+        else: sinks.append([cx, cy, [(p, vs)]])
     out = []
-    for s in sinks:
-        xs = [p[0] for p in s[3]]; ys = [p[1] for p in s[3]]
-        out.append([round(sum(xs) / len(xs), 1), round(sum(ys) / len(ys), 1), len(s[3])])
+    for cx, cy, members in sinks:
+        mx = sum(sum(v[0] for v in vs) / p for p, vs in members) / len(members); my = sum(sum(v[1] for v in vs) / p for p, vs in members) / len(members)
+        best = min(((v, p) for p, vs in members for v in vs), key=lambda z: math.hypot(z[0][0] - mx, z[0][1] - my))
+        (vx, vy, vd, ve, vr), p = best
+        nw = sum(1 for o in ob if math.hypot(max(o[0] - vx, 0, vx - o[0] - o[2]), max(o[1] - vy, 0, vy - o[1] - o[3])) < 25)
+        bnd = int(min(vx - 30, 1570 - vx, vy - 30, 1170 - vy) < 20)
+        out.append([round(vx, 2), round(vy, 2), len(members), p, round(vd % (2 * math.pi), 3), eng.dbg_biome(vx, vy), nw, bnd])
     out.sort(key=lambda s: -s[2])
-    return out, dict(n=n0, stuck=len(pts))
+    return out, dict(n=n0, stuck=len(cyc))
 
 
 def drop_test(seed, sinks, n, T):
-    """hold test: n predators dropped at each sink point (jitter 6, random heading, energy 60-200), no agents, T s;
-    -> per sink [held_all_T (never left R of the sink point), at_sink_end]"""
+    """hold test: at each sink vertex drop 1 predator in the exact cycle state (vertex + heading) and n-1 with jitter 6 and a
+    random heading (energy 60-200), no agents, T s. -> per sink [exact_held, random_held_all_T, random_at_sink_end, n_random]"""
     import nightsim
     sim = nightsim.SimulationCore(seed=seed, predators=True); eng = sim._engine
     sim.step([]); eng.dbg_keep_agents(0)
     rng = random.Random(seed * 31 + 7); owner = []
     for si, s in enumerate(sinks):
-        for k in range(n):
+        owner.append((si, 1) if eng.dbg_add_predator(s[0], s[1], s[4], 150., False) else (si, -1))
+        for k in range(n - 1):
             for _ in range(40):
                 x, y = s[0] + rng.uniform(-6, 6), s[1] + rng.uniform(-6, 6)
-                if eng.dbg_add_predator(x, y, rng.uniform(0, 2 * math.pi), rng.uniform(60, 200), False): owner.append(si); break
+                if eng.dbg_add_predator(x, y, rng.uniform(0, 2 * math.pi), rng.uniform(60, 200), False): owner.append((si, 0)); break
+    owner = [o for o in owner if o[1] >= 0]
     held = [True] * len(owner); t = eng.info()['time']; tend = t + T
     while t < tend - 1e-6:
         eng.dbg_step(10); t = eng.info()['time']; P = eng.predators()
-        for i, si in enumerate(owner):
+        for i, (si, ex) in enumerate(owner):
             if held[i] and math.hypot(P[i][0] - sinks[si][0], P[i][1] - sinks[si][1]) > R: held[i] = False
     P = eng.predators(); out = []
     for si in range(len(sinks)):
-        idx = [i for i, o in enumerate(owner) if o == si]
-        out.append([sum(held[i] for i in idx), sum(1 for i in idx if math.hypot(P[i][0] - sinks[si][0], P[i][1] - sinks[si][1]) <= R), len(idx)])
+        ie = [i for i, o in enumerate(owner) if o == (si, 1)]; ir = [i for i, o in enumerate(owner) if o == (si, 0)]
+        out.append([int(bool(ie) and held[ie[0]]), sum(held[i] for i in ir),
+                    sum(1 for i in ir if math.hypot(P[i][0] - sinks[si][0], P[i][1] - sinks[si][1]) <= R), len(ir)])
     return out
+
+
+SINKS = {}
+SPEC_MINN = int(os.environ.get('STUCK_SPEC_MINN', '3')); KILLTEST = int(os.environ.get('STUCK_KILLTEST', '0')); LANE = float(os.environ.get('STUCK_LANE', '70'))
+
+
+def kill_specs(eng, seed, sinks):
+    """delivery spec per sink (captures >= SPEC_MINN): kill states (G, heading) near the cycle vertex from which the
+    deterministic no-agent predator dynamics fall into a cycle within 30 of the vertex. Grid 3 units within 21 of the
+    vertex x 24 headings, all dropped at once (predators do not interact), 350 ticks. A spec needs a straight lane: the
+    points G - k u(heading), k = 5..LANE, predator-free. Robustness = success rate over the 3x3 grid neighbours x
+    +-1 heading step. -> per sink [sink_index, vx, vy, n_candidates, n_success, best specs [Gx, Gy, th, robust, Lx, Ly]]"""
+    eng.dbg_keep_agents(0)
+    NH = 24; out = []
+    todo = [(si, s) for si, s in enumerate(sinks) if s[2] >= SPEC_MINN]
+    if not todo: return out
+    base = len(eng.predators()); idx = {}
+    for si, s in todo:
+        vx, vy = s[0], s[1]
+        for ix in range(-7, 8):
+            for iy in range(-7, 8):
+                x, y = vx + 3 * ix, vy + 3 * iy
+                if 3 * math.hypot(ix, iy) > 21.01 or eng.dbg_pred_blocked(x, y): continue
+                for h in range(NH):
+                    if eng.dbg_add_predator(x, y, 2 * math.pi * h / NH, 200., False):
+                        idx[(si, ix, iy, h)] = base; base += 1
+    eng.dbg_step(150); hist = []
+    for _ in range(20):
+        eng.dbg_step(10); hist.append(eng.predators())
+    ok = {}
+    for k, i in idx.items():   # held: within 30 of the vertex for the last 200 ticks (a cycle; resting keeps it in place)
+        si = k[0]; vx, vy = sinks[si][0], sinks[si][1]
+        ok[k] = all(math.hypot(h[i][0] - vx, h[i][1] - vy) < 30 for h in hist)
+    for si, s in todo:
+        keys = [k for k in idx if k[0] == si]
+        cands = []
+        # the agent stands at A; the predator touches it (< 15) one move short, so the kill state is ~A - k u(th), k 8..15
+        def okat(x, y, h):
+            ix, iy = round((x - s[0]) / 3), round((y - s[1]) / 3)
+            return ok.get((si, ix, iy, h % NH))
+        for ix in range(-10, 11):
+            for iy in range(-10, 11):
+                ax, ay = s[0] + 3 * ix, s[1] + 3 * iy
+                if 3 * math.hypot(ix, iy) > 30.01 or not eng.dbg_free(ax - 5, ay - 5, 10): continue
+                for h in range(NH):
+                    th = 2 * math.pi * h / NH; ux, uy = math.cos(th), math.sin(th)
+                    vals = [okat(ax - k * ux, ay - k * uy, h + dh) for k in (8, 10, 12, 14) for dh in (-1, 0, 1)]
+                    vals = [v for v in vals if v is not None]
+                    if len(vals) < 6: continue
+                    rob = sum(vals) / len(vals)
+                    if rob < 0.3: continue
+                    if any(eng.dbg_pred_blocked(ax - d * ux, ay - d * uy) for d in range(15, int(LANE) + 1, 5)): continue
+                    cands.append([round(ax, 1), round(ay, 1), round(th, 4), round(rob, 3), round(ax - LANE * ux, 1), round(ay - LANE * uy, 1)])
+        cands.sort(key=lambda c: -c[3])
+        if KILLTEST > 0:
+            scored = []
+            for c in cands[:KILLTEST]:
+                scored.append(c + [kill_test(seed, s, c)])
+            scored.sort(key=lambda c: (-c[6], -c[3]))
+            cands = scored
+        out.append([si, s[0], s[1], len(keys), sum(1 for k in keys if ok[k]), cands[:5]])
+    return out
+
+
+def kill_test(seed, sink, c):
+    """agent frozen at G, predator approaching along the lane (4 variants: distance 50/70 on the axis, 60 at +-8 off
+    the axis), heading at G; after the kill 300 ticks without agents. -> fraction ending in a cycle within 30 of the vertex"""
+    import nightsim
+    gx, gy, th = c[0], c[1], c[2]; ux, uy = math.cos(th), math.sin(th); good = 0; n = 0
+    for D, off in ((50, 0), (70, 0), (60, 8), (60, -8)):
+        sx, sy = gx - D * ux - off * uy, gy - D * uy + off * ux
+        sim = nightsim.SimulationCore(seed=seed, predators=False); eng = sim._engine
+        sim.step([]); ags = eng.dbg_keep_agents(1)
+        if eng.dbg_pred_blocked(sx, sy) or not ags: continue
+        eng.dbg_set_agent(ags[0][0], gx, gy, th + math.pi, 300., 10., 20., 800., 100., 400., 1.57, 1000.)
+        if not eng.dbg_add_predator(sx, sy, math.atan2(gy - sy, gx - sx), 200., False): continue
+        n += 1
+        for _ in range(60):
+            eng.dbg_step(1)
+            if not eng.agents(): break
+        if eng.agents(): continue
+        eng.dbg_step(100); hold = True
+        for _ in range(20):
+            eng.dbg_step(10); p = eng.predators()[0]
+            if math.hypot(p[0] - sink[0], p[1] - sink[1]) >= 30: hold = False; break
+        good += hold
+    return round(good / max(1, n), 3)
 
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--mode', default='wander'); ap.add_argument('--configs', default='{"none":{}}')
     ap.add_argument('--seeds', nargs='+', required=True); ap.add_argument('--npred', type=int, default=40)
-    ap.add_argument('--T', type=float, default=900.); ap.add_argument('--workers', type=int, default=32); ap.add_argument('--out', required=True)
+    ap.add_argument('--T', type=float, default=900.); ap.add_argument('--sinks', default=''); ap.add_argument('--workers', type=int, default=32); ap.add_argument('--out', required=True)
     a = ap.parse_args()
     try: cfgs = json.loads(a.configs)
     except json.JSONDecodeError: cfgs = json.load(open(a.configs))
+    if a.sinks:
+        for l in open(a.sinks):
+            r = json.loads(l); SINKS[r['seed']] = r['sinks']
     jobs = [(l, kw, s, a.mode, a.npred, a.T) for l, kw in cfgs.items() for s in parse_seeds(a.seeds)]
     t0 = time.time(); n = 0
     with Pool(a.workers) as pool, open(a.out, 'a') as f:

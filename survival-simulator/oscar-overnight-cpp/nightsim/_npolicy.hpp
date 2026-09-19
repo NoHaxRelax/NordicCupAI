@@ -351,6 +351,7 @@ struct Params {
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0., trap_min_cd = 0., evade_ignore_held = 0., bait_rot_margin = 100., pred_hide = 0., pred_hide_min = 60., pred_hide_w = 25., pred_hide_t = 0., birth_fruit_k = 0., birth_fruit_r = 80.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
+    double doom_r = 0., doom_rel = 0.6, doom_min = 100.5;   // econ hunt: a nearly-caught agent (>100 E) gives birth -> 100 energy leaves the predator's meal (score penalty E/100)
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     // nightsim nest (keeper_mode > 0): fruit within nest_r of the rear entrance is reserved for the keeper and its newborn
     // 'cadet'; the keeper breeds when the bait has < fuel_lead s left, the cadet eats (top priority) and goes in just in time
@@ -363,15 +364,18 @@ struct Params {
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;
     // stuck-spot guiding (nightsim, _nstuck.hpp; off unless sg_mode > 0)
     double sg_mode = 0., sg_t0 = 0., sg_t1 = 600., sg_pred_r = 400., sg_guide_r = 250., sg_min_e = 120., sg_dist_w = 0.3, sg_side_pen = 300.,
-           sg_cap = 3., sg_occ_r = 35., sg_near = 45., sg_far = 80., sg_wait = 6., sg_lost = 8., sg_timeout = 90., sg_arrive = 6., sg_escape = 0.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
+           sg_cap = 3., sg_occ_r = 35., sg_near = 45., sg_far = 80., sg_wait = 6., sg_lost = 8., sg_timeout = 90., sg_arrive = 3., sg_escape = 0.,
+           sg_need_spec = 1., sg_skip_occ = 0., sg_clear = 0., sg_acq = 55., sg_release = 150., sg_keep_r = 0., sg_keep_all = 0., sg_keep_t = 120.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     // exploit layer (nightsim): overflow teleport into the bottom-right boundary corner (turn X, then move_direction X ->
     // direction+X = inf -> NaN position -> clamped to (W-5,H-5) inside both boundary walls; predators cannot reach it).
     // tp_mode 0 off, 1 rescue: arm when a predator facing us is within tp_r; 2 rescue only when we cannot sprint.
     // tp_ins_t: from this time keep >=1 prisoner with energy > tp_ins_keep alive (insurance), sending the richest agent
     // with energy >= tp_ins_e. tp_last_n: when <= this many free agents remain (after tp_last_t), all go in.
-    double dg_pre = 1., dg_r = 0., dg_lam = 0.5, dg_cap = 40., dg_walls = 1., dg_pspeed = 15., kite_r = 0., kite_rel = 0.7, kite_min = 95., kite_sleep = 1., tp_mode = 0., tp_r = 45., tp_rel = 0.8, tp_ins_t = OINF, tp_ins_e = 300., tp_ins_keep = 60., tp_last_n = 0., tp_last_t = 0., tp_last_e = 0., tp_ins_age = 1e9, tp_ins_agew = 0., tp_min_free = 0.;
+    double bio_w = 0., bio_t = 0., fit_sprint = 0., fit_sprint_cap = 2.0, dg_pre = 1., dg_r = 0., dg_lam = 0.5, dg_cap = 40., dg_walls = 1., dg_pspeed = 15., trap_corner = 0., wb_mode = 0., wb_t = 60., wb_y = 1050., wb_e = 250., wb_keep = 120., wb_track = 8., wb_agew = 0., wb_maxage = 1e9, cg_r = 36., cg_goal_r = 25., cg_lane = 110., st_mode = 0., st_min = 100., st_max = 240., st_rel = 0.45, st_e = 0., st_old = 1., st_minfree = 3., st_t = 0., kite_r = 0., kite_rel = 0.7, kite_min = 95., kite_sleep = 1., tp_mode = 0., tp_r = 45., tp_rel = 0.8, tp_ins_t = OINF, tp_ins_e = 300., tp_ins_keep = 60., tp_last_n = 0., tp_last_t = 0., tp_last_e = 0., tp_ins_age = 1e9, tp_ins_agew = 0., tp_min_free = 0., tp_exit = 0., tp_exit_min_t = 5., tp_exit_quiet = 30., tp_exit_slide = 4., tp_exit_e = 25., tp_spr_r = 0., tp_spr_min = 32.5;
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
            pred_dodge_r = 0., pred_dodge_ang = 1.5708, pred_dodge_hold = 0., pred_dodge_hold_face = 1.;
+    double pdp_r = 0., pdp_iso = 120., pdp_face = 1., pdp_cost = 0., pdp_sprint = 0., pdp_excl = 0., pdp_set = 0.;   // pdp_set k > 0: tables from <dir>k (e.g. capture margin 20)   // x3 perception: DP chase-escape layer (_npdp.hpp); 0 = off
+    double bm_r = 0., bm_s = 0.;   // x4 movecoll: in slow biomes (swamp/river) scale evasion radii by 1 + k*(1/pen - 1); 0 = off
     double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN, l_births_per_tick = NAN, l_emergency_reserve = NAN, l_low_pop_reserve = NAN;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
          old_eat_last = true, heir_needs_site = true;
@@ -890,7 +894,7 @@ public:
     double fitness(const AState& s) const {
         return (P.fit_vision * std::pow(s.vr / 200., 2.0) * pmin(1.5, s.cone / 1.0472)
                 + P.fit_hear * std::pow(s.hear / 50., 2.0)
-                + P.fit_energy * pmin(2., s.max_energy / 500.) + P.fit_speed * pmin(P.fit_speed_cap, pmin(s.speed, s.sprint) / 10.));
+                + P.fit_energy * pmin(2., s.max_energy / 500.) + P.fit_speed * pmin(P.fit_speed_cap, pmin(s.speed, s.sprint) / 10.) + P.fit_sprint * pmin(P.fit_sprint_cap, s.sprint / 20.));
     }
     // nightsim (Oscar 09:45): keep agents above the engine's sprint cap (20% of max energy) plus a margin
     bool below_floor(const AState& s) const { return P.sprint_floor > 0. && s.energy < 0.2 * s.max_energy + P.sprint_floor; }
@@ -958,6 +962,12 @@ public:
         double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;
         if (P.nursery_bonus > 0. && !m.heir_done && s.age >= P.heir_age - 8.)
             value += P.nursery_bonus * (double)std::min<int64_t>(4, t.fruit_free);
+        if (P.bio_w > 0. && time >= P.bio_t) {   // exploit: slow biomes are kill zones (swamp 2x, river 5x kills/agent-s)
+            CellV* bc = g.cells.get(cell_of(t.p));
+            int bb = bc ? bc->biome : -1;
+            double pen = bb == 1 ? 0.5 : (bb == 2 ? 0.8 : (bb == 4 ? 0.3 : 1.0));
+            value -= P.bio_w * 60. * (1. / pen - 1.);
+        }
         if (P.pred_avoid_w > 0. && !g.pmem.empty()) {   // nightsim: avoid posts where predators were seen recently
             double pen = 0.;
             for (auto& q : g.pmem) if (dist_lt(q.p, t.p, P.pred_avoid_r)) pen += 1. - (time - q.t) / P.pred_avoid_t;
@@ -1494,8 +1504,32 @@ public:
         double dd, dir, turn; go_to(m, s, target, 3., dd, dir, turn);   // approach legs use the obstacle-avoiding navigator
         pl = Plan{dd, dir, turn};
     }
+    static constexpr int64_t CORNER_BAIT = 1000000000000LL;   // sentinel: the bait is the teleport prisoner (not in minds)
     void run_trap(std::unordered_map<int64_t, Plan>& plans) {
         if (time < P.trap_start) return;
+        if (P.trap_corner > 0.) {   // exploit: the trap is the teleport corner; prisoners are the (immortal) bait
+            groups.each([&](const int64_t&, GroupP& gp) {
+                Group& g = *gp;
+                if (!g.anchored) return;
+                P2 goal{1562., 1162.}; double k = P.cg_lane / std::sqrt(2.);
+                P2 out{goal.x - k, goal.y - k};
+                if (P.trap_corner >= 2.) { goal = P2{1558., P.wb_y}; out = P2{goal.x - P.cg_lane, goal.y}; }   // wall bait: deliver along the wall face
+                g.trap = Group::Site{goal, goal, out, goal, 20., 20., 0., false};
+                g.has_trap = true; g.bait = CORNER_BAIT;
+                for (auto& q : g.pseen) if (!dist_lt(q.p, g.trap.mouth, 40.)) { g.guide_seen = time; break; }
+                if (P.trap_mode >= 3.) run_guide(g, plans);
+                g.agents.each([&](int64_t a) {
+                    if (a == g.guide) return;
+                    Mind& m = M(a); double d = dist(m.pose->p, g.trap.mouth);
+                    if (d < P.trap_keepout) {
+                        double dd, ang; local_of(*m.pose, g.trap.mouth, dd, ang);
+                        const AState& s = st(a);
+                        plans[a] = Plan{pmin(s.speed, s.sprint), wrap(ang + OPI), 0.};
+                    }
+                });
+            });
+            return;
+        }
         groups.each([&](const int64_t&, GroupP& gp) {
             Group& g = *gp;
             if (!g.anchored) return;
@@ -1930,6 +1964,12 @@ public:
     // sideways (perpendicular, away from the predator's heading) to exploit its 0.3 rad/tick turn cap.
     bool evade(const AState& s, Plan& pl) {
         Mind& m = M(s.aid);
+        struct BmG { Params& Q; double r, f, d, sp; bool on; ~BmG() { if (on) { Q.pred_r = r; Q.pred_face_r = f; Q.pred_dodge_r = d; Q.pred_sprint_r = sp; } } }
+            bmg{P, P.pred_r, P.pred_face_r, P.pred_dodge_r, P.pred_sprint_r, false};
+        if ((P.bm_r > 0. || P.bm_s > 0.) && s.biome >= 0 && s.biome < 5 && MOVE_PENALTY[s.biome] < 0.99) {   // x4 movecoll
+            double q = 1. / MOVE_PENALTY[s.biome] - 1.; bmg.on = true;
+            P.pred_r *= 1. + P.bm_r * q; P.pred_face_r *= 1. + P.bm_r * q; P.pred_dodge_r *= 1. + P.bm_r * q; P.pred_sprint_r *= 1. + P.bm_s * q;
+        }
         struct Th { double d, ang, rel; };
         std::vector<Th> th;
         if (P.pred_share > 0.) {
@@ -1947,6 +1987,7 @@ public:
                 th.push_back(Th{o.distance, o.angle, o.has_rel_dir ? o.rel_dir : OPI});
             }
         }
+        if (P.pdp_r > 0. && pdp_evade(s, th, pl)) { n_evading++; return true; }   // x3: DP chase-escape (_npdp.hpp)
         if (P.dg_r > 0.) {   // exploit: exact predator pursuit law -> 2-ply lookahead dodge (agent frame, agent at origin, heading 0)
             bool near = false;
             for (const Th& t : th) if (t.d < P.dg_r) near = true;
@@ -2241,6 +2282,7 @@ public:
 
     std::unordered_set<int64_t> frozen;   // tests only
 #include "_nstuck.hpp"
+#include "_npdp.hpp"
     bool late_on = false;
     void apply_late() {
         auto ov = [](double& dst, double v) { if (!std::isnan(v)) dst = v; };
@@ -2249,20 +2291,86 @@ public:
     // ---- exploit layer: corner prisoners (see Params tp_*)
     std::unordered_set<int64_t> tp_pris, tp_armed, tp_seen;
     std::unordered_map<int64_t, double> tp_eprev;
+    std::unordered_map<int64_t, int> tp_exit_step; std::unordered_map<int64_t, double> tp_in_t, tp_quiet_since, tp_exit_y; int64_t tp_n_exit = 0, tp_n_exit_done = 0, tp_gu_slow = 0, tp_gu_other = 0;
+    std::vector<std::pair<int64_t, P2>> tp_returning;
+    std::unordered_map<int64_t, int> st_pend; std::unordered_set<int64_t> st_set; int64_t st_n = 0, cg_n = 0;
+    std::unordered_set<int64_t> wb_set, wb_pend; std::unordered_map<int64_t, double> wb_yv; std::unordered_map<int64_t, int> wb_stuck; int64_t wb_n = 0;
     int64_t tp_n = 0, tp_n_ins = 0, tp_n_last = 0, tp_n_kids = 0; double tp_t_free = 0.;
     static constexpr double TP_X = 1e308;
     std::vector<Act> call(std::vector<AState>&& sts, double sim_time) {
-        if (P.tp_mode <= 0. && !(sim_time >= P.tp_ins_t) && P.tp_last_n <= 0.) return call_inner(std::move(sts), sim_time);
+        if (P.tp_mode <= 0. && !(sim_time >= P.tp_ins_t) && P.tp_last_n <= 0. && P.tp_spr_r <= 0. && P.st_mode <= 0. && P.trap_corner <= 0. && P.wb_mode <= 0.) return call_inner(std::move(sts), sim_time);
         std::vector<Act> out; std::vector<AState> free_s;
         for (AState& s : sts) {
             bool is_new = !tp_seen.count(s.aid); tp_seen.insert(s.aid);
             if (is_new && !minds.has(s.aid)) {
                 for (const Obs& o : *s.obs) if (o.type == 1 && o.has_id && o.distance < 1e-6 && tp_pris.count(o.id)) { tp_pris.insert(s.aid); tp_n_kids++; break; }
             }
+            if (st_set.count(s.aid)) continue;   // statue: heading inf, never acts again (any move would NaN-teleport it)
+            if (st_pend.count(s.aid)) {   // two turns of 1e308 -> heading inf
+                int k = st_pend[s.aid]++;
+                out.push_back(Act{s.aid, 0., 0., TP_X, false});
+                if (k >= 1) { st_pend.erase(s.aid); st_set.insert(s.aid); st_n++; }
+                continue;
+            }
             if (tp_armed.count(s.aid)) {   // second tick: teleport, reset heading to exactly 0
+                if (wb_pend.count(s.aid)) { wb_pend.erase(s.aid); wb_set.insert(s.aid); wb_yv[s.aid] = 1195.; wb_n++; }
                 tp_armed.erase(s.aid); tp_pris.insert(s.aid);
                 out.push_back(Act{s.aid, 0., TP_X, -TP_X, false}); tp_n++;
                 continue;
+            }
+            if (wb_set.count(s.aid)) {   // wall bait: slide north inside the right wall to wb_y, then stay level with the nearest heard predator
+                static const double PEN[5] = {1.0, 0.5, 0.8, 1.0, 0.3};
+                double pen = (s.biome >= 0 && s.biome < 5) ? PEN[s.biome] : 1.0;
+                bool spr = s.energy >= s.max_energy / 5. + 1.;
+                double Lmax = (spr ? s.sprint : pmin(s.speed, s.sprint)) * pen;
+                double y = wb_yv[s.aid], want = 0.;
+                if (y > P.wb_y + 3. && wb_stuck[s.aid] < 5) want = -(y - P.wb_y);
+                else {
+                    double best = OINF;
+                    for (const Obs& o : *s.obs) if (o.type == 2 && o.distance < best) { best = o.distance; want = o.distance * std::sin(o.angle); }
+                    if (std::fabs(want) <= P.wb_track) want = 0.;
+                }
+                bool spawn = s.energy > 100.5 && s.energy < 101.5 + 2.5 * 0.2 && !spr;
+                if (want != 0. && Lmax > 10.6) {
+                    double L = pmin(Lmax, std::hypot(10.5, std::fabs(want)));
+                    double dy = std::sqrt(pmax(0., L * L - 10.5 * 10.5));
+                    out.push_back(Act{s.aid, L / pen, std::atan2(want > 0 ? dy : -dy, 10.5), 0., false});
+                    wb_yv[s.aid] = y + (want > 0 ? dy : -dy);
+                } else {
+                    if (want != 0. && y > P.wb_y + 3.) wb_stuck[s.aid]++;
+                    out.push_back(Act{s.aid, 0., 0., 0., spawn});
+                }
+                continue;
+            }
+            if (tp_pris.count(s.aid) && P.tp_exit > 0.) {   // safe house: sprinters leave via the right wall when quiet
+                if (!tp_in_t.count(s.aid)) { tp_in_t[s.aid] = sim_time; tp_quiet_since[s.aid] = sim_time; }
+                bool heard = false;
+                for (const Obs& o : *s.obs) if (o.type == 2) { heard = true; break; }
+                if (heard) tp_quiet_since[s.aid] = sim_time;
+                auto it = tp_exit_step.find(s.aid);
+                bool can = s.sprint >= P.tp_spr_min && s.energy >= s.max_energy / 5. + P.tp_exit_e + 0.5 * s.sprint * (P.tp_exit_slide + 3.);
+                if (it == tp_exit_step.end() && can && sim_time - tp_in_t[s.aid] >= P.tp_exit_min_t && sim_time - tp_quiet_since[s.aid] >= P.tp_exit_quiet * 0.1 - 1e-9) {
+                    tp_exit_step[s.aid] = 0; it = tp_exit_step.find(s.aid); tp_n_exit++;
+                }
+                if (it != tp_exit_step.end()) {
+                    int k = it->second++;
+                    static const double PEN[5] = {1.0, 0.5, 0.8, 1.0, 0.3};
+                    double pen = (s.biome >= 0 && s.biome < 5) ? PEN[s.biome] : 1.0;
+                    double L = s.sprint * pen;
+                    if (!tp_exit_y.count(s.aid)) tp_exit_y[s.aid] = 1195.;
+                    if (k >= (int)P.tp_exit_slide && L >= 31.0 && tp_exit_y[s.aid] < 1160.) {   // exit west (x 1595 -> <= 1564)
+                        out.push_back(Act{s.aid, s.sprint, OPI, 0., false});
+                        tp_returning.push_back({s.aid, P2{1595. - L, tp_exit_y[s.aid]}});
+                        tp_pris.erase(s.aid); tp_exit_step.erase(it); tp_in_t.erase(s.aid); tp_quiet_since.erase(s.aid); tp_exit_y.erase(s.aid); tp_n_exit_done++;
+                        continue;
+                    }
+                    if (L <= 10.6 || k > 60 || tp_exit_y[s.aid] < 60.) { if (L <= 10.6) tp_gu_slow++; else tp_gu_other++; tp_exit_step.erase(it); tp_exit_y.erase(s.aid); out.push_back(Act{s.aid, 0., 0., 0., false}); continue; }   // give up, stay a prisoner
+                    // slide north inside the right wall: effective endpoint x = 1595 + 10.5 (beyond the edge), clamped back to 1595
+                    double dy = std::sqrt(L * L - 10.5 * 10.5);
+                    out.push_back(Act{s.aid, s.sprint, std::atan2(-dy, 10.5), 0., false});
+                    tp_exit_y[s.aid] -= dy;
+                    continue;
+                }
             }
             if (tp_pris.count(s.aid)) {
                 double drop = tp_eprev.count(s.aid) ? pmax(0.1, tp_eprev[s.aid] - s.energy) : 0.1;
@@ -2274,6 +2382,11 @@ public:
             free_s.push_back(s);
         }
         std::unordered_set<int64_t> arm_now;
+        if (P.tp_spr_r > 0.) for (const AState& s : free_s) {
+            if (s.sprint < P.tp_spr_min || s.energy < s.max_energy / 5. + P.tp_exit_e + 0.5 * s.sprint * (P.tp_exit_slide + 3.)) continue;
+            for (const Obs& o : *s.obs)
+                if (o.type == 2 && o.distance < P.tp_spr_r && (!o.has_rel_dir || std::fabs(o.rel_dir) <= P.tp_rel)) { arm_now.insert(s.aid); break; }
+        }
         if (P.tp_mode > 0.) for (const AState& s : free_s) {
             for (const Obs& o : *s.obs) {
                 if (o.type != 2 || o.distance >= P.tp_r) continue;
@@ -2296,10 +2409,60 @@ public:
                 if (best) { arm_now.insert(best->aid); tp_n_ins++; }
             }
         }
+        if (P.wb_mode > 0. && sim_time >= P.wb_t && wb_pend.empty()) {   // keep one working wall bait
+            bool have = false;
+            for (const AState& s : sts) if (wb_set.count(s.aid) && s.energy > P.wb_keep) { have = true; break; }
+            if (!have) {
+                const AState* best = nullptr;
+                auto wv = [&](const AState& s) { return s.energy - P.wb_agew * s.age; };
+                for (const AState& s : free_s) if (!arm_now.count(s.aid) && s.energy >= P.wb_e && s.age <= P.wb_maxage && !(minds.has(s.aid) && M(s.aid).old) && (!best || wv(s) > wv(*best))) best = &s;
+                if (best && free_s.size() > 2) { arm_now.insert(best->aid); wb_pend.insert(best->aid); }
+            }
+        }
         if (P.tp_last_n > 0. && sim_time >= P.tp_last_t && (double)free_s.size() <= P.tp_last_n)
             for (const AState& s : free_s) if (!arm_now.count(s.aid) && s.energy >= P.tp_last_e) { arm_now.insert(s.aid); tp_n_last++; }
+        if (P.st_mode > 0. && sim_time >= P.st_t && (double)free_s.size() > P.st_minfree) {
+            // exploit: a statue seen by a predator from >= 90 (rel_dir NaN -> pivot with sign(NaN)) sends it to (W-10,H-10) forever
+            std::vector<AState> keep; int made = 0;
+            for (const AState& s : free_s) {
+                bool cand = (P.st_old > 0. && minds.has(s.aid) && M(s.aid).old) || s.energy < P.st_e;
+                bool fire = false;
+                if (cand && made == 0) for (const Obs& o : *s.obs)
+                    if (o.type == 2 && o.distance >= P.st_min && o.distance <= P.st_max && o.has_rel_dir && std::fabs(o.rel_dir) < P.st_rel) { fire = true; break; }
+                if (fire && (double)free_s.size() - 1. > P.st_minfree) { st_pend[s.aid] = 1; out.push_back(Act{s.aid, 0., 0., TP_X, false}); made++; continue; }
+                keep.push_back(s);
+            }
+            free_s.swap(keep);
+        }
         if (!free_s.empty()) tp_t_free = sim_time;
+        if (!tp_returning.empty()) {
+            std::vector<std::pair<int64_t, P2>> keep;
+            for (auto& rp : tp_returning) {
+                bool present = false;
+                for (const AState& s : free_s) if (s.aid == rp.first) present = true;
+                if (!present) continue;
+                if (minds.has(rp.first)) continue;
+                GroupP best; size_t bn = 0;
+                groups.each([&](const int64_t&, GroupP& g) { if (g->anchored && g->agents.size() >= bn) { best = g; bn = g->agents.size(); } });
+                if (!best) { best = new_group(); best->anchored = true; }
+                auto m = std::make_shared<Mind>();
+                m->aid = rp.first; m->group = best->id; m->pose = mkpose(rp.second, 0.); m->born = sim_time;
+                m->has_eprev = false;
+                minds.set(rp.first, m); best->agents.add(rp.first);
+            }
+            tp_returning.clear();
+        }
         std::vector<Act> inner = call_inner(std::move(free_s), sim_time);
+        if (P.trap_corner > 0.) groups.each([&](const int64_t&, GroupP& gp) {   // corner guide: teleport in at the tip when the predator closes
+            Group& g = *gp;
+            if (!g.has_trap || g.guide < 0 || g.guide_state != 3 || !minds.has(g.guide) || !in_states(g.guide)) return;
+            if (!dist_lt(M(g.guide).pose->p, g.trap.goal, P.cg_goal_r)) return;
+            for (const Obs& o : *st(g.guide).obs) if (o.type == 2 && o.distance < P.cg_r) {
+                arm_now.insert(g.guide); cg_n++;
+                if (P.wb_mode > 0. && P.trap_corner >= 2.) wb_pend.insert(g.guide);   // the delivered guide becomes the next wall bait
+                break;
+            }
+        });
         for (Act& a : inner) {
             if (arm_now.count(a.aid)) {
                 a.turn = TP_X; tp_armed.insert(a.aid);
@@ -2460,6 +2623,8 @@ public:
             bool spawn = spawn_set.count(aid) > 0 && P.no_spawn <= 0. && !is_trap_role(aid) && !is_cadet(aid);
             if (P.keeper_mode > 0.) { Group& gk = G(m.group); if (gk.keeper == aid && gk.keeper_spawn && s.energy > 101.) spawn = true; }
             if (spawn && P.spawn_pred_r > 0.) for (const Obs& o : *s.obs) if (o.type == 2 && o.distance < P.spawn_pred_r) { spawn = false; break; }
+            if (!spawn && P.doom_r > 0. && s.energy - cost_now(pl.dist, pl.turn, s) > P.doom_min)
+                for (const Obs& o : *s.obs) if (o.type == 2 && o.distance < P.doom_r && (!o.has_rel_dir || std::fabs(o.rel_dir) < P.doom_rel)) { spawn = true; break; }
             bool ok = spawn && s.energy - cost_now(pl.dist, pl.turn, s) > 100.;
             m.spawned_ok = ok;
             if (ok) last_spawners.push_back(aid);

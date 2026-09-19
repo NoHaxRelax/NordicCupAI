@@ -54,6 +54,7 @@ def one(job):
     events()
     kw = dict(kw); pl = kw.pop('test_pred_life', 0.)
     eng.dbg_pred_life(float(pl))   # tests only: perfect-trap model (0 = off)
+    co = kw.pop('test_corner_oracle', 0.); ox = kw.pop('test_oracle_x', 1555.); oy = kw.pop('test_oracle_y', 1155.); eng.dbg_corner_oracle(float(co), float(ox), float(oy))   # tests only: perfect delivery to the teleport corner
     eng.policy_init(nightsim.seed_key(seed), kw)
     peak = state['num_agents']; nxt = sample; last = None; traj = []; FD = {}; fates = []; tail = []
     if TAIL > 0: sample = 10.; nxt = 10.
@@ -81,14 +82,15 @@ def one(job):
                     import math as _m
                     held = sum(1 for p_ in eng.predators() if _m.hypot(p_[0] - tr[0], p_[1] - tr[1]) < 35)
                 traj.append([int(nxt), last[2], last[0], last[3], info['next_fruit_id'], eaten, round(fe), round(sum(a[5] for a in ags)/max(1, len(ags))), round(sum(a[7] for a in ags)/max(1, len(ags)), 1), round(sum(a[10] for a in ags)/max(1, len(ags))), pd,
-                             held, (tr[6] if tr else 0), (int(tr[4] >= 0) if tr else -1), (list(tr[8]) if tr else [0]*12)])
+                             held, (tr[6] if tr else 0), (int(tr[4] >= 0) if tr else -1), (list(tr[8]) if tr else [0]*12),
+                             [round(max((a[8] for a in ags), default=0), 1), sum(1 for a in ags if a[8] >= 32), sum(1 for a in ags if a[8] >= 40), round(max((a[7] for a in ags), default=0), 1), round(sum(a[6] for a in ags)/max(1, len(ags)))]])
             nxt += sample
     info = eng.info()
     return dict(label=label, seed=seed, surv=round(info['time'], 1), score=round(info['score'], 3), fruit=round(fe/1000, 3),
                 eaten=eaten, peak=peak, created=info['next_agent_id'], pdeaths=pd, sdeaths=sd, penalty=round(pen, 3),
                 trees_d=last and last[0], fruits_d=last and last[1], preds=len(eng.predators()), traj=traj,
                 wall=round(time.perf_counter()-t0, 1), **({'fates': fates} if DIAG_FROM > 0 else {}), **({'tail': tail} if TAIL > 0 else {}),
-                **({'kills': kills} if os.environ.get('NIGHT_KILLS') else {}), **({'deaths': deaths} if os.environ.get('NIGHT_DEATHS') else {}), refuge=eng.dbg_eval(), tp=eng.dbg_tp())
+                **({'kills': kills} if os.environ.get('NIGHT_KILLS') else {}), **({'deaths': deaths} if os.environ.get('NIGHT_DEATHS') else {}), refuge=eng.dbg_eval(), tp=eng.dbg_tp(), frozen=sum(1 for p_ in eng.predators() if p_[0] == 1590. and p_[1] == 1190.), pinned=sum(1 for p_ in eng.predators() if (p_[0]-1595.)**2 + (p_[1]-1195.)**2 < 70.**2), wall_pinned=sum(1 for p_ in eng.predators() if p_[0] > 1480. and abs(p_[1] - kw.get('wb_y', -1e9)) < 120.), gstat=eng.dbg_trap() and list(eng.dbg_trap()[8]))
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
