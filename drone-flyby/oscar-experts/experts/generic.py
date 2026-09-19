@@ -110,8 +110,8 @@ class GenericExpert:
         """Connected components of pixels near the sprite's paint colour, within the size window."""
         cfg = self.spec.colour_blob
         st = self.stats.get(zoom)
-        z = (lab - st['mean']) / st['std']
-        probability = np.exp(-.5 * (z[:, :, 1] ** 2 + z[:, :, 2] ** 2))
+        z = (lab[:, :, 1:] - st['mean'][1:]) / st['std'][1:]  # only a and b enter the probability
+        probability = np.exp(-.5 * (z[:, :, 0] ** 2 + z[:, :, 1] ** 2))
         mask = (probability > cfg.get('probability', .35)).astype(np.uint8)
         count, labels, stats, centroids = cv2.connectedComponentsWithStats(mask)
         rows = []

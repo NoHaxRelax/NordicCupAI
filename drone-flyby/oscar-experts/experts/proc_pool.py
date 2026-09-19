@@ -13,7 +13,8 @@ from multiprocessing import get_context, shared_memory
 import numpy as np
 
 
-def _worker(conn, project, bank, gates, classes, sift):
+def _worker(conn, project, bank, gates, classes, sift, index=0):
+    os.environ['DRONE_EXPERT_WORKER_INDEX'] = str(index)  # gpu_window picks this worker's GPU from a device list
     import cv2
     cv2.setNumThreads(1)
     if project not in sys.path:
@@ -90,7 +91,7 @@ class ExpertProcessPool:
             for w in range(n):
                 mine = [c for c in order if self.assign[c] == w]
                 parent, child = ctx.Pipe()
-                p = ctx.Process(target=_worker, args=(child, str(project), str(bank), str(gates) if gates else None, mine, bool(sift)), daemon=True)
+                p = ctx.Process(target=_worker, args=(child, str(project), str(bank), str(gates) if gates else None, mine, bool(sift), w), daemon=True)
                 p.start()
                 self.conns.append(parent); self.procs.append(p)
         for c in self.conns:

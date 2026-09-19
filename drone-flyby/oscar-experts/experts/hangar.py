@@ -112,7 +112,7 @@ class HangarExpert:
         count, labels, stats, centroids = cv2.connectedComponentsWithStats(dark)
         gray, high = features(image)
         templates = self.templates_for(zoom)
-        rows, candidates = [], []
+        rows, candidates, jobs = [], [], []
         for label in range(1, count):
             x, y, w, h, area = stats[label]
             if area < 16:
@@ -153,10 +153,10 @@ class HangarExpert:
                 candidate['rejected_by'] = 'chroma'; candidates.append(candidate); continue
             if not touches_edge and rim_contrast < cfg.min_rim_contrast:
                 candidate['rejected_by'] = 'rim_contrast'; candidates.append(candidate); continue
-            best = None
             cut_x, cut_y = (x == 0 or x + w >= W), (y == 0 or y + h >= H)
-            # Every (template, angle) pose is scored first, then (edge-cut shapes) refined around its hit; each stage is one
-            # batch, on the GPU when DRONE_EXPERT_WINDOW_GPU is set (same results as local_masked_match), else on the CPU.
+            # Every (template, angle) pose is scored first, then (edge-cut shapes) refined around its hit. The pose searches of
+            # ALL surviving components run as two batches after this loop (on the GPU when DRONE_EXPERT_WINDOW_GPU is set, same
+            # results as local_masked_match); the candidate is appended now so the explain order stays component order.
             plan = []
             for template in templates:
                 if touches_edge:
@@ -177,21 +177,31 @@ class HangarExpert:
                         r, st = cfg.local_radius, cfg.local_step
                         offsets = [(dx, dy) for dy in range(-r, r + 1, st) for dx in range(-r, r + 1, st)]
                     plan.append((template, angle, tgray, thigh, tmask, offsets))
-            hits = self._local_batch(image, gray, high, [(tg, thg, tm, rcx, rcy, offs) for _, _, tg, thg, tm, offs in plan])
+            jobs.append((candidate, plan, touches_edge, rcx, rcy, rim_contrast, interior_chroma))
+            candidates.append(candidate)
+        # stage 1: every pose of every surviving component; stage 2: refine the edge-cut ones around their hits
+        flat = [(tg, thg, tm, rcx, rcy, offs) for _, plan, _, rcx, rcy, _, _ in jobs for _, _, tg, thg, tm, offs in plan]
+        flat_hits = self._local_batch(image, gray, high, flat)
+        fine = [(dx, dy) for dy in range(-3, 4) for dx in range(-3, 4)]
+        per_job, refine, k = [], [], 0
+        for n, (_, plan, touches_edge, _, _, _, _) in enumerate(jobs):
+            hits = flat_hits[k:k + len(plan)]; k += len(plan)
+            per_job.append(hits)
             if touches_edge:
-                fine = [(dx, dy) for dy in range(-3, 4) for dx in range(-3, 4)]
-                refine = [(k, (tg, thg, tm, hit[1] + tm.shape[1] / 2, hit[2] + tm.shape[0] / 2, fine)) for k, ((_, _, tg, thg, tm, _), hit) in enumerate(zip(plan, hits)) if hit]
-                for (k, _), hit2 in zip(refine, self._local_batch(image, gray, high, [r for _, r in refine])):
-                    hits[k] = hit2 or hits[k]
+                refine += [((n, m), (tg, thg, tm, hit[1] + tm.shape[1] / 2, hit[2] + tm.shape[0] / 2, fine)) for m, ((_, _, tg, thg, tm, _), hit) in enumerate(zip(plan, hits)) if hit]
+        for ((n, m), _), hit2 in zip(refine, self._local_batch(image, gray, high, [r for _, r in refine])):
+            per_job[n][m] = hit2 or per_job[n][m]
+        for (candidate, plan, touches_edge, rcx, rcy, rim_contrast, interior_chroma), hits in zip(jobs, per_job):
+            best = None
             for (template, angle, _, _, tmask, _), hit in zip(plan, hits):
                 if hit and (best is None or hit[0] > best[0]):
                     best = (hit[0], hit[1], hit[2], hit[3], template, angle, tmask.shape)
             if best is None:
-                candidate['rejected_by'] = 'no_visible_pose'; candidates.append(candidate); continue
+                candidate['rejected_by'] = 'no_visible_pose'; continue
             correlation, x1, y1, visible, template, angle, (th, tw) = best
             candidate.update(correlation=float(correlation), visible_fraction=visible, template_id=template.id, angle=float(angle))
             if correlation < cfg.correlation_threshold:
-                candidate['rejected_by'] = 'correlation'; candidates.append(candidate); continue
+                candidate['rejected_by'] = 'correlation'; continue
             rim_score = float(np.clip(rim_contrast / 120., 0, 1))
             chroma_score = float(np.exp(-interior_chroma / 10.))
             score = float(np.clip(.6 * correlation + .2 * rim_score + .2 * chroma_score, 0, 1))
@@ -200,9 +210,8 @@ class HangarExpert:
             bbox = [float(np.clip(bbox[0], 0, W)), float(np.clip(bbox[1], 0, H)), float(np.clip(bbox[2], 0, W)), float(np.clip(bbox[3], 0, H))]
             candidate.update(score=score, bbox=bbox, mask_bbox=[x1, y1, x1 + tw, y1 + th], rim_score=rim_score, chroma_score=chroma_score)
             if score < cfg.score_threshold:
-                candidate['rejected_by'] = 'score'; candidates.append(candidate); continue
+                candidate['rejected_by'] = 'score'; continue
             candidate.update({'class': self.class_name, 'family': 'hangar_expert', 'rejected_by': None})
-            candidates.append(candidate)
             rows.append(candidate)
         accepted = rows  # one candidate per dark region; adjacent regions are never merged away
         sift_rows = [dict(r, **{'class': self.class_name}) for r in self.sift.match(image, s)] if self.sift else []

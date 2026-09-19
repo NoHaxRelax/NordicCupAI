@@ -148,19 +148,19 @@ def barrel_line(ctx, candidate, template, tmask):
 
 SPECS = {
     'helicopter': ClassSpec('helicopter', signatures=(rotor_lines, green_paint, camo_texture), competitors=('jammer', 'tank'), sift=True,
-                            colour_blob=dict(probability=.3, min_fraction=.2, max_fraction=1.2), fine_templates=6, proposer_templates=6, scales=(1., 1.5, 2.), size_window=(.6, 2.6)),
+                            colour_blob=dict(probability=.3, min_fraction=.2, max_fraction=1.2), fine_templates=8, proposer_templates=8, scales=(1., 1.5, 2.), size_window=(.6, 2.6)),
     'jammer': ClassSpec('jammer', signatures=(rectangle_panel, green_paint), competitors=('small_tower', 'tank'),
                         colour_blob=dict(probability=.4, min_fraction=.4, max_fraction=1.5)),
-    'jet_plane': ClassSpec('jet_plane', signatures=(bright_fraction, dark_fraction), competitors=('small_plane', 'condor', 'medium_plane'), sift=True, fine_templates=6, proposer_templates=6),
+    'jet_plane': ClassSpec('jet_plane', signatures=(bright_fraction, dark_fraction), competitors=('small_plane', 'condor', 'medium_plane'), sift=True, fine_templates=8, proposer_templates=8),
     # articulated (tube up/down) and seen from several sides: every reviewed sprite of the zoom takes part (5/12 -> 7/12 at L1)
     'large_launcher': ClassSpec('large_launcher', signatures=(camo_texture, barrel_line), competitors=('tank', 'large_tower', 'mine_roller'), sift=True,
-                                fine_templates=6, proposer_templates=6),
+                                fine_templates=8, proposer_templates=8),
     # tall objects: a smaller pose correlates better (the roof) but the organizer box covers the whole projected tower, so no size refinement
-    'large_tower': ClassSpec('large_tower', signatures=(camo_texture, bright_fraction), competitors=('large_launcher', 'tank'), sift=True, fine_templates=6, proposer_templates=6, box_scales=()),
+    'large_tower': ClassSpec('large_tower', signatures=(camo_texture, bright_fraction), competitors=('large_launcher', 'tank'), sift=True, fine_templates=8, proposer_templates=8, box_scales=()),
     'medium_launcher': ClassSpec('medium_launcher', signatures=(dark_fraction, camo_texture), competitors=('small_launcher', 'ta-ta'),
                                  colour_blob=dict(probability=.35, min_fraction=.4, max_fraction=1.6), size_window=(.5, 1.8)),
     'medium_plane': ClassSpec('medium_plane', signatures=(dark_fraction, green_paint), competitors=('small_plane', 'jet_plane'),
-                              colour_blob=dict(probability=.35, min_fraction=.4, max_fraction=1.6), fine_templates=6, proposer_templates=6),
+                              colour_blob=dict(probability=.35, min_fraction=.4, max_fraction=1.6), fine_templates=8, proposer_templates=8),
     'mine_roller': ClassSpec('mine_roller', signatures=(camo_texture, dark_fraction), competitors=('tank', 'large_launcher')),
     'small_launcher': ClassSpec('small_launcher', signatures=(green_paint, dark_fraction), competitors=('medium_launcher',),
                                 colour_blob=dict(probability=.3, min_fraction=.3, max_fraction=2.), size_window=(.4, 2.2), fine_offsets=(-20., -10., 0., 10., 20.)),
@@ -172,5 +172,5 @@ SPECS = {
                             colour_blob=dict(probability=.3, min_fraction=.3, max_fraction=1.4)),
     'ta-ta': ClassSpec('ta-ta', signatures=(bright_fraction, dark_fraction), competitors=('medium_launcher', 'small_launcher'), size_window=(.5, 2.), box_scales=(),
                        colour_blob=dict(probability=.4, min_fraction=.4, max_fraction=1.6, min_area=12), max_colour_candidates=30),
-    'tank': ClassSpec('tank', signatures=(camo_texture, barrel_line), competitors=('mine_roller', 'small_tower', 'large_launcher'), fine_templates=6, proposer_templates=6),
+    'tank': ClassSpec('tank', signatures=(camo_texture, barrel_line), competitors=('mine_roller', 'small_tower', 'large_launcher'), fine_templates=8, proposer_templates=8),
 }

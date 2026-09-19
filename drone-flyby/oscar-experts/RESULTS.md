@@ -588,3 +588,35 @@ tightness here; the 92-sprite bank (`bank-allauto`) becomes the deployed bank on
 Validation API, attempt Y-A13-allauto from pod 1 (21:05, full run first try): **0.2342** with 179/249 frames (Y-A2:
 0.2346 with 191 frames, 0.209 with 180). Per delivered frame the 95-sprite bank is ahead, matching the proxy
 (0.305 vs 0.284); on the API the difference sits inside the delivery noise.
+
+Recording Y-A14 (L1-only sweep, gates v9 only, NO verifier): proxy 0.169 (with verifier v1: 0.284). The verifier is
+the single most valuable stage on the validation scene (+0.115): the gates alone pass far too many false boxes.
+Not submitted.
+
+Recording Y-A15 (L1-only sweep, 95-sprite bank, routing: tank, planes and ta-ta native at L1, rest delivered):
+proxy 0.271 at 1.8 s per frame (all native on the same bank: 0.305 at 2.7 s). Routing costs about 0.03 on either
+bank; the live endpoint can spend it if the frame budget demands.
+
+Recording Y-A16 (L1-only sweep, 95-sprite bank, verifier-confidence floor .5): proxy 0.300 (floor .3: 0.305). The
+low-confidence tail holds slightly more true boxes than false ones; the floor stays at .3. Not submitted.
+
+Recording Y-A17 (95-sprite bank + box-mask sprites of helicopter-043-073): proxy 0.283 (without them 0.305). Box
+masks with 2-9% real foreground add false helicopter boxes; discarded (bank-heli not deployed). Training-split
+sprite sources are now exhausted: every track with training tiles is either in the bank or measured as harmful.
+
+Proxy determinism: re-scoring the Y-A13 recording with the local evaluator gives 0.303 (first 0.305), so the local
+proxy's own noise is about 0.002 and differences of 0.02 between recordings are real.
+
+Budget (22:15): pod 1 about 26 h and pod 2 about 20 h at $1.59/h, roughly $74 of the $100 night budget. Pod 2 is
+stopped now (disk kept, never terminated); pod 1 stays up for recordings and submissions.
+
+## Recording Y-A18 (22:20): L1-only sweep, 95-sprite bank, sprite caps 8 instead of 6 for the multi-sprite classes: proxy **0.310**
+
+New best (+0.005 over caps 6, above the 0.002 proxy noise). Deployed: `fine_templates=8, proposer_templates=8` for
+tank, medium_plane, large_tower, helicopter, jet_plane, large_launcher (working tree and pod 1). Submitted from pod 1.
+Pod 2 stopped at 22:15 (EXITED, disk kept).
+
+Validation API, attempt Y-A18-caps8 from pod 1 (22:30, full run first try): **0.2282** with 165/249 frames
+delivered (0.00138 per delivered frame; Y-A13 0.00131, Y-A2 0.00123). Per delivered frame the proxy ordering holds
+(caps 8 > 95-sprite bank > 86-sprite bank); the raw API number is dominated by how many frames the organizer's
+pacing delivers (165-191 across attempts).

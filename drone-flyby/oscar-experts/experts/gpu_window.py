@@ -24,10 +24,11 @@ _DISABLED = []  # set after a GPU failure in this process: everything runs on th
 
 
 def device():
-    name = os.environ.get('DRONE_EXPERT_WINDOW_GPU', '')
-    if not name or _DISABLED:
+    names = [n for n in os.environ.get('DRONE_EXPERT_WINDOW_GPU', '').split(',') if n]
+    if not names or _DISABLED:
         return None
-    dev = torch.device(name)
+    # a comma list spreads pinned pool workers over several GPUs (worker w uses device w mod n)
+    dev = torch.device(names[int(os.environ.get('DRONE_EXPERT_WORKER_INDEX', '0')) % len(names)])
     try:  # many worker processes share one GPU: keep each process's cuFFT plan cache (and its workspaces) small
         torch.backends.cuda.cufft_plan_cache[dev.index or 0].max_size = int(os.environ.get('DRONE_EXPERT_CUFFT_PLANS', '32'))
     except Exception:
@@ -51,7 +52,7 @@ def _scene(image, gray, high, dev):
     with _LOCK:
         entry = _SCENES.get(key)
         if entry is None or entry[0] is not gray or entry[1] is not high:
-            entry = (gray, high, torch.as_tensor(gray, dtype=torch.float64, device=dev), torch.as_tensor(high, dtype=torch.float64, device=dev))
+            entry = (gray, high, torch.as_tensor(gray, device=dev).double(), torch.as_tensor(high, device=dev).double())  # float32 upload, widened on the GPU (same values)
             _SCENES[key] = entry
             while len(_SCENES) > 4:
                 _SCENES.pop(next(iter(_SCENES)))
@@ -110,7 +111,7 @@ def _kernel_spectra_locked(poses, Fh, Fw, dev):
     bkey = (Fh, Fw, str(dev))
     new_bytes = len(poses) * 3 * Fh * (Fw // 2 + 1) * 16  # upper bound for this call's new spectra (complex128, 3 planes)
     if _SPEC_BYTES[0] + new_bytes > _SPEC_BUDGET:  # per-process device budget: flush everything and give the memory back
-        _STORE.clear(); _SPEC.clear(); _SPEC_BYTES[0] = 0
+        _STORE.clear(); _SPEC.clear(); _LSTORE.clear(); _LSPEC.clear(); _SPEC_BYTES[0] = 0
         torch.cuda.empty_cache()
     store = _STORE.get(bkey)
     rows, missing, seen = [], [], {}
@@ -157,51 +158,58 @@ def match_many(image, gray, high, margin, requests, dev):
     H, W = gray.shape
     PH, PW = H + 2 * margin, W + 2 * margin
     out = [None] * len(requests)
+    if not requests:
+        return out
+    # request bookkeeping vectorised (np.rint and Python round both round half to even, so corners are unchanged)
+    hs = np.array([r[2].shape[0] for r in requests]); ws = np.array([r[2].shape[1] for r in requests])
+    cx = np.array([r[3] for r in requests], np.float64); cy = np.array([r[4] for r in requests], np.float64)
+    rad = np.array([r[5] for r in requests], np.int64)
+    x0 = np.rint(cx - ws / 2 - rad).astype(np.int64) + margin
+    y0 = np.rint(cy - hs / 2 - rad).astype(np.int64) + margin
+    with _SPEC_LOCK:
+        counts = np.array([_mask_count_locked(r[2]) for r in requests])
+    ok = (x0 >= 0) & (y0 >= 0) & (x0 + ws + 2 * rad <= PW) & (y0 + hs + 2 * rad <= PH) & (counts >= 8)
+    fh = -(-(hs + 2 * rad) // 16) * 16; fw_ = -(-(ws + 2 * rad) // 16) * 16
     buckets = {}
-    for i, (tg, th, tmask, cx, cy, radius) in enumerate(requests):
-        h, w = tmask.shape
-        x0 = int(round(cx - w / 2 - radius)) + margin
-        y0 = int(round(cy - h / 2 - radius)) + margin
-        if x0 < 0 or y0 < 0 or x0 + w + 2 * radius > PW or y0 + h + 2 * radius > PH:
-            continue
-        if _mask_count(tmask) < 8:
-            continue
-        hw, ww = h + 2 * radius, w + 2 * radius
-        key = (-(-hw // 16) * 16, -(-ww // 16) * 16)
-        buckets.setdefault(key, []).append((i, x0, y0))
+    for i in np.flatnonzero(ok):
+        buckets.setdefault((int(fh[i]), int(fw_[i])), []).append(int(i))
     if not buckets:
         return out
     sg, sh = _scene(image, gray, high, dev)
+    pending = []
     for (Fh, Fw), items in buckets.items():
         step = max(1, min(512, _BATCH_ELEMS // (Fh * Fw)))  # bounded working set (float64, ~15 temporaries of this size)
         for first in range(0, len(items), step):
             chunk = items[first:first + step]
-            n = len(chunk)
-            x0 = torch.as_tensor([c[1] for c in chunk], device=dev); y0 = torch.as_tensor([c[2] for c in chunk], device=dev)
-            ys = _reflect(y0[:, None] + torch.arange(Fh, device=dev)[None] - margin, H).clamp(0, H - 1)  # (n, Fh)
-            xs = _reflect(x0[:, None] + torch.arange(Fw, device=dev)[None] - margin, W).clamp(0, W - 1)  # (n, Fw)
-            rad = np.array([requests[i][5] for i, _, _ in chunk], np.int64)
-            fk, fm, count, energy = _kernel_spectra([requests[i][:3] for i, _, _ in chunk], Fh, Fw, dev)
+            meta = torch.from_numpy(np.stack([x0[chunk], y0[chunk], rad[chunk]])).to(dev)  # one upload per chunk
+            cx0, cy0, rr = meta[0], meta[1], meta[2]
+            ys = _reflect(cy0[:, None] + torch.arange(Fh, device=dev)[None] - margin, H).clamp(0, H - 1)  # (n, Fh)
+            xs = _reflect(cx0[:, None] + torch.arange(Fw, device=dev)[None] - margin, W).clamp(0, W - 1)  # (n, Fw)
+            fk, fm, count, energy = _kernel_spectra([requests[i][:3] for i in chunk], Fh, Fw, dev)
             win = torch.stack([sg[ys[:, :, None], xs[:, None, :]], sh[ys[:, :, None], xs[:, None, :]]], 1)  # (n, 2, Fh, Fw)
-            fw = torch.fft.rfft2(win); fw2 = torch.fft.rfft2(win.square())
-            R = int(rad.max()); P = 2 * R + 1
-            num = torch.fft.irfft2(fw * fk, s=(Fh, Fw))[:, :, :P, :P]
-            s1 = torch.fft.irfft2(fw * fm, s=(Fh, Fw))[:, :, :P, :P]
-            s2 = torch.fft.irfft2(fw2 * fm, s=(Fh, Fw))[:, :, :P, :P]
+            f1 = torch.fft.rfft2(win); f2 = torch.fft.rfft2(win.square())
+            R = int(rad[chunk].max()); P = 2 * R + 1
+            num = torch.fft.irfft2(f1 * fk, s=(Fh, Fw))[:, :, :P, :P]
+            s1 = torch.fft.irfft2(f1 * fm, s=(Fh, Fw))[:, :, :P, :P]
+            s2 = torch.fft.irfft2(f2 * fm, s=(Fh, Fw))[:, :, :P, :P]
             var = (s2 - s1.square() / count).clamp_min(0)
             den = (var * energy).sqrt()
             ncc = torch.where(den > 0, num / torch.where(den > 0, den, torch.ones_like(den)), torch.full_like(num, float('nan')))
             resp = .45 * ncc[:, 0] + .55 * ncc[:, 1]                     # (n, P, P)
             resp = torch.nan_to_num(resp, nan=-1., posinf=-1., neginf=-1.)
-            rr = torch.as_tensor(rad, device=dev)
             grid = torch.arange(P, device=dev)
             inside = (grid[None, :, None] <= 2 * rr[:, None, None]) & (grid[None, None, :] <= 2 * rr[:, None, None])
             resp = torch.where(inside, resp, torch.full_like(resp, -float('inf')))
             peak, idx = resp.flatten(1).max(1)  # first maximum in row-major order, as cv2.minMaxLoc
-            peak, idx = peak.cpu().numpy(), idx.cpu().numpy()
-            for j, (i, x0_, y0_) in enumerate(chunk):
-                py, px = divmod(int(idx[j]), P)
-                out[i] = (float(peak[j]), x0_ + px - margin, y0_ + py - margin)
+            peak_h = torch.empty(peak.shape, dtype=peak.dtype, pin_memory=True); idx_h = torch.empty(idx.shape, dtype=idx.dtype, pin_memory=True)
+            peak_h.copy_(peak, non_blocking=True); idx_h.copy_(idx, non_blocking=True)
+            pending.append((chunk, peak_h, idx_h, P))
+    torch.cuda.current_stream(dev).synchronize()  # one wait for all chunks
+    for chunk, peak_h, idx_h, P in pending:
+        pk, ix = peak_h.numpy(), idx_h.numpy()
+        for j, i in enumerate(chunk):
+            py, px = divmod(int(ix[j]), P)
+            out[i] = (float(pk[j]), int(x0[i]) + px - margin, int(y0[i]) + py - margin)
     _trim(dev)
     return out
 
@@ -238,18 +246,9 @@ def local_many(image, gray, high, requests, dev):
             V = (inside_y[:, :, None] & inside_x[:, None, :]).to(torch.float64)[:, None]          # (n, 1, Fh, Fw)
             yc, xc = ys.clamp(0, H - 1), xs.clamp(0, W - 1)
             X = torch.stack([sg[yc[:, :, None], xc[:, None, :]], sh[yc[:, :, None], xc[:, None, :]]], 1) * V  # (n, 2, Fh, Fw)
-            T = np.zeros((n, 1, Fh, Fw)); Y = np.zeros((n, 2, Fh, Fw))
-            for j, i in enumerate(chunk):
-                tg, th, tmask = requests[i][:3]
-                h, w = tmask.shape
-                m = tmask.astype(np.float64)
-                T[j, 0, :h, :w] = m
-                Y[j, 0, :h, :w] = tg.astype(np.float64) * m
-                Y[j, 1, :h, :w] = th.astype(np.float64) * m
-            Tt = torch.as_tensor(T, device=dev); Yt = torch.as_tensor(Y, device=dev)
             f = torch.fft.rfft2
             FV, FX, FX2 = f(V), f(X), f(X * X)
-            FT, FY, FY2 = f(Tt).conj(), f(Yt).conj(), f(Yt * Yt).conj()
+            FT, FY, FY2 = _local_spectra([requests[i][:3] for i in chunk], Fh, Fw, dev)
             ir = lambda a: torch.fft.irfft2(a, s=(Fh, Fw))
             cnt = ir(FV * FT).round()                                      # (n, 1, Fh, Fw)
             Sx, Sxx = ir(FX * FT), ir(FX2 * FT)                            # (n, 2, ...)
@@ -282,3 +281,51 @@ def local_many(image, gray, high, requests, dev):
                 out[i] = (float(score[b]), int(corners[b, 0]), int(corners[b, 1]), float(vis[b]))
     _trim(dev)
     return out
+
+_LSTORE = {}  # (Fh, Fw, device) -> dict(ft, fy, fy2 tensors, n, keep)
+_LSPEC = {}   # (id(tmask), Fh, Fw, device) -> (tmask kept alive, row)
+
+
+def _local_spectra(poses, Fh, Fw, dev):
+    """conj FFTs of mask T, masked template Y (2 channels) and Y^2 for local_many, cached per pose and FFT size like
+    _kernel_spectra (same byte budget); built from each pose once instead of zero-padded float64 arrays per request."""
+    with _SPEC_LOCK:
+        bkey = (Fh, Fw, str(dev))
+        new_bytes = len(poses) * 5 * Fh * (Fw // 2 + 1) * 16
+        if _SPEC_BYTES[0] + new_bytes > _SPEC_BUDGET:
+            _STORE.clear(); _SPEC.clear(); _LSTORE.clear(); _LSPEC.clear(); _SPEC_BYTES[0] = 0
+            torch.cuda.empty_cache()
+        store = _LSTORE.get(bkey)
+        rows, missing, seen = [], [], {}
+        for tg, th, tmask in poses:
+            key = (id(tmask), Fh, Fw, str(dev))
+            hit = _LSPEC.get(key)
+            if hit is not None and hit[0] is tmask:
+                rows.append(hit[1]); continue
+            if key not in seen:
+                seen[key] = -1 - len(missing); missing.append((key, tg, th, tmask))
+            rows.append(seen[key])
+        if missing:
+            T = np.zeros((len(missing), 1, Fh, Fw)); Y = np.zeros((len(missing), 2, Fh, Fw))
+            for j, (_, tg, th, tmask) in enumerate(missing):
+                h, w = tmask.shape
+                m = tmask.astype(np.float64)
+                T[j, 0, :h, :w] = m
+                Y[j, 0, :h, :w] = tg.astype(np.float64) * m
+                Y[j, 1, :h, :w] = th.astype(np.float64) * m
+            Tt = torch.as_tensor(T, device=dev); Yt = torch.as_tensor(Y, device=dev)
+            f = torch.fft.rfft2
+            new = dict(ft=f(Tt).conj(), fy=f(Yt).conj(), fy2=f(Yt * Yt).conj())
+            if store is None:
+                store = _LSTORE[bkey] = dict(new, n=0, keep=[]); base = 0
+            else:
+                base = store['n']
+                for name in ('ft', 'fy', 'fy2'):
+                    store[name] = torch.cat([store[name][:base], new[name]])
+            store['n'] = base + len(missing)
+            _SPEC_BYTES[0] += len(missing) * 5 * Fh * (Fw // 2 + 1) * 16
+            for j, (key, _, _, tmask) in enumerate(missing):
+                _LSPEC[key] = (tmask, base + j); store['keep'].append(tmask)
+            rows = [base + (-1 - r) if r < 0 else r for r in rows]
+        idx = torch.as_tensor(rows, device=dev)
+        return store['ft'][idx], store['fy'][idx], store['fy2'][idx]

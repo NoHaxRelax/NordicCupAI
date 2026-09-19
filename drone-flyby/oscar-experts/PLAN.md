@@ -200,6 +200,25 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
   86-sprite backup kept). Detector-side ranking on the validation scene: bank coverage > gates v9 > everything else.
   Y-A13 submitted from pod 1; Y-A14 (gates only, no verifier) recording on pod 1 as the last detector knob.
 
+- 21:35 speed batch 11 applied (multi-GPU proposer/windows, hangar batching; identical rows; a 4x A100 pod runs a
+  view in about 1 s at every level). Not needed for recordings (score does not depend on speed), so the speed
+  session's 4-GPU pod stops. Verifier v1 is worth +0.115 on the proxy (gates only 0.169); routing costs 0.03 on
+  the 95-sprite bank too (0.271 vs 0.305).
+
+- 21:50 speed batch 12 applied (window bookkeeping, GPU-side scene widening; identical rows; helicopter 0.62 -> 0.49 s,
+  launcher 0.50 -> 0.35 s per L1 view). Speed batches 1-12 are all in the working tree and on both pods.
+
+## 22:00 status (for a reader who sees only this block)
+- Deployed: pass 11 experts, 95-sprite bank (reviewed + auto track sprites), gates v9, verifier v1, helicopter
+  scales, L0 at half scale, speed batches 1-12, MPS. Best local proxy 0.305 (L1-only top-band sweep); API 0.234
+  with 179 frames delivered (API noise about 0.03 per attempt from frame delivery).
+- Settled knobs on the validation proxy: verifier on (+0.115), gates v9 (v11 -0.04, per-sprite -0.03), bank
+  coverage (+0.07 from 68 to 95 sprites), L1 native (delivered -0.10, routing -0.03), L0 overviews off (+0.08),
+  top band (mid band -0.12), revisits off (+0.03), tracker thresholds and confidence floor neutral.
+- Running: Y-A17 (helicopter-043-073 box sprites, pod 2), Y-A18 (8-sprite caps, pod 1).
+- Open for Oscar: reviewed outlines for the auto sprites (review sheet in this folder); a legal live sweep under the
+  organizer's camera limits; whether to spend validation-scene data on sprites once he allows it.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.

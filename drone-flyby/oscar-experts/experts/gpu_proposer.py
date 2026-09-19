@@ -52,11 +52,16 @@ class SharedProposer:
     def __init__(self, experts, device='cuda:0', chunk=48):
         """experts: {class_name: GenericExpert}. Kernels are prepared per zoom from each expert's own proposer settings."""
         self.device = torch.device(device)
+        # DRONE_PROPOSER_DEVICES=cuda:0,cuda:1,...: split the kernel chunks over several GPUs (each kernel's correlation is
+        # independent and computed identically on identical GPUs; results are collected in the original chunk order)
+        names = [d for d in __import__('os').environ.get('DRONE_PROPOSER_DEVICES', '').split(',') if d]
+        self.devices = [torch.device(d) for d in names] or [self.device]
         self.chunk = chunk
         self.experts = {n: e for n, e in experts.items() if hasattr(e, 'proposer') and hasattr(e, 'proposer_templates_for')}
         self.kernels = {}  # zoom -> list of dict(name, heading, angle, gray, high, mask, count, energy, h, w, threshold, peaks)
         self.fft_cache = {}  # (zoom, scale, H, W, chunk index) -> (kf, mf, count, energy) on the device
         self.cache_bytes = 0
+        self.cache_lock = __import__('threading').Lock()
         self.meta_cache = {}
 
     def _kernels(self, zoom, scale):
@@ -82,13 +87,13 @@ class SharedProposer:
         self.kernels[key] = rows
         return rows
 
-    def _meta(self, group):
+    def _meta(self, group, dev=None):
         """Per-chunk constants as device tensors, built once: copying Python lists to the GPU on every chunk forced a
         stream synchronisation each time (pageable host memory), which left the GPU idle between chunks."""
-        key = tuple(id(r) for r in group)
+        dev = dev or self.device
+        key = (str(dev),) + tuple(id(r) for r in group)
         meta = self.meta_cache.get(key)
         if meta is None:
-            dev = self.device
             meta = dict(count=torch.as_tensor([r['count'] for r in group], device=dev)[:, None, None, None],
                         energy=torch.as_tensor(np.array([r['energy'] for r in group]), device=dev)[:, :, None, None],
                         weights=torch.as_tensor(np.array([r['weights'] for r in group], np.float32), device=dev)[:, :, None, None],
@@ -97,12 +102,13 @@ class SharedProposer:
             self.meta_cache[key] = meta
         return meta
 
-    def _device_kernel(self, r):
-        """Small posed kernel and mask as device tensors, uploaded once and kept on the row."""
-        if 'kernel_t' not in r:
-            r['kernel_t'] = torch.as_tensor(r['kernel'], device=self.device)
-            r['mask_t'] = torch.as_tensor(r['mask'], device=self.device)
-        return r['kernel_t'], r['mask_t']
+    def _device_kernel(self, r, dev=None):
+        """Small posed kernel and mask as device tensors, uploaded once per device and kept on the row."""
+        dev = dev or self.device
+        k = 'kernel_t' if dev == self.device else f'kernel_t:{dev}'
+        if k not in r:
+            r[k] = (torch.as_tensor(r['kernel'], device=dev), torch.as_tensor(r['mask'], device=dev))
+        return r[k]
 
     @torch.inference_mode()
     def propose_all(self, image, scale, zoom, classes=None, on_done=None):
@@ -152,9 +158,7 @@ class SharedProposer:
             FW = W if _smooth(W) == W else _smooth(W + 2)
         gray = np.pad(gray, ((0, FH - H), (0, FW - W)), mode='wrap')
         high = np.pad(high, ((0, FH - H), (0, FW - W)), mode='wrap')
-        scene = torch.as_tensor(np.stack([gray, high]), device=self.device)  # (2, FH, FW)
-        sf = torch.fft.rfft2(scene)
-        sqf = torch.fft.rfft2(scene.square())
+        scene_np = np.stack([gray, high])
         # Memory scales with chunk x H x W: keep the working set near the 384-px-tile design point, so a full
         # 2160-px view runs in a few GB instead of 40 (four replays plus a trainer must share one GPU). Kernel FFT
         # caching only pays off for tile-sized scenes; a full view never fits the cache and would only thrash it.
@@ -163,59 +167,101 @@ class SharedProposer:
         last = {}
         for i, r in enumerate(rows):
             last[r['name']] = i
-        pending = None
-        for first in range(0, len(rows), chunk):
-            group = [r for r in rows[first:first + chunk] if r['h'] <= H and r['w'] <= W]
-            if not group:
-                continue
-            cache_key = (zoom, round(scale, 4), downscale, blur, FH, FW, first, subset)  # chunk indices depend on the class subset
-            if not cacheable or cache_key not in self.fft_cache:
-                # Dense padded kernels are built on the device from the small posed kernels (uploaded once per zoom),
-                # so no H x W host arrays and no host-to-device copy per view. Same arrays, same FFTs as before.
-                k = torch.zeros((len(group), 2, FH, FW), device=self.device)
-                m = torch.zeros((len(group), 1, FH, FW), device=self.device)
-                for i, r in enumerate(group):
-                    kt, mt = self._device_kernel(r)
-                    k[i, :, :r['h'], :r['w']] = kt
-                    m[i, 0, :r['h'], :r['w']] = mt
-                meta = self._meta(group)
-                entry = (torch.fft.rfft2(k), torch.fft.rfft2(m), meta['count'], meta['energy'])
-                del k, m
-                if cacheable and self.cache_bytes + _nbytes(entry) <= CACHE_BYTES:
+        spectra = {}
+        for dev in self.devices:
+            scene = torch.as_tensor(scene_np, device=dev)  # (2, FH, FW)
+            spectra[str(dev)] = (torch.fft.rfft2(scene), torch.fft.rfft2(scene.square()))
+        ctx = dict(H=H, W=W, FH=FH, FW=FW, zoom=zoom, scale=scale, downscale=downscale, blur=blur, subset=subset, cacheable=cacheable, spectra=spectra)
+        starts = list(range(0, len(rows), chunk))
+        if len(self.devices) == 1:
+            pending = None  # launch chunk i, then read chunk i-1's peaks while the GPU works
+            for first in starts:
+                launched = self._launch(self.devices[0], ctx, first, rows[first:first + chunk], chunk)
+                if launched is None:
+                    continue
+                if pending is not None:
+                    self._collect(pending, out, pad, downscale, FW, emit, last)
+                pending = launched
+            if pending is not None:
+                self._collect(pending, out, pad, downscale, FW, emit, last)
+        else:
+            import threading
+            results = {}
+            ready = {first: threading.Event() for first in starts}
+
+            def run(d, dev):
+                with torch.cuda.device(dev), torch.inference_mode():
+                    for n, first in enumerate(starts):
+                        if n % len(self.devices) == d:
+                            try:
+                                results[first] = self._launch(dev, ctx, first, rows[first:first + chunk], chunk)
+                            except Exception as error:  # surfaced in the main thread
+                                results[first] = error
+                            ready[first].set()
+            threads = [threading.Thread(target=run, args=(d, dev), daemon=True) for d, dev in enumerate(self.devices)]
+            for t in threads:
+                t.start()
+            for first in starts:  # original chunk order: identical lists and emit order
+                ready[first].wait()
+                got = results.pop(first)
+                if isinstance(got, Exception):
+                    raise got
+                if got is not None:
+                    self._collect(got, out, pad, downscale, FW, emit, last)
+            for t in threads:
+                t.join()
+        if emit is not None:
+            emit(list(last))  # this scene's classes are complete
+
+    def _launch(self, dev, ctx, first, chunk_rows, chunk):
+        """GPU work of one kernel chunk on `dev`: correlation maps, response, 5x5 local maxima, per-kernel top peaks,
+        copied asynchronously to pinned memory. Returns (group, vals, idx, event, end) or None for an empty chunk."""
+        H, W, FH, FW = ctx['H'], ctx['W'], ctx['FH'], ctx['FW']
+        group = [r for r in chunk_rows if r['h'] <= H and r['w'] <= W]
+        if not group:
+            return None
+        sf, sqf = ctx['spectra'][str(dev)]
+        # chunk indices depend on the class subset; spectra live on one device
+        cache_key = (ctx['zoom'], round(ctx['scale'], 4), ctx['downscale'], ctx['blur'], FH, FW, first, ctx['subset'], str(dev))
+        meta = self._meta(group, dev)
+        entry = self.fft_cache.get(cache_key)
+        if entry is None:
+            # Dense padded kernels are built on the device from the small posed kernels (uploaded once per device),
+            # so no H x W host arrays and no host-to-device copy per view. Same arrays, same FFTs as before.
+            k = torch.zeros((len(group), 2, FH, FW), device=dev)
+            m = torch.zeros((len(group), 1, FH, FW), device=dev)
+            for i, r in enumerate(group):
+                kt, mt = self._device_kernel(r, dev)
+                k[i, :, :r['h'], :r['w']] = kt
+                m[i, 0, :r['h'], :r['w']] = mt
+            entry = (torch.fft.rfft2(k), torch.fft.rfft2(m), meta['count'], meta['energy'])
+            del k, m
+            with self.cache_lock:
+                if ctx['cacheable'] and self.cache_bytes + _nbytes(entry) <= CACHE_BYTES:
                     # byte-budgeted cache (DRONE_PROPOSER_CACHE_GB, default 4), filled once and never evicted: every view walks
                     # the same chunks in the same order, so LRU over a working set larger than the budget never hits,
                     # while a static cache hits on the fraction that fits
                     self.fft_cache[cache_key] = entry
                     self.cache_bytes += _nbytes(entry)
-            else:
-                entry = self.fft_cache[cache_key]
-            kf, mf, count, energy = entry
-            numerator = torch.fft.irfft2(sf * kf.conj(), s=(FH, FW))
-            total = torch.fft.irfft2(sf * mf.conj(), s=(FH, FW))
-            total2 = torch.fft.irfft2(sqf * mf.conj(), s=(FH, FW))
-            meta = self._meta(group)
-            weights = meta['weights']
-            response, local_max = _response(numerator, total, total2, count, energy, weights)  # (n, H, W), valid positions are top-left corners
-            # Peaks: a local maximum above the kernel's threshold inside its valid region (top-left y <= H-h, x <= W-w); per
-            # kernel the best peaks*4 by score, ties in row-major order. The GPU keeps each kernel's top peaks*4+8 (topk, no
-            # nonzero sync) and copies them to pinned memory asynchronously; the host reads chunk i-1's peaks while the GPU
-            # already runs chunk i. Values and selection equal the nonzero/lexsort version.
-            hs, ws, thr = meta['h'], meta['w'], meta['threshold']
-            yy = torch.arange(FH, device=self.device)[None, :, None]; xx = torch.arange(FW, device=self.device)[None, None, :]
-            inside = (yy <= (H - hs)[:, None, None]) & (xx <= (W - ws)[:, None, None])
-            peaks = inside & (response >= thr[:, None, None]) & (response == local_max)
-            k2 = min(FH * FW, max(r['peaks'] for r in group) * 4 + 8)
-            vals, idx = torch.where(peaks, response, torch.full_like(response, -float('inf'))).flatten(1).topk(k2, dim=1)
-            vals_h = torch.empty(vals.shape, dtype=vals.dtype, pin_memory=True); idx_h = torch.empty(idx.shape, dtype=idx.dtype, pin_memory=True)
-            vals_h.copy_(vals, non_blocking=True); idx_h.copy_(idx, non_blocking=True)
-            ready = torch.cuda.Event(); ready.record()
-            if pending is not None:
-                self._collect(pending, out, pad, downscale, FW, emit, last)
-            pending = (group, vals_h, idx_h, ready, first + chunk)
-        if pending is not None:
-            self._collect(pending, out, pad, downscale, FW, emit, last)
-        if emit is not None:
-            emit(list(last))  # this scene's classes are complete
+        kf, mf, count, energy = entry
+        numerator = torch.fft.irfft2(sf * kf.conj(), s=(FH, FW))
+        total = torch.fft.irfft2(sf * mf.conj(), s=(FH, FW))
+        total2 = torch.fft.irfft2(sqf * mf.conj(), s=(FH, FW))
+        response, local_max = _response(numerator, total, total2, count, energy, meta['weights'])  # (n, H, W), top-left corners
+        # Peaks: a local maximum above the kernel's threshold inside its valid region (top-left y <= H-h, x <= W-w); per
+        # kernel the best peaks*4 by score, ties in row-major order. The GPU keeps each kernel's top peaks*4+8 (topk, no
+        # nonzero sync) and copies them to pinned memory asynchronously; the host reads chunk i-1's peaks while the GPU
+        # already runs chunk i. Values and selection equal the nonzero/lexsort version.
+        hs, ws, thr = meta['h'], meta['w'], meta['threshold']
+        yy = torch.arange(FH, device=dev)[None, :, None]; xx = torch.arange(FW, device=dev)[None, None, :]
+        inside = (yy <= (H - hs)[:, None, None]) & (xx <= (W - ws)[:, None, None])
+        peaks = inside & (response >= thr[:, None, None]) & (response == local_max)
+        k2 = min(FH * FW, max(r['peaks'] for r in group) * 4 + 8)
+        vals, idx = torch.where(peaks, response, torch.full_like(response, -float('inf'))).flatten(1).topk(k2, dim=1)
+        vals_h = torch.empty(vals.shape, dtype=vals.dtype, pin_memory=True); idx_h = torch.empty(idx.shape, dtype=idx.dtype, pin_memory=True)
+        vals_h.copy_(vals, non_blocking=True); idx_h.copy_(idx, non_blocking=True)
+        ready = torch.cuda.Event(); ready.record(torch.cuda.current_stream(dev))
+        return (group, vals_h, idx_h, ready, first + chunk)
 
     @staticmethod
     def _collect(pending, out, pad, downscale, FW, emit, last):
