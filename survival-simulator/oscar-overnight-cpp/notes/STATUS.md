@@ -550,3 +550,13 @@ Log (newest last)
 - 09:45 f44 population cap under predators (96 seeds): cap_mult 0.8 +26+-33, 1.0 +5+-38, 1.0 with lower
   reserves -5+-36, 0.65 with lower reserves -17+-34. Noise; a larger cap just creates more children that die
   (created 436 -> 478-500, kills 146 -> 159-175). The equilibrium is not cap-limited under predators.
+- 09:46 OSCAR (09:50): focus = (1) agents not dying, (2) consistently delivering predators to the traps,
+  (3) nearby agents taking over a delivery when needed. PLAN P3, one problem at a time:
+  P3.1 not dying: sprint_floor A/B running (f45); adopt if it holds on fresh seeds, then re-read the kill categories.
+  P3.2 delivery: after guide_clear the dominant failure is "released: no straight wall-free lane" (40 of 56 episodes
+  per game) and the scenario harness skips 530 of 768 placements as 'no_line' - i.e. real geometry mostly has
+  no straight lane. Step a: one-bend routes (guide -> via point -> lane point; a fan of via points at +-25/50/75
+  degrees, both segments wall-free) for guide selection and leading; also prefer trap sites reachable from the
+  colony. Step b: scenario with a blocked straight line (harness no longer skips 'no_line'); step c: full games.
+  P3.3 take-over: when a guide is released or dies, the nearest eligible member with a route continues (existing
+  selection + guide_relay hand-over); measure handoffs per game.
