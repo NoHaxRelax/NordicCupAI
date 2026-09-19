@@ -279,3 +279,9 @@ Log (newest last)
   full) -> new pod n6 (jjys2nbbrba2v3). Running f32 (items 2+5): trap only from 900/1200 s when predators are
   many, with keeper, near-colony sites, and lane-limited guides. Coded item 4: committed dodge heading
   (pred_dodge_hold ticks: run past/behind the predator, then walk away).
+- 06:44 Item 4 (turn-rate escape, committed heading 5/10/20 ticks, with/without facing, angle 2.5): -409..-488 s
+  vs the per-tick sidestep => re-evaluating the sidestep every tick against the predator's current heading is
+  essential; 'run past and behind, then walk away' loses. Items 2+5 (trap only from 900/1200 s, when predators are
+  8-13): -18..-96 s, held predators ~0.03; late colonies (5-10 agents) cannot afford baits either. Item 3 (relay
+  guiding) implemented (guide_relay: a fresh member waits 180 ahead on the lane, takes over when the predator
+  comes within 45); scenario A/B at 500/700 units running on n6.

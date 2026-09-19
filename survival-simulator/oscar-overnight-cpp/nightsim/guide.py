@@ -12,15 +12,16 @@ from nightsim.run import parse_seeds
 from nightsim.trapsite import grade
 
 HELD = int(__import__('os').environ.get('NIGHT_HELD', '0'))
+RELAY = int(__import__('os').environ.get('NIGHT_RELAY', '0'))   # place a third agent halfway along the lane (relay candidate)
 
 def one(job):
     label, kw, seed, dg, dp, bear, sp, T = job
     import nightsim
     sim = nightsim.SimulationCore(seed=seed, predators=False); eng = sim._engine
     sim.step([]); eng.pop_events()
-    ags = eng.dbg_keep_agents(2)
-    if len(ags) < 2: return dict(label=label, seed=seed, skip='agents')
-    bait, guide = ags[0][0], ags[1][0]
+    ags = eng.dbg_keep_agents(3 if RELAY else 2)
+    if len(ags) < (3 if RELAY else 2): return dict(label=label, seed=seed, skip='agents')
+    bait, guide = ags[0][0], ags[1][0]; relay = ags[2][0] if RELAY else None
     cfg = dict(kw, trap_mode=3, merge_anchored=1, pred_mode=1, pred_share=1, no_spawn=1, trap_bait_fixed=bait, trap_start=0)
     eng.policy_init(nightsim.seed_key(seed), cfg)
     eng.run_policy(1e9, eng.info()['time'] + 0.1)      # one policy call creates the minds
@@ -48,6 +49,10 @@ def one(job):
     gsx, gsy, px, py, phi = found
     eng.dbg_set_agent(bait, gx, gy, math.atan2(-ay, -ax) + math.pi, 400., 10., 20., 500., 100., 400., 1.57, 1000.)
     eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), 300., float(sp), float(min(40, 2 * sp)), 800., 100., 400., 1.57, 1000.)
+    if RELAY:
+        rx, ry = mx + dx * dg * 0.45, my + dy * dg * 0.45
+        if not eng.dbg_free(rx - 5, ry - 5, 10): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='relay_pos')
+        eng.dbg_set_agent(relay, rx, ry, math.atan2(gsy - ry, gsx - rx), 300., float(sp), float(min(40, 2 * sp)), 800., 100., 400., 1.57, 1000.)
     if not eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px), 200., False): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='pred_pos')
     # step 2: K predators already held at the mouth (awake, full energy), spread across the lane just outside the mouth
     held_ok = 0
