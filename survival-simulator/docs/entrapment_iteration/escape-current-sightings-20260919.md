@@ -86,7 +86,10 @@ seed: `--release-trap-food` and `--bait-reserve 90`. They are not yet adopted.
 
 The release-food replay completed at **441.04 score / 418.1 seconds**, with
 18.5 estimated seconds without bait and zero sprint-available captures.
-It regressed markedly and remains off. The reservation replay is still running.
+It regressed markedly and remains off. The 90-second reservation replay also
+completed: **790.58 score / 746.2 seconds**, with **7.8 estimated bait-gap
+seconds**. Its shorter lifetime reduces the opportunity for later gaps, so
+that gap total is not sufficient evidence of an improvement. It remains off.
 
 ## Observed-terrain bait ETA probe
 
