@@ -48,3 +48,13 @@ Runpod MCP and CPU catalog were verified. No new pod was rented: the free PC
 is the first paired screen. The existing ledger estimates $4.88 spent of $10,
 leaving approximately $5.12 for broader validation if justified. Other users'
 pods are not part of this work and were left untouched.
+
+## Offspring reservation prototype (v2)
+
+Explicitly tracks newborns through normal parent observations, keeps them
+gathering locally, protects them from guide recruitment, and prioritizes
+viable nursery children for bait. The pilot scored 791.73, ended at 762.9
+seconds, and accumulated 190.9 estimated bait-gap seconds. No nursery births
+occurred: the stricter birth rules do not yet provide a reliable donor supply.
+This is an unsuccessful experimental iteration, still disabled by default.
+The first-version paired PC batch is unchanged.

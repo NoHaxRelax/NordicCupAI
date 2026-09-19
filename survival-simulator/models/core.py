@@ -169,7 +169,8 @@ class EntrapmentPolicy:
             if life < travel + 15.: continue
             old = self.orchard.minds[aid].old or s['age'] >= 55.
             deadline = math.inf if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
-            choices.append((travel+5. < deadline, old and self.bait_reserve_seconds > 0., -travel, old, life-travel,
+            choices.append((travel+5. < deadline, aid in self.nursery.children,
+                            old and self.bait_reserve_seconds > 0., -travel, old, life-travel,
                             s['energy'], aid, travel))
         return max(choices)[-2:] if choices else None
 
@@ -460,9 +461,10 @@ class EntrapmentPolicy:
                 track = next(t for t in self.tracks.values() if t.guide_id == aid)
                 action = self._guide_action(track, s)
             else:
-                role = ('nursery_farmer' if aid in self.nursery.members else 'bait_candidate'
+                role = ('nursery_farmer' if aid in self.nursery.members else 'nursery_child'
+                        if aid in self.nursery.children else 'bait_candidate'
                         if aid == self.reserved_bait else 'explorer' if self.site is None else 'gatherer')
-                action = (self.nursery.action(self,aid,s) if aid in self.nursery.members else
+                action = (self.nursery.action(self,aid,s) if aid in self.nursery.members | self.nursery.children else
                           exploration[aid] if self.site is None else orchard[aid])
                 bait_local = None
                 if self.site is not None and self.bait is not None:
@@ -470,10 +472,10 @@ class EntrapmentPolicy:
                     if pose is not None and pose.group_id == self.site_group:
                         bait_local = local(pose, self.site['goal'])
                 action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
-                if avoiding and aid != self.reserved_bait and aid not in self.nursery.members:
+                if avoiding and aid != self.reserved_bait and aid not in self.nursery.members | self.nursery.children:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
-            if role in ('bait', 'replacement_bait', 'retired_bait', 'guide', 'bait_candidate'):
+            if role in ('bait', 'replacement_bait', 'retired_bait', 'guide', 'bait_candidate', 'nursery_child'):
                 action = action.model_copy(update={'spawn_agent': False})
             if orchard[aid].spawn_agent and not action.spawn_agent:
                 self.orchard.minds[aid].heir_done = heir_done.get(aid, False)
