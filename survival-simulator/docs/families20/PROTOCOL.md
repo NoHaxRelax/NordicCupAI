@@ -1,5 +1,8 @@
 # Second ten-family campaign
 
+Completed: all 40,800 games verified. See RESULTS.md for the ranking and training
+trajectories, and COMPUTE.md for runtime, cost estimate and reproducibility checks.
+
 Follow-up to families10. Ten **new parameter families / policy combinations**,
 not ten newly trained neural networks. Native simulator and Orchard policy are
 unchanged. The previous population winner provides the common starting policy.
