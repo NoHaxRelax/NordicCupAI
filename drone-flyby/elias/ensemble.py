@@ -10,6 +10,13 @@ kept at reduced confidence instead of being dropped (low-confidence boxes are ne
 Per-class routing (ELIAS_ROUTE, JSON like {"small_tower": 1, "ta-ta": 1}): a routed class is taken from that ONE
 model only, at that model's own confidence, so the model that measured best on a class answers for it; classes
 without a route are merged across models as above. Measure each model per class on the portal, route, re-measure.
+
+An ELIAS_WEIGHTS entry written module:factory is another detector hook (for example a teammate's own detector),
+built with no arguments and called as detector(image, request) -> rows of label, box, confidence, so a foreign
+pipeline can keep its detector for most classes and take ours for the classes where ours measured better:
+
+    DRONE_DETECTOR=elias.ensemble:build ELIAS_WEIGHTS="their.module:build,elias/release/both_m1280.pt,elias/release/F5_fixed_m1280.pt"
+    ELIAS_ROUTE='{"helicopter": 1, "ta-ta": 2, "<every other class>": 0}'
 """
 from __future__ import annotations
 
@@ -31,17 +38,21 @@ class Ensemble:
         threads = cv2.getNumThreads()
         from ultralytics import YOLO
         with redirect_stdout(sys.stderr):
-            self.models = [YOLO(w) for w in weights]
+            # an entry written module:factory is any other detector hook (a teammate's), built and called like ours
+            self.models = [_factory(w)() if ':' in w and not os.path.exists(w) else YOLO(w) for w in weights]
         cv2.setNumThreads(threads)
         self.sizes, self.device, self.conf, self.half = sizes, device, conf, half
         self(np.zeros((540, 960, 3), np.uint8), {})
 
+    def _run(self, m, size, image, request):
+        if not hasattr(m, 'predict'):                          # a hook detector: rows of label, box, confidence
+            return [(r['label'], np.array(r['box'], float), float(r['confidence'])) for r in (m(image, request) or [])]
+        with redirect_stdout(sys.stderr):
+            r = m.predict(image, imgsz=size, device=self.device, conf=self.conf, half=self.half, verbose=False)[0]
+        return [(m.names[int(c)], np.array([x1, y1, x2, y2]), float(s)) for x1, y1, x2, y2, s, c in r.boxes.data.cpu().tolist()]
+
     def __call__(self, image, request):
-        per = []
-        for m, size in zip(self.models, self.sizes):
-            with redirect_stdout(sys.stderr):
-                r = m.predict(image, imgsz=size, device=self.device, conf=self.conf, half=self.half, verbose=False)[0]
-            per.append([(m.names[int(c)], np.array([x1, y1, x2, y2]), float(s)) for x1, y1, x2, y2, s, c in r.boxes.data.cpu().tolist()])
+        per = [self._run(m, size, image, request) for m, size in zip(self.models, self.sizes)]
         rows, n = [], len(self.models)
         route = self.route
         try:
@@ -70,6 +81,12 @@ class Ensemble:
                 if implausible(image, r['box'], grow=1.0):
                     r['confidence'] = float(r['confidence'])*self.context
         return rows
+
+
+def _factory(spec):
+    import importlib
+    module, name = spec.rsplit(':', 1)
+    return getattr(importlib.import_module(module), name)
 
 
 def _iou(a, b):
