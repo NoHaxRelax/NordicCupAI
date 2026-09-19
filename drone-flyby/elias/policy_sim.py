@@ -187,9 +187,31 @@ class Cued(OscarSweep):
         return super().next_view(i, cam, state)
 
 
+class BottomStart(OscarSweep):
+    """The base sweep, preceded by one pass along the BOTTOM band (L1 left, centre, right) right after the
+    opening overviews, so small objects that are already in the lower half when the flight starts get their one
+    L1 look before they leave. The camera then steps up to top-right (1080 px, inside the L1 limit) and the base
+    sweep resumes from its right-hand waypoint. Costs three top-band frames at the very start."""
+    def __init__(self, mode='l1', overview_between_sides=False):
+        super().__init__(mode, overview_between_sides)
+        self.plan = [(1, 960, 1620), (1, 1920, 1620), (1, 2880, 1620), (1, 2880, 540)]
+        self.done = 0
+
+    def next_view(self, i, cam, state):
+        if i == 0:
+            return super().next_view(i, cam, state)
+        if self.done < len(self.plan):
+            v = self.plan[self.done]; self.done += 1
+            if self.done == len(self.plan):
+                self.sweep.waypoint = 2
+            return v
+        return super().next_view(i, cam, state)
+
+
 POLICIES = {
     'l1': lambda: OscarSweep('l1', True),
     'l1_lcr': lambda: OscarSweep('l1', False),
+    'l1_lcr_bottom': lambda: BottomStart('l1', False),
     'l2_top': lambda: OscarSweep('l2_top', True),
     'cued': lambda: Cued('l1', True),
     'cued_lcr': lambda: Cued('l1', False),
