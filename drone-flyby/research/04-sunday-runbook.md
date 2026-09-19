@@ -3,6 +3,12 @@
 Deadline **16:00 CEST Sunday 20 September**. One evaluation attempt, zero used. Only Elias queues it (PreToolUse
 hook in `.claude/settings.json`; the agent never writes `.claude/EVAL_UNLOCK`). Top five: code and models by 20:00.
 
+> **Status Saturday 17:10.** Oscar's pipeline scores 0.705 to 0.727 on full public runs from his Swedish pod; this
+> branch's best same-day number is 0.678 and the routed mix below is unmeasured. Unless a same-day run shows
+> otherwise, the attempt is Oscar's endpoint and this runbook is the fallback; the pieces he can take from here are in
+> `05-handover-to-oscar.md`. All four of Saturday's pods were terminated at 16:55, so steps 1 to 3 start from a fresh
+> pod (see "If the endpoint will not come up", last bullet).
+
 > **The serving pod exists.** `sue6qz4ml2mzxc` (elias-drone-serve-eu, RTX 4090, EUR-NO-1, 0.74 USD/h) has served
 > every measurement since Saturday afternoon: ssh `root@149.36.0.35 -p 18676`, endpoint 9053 mapped to the public
 > TCP port **18677** on the same address. Round trip to the Helsinki server 40 to 70 ms (a US pod: 250 ms, and the

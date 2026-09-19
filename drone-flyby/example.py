@@ -135,10 +135,11 @@ def _scaled(rows):
         return rows
     out = []
     for a in rows:
-        k = float(BOX_SCALE.get(a['object_id'], 1.0))
-        if k == 1.0:
+        k = BOX_SCALE.get(a['object_id'], 1.0)
+        kw, kh = (float(k[0]), float(k[1])) if isinstance(k, (list, tuple)) else (float(k), float(k))   # one factor, or [width, height]
+        if kw == 1.0 and kh == 1.0:
             out.append(a); continue
-        x1, y1, x2, y2 = a['bbox']; cx, cy, w, h = (x1+x2)/2, (y1+y2)/2, (x2-x1)*k, (y2-y1)*k
+        x1, y1, x2, y2 = a['bbox']; cx, cy, w, h = (x1+x2)/2, (y1+y2)/2, (x2-x1)*kw, (y2-y1)*kh
         out.append({**a, 'bbox': [max(0., cx-w/2), max(0., cy-h/2), min(1., cx+w/2), min(1., cy+h/2)]})
     return out
 
