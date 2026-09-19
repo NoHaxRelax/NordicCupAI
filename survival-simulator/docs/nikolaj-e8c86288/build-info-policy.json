@@ -1,0 +1,60 @@
+{
+  "sources": {
+    "_policy.cpp": "dfa87674c88f37f0f3f9f81d353ccc8f55eeaeb884b54f5f69e6c95897dfbeb1",
+    "_orchard_policy.cpp": "e5a79b44bfb4a9c4461134c5ec98d99c4775dc66dbd9e08f04eab0e72ccdeaa8",
+    "_engine.cpp": "45a5928464b5231feb8b1378fc0c4b593f22c7ba38040274ae7f4295d2581f5f",
+    "_orchard.hpp": "b83aa6c385c2cb3d726b7511e918e0aaa66412a7509e858a49914eafaf2d8895",
+    "_evasion.hpp": "551169f0a48435e177ec5ee2df005ee2d8f756bbb0d62e8810168431bf29a8cc",
+    "policy_abi.hpp": "99d1367146689fd51cd7c464554bf0614698afc508452e1891c97841083e3536",
+    "policy_iface.hpp": "e67744a499fcdbce83c389912e95aee9a8440920022b919ca494882fb1f8e7f5",
+    "_shared_pysem.inc": "bb95cd0128d50f6d65d446d247c2bac9f20761bb23d0a53b4154e67ecab96433"
+  },
+  "binary_sha256": "dc6117684297786cebf1d9f0e225c4f7823965a33396b1d86877845928a5eaa8",
+  "python": "3.13.14 (main, Aug  5 2026, 15:44:26) [Clang 22.1.3 ]",
+  "numpy": "2.5.3",
+  "commands": [
+    [
+      "c++",
+      "-O2",
+      "-std=c++17",
+      "-fPIC",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-fno-builtin-sin",
+      "-fno-builtin-cos",
+      "-fno-builtin-sincos",
+      "-I",
+      "/home/lucas/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/include/python3.13",
+      "-I",
+      "/home/lucas/entrapment-research-20260918/.venv/lib/python3.13/site-packages/numpy/_core/include",
+      "-c",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_policy.cpp",
+      "-o",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_policy.o"
+    ],
+    [
+      "c++",
+      "-O2",
+      "-std=c++17",
+      "-fPIC",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-fno-builtin-sin",
+      "-fno-builtin-cos",
+      "-fno-builtin-sincos",
+      "-c",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_orchard_policy.cpp",
+      "-o",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_orchard_policy.o"
+    ],
+    [
+      "c++",
+      "-shared",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_policy.o",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_orchard_policy.o",
+      "-o",
+      "/home/lucas/nikolaj-e8c86288-eval1000/survival-simulator/fastsim/_policy.cpython-313-x86_64-linux-gnu.tmp"
+    ]
+  ],
+  "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+}
