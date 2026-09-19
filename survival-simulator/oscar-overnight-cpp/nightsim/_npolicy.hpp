@@ -338,7 +338,7 @@ struct Params {
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
-    double decoy_old = 0., decoy_e = 0., decoy_r = 150.;
+    double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -1623,6 +1623,14 @@ public:
             if (!nr || t.d < nr->d) nr = &t;
         }
         if (!nr) return false;
+        if (P.evade_closest > 0. && nr->d > P.evade_closest) {   // predators chase their closest agent: if another visible agent is nearer to it, keep foraging
+            P2 pp{std::cos(nr->ang) * nr->d, std::sin(nr->ang) * nr->d};
+            for (const Obs& o : *s.obs) {
+                if (o.type != 1) continue;
+                P2 q{std::cos(o.angle) * o.distance, std::sin(o.angle) * o.distance};
+                if (dist(q, pp) < nr->d - 8.) return false;
+            }
+        }
         if (P.hide_mode > 0. && hide_through(s, pl, nr->d)) return true;
         {   // decoy (nightsim): an agent that is dying anyway walks TOWARD the nearest predator so it becomes the
             // predator's closest target instead of a young forager; its low energy costs little score
@@ -1838,6 +1846,7 @@ public:
             const AState& s = st(aid); Mind& m = M(aid);
             const Plan& pl = plans[aid];
             bool spawn = spawn_set.count(aid) > 0 && P.no_spawn <= 0. && !is_trap_role(aid);
+            if (spawn && P.spawn_pred_r > 0.) for (const Obs& o : *s.obs) if (o.type == 2 && o.distance < P.spawn_pred_r) { spawn = false; break; }
             bool ok = spawn && s.energy - cost_now(pl.dist, pl.turn, s) > 100.;
             m.spawned_ok = ok;
             if (ok) last_spawners.push_back(aid);

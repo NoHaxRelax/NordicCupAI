@@ -212,3 +212,8 @@ Log (newest last)
   mean 82 energy each). Next problem (Oscar's list): make the OLD agents the ones that get eaten. decoy_old/decoy_e:
   a senescent (or low-energy) agent within decoy_r of a predator walks toward it so it is the predator's closest
   target; f22 tests radius 80/150/250 and energy thresholds 40/80 on j/k; kp on i records every kill (t, age, energy).
+- 04:35 f22: old-agent decoys -6 s / -19 score (more kills, no benefit); low-energy decoys -34..-120. Rejected.
+  kp kill profile (128 games, 140 kills/game): 34% of victims are under 20 s old (newborns at 75 energy), median
+  age 32, median energy 72; 9% of kills (>=150 energy) carry 23% of the penalty; kills peak at 250-750 s. f23
+  tests: flee only when I am the predator's closest visible agent (evade_closest), and no births while a
+  predator is within 100/200/400 (spawn_pred_r).
