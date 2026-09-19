@@ -581,3 +581,18 @@ Log (newest last)
   (kills 146 -> 131). f48 = fresh-seed confirmation 7400-7831 (432 seeds over n7/n8/n9): floors 40/60/80/120.
   f46 full games: routing -143, routing+relay -161 vs straight-lane-only -105; rel4 relay in the blocked-lane
   scenario 76-77% vs 79%. Take-over and routing do not help delivery.
+- 10:17 OSCAR (10:10): the biggest gain is delivery 79% -> 100% as a baseline; test the edge cases before
+  scaling: one agent + one predator, one agent + several predators, several agents + one predator.
+  Harness nightsim/guide.py: NIGHT_GE (guide energy, max 800 -> sprint cap 160), NIGHT_NPRED, NIGHT_NBY, failure
+  attribution (edge_ana.py). HARNESS BUG FIXED: the predator was placed before 3 warm-up ticks with the guide frozen,
+  so it closed ~70 of its 100-180 start distance before the guide could move (most "killed <3 s" failures).
+  ROOT CAUSE of guide deaths (tick trace): observations are taken before the predator moves, so the guide's view of
+  the gap lags one predator step (~15); with near 45 = sprint_until 45 the guide alternates sprint/walk at a TRUE gap
+  of 30-35 and any wall contact kills it. Guides also walk backwards blind into walls they have not seen.
+  Edge 1, fixed harness, one guide + one predator (valid placements):
+    clear lane: GE 700 current band 95% delivered; GE 300 see below. Wider bands 55/70/90 92%, 60/75/95 87%,
+    70/85/105 80% (more guides survive but lose the predator or run out of sprint energy).
+    blocked lanes allowed: GE 700 current 83%, wider bands 63-75%.
+  Edge 3 (2 bystanders, old harness): 81% (GE 300), 86% (GE 700), 0.5-0.6 bystanders killed per scenario.
+  Next: map-based wall avoidance for the backwards walk (guide_mapclear 20/35/50) on blocked lanes (n7 GE 700,
+  n9 GE 300).

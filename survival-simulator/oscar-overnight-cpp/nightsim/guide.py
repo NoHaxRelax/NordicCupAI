@@ -13,16 +13,22 @@ from nightsim.trapsite import grade
 
 HELD = int(__import__('os').environ.get('NIGHT_HELD', '0'))
 RELAY = int(__import__('os').environ.get('NIGHT_RELAY', '0'))
-NOLINE = int(__import__('os').environ.get('NIGHT_NOLINE', '0'))   # accept placements whose straight lane is blocked (routing test)   # place a third agent halfway along the lane (relay candidate)
+NOLINE = int(__import__('os').environ.get('NIGHT_NOLINE', '0'))   # accept placements whose straight lane is blocked (routing test)
+_E = __import__('os').environ
+GE = float(_E.get('NIGHT_GE', '300'))        # guide start energy (max 800 -> sprint cap at 160)
+NPRED = int(_E.get('NIGHT_NPRED', '1'))      # edge case 2: predators chasing (extra ones placed 60-140 from the guide)
+NBY = int(_E.get('NIGHT_NBY', '0'))          # edge case 3: extra free agents (bystanders) 40-160 from the guide   # place a third agent halfway along the lane (relay candidate)
 
 def one(job):
     label, kw, seed, dg, dp, bear, sp, T = job
     import nightsim
     sim = nightsim.SimulationCore(seed=seed, predators=False); eng = sim._engine
     sim.step([]); eng.pop_events()
-    ags = eng.dbg_keep_agents(3 if RELAY else 2)
-    if len(ags) < (3 if RELAY else 2): return dict(label=label, seed=seed, skip='agents')
+    need = (3 if RELAY else 2) + NBY
+    ags = eng.dbg_keep_agents(need)
+    if len(ags) < need: return dict(label=label, seed=seed, skip='agents')
     bait, guide = ags[0][0], ags[1][0]; relay = ags[2][0] if RELAY else None
+    bys = [a[0] for a in ags[(3 if RELAY else 2):]]
     cfg = dict(kw, trap_mode=3, merge_anchored=1, pred_mode=1, pred_share=1, no_spawn=1, trap_bait_fixed=bait, trap_start=0)
     eng.policy_init(nightsim.seed_key(seed), cfg)
     eng.run_policy(1e9, eng.info()['time'] + 0.1)      # one policy call creates the minds
@@ -49,20 +55,22 @@ def one(job):
     if not found: return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='no_line')
     gsx, gsy, px, py, phi = found
     eng.dbg_set_agent(bait, gx, gy, math.atan2(-ay, -ax) + math.pi, 400., 10., 20., 500., 100., 400., 1.57, 1000.)
-    eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), 300., float(sp), float(min(40, 2 * sp)), 800., 100., 400., 1.57, 1000.)
+    eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), GE, float(sp), float(min(40, 2 * sp)), 800., 100., 400., 1.57, 1000.)
+    import random as _r
+    rng = _r.Random(seed * 1000 + int(dg) + int(dp) * 7 + int(bear) * 13 + int(sp))
+    for b_ in bys:   # bystanders: ordinary colony members near the guide
+        for _ in range(40):
+            a_ = rng.uniform(0, 2 * math.pi); d_ = rng.uniform(40, 160); bx, by = gsx + d_ * math.cos(a_), gsy + d_ * math.sin(a_)
+            if eng.dbg_free(bx - 5, by - 5, 10): break
+        else: return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='by_pos')
+        eng.dbg_set_agent(b_, bx, by, rng.uniform(0, 2 * math.pi), 250., 10., 20., 600., 100., 400., 1.57, 1000.)
     if RELAY:
         rx, ry = mx + dx * dg * 0.45, my + dy * dg * 0.45
         if not eng.dbg_free(rx - 5, ry - 5, 10): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='relay_pos')
         eng.dbg_set_agent(relay, rx, ry, math.atan2(gsy - ry, gsx - rx), 300., float(sp), float(min(40, 2 * sp)), 800., 100., 400., 1.57, 1000.)
-    if not eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px), 200., False): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='pred_pos')
-    # step 2: K predators already held at the mouth (awake, full energy), spread across the lane just outside the mouth
-    held_ok = 0
-    for k in range(HELD):
-        off = (k % 5 - 2) * 4.0; back = 12. + 8. * (k // 5)
-        hx, hy = mx + ax * back - ay * off, my + ay * back + ax * off
-        if eng.dbg_add_predator(hx, hy, math.atan2(gy - hy, gx - hx), 200., False): held_ok += 1
+    if eng.dbg_pred_blocked(px, py): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='pred_pos')
     # settle after teleporting: observations refresh and the policy's poses are re-synced twice (odometry/VO would drift)
-    eng.dbg_freeze([bait, guide, relay] if RELAY else [bait, guide])
+    eng.dbg_freeze(([bait, guide, relay] if RELAY else [bait, guide]) + bys)
     for _ in range(3):
         eng.dbg_true_poses(); eng.run_policy(1e9, eng.info()['time'] + 0.1)
     eng.dbg_true_poses(); eng.dbg_freeze([bait, relay] if RELAY else [bait])
@@ -70,11 +78,30 @@ def one(job):
         for _ in range(2):
             eng.run_policy(1e9, eng.info()['time'] + 0.1); eng.dbg_true_poses()
         eng.dbg_freeze([bait])
-    t0 = eng.info()['time']; e0 = 300.; killed = {}; dmin = 1e9; near = 0.; t_del = None; states = []
+    # predators are placed only after the warm-up (a predator placed before it closes 45+ units on the frozen guide)
+    if not eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px), 200., False): return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='pred_pos')
+    extra_ok = 0
+    for k in range(NPRED - 1):   # edge case 2: more predators around the guide
+        for _ in range(40):
+            a_ = rng.uniform(0, 2 * math.pi); d_ = rng.uniform(60, 140); qx, qy = gsx + d_ * math.cos(a_), gsy + d_ * math.sin(a_)
+            if not eng.dbg_pred_blocked(qx, qy) and eng.dbg_add_predator(qx, qy, math.atan2(gsy - qy, gsx - qx), 200., False): extra_ok += 1; break
+    if extra_ok < NPRED - 1: return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='pred2_pos')
+    # step 2: K predators already held at the mouth (awake, full energy), spread across the lane just outside the mouth
+    held_ok = 0
+    for k in range(HELD):
+        off = (k % 5 - 2) * 4.0; back = 12. + 8. * (k // 5)
+        hx, hy = mx + ax * back - ay * off, my + ay * back + ax * off
+        if eng.dbg_add_predator(hx, hy, math.atan2(gy - hy, gx - hx), 200., False): held_ok += 1
+    t0 = eng.info()['time']; e0 = GE; killed = {}; dmin = 1e9; near = 0.; t_del = None; states = []; g_last = None; g_emin = GE
     while eng.info()['time'] < t0 + T:
         eng.run_policy(t0 + T, eng.info()['time'] + 0.5)
         for kind, t, a, age, en in eng.pop_events():
             if kind == 'predator': killed[a] = round(t - t0, 1)
+        agn = {a[0]: a for a in eng.agents()}
+        if guide in agn:
+            ga = agn[guide]; g_emin = min(g_emin, ga[5])
+            pr_ = eng.predators(); dpg = min((math.hypot(q[0] - ga[1], q[1] - ga[2]) for q in pr_), default=1e9)
+            g_last = (round(ga[5], 1), round(math.hypot(ga[1] - mx, ga[2] - my)), round(dpg, 1))
         pr = eng.predators()
         if pr:
             dmin = min(dmin, math.hypot(pr[0][0] - gx, pr[0][1] - gy))
@@ -89,7 +116,9 @@ def one(job):
     return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, delivered=int(t_del is not None and bait not in killed), t_deliver=t_del,
                 held0=HELD, held_placed=held_ok, held_end=held_end, npred=len(prs),
                 guide_alive=int(guide in ag), t_guide_died=killed.get(guide), bait_alive=int(bait in ag), used=round(e0 - ag[guide][5], 1) if guide in ag else None,
-                dmin_bait=round(dmin, 1), states=''.join(str(x) for x in states[::4]), site=[round(gx), round(gy), round(ov), rear], phi=phi)
+                dmin_bait=round(dmin, 1), states=''.join(str(x) for x in states[::4]), site=[round(gx), round(gy), round(ov), rear], phi=phi,
+                ge=GE, g_emin=round(g_emin, 1), g_last=g_last, npred0=NPRED, nby=NBY, by_dead=sum(1 for b_ in bys if b_ in killed),
+                held_all=sum(1 for p_ in prs if math.hypot(p_[0] - mx, p_[1] - my) < 30))
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()

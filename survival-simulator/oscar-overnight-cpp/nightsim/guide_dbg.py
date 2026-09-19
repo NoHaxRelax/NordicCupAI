@@ -37,7 +37,7 @@ for phi in PHI:
 print('found', found)
 gsx, gsy, px, py, phi = found
 eng.dbg_set_agent(bait, gx, gy, 0., 400., 10., 20., 500., 100., 400., 1.57, 1000.)
-eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), 300., sp, min(40, 2*sp), 800., 100., 400., 1.57, 1000.)
+eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), float(os.environ.get("NIGHT_GE", "300")), sp, min(40, 2*sp), 800., 100., 400., 1.57, 1000.)
 print('pred added', eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px), 200., False))
 if RELAY:
     rx, ry = mx + dx * dg * 0.45, my + dy * dg * 0.45
@@ -52,7 +52,7 @@ if RELAY:   # keep the relay frozen (ineligible) until the policy has chosen the
     eng.dbg_freeze([bait])
 t0 = eng.info()['time']
 for k in range(60):
-    eng.run_policy(t0 + 60, eng.info()['time'] + 0.2)
+    eng.run_policy(t0 + 60, eng.info()["time"] + float(os.environ.get("NIGHT_DT", "0.2")))
     ev = [e for e in eng.pop_events() if e[0] != 'fruit']
     ag = {a[0]: a for a in eng.agents()}; pr = eng.predators()
     g = ag.get(guide); p = pr[0] if pr else None
@@ -64,7 +64,7 @@ for k in range(60):
     dm = math.hypot(p[0]-mx, p[1]-my) if p else None
     b_ = ag.get(bait); dbait = math.hypot(p[0]-b_[1], p[1]-b_[2]) if b_ and p else None
     if g and p:
-        print(f"t{eng.info()['time']-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} | d {d:.0f} d_mouth {dm:.0f} d_bait {dbait:.0f} state {r[0][5] if r else None} | pred sees {pi[0][0]:.0f} look {pi[0][1]:.2f} mode {pi[0][3]} {ev}")
+        print(f"t{eng.info()["time"]-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) hd {g[3]:.2f} e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} | d {d:.0f} d_mouth {dm:.0f} d_bait {dbait:.0f} state {r[0][5] if r else None} | pred sees {pi[0][0]:.0f} look {pi[0][1]:.2f} mode {pi[0][3]} {ev}")
     else:
         print(f"t{eng.info()['time']-t0:5.1f} guide dead | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} d_mouth {dm:.0f} d_bait {dbait:.0f} bait alive {b_ is not None} | pred sees {pi[0][0]:.0f} mode {pi[0][3]} {ev}" if p else 'no predator')
     if not b_: break
