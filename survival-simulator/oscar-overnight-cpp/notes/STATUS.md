@@ -140,3 +140,8 @@ Log (newest last)
   that the 'guides done' counter missed, plus two waste modes: the next guide walks to the STALE position of the
   now-held predator, and guides wait beyond the band for predators busy elsewhere. Fixes: deliveries counted as
   sightings newly held at the mouth, guide released on delivery, waiting timeout 6 s -> re-acquire. f8 running.
+- 03:14 f8: all trap variants still -205..-225 s; the new delivery counter over-counts (held sightings
+  flicker) while the sampled 'held' stays ~0.05: holds last only as long as the bait lives (a bait never eats and
+  dies in 60-100 s), then the predators are released. Full-game trap integration parked; the tooling and the
+  funnel/attribution counters stay in the branch. Now step 3 (not losing agents in general): f9 evasion variants
+  (flee radius 100/150/200/300, dodge on/off, shared sightings, sprint radius).
