@@ -74,3 +74,7 @@ is no timed wait outside the trap. All deadlines remain estimates, not a
 guarantee against blocked paths, localization errors or lack of viable agents.
 
 Replay: `logs/entrapment-iteration/interactive-bait-fruit-v2-20260919`, port 9070.
+Completed same-seed run (`78c2556`): score 497.24, extinction at 477.5 seconds,
+4,775 frames, runtime 114.8 seconds. Eight bait arrivals and five overlaps;
+estimated gaps still totalled 91.2 seconds (longest 86.4 seconds). This does
+not establish reliable continuity despite more overlapping handoffs.
