@@ -676,3 +676,7 @@ Log (newest last)
   (10000-10511), then L2 = late-game resource variants at forked checkpoints 1500/1700/2000 on 480 seeds (cap
   0.35/0.8, forage reach up/down, breeding reserves up/down, low-population births, exploration). L1 (late
   evasion) finishing on n10-n14. Spend ~$67 of $140.
+- 13:44 OSCAR: investigate all parts of the game, not only 1500/2000, without replaying from 0 each time.
+  lategame.py now plays each seed ONCE and forks every variant at 300, 600, ... 2400 s along the way (effects can be
+  read per phase). Queue on all 10 pods: 01_B1 (running), 02_L2 (resource variants, all checkpoints, seeds
+  9000-9479), 03_E2 (evasion variants incl. wall hiding, all checkpoints, fresh seeds 9480-9959).

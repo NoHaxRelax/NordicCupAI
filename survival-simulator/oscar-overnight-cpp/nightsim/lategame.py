@@ -97,41 +97,44 @@ def variant(eng, label, spec, seed, t0, snap):
                 placed=placed, traj=traj, **snap, **extra)
 
 def one(job):
-    seed, t0, base, variants = job
+    """One seed: play the base game ONCE; at every checkpoint (ascending) fork all variants, then keep playing the base."""
+    seed, t0s, base, variants = job
     import nightsim
     sim = nightsim.SimulationCore(seed=seed, predators=True); eng = sim._engine
     sim.step([]); eng.pop_events()
     eng.policy_init(nightsim.seed_key(seed), dict(base, trap_mode=1))
-    while eng.agents() and eng.info()['time'] < t0 - 1e-6:
-        eng.run_policy(t0, min(t0, eng.info()['time'] + 100.)); eng.pop_events()
-    if not eng.agents(): return [dict(label=l, seed=seed, t0=t0, skip='dead_before_t0') for l in variants]
-    snap = dict(alive0=len(eng.agents()), preds0=len(eng.predators()), trees0=len(eng.trees()), score0=round(eng.info()['score'], 3))
     out = []
-    for label, spec in variants.items():
-        r, w = os.pipe(); pid = os.fork()
-        if pid == 0:
-            os.close(r)
-            try: res = variant(eng, label, spec, seed, t0, snap)
-            except Exception as e: res = dict(label=label, seed=seed, t0=t0, skip='error', err=repr(e)[:200])
-            os.write(w, json.dumps(res).encode()); os.close(w); os._exit(0)
-        os.close(w); buf = b''
-        while True:
-            chunk = os.read(r, 65536)
-            if not chunk: break
-            buf += chunk
-        os.close(r); os.waitpid(pid, 0)
-        out.append(json.loads(buf) if buf else dict(label=label, seed=seed, t0=t0, skip='child_failed'))
+    for t0 in sorted(t0s):
+        while eng.agents() and eng.info()['time'] < t0 - 1e-6:
+            eng.run_policy(t0, min(t0, eng.info()['time'] + 100.)); eng.pop_events()
+        if not eng.agents():
+            out.extend(dict(label=l, seed=seed, t0=t0, skip='dead_before_t0') for l in variants); continue
+        snap = dict(alive0=len(eng.agents()), preds0=len(eng.predators()), trees0=len(eng.trees()), score0=round(eng.info()['score'], 3))
+        for label, spec in variants.items():
+            r, w = os.pipe(); pid = os.fork()
+            if pid == 0:
+                os.close(r)
+                try: res = variant(eng, label, spec, seed, t0, snap)
+                except Exception as e: res = dict(label=label, seed=seed, t0=t0, skip='error', err=repr(e)[:200])
+                os.write(w, json.dumps(res).encode()); os.close(w); os._exit(0)
+            os.close(w); buf = b''
+            while True:
+                chunk = os.read(r, 65536)
+                if not chunk: break
+                buf += chunk
+            os.close(r); os.waitpid(pid, 0)
+            out.append(json.loads(buf) if buf else dict(label=label, seed=seed, t0=t0, skip='child_failed'))
     return out
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', required=True); ap.add_argument('--variants', required=True); ap.add_argument('--seeds', nargs='+', required=True)
-    ap.add_argument('--t0', type=float, nargs='+', default=[900., 1500., 2100.]); ap.add_argument('--workers', type=int, default=32)
+    ap.add_argument('--t0', type=float, nargs='+', default=[300., 600., 900., 1200., 1500., 1800., 2100., 2400.]); ap.add_argument('--workers', type=int, default=32)
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     bf, bl = a.base.split(':'); base = json.load(open(bf))[bl]
     variants = json.load(open(a.variants))
-    jobs = [(s, t0, base, variants) for t0 in a.t0 for s in parse_seeds(a.seeds)]
+    jobs = [(s, a.t0, base, variants) for s in parse_seeds(a.seeds)]
     t0_ = time.time(); n = 0
     with Pool(a.workers) as pool, open(a.out, 'a') as f:
         for rows in pool.imap_unordered(one, jobs, chunksize=1):
