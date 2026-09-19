@@ -90,6 +90,16 @@ The deployed F3 measured small_launcher 0.34 from Oslo against 0.56 in the night
 The harness's small_tower and tank labels are off the organisers' convention (the portal says F5 beats F3 on both), so
 cross-checkpoint routing still comes from same-day portal runs; the harness ranks policies on one checkpoint.
 
+## Laptop thirds of 23:31 to 23:45 are void
+
+`portal_session2.log`: deploy config (cluster births + launcher box 0.85) 0.235 + 0.293 + 0.082, then plain F3 0.150 + 0.206
+before the session was stopped. The plain runs lost 72 and 99 frames against 26 and 32 for the first two deploy runs and
+the server time per frame rose from 66 ms (23:00 one-class runs, 5 to 17 lost frames) through 93 to 166 ms; the laptop
+was on mains and unthrottled, so the load came from other use of the machine. The plain-against-deploy difference is
+therefore not a measurement. The comparison was moved to a fresh Oslo pod (`measure_pod2.log`: PLAIN, DEPLOY and FINAL
+with ta-ta routed to F5, interleaved per window). The one-class confirmations of 23:00 stand (equal frame loss within
+each pair).
+
 ## Pulled from Oscar's branches (2026-09-19 23:00)
 
 `drone/oscar-sprite-synthetic` (18th 20:57), `drone/oscar-live-tracker` (18th 23:28) and `drone/oscar-experts` (19th 11:03) are local tracking branches now, LFS fetched. The experts branch is his overnight per-class expert system (proposer, gates, verifier, real-frame evaluator), API 0.215 to 0.239 at the time; his 0.727 afternoon pipeline is not pushed. His notes agree with ours on: the top band (every lower band loses), no L0 overviews (0.229 against 0.315), a sides-only sweep beating four waypoints (0.334 against 0.315, see C5b), medium_launcher answers twice as wide as the tight labels, and camera errors on the API being replay divergence, not the live policy. His expert detector never fires on the validation large_tower, small_tower and mine_roller (no validation sprites) and fires on 3 of 149 large_launcher labels; ours scores 0.70 to 0.93 there.

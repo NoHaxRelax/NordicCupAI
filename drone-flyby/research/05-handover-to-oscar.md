@@ -145,6 +145,11 @@ over to your server as they are: `DRONE_CLUSTER_BIRTHS=1 DRONE_BOX_SCALE='{"medi
 - The deployed checkpoint's small_launcher moved from 0.56 (night) to 0.34 (afternoon) with byte-identical code and
   the same band; whatever moved is on the portal or host side, so compare models on same-day runs only.
 - Public full runs show the real score to every team; concealed thirds do not.
+- The large backbone bought us nothing at 1280: yolo26l on the corrected data (F6) ends the in-scene check at 0.916
+  against 0.915 for the medium (F5) and runs the full pipeline on the local harness at 0.551 against 0.532 for F5 and
+  0.600 for the deployed medium F3 (`research/03-checklist.md`, row A3 and the harness table). Your x1280 and l1280 pods
+  started Saturday 23:36: results are size-specific, so measure them against the medium on the same harness or the same
+  hour of portal runs before serving one.
 
 ## 7. Where everything is
 
