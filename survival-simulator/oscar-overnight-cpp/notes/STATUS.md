@@ -356,3 +356,18 @@ Log (newest last)
   the open anyway). First trap-family mechanism that is clearly positive in the narrow test at zero extra cost.
   R3 ref2 on j (128 seeds 7200-7327, 6 configs): rf_ref, rg_60, rg_100, rg_100_slow (only agents that cannot
   outrun a predator), rg_100_post (posts near known gaps, refuge_post_w 1), rg_100_slow_post.
+- 07:46 R3 ref2 (128 seeds, full games): refuge is strongly NEGATIVE: rg_100 -284+-30, rg_100_post -237,
+  rg_60 -170, rg_100_slow -146, rg_100_slow_post -152; kills per game UP (141 -> 160-179), starvation down
+  (291 -> 227-257). Opposite of the scenario (kills 41% -> 20%). Hypotheses: (a) the policy's site positions in
+  a self-built map are off by a few units, so the agent holds outside the safe zone; (b) inside the gap the agent
+  faces the goal, the predator at the mouth is behind it and outside its vision cone, so after refuge_leave 8 s
+  it walks out into the predator; (c) route deaths (the run to the gap). Narrow test ref3 on j (96 seeds): death
+  attribution counters (died en route / holding / exiting, exits), hold now faces the mouth, refuge_leave 8 vs 30,
+  all vs slow-only.
+- 07:55 ref3 (96 seeds) death attribution, per game with rg_100: 113 refuge attempts, 92 die EN ROUTE (82%),
+  10 die holding, 0 die exiting, 0.3 exits (refugees hold until they die; the predator never leaves). Facing the
+  mouth and refuge_leave 30 change nothing (-278/-297; slow-only -139/-174). So the full-game failure is the RUN
+  to the gap, not the hold: in the scenario the agent stands on the lane axis in front of the mouth; in a game an
+  agent "within 100 of the mouth" is usually on the far side of the obstacle and runs into walls with the predator
+  behind. Next narrow test ref4: refuge_clear (straight run to the pre-point and mouth must not cross known walls)
+  and refuge_sprint (sprint the whole run), radius 60/100, all vs slow-only.

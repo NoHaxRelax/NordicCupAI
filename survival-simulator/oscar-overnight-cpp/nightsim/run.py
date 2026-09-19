@@ -87,7 +87,7 @@ def one(job):
                 eaten=eaten, peak=peak, created=info['next_agent_id'], pdeaths=pd, sdeaths=sd, penalty=round(pen, 3),
                 trees_d=last and last[0], fruits_d=last and last[1], preds=len(eng.predators()), traj=traj,
                 wall=round(time.perf_counter()-t0, 1), **({'fates': fates} if DIAG_FROM > 0 else {}), **({'tail': tail} if TAIL > 0 else {}),
-                **({'kills': kills} if os.environ.get('NIGHT_KILLS') else {}))
+                **({'kills': kills} if os.environ.get('NIGHT_KILLS') else {}), refuge=eng.dbg_eval())
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
