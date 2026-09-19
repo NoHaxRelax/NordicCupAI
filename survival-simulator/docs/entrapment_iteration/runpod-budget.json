@@ -48,9 +48,25 @@
       "compute_and_disk_upper_estimate_usd": 0.4226,
       "posted_billing_note": "No billing records posted yet; zero records is not zero cost.",
       "artifacts": "docs/avoidance/bayes16"
+    },
+    {
+      "id": "zmml46gemukrm5",
+      "name": "lucas-nikolaj100-20260919",
+      "created_at_utc": "2026-09-19T13:19:28.382Z",
+      "hourly_usd": 1.09,
+      "status": "running",
+      "purpose": "Nikolaj rank-1 frozen 100 fresh maps",
+      "vcpu_count": 16,
+      "keep_running_after_job": true,
+      "retention_reason": "User explicitly requested not to close pods after usage.",
+      "ssh_host": "64.247.206.209",
+      "ssh_port": 13037,
+      "completed_games": 100,
+      "estimated_spend_so_far_usd": 0.0932,
+      "estimate_time_utc": "2026-09-19T13:24:03.203783+00:00"
     }
   ],
-  "estimated_spend_usd": 5.6737,
+  "estimated_spend_usd": 5.7669,
   "creation_attempts": [
     {
       "cpu": "cpu3c",
@@ -68,7 +84,7 @@
       "attempts": 1
     }
   ],
-  "result": "2784/2784 native full games backed up; Bayesian experiment pod deleted (204), absence verified (404).",
-  "estimate_updated_at_utc": "2026-09-19T12:53:10.230645+00:00",
+  "result": "Nikolaj 100-map benchmark complete and backed up. Pod zmml46gemukrm5 remains RUNNING at explicit user request and continues billing.",
+  "estimate_updated_at_utc": "2026-09-19T13:24:03.203783+00:00",
   "confirmed_spend_usd_before_nursery": 4.891723719847505
 }
