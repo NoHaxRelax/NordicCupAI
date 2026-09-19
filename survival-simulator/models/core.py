@@ -66,7 +66,8 @@ class EntrapmentPolicy:
     def __init__(self, seed=0, *, bait_overlap_seconds=20., bait_reserve_seconds=0., survival_settings=None,
                  release_trap_food=False, nursery_size=0, bait_food_lead_seconds=6.,
                  guide_lookahead_ticks=3, share_guide_paths=True,
-                 guide_preferred_distance=(100.,120.), guide_reacquire_close=False):
+                 guide_preferred_distance=(100.,120.), guide_reacquire_close=False,
+                 guide_contact_forecast=False):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -79,6 +80,7 @@ class EntrapmentPolicy:
             raise ValueError('guide_lookahead_ticks must be 0 or 3')
         self.guide_lookahead_ticks = guide_lookahead_ticks
         self.guide_reacquire_close = guide_reacquire_close
+        self.guide_contact_forecast = guide_contact_forecast
         low,high = guide_preferred_distance
         if not all(math.isfinite(x) for x in (low,high)) or not 0. < low <= high:
             raise ValueError('guide_preferred_distance must be finite, positive and ordered')
@@ -407,6 +409,7 @@ class EntrapmentPolicy:
         agent = dict(s)
         track.memory['_lookahead_ticks'] = self.guide_lookahead_ticks
         track.memory['_reacquire_close'] = self.guide_reacquire_close
+        track.memory['_contact_forecast'] = self.guide_contact_forecast
         track.memory['_preferred_predator_distance'] = self.guide_preferred_distance
         track.memory['_terrain_samples'] = [
             (local(pose,sample.position),sample.biome,sample.uncertainty)
@@ -612,6 +615,7 @@ class EntrapmentPolicy:
                     guide_lookahead_ticks=self.guide_lookahead_ticks, share_guide_paths=self.share_guide_paths,
                     guide_preferred_distance=self.guide_preferred_distance,
                     guide_reacquire_close=self.guide_reacquire_close,
+                    guide_contact_forecast=self.guide_contact_forecast,
                     bait_navigation=self.bait_navigation, guide_corridors=self.guide_corridors,
                     bait_reserve_seconds=self.bait_reserve_seconds, reserved_bait=self.reserved_bait,
                     release_trap_food=self.release_trap_food,

@@ -40,6 +40,8 @@ def predator_step(p, heading, guide, guide_heading, bait, free, visible,
     Speed cap and terrain sample the unknown walk/sprint and biome gates. Resting,
     unseen competing prey and wandering are not exactly predictable.
     """
+    if speed_cap==0.:  # Resting predator: neither movement nor turn occurs.
+        return p,heading
     target, target_heading = guide, guide_heading
     if math.dist(p,bait)<math.dist(p,guide) and visible(p,heading,bait):
         target, target_heading = bait, 0.
@@ -218,16 +220,18 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
     # Check surviving paths with possible physical speeds and pivot signs.
     # The nominal search avoids a full branching game-tree explosion.
     checked = []
+    contact_forecast = bool(memory.get('_contact_forecast',False))
+    motion_scenarios = PREDATOR_MOTION + (((0.,1.),) if contact_forecast else ())
     for order,node in enumerate(nodes):
-        captures = 0; worst_tick = HORIZON+1; minimum = math.inf; scenarios = 0
-        for cap,terrain in PREDATOR_MOTION:
+        captures = 0; worst_tick = HORIZON+1; minimum = math.inf; scenarios = 0; contact_losses=0
+        for cap,terrain in motion_scenarios:
             for bias in (-1.,0.,1.):
                 # Current biome is observed. Future starts may land in river,
                 # while the predator remains on faster ground. Replay actual
                 # commands with that slowdown, rather than nominal endpoints.
                 for slow_at in (HORIZON,1,2):
                     preds,headings = list(forecast),list(initial_headings)
-                    q=(0.,0.); captured=False
+                    q=(0.,0.); captured=False; lost_contact=False
                     for depth,(length,angle) in enumerate(node.commands):
                         factor = .3 if depth>=slow_at else terrain_at(q)
                         new_q=(q[0]+length*factor*math.cos(angle),q[1]+length*factor*math.sin(angle))
@@ -237,17 +241,21 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
                         p=preds[target_index]; h=math.atan2(p[1]-q[1],p[0]-q[0])
                         for i in range(len(preds)):
                             preds[i],headings[i] = predator_step(preds[i],headings[i],q,h,bait,free,visible,cap,bias,terrain)
+                        if math.dist(q,bait)>80. and not visible(preds[target_index],headings[target_index],q):
+                            lost_contact=True
                         separation = min(math.dist(q,p) for p in preds)
                         minimum = min(minimum,separation)
                         if separation<CAPTURE_RADIUS:
                             captured=True;worst_tick=min(worst_tick,depth);break
-                    captures+=captured;scenarios+=1
-        checked.append(((captures>0,-worst_tick,captures,order),node,captures,scenarios,minimum))
-    _,winner,captures,scenarios,minimum = min(checked,key=lambda x:x[0])
+                    captures+=captured;scenarios+=1;contact_losses+=lost_contact
+        checked.append(((captures>0,-worst_tick,captures,contact_losses if contact_forecast else 0,order),
+                        node,captures,scenarios,minimum,contact_losses))
+    _,winner,captures,scenarios,minimum,contact_losses = min(checked,key=lambda x:x[0])
     return winner.first,dict(horizon_ticks=HORIZON,horizon_seconds=.3,
         capture_radius=CAPTURE_RADIUS,extra_predator_clearance=0.,preferred_distance=[preferred_min,preferred_max],
         reacquiring_contact=reacquiring,following_distance=list(following_distance),
         predicted_safe=captures==0,capture_scenarios=captures,sampled_scenarios=scenarios,
+        contact_forecast=contact_forecast,contact_loss_scenarios=contact_losses,
         minimum_separation=round(minimum,2),observation_lag_estimated=lag_known,expanded=expanded,
         terrain_samples=len(samples),terrain_scenarios=['observed_samples','river_next_tick','river_in_two_ticks'],
         guide_path=winner.path,predator_path=winner.predator_paths[target_index],
