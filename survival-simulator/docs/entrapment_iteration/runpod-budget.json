@@ -33,6 +33,17 @@
       "posted_billing_usd_as_of_check": 0.11261015655327355,
       "billing_checked_at_utc": "2026-09-19T09:12:07.606640+00:00",
       "billing_note": "Posted amount is below elapsed-time estimate; retain conservative total estimate while billing catches up."
+    },
+    {
+      "id": "gmmphzfgodxci2",
+      "name": "lucas-entrapment-cpp-final100-20260919",
+      "created_at_utc": "2026-09-19T12:03:06.500Z",
+      "hourly_usd": 0.96,
+      "status": "running",
+      "data_center": "EUR-IS-1",
+      "purpose": "Frozen C++ final100 and matched orchard baseline100; four25-game shards pervariant",
+      "incremental_budget_usd": 1.5,
+      "delete_by_utc": "2026-09-19T13:28:00Z"
     }
   ],
   "estimated_spend_usd": 5.2511,
@@ -53,7 +64,7 @@
       "attempts": 1
     }
   ],
-  "result": "24/24 completed native games backed up; nursery pod deleted (204) and absence verified (404). Nursery billing not posted yet; estimate includes conservative uptime and $0.01 disk allowance.",
+  "result": "Final C++ benchmark pod is running; prior conservative spend5.2511 plus accrued pod uptime. New pod budget1.50, below total10.",
   "estimate_updated_at_utc": "2026-09-19T08:44:22Z",
   "confirmed_spend_usd_before_nursery": 4.891723719847505
 }
