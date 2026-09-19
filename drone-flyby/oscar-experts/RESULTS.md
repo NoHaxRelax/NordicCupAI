@@ -1,3 +1,7 @@
+> Clock note: the times written as "CEST" in this file are session-relative and run about 9.5 hours ahead of the
+> laptop's local time (the session started at midnight local and the labels drifted); the UTC timestamps in
+> VALIDATION-SCORES.md and the organizer receipts are authoritative.
+
 # Overnight results, 19 Sep 2026 (draft, updated as stages finish)
 
 All numbers are on TRAINING tiles (grid384 train split: reference frames plus training-split validation
@@ -629,3 +633,6 @@ the validation scene; caps 12 deployed (working tree and pod 1). Submitted from 
 Validation API, attempt Y-A19-caps12 from pod 1 (23:05, full run first try): **0.2302** with 172/249 frames
 (0.00134 per delivered frame; Y-A18 0.00138, Y-A13 0.00131, Y-A2 0.00123). The last three configurations are
 indistinguishable on the API within the delivery noise; the proxy separates them by 0.005 each.
+
+Recording Y-A20 (sprite caps 16, i.e. every sprite of every class): proxy 0.314 (caps 12: 0.315) at 3.6 s per frame.
+Saturated; caps 12 stay deployed. Training-only levers are exhausted for this session.

@@ -222,6 +222,20 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 - 22:45 full_pass.sh now exports DRONE_EXPERT_WINDOW_GPU with a 2000/4000 MB per-shard budget (speed session's tip:
   3.4 -> 2.7 s per tile, identical summaries). Milestone 11 pushed (7918dab). Y-A19 (sprite caps 12) recording on pod 1.
 
+## Final status of the overnight session (both pods stopped, disks kept)
+- Deployed expert pipeline (pod 1 project + working tree, milestone 13 on drone/oscar-experts): pass 11 experts,
+  95-sprite bank, sprite caps 12, gates v9, verifier v1, helicopter scales, L0 half scale, speed batches 1-12, MPS.
+- Best local proxy 0.315 (L1-only top-band sweep, recording Y-A19); API 0.230 with 172 of 249 frames delivered;
+  API noise from frame delivery is about 0.03, the local proxy's about 0.002. Full table: VALIDATION-SCORES.md.
+- Levers ranked on the validation scene: camera strategy (L1-only sweep +0.13 over l2-top), verifier (+0.115), bank
+  coverage (+0.08 from 68 to 95 sprites, caps 6 -> 12 +0.01), L1 native (+0.10 over delivered), top band (+0.12 over
+  mid band); neutral: tracker thresholds, confidence floor, helicopter scales; harmful: later gate refits, verifier v2,
+  L0 overview frames, revisits, crude box-mask sprites.
+- To resume: `start` the pods (pod-action), rerun /workspace/experts/mps_on.sh, start a replay server on 19123 with
+  `( setsid nohup ... & )` in its own ssh call, submit with validate_retry.sh from the laptop.
+- For Oscar: review the auto sprites (auto-sprites-review-sheet.png); decide on validation-scene sprites; the live
+  policy needs legal camera steps (L1 1102 px, L2 551 px, no L0->L2).
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.
