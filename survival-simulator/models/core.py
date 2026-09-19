@@ -423,6 +423,14 @@ class EntrapmentPolicy:
         pose = self.estimator.poses[aid]
         if aid in self.retired_baits or self._arrival(aid): return action_for(aid)
         rear = self.site['replacement_entry']
+        # A past visit to the rear waypoint is not a permanent exemption from
+        # predator avoidance. A detour can bring the replacement back around
+        # the exposed front; send it to the rear again and restore avoidance.
+        if (aid in self.entered_rear and
+                float((pose.position-np.asarray(self.site['mouth'])) @ np.asarray(self.site['inward'])) < 0.):
+            self.entered_rear.discard(aid)
+            self.navigator.release(aid)
+            self.event('replacement_left_rear_route',agent=aid)
         if math.dist(pose.position, rear) < 3.: self.entered_rear.add(aid)
         target = self.site['goal'] if aid in self.entered_rear else rear
         plan = self.navigator.steer(aid, pose.position, target, self.now)
