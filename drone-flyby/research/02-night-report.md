@@ -99,7 +99,31 @@ averaged over all 16 classes, about 0.66 over the 11 it was trained on, and no e
 
 ## Per class, the deployed model against organiser truth
 
-PER_CLASS_F3_TABLE
+One class per concealed portal run, AP = portal score x 13 (the validation truth holds 13 classes).
+
+| class | `both_m1280.pt` (organiser-convention boxes) | the earlier model trained on pseudo-label boxes |
+|---|---:|---:|
+| jet_plane | 0.97 | 0.97 |
+| helicopter | 0.96 | 0.93 |
+| hangar | 0.95 | 0.95 |
+| mine_roller | 0.93 | 0.92 |
+| tank | 0.87 | 0.47 |
+| small_tower | 0.80 | 0.07 |
+| large_launcher | 0.72 | 0.66 |
+| large_tower | 0.70 | 0.75 |
+| small_plane | 0.66 | 0.06 |
+| small_launcher | 0.56 | 0.57 |
+| medium_plane | 0.50 | 0.47 |
+| medium_launcher | 0.14 | 0.08 |
+| ta-ta | 0.00 | 0.00 |
+| condor | 0.00 | 0.00 |
+| spacecraft | 0.00 | 0.00 |
+| jammer | not measured (the run failed) | 0.00 |
+
+The measured classes sum to 0.673, consistent with the three-thirds estimate of 0.694. What changed: tank 0.47 to 0.87 and
+small_tower 0.07 to 0.80 (box convention), and small_plane 0.06 to 0.66 (the generator no longer treats the unlabelled
+planes in the validation frames as background). What is left on validation: medium_launcher (0.14), medium_plane (0.50),
+small_launcher (0.56) and whichever of ta-ta, condor, jammer, spacecraft is the 13th class (each class is worth 0.077).
 
 ## What is still on the table
 
@@ -124,4 +148,5 @@ run with that run's attempt, so `elias/portal.py` only accepts a result whose UR
 ## Cost
 
 Three RunPod GPUs, all created and terminated by the agent; Oscar's pods were never touched.
-COST_LINE
+RTX 4090 for 3.7 h and 2.9 h at 0.74 USD per hour, RTX 5090 for 2.9 h at 0.99: **about 7.80 USD of the 10 USD allowed.**
+All three were terminated by 06:17 and the account listing was checked afterwards: no agent pod remains.
