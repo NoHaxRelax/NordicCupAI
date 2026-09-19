@@ -1,0 +1,182 @@
+[
+  {
+    "model": "scheduled_breeding",
+    "n": 1000,
+    "mean": 1559.9923799359453,
+    "ci95": [
+      1534.0611044131538,
+      1585.3086817554222
+    ],
+    "steps": 15719923,
+    "interface_us_per_tick": 0.3008081878009199,
+    "policy_us_per_tick": 558.4975171738437,
+    "engine_us_per_tick": 437.3361927254987,
+    "loop_wall_us_per_tick": 996.1731406581317,
+    "loop_cpu_us_per_tick": 973.2544894884663
+  },
+  {
+    "model": "trait_succession",
+    "n": 1000,
+    "mean": 1537.6800387986377,
+    "ci95": [
+      1513.417214323375,
+      1561.8891312659962
+    ],
+    "steps": 15486646,
+    "interface_us_per_tick": 0.291339879080338,
+    "policy_us_per_tick": 463.95623824177295,
+    "engine_us_per_tick": 354.5564240177634,
+    "loop_wall_us_per_tick": 818.8424006115333,
+    "loop_cpu_us_per_tick": 799.6802775502197
+  },
+  {
+    "model": "population_harvest",
+    "n": 1000,
+    "mean": 1529.3213326089317,
+    "ci95": [
+      1505.1017606092441,
+      1553.633030050646
+    ],
+    "steps": 15533560,
+    "interface_us_per_tick": 0.2859578298213674,
+    "policy_us_per_tick": 502.34971043424684,
+    "engine_us_per_tick": 363.57107646695283,
+    "loop_wall_us_per_tick": 866.2449506597329,
+    "loop_cpu_us_per_tick": 842.0633631280273
+  },
+  {
+    "model": "population_explore",
+    "n": 1000,
+    "mean": 1519.466557605213,
+    "ci95": [
+      1495.2433001400595,
+      1543.230188901878
+    ],
+    "steps": 15487483,
+    "interface_us_per_tick": 0.3048818113956929,
+    "policy_us_per_tick": 503.81315832940703,
+    "engine_us_per_tick": 397.74633964356894,
+    "loop_wall_us_per_tick": 901.9024768306767,
+    "loop_cpu_us_per_tick": 882.7994205273382
+  },
+  {
+    "model": "distributed_orchards",
+    "n": 1000,
+    "mean": 1517.812213907072,
+    "ci95": [
+      1494.0560152592207,
+      1540.7685689097057
+    ],
+    "steps": 15528963,
+    "interface_us_per_tick": 0.3030751150608061,
+    "policy_us_per_tick": 489.6096045056582,
+    "engine_us_per_tick": 384.8538716355368,
+    "loop_wall_us_per_tick": 874.8062838062658,
+    "loop_cpu_us_per_tick": 853.2362372428217
+  },
+  {
+    "model": "mobile_harvest",
+    "n": 1000,
+    "mean": 1517.5243093622103,
+    "ci95": [
+      1494.342996657365,
+      1540.442429966906
+    ],
+    "steps": 15575345,
+    "interface_us_per_tick": 0.3110282983137773,
+    "policy_us_per_tick": 478.4525521775601,
+    "engine_us_per_tick": 402.65221802155907,
+    "loop_wall_us_per_tick": 881.45394727372,
+    "loop_cpu_us_per_tick": 856.6654351710989
+  },
+  {
+    "model": "clustered_orchards",
+    "n": 1000,
+    "mean": 1509.9365696026662,
+    "ci95": [
+      1484.8069867187337,
+      1535.2351537718505
+    ],
+    "steps": 15422554,
+    "interface_us_per_tick": 0.2617342106890986,
+    "policy_us_per_tick": 455.99224740636345,
+    "engine_us_per_tick": 351.0491448616746,
+    "loop_wall_us_per_tick": 807.342415903034,
+    "loop_cpu_us_per_tick": 783.7374306304908
+  },
+  {
+    "model": "expanded_population",
+    "n": 1000,
+    "mean": 1505.1267070250913,
+    "ci95": [
+      1481.1114148626707,
+      1529.4089885913704
+    ],
+    "steps": 15316209,
+    "interface_us_per_tick": 0.29165466180306104,
+    "policy_us_per_tick": 491.75701691919977,
+    "engine_us_per_tick": 375.37204550159896,
+    "loop_wall_us_per_tick": 867.46022173594,
+    "loop_cpu_us_per_tick": 843.3474253414144
+  },
+  {
+    "model": "economy_gaze",
+    "n": 1000,
+    "mean": 1503.8511454930679,
+    "ci95": [
+      1480.9704015738055,
+      1527.288714569781
+    ],
+    "steps": 15136323,
+    "interface_us_per_tick": 0.3003235283760792,
+    "policy_us_per_tick": 507.9151628369717,
+    "engine_us_per_tick": 391.63515069267487,
+    "loop_wall_us_per_tick": 899.889177052115,
+    "loop_cpu_us_per_tick": 877.0520289073509
+  },
+  {
+    "model": "ripeness_reserve",
+    "n": 1000,
+    "mean": 1500.4181065393757,
+    "ci95": [
+      1476.7430795024336,
+      1523.7661872761062
+    ],
+    "steps": 15235409,
+    "interface_us_per_tick": 0.2856927078885772,
+    "policy_us_per_tick": 492.80371339148166,
+    "engine_us_per_tick": 362.2036182388015,
+    "loop_wall_us_per_tick": 855.3310705179624,
+    "loop_cpu_us_per_tick": 833.9709805845055
+  },
+  {
+    "model": "previous_winner",
+    "n": 1000,
+    "mean": 1491.723610033607,
+    "ci95": [
+      1467.3880857014722,
+      1515.7890494585342
+    ],
+    "steps": 15200105,
+    "interface_us_per_tick": 0.2967423994768457,
+    "policy_us_per_tick": 503.655921529621,
+    "engine_us_per_tick": 382.3897409822498,
+    "loop_wall_us_per_tick": 886.3823603674448,
+    "loop_cpu_us_per_tick": 859.6248028020859
+  },
+  {
+    "model": "original_baseline",
+    "n": 1000,
+    "mean": 1466.9471783380802,
+    "ci95": [
+      1440.9606098218337,
+      1493.2959260544085
+    ],
+    "steps": 14871927,
+    "interface_us_per_tick": 0.19715635384708383,
+    "policy_us_per_tick": 340.19094345420064,
+    "engine_us_per_tick": 257.73937959391543,
+    "loop_wall_us_per_tick": 598.1646107530652,
+    "loop_cpu_us_per_tick": 581.1302228615028
+  }
+]
