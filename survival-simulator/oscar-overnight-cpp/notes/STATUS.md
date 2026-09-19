@@ -680,3 +680,9 @@ Log (newest last)
   lategame.py now plays each seed ONCE and forks every variant at 300, 600, ... 2400 s along the way (effects can be
   read per phase). Queue on all 10 pods: 01_B1 (running), 02_L2 (resource variants, all checkpoints, seeds
   9000-9479), 03_E2 (evasion variants incl. wall hiding, all checkpoints, fresh seeds 9480-9959).
+- 13:47 L1 RESULT (late-only evasion changes at forked checkpoints 1500/1700/2000, 424 paired games):
+  ALL worse: face 160 -62+-10, face 250 -98, flee 120 -105, flee 120 + face 160 -97, sprint 60 -22, wall
+  hiding -36 / -44, shared alarms -14; dodge radius 120 = no effect (dodges only act on predators already inside
+  the flee radius). More caution = less foraging, and the late colony is food-limited. Queued 04_E3: LESS reactive
+  evasion (flee 50/60, face 60, sprint 30, dodge angle 1.2/1.6, no facing, combined) at all checkpoints, seeds
+  9960-10439.
