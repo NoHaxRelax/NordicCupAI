@@ -6,7 +6,8 @@
       "name": "lucas-entrapment-site-coverage-20260918",
       "created_at_utc": "2026-09-18T20:14:35.758Z",
       "hourly_usd": 0.48,
-      "status": "running",
+      "status": "terminated",
+      "terminated_at_utc": "2026-09-19T06:24:30Z",
       "data_center": "EU-RO-1",
       "ssh_host": "213.173.105.83",
       "ssh_port": 39610,
@@ -18,7 +19,7 @@
       ]
     }
   ],
-  "estimated_spend_usd": 0.29,
+  "estimated_spend_usd": 4.88,
   "creation_attempts": [
     {
       "cpu": "cpu3c",
@@ -36,6 +37,6 @@
       "attempts": 1
     }
   ],
-  "result": "New 16-vCPU CPU3 pod created successfully after explicit data-center selection; earlier attempts failed. Spend now accrues at $0.48/hour.",
-  "estimate_updated_at_utc": "2026-09-18T20:50:47.675409+00:00"
+  "result": "The 16-vCPU CPU3 pod was terminated after required artifacts were backed up and checksum dry-run verification completed. Estimated spend is based on elapsed wall time at $0.48/hour; it is not an exact billing total.",
+  "estimate_updated_at_utc": "2026-09-19T06:24:30Z"
 }
