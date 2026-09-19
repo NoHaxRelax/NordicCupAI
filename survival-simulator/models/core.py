@@ -159,8 +159,8 @@ class EntrapmentPolicy:
             if life < travel + 15.: continue
             old = self.orchard.minds[aid].old or s['age'] >= 55.
             deadline = math.inf if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
-            choices.append((travel < deadline, old, life-travel,
-                            s['energy'], -distance, aid, travel))
+            choices.append((travel+5. < deadline, -travel, old, life-travel,
+                            s['energy'], aid, travel))
         return max(choices)[-2:] if choices else None
 
     def _bait_roles(self, states):
@@ -196,11 +196,26 @@ class EntrapmentPolicy:
             target = self.site['goal'] if entered else self.site['replacement_entry']
             plan = self.navigator.steer(aid, pose.position, target, self.now)
             distance = plan.remaining
+            # Avoidance and ageing can invalidate the dispatch estimate.
+            # Reassign early when another viable agent can beat that deadline.
+            remaining = distance + (0. if entered else math.dist(target, self.site['goal']))
+            travel = remaining/(max(.1, states[aid]['speed'])*.3*10.)
+            life = remaining_life(states[aid]['energy']-remaining/.3*.05-6., states[aid]['age'])
+            deadline = math.inf if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
+            if not entered and (travel+5. >= deadline or life < travel+15.):
+                alternative = self._select_bait(states, self.retired_baits | {self.bait, aid}
+                                               | {t.guide_id for t in self.tracks.values()})
+                if alternative is not None and alternative[1]+5. < deadline and (alternative[1] < travel or life < travel+15.):
+                    self.event('replacement_reassigned', agent=aid, replacement=alternative[0])
+                    self.incoming = None
+                    self.bait_progress = None
+                    self.bait_retry_after[aid] = self.now+15.
+                    self.navigator.release(aid)
             last = self.bait_progress
             if last is None or last[0] != entered or distance < last[1]-2.:
                 self.bait_progress = (entered, distance, self.now)
             stalled = self.now-self.bait_progress[2] > 8.
-            if stalled:
+            if stalled and self.incoming is not None:
                 self.event('replacement_stalled', agent=aid)
                 self.bait_retry_after[aid] = self.now+15.
                 self.incoming = None
@@ -290,7 +305,7 @@ class EntrapmentPolicy:
             self.metrics['guide_assignments'] += 1
             self.event('guide_assigned', agent=aid, track=track.key)
 
-    def _bait_action(self, aid, s):
+    def _bait_action(self, aid, s, states):
         pose = self.estimator.poses[aid]
         if aid in self.retired_baits or self._arrival(aid): return action_for(aid)
         rear = self.site['replacement_entry']
@@ -301,7 +316,32 @@ class EntrapmentPolicy:
             # Retry when geometry changes or a transient collision clears.
             if int(self.now*10) % 30 == 0: self.navigator.release(aid)
             return action_for(aid, turn_angle=.2)
-        x, y = local(pose, plan.waypoint)
+        waypoint = plan.waypoint
+        # No food waits or assumed food gains: even if the fruit disappears,
+        # this short detour must leave enough energy and handoff time.
+        if (aid not in self.entered_rear and self.bait in states
+                and s['energy'] < s['max_energy']):
+            deadline = remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
+            segment = waypoint-pose.position
+            length2 = float(segment @ segment)
+            options = []
+            for o in s['observations']:
+                if o['type'] != 'Fruit' or o['distance'] > 40.: continue
+                fruit = pose.position+rotate(np.array([o['distance']*math.cos(o['angle']),
+                                                       o['distance']*math.sin(o['angle'])]), pose.heading)
+                fraction = float(np.clip((fruit-pose.position) @ segment/max(length2, 1e-9), 0., 1.))
+                if np.linalg.norm(fruit-pose.position-fraction*segment) > 15.: continue
+                if not self.navigator._clear(pose.position, fruit) or not self.navigator._clear(fruit, waypoint): continue
+                extra = max(0., float(np.linalg.norm(fruit-pose.position)+np.linalg.norm(waypoint-fruit)-math.sqrt(length2)))
+                if extra > 20.: continue
+                total = plan.remaining+math.dist(rear, self.site['goal'])+extra
+                travel = total/(max(.1, s['speed'])*.3*10.)+.2
+                life = remaining_life(s['energy']-total/.3*.05-6., s['age'])
+                if travel+5. < deadline and life >= travel+15.:
+                    options.append((extra, o['distance'], fruit))
+            if options:
+                waypoint = min(options, key=lambda x: x[:2])[2]
+        x, y = local(pose, waypoint)
         angle = math.atan2(y, x)
         distance = min(s['speed'], math.hypot(x, y)/MOVE_PENALTY[s['biome']])
         return action_for(aid, move_distance=distance, move_direction=angle,
@@ -367,13 +407,17 @@ class EntrapmentPolicy:
         for aid, s in states.items():
             role = self.roles.get(aid)
             if role in ('bait', 'replacement_bait', 'retired_bait'):
-                action = self._bait_action(aid, s)
+                action = self._bait_action(aid, s, states)
                 if role == 'replacement_bait' and not self._arrival(aid):
                     pose = self.estimator.poses[aid]
                     bait_local = local(pose, self.site['goal'])
                     shared = self._shared_predators(aid)
                     avoidance_state = s
-                    if aid in self.entered_rear:
+                    rear = np.asarray(self.site['replacement_entry'])
+                    behind = float((pose.position-np.asarray(self.site['other_mouth'])) @ np.asarray(self.site['inward'])) >= 0.
+                    rear_approach = (behind and math.dist(pose.position, rear) <= 25.
+                                     and self.navigator._clear(pose.position, rear))
+                    if aid in self.entered_rear or rear_approach:
                         # On the final rear approach, permit sensing range of
                         # the observed trap occupants, but avoid other predators.
                         def occupant(o):

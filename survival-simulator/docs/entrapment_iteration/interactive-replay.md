@@ -55,3 +55,22 @@ score 503.23 (previous same-seed baseline 632.18). Five bait arrivals included
 two overlapping replacements, but estimated bait gaps still totalled 95.3
 seconds, longest 68.9 seconds. Bait continuity remains unresolved. Runtime was
 155.4 seconds. Saved summary and source manifest accompany this document.
+
+## Nearby bait and opportunistic fruit (2026-09-19)
+
+Viable candidates now prioritize conservative travel time, with old age as a
+tie-breaker. Incoming bait is reassessed if avoidance or ageing makes its
+estimated deadline or arrival reserve unsafe. Fruit detours use only current
+observations: fruit must be within 40 units, within 15 units of the next route
+segment, add at most 20 units of walking, and have clear paths to and from it.
+Without counting any fruit gain, estimated arrival must beat the active bait's
+conservative lifetime by 5 seconds and leave at least 15 seconds of idle life.
+There is no waiting for fruit and no detour after entering the channel.
+
+The previous replay showed replacements stopped 8–12 units short of the rear
+waypoint by predator avoidance. The trap-occupant exception now also covers
+the clear approach within 25 units of that waypoint on the rear side. There
+is no timed wait outside the trap. All deadlines remain estimates, not a
+guarantee against blocked paths, localization errors or lack of viable agents.
+
+Replay: `logs/entrapment-iteration/interactive-bait-fruit-v2-20260919`, port 9070.
