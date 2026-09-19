@@ -1099,3 +1099,46 @@ Rescues (27B below 0.5, extractor at 0.5 or more): 10 with DeBERTa, 12 with RoBE
 actually be computed from the two spans scores below the 27B alone, and the 27B's whole misses are
 shared, so there is nothing for a zero-shot extractor to cover. The only untested route stays the
 fine-tune, and it would have to clear 0.7119 on its own (research/10, entry 61).
+
+
+## 63. "It came back normal": does the 27B cite the answer without its subject, and should the prompt ask for context?
+
+Elias's observation on the overlap page. `bench/context_pattern.py` rebuilds the served clause units,
+takes the unit run the served pipeline built from each answer (`model.anchor_ids`, asserted equal to the
+served span on all 195 gold-yes training questions) and compares it with the run of units that best
+matches the gold interval (the same oracle as `bench/units/clause_oracle.py`, ceiling 0.9201). Full
+listing with every cited and annotated text in `research/13-context-pattern.md`; all 72 differing rows
+read by hand.
+
+| cited run against the annotated run | n | mean tIoU |
+| --- | ---: | ---: |
+| same units | 123 | 0.927 |
+| short at the front (the pattern) | 15 | 0.453 |
+| long at the front (its mirror image) | 18 | 0.402 |
+| short at the back | 13 | 0.460 |
+| long at the back | 9 | 0.519 |
+| disjoint | 16 | 0.000 |
+| shifted | 1 | 0.165 |
+
+The pattern is real in 7 questions (three of them the same thyroid span in sample_48: "It came back
+normal." where the annotators start two units earlier). Its mirror image is more common: 18 rows where
+the model included the set-up and the annotators scored only the answer ("And what did it say? It was
+negative." is scored on "It was negative." alone). The confirmation that follows an answer goes the same
+way, 13 added by the annotators only against 9 added by the model only. The served prompt already asks
+for a neighbour "when the fact is spread over two (a question and its answer, a statement and its
+number)", and the model applies it about as often as the annotators do.
+
+Simulated prompt change, adding the unit in front of the citation:
+
+| trigger | fires | wins | loses | mean tIoU | score |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| never (served) | 0 | | | 0.7119 | 0.8261 |
+| the citation opens on a pronoun | 53 | 6 | 39 | 0.6675 | 0.7995 |
+| pronoun-led and one unit long | 27 | 5 | 17 | 0.6906 | 0.8133 |
+| always | 195 | 17 | 162 | 0.4983 | 0.6980 |
+| only when it helps (perfect trigger) | 17 | 17 | 0 | 0.7331 | 0.8389 |
+
+**Verdict: do not prompt for more context.** Every trigger that can be written loses more than it wins;
+the perfect trigger is worth +0.021 tIoU and research/10 measured that a learned previous-utterance
+classifier captures 0.009 of it. The 16 whole misses are a different failure (a valid passage cited, the
+annotators marked another mention; two golds sit on the greeting).
