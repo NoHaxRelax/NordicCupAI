@@ -81,3 +81,8 @@ Log (newest last)
   (the handoff needs it). Known hard case: predator between the guide and the trap (bearing 180): the predator
   either eats the guide at close range or wanders off out of its senses. Measuring delivery by bearing: g1 (12
   seeds) on i, g2 full grid on j/k.
+- 02:25 FIRST STEP-1 MEASUREMENT (g2, 1746 valid scenarios of 5184; 46% skipped for no clear straight line, 20%
+  invalid site): delivered 62%; by predator bearing 0/90/180 (behind guide / side / between guide and trap):
+  85% / 68% / 34%; by guide walk speed 10/13/16: 55/62/68%; start distance 150: 74%. Bait never died. Failure
+  modes: predator lost / re-acquire loop 77%, guide killed within 8 s 22%. Fix under test (g3): hold the predator
+  at 100-130 while leading instead of walking away at full speed.

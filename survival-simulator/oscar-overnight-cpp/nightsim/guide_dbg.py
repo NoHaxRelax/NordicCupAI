@@ -4,6 +4,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 import nightsim
 from nightsim.trapsite import grade
 seed, dg, dp, bear, sp = int(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5])
+PHI = [int(sys.argv[6])] if len(sys.argv) > 6 else [0, 10, -10, 20, -20, 30, -30, 45, -45, 60, -60]
 kw = json.load(open('/workspace/night/cfg-r21.json'))['r21s0c2']
 sim = nightsim.SimulationCore(seed=seed, predators=False); eng = sim._engine
 sim.step([]); eng.pop_events()
@@ -25,7 +26,7 @@ gid, gx, gy, mx, my, ox, oy, ov, gap, rear, nw = sites[0]
 ax, ay = (mx - gx), (my - gy); n = math.hypot(ax, ay); ax, ay = ax / n, ay / n
 def clear(x0, y0, x1, y1): return all(not eng.dbg_pred_blocked(x0 + (x1-x0)*i/40, y0 + (y1-y0)*i/40) for i in range(41))
 found = None
-for phi in [0, 10, -10, 20, -20, 30, -30, 45, -45, 60, -60]:
+for phi in PHI:
     f = math.radians(phi); dx, dy = ax * math.cos(f) - ay * math.sin(f), ax * math.sin(f) + ay * math.cos(f)
     gsx, gsy = mx + dx * dg, my + dy * dg
     b = math.radians(bear); px, py = gsx + dp * (dx * math.cos(b) - dy * math.sin(b)), gsy + dp * (dx * math.sin(b) + dy * math.cos(b))
