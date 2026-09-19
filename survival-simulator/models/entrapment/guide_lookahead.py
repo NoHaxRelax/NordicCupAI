@@ -98,7 +98,11 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
     waypoints = route.get('waypoints') or [(
         HORIZON*action['move_distance']*modifier*math.cos(action['move_direction']),
         HORIZON*action['move_distance']*modifier*math.sin(action['move_direction']))]
-    preferred_min,preferred_max = memory.get('_preferred_predator_distance',(100.,120.))
+    following_distance = memory.get('_preferred_predator_distance',(100.,120.))
+    reacquiring = bool(memory.get('_predator_not_following',False))
+    # The following gap is useful only after contact is established. Keeping
+    # 100 units away from a predator looking elsewhere prevents reacquisition.
+    preferred_min,preferred_max = (0.,55.) if reacquiring else following_distance
     samples = [((0.,0.),modifier,0.)] + [
         (tuple(p),TERRAIN[biome],uncertainty)
         for p,biome,uncertainty in memory.get('_terrain_samples',())]
@@ -242,6 +246,7 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
     _,winner,captures,scenarios,minimum = min(checked,key=lambda x:x[0])
     return winner.first,dict(horizon_ticks=HORIZON,horizon_seconds=.3,
         capture_radius=CAPTURE_RADIUS,extra_predator_clearance=0.,preferred_distance=[preferred_min,preferred_max],
+        reacquiring_contact=reacquiring,following_distance=list(following_distance),
         predicted_safe=captures==0,capture_scenarios=captures,sampled_scenarios=scenarios,
         minimum_separation=round(minimum,2),observation_lag_estimated=lag_known,expanded=expanded,
         terrain_samples=len(samples),terrain_scenarios=['observed_samples','river_next_tick','river_in_two_ticks'],

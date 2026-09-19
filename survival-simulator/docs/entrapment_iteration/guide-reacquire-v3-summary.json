@@ -1,0 +1,670 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 5368,
+  "sim_time": 536.8000000000535,
+  "runtime_seconds": 227.4114733869792,
+  "score": 548.9517234410756,
+  "final_agents": 0,
+  "peak_agents": 28,
+  "total_agents_seen": 121,
+  "predators": 5,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 3,
+  "maximum_predators_continuously_near_bait_30s": 3,
+  "estimated_bait_gap_seconds_after_first_arrival": 0.1,
+  "longest_estimated_bait_gap_seconds": 0.1,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 31,
+    "guide_deaths": 28,
+    "guide_releases": 0,
+    "delivery_arrivals": 2,
+    "bait_arrivals": 17,
+    "overlapping_replacements": 16,
+    "estimated_unbaited_seconds": 2.600000000000037,
+    "no_viable_bait_ticks": 1997
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 61,
+      "predator:guide": 25,
+      "starvation:retired_bait": 16,
+      "predator:avoiding_predator": 11,
+      "starvation:guide": 4,
+      "starvation:avoiding_predator": 2,
+      "predator:replacement_bait": 1,
+      "starvation:bait": 1
+    },
+    "fruit_eaten": 848,
+    "energy_deaths_before_age_60": {
+      "gatherer": 25,
+      "guide": 3,
+      "avoiding_predator": 1
+    },
+    "ripe_fruit_eaten": 768,
+    "ripe_fraction": 0.9056603773584906,
+    "mean_agent_energy_fraction": 0.3208492720935237,
+    "predator_deaths_with_sprint_available": {
+      "avoiding_predator": 2,
+      "guide": 5,
+      "replacement_bait": 1
+    },
+    "premature_guide_predator_deaths_with_sprint_available": 5,
+    "premature_guide_death_cases": [
+      {
+        "time": 285.8999999999965,
+        "agent": 58,
+        "energy_before": 177.00637770020535,
+        "energy_at_death": 175.6828147130368,
+        "sprint_threshold": 100.0,
+        "biome": "swamp",
+        "action": {
+          "agent_id": 58,
+          "move_distance": 11.385987875859634,
+          "move_direction": -2.61799388,
+          "turn_angle": 0.19207100103119606,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 23.6,
+          "handoff_distance": 836.53,
+          "mode": "sprint",
+          "route": {
+            "dist": 836.5329810995008,
+            "dist_to_point": 73.73937844376408,
+            "dir": -0.21299699533887284,
+            "waypoints": [
+              [
+                72.07299900867123,
+                -15.587775568333512
+              ],
+              [
+                121.83930809353379,
+                -124.7817061692141
+              ],
+              [
+                -359.62877602442586,
+                -322.2367237701384
+              ],
+              [
+                -433.6482519017126,
+                -419.73088848088867
+              ]
+            ],
+            "clearance": 11.0,
+            "replans": 7
+          },
+          "reacquisitions": 1,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 72,
+            "sampled_scenarios": 72,
+            "minimum_separation": 7.75,
+            "observation_lag_estimated": true,
+            "expanded": 333,
+            "terrain_samples": 20,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -4.930277379555237,
+                -2.846496959062417
+              ],
+              [
+                -1.5822230793497742,
+                -7.450920091245357
+              ],
+              [
+                4.076346666068229,
+                -8.076034811553303
+              ]
+            ],
+            "predator_path": [
+              [
+                16.328181368614715,
+                1.2875993174993852
+              ],
+              [
+                1.3340896522031382,
+                1.7085667744812099
+              ],
+              [
+                -7.92523397361229,
+                -0.8732941017186222
+              ],
+              [
+                -19.694750610915747,
+                -8.449301606209435
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 11.386,
+            "sprint_selected": true,
+            "energy": 177.006,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      },
+      {
+        "time": 333.0000000000072,
+        "agent": 64,
+        "energy_before": 163.5884491872485,
+        "energy_at_death": 161.30981854357373,
+        "sprint_threshold": 100.0,
+        "biome": "swamp",
+        "action": {
+          "agent_id": 64,
+          "move_distance": 13.335784981632791,
+          "move_direction": 3.07412285,
+          "turn_angle": -0.06746980426598231,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 22.41,
+          "handoff_distance": 794.92,
+          "mode": "sprint",
+          "route": {
+            "dist": 794.9244321892729,
+            "dist_to_point": 7.999999999999981,
+            "dir": 2.7459009866011153,
+            "waypoints": [
+              [
+                -7.381841475847267,
+                3.083572023718716
+              ],
+              [
+                -40.94474996537541,
+                23.50890553188958
+              ],
+              [
+                -220.8715337020122,
+                -113.70025048253069
+              ],
+              [
+                -386.317024669485,
+                -293.22125069847164
+              ],
+              [
+                -633.159135519732,
+                -419.4165887047419
+              ]
+            ],
+            "clearance": 5.01,
+            "mode": "rejoin_predator_lane",
+            "replans": 12
+          },
+          "reacquisitions": 1,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 51,
+            "sampled_scenarios": 72,
+            "minimum_separation": 4.07,
+            "observation_lag_estimated": false,
+            "expanded": 237,
+            "terrain_samples": 20,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -6.652721542455955,
+                0.44954015129700553
+              ],
+              [
+                -13.19628975428849,
+                -0.8320624884398432
+              ],
+              [
+                -6.651849006723998,
+                -2.109202093456924
+              ]
+            ],
+            "predator_path": [
+              [
+                22.361218160709793,
+                -1.5110004923721798
+              ],
+              [
+                7.798318563685845,
+                2.083711641721413
+              ],
+              [
+                -7.036632810658379,
+                4.302769487033798
+              ],
+              [
+                -13.386546147826945,
+                3.3332135395817355
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 13.336,
+            "sprint_selected": true,
+            "energy": 163.588,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      },
+      {
+        "time": 337.3000000000082,
+        "agent": 71,
+        "energy_before": 166.41131395030115,
+        "energy_at_death": 165.09238857250455,
+        "sprint_threshold": 100.0,
+        "biome": "swamp",
+        "action": {
+          "agent_id": 71,
+          "move_distance": 11.385987875859634,
+          "move_direction": 2.77418591,
+          "turn_angle": -0.1629320419650335,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 22.83,
+          "handoff_distance": 480.12,
+          "mode": "sprint",
+          "route": {
+            "dist": 480.1230800040206,
+            "dist_to_point": 384.45788658141447,
+            "dir": -2.723601230382814,
+            "waypoints": [
+              [
+                -351.35841391853745,
+                -156.06130693832293
+              ],
+              [
+                -446.93760282269136,
+                -160.11690566215142
+              ]
+            ],
+            "clearance": 11.0,
+            "replans": 2
+          },
+          "reacquisitions": 1,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 72,
+            "sampled_scenarios": 72,
+            "minimum_separation": 7.25,
+            "observation_lag_estimated": true,
+            "expanded": 333,
+            "terrain_samples": 21,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -5.3130547442737335,
+                2.0449032401695737
+              ],
+              [
+                -5.313054762520368,
+                7.737897178099391
+              ],
+              [
+                -0.38277740121176596,
+                10.584394168765908
+              ]
+            ],
+            "predator_path": [
+              [
+                15.583324781804905,
+                -1.390237871348715
+              ],
+              [
+                0.6026076104436964,
+                -2.1505753172787743
+              ],
+              [
+                -10.564085583661463,
+                0.6922951882980843
+              ],
+              [
+                -22.671382247702624,
+                8.103504673549965
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 11.386,
+            "sprint_selected": true,
+            "energy": 166.411,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      },
+      {
+        "time": 342.6000000000094,
+        "agent": 87,
+        "energy_before": 297.430832510987,
+        "energy_at_death": 296.7047778969076,
+        "sprint_threshold": 100.0,
+        "biome": "swamp",
+        "action": {
+          "agent_id": 87,
+          "move_distance": 11.385987875859634,
+          "move_direction": -2.0943951,
+          "turn_angle": 0.35660356620930594,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 24.46,
+          "handoff_distance": 577.28,
+          "mode": "walk",
+          "route": {
+            "dist": 577.2784016798053,
+            "dist_to_point": 300.0487297045232,
+            "dir": -1.420757098406144,
+            "waypoints": [
+              [
+                44.85036004260884,
+                -296.67774672419637
+              ],
+              [
+                -7.170825445593264,
+                -568.9828830766429
+              ]
+            ],
+            "clearance": 11.0,
+            "replans": 5
+          },
+          "reacquisitions": 1,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 24,
+            "sampled_scenarios": 72,
+            "minimum_separation": 14.03,
+            "observation_lag_estimated": true,
+            "expanded": 171,
+            "terrain_samples": 28,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -2.84649695716579,
+                -4.930277380650255
+              ],
+              [
+                1.7698677634570004e-08,
+                -9.860554751082173
+              ],
+              [
+                2.9571903171977976,
+                -14.725244413316954
+              ]
+            ],
+            "predator_path": [
+              [
+                18.33145781915767,
+                2.9591492935630743
+              ],
+              [
+                4.105471391177312,
+                7.715335807033575
+              ],
+              [
+                -10.89068175865864,
+                8.055027883280875
+              ],
+              [
+                -25.31743993178664,
+                3.9478818408221414
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 11.386,
+            "sprint_selected": false,
+            "energy": 297.431,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      },
+      {
+        "time": 345.7000000000101,
+        "agent": 75,
+        "energy_before": 320.21190527580103,
+        "energy_at_death": 318.8539016971628,
+        "sprint_threshold": 100.0,
+        "biome": "swamp",
+        "action": {
+          "agent_id": 75,
+          "move_distance": 11.385987875859634,
+          "move_direction": 1.57079633,
+          "turn_angle": -0.4084676193236208,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 25.85,
+          "handoff_distance": 674.5,
+          "mode": "sprint",
+          "route": {
+            "dist": 674.5044565068381,
+            "dist_to_point": 167.77567512506616,
+            "dir": 2.8944166675347036,
+            "waypoints": [
+              [
+                -162.67650752723688,
+                41.04912986182027
+              ],
+              [
+                -394.5016882926043,
+                250.46996350332964
+              ],
+              [
+                -485.74337113345774,
+                422.03554614815994
+              ]
+            ],
+            "clearance": 11.0,
+            "replans": 2
+          },
+          "reacquisitions": 1,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 18,
+            "sampled_scenarios": 72,
+            "minimum_separation": 14.3,
+            "observation_lag_estimated": true,
+            "expanded": 333,
+            "terrain_samples": 22,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -1.8246634537998552e-08,
+                5.692993937929817
+              ],
+              [
+                -2.169836169091384,
+                10.95626203444484
+              ],
+              [
+                -2.1698361873380185,
+                16.649255972374657
+              ]
+            ],
+            "predator_path": [
+              [
+                19.696752460910012,
+                -2.831968568392309
+              ],
+              [
+                5.452016656284419,
+                -7.531702800922656
+              ],
+              [
+                -9.545365667479151,
+                -7.811923133632487
+              ],
+              [
+                -23.95572301337098,
+                -3.6475983187673755
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 11.386,
+            "sprint_selected": true,
+            "energy": 320.212,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      }
+    ],
+    "intentional_delivery_sacrifices": 2,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Intentional hold_at_delivery excluded from premature guide failures; terrain/walls can still make escape impossible."
+  }
+}
