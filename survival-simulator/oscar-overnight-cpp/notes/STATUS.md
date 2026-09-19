@@ -686,3 +686,8 @@ Log (newest last)
   the flee radius). More caution = less foraging, and the late colony is food-limited. Queued 04_E3: LESS reactive
   evasion (flee 50/60, face 60, sprint 30, dodge angle 1.2/1.6, no facing, combined) at all checkpoints, seeds
   9960-10439.
+- 13:54 B1 (top-10 s1 candidates, 520 fresh seeds): winner's curse; s1c16 +33+-16 (2 SE; cap_mult 0.6,
+  higher breed/heir reserves, sprint 31, dodge 1.32, ...), s1c0 +18, s1c9 +18, others -48..+6; screening #2
+  s1c22 -40. B2 queued (base, s1c16, s1c0, s1c9 on 1030 fresh seeds). Throughput measured: full games 572 per pod
+  in 310-389 s = 5,300-6,600/h per pod, ~55-65k/h on 10 pods. Checkpoint rounds were load-imbalanced (one job per
+  seed): lategame.py now uses one job per (seed, checkpoint) for E2/E3 onward.

@@ -134,10 +134,12 @@ if __name__ == '__main__':
     a = ap.parse_args()
     bf, bl = a.base.split(':'); base = json.load(open(bf))[bl]
     variants = json.load(open(a.variants))
-    jobs = [(s, a.t0, base, variants) for s in parse_seeds(a.seeds)]
+    # one job per (seed, checkpoint): replaying the base to the checkpoint is cheap next to the variants' continuations,
+    # and many small jobs keep all cores busy (one job per seed left half the cores idle at the end); late checkpoints first
+    jobs = [(s, [t0], base, variants) for t0 in sorted(a.t0, reverse=True) for s in parse_seeds(a.seeds)]
     t0_ = time.time(); n = 0
     with Pool(a.workers) as pool, open(a.out, 'a') as f:
-        for rows in pool.imap_unordered(one, jobs, chunksize=1):
+        for rows in pool.imap_unordered(one, jobs, chunksize=1):   # rows of one (seed, checkpoint)
             for r in rows: f.write(json.dumps(r) + '\n'); n += 1
             f.flush()
     print(f'done {n} rows in {time.time()-t0_:.0f}s', flush=True)
