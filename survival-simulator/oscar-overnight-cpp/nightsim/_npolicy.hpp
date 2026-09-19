@@ -473,6 +473,8 @@ public:
                     GroupP ga = groups.at(m.group), gb = groups.at(mb.group);
                     Pose pb = pose_from_observer(*m.pose, o);
                     P2 pB = pb->p; double thB = pb->theta;
+                    if (dbg_log) fprintf(stderr, "[t=%.1f] MERGE observer %lld (g%lld anch %d pose %.0f,%.0f th %.2f) sees %lld (g%lld anch %d, its pose %.0f,%.0f th %.2f) at d=%.0f ang=%.2f rel=%.2f -> implied (%.0f,%.0f th %.2f)\n",
+                                        time, (long long)s.aid, (long long)ga->id, ga->anchored, m.pose->p.x, m.pose->p.y, m.pose->theta, (long long)o.id, (long long)gb->id, gb->anchored, mb.pose->p.x, mb.pose->p.y, mb.pose->theta, o.distance, o.angle, o.rel_dir, pB.x, pB.y, thB);
                     if (gb->anchored && !ga->anchored) {
                         double dth = wrap(thB - mb.pose->theta);
                         P2 shift = sub(pB, rot(mb.pose->p, dth));
@@ -589,18 +591,22 @@ public:
         if (dbg_log && !G(m.group).anchored) fprintf(stderr, "[t=%.1f] anchor: agent %lld group %lld (n=%zu) edge L=%.0f\n", time, (long long)m.aid, (long long)m.group, G(m.group).agents.size(), hypot2(x2 - x1, y2 - y1));
         double L = hypot2(x2 - x1, y2 - y1);
         double phi = std::atan2(y2 - y1, x2 - x1);
-        double theta; P2 cands[4];
+        double theta; P2 cands[2];
+        // the edge in the agent frame rotated by theta is axis-aligned; its offset tells which wall it is:
+        // a horizontal edge below the agent (+y after rotation) is the bottom wall's inner face (y = H-30), above it the top face (y = 30)
         if (L > 1500) {
             theta = wrap(-phi);
-            cands[0] = {0., 30.}; cands[1] = {0., H - 30.}; cands[2] = {0., 0.}; cands[3] = {0., H};
+            P2 r1 = rot(P2{x1, y1}, theta);
+            if (r1.y > 0) { cands[0] = {0., H - 30.}; cands[1] = {0., H}; } else { cands[0] = {0., 30.}; cands[1] = {0., 0.}; }
         } else {
             theta = wrap(OPI / 2 - phi);
-            cands[0] = {30., 0.}; cands[1] = {W - 30., 0.}; cands[2] = {0., 0.}; cands[3] = {W, 0.};
+            P2 r1 = rot(P2{x1, y1}, theta);
+            if (r1.x > 0) { cands[0] = {W - 30., 0.}; cands[1] = {W, 0.}; } else { cands[0] = {30., 0.}; cands[1] = {0., 0.}; }
         }
         bool found = false; P2 best{};
         for (P2 sxy : cands) {
             P2 pp = sub(sxy, rot(P2{x1, y1}, theta));
-            if (4 <= pp.x && pp.x <= W - 4 && 4 <= pp.y && pp.y <= H - 4) { best = pp; found = true; break; }
+            if (35. <= pp.x && pp.x <= W - 35. && 35. <= pp.y && pp.y <= H - 35.) { best = pp; found = true; break; }
         }
         if (!found) return;
         Group& g = G(m.group);
@@ -608,10 +614,14 @@ public:
             double dth = wrap(theta - m.pose->theta);
             P2 shift = sub(best, rot(m.pose->p, dth));
             transform_group(g, dth, shift); g.anchored = true;
+            if (dbg_log) fprintf(stderr, "[t=%.1f] anchored agent %lld at (%.0f,%.0f) theta %.2f from edge (%.0f,%.0f)-(%.0f,%.0f) L=%.0f\n", time, (long long)m.aid, m.pose->p.x, m.pose->p.y, m.pose->theta, x1, y1, x2, y2, L);
         } else {
             P2 err = sub(best, m.pose->p);
             double ne = norm(err);
-            if (0.5 < ne && ne < 40) m.pose->p = best;
+            if (ne > 0.5) {   // boundary evidence is exact: snap the agent (any size of error), keep its heading
+                if (dbg_log && ne >= 40.) fprintf(stderr, "[t=%.1f] SNAP agent %lld by %.0f to (%.0f,%.0f)\n", time, (long long)m.aid, ne, best.x, best.y);
+                m.pose->p = best;
+            }
         }
     }
     void marks_of(const PoseObj& pose, const std::vector<Obs>& obs, double wf, double wt, std::vector<Mark>& out) {

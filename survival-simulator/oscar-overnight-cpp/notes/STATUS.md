@@ -240,3 +240,10 @@ Log (newest last)
   map consistency under merges is the prerequisite for any trap work; out of tonight's scope.
 - 05:10 Work concluded: no productive experiment left inside the agreed scope (P1 converged, evasion converged,
   trap blocked on pose consistency + bait economics). Pods i/j/k stopped (disks kept). Spend ~$38 of $100.
+- 05:26 Resumed (peer relayed Oscar: keep going until told to stop). Problem now: map consistency under family merges. Tools: NIGHT_POLLOG=1 prints anchors, merges (observer/observed poses, implied pose) and pose JUMPs > 20 with true poses. Pod i restarted.
+- 05:47 BUG FOUND AND FIXED in anchor(): the boundary-wall candidate order accepted the first in-map position
+  (y=5, inside the wall) instead of the wall on the correct side (seed 7000: agent 3 placed 1140 units off, then
+  merged into the main family with zero correction). Fix: pick the wall by the edge's side relative to the agent
+  and require the playable interior; also snap an anchored agent to boundary evidence for any error size (was < 40).
+  Pods j/k restarting (container disks are wiped on restart: bootstrap + deploy needed) for paired re-tests of both
+  shipped configs on their confirmation seeds.

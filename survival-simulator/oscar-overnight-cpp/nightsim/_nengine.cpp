@@ -1876,7 +1876,23 @@ PyObject* Engine_run_policy(EngineObject* self, PyObject* args) {
     Engine* e = self->eng;
     long steps = 0; size_t peak = e->agents.size();
     Py_BEGIN_ALLOW_THREADS
+    static std::unordered_map<int64_t, std::pair<double,double>> last_pose;   // jump log (debug only)
     while (!e->agents.empty() && e->time < horizon) {
+        if (self->pol->dbg_log) {
+            // log pose jumps > 20 units between consecutive policy calls, with the true pose
+            for (const Creature& a : e->agents) {
+                if (!self->pol->minds.has(a.id)) continue;
+                auto& mp = self->pol->minds.at(a.id)->pose;
+                auto it = last_pose.find(a.id);
+                if (it != last_pose.end()) {
+                    double jx = mp->p.x - it->second.first, jy = mp->p.y - it->second.second;
+                    if (std::sqrt(jx*jx + jy*jy) > 20.)
+                        fprintf(stderr, "[t=%.1f] JUMP agent %lld pose (%.0f,%.0f)->(%.0f,%.0f) true (%.0f,%.0f) err after %.0f\n", e->time, (long long)a.id,
+                                it->second.first, it->second.second, mp->p.x, mp->p.y, a.x, a.y, std::sqrt((mp->p.x-a.x)*(mp->p.x-a.x)+(mp->p.y-a.y)*(mp->p.y-a.y)));
+                }
+                last_pose[a.id] = {mp->p.x, mp->p.y};
+            }
+        }
         if (self->pol->P.oracle_trees > 0.) {
             self->pol->oracle_p.clear(); self->pol->oracle_age.clear();
             for (const Tree& t : e->trees) { self->pol->oracle_p.push_back(orchard::P2{t.x, t.y}); self->pol->oracle_age.push_back(t.age); }
