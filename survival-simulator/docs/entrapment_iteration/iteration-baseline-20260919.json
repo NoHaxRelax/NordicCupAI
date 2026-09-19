@@ -1,0 +1,79 @@
+{
+  "production_base_commit": "53f1a4c70862ded2e6cb570642e79cffef6a9c8b",
+  "production_note": "Core/guide behavior unchanged since original default; later debug output does not change actions. Experimental candidates remain separate.",
+  "production_delivery": {
+    "passes": 74,
+    "attempts": 100,
+    "protocol": "one full-start-energy guide delivering newcomer to30preloaded, nativeenergy, final30s hold, rear side clear; missing sites fail"
+  },
+  "production_native": {
+    "games": 10,
+    "mean_score": 521.4610628892119,
+    "all_extinct": true,
+    "recorded_every_tick": true
+  },
+  "experimental": {
+    "predictive_pacing": {
+      "passes": 78,
+      "attempts": 100,
+      "baseline_passes": 74,
+      "note": "Development comparison: subset used in tuning; no independent95%claim"
+    },
+    "static_site_ranking": {
+      "plan": {
+        "maps": 100,
+        "all_map_attempts_per_arm": 300,
+        "no_site_maps": 6,
+        "single_site_maps": 8,
+        "shared_choice_maps": 45,
+        "paired_choice_maps": 49,
+        "native_jobs": 429,
+        "deduplicated_jobs": 171
+      },
+      "arms": {
+        "default": {
+          "successes": 213,
+          "all_map_attempts": 300,
+          "all_map_rate": 0.71,
+          "outcomes": {
+            "delivery_or_retention_failed": 44,
+            "delivery_pass": 213,
+            "initial_predators_escaped": 25,
+            "no_usable_bait_site": 18
+          }
+        },
+        "candidate": {
+          "successes": 219,
+          "all_map_attempts": 300,
+          "all_map_rate": 0.73,
+          "outcomes": {
+            "delivery_or_retention_failed": 43,
+            "delivery_pass": 219,
+            "initial_predators_escaped": 15,
+            "no_usable_bait_site": 18,
+            "wrong_side": 5
+          }
+        }
+      },
+      "paired": {
+        "wins": 23,
+        "losses": 17,
+        "ties": 260
+      }
+    },
+    "generic_corners": {
+      "passes": 32,
+      "attempts": 42,
+      "replacement_survived": 42,
+      "maps": 7,
+      "note": "Novel-map development sample, 6encounters/map; notgeneralcoverageestimate"
+    },
+    "upstream_survival_integration": {
+      "games": 6,
+      "mean_score": 814.9340984565381,
+      "matched_baseline_mean": 585.502743174611,
+      "note": "Native same-seed processes notbitidentical; no95%claim"
+    }
+  },
+  "limitation": "95%delivery objective notachieved; overnight iteration didnotcontinue after approximately21:16UTC; completedprocessescollected nextmorning."
+}

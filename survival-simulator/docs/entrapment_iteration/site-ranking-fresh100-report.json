@@ -1,0 +1,42 @@
+{
+  "plan": {
+    "maps": 100,
+    "all_map_attempts_per_arm": 300,
+    "no_site_maps": 6,
+    "single_site_maps": 8,
+    "shared_choice_maps": 45,
+    "paired_choice_maps": 49,
+    "native_jobs": 429,
+    "deduplicated_jobs": 171
+  },
+  "arms": {
+    "default": {
+      "successes": 213,
+      "all_map_attempts": 300,
+      "all_map_rate": 0.71,
+      "outcomes": {
+        "delivery_or_retention_failed": 44,
+        "delivery_pass": 213,
+        "initial_predators_escaped": 25,
+        "no_usable_bait_site": 18
+      }
+    },
+    "candidate": {
+      "successes": 219,
+      "all_map_attempts": 300,
+      "all_map_rate": 0.73,
+      "outcomes": {
+        "delivery_or_retention_failed": 43,
+        "delivery_pass": 219,
+        "initial_predators_escaped": 15,
+        "no_usable_bait_site": 18,
+        "wrong_side": 5
+      }
+    }
+  },
+  "paired": {
+    "wins": 23,
+    "losses": 17,
+    "ties": 260
+  }
+}
