@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.." || exit 1
 VP="$HOME/venvs/nordic-drone/Scripts/python.exe"
 CF="/c/Users/edlun/AppData/Local/Temp/claude/c--Users-edlun-Desktop-lucky-shots-NordicCupAI/bf48d8ae-2b16-4039-be3b-c570527b37ee/scratchpad/cloudflared.exe"
 OUT=elias/out/portal/$TAG; mkdir -p "$OUT"; PORT=${PORT:-9053}
-export DRONE_DETECTOR=ultralytics DRONE_WEIGHTS="$W" DRONE_DEVICE=cuda:0 DRONE_PORT=$PORT DRONE_LOG_DIR="$OUT" \
+export DRONE_DETECTOR=ultralytics DRONE_WEIGHTS="$W" DRONE_DEVICE=cuda:0 DRONE_IMGSZ=${IMGSZ:-960} DRONE_PORT=$PORT DRONE_LOG_DIR="$OUT" \
        DRONE_OVERVIEW_BETWEEN_SIDES=${OVERVIEW:-0} DRONE_MISS_RULE=seen DRONE_CONF=${CONF:-0.05} \
        DRONE_BIRTH_CONFIDENCE=${BIRTH:-0.25} DRONE_UPDATE_CONFIDENCE=${UPDATE:-0.15} DRONE_ANSWER_WINDOWS="$WIN" DRONE_CV_THREADS=6
 "$VP" api.py > "$OUT/api.log" 2>&1 & API=$!

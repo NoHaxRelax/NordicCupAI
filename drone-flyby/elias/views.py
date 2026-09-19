@@ -35,6 +35,44 @@ BOUNDS = {0: (1920, 1920, 1080, 1080), 1: (960, 2880, 540, 1620), 2: (480, 3360,
 UNLABELLED = {'validation': {'condor', 'jammer', 'small_plane', 'spacecraft', 'ta-ta'}, 'helsinki': set()}
 
 
+class YoloViews:
+    """An Ultralytics checkpoint behind the same detect(view, level) interface, optionally re-scored by the
+    window classifier: confidence <- confidence * p_classifier(label) ** power (a verifier re-ranks, it never
+    deletes: low-confidence boxes are free under AP, confident false positives are not)."""
+    def __init__(self, weights, verifier=None, imgsz=960, conf=0.03, power=1.0, relabel=False):
+        self.relabel = relabel
+        from ultralytics import YOLO
+        self.model = YOLO(weights); self.imgsz, self.conf, self.power = imgsz, conf, power
+        self.ver = WindowDetector(verifier) if verifier else None
+
+    def detect(self, view, level):
+        import torch
+        res = self.model.predict(view, imgsz=self.imgsz, conf=self.conf, verbose=False, device=0)[0]
+        rows = [{'label': self.model.names[int(c)], 'box': [x1, y1, x2, y2], 'confidence': float(sc)}
+                for x1, y1, x2, y2, sc, c in res.boxes.data.cpu().tolist()]
+        if not self.ver or not rows:
+            return rows
+        from detector import spec_scale, SCALES
+        f = FACTOR[level]; wins, sidx = [], []
+        for r in rows:
+            x1, y1, x2, y2 = r['box']; s = spec_scale(max(x2-x1, y2-y1)*f, f); red = s//f
+            small = view if red == 1 else cv2.resize(view, (960//red, 540//red), interpolation=cv2.INTER_AREA)
+            pad = np.zeros((small.shape[0]+WIN, small.shape[1]+WIN, 3), np.uint8); pad[WIN//2:WIN//2+small.shape[0], WIN//2:WIN//2+small.shape[1]] = small
+            cx, cy = int(round((x1+x2)/2/red)), int(round((y1+y2)/2/red))
+            wins.append(pad[cy:cy+WIN, cx:cx+WIN]); sidx.append(SCALES.index(min(s, 8)))
+        x = torch.from_numpy(np.stack(wins)).to(self.ver.device).permute(0, 3, 1, 2).float().div_(255.).sub_(0.45).div_(0.25)
+        prob = self.ver._logits(x.contiguous(memory_format=torch.channels_last), torch.tensor(sidx, device=self.ver.device)).softmax(1).cpu().numpy()
+        extra = []
+        for r, p in zip(rows, prob):
+            k = int(np.argmax(p[:len(OBJECT_CLASSES)])); own = list(OBJECT_CLASSES).index(r['label'])
+            if self.relabel and k != own and p[k] > 2*p[own]:
+                # a second opinion that disagrees strongly: report BOTH labels (a wrong extra costs little,
+                # the right one gains a true positive), the classifier's first
+                extra.append({'label': OBJECT_CLASSES[k], 'box': r['box'], 'confidence': float(r['confidence']*p[k]**self.power)})
+            r['confidence'] = float(r['confidence']*p[own]**self.power)
+        return rows+extra
+
+
 def frames_of(scene, step):
     out = []
     for f in sorted((ROOT/'src'/scene/'annotations').glob('*.json')):
@@ -95,7 +133,7 @@ def ap101(scores, tp, n_gt):
 
 
 def cmd_eval(a):
-    det = WindowDetector(a.weights, propose=a.propose, accept=a.accept)
+    det = (YoloViews(a.weights, a.verifier or None, a.imgsz, power=a.power, relabel=a.relabel) if a.yolo else WindowDetector(a.weights, propose=a.propose, accept=a.accept))
     rng = np.random.default_rng(a.seed); skip = UNLABELLED[a.scene]
     trained = set(a.classes.split(',')) if a.classes else set(OBJECT_CLASSES)
     per = {c: {'s': [], 'tp': [], 'n': 0} for c in OBJECT_CLASSES}
@@ -185,6 +223,8 @@ def main():
     ap.add_argument('--n-l2', type=int, default=3); ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--propose', type=float, default=0.25); ap.add_argument('--accept', type=float, default=0.35)
     ap.add_argument('--min-conf', type=float, default=0.35); ap.add_argument('--classes', default='', help='comma list the weights were trained on')
+    ap.add_argument('--yolo', action='store_true', help='--weights is an Ultralytics checkpoint'); ap.add_argument('--verifier', default='')
+    ap.add_argument('--relabel', action='store_true'); ap.add_argument('--imgsz', type=int, default=960); ap.add_argument('--power', type=float, default=1.0)
     ap.add_argument('--out', default=str(HERE/'out'/'neg_mined.npz')); ap.add_argument('--json', default='')
     a = ap.parse_args()
     {'eval': cmd_eval, 'mine': cmd_mine}[a.cmd](a)
