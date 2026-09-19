@@ -700,3 +700,13 @@ Log (newest last)
   15/tick, agent walk speed can evolve to 20 -> a lineage walking >15 cannot be caught in the open. Kill records
   show mean walk speed 10.9: selection is weak (every elder gets an heir). 03b_SEL queued first: strong breeding
   selection on speed (fit_speed 5, cap 2.0; heir_select on/off; low max energy), 512 seeds.
+- 14:26 SEL (416 seeds): strong speed selection works on traits (colony walk speed 15.7 at 1000 s, 17 late
+  vs 13/15 base; kills -30 per game) but survival -22..-79 (fruit -3.5..-6: those variants dropped the vision
+  selection). SEL2 queued first: base fitness + speed selection (fit_speed 1.5/3/6, cap 2.0, heir_select on/off,
+  and s1c16 + speed). E3 (running on 8 pods) paused and re-queued behind it.
+- 15:05 OSCAR: fewer seeds per try, more policies; iteration time is key. Queue fixed (long rounds removed,
+  urgent jobs first; slow shared hosts n16/n17 get half shares); pipe2.sh = 64-seed screen -> top-8 400-seed
+  confirmation, ~10 min per cycle. B2 (870 fresh seeds): s1c16 +39+-12, s1c0 +33+-13 (score +43). R1 (200 uniform
+  random configs): random draws mostly far worse; structural fruit-at-birth neutral/negative. S2 around the winners
+  -> CONFIRMED on 400 fresh seeds: cmb_dp30 (s1c16 + s1c0 changes + dist_pen 0.3) +103+-19 s, score +85+-20
+  (~1608 s / 1600); c16c0 +92+-19. New best saved as best_1310 (configs-all.json). S3: 32 configs around it.
