@@ -105,3 +105,6 @@ Log (newest last)
 - 02:35 STEP 1 NAILED to the scenario limit: 78% overall, 96% with the predator behind the guide (GUIDE.md).
   Guide selection now penalises candidates with the predator between them and the trap. Step 2 started: K
   predators already held at the mouth (K=0,1,3,6,10) + one delivered; measure holding and delivery (runs m0..m10).
+- 02:36 STEP 2 (holding): K=1/3/6/10 predators already held + one delivered: 94-98% delivered, all held,
+  bait never dies. Now f1: FULL GAMES with predators, 192 seeds: no predator logic vs evasion vs evasion+trap
+  (site finder, bait with replacement, guide), tracking held predators and guides used per 250 s.

@@ -75,7 +75,12 @@ def one(job):
             if abs(nxt % 250) < 1e-6:
                 ags = eng.agents()
                 # t, alive, trees, predators, fruit spawned so far (max id), eaten so far, eaten energy so far, mean energy
-                traj.append([int(nxt), last[2], last[0], last[3], info['next_fruit_id'], eaten, round(fe), round(sum(a[5] for a in ags)/max(1, len(ags))), round(sum(a[7] for a in ags)/max(1, len(ags)), 1), round(sum(a[10] for a in ags)/max(1, len(ags))), pd])
+                tr = eng.dbg_trap(); held = 0
+                if tr is not None:
+                    import math as _m
+                    held = sum(1 for p_ in eng.predators() if _m.hypot(p_[0] - tr[0], p_[1] - tr[1]) < 35)
+                traj.append([int(nxt), last[2], last[0], last[3], info['next_fruit_id'], eaten, round(fe), round(sum(a[5] for a in ags)/max(1, len(ags))), round(sum(a[7] for a in ags)/max(1, len(ags)), 1), round(sum(a[10] for a in ags)/max(1, len(ags))), pd,
+                             held, (tr[6] if tr else 0), (int(tr[4] >= 0) if tr else -1)])
             nxt += sample
     info = eng.info()
     return dict(label=label, seed=seed, surv=round(info['time'], 1), score=round(info['score'], 3), fruit=round(fe/1000, 3),

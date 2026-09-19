@@ -2121,6 +2121,15 @@ PyObject* Engine_dbg_pred_info(EngineObject* self, PyObject*) {
     for (auto& p : e->predators) { PyObject* t = Py_BuildValue("(dddi)", p.dbg_tdist, p.dbg_look, p.dbg_ang, p.dbg_mode); PyList_Append(L, t); Py_DECREF(t); }
     return L;
 }
+PyObject* Engine_dbg_trap(EngineObject* self, PyObject*) {
+    // tests: (mouth_x, mouth_y, goal_x, goal_y, bait, n_retired, guide_done, n_walls) of the largest anchored group with a trap, else None
+    if (!self->pol) Py_RETURN_NONE;
+    orchard::GroupP best; size_t bn = 0;
+    self->pol->groups.each([&](const int64_t&, orchard::GroupP& g) { if (g->has_trap && g->agents.size() >= bn) { best = g; bn = g->agents.size(); } });
+    if (!best) Py_RETURN_NONE;
+    long long conf = 0; for (auto& w : best->walls) if (self->pol->confirmed(w)) conf++;
+    return Py_BuildValue("(ddddLLLL)", best->trap.mouth.x, best->trap.mouth.y, best->trap.goal.x, best->trap.goal.y, (long long)best->bait, (long long)best->retired.size(), (long long)best->guide_done, conf);
+}
 PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
     // counters from the policy's predator layer
     if (!self->pol) Py_RETURN_NONE;
@@ -2187,6 +2196,7 @@ PyMethodDef Engine_methods[] = {
     {"dbg_true_poses", (PyCFunction)Engine_dbg_true_poses, METH_NOARGS, "tests: true poses + anchor"},
     {"dbg_pseen", (PyCFunction)Engine_dbg_pseen, METH_NOARGS, "tests: shared predator sightings"},
     {"dbg_pred_info", (PyCFunction)Engine_dbg_pred_info, METH_NOARGS, "tests: predator target/mode"},
+    {"dbg_trap", (PyCFunction)Engine_dbg_trap, METH_NOARGS, "tests: current trap of the main group"},
     {"dbg_pred_blocked", (PyCFunction)Engine_dbg_pred_blocked, METH_VARARGS, "tests: predator cannot stand here"},
     {"policy_init", (PyCFunction)Engine_policy_init, METH_VARARGS, "policy_init(seed_key, config_dict): native orchard policy"},
     {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
