@@ -75,3 +75,10 @@ only positions inside the 30-unit boundary walls plus agent radius, and permits
 large corrections when direct boundary evidence contradicts odometry. It does
 not substitute hidden world coordinates. An isolated same-seed run records its
 effect; two fresh-seed baseline runs (204871 and 917263) were started beforehand.
+
+Completed fresh-map baselines before the anchor fix: scores 647.03 and 929.83
+(mean 788.43 over only two maps); both found a trap but both went extinct.
+Their estimated bait gaps were 95.9 and 65.4 seconds. The anchor-fixed
+development seed scored 872.19 at 821.3 seconds, versus 1058.04 previously.
+Keep these as measured regressions on these specific runs, not evidence of
+improvement or a broad estimate of either policy's mean.

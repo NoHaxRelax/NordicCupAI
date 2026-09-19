@@ -21,6 +21,15 @@ food to nursery parents or explicitly track which parent produced each donor.
 Local every-frame pilot: `logs/entrapment-iteration/nursery-pilot-20260919`,
 viewer port 9075. Green rings identify nursery gatherers.
 
+Completed pilot: score 877.88, extinction 858.9 seconds, estimated bait gaps
+274.6 seconds. Same-seed post-anchor baseline scored 872.19 at 821.3 seconds.
+There is no demonstrated improvement from this single game. One nursery birth
+occurred at 111.2 seconds (parent 21, newborn 27, confirmed by next-frame normal
+agent IDs). Child 27 was never dispatched as bait and died at age 122.8 as a
+gatherer. Thus this version produces population near the trap but does not yet
+ensure those offspring become bait; explicit offspring reservation is needed
+in the next version. The remote paired batch uses this immutable first version.
+
 Free remote CPU experiment:
 
 - `ssh pc` reports 12 CPUs. Six workers run twelve full games: baseline and
