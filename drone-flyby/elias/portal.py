@@ -58,16 +58,21 @@ def validate(url, wait_s=900, tries=14):
         rows = sorted(status().get('validations', []), key=lambda a: a.get('submitted_at') or '')
         if any(not a.get('finished_at') for a in rows):
             print('a teammate validation is running: waiting', flush=True); time.sleep(8); continue
+        # A fixed URL (a pod's own port) repeats across runs, so a result only counts if its row is NEW: a run of
+        # our URL that was already in the history before this queue request is an earlier run, not this one.
+        seen = {((a.get('service_url') or '').rstrip('/'), a.get('submitted_at')) for a in rows}
         r = requests.post(f'{BASE}/validate/queue', headers={'x-token': key()}, json={'url': url}, timeout=30)
-        print('queue ->', r.status_code, r.text[:200], flush=True); r.raise_for_status()
+        print('queue ->', r.status_code, r.text[:700], flush=True); r.raise_for_status()
         t0 = time.time()
         while time.time()-t0 < wait_s:
             time.sleep(15)
             rows = status().get('validations', [])
-            mine = [a for a in rows if (a.get('service_url') or '').rstrip('/') == url.rstrip('/')]
+            rows = sorted(rows, key=lambda a: a.get('submitted_at') or '')
+            mine = [a for a in rows if (a.get('service_url') or '').rstrip('/') == url.rstrip('/')
+                    and ((a.get('service_url') or '').rstrip('/'), a.get('submitted_at')) not in seen]
             if mine and mine[-1].get('finished_at'):
                 a = mine[-1]; print(f"RESULT score {a.get('score')}  errors {str(a.get('errors'))[:120]}  url {a.get('service_url')}"); return a
-            if not mine and all(a.get('finished_at') for a in rows) and time.time()-t0 > 60:
+            if not mine and all(a.get('finished_at') for a in rows) and time.time()-t0 > 600:
                 print('our URL never appeared in the history: the queue request was absorbed by another run; retrying'); break
     sys.exit('could not get a validation of our own URL')
 
