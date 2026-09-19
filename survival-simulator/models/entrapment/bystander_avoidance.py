@@ -15,7 +15,11 @@ def avoid_predators(action, state, bait=None, shared_predators=(), guided_paths=
     predators = [o for o in state['observations'] if o['type'] == 'Predator'] + list(shared_predators)
     if not predators and not guided_paths and (bait is None or math.hypot(*bait) > 125.):
         return action, False
-    walls = [LineString(o['coords']) for o in state['observations'] if o['type'] == 'Edge']
+    # Native ray casting repeats the same whole wall segment many times.
+    # Exact deduplication preserves geometry and avoids repeating every check.
+    edge_coords = dict.fromkeys(tuple(tuple(p) for p in o['coords'])
+                               for o in state['observations'] if o['type']=='Edge')
+    walls = [LineString(coords) for coords in edge_coords]
     positions = [(o['distance']*math.cos(o['angle']), o['distance']*math.sin(o['angle']))
                  for o in predators]
     headings = [math.atan2(-p[1], -p[0])-o['rel_dir'] if 'rel_dir' in o else None
