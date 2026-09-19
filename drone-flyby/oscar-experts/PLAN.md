@@ -174,6 +174,23 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
   four of six attempts even with no-store/close headers, pod 1's served every attempt (W-A 202, Y-A 222 frames).
   Recordings made on pod 2 are copied to pod 1 (local.jsonl) and served there. Y-C submitted that way.
 
+## 18:55 status
+- Deployed pipeline: pass 11 experts + final bank, gates v9, verifier v1, helicopter scales, L0 at half scale, speed
+  batches 1-9, MPS. Best local proxy 0.284 = L1-only sweep (no L0 overviews); its API score 0.235 with 191/249
+  frames delivered (organizer pacing loses 12-25% of frames on recorded replays; about half the attempts stop after
+  frame 1 on the organizer's side, so `validate_retry.sh` resubmits until a full run).
+- API table: V-D 0.239, Y-A2 0.235, V-B 0.221, W-D 0.215, Y-A 0.203, W-A 0.150. Milestone 8 pushed (ffa2f4f).
+- Running: Y-C2 (L1-only + revisits) and Y-A5 (min conf .15) on pod 1, Y-A6 (L1-only, half-height band) on pod 2.
+- Neutral so far: helicopter scale sweep, birth confidence .3. Harmful on the validation scene: per-sprite gates,
+  verifier v2, L0 overview frames.
+- Open for Oscar: the organizer's camera limits (L1 step 1102 px, L2 551 px, no L0->L2) need a legal sweep in the
+  live policy; sprite coverage of validation-scene tracks (large launcher c-047-078, small towers) is the biggest
+  detector gap and cannot be closed from training data alone.
+
+- 19:40 API noise: the same recording (Y-A2) scored 0.235 then 0.209, tracking delivered frames (191 vs 180). Treat
+  API differences under 0.03 as noise; rank configurations on the local proxy and confirm the top one with repeats.
+  Tracker knobs (birth, update, confidence floor) and the band height are settled: L1-only top-band sweep, 0.284.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.

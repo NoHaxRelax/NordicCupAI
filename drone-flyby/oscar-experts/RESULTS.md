@@ -529,3 +529,28 @@ Countermeasure: `validate_retry.sh` resubmits until more than 100 requests reach
 is 1102 px). API table: V-D 0.239 (239 frames), Y-A2 0.235 (191), V-B 0.221, W-D 0.215, Y-A 0.203, W-A 0.150.
 Per delivered frame the L1-only sweep is clearly the best strategy; the transport pacing now costs more than any
 pipeline change. Next: Y-A3 (birth confidence .3), Y-C2 (L1-only + revisits), Y-A5 (min confidence .15).
+
+Memory note (18:40): with speed batches 7-9 (6000-pose cache, GPU windows per worker) one 16-process recording holds
+the whole A100 (workers 4-14 GB each); a second recording on pod 2 failed at startup with CUDA OOM, and on pod 1
+the second one runs on CPU fallbacks. Launches now use DRONE_EXPERT_POSED_CACHE=1500 and one recording per pod.
+
+Recording Y-A3 (l1 sweep with L0 overviews, track birth confidence .3 instead of .5): proxy 0.208 = Y-A, so the
+tracker's birth threshold is neutral; not submitted. Strategy proxies with the deployed pair: L1-only sweep 0.284,
+L1 sweep + L0 overviews 0.208, + revisits 0.193, l2 top + revisits 0.158.
+
+Recording Y-C2 (L1-only sweep + revisit every 3 frames): proxy 0.254 (Y-A2 without revisits 0.284). Revisits at
+L2 cost more sweep coverage than they add; not submitted.
+
+Recording Y-A5 (L1-only sweep, detector minimum confidence .15 instead of .3): proxy 0.284 = Y-A2; the confidence
+floor is neutral (the gate and verifier already decide). Not submitted. Remaining knobs under test: update
+confidence .5 (Y-A7, pod 1), half-height band (Y-A6, pod 2).
+
+Recording Y-A6 (L1-only sweep with the band at half frame height, vertical fraction .5): proxy 0.164 (top band
+0.284). Objects are caught entering at the top; the mid band sees far fewer of them. Not submitted.
+
+Recording Y-A7 (L1-only sweep, track update confidence .5): proxy 0.284 = Y-A2. Every tracker knob tested (birth .3,
+update .5, detector floor .15) is neutral; 0.284 is the L1-only sweep's local ceiling with the deployed detector.
+
+Y-A2 rerun on the API (19:35, uuid cb481c4d): **0.209** with 180/249 frames delivered (first run 0.235 with 191).
+The API score of a fixed recording moves with the frames the organizer's pacing delivers: about 0.0025 per frame,
+so two attempts of the same recording differ by 0.02-0.03. Configuration differences below that need repeats.
