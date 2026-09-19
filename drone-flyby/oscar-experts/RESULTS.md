@@ -496,3 +496,36 @@ t2+v1 0.150, t2+v2 0.133. Y-C (l1 sweep + overview + revisit 3, v9+v1, latest co
 Recording Y-A (l1 sweep + overview, gates v9 + verifier v1, helicopter scales, L0 at half scale, speed batches 1-9,
 MPS): proxy **0.208**, 249 frames, no errors, ~2.7 s per frame at L0 and L1. Best local proxy so far
 (W-A 0.198 with gates-t2 + v2; V-D 0.158). Submitted from pod 1.
+
+## Validation API, attempt Y-A-l1sweep via pod 1's proxy (17:20, uuid 15ee68c3): **0.2035** (proxy 0.208, 222/249 frames served, 7 camera errors)
+
+API scores so far: V-D 0.239 (tunnel, 239 frames), V-B 0.221, W-D 0.215, Y-A 0.203, W-A 0.150. Local proxies:
+Y-A 0.208, W-A 0.198, V-B 0.198, V-D 0.158, W-D 0.133. The API rewards the l2-top recordings relative to the proxy
+(the organizer's labels vs the team's quick labels differ per class); the l1 sweep is the better local proxy but not
+yet the better API score. Y-C (l1 sweep + revisit 3) recording on pod 2; Y-A2 (l1 sweep without L0 overviews) next.
+
+Recording Y-C (l1 sweep + overview + revisit 3, gates v9 + verifier v1, latest code, MPS): proxy 0.193 (Y-A without
+revisits 0.208). Submitted from pod 2. Y-A2 (l1 sweep, no L0 overviews) recording on pod 1.
+
+Attempt Y-C-l1-rev3 via proxy (uuid b3034191): 0.054 with one request delivered again, so the launch method was not
+the cause. Hypothesis: the Runpod proxy answers later requests from a cache or a reused connection. replay_server.py
+on both pods now sends Cache-Control: no-store and Connection: close and runs uvicorn with keep-alive off; Y-C
+resubmitted through it.
+
+## Recording Y-A2 (18:00): l1 sweep WITHOUT L0 overviews, gates v9 + verifier v1, latest code: proxy **0.284**
+
+Every earlier recording had L0 overview frames between the L1 sides (Y-A 0.208, W-A 0.198). Dropping them gives
+0.284: our L0 answers cost more than they add (weak L0 recall plus false tracks) and the L1-only sweep spends every
+frame at a resolution the experts handle. Y-A2 is the next submission from pod 1 (after Y-C).
+
+Attempt Y-C from pod 1 (uuid 973d2ed8): one request delivered, 0.0. So the single-request failure is neither the pod
+nor the server: of 12 attempts, 5 ran fully and 6 stopped after frame 1 with no reported error and an 83 s duration,
+alternating in time. Most likely one of the organizer's queue workers loses our endpoint after the first frame.
+Countermeasure: `validate_retry.sh` resubmits until more than 100 requests reach the server (Y-A2 running).
+
+## Validation API, attempt Y-A2-l1only from pod 1 (18:20, uuid 599de753, first try full): **0.2346** (proxy 0.284)
+
+191 of 249 frames delivered; the 16 listed errors are L1 camera-step rejections (our sweep moves 1920 px, the limit
+is 1102 px). API table: V-D 0.239 (239 frames), Y-A2 0.235 (191), V-B 0.221, W-D 0.215, Y-A 0.203, W-A 0.150.
+Per delivered frame the L1-only sweep is clearly the best strategy; the transport pacing now costs more than any
+pipeline change. Next: Y-A3 (birth confidence .3), Y-C2 (L1-only + revisits), Y-A5 (min confidence .15).

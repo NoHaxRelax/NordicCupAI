@@ -170,6 +170,10 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
   Deployed pair for submissions is gates v9 + verifier v1 (attribution: per-sprite gates -.008, verifier v2 -.017 on
   the proxy). Y-A (l1 sweep, that pair, batch 7-9 code, MPS) recording on pod 1 at ~2.7 s per frame.
 
+- 17:50 submissions go through POD 1's proxy only (ypuawkayl3px8t-19123): pod 2's proxy delivered one request in
+  four of six attempts even with no-store/close headers, pod 1's served every attempt (W-A 202, Y-A 222 frames).
+  Recordings made on pod 2 are copied to pod 1 (local.jsonl) and served there. Y-C submitted that way.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.
