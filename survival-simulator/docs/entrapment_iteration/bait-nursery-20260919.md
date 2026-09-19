@@ -58,3 +58,23 @@ seconds, and accumulated 190.9 estimated bait-gap seconds. No nursery births
 occurred: the stricter birth rules do not yet provide a reliable donor supply.
 This is an unsuccessful experimental iteration, still disabled by default.
 The first-version paired PC batch is unchanged.
+
+## Scheduled donor prototype (v3)
+
+Keeps one observed nursery child available while an earlier replacement
+travels. Parents may reproduce below 75 seconds of current bait lifetime,
+with at least max(250, 60% capacity) energy. Normal predator avoidance vetoes
+reproduction during escape; a trapped predator behind a wall no longer blocks
+all births merely through proximity. Requests are recorded only after the
+final action/energy checks. Tree memory lasts 60 seconds and children remain
+reserved if the temporary food center disappears. Children leave the reserve
+at age 45; all route, energy, direct-entry and overlap rules still apply.
+
+The first local v3 pilot has observed child 61 becoming bait at 197.4 seconds
+(83.9 energy, age 27.5). Child 27 did not make the journey. A completed pilot
+and paired maps are needed before drawing a performance conclusion.
+
+A temporary 16-vCPU Runpod CPU3 pod, n0d6kz5mjuzd6a, was created at
+08:00:41 UTC for the paired comparison. Compute price is $0.48/hour plus
+disk; the previous pod's actual billing was $4.8917 including disk. Budget
+remains $10 total. The free PC continues the immutable v1 batch.

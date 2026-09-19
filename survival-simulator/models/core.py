@@ -464,14 +464,18 @@ class EntrapmentPolicy:
                 role = ('nursery_farmer' if aid in self.nursery.members else 'nursery_child'
                         if aid in self.nursery.children else 'bait_candidate'
                         if aid == self.reserved_bait else 'explorer' if self.site is None else 'gatherer')
-                action = (self.nursery.action(self,aid,s) if aid in self.nursery.members | self.nursery.children else
-                          exploration[aid] if self.site is None else orchard[aid])
+                action = (self.nursery.action(self,aid,s)
+                          if aid in self.nursery.members | self.nursery.children else None)
+                if action is None:
+                    action = exploration[aid] if self.site is None else orchard[aid]
                 bait_local = None
                 if self.site is not None and self.bait is not None:
                     pose = self.estimator.poses.get(aid)
                     if pose is not None and pose.group_id == self.site_group:
                         bait_local = local(pose, self.site['goal'])
                 action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
+                if avoiding and aid in self.nursery.members:
+                    action = action.model_copy(update={'spawn_agent': False})
                 if avoiding and aid != self.reserved_bait and aid not in self.nursery.members | self.nursery.children:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
@@ -497,7 +501,10 @@ class EntrapmentPolicy:
             m.spawned_ok = a.spawn_agent and s['energy']-cost > 100.
             if orchard[aid].spawn_agent and not m.spawned_ok:
                 m.heir_done = heir_done.get(aid, False)
-            if m.spawned_ok: self.orchard.last_spawners.append(aid)
+            if m.spawned_ok:
+                self.orchard.last_spawners.append(aid)
+                if aid in self.nursery.members:
+                    self.nursery.record_birth(self, aid, s)
             self.explorer.crowd_tracker.remember_turn(aid, a.turn_angle)
             if aid in self.explorer._escape_memories:
                 self.explorer._escape_memories[aid].last_turn = a.turn_angle

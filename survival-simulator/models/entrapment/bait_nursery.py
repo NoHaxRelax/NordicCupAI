@@ -46,7 +46,7 @@ class BaitNursery:
             self.members.clear(); self.children.clear(); self.center = None; self.frame = frame
         goal = np.asarray(policy.site['goal']); rear = np.asarray(policy.site['replacement_entry'])
         inward = np.asarray(policy.site['inward'])
-        trees = [t.position for t in group.trees if policy.now-t.last_seen < 20.
+        trees = [t.position for t in group.trees if policy.now-t.last_seen < 60.
                  and 120. < np.linalg.norm(t.position-goal) < 300.
                  and (t.position-goal) @ inward > 30.
                  and np.linalg.norm(t.position-rear) < 220.
@@ -55,7 +55,7 @@ class BaitNursery:
             self.center = (min(trees, key=lambda p: np.linalg.norm(p-rear)
                               -30*sum(np.linalg.norm(p-q)<100. for q in trees)).copy() if trees else None)
         if self.center is None:
-            self.members.clear(); self.children.clear(); return
+            self.members.clear(); return
         unavailable = policy.retired_baits | {policy.bait, policy.incoming} | {t.guide_id for t in policy.tracks.values()}
         eligible = [aid for aid, s in states.items() if aid not in unavailable and s['age'] < 55.
                     and policy.estimator.poses[aid].group_id == group.group_id
@@ -69,20 +69,20 @@ class BaitNursery:
         self.members.update(candidates[:max(0,self.size-len(self.members))])
         for aid in self.members: policy.roles[aid] = 'nursery_farmer'
         for aid in self.children-unavailable: policy.roles[aid] = 'nursery_child'
-        children = sum(s['age'] < 15. and policy.estimator.poses[aid].group_id == group.group_id
-                       and np.linalg.norm(policy.estimator.poses[aid].position-self.center)<160.
-                       for aid,s in states.items())
-        if (policy.incoming is None and active_life < 45. and children < 2
+        # Maintain one future donor while the current replacement travels.
+        # Reproduction still pays the normal 100 energy and the child must
+        # pass the ordinary route/lifetime checks before being sent as bait.
+        if (active_life < 75.
                 and not self.children-unavailable and self.pending_birth is None
                 and policy.now-self.last_birth >= 15.):
-            rich = [aid for aid in self.members if states[aid]['energy'] >= max(250., .5*states[aid]['max_energy'])
-                    and not any(o['type']=='Predator' and o['distance']<275. for o in states[aid]['observations'])
-                    and not policy._shared_predators(aid)
+            rich = [aid for aid in self.members if states[aid]['energy'] >= max(250., .6*states[aid]['max_energy'])
                     and np.linalg.norm(policy.estimator.poses[aid].position-self.center) < 100.]
             if rich: self.spawn_parent = max(rich, key=lambda aid: states[aid]['energy'])
 
     def action(self, policy, aid, state):
         pose = policy.estimator.poses[aid]
+        if self.center is None or pose.group_id != policy.site_group or pose.uncertainty > 8.:
+            return None
         mind = policy.orchard.minds[aid]; group = policy.orchard.groups[mind.group]
         target = self.center
         # Reuse Orchard's ripe-fruit assignment, bounded to the nursery area.
@@ -104,13 +104,14 @@ class BaitNursery:
                 direction = math.atan2(offset[1],offset[0])
                 move = min(state['speed'],float(np.linalg.norm(offset))/MOVE_PENALTY[state['biome']])
                 turn = max(-.3,min(.3,direction))
-        spawn = aid == self.spawn_parent and policy.incoming is None
-        if spawn:
-            self.last_birth = policy.now
-            self.pending_birth = (aid, policy.now, self.known_agents.copy())
-            policy.event('nursery_birth_requested', agent=aid, energy=state['energy'])
         return ActionRequest(agent_id=aid,move_distance=move,move_direction=direction,
-                             turn_angle=turn,spawn_agent=spawn)
+                             turn_angle=turn,spawn_agent=aid == self.spawn_parent)
+
+    def record_birth(self, policy, aid, state):
+        """Called only after avoidance and the final energy/spawn check."""
+        self.last_birth = policy.now
+        self.pending_birth = (aid, policy.now, self.known_agents.copy())
+        policy.event('nursery_birth_requested', agent=aid, energy=state['energy'])
 
     def snapshot(self):
         return dict(members=sorted(self.members), children=sorted(self.children),

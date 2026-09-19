@@ -17,9 +17,18 @@
         "/workspace/visible-contact/logs/paired100",
         "/workspace/entrapment/logs/fullgames-baseline9"
       ]
+    },
+    {
+      "id": "n0d6kz5mjuzd6a",
+      "name": "lucas-bait-nursery-v3-20260919",
+      "created_at_utc": "2026-09-19T08:00:41.812Z",
+      "hourly_usd": 0.48,
+      "status": "running",
+      "data_center": "US-CA-2",
+      "purpose": "Paired optional nursery v3 and ordinary bait replacement, full native games"
     }
   ],
-  "estimated_spend_usd": 4.88,
+  "estimated_spend_usd": 4.891723719847505,
   "creation_attempts": [
     {
       "cpu": "cpu3c",
@@ -37,6 +46,7 @@
       "attempts": 1
     }
   ],
-  "result": "The 16-vCPU CPU3 pod was terminated after required artifacts were backed up and checksum dry-run verification completed. Estimated spend is based on elapsed wall time at $0.48/hour; it is not an exact billing total.",
-  "estimate_updated_at_utc": "2026-09-19T06:24:30Z"
+  "result": "Previous pod billing confirmed including disk. Nursery evaluation pod active; retrieve artifacts and terminate after batch.",
+  "estimate_updated_at_utc": "2026-09-19T08:00:41.812Z",
+  "confirmed_spend_usd_before_nursery": 4.891723719847505
 }

@@ -26,9 +26,13 @@ def main():
             except subprocess.TimeoutExpired: return dict(seed=seed,nursery=size,error='timeout')
         if code or not (folder/'summary.json').exists():return dict(seed=seed,nursery=size,error=f'exit {code}')
         s=json.loads((folder/'summary.json').read_text())
+        children={e['agent'] for e in s['events'] if e['kind']=='nursery_child_observed'}
+        arrivals={e['agent'] for e in s['events'] if e['kind']=='bait_arrived'}
         return dict(seed=seed,nursery=size,status=s['status'],score=s['score'],seconds=s['sim_time'],
                     gaps=s['estimated_bait_gap_seconds_after_first_arrival'],metrics=s['policy_metrics'],
-                    native=s['native_evaluation'])
+                    native=s['native_evaluation'], nursery_outcomes=dict(
+                        births_requested=sum(e['kind']=='nursery_birth_requested' for e in s['events']),
+                        children_observed=len(children), children_arriving_as_bait=len(children & arrivals)))
     rows=[]
     with ThreadPoolExecutor(max_workers=a.workers) as pool:
         jobs=[pool.submit(run,seed,size) for seed in a.seeds for size in (0,2)]
