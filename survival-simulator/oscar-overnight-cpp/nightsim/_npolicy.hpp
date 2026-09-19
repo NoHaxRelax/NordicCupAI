@@ -257,6 +257,7 @@ struct Group {
     // last known guide status (for death attribution): distance to lane point, predators within 120, walk speed, stuck ticks, ticks alive
     double gl_dT = 0., gl_speed = 0.; int64_t gl_npred = 0, gl_stuck = 0, gl_ticks = 0; P2 gl_pos{};
     int64_t d_far = 0, d_multi = 0, d_slow = 0, d_stuck = 0, d_early = 0, d_state1 = 0;
+    bool guide_sprinting = false;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
@@ -335,7 +336,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
+    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
@@ -1477,7 +1478,8 @@ public:
                 if (is_trap_role(a) || frozen.count(a)) return;
                 const AState& s = st(a); Mind& m = M(a);
                 if (s.energy < P.guide_min_e || m.old) return;   // old agents drain 10+/s: they cannot guide
-                double sc = s.energy * 0.1 - dist(m.pose->p, pp) * 0.05 + pmin(s.speed, s.sprint) * 10.;
+                if (P.guide_max_dist > 0. && dist(m.pose->p, pp) > P.guide_max_dist) return;   // do not send guides across the map
+                double sc = s.energy * 0.1 - dist(m.pose->p, pp) * 0.05 - dist(m.pose->p, g.trap.out) * P.guide_lane_w + pmin(s.speed, s.sprint) * 10.;
                 {   // prefer candidates that are NOT on the far side of the predator from the lane (predator between them and the trap)
                     P2 a = sub(g.trap.out, m.pose->p), b = sub(pp, m.pose->p);
                     double na = norm(a), nb = norm(b);
@@ -1486,7 +1488,7 @@ public:
                 if (sc > bs) { bs = sc; bg = a; }
             });
             if (bg < 0) return;
-            g.guide = bg; g.guide_state = 1; g.guide_since = time; g.ep_start++; g.ep_chased = g.ep_s3 = g.ep_h = false; g.gl_ticks = 0; g.gl_stuck = 0; g.gl_pos = M(bg).pose->p;
+            g.guide = bg; g.guide_state = 1; g.guide_since = time; g.ep_start++; g.guide_sprinting = false; g.ep_chased = g.ep_s3 = g.ep_h = false; g.gl_ticks = 0; g.gl_stuck = 0; g.gl_pos = M(bg).pose->p;
             Mind& m = M(bg);
             if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(bg);
             m.has_post = false;
@@ -1536,7 +1538,9 @@ public:
                 double off = wrap(angT - angP);   // lane direction relative to the predator direction
                 double sgn = off > 0 ? 1. : -1.;
                 bool blocked_ = std::fabs(off) < 1.1;                                               // predator between us and the lane
-                if (dP < P.guide_near) { step = s.sprint; dir = wrap(angP + (blocked_ ? sgn * P.guide_block_ang : OPI)); }   // too close: sprint away (angled if blocked)
+                if (dP < P.guide_near) g.guide_sprinting = true;                                    // too close: start sprinting
+                else if (dP > P.guide_sprint_until) g.guide_sprinting = false;                     // hysteresis: keep sprinting until this far
+                if (g.guide_sprinting) { step = s.sprint; dir = wrap(angP + (blocked_ ? sgn * P.guide_block_ang : OPI)); }
                 else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // predator in the way: circle it, drifting away
                 else if (dP > P.guide_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < P.guide_far + 40.))
                     step = walk * pmax(0., (P.guide_far + 20. - dP) / 20.);   // slow down beyond the band, unless it is charging in fast

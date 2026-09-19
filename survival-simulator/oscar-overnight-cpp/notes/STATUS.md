@@ -127,3 +127,7 @@ Log (newest last)
   reached the lane point 292 (13%) -> handoff spot 28 (1%); 1919 guides died en route (87%), 179 lost. The
   problem is the LEAD walk, not acquisition. f5 attributes the deaths (far from lane / >=2 predators / slow /
   stuck against walls / early).
+- 02:58 f5 death attribution (1919 guide deaths): walk speed < 12 in 79%, > 300 from the lane 52%, >= 2
+  predators near 18%, in ACQUIRE 20%, stuck 9%. Colony agents walk ~10 vs predator 15: a walking guide loses 5/tick.
+  f6: sprint hysteresis (sprint until 70/90 once triggered), assignment limited to predators within 250/400 and
+  candidates near the lane.
