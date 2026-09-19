@@ -114,3 +114,9 @@ Log (newest last)
   Trace (seed 6000): site found at 100 s, first predator 120 s, colony 40 -> 15 agents by 200 s (7 eaten in 10 s),
   guides assigned 3x but never delivered, 1 predator held briefly at 270-290 s. f2 tests trap-on-demand (bait only
   after a sighting within 60/120 s) and no keep-out.
+- 02:48 f2: on-demand bait / no keep-out do not help (all trap variants ~700 s, guides done 0). One-second
+  guide traces in full games show why: guides were chosen OLD (drain 10+/s, dead in seconds), assigned to far
+  sightings of predators busy eating other agents, 'chasing' detection too loose (72-degree cone), some guides
+  with 70-unit pose errors, stale sighting targets while a second predator is 33 away. Fixes: guides must be
+  young with >= 120 energy (fast preferred), chase = predator displacement within 37 degrees of us AND closing.
+  f3 running (evade / trap / trap with 200-energy guides / bait-only).

@@ -2083,7 +2083,9 @@ PyObject* Engine_dbg_roles(EngineObject* self, PyObject*) {
     PyObject* L = PyList_New(0);
     if (!self->pol) return L;
     self->pol->groups.each([&](const int64_t& gid, orchard::GroupP& g) {
-        PyObject* t = Py_BuildValue("(LiLLLiL)", (long long)gid, g->has_trap ? 1 : 0, (long long)g->bait, (long long)g->rep, (long long)g->guide, g->guide_state, (long long)g->retired.size());
+        double gx = 0, gy = 0; if (g->guide >= 0 && self->pol->minds.has(g->guide)) { auto& mp = self->pol->minds.at(g->guide)->pose; gx = mp->p.x; gy = mp->p.y; }
+        PyObject* t = Py_BuildValue("(LiLLLiLdddddd)", (long long)gid, g->has_trap ? 1 : 0, (long long)g->bait, (long long)g->rep, (long long)g->guide, g->guide_state, (long long)g->retired.size(),
+                                    g->guide_dprev, self->pol->time - g->guide_seen, gx, gy, g->guide_pred.x, g->guide_pred.y);
         PyList_Append(L, t); Py_DECREF(t);
     });
     return L;
