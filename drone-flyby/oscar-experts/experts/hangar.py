@@ -15,6 +15,8 @@ Inputs are the image and its scale; no frame index, track or label is consumed.
 """
 from dataclasses import dataclass
 
+import os
+
 import cv2
 import numpy as np
 
@@ -73,9 +75,25 @@ class HangarExpert:
             bgr, mask = template.posed(key[1], key[2])  # compute at the key: history-independent cache
             gray, high = features(bgr)
             self._posed[key] = (gray, high, mask)
-            if len(self._posed) > 512:
+            if len(self._posed) > 4000:  # was 512: evicted poses are recomputed as new arrays, which also misses the GPU spectra cache
                 self._posed.pop(next(iter(self._posed)))
         return self._posed[key]
+
+    def _local_batch(self, image, gray, high, reqs):
+        """local_masked_match for each (tgray, thigh, tmask, cx, cy, offsets): one GPU batch when DRONE_EXPERT_WINDOW_GPU is set."""
+        mv = self.settings.min_visible
+        dev = None
+        if reqs and os.environ.get('DRONE_EXPERT_WINDOW_GPU'):
+            from . import gpu_window
+            dev = gpu_window.device()
+        if dev is None:
+            return [local_masked_match(gray, high, tg, thg, tm, cx, cy, min_visible=mv, offsets=offs) for tg, thg, tm, cx, cy, offs in reqs]
+        try:
+            out = gpu_window.local_many(image, gray, high, [(tg, thg, tm, cx, cy, offs, mv, (.45, .55)) for tg, thg, tm, cx, cy, offs in reqs], dev)
+        except Exception as error:  # GPU trouble never drops the class: fall back to the CPU for this and later calls
+            gpu_window.failed(error)
+            out = ['cpu'] * len(reqs)
+        return [local_masked_match(gray, high, *r[:5], min_visible=mv, offsets=r[5]) if o == 'cpu' else o for r, o in zip(reqs, out)]
 
     def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False):
         """Return accepted rows; with explain=True also return every candidate and why it was rejected."""
@@ -137,6 +155,9 @@ class HangarExpert:
                 candidate['rejected_by'] = 'rim_contrast'; candidates.append(candidate); continue
             best = None
             cut_x, cut_y = (x == 0 or x + w >= W), (y == 0 or y + h >= H)
+            # Every (template, angle) pose is scored first, then (edge-cut shapes) refined around its hit; each stage is one
+            # batch, on the GPU when DRONE_EXPERT_WINDOW_GPU is set (same results as local_masked_match), else on the CPU.
+            plan = []
             for template in templates:
                 if touches_edge:
                     # A cut shape gives no usable heading or centre: sweep headings coarsely and
@@ -152,14 +173,19 @@ class HangarExpert:
                         xs = range(-tw // 2, tw // 2 + 1, cfg.partial_step) if cut_x else range(-6, 7, 3)
                         ys = range(-th // 2, th // 2 + 1, cfg.partial_step) if cut_y else range(-6, 7, 3)
                         offsets = [(dx, dy) for dy in ys for dx in xs]
-                        hit = local_masked_match(gray, high, tgray, thigh, tmask, rcx, rcy, min_visible=cfg.min_visible, offsets=offsets)
-                        if hit:
-                            fine = [(dx, dy) for dy in range(-3, 4) for dx in range(-3, 4)]
-                            hit = local_masked_match(gray, high, tgray, thigh, tmask, hit[1] + tw / 2, hit[2] + th / 2, min_visible=cfg.min_visible, offsets=fine) or hit
                     else:
-                        hit = local_masked_match(gray, high, tgray, thigh, tmask, rcx, rcy, cfg.local_radius, cfg.local_step, cfg.min_visible)
-                    if hit and (best is None or hit[0] > best[0]):
-                        best = (hit[0], hit[1], hit[2], hit[3], template, angle, tmask.shape)
+                        r, st = cfg.local_radius, cfg.local_step
+                        offsets = [(dx, dy) for dy in range(-r, r + 1, st) for dx in range(-r, r + 1, st)]
+                    plan.append((template, angle, tgray, thigh, tmask, offsets))
+            hits = self._local_batch(image, gray, high, [(tg, thg, tm, rcx, rcy, offs) for _, _, tg, thg, tm, offs in plan])
+            if touches_edge:
+                fine = [(dx, dy) for dy in range(-3, 4) for dx in range(-3, 4)]
+                refine = [(k, (tg, thg, tm, hit[1] + tm.shape[1] / 2, hit[2] + tm.shape[0] / 2, fine)) for k, ((_, _, tg, thg, tm, _), hit) in enumerate(zip(plan, hits)) if hit]
+                for (k, _), hit2 in zip(refine, self._local_batch(image, gray, high, [r for _, r in refine])):
+                    hits[k] = hit2 or hits[k]
+            for (template, angle, _, _, tmask, _), hit in zip(plan, hits):
+                if hit and (best is None or hit[0] > best[0]):
+                    best = (hit[0], hit[1], hit[2], hit[3], template, angle, tmask.shape)
             if best is None:
                 candidate['rejected_by'] = 'no_visible_pose'; candidates.append(candidate); continue
             correlation, x1, y1, visible, template, angle, (th, tw) = best

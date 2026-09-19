@@ -148,7 +148,7 @@ def barrel_line(ctx, candidate, template, tmask):
 
 SPECS = {
     'helicopter': ClassSpec('helicopter', signatures=(rotor_lines, green_paint, camo_texture), competitors=('jammer', 'tank'), sift=True,
-                            colour_blob=dict(probability=.3, min_fraction=.2, max_fraction=1.2), fine_templates=6, proposer_templates=6),
+                            colour_blob=dict(probability=.3, min_fraction=.2, max_fraction=1.2), fine_templates=6, proposer_templates=6, scales=(1., 1.5, 2.), size_window=(.6, 2.6)),
     'jammer': ClassSpec('jammer', signatures=(rectangle_panel, green_paint), competitors=('small_tower', 'tank'),
                         colour_blob=dict(probability=.4, min_fraction=.4, max_fraction=1.5)),
     'jet_plane': ClassSpec('jet_plane', signatures=(bright_fraction, dark_fraction), competitors=('small_plane', 'condor', 'medium_plane'), sift=True, fine_templates=6, proposer_templates=6),

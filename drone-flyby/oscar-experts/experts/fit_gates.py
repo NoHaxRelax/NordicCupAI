@@ -34,8 +34,8 @@ def features_of(candidate):
     return out
 
 
-def collect(report):
-    rows, labels, groups = [], [], []
+def collect(report, with_templates=False):
+    rows, labels, groups, templates = [], [], [], []
     for crop in report['crops']:
         targets = [t['bbox'] for t in crop['targets']]
         for c in crop['candidates']:
@@ -45,14 +45,43 @@ def collect(report):
             if .2 < best < .5:
                 continue  # near miss: neither a clean positive nor a clean negative
             f = features_of(c); f['zoom'] = float(crop['zoom'])
-            rows.append(f); labels.append(1 if best >= .5 else 0); groups.append(crop['id'])
+            rows.append(f); labels.append(1 if best >= .5 else 0); groups.append(crop['id']); templates.append(str(c.get('template_id', '')))
     for e in report.get('empty', []):
         for c in e.get('candidates', []):
             if c.get('rejected_by') or 'bbox' not in c:
                 continue
             f = features_of(c); f['zoom'] = float(e['zoom'])
-            rows.append(f); labels.append(0); groups.append(e['id'])
+            rows.append(f); labels.append(0); groups.append(e['id']); templates.append(str(c.get('template_id', '')))
+    if with_templates:
+        return rows, np.array(labels), np.array(groups), np.array(templates)
     return rows, np.array(labels), np.array(groups)
+
+
+def fit_gate(rows, y, groups, keys, recall, folds):
+    """One standardised logistic gate with an out-of-fold threshold at the recall target. Returns (gate dict, oof scores)."""
+    X = design(rows, keys)
+    mean, std = X.mean(0), np.maximum(X.std(0), 1e-6)
+    Xs = (X - mean) / std
+    unique = np.unique(groups); rng = np.random.default_rng(1731); rng.shuffle(unique)
+    fold_of = {g: i % folds for i, g in enumerate(unique)}
+    fold = np.array([fold_of[g] for g in groups])
+    oof = np.zeros(len(y))
+    for f in range(folds):
+        train = fold != f
+        if y[train].sum() < 4 or (~train).sum() == 0:
+            continue
+        w = fit_logistic(Xs[train], y[train])
+        oof[~train] = np.hstack([Xs[~train], np.ones((int((~train).sum()), 1))]) @ w
+    pos_scores = np.sort(oof[y == 1])
+    threshold = float(pos_scores[max(0, int((1 - recall) * len(pos_scores)))])
+    kept_bg = float((oof[y == 0] >= threshold).mean()) if (y == 0).any() else 0.
+    recall_oof = float((oof[y == 1] >= threshold).mean())
+    w = fit_logistic(Xs, y)
+    weights = {k: round(float(v), 3) for k, v in zip(keys + ['zoom0', 'zoom1', 'zoom2'], w[:-1])}
+    top = sorted(weights.items(), key=lambda kv: -abs(kv[1]))[:6]
+    gate = dict(keys=keys, mean=mean.tolist(), std=std.tolist(), weights=w.tolist(), threshold=threshold,
+                positives=int(y.sum()), negatives=int((y == 0).sum()), oof_recall=recall_oof, oof_background_kept=kept_bg, top_weights=top)
+    return gate, oof
 
 
 def design(rows, keys):
@@ -88,37 +117,40 @@ def main():
     for report_path in sorted(a.runs.glob('*/report.json')):
         report = json.loads(report_path.read_text())
         name = report['class_name']
-        rows, y, groups = collect(report)
+        rows, y, groups, templates = collect(report, with_templates=True)
         if y.sum() < 8:
             print(f'{name}: only {int(y.sum())} positives, no gate'); continue
         keys = sorted({k for r in rows for k in r if k != 'zoom'})
-        X = design(rows, keys)
-        mean, std = X.mean(0), np.maximum(X.std(0), 1e-6)
-        Xs = (X - mean) / std
-        unique = np.unique(groups); rng = np.random.default_rng(1731); rng.shuffle(unique)
-        fold_of = {g: i % a.folds for i, g in enumerate(unique)}
-        folds = np.array([fold_of[g] for g in groups])
-        oof = np.zeros(len(y))
-        for f in range(a.folds):
-            train = folds != f
-            if y[train].sum() < 4:
-                continue
-            w = fit_logistic(Xs[train], y[train])
-            oof[~train] = np.hstack([Xs[~train], np.ones((int((~train).sum()), 1))]) @ w
-        pos_scores = np.sort(oof[y == 1])
-        threshold = float(pos_scores[max(0, int((1 - a.recall) * len(pos_scores)))])
-        kept_bg = float((oof[y == 0] >= threshold).mean()) if (y == 0).any() else 0.
-        recall_oof = float((oof[y == 1] >= threshold).mean())
-        w = fit_logistic(Xs, y)
-        weights = {k: round(float(v), 3) for k, v in zip(keys + ['zoom0', 'zoom1', 'zoom2'], w[:-1])}
-        top = sorted(weights.items(), key=lambda kv: -abs(kv[1]))[:6]
-        gates[name] = dict(keys=keys, mean=mean.tolist(), std=std.tolist(), weights=w.tolist(), threshold=threshold,
-                           positives=int(y.sum()), negatives=int((y == 0).sum()), oof_recall=recall_oof, oof_background_kept=kept_bg, top_weights=top)
-        print(f'{name:16s} pos {int(y.sum()):4d} neg {int((y == 0).sum()):5d} | out-of-fold recall {recall_oof:.3f}, background kept {kept_bg:.3f} | top: {top}')
+        gate, oof = fit_gate(rows, y, groups, keys, a.recall, a.folds)
+        # Per-template sub-gates: with several sprites per class the features of true candidates spread out
+        # (each sprite has its own correlation and colour statistics) and one class-wide gate lets much more
+        # background through (large launcher: 15% -> 58% with six sprites). A gate per sprite keeps them tight.
+        by_template, combined = {}, oof.copy()
+        for t in sorted(set(templates)):
+            sel = templates == t
+            if t and y[sel].sum() >= 8 and (y[sel] == 0).sum() >= 40:
+                sub, sub_oof = fit_gate([r for r, m in zip(rows, sel) if m], y[sel], groups[sel], keys, a.recall, a.folds)
+                # keep the sprite's gate only where it beats the class gate on this sprite's own out-of-fold rows
+                # (a split with few positives can be looser than the class gate: jet plane .11 -> .41 otherwise)
+                class_kept = float((oof[sel & (y == 0)] >= gate['threshold']).mean()) if (sel & (y == 0)).any() else 0.
+                if sub['oof_background_kept'] < class_kept:
+                    by_template[t] = sub
+                    combined[sel] = sub_oof - sub['threshold'] + gate['threshold']  # express on the class gate's threshold scale
+        if by_template:
+            gate['by_template'] = by_template
+            kept_bg = float((combined[y == 0] >= gate['threshold']).mean()) if (y == 0).any() else 0.
+            gate['oof_background_kept_with_templates'] = kept_bg
+            gate['oof_recall_with_templates'] = float((combined[y == 1] >= gate['threshold']).mean())
+        gates[name] = gate
+        extra = f" | per-template ({len(by_template)}): recall {gate['oof_recall_with_templates']:.3f}, background kept {gate['oof_background_kept_with_templates']:.3f}" if by_template else ''
+        print(f"{name:16s} pos {gate['positives']:4d} neg {gate['negatives']:5d} | out-of-fold recall {gate['oof_recall']:.3f}, background kept {gate['oof_background_kept']:.3f}{extra} | top: {gate['top_weights']}")
     a.output.write_text(json.dumps(dict(format='expert-gates-v1', recall_target=a.recall, source=str(a.runs), gates=gates), indent=1))
 
 
 def apply_gate(gate, candidate, zoom):
+    sub = gate.get('by_template', {}).get(str(candidate.get('template_id', '')))
+    if sub is not None:
+        gate = sub  # the sprite's own gate when it had enough training candidates; class gate otherwise
     f = features_of(candidate); f['zoom'] = float(zoom)
     x = design([f], gate['keys'])[0]
     xs = (x - np.array(gate['mean'])) / np.array(gate['std'])

@@ -13,6 +13,7 @@ extents, edge boxes kept. Configure through environment variables:
   DRONE_EXPERT_NATIVE    1 (default): upsample the delivered view to native pixel scale before the experts
   DRONE_EXPERT_SIFT      0 (default): drop the SIFT comparison branch in live mode (slow, never fused)
   DRONE_EXPERT_PROCS     worker processes for the per-class stage (default 0 = thread pool); identical rows, no GIL
+  DRONE_EXPERT_ROUTING   per-level class -> upsampling factor of the delivered view, JSON inline or file (overrides LEVEL_FACTORS per class)
   DRONE_EXPERT_GPU       cuda device for the shared FFT proposer (one scene transform per view for all classes); unset = CPU proposers
 """
 import json
@@ -70,6 +71,13 @@ class ExpertDetector:
                                            sift=os.environ.get('DRONE_EXPERT_SIFT', '0') == '1', cost_order=slow_first)
         self.min_confidence = float(min_confidence)
         self.native = bool(native)
+        # DRONE_EXPERT_ROUTING: JSON (inline or a file path) {level: {class or "default": upsampling factor of the delivered view}}
+        spec = os.environ.get('DRONE_EXPERT_ROUTING', '')
+        if spec and not spec.lstrip().startswith('{'):
+            spec = Path(spec).read_text()
+        self.routing = {int(k): v for k, v in (json.loads(spec) if spec else {}).items()}
+        raw = os.environ.get('DRONE_EXPERT_LEVEL_FACTORS', '')
+        self.level_factors = {i: float(v) for i, v in enumerate(raw.split(','))} if raw else {}
         self.log = Path(log) if log else None
         self(np.zeros((540, 960, 3), np.uint8), {'view': {'resolution_level': 1}})  # warm-up
 
@@ -89,18 +97,40 @@ class ExpertDetector:
         scale = SCALE_FOR_LEVEL.get(level, .5)
         # The experts and their gates were fitted on tiles at native pixel scale with zoom-specific blur.
         # Upsample the delivered view to that scale (x2 at L1, x4 at L0) so every feature transfers as fitted.
-        factor = 1. / scale if self.native else 1.
-        work = image if factor == 1. else cv2.resize(image, None, fx=factor, fy=factor, interpolation=cv2.INTER_LINEAR)
-        shared = self.shared.propose_all(work, 1. if self.native else scale, level) if self.shared is not None else {}
+        # DRONE_EXPERT_LEVEL_FACTORS overrides the upsample factor per level: "2,2,1" runs L0 at half the native
+        # scale (94% of native L0 recall on training tiles at a quarter of the pixels; pass 11d2).
+        default = self.level_factors.get(level, 1. / scale if self.native else 1.)
+        # DRONE_EXPERT_ROUTING can send single classes to another factor at a level (e.g. native L0 only for ta-ta and the
+        # planes): one scene and one proposer pass per factor, restricted to its classes; unset = the level factor for all.
+        route = self.routing.get(level, {})
+        factors = {name: float(route.get(name, route.get('default', default))) for name in self.experts}
+        groups = {}
+        for name, f in factors.items():
+            groups.setdefault(f, []).append(name)
+        scenes = []
+        for f, names in groups.items():
+            work = image if f == 1. else cv2.resize(image, None, fx=f, fy=f, interpolation=cv2.INTER_LINEAR)
+            scenes.append((names, work, scale * f))  # scale * f: pixels per source pixel the experts see; 1 = native
+        multi = len(groups) > 1
         if self.procs is not None:
-            by_class = self.procs.run(list(self.experts), work, 1. if self.native else scale, level, shared)
-            rows = [r for name in self.experts for r in by_class[name]]
+            # stream: each class's expert starts in its worker as soon as its proposals are done (GPU and CPU overlap)
+            def produce(callback):
+                if self.shared is not None:
+                    for names, work, s_run in scenes:
+                        self.shared.propose_all(work, s_run, level, classes=names if multi else None, on_done=callback)
+            by_class = self.procs.run_stream(scenes, level, produce, set(self.shared.experts) if self.shared is not None else set())
         else:
-            futures = [self.pool.submit(self._run, name, work, 1. if self.native else scale, level, shared.get(name)) for name in self.experts]
-            rows = [r for f in futures for r in f.result()]
-        if factor != 1.:
-            for r in rows:
-                r['bbox'] = [float(v) / factor for v in r['bbox']]
+            jobs = [(names, work, s_run, self.shared.propose_all(work, s_run, level, classes=names if multi else None) if self.shared is not None else {})
+                    for names, work, s_run in scenes]
+            futures = {name: self.pool.submit(self._run, name, work, s_run, level, shared.get(name)) for names, work, s_run, shared in jobs for name in names}
+            by_class = {name: f.result() for name, f in futures.items()}
+        rows = []
+        for name in self.experts:  # same row order as before: class order
+            f = factors[name]
+            for r in by_class.get(name, []):
+                if f != 1.:
+                    r['bbox'] = [float(v) / f for v in r['bbox']]
+                rows.append(r)
         if self.verifier is not None and rows:
             rows = self.verifier.annotate(image, rows)
             for r in rows:

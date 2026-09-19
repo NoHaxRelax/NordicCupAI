@@ -66,6 +66,7 @@ def main():
     p.add_argument('--zooms', nargs='+', type=int, default=[0, 1, 2])
     p.add_argument('--max-empty', type=int, default=60)
     p.add_argument('--gates', type=Path)
+    p.add_argument('--scales', default=None, help='comma-separated run scale per zoom L0,L1,L2 (e.g. 0.5,1,1); overrides --delivered')
     p.add_argument('--delivered', action='store_true', help='run the experts on delivered-resolution pixels (L0 x1/4, L1 x1/2) with templates scaled to match; results are rescaled to native for matching')
     p.add_argument('--verifier', type=Path, help='trained verifier; candidates it calls background are recorded as rejected_by=verifier')
     p.add_argument('--verifier-threshold', type=float, default=.5)
@@ -134,7 +135,7 @@ def main():
     for kind, tiles in (('positive', positives), ('empty', empties)):
         for r in tiles:
             image = cv2.imread(str(a.grid / r['file']))
-            factor = DELIVERED_SCALE[r['zoom']] if a.delivered else 1.
+            factor = float(a.scales.split(',')[r['zoom']]) if a.scales else (DELIVERED_SCALE[r['zoom']] if a.delivered else 1.)
             run_image = image if factor == 1. else cv2.resize(image, None, fx=factor, fy=factor, interpolation=cv2.INTER_AREA)
             key = a.cache / f"{signature}-{r['id']}{'' if factor == 1. else f'-d{factor}'}.json"
             if key.exists():
@@ -146,9 +147,12 @@ def main():
             for c in a.classes:
                 by_family, candidates = futures[c].result()
                 if factor != 1.:
-                    for rows_ in by_family.values():
-                        rescale(rows_, 1. / factor)
-                    rescale(candidates, 1. / factor)
+                    # accepted rows and the candidate list share dict objects: scale each distinct one exactly once
+                    seen = {}
+                    for rows_ in list(by_family.values()) + [candidates]:
+                        for q in rows_:
+                            seen.setdefault(id(q), q)
+                    rescale(list(seen.values()), 1. / factor)
                 fams = class_families(c)
                 by_family = {f: by_family.get(f, []) for f in fams}
                 if verifier is not None and by_family.get(fams[0]):

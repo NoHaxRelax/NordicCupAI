@@ -78,6 +78,7 @@ def main():
     p.add_argument('--tracks', nargs='+', required=True, help='class:track_id entries')
     p.add_argument('--frames-per-track', type=int, default=2)
     p.add_argument('--margin', type=int, default=10)
+    p.add_argument('--box-mask', action='store_true', help='when the auto mask fails (< 30 px), use the organizer box interior as the mask (background included; verifier must prune)')
     a = p.parse_args()
     manifest = json.loads((a.grid / 'manifest.json').read_text())
     doc = json.loads((a.bank / 'manifest.json').read_text())
@@ -99,6 +100,8 @@ def main():
             cx2, cy2 = min(384, b[2] + a.margin), min(384, b[3] + a.margin)
             box = (b[0] - cx1, b[1] - cy1, b[2] - cx1, b[3] - cy1)
             mask, method = auto_mask(tile2[cy1:cy2, cx1:cx2], box)
+            if mask.sum() < 30 and a.box_mask:
+                mask = np.zeros(mask.shape, bool); mask[box[1]:box[3], box[0]:box[2]] = True; method = 'box'
             if mask.sum() < 30:
                 print(f'{entry} frame {frame}: mask too small ({int(mask.sum())} px), skipped'); continue
             out = a.bank / cls; out.mkdir(exist_ok=True)

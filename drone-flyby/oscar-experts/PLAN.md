@@ -130,6 +130,46 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
   on it) and the pose-cache reproducibility fix (warp at the rounded key; changes 2 of 2,675 rows; gates refit at the
   next pass). Recordings V-A..D were crawling (6-13 frames in 20 min) while sharing pod 2 with pass 11d.
 
+- 12:10 recordings: four at once on pod 2 crawl (L0 frames 48-66 s under contention; the l1-sweep strategies are half
+  L0 frames). A and C stopped; B (l2 top) and D (l2 top + revisit 3, the shape of the team's 0.51 run) continue alone
+  and get submitted first. A/C rerun later, on delivered resolution if pass 11d shows L0/L1 recall holds.
+- Pass 11 = deployed config, milestone 6 pushed (98fedfb). verify11 + verifier v2 running on pod 1.
+
+## 13:55 validation loop running
+- API score 0.239 for recording D (l2 top + revisit 3, gates v9, verifier v1); recording B submitted; improved
+  recordings W-A (pod 1) and W-D (pod 2) in progress with gates-t2, verifier v2, helicopter scales (1, 1.5, 2) and the
+  batch-4 GPU windows; they get submitted when done.
+- Bank: large-tower-038-067 added as a box-mask sprite (auto mask failed; background included, verifier prunes);
+  bank now 89 sprites on both pods. Validation-scene small towers and the mine roller (excluded track) have no
+  training-split sprite: not addressable under the training-only rule.
+- Biggest remaining levers: camera coverage (l1 sweep + overview vs l2 top), false boxes for launcher/ta-ta/condor,
+  and per-class resolution for speed (table in RESULTS.md).
+
+- 14:30 submissions now go through the Runpod HTTP proxy (port 19123 on both pods, `validate_proxy.sh`); quick
+  tunnels dropped traffic (attempt B: one request, 0.0056). Attempt D (tunnel, frames 1-8 lost): 0.239.
+
+- 15:00 speed batch 5 applied (pinned pool, vectorised fair-share, DRONE_EXPERT_ROUTING per-class resolution; example
+  routing file: native L0 for ta-ta, small_plane, jet_plane at artifacts/.../routing-L0-native-planes.json). Live idle A100:
+  L2 2.1 s, L1 6.5 s, L0 5.7-7.9 s. First improved recording W-D scored lower on the proxy (.133 vs .158): the
+  per-sprite gates or verifier v2 halve tank recall on validation-scene tanks; attribution recordings running.
+
+- 15:40 speed batch 6 applied (hangar GPU windows: L1 live 6.5 -> 4.6 s). Validation transport is still the blocker:
+  through the Runpod proxy the organizer's client delivered one request in three of four attempts (W-D twice, B once)
+  while a real-time evaluator from pod 1 and laptop bursts arrive fine; scores from those attempts (0.066, 0.019) are
+  not the recordings'. Only two attempts served a full run so far: D via tunnel 0.239, B via proxy 0.221.
+
+- 16:25 speed batch 7 applied (pipelined proposer bit-identical: tile 0.41 -> 0.24 s, L1 3.2 -> 2.1 s; proposer->expert
+  streaming; GPU-window failures now fall back to the CPU per call, so concurrent GPU recordings are safe again).
+  API: W-A 0.150 (201/249 frames delivered); attribution recordings rerunning one per pod (X-D-v9v1 pod 2, X-D-gt2v1 pod 1).
+
+- 16:40 NVIDIA MPS enabled on both pods (speed batch 8, `/workspace/experts/mps_on.sh`, idempotent; stop with
+  `echo quit | nvidia-cuda-mps-control`). GPU processes started from now share the GPU concurrently (single recording
+  L1 6.0 -> 2.8 s). Caveat: a hard GPU fault in one client can abort the others.
+
+- 16:55 speed batch 9 applied (pose-cache caps 6000/4000 via DRONE_EXPERT_POSED_CACHE; identical rows; L2 0.71 s).
+  Deployed pair for submissions is gates v9 + verifier v1 (attribution: per-sprite gates -.008, verifier v2 -.017 on
+  the proxy). Y-A (l1 sweep, that pair, batch 7-9 code, MPS) recording on pod 1 at ~2.7 s per frame.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.

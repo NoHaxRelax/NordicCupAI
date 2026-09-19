@@ -19,6 +19,7 @@ from itertools import zip_longest
 from .common import CorrelationProposer, SiftMatcher, features, fit_bars, load_templates, local_masked_match, masked_ncc
 
 ZOOM_FOR_SCALE = {.25: 0, .5: 1, 1.: 2}
+POSED_CACHE = int(__import__('os').environ.get('DRONE_EXPERT_POSED_CACHE', '6000'))  # was 800: medium plane alone needs ~1100 poses per view
 
 
 @dataclass
@@ -101,7 +102,7 @@ class GenericExpert:
             bgr, mask, box = template.posed_with_box(key[1], key[2])  # compute at the key: history-independent cache
             gray, high = features(bgr)
             self._posed[key] = (bgr, gray, high, mask, box)
-            if len(self._posed) > 800:
+            if len(self._posed) > POSED_CACHE:  # >= one view's poses, so batched window prefetches are never evicted before use
                 self._posed.pop(next(iter(self._posed)))
         return self._posed[key]
 
@@ -142,13 +143,17 @@ class GenericExpert:
             by_template.setdefault(p.get('template_id'), []).append(p)
         merged = [self.proposer.merge(sorted(v, key=lambda p: -p['proposer_score']), radius=radius) for v in by_template.values()]
         kept = []
-        for p in (p for group in zip_longest(*merged) for p in group if p is not None):
-            for k in kept:
-                if np.hypot(p['cx'] - k['cx'], p['cy'] - k['cy']) <= radius:
-                    k['alternative_headings'].extend([p['heading']] + p['alternative_headings'])
-                    break
-            else:
-                kept.append(dict(p, alternative_headings=list(p['alternative_headings'])))
+        order = [p for group in zip_longest(*merged) for p in group if p is not None]
+        xs = np.empty(len(order)); ys = np.empty(len(order))  # kept centres, checked in one vectorised step (same first match)
+        for p in order:
+            n = len(kept)
+            if n:
+                near = np.flatnonzero(np.hypot(p['cx'] - xs[:n], p['cy'] - ys[:n]) <= radius)
+                if near.size:
+                    kept[near[0]]['alternative_headings'].extend([p['heading']] + p['alternative_headings'])
+                    continue
+            xs[n], ys[n] = p['cx'], p['cy']
+            kept.append(dict(p, alternative_headings=list(p['alternative_headings'])))
         return kept
 
     @staticmethod
@@ -162,6 +167,11 @@ class GenericExpert:
         The scene is reflection-padded so poses partly outside the image still score; the
         template mask keeps the comparison on the object's own pixels.
         """
+        pre = getattr(self, '_prefetched', None)
+        if pre:
+            hit = pre.get((id(tmask), cx, cy, radius))
+            if hit is not None and hit[0] is tmask:
+                return hit[1]
         gray_p, high_p, margin = padded
         h, w = tmask.shape
         x0 = int(round(cx - w / 2 - radius)) + margin
@@ -234,6 +244,40 @@ class GenericExpert:
                         best[k] = (c, x1, y1, vis, template, angle, scale, masks[j])
         return best
 
+    def _prefetch_windows(self, image, gray, high, padded, proposals, templates, s, zoom, H, W):
+        """DRONE_EXPERT_WINDOW_GPU=cuda:N: evaluate the fine-pose and competitor _match_window calls the candidate loop
+        below will make, in one batched GPU pass (gpu_window.py). The loop is unchanged: _match_window returns the
+        prefetched result when its exact request was prefetched and computes on the CPU otherwise."""
+        from . import gpu_window
+        dev = gpu_window.device()
+        if dev is None or not proposals:
+            return None
+        reqs = []
+        for prop in proposals:  # mirrors the candidate loop: fine_pose over templates x headings x offsets x scales
+            cx, cy = prop['cx'], prop['cy']
+            half = .5 * self.long_side * s
+            partial = cx < half or cy < half or cx > W - half or cy > H - half
+            headings = sorted({prop['heading'] % 360.} | {h % 360. for h in prop.get('alternative_headings', [])[:1]})
+            for template in templates:
+                for base in headings + [h + 180. for h in headings]:
+                    for offset in self.spec.fine_offsets:
+                        for scale in self.spec.scales:
+                            _, tg, th, tmask, _ = self.posed(template, base + offset, s * scale)
+                            thh, tww = tmask.shape
+                            reqs.append((tg, th, tmask, cx, cy, max(4, min(tww, thh) // 3) if partial else 6))
+            for others in self.competitors.values():  # competitor scores at the proposal centre
+                others_z = [t for t in others if t.zoom == zoom] or others
+                for t in others_z[:1]:
+                    for base in range(0, 360, 90):
+                        _, tg, th, om, _ = self.posed(t, base, s)
+                        reqs.append((tg, th, om, cx, cy, 4))
+        try:
+            hits = gpu_window.match_many(image, gray, high, padded[2], reqs, dev)
+        except Exception as error:  # GPU trouble never drops a class: every window is then computed on the CPU
+            gpu_window.failed(error)
+            return None
+        return {(id(r[2]), r[3], r[4], r[5]): (r[2], hit) for r, hit in zip(reqs, hits)}
+
     def detect(self, image, pixels_per_source_pixel=1., zoom=None, explain=False, proposals=None, scene_gpu=None):
         """proposals: optional precomputed correlation proposals (SharedProposer), skipping this expert's own sweep.
         scene_gpu: optional gpu_fine.SceneGPU of this image; the fine pose then runs as batched GPU convolutions."""
@@ -261,6 +305,7 @@ class GenericExpert:
         ctx = dict(image=image, lab=lab, L=L, chroma=chroma, gray=gray, high=high, scale=s, zoom=zoom, expert=self)
         rows, candidates = [], []
         gpu_best = self._gpu_fine_all(scene_gpu, proposals, templates, s, H, W) if scene_gpu is not None else None
+        self._prefetched = self._prefetch_windows(image, gray, high, padded, proposals, templates, s, zoom, H, W) if gpu_best is None else None
         for pi, prop in enumerate(proposals):
             cx, cy = prop['cx'], prop['cy']
             half = .5 * self.long_side * s

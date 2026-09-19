@@ -95,21 +95,41 @@ class SharedProposer:
         return r['kernel_t'], r['mask_t']
 
     @torch.inference_mode()
-    def propose_all(self, image, scale, zoom):
+    def propose_all(self, image, scale, zoom, classes=None, on_done=None):
+        """classes: optional subset of class names (per-class resolution routing); None = every class.
+        on_done(name, proposals): called once per class as soon as its last kernel chunk is done (with exactly the list
+        this call returns for it), so the caller can start that class's expert while the GPU continues."""
         rows = self._kernels(zoom, scale)
+        # scene padding comes from the FULL kernel set, so a class's proposals do not depend on which subset is routed here
+        pads = {}
+        for r in rows:
+            k = (r['downscale'], r['blur']); pads[k] = max(pads.get(k, 0), max(r['h'], r['w']) // 2 + 1)
+        subset = None
+        if classes is not None:
+            subset = frozenset(classes)
+            rows = [r for r in rows if r['name'] in subset]
         if not rows:
             return {}
-        out = {n: [] for n in self.experts}
+        out = {n: [] for n in self.experts if subset is None or n in subset}
+        done = set()
+
+        def emit(names):
+            for n in names:
+                if n not in done:
+                    done.add(n)
+                    if on_done is not None:
+                        on_done(n, sorted(out[n], key=lambda p: -p['proposer_score']))
         # one scene per distinct (downscale, blur): the first class's settings must never leak into the others
         for (downscale, blur), group_rows in itertools.groupby(rows, key=lambda r: (r['downscale'], r['blur'])):
-            self._propose_group(image, scale, zoom, list(group_rows), downscale, blur, out)
+            self._propose_group(image, scale, zoom, list(group_rows), downscale, blur, out, subset, pads[(downscale, blur)], emit if on_done else None)
+        emit(list(out))
         return {n: sorted(v, key=lambda p: -p['proposer_score']) for n, v in out.items()}
 
-    def _propose_group(self, image, scale, zoom, rows, downscale, blur, out):
+    def _propose_group(self, image, scale, zoom, rows, downscale, blur, out, subset=None, pad=None, emit=None):
         small = image if downscale == 1. else cv2.resize(image, None, fx=downscale, fy=downscale, interpolation=cv2.INTER_AREA)
         small = cv2.GaussianBlur(small, (0, 0), blur)
         gray, high = features(small)
-        pad = max(max(r['h'], r['w']) for r in rows) // 2 + 1
+        pad = pad if pad is not None else max(max(r['h'], r['w']) for r in rows) // 2 + 1
         gray = cv2.copyMakeBorder(gray, pad, pad, pad, pad, cv2.BORDER_REFLECT)
         high = cv2.copyMakeBorder(high, pad, pad, pad, pad, cv2.BORDER_REFLECT)
         H, W = gray.shape
@@ -130,11 +150,15 @@ class SharedProposer:
         # caching only pays off for tile-sized scenes; a full view never fits the cache and would only thrash it.
         chunk = max(2, min(self.chunk, int(self.chunk * (512 * 512) / float(H * W))))
         cacheable = H * W <= 1024 * 1024
+        last = {}
+        for i, r in enumerate(rows):
+            last[r['name']] = i
+        pending = None
         for first in range(0, len(rows), chunk):
             group = [r for r in rows[first:first + chunk] if r['h'] <= H and r['w'] <= W]
             if not group:
                 continue
-            cache_key = (zoom, round(scale, 4), downscale, blur, FH, FW, first)
+            cache_key = (zoom, round(scale, 4), downscale, blur, FH, FW, first, subset)  # chunk indices depend on the class subset
             if not cacheable or cache_key not in self.fft_cache:
                 # Dense padded kernels are built on the device from the small posed kernels (uploaded once per zoom),
                 # so no H x W host arrays and no host-to-device copy per view. Same arrays, same FFTs as before.
@@ -166,26 +190,43 @@ class SharedProposer:
             weights = meta['weights']
             response = (weights * maps).sum(1)  # (n, H, W), valid positions are top-left corners
             local_max = torch.nn.functional.max_pool2d(response[:, None], 5, 1, 2)[:, 0]
-            # All kernels of the chunk at once, one device->host transfer: a peak is a local maximum above the kernel's
-            # threshold inside its valid region (top-left y <= H-h, x <= W-w); per kernel the best peaks*4 by score.
+            # Peaks: a local maximum above the kernel's threshold inside its valid region (top-left y <= H-h, x <= W-w); per
+            # kernel the best peaks*4 by score, ties in row-major order. The GPU keeps each kernel's top peaks*4+8 (topk, no
+            # nonzero sync) and copies them to pinned memory asynchronously; the host reads chunk i-1's peaks while the GPU
+            # already runs chunk i. Values and selection equal the nonzero/lexsort version.
             hs, ws, thr = meta['h'], meta['w'], meta['threshold']
             yy = torch.arange(FH, device=self.device)[None, :, None]; xx = torch.arange(FW, device=self.device)[None, None, :]
             inside = (yy <= (H - hs)[:, None, None]) & (xx <= (W - ws)[:, None, None])
             peaks = inside & (response >= thr[:, None, None]) & (response == local_max)
-            ks, ys, xs = torch.nonzero(peaks, as_tuple=True)
-            if ks.numel() == 0:
-                continue
-            scores = response[ks, ys, xs]
-            ks, ys, xs, scores = ks.cpu().numpy(), ys.cpu().numpy(), xs.cpu().numpy(), scores.cpu().numpy()
-            order = np.lexsort((-scores, ks))  # by kernel, then score descending
-            ks, ys, xs, scores = ks[order], ys[order], xs[order], scores[order]
-            starts = np.flatnonzero(np.r_[True, ks[1:] != ks[:-1]])
-            ends = np.r_[starts[1:], len(ks)]
-            for a, b in zip(starts, ends):
-                r = group[int(ks[a])]
-                b = min(b, a + r['peaks'] * 4)
-                for y, x, sc in zip(ys[a:b], xs[a:b], scores[a:b]):
-                    cx = (x - pad + r['w'] / 2) / downscale
-                    cy = (y - pad + r['h'] / 2) / downscale
-                    out[r['name']].append(dict(cx=float(cx), cy=float(cy), heading=float(r['heading']), bar_angle=float(r['angle']), proposer_score=float(sc), template_id=r['template'],
-                                               size=(r['w'] / downscale, r['h'] / downscale), source='correlation'))
+            k2 = min(FH * FW, max(r['peaks'] for r in group) * 4 + 8)
+            vals, idx = torch.where(peaks, response, torch.full_like(response, -float('inf'))).flatten(1).topk(k2, dim=1)
+            vals_h = torch.empty(vals.shape, dtype=vals.dtype, pin_memory=True); idx_h = torch.empty(idx.shape, dtype=idx.dtype, pin_memory=True)
+            vals_h.copy_(vals, non_blocking=True); idx_h.copy_(idx, non_blocking=True)
+            ready = torch.cuda.Event(); ready.record()
+            if pending is not None:
+                self._collect(pending, out, pad, downscale, FW, emit, last)
+            pending = (group, vals_h, idx_h, ready, first + chunk)
+        if pending is not None:
+            self._collect(pending, out, pad, downscale, FW, emit, last)
+        if emit is not None:
+            emit(list(last))  # this scene's classes are complete
+
+    @staticmethod
+    def _collect(pending, out, pad, downscale, FW, emit, last):
+        """Host side of one chunk: wait for its peaks, append them per kernel in order, report finished classes."""
+        group, vals_h, idx_h, ready, end = pending
+        ready.synchronize()
+        vals, idx = vals_h.numpy(), idx_h.numpy()
+        for j, r in enumerate(group):
+            v, ix = vals[j], idx[j]
+            keep = np.isfinite(v)
+            v, ix = v[keep], ix[keep]
+            order = np.lexsort((ix, -v))[:r['peaks'] * 4]  # score descending, ties in row-major order
+            for sc, flat in zip(v[order], ix[order]):
+                y, x = divmod(int(flat), FW)
+                cx = (x - pad + r['w'] / 2) / downscale
+                cy = (y - pad + r['h'] / 2) / downscale
+                out[r['name']].append(dict(cx=float(cx), cy=float(cy), heading=float(r['heading']), bar_angle=float(r['angle']), proposer_score=float(sc), template_id=r['template'],
+                                           size=(r['w'] / downscale, r['h'] / downscale), source='correlation'))
+        if emit is not None:
+            emit([n for n, i in last.items() if i < end])  # every kernel of these classes is done
