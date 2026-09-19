@@ -670,3 +670,9 @@ Log (newest last)
   a known wall between us; builds the wall map). L1 on n10-n14: late-only evasion variants applied at forked
   checkpoints 1500/1700/2000 (seeds 9000-9479): face 160/250, flee 120 (+face 160), dodge 120, sprint 60, hide
   (w 25/50), shared alarms.
+- 13:42 OSCAR: iterate much faster, 10k-40k runs per hour, all C++ on Runpod in parallel. Now 10 pods
+  (n10-n19, cpu3c 32 vCPU, $9.60/h) with a pod-side job queue (qd.sh daemon; night.sh q / qstart / qstat) so the
+  next batch starts the moment one finishes. Queued on all 10: B1 = top-10 s1 candidates + base on 512 fresh seeds
+  (10000-10511), then L2 = late-game resource variants at forked checkpoints 1500/1700/2000 on 480 seeds (cap
+  0.35/0.8, forage reach up/down, breeding reserves up/down, low-population births, exploration). L1 (late
+  evasion) finishing on n10-n14. Spend ~$67 of $140.

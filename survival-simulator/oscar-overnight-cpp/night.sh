@@ -24,5 +24,8 @@ case $cmd in
   pull) p=$1; job=$2
     scp -q $SSHO -P $(port $p) root@$(host $p):/workspace/night/runs/$job.jsonl $D/runs/$job-$p.jsonl 2>/dev/null && echo "$(wc -l < $D/runs/$job-$p.jsonl) rows $job-$p" ;;
   kill) p=$1; job=$2; sshp $p "pkill -f 'runs/$job[.]jsonl'; echo killed $job on $p" ;;
+  qstart) for p in "$@"; do cat $D/qd.sh | sshp $p "cat > /workspace/night/qd.sh; pgrep -f "bash /workspace/night/[q]d.sh" > /dev/null || (setsid nohup bash /workspace/night/qd.sh > /dev/null 2>&1 < /dev/null &); echo qd up on $p" & done; wait ;;
+  q) p=$1; name=$2; shift 2; printf '%s\n' "cd /workspace/night/code/survival" "$*" | sshp $p "mkdir -p /workspace/night/queue; cat > /workspace/night/queue/$name.sh; echo queued $name on $p" ;;
+  qstat) for p in $(allpods); do echo "$p: $(sshp $p "ls /workspace/night/queue/ 2>/dev/null | grep -E '\.(sh|running)$' | tr '\n' ' '; tail -1 /workspace/night/queue/qd.log 2>/dev/null; cut -d' ' -f1 /proc/loadavg" 2>/dev/null | tr '\n' ' ')" & done; wait ;;
   status) for p in $(allpods); do echo "$p: $(sshp $p "cat /proc/loadavg | cut -d' ' -f1; ps aux | grep -c '[n]ightsim/run.py'; for f in /workspace/night/runs/*.log; do test -f \$f && echo \$(basename \$f .log):\$(wc -l < \${f%.log}.jsonl 2>/dev/null):\$(tail -c 60 \$f | tr '\n' ' '); done" 2>&1 | tr '\n' ' ')"; done ;;
 esac
