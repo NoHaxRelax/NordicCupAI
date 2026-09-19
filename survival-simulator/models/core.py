@@ -183,7 +183,7 @@ class EntrapmentPolicy:
             plan = self.navigator.steer(aid, pose.position, rear, self.now)
             if plan.blocked or not math.isfinite(plan.remaining): continue
             distance = plan.remaining + float(np.linalg.norm(rear-goal))
-            travel = distance/(max(.1, s['speed'])*.3*10.)
+            travel = distance/(max(.1, min(s['speed'],s['sprint_speed']))*.3*10.)
             walk_cost = distance/.3*.05 + 6.
             life = remaining_life(s['energy']-walk_cost, s['age'])
             if life < travel + 15.: continue
@@ -232,7 +232,7 @@ class EntrapmentPolicy:
             # Avoidance and ageing can invalidate the dispatch estimate.
             # Reassign early when another viable agent can beat that deadline.
             remaining = distance + (0. if entered else math.dist(target, self.site['goal']))
-            travel = remaining/(max(.1, states[aid]['speed'])*.3*10.)
+            travel = remaining/(max(.1, min(states[aid]['speed'],states[aid]['sprint_speed']))*.3*10.)
             life = remaining_life(states[aid]['energy']-remaining/.3*.05-6., states[aid]['age'])
             deadline = math.inf if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
             if not entered and (travel+5. >= deadline or life < travel+15.):
@@ -386,7 +386,7 @@ class EntrapmentPolicy:
                 if extra > 30.:
                     skip('long_detour'); continue
                 total = plan.remaining+math.dist(rear, self.site['goal'])+extra
-                travel = total/(max(.1, s['speed'])*.3*10.)+.2
+                travel = total/(max(.1, min(s['speed'],s['sprint_speed']))*.3*10.)+.2
                 life = remaining_life(s['energy']-total/.3*.05-6., s['age'])
                 if travel+5. < deadline and life >= travel+15.:
                     options.append((extra, o['distance'], fruit))

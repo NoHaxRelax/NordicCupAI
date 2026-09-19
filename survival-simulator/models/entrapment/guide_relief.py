@@ -89,7 +89,7 @@ def forecast_travel(agent: AgentForecastInput, *, wants_sprint: bool = True,
 
     while elapsed < horizon and energy > 0 and remaining > 1e-9:
         can_sprint = wants_sprint and energy >= agent.max_energy * SPRINT_CUTOFF_FRACTION
-        requested = agent.sprint_speed if can_sprint else agent.speed
+        requested = agent.sprint_speed if can_sprint else min(agent.speed,agent.sprint_speed)
         requested = min(requested, remaining / agent.terrain_progress)
         walk = min(requested, agent.speed)
         movement_cost = walk * WALK_COST_PER_UNIT + max(0.0, requested-walk) * SPRINT_COST_PER_UNIT

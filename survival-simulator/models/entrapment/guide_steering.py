@@ -70,7 +70,7 @@ def prioritize(action, bait, edges, agent, memory, target=None):
     origin = to_fixed((0., 0.))
     modifier = TERRAIN[agent['biome']]
     energy = agent.get('energy', math.inf)
-    cap = (agent['speed'] if energy < agent.get('max_energy', 500.) / 5
+    cap = (min(agent['speed'],agent['sprint_speed']) if energy < agent.get('max_energy', 500.) / 5
            else agent['sprint_speed'])
     desired_length = min(action['move_distance'], cap) * modifier
     desired = (desired_length * math.cos(action['move_direction']),

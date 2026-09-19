@@ -28,7 +28,7 @@ def avoid_predators(action, state, bait=None, shared_predators=(), guided_paths=
             if math.dist(previous,point) > .1:
                 positions.append(point)
                 headings.append(math.atan2(point[1]-previous[1],point[0]-previous[0]))
-    cap = state['sprint_speed'] if state['energy'] >= state['max_energy']/5 else state['speed']
+    cap = state['sprint_speed'] if state['energy'] >= state['max_energy']/5 else min(state['speed'],state['sprint_speed'])
     modifier = TERRAIN[state['biome']]
     desired_length = min(cap, action.move_distance)
     desired = (desired_length*modifier*math.cos(action.move_direction),

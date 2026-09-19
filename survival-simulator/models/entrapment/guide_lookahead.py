@@ -166,7 +166,7 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
             angles = [bearing,bearing-math.pi/4,bearing+math.pi/4,away,away-math.pi/2,away+math.pi/2]
             angles += [i*math.tau/12 for i in range(12)]
             angles = list(dict.fromkeys(round(wrap(a),8) for a in angles))
-            cap = agent['sprint_speed'] if node.energy>=agent['max_energy']/5 else agent['speed']
+            cap = agent['sprint_speed'] if node.energy>=agent['max_energy']/5 else min(agent['speed'],agent['sprint_speed'])
             lengths = {min(agent['speed'],cap),cap}
             if node.energy < agent['max_energy']/5+3*(.05*agent['speed']+.5*max(0.,cap-agent['speed'])+1.):
                 lengths.add((min(agent['speed'],cap)+cap)/2)
@@ -241,7 +241,7 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
                         p=preds[target_index]; h=math.atan2(p[1]-q[1],p[0]-q[0])
                         for i in range(len(preds)):
                             preds[i],headings[i] = predator_step(preds[i],headings[i],q,h,bait,free,visible,cap,bias,terrain)
-                        if math.dist(q,bait)>80. and not visible(preds[target_index],headings[target_index],q):
+                        if contact_forecast and math.dist(q,bait)>80. and not visible(preds[target_index],headings[target_index],q):
                             lost_contact=True
                         separation = min(math.dist(q,p) for p in preds)
                         minimum = min(minimum,separation)
