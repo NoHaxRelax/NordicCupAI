@@ -341,7 +341,7 @@ struct Params {
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
-    double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250.;
+    double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -1367,7 +1367,7 @@ public:
                     if (!lane) continue;
                     bool rear_ok = clear_of(g, rear, 5.5) && clear_of(g, pt((end == 0 ? hi : lo) + 8. * inward, xc), 5.5);
                     Group::Site st{goal, mouth, pt(m_along - 60. * inward, xc + lane_off), rear, hi - lo, gap, 0., rear_ok};
-                    st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? 0.02 * dist(goal, cen) : 0.);
+                    st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? P.site_dist_w * dist(goal, cen) : 0.);
                     g.sites.push_back(st);
                 }
             }

@@ -258,3 +258,8 @@ Log (newest last)
   held 0.05-0.1 (predators still do not come by themselves); keeper+guides -187; old-agent bait -481.
   Running: f28 keeper continuity (keeper_r 200/300, reserve 20, post radius 400), f29 guides with exact positions,
   f30 keeper confirmation on 192 more seeds.
+- 06:09 With exact positions: keeper -100±24 (192 seeds); more baits (keeper_r 200/300, reserve 20: 43-48
+  baits/game) makes it worse (-129..-183): every bait is 100 energy and held predators never exceed ~0.2 because
+  predators hunt where the colony is, not at the crevice. Guides with exact positions -93..-250. Last trap test
+  (f31): choose the site nearest the colony (site_dist_w 0.3/1.0) with and without bait-on-sight. Also running the
+  final fresh-seed measurement of both shipped configs with the fixed policy (768 seeds each, j/k).
