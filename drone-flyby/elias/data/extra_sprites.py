@@ -40,29 +40,36 @@ GROW = {'ta-ta': 0.35, 'small_launcher': 0.3}
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--per-track', type=int, default=6); ap.add_argument('--dry', action='store_true')
+    ap.add_argument('--classes', nargs='+', default=None, help='only these classes')
+    ap.add_argument('--grow', type=float, default=None, help='box growth fraction for every class (default: per-class GROW, else 0.2)')
+    ap.add_argument('--no-growth', action='store_true', help='forbid GrabCut from growing the box (keeps shadows out)')
+    ap.add_argument('--suffix', default='', help='id suffix, e.g. -tight, so a re-cut does not collide with earlier entries')
+    ap.add_argument('--sheet', default='extra_sprites_review.jpg')
     a = ap.parse_args()
     bank_path = ELIAS/'sprites'/'bank.json'; bank = json.loads(bank_path.read_text(encoding='utf-8'))
     classes = bank['classes']; known = {e['id'] for e in bank['sprites']}
     chains = {t: json.loads((ELIAS/'out'/f'unlabelled2_{t}.json').read_text()) for t in ('hel', 'both')}
     entries, sheet = [], []
     for (tag, k), cls in WHAT.items():
+        if a.classes and cls not in a.classes:
+            continue
         pts = sorted({p[0]: p for p in chains[tag][k]['pts']}.values())
         picks = [pts[int(i)] for i in np.linspace(0, len(pts)-1, min(a.per_track, len(pts)))]
         for p in picks:
             fr, x, y, w, h, conf = p[0], p[1], p[2], p[3], p[4], p[5]
-            g = GROW.get(cls, 0.2); bw, bh = w*(1+g), h*(1+g)
+            g = a.grow if a.grow is not None else GROW.get(cls, 0.2); bw, bh = w*(1+g), h*(1+g)
             box = [int(round(x-bw/2)), int(round(y-bh/2)), int(round(x+bw/2)), int(round(y+bh/2))]
             box = [max(4, box[0]), max(4, box[1]), min(3835, box[2]), min(2155, box[3])]
             img = cv2.imread(str(ROOT/'src'/'validation'/'images'/f'frame_{fr:06d}.png'), cv2.IMREAD_COLOR)
-            sprite, origin, info = cut_sprite(img, box, True, 3)
-            sid = f'cut:validation-f{fr:06d}-x-{cls}-{tag}{k}'
+            sprite, origin, info = cut_sprite(img, box, not a.no_growth, 3)
+            sid = f'cut:validation-f{fr:06d}-x-{cls}-{tag}{k}{a.suffix}'
             note = info.get('auto_reject', '')
             if sprite is None or note:
                 print(f'  skip {sid}: {note or "no sprite"}'); continue
             sh, sw = sprite.shape[:2]; ox, oy = origin
-            file = f'{cls}/cut__validation-f{fr:06d}-x-{cls}-{tag}{k}.png'
+            file = f'{cls}/cut__validation-f{fr:06d}-x-{cls}-{tag}{k}{a.suffix}.png'
             entry = {'file': file, 'id': sid, 'class_name': cls, 'class_id': classes.index(cls), 'zoom': 2, 'source': 'validation',
-                     'frame': fr, 'track': f'x-{cls}-{tag}{k}', 'label_status': 'agent_found', 'split': 'train',
+                     'frame': fr, 'track': f'x-{cls}-{tag}{k}{a.suffix}', 'label_status': 'agent_found', 'split': 'train',
                      'review_status': 'agent_found_2026-09-19_unlabelled_search', 'size': [int(sw), int(sh)],
                      'box_in_sprite': [box[0]-ox, box[1]-oy, box[2]-ox, box[3]-oy], 'box_src': box, 'origin_src': [int(ox), int(oy)],
                      'center_src': [float(x), float(y)], 'detector_confidence': float(conf), 'grabcut_variant': 'enlarged_3x',
@@ -82,8 +89,8 @@ def main():
         w = max(t.shape[1] for t in sheet); h = max(t.shape[0] for t in sheet)
         pads = [cv2.copyMakeBorder(t, 0, h-t.shape[0], 0, w-t.shape[1], cv2.BORDER_CONSTANT) for t in sheet]
         pads += [np.zeros((h, w, 3), np.uint8)]*((-len(pads)) % 4)
-        cv2.imwrite(str(ELIAS/'out'/'extra_sprites_review.jpg'), np.vstack([np.hstack(pads[i:i+4]) for i in range(0, len(pads), 4)]))
-        print('elias/out/extra_sprites_review.jpg')
+        cv2.imwrite(str(ELIAS/'out'/a.sheet), np.vstack([np.hstack(pads[i:i+4]) for i in range(0, len(pads), 4)]))
+        print('elias/out/'+a.sheet)
     if a.dry:
         return
     shutil.copy(bank_path, bank_path.with_suffix('.json.bak-20260919'))

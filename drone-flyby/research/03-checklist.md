@@ -12,7 +12,7 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 
 | # | item | expected | hours | status | evidence |
 |---|---|---|---:|---|---|
-| A1 | Retrain the F3 recipe with the unlabelled validation objects fixed: keep-out zones for 19 tracks, 42 new sprites (18 leaning ta-ta, 18 second small_tower, 6 second medium_launcher) | ta-ta 0 to about 0.5, small_tower and tank back to 0.86/0.93, medium_launcher up; +0.05 to +0.08 on validation | 3 | DOING | `runs/detect/elias/out/runs_yolo/F4_fixed_m1280`, chain `elias/out/logs/after_train2.sh` writes `elias/out/logs/after_train.log` |
+| A1 | Retrain the F3 recipe with the unlabelled validation objects fixed: keep-out zones for 19 tracks, 42 new sprites (18 leaning ta-ta, 18 second small_tower, 6 second medium_launcher) | ta-ta 0 to about 0.5, small_tower and tank back to 0.86/0.93, medium_launcher up; +0.05 to +0.08 on validation | 3 | DOING, measuring | F4 weights `elias/out/weights/F4_fixed_m1280.last.pt`. Laptop per-class so far: small_tower 0.93 (F3 0.80). ta-ta 0.00 with the size prior: the tracker replaced the detector's box with the flat Helsinki prior (31x25 on a 19x33 walker); rerun with `DRONE_CLASS_EXTENT` detector pending. medium_launcher 0.11 with detector extents (F3 0.14): the loss is false positives on dark blobs, see B1. Laptop runs score about a tenth under pod runs (0.627 vs 0.694 for the same model) |
 | A2 | P2 detection head (stride 4) on the same data, YOLO26m-p2 at 1280 | small_launcher and ta-ta at L1 (10 to 15 px delivered) | 2 + 1.5 h GPU | TODO | VisDrone standard trick: arXiv 2512.07379, SAHI arXiv 2202.06934 |
 | A3 | Large backbone (yolo26l) on the FIXED data | unknown; lost to medium on the old data (0.39 vs 0.42) | 0.5 + 2 h GPU | TODO, needs a pod | Elias asked for the big-model check |
 | A4 | Spend the latency headroom: 1536 input, flip averaging, two-checkpoint ensemble (`elias/ensemble.py`) | +0.02 to +0.05 at detector level | 2 | TODO | 110 ms of a 300 ms budget used on an RTX 5090; laptop 85 ms at 1280 |
@@ -22,13 +22,14 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 | A8 | Free rotation of tall objects | | | REJECTED | costs 0.06; lean limits stay |
 | A9 | Train on the real validation frames | would push the board to about 0.9 | 2 | REJECTED by Elias's rule | no evaluation gain, reveals our strength |
 | A10 | Second small_launcher sprites from the unlabelled ones | | 1 | BLOCKED | GrabCut returns slivers on 25 px objects; needs a manual mask or a bigger box recipe |
+| A12 | Shadow-free walker sprites: the 18 ta-ta sprites include the cast shadow, so the detector's walker box is 31x56 on a 19x33 body; re-cut with `--grow 0.05 --no-growth --suffix=-tight` gives 12 to 16 x 29 px bodies (`elias/out/extra_sprites_tata_tight.jpg`) | ta-ta boxes match the organiser convention if it excludes shadows | 0.5 + 1.6 h GPU | TODO, decide after the ta-ta rerun | which convention the truth uses is unknown; the replay with three box sizes scored AP 0.74 |
 | A11 | Jammer, condor, spacecraft never measured on a real unseen instance | unknown | | BLOCKED | absent from validation; only Helsinki (training set) has them |
 
 ## B. Answer policy (what we emit)
 
 | # | item | expected | hours | status | evidence |
 |---|---|---|---:|---|---|
-| B1 | Sibling-class hedging: for launcher, plane and tower detections also emit the sibling classes at lower confidence | confusion stops being a miss; absent classes cost nothing, low-confidence extras cost almost nothing | 1 | TODO, next after A1 | scorer analysis in `research/02-night-report.md`; test with one-class runs for medium_launcher, medium_plane, large_tower |
+| B1 | Sibling-class hedging: for launcher, plane and tower detections also emit the sibling classes at lower confidence | confusion stops being a miss; absent classes cost nothing, low-confidence extras cost almost nothing | 1 | IMPLEMENTED, untested: `DRONE_HEDGE_FACTOR` in example.py (0 = off), groups launchers, planes, towers, tank/mine_roller | scorer analysis in `research/02-night-report.md`; test with one-class runs for medium_launcher, medium_plane, large_tower |
 | B2 | Confidence floor and thresholds (`DRONE_CONF=0.05 BIRTH 0.25 UPDATE 0.15`) re-tuned for the new model | +0.10 was the gain of lowering them the first time | 1 | TODO | |
 | B3 | Emit forecast boxes for retired tracks at a low confidence instead of dropping them | small | 1 | TODO | low-confidence extras are nearly free |
 
@@ -36,6 +37,7 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 
 | # | item | expected | hours | status | evidence |
 |---|---|---|---:|---|---|
+| C0 | Per-class box extents: `DRONE_CLASS_EXTENT` detector for ta-ta (leans) and medium_launcher (validation instance smaller than Helsinki's); the size prior stays for the rest | ta-ta from 0 | 0 | DOING, measuring | the night's note: prior helps towers and small_launcher, hurts medium_launcher |
 | C1 | Zoom to L2 on cue: sweep at L1; when a detection is small or ambiguous, spend the next frame at L2 on its forecast position, then return | simulator 0.82 to 0.93 against 0.75 for the sweep at a 16 px recogniser; the only route to ta-ta (0 of the L1 looks, 22 to 26 L2 hits) | 4 to 6 | TODO, after B1 | `elias/policy_sim.py` policies `cued`, `cued_lcr` |
 | C2 | Mid-life refresh: a lower-band look every ~8 frames so forecasts (hold 8 to 12 frames) get renewed during the ~16 frames below the band | part of the tracker's 0.08 | 2 | TODO, simulate first | add a policy to `policy_sim.py` |
 | C3 | Density-crop rule: zoom where several noticed objects cluster so one L2 look pays for many | small | 2 | TODO, simulate first | ClusDet / DMNet family, survey doi 10.1007/s10462-025-11150-9 |
@@ -51,6 +53,7 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 |---|---|---|---|---|
 | D1 | Dedicated GPU server for the attempt (RTX 5090 pod: 45 runs without a fault at 110 ms) | 1 | TODO Sunday morning | laptop CUDA "illegal instruction" at frame 65 killed detections silently |
 | D2 | Watchdog: restart the detector process on an exception, answer empty meanwhile | 1 | TODO | `example.py` has no recovery |
+| D7 | Stale-frame guard: a request older than the newest processed frame is answered empty without touching the tracker | avoids 'out-of-order frame' failures that reset the whole workflow after three | 0.5 | IMPLEMENTED 2026-09-19 13:50 in example.py, untested on the portal | seen in the voided F4x ta-ta run: four such failures |
 | D3 | Rehearsal on the pod: one concealed half run of the final weights from the pod before the attempt | 0.5 | TODO Sunday | `elias/pod_serve.sh`, `elias/pod_portal.sh` |
 | D4 | Pick the final weights and settings, write them in `elias/README.md` deploy block | 0.5 | TODO | |
 | D5 | Elias queues the evaluation attempt; nobody else, no agent | | TODO Sunday | hook `.claude/hooks/block-evaluation.py` |

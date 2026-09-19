@@ -99,6 +99,45 @@ def _emit(frame_index):
     return not ANSWER_WINDOWS or any(a <= frame_index < b for a, b in ANSWER_WINDOWS)
 
 
+# Sibling-class hedging (DRONE_HEDGE_FACTOR, 0 = off): every emitted box of a class that is easily confused with its
+# size siblings is repeated under the sibling names at confidence x factor. Under per-class AP a box of a class that is
+# absent from the truth costs nothing, and a low-confidence extra costs almost nothing, while a confident wrong label
+# is a miss; the hedge turns the confusion into a recall gain at the tail of the ranking.
+HEDGE_FACTOR = float(os.environ.get('DRONE_HEDGE_FACTOR', '0') or 0)
+HEDGE_GROUPS = [['small_launcher', 'medium_launcher', 'large_launcher'], ['small_plane', 'medium_plane', 'jet_plane'],
+                ['small_tower', 'large_tower'], ['tank', 'mine_roller']]
+HEDGE_OF = {c: [o for o in g if o != c] for g in HEDGE_GROUPS for c in g}
+
+
+# Per-class box scale (DRONE_BOX_SCALE, JSON like {"ta-ta": 0.7}): shrink or grow emitted boxes about their centre. A
+# measured fix for classes whose learned extent differs from the organisers' convention on this flight.
+BOX_SCALE = json.loads(os.environ.get('DRONE_BOX_SCALE', '{}') or '{}')
+
+
+def _scaled(rows):
+    if not BOX_SCALE:
+        return rows
+    out = []
+    for a in rows:
+        k = float(BOX_SCALE.get(a['object_id'], 1.0))
+        if k == 1.0:
+            out.append(a); continue
+        x1, y1, x2, y2 = a['bbox']; cx, cy, w, h = (x1+x2)/2, (y1+y2)/2, (x2-x1)*k, (y2-y1)*k
+        out.append({**a, 'bbox': [max(0., cx-w/2), max(0., cy-h/2), min(1., cx+w/2), min(1., cy+h/2)]})
+    return out
+
+
+def _hedged(rows):
+    if HEDGE_FACTOR <= 0:
+        return rows
+    out = list(rows)
+    for a in rows:
+        for sib in HEDGE_OF.get(a['object_id'], ()):
+            out.append({'object_id': sib, 'bbox': a['bbox'], 'confidence': float(a['confidence'])*HEDGE_FACTOR})
+    out.sort(key=lambda a: -float(a['confidence']))
+    return out[:500]
+
+
 # Several replays share one machine: cap the per-process thread pools so
 # concurrent processes do not thrash (0 keeps the library defaults).
 _THREADS = int(os.environ.get('DRONE_CV_THREADS', '0'))
@@ -121,6 +160,7 @@ class Session:
         self.workflow = self.new_workflow()
         self.prior = self.workflow.prior
         self.frames = 0
+        self.last_index = None      # newest frame index processed: older requests are stale and answered empty
         self.failures = 0
         self.log = None
         if SETTINGS['log_dir']:
@@ -205,6 +245,12 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
         if request.camera_command_feedback is not None:
             logger.warning('Camera command from frame %s was ignored: %s',
                            request.camera_command_feedback.frame, request.camera_command_feedback.reason)
+        if session.last_index is not None and int(req['frame_index']) < session.last_index:
+            # A request that arrived after a newer frame was already processed (the portal abandons slow answers
+            # and moves on). Touching the tracker with it would raise 'out-of-order frame', count as a failure and
+            # after three failures reset the whole workflow, so answer it empty and leave the tracker alone.
+            logger.warning('Stale frame %s (index %s) after index %s: answered empty', req['frame'], req['frame_index'], session.last_index)
+            return DroneFlybyPredictResponseDto(request_id=req['request_id'], frame=req['frame'], annotations=[], requested_view=None)
         view = ViewGeometry.from_request(req)
         image = decode_view(request.view)
         _RAW.clear()
@@ -214,6 +260,7 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
         try:
             answer = session.workflow.process(req, detections, image=image, detector_ran=ran)
             session.failures = 0
+            session.last_index = int(req['frame_index'])
             diagnostics = session.workflow.diagnostics
         except Exception:
             session.failures += 1
@@ -225,7 +272,7 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
                 session.workflow = session.new_workflow(); session.failures = 0
         tracking_ms = (time.perf_counter()-tracking_started)*1000
         requested = answer.get('requested_view')
-        full_rows = answer['annotations']
+        full_rows = _hedged(_scaled(answer['annotations']))
         shown = [a for a in full_rows if not ANSWER_CLASSES or a['object_id'] in ANSWER_CLASSES]
         emitted = _emit(req['frame_index'])
         response = DroneFlybyPredictResponseDto(
