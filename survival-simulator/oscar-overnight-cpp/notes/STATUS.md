@@ -32,6 +32,16 @@ Closed at 08:30; code stays behind refuge_* parameters (default off) with nights
 counters (dbg_eval) and the kill hook (NIGHT_REFLOG=1). Lesson for any trap/refuge work: the self-built wall map is
 wrong at the few-unit level often enough that geometry-critical behaviour must verify walls by direct observation.
 
+**08:30-08:50, THE MAP (measured directly, nightsim/mapcheck.py + dbg_walls):** in the map the policy builds from its
+own wall observations, 37% of confirmed face length is phantom (the side it calls solid is free) and 48% is missed
+(the side it calls free is blocked); of its crevice sites only 15% are real, the TOP-1 site only 3% of the time.
+Cause: an observation of a known face from a mis-posed agent with the opposite solid side created an inverted twin
+face; a thin wall's twins pair into a "crevice" inside the wall. Fix (add_wall, wall_conflict, now the default for
+map-building modes): opposite-side observations count as conflicts on the existing face. Result: phantom 19%,
+missed 28%, sites valid 49%, top-1 valid 35% (52% with wall_min_n 20). The shipped configs build no map, so they
+are unchanged. Every trap/bait/guide/refuge result of the night before 08:45 ran on the broken map; the guide and
+bait SCENARIOS loaded true walls and never saw it.
+
 **What the full-game trap funnel says (per game, f35/f37):** 17-26 guide episodes, 7-11 guide deaths (classes: far
 from the trap and slow walk dominate; several predators near is rare), 0.26-0.29 handoffs, 0.04-0.09 predators
 held, 19-21 baits born, 132 kills per game even without the trap. Cost decomposition (f37, 192 seeds): baits alone
@@ -449,3 +459,8 @@ Log (newest last)
   nightsim (it only affects map-building modes: trap/hide/refuge/occ_walls; the shipped configs build no map, so
   they are unchanged). Half the sites are still invalid: testing stricter confirmation (two distinct observers,
   wall_min_obs=2; or 20 observations, wall_min_n=20) on the map metric only (mc3).
+- 08:46 mc3: wall_min_obs=2 is already the default (identical to mc2); wall_min_n=20 (20 observations to confirm a
+  face): phantom 18.8 -> 14.5%, missed 27.5 -> 24.7%, sites valid 49 -> 56%, top-1 valid 35 -> 52%. Diminishing
+  returns from confirmation knobs; the remaining errors are faces recorded inside solid (observer position error).
+  f39 on n7: does the corrected map rescue Lucas's guide trap? rf_ref vs rf_trap_old (map as before) vs
+  rf_trap_wc (wall_conflict + wall_min_n 20) vs the same with guides only for predators within 300 of the trap.

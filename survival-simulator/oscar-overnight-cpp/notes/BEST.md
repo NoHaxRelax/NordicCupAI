@@ -51,3 +51,7 @@ No trap variant tested tonight is positive. Shipped configs unchanged.
 ## 08:15 19 Sept: refuge design (refuge_mode, default off)
 Best full-game result -14 +- 38 s (refuge_r 60, refuge_clear 1, refuge_sprint 1, site_safe 4) vs pred_best_0400:
 not adopted. Shipped configs unchanged.
+
+## 08:50 19 Sept: map fix
+`wall_conflict=1` is now the nightsim default (map-building modes only). Shipped configs unchanged (they build no
+map). Refuge on the corrected map: +13 +- 32 s at radius 60, not adopted.

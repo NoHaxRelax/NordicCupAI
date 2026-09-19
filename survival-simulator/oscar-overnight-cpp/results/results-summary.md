@@ -134,3 +134,13 @@ chosen).
 Conclusion: the refuge is the first trap-family mechanism that is clearly positive in the narrow test, but in full
 games it never beats evasion alone. Root causes are map consistency, not the refuge logic: about two thirds of the
 map's narrow gaps are not real at the hold point, and runners' poses drift ~10 units on wall collisions.
+
+## 08:30-08:50, the map itself (nightsim/mapcheck.py, 32 games, 600 s, with predators)
+
+| Map code | Phantom face length | Missed face length | Sites per game | Sites valid | Top-1 site valid |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| as used all night | 37.3% | 48.0% | 23.3 | 15% | 3% |
+| wall_conflict=1 (opposite-side observations are conflicts, not twin faces) | 18.8% | 27.5% | 5.2 | 49% | 35% |
+| + wall_min_n=20 | 14.5% | 24.7% | 4.9 | 56% | 52% |
+
+Refuge on the corrected map (f38, 96 seeds): rg_60s_wc +13 +- 32 (50/96 wins), rg_100s_wc -17, rg_100v_wc -65.
