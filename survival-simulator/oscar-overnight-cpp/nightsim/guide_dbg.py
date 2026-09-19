@@ -42,17 +42,17 @@ for _ in range(3):
     eng.dbg_true_poses(); eng.run_policy(1e9, eng.info()['time'] + 0.1)
 eng.dbg_true_poses(); eng.dbg_freeze([bait])
 t0 = eng.info()['time']
-for k in range(120):
+for k in range(60):
     eng.run_policy(t0 + 60, eng.info()['time'] + 0.5)
     ev = [e for e in eng.pop_events() if e[0] != 'fruit']
     ag = {a[0]: a for a in eng.agents()}; pr = eng.predators()
     g = ag.get(guide); p = pr[0] if pr else None
-    r = eng.dbg_roles(); ps = eng.dbg_pseen()
+    r = eng.dbg_roles(); ps = eng.dbg_pseen(); pi = eng.dbg_pred_info()
     d = math.hypot(g[1]-p[0], g[2]-p[1]) if g and p else None
     dm = math.hypot(p[0]-mx, p[1]-my) if p else None
     b_ = ag.get(bait); dbait = math.hypot(p[0]-b_[1], p[1]-b_[2]) if b_ and p else None
     if g and p:
-        print(f"t{eng.info()['time']-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} | d {d:.0f} d_mouth {dm:.0f} d_bait {dbait:.0f} state {r[0][5] if r else None} {ev}")
+        print(f"t{eng.info()['time']-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} | d {d:.0f} d_mouth {dm:.0f} d_bait {dbait:.0f} state {r[0][5] if r else None} | pred sees {pi[0][0]:.0f} look {pi[0][1]:.2f} mode {pi[0][3]} {ev}")
     else:
         print(f"t{eng.info()['time']-t0:5.1f} guide dead | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} d_mouth {dm:.0f} d_bait {dbait} bait alive {b_ is not None} {ev}" if p else 'no predator')
     if not b_: break

@@ -86,3 +86,9 @@ Log (newest last)
   85% / 68% / 34%; by guide walk speed 10/13/16: 55/62/68%; start distance 150: 74%. Bait never died. Failure
   modes: predator lost / re-acquire loop 77%, guide killed within 8 s 22%. Fix under test (g3): hold the predator
   at 100-130 while leading instead of walking away at full speed.
+- 02:30 g3 (hold 100-130): 63% (same as g2). g4 (hold 70-95 + acquire sprint): 52% => WORSE (more guides killed, more lost). Reverted to g3 lead; g5 A/B: A=g3, B=+acquire sprint, C=hold 80-115, D=handoff at 45.
+- 02:35 g5 A/B (2337 scenarios each): A (g3 logic) 65%, B (+acquire sprint) 64%, C (hold 80-115) 62%, D (handoff
+  45) 64% => parameters are not the lever. Instrumented the predator (dbg_pred_info): the dominant failure is the
+  predator LOSING SIGHT of the guide at 120-140 (line of sight cut by the trap's own obstacle: mode 3 edge-avoid),
+  then wandering away at walk speed; re-acquire is slow. Predator hearing (60, omnidirectional, through walls) is
+  the only loss-proof sense => g6 tests hold bands 60-90 / 50-80 / 45-70 (predator kept within hearing).

@@ -330,7 +330,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double trap_bait_fixed = -1., guide_near = 70., guide_far = 95., guide_acq = 55., guide_min_e = 60., guide_lost = 10., guide_hand = 55.;
+    double trap_bait_fixed = -1., guide_near = 92., guide_far = 130., guide_acq_sprint = 0., guide_acq = 55., guide_min_e = 60., guide_lost = 10., guide_hand = 55.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
@@ -1490,7 +1490,7 @@ public:
             if (fresh && (dP <= P.guide_acq || chasing)) { g.guide_state = 2; }
             else {   // get into its hearing range fast: sprint when it is not coming to us
                 double dd, dir, turn; go_to(m, s, g.guide_pred, P.guide_acq - 10., dd, dir, turn);
-                if (dP > 80. && !chasing) dd = pmin(s.sprint, pmax(0., dP - 45.));
+                if (P.guide_acq_sprint > 0. && dP > 80. && !chasing) dd = pmin(s.sprint, pmax(0., dP - 45.));
                 plans[g.guide] = Plan{dd, dir, turn}; return;
             }
         }
@@ -1505,10 +1505,9 @@ public:
                 double off = wrap(angT - angP);   // lane direction relative to the predator direction
                 double sgn = off > 0 ? 1. : -1.;
                 bool blocked_ = std::fabs(off) < 1.1;                                               // predator between us and the lane
-                if (dP < P.guide_near) { step = s.sprint; dir = wrap(angP + (blocked_ ? sgn * 2.5 : OPI)); }   // too close: sprint away (angled if blocked)
-                else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // predator in the way: circle it, drifting away
-                else if (dP < P.guide_far) { step = walk; dir = wrap(angP + OPI); }                            // hold band: walk straight away
-                else step = walk * pmax(0., (P.guide_far + 20. - dP) / 20.);                                   // beyond the band: slow down, stop
+                if (dP < P.guide_near) { step = s.sprint; dir = wrap(angP + (blocked_ ? sgn * 2.5 : OPI)); }   // direct-chase range: sprint away (angled if blocked)
+                else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // pivot range: circle it, drifting away
+                else if (dP > P.guide_far - 20.) step = walk * pmax(0., (P.guide_far + 20. - dP) / 40.);        // hold the predator at ~100-130: slow down, stop at guide_far+20
                 plans[g.guide] = Plan{pmin(step, pmax(dT, 1.)), dir, angP};
                 return;
             }
