@@ -1,0 +1,141 @@
+[
+  {
+    "replay": "survival-simulator/logs/entrapment-iteration/guide-coordination-control-20260919",
+    "seed": 1883894846,
+    "status": "complete",
+    "score": 784.8764462710988,
+    "sim_time": 750.4000000001021,
+    "premature_captures": 3,
+    "failures_with_recent_observed_slowdown": 0,
+    "failures_without_same_terrain_speed_advantage": 0,
+    "intentional_delivery_sacrifices": 2,
+    "failures": [
+      {
+        "agent": 9,
+        "time": 127.49999999999703,
+        "role": "avoiding_predator",
+        "biome": "desert",
+        "benchmark_failure": true,
+        "same_terrain_sprint_advantage": 5.0,
+        "current_terrain_sprint_distance": 16.0,
+        "predator_fast_terrain_sprint_distance": 15.0,
+        "current_terrain_advantage_against_fast_predator": 1.0,
+        "requested_move": 20,
+        "requested_full_sprint": true,
+        "expected_move_before_wall_deflection": 16.0,
+        "recent_biome_changes": [
+          {
+            "time": 127.49999999999703,
+            "from_biome": "swamp",
+            "to_biome": "desert",
+            "slowdown": false,
+            "observed_gap_before": 57.20434368000141,
+            "observed_gap_after": 42.22623635004884
+          }
+        ],
+        "seconds_since_last_observed_slowdown": null,
+        "note": "Distances per tick, before wall deflection. Predator terrain is unknown; 15 is a worst case. No recent transition does not exclude older slowdown."
+      },
+      {
+        "agent": 92,
+        "time": 444.40000000003255,
+        "role": "avoiding_predator",
+        "biome": "swamp",
+        "benchmark_failure": true,
+        "same_terrain_sprint_advantage": 5.0,
+        "current_terrain_sprint_distance": 10.0,
+        "predator_fast_terrain_sprint_distance": 15.0,
+        "current_terrain_advantage_against_fast_predator": -5.0,
+        "requested_move": 20,
+        "requested_full_sprint": true,
+        "expected_move_before_wall_deflection": 10.0,
+        "recent_biome_changes": [],
+        "seconds_since_last_observed_slowdown": null,
+        "note": "Distances per tick, before wall deflection. Predator terrain is unknown; 15 is a worst case. No recent transition does not exclude older slowdown."
+      },
+      {
+        "agent": 109,
+        "time": 577.1000000000627,
+        "role": "avoiding_predator",
+        "biome": "swamp",
+        "benchmark_failure": true,
+        "same_terrain_sprint_advantage": 5.0,
+        "current_terrain_sprint_distance": 10.0,
+        "predator_fast_terrain_sprint_distance": 15.0,
+        "current_terrain_advantage_against_fast_predator": -5.0,
+        "requested_move": 20,
+        "requested_full_sprint": true,
+        "expected_move_before_wall_deflection": 10.0,
+        "recent_biome_changes": [],
+        "seconds_since_last_observed_slowdown": null,
+        "note": "Distances per tick, before wall deflection. Predator terrain is unknown; 15 is a worst case. No recent transition does not exclude older slowdown."
+      }
+    ]
+  },
+  {
+    "replay": "survival-simulator/logs/entrapment-iteration/escape-current-sightings-v1-20260919",
+    "seed": 1883894846,
+    "status": "complete",
+    "score": 1077.5033085080943,
+    "sim_time": 1027.500000000161,
+    "premature_captures": 0,
+    "failures_with_recent_observed_slowdown": 0,
+    "failures_without_same_terrain_speed_advantage": 0,
+    "intentional_delivery_sacrifices": 2,
+    "failures": []
+  },
+  {
+    "replay": "survival-simulator/logs/entrapment-iteration/escape-bait-terrain-20260919",
+    "seed": 1883894846,
+    "status": "complete",
+    "score": 626.5808085848455,
+    "sim_time": 601.3000000000682,
+    "premature_captures": 1,
+    "failures_with_recent_observed_slowdown": 0,
+    "failures_without_same_terrain_speed_advantage": 1,
+    "intentional_delivery_sacrifices": 3,
+    "failures": [
+      {
+        "agent": 118,
+        "time": 549.4000000000564,
+        "role": "guide",
+        "biome": "swamp",
+        "benchmark_failure": true,
+        "same_terrain_sprint_advantage": -4.43613431905171,
+        "current_terrain_sprint_distance": 5.281932840474145,
+        "predator_fast_terrain_sprint_distance": 15.0,
+        "current_terrain_advantage_against_fast_predator": -9.718067159525855,
+        "requested_move": 10.56386568094829,
+        "requested_full_sprint": true,
+        "expected_move_before_wall_deflection": 5.281932840474145,
+        "recent_biome_changes": [],
+        "seconds_since_last_observed_slowdown": null,
+        "note": "Distances per tick, before wall deflection. Predator terrain is unknown; 15 is a worst case. No recent transition does not exclude older slowdown."
+      }
+    ]
+  },
+  {
+    "replay": "survival-simulator/logs/entrapment-iteration/hearing-handoff-44-20260919",
+    "seed": 1883894846,
+    "status": "complete",
+    "score": 842.5634500015911,
+    "sim_time": 791.6000000001114,
+    "premature_captures": 0,
+    "failures_with_recent_observed_slowdown": 0,
+    "failures_without_same_terrain_speed_advantage": 0,
+    "intentional_delivery_sacrifices": 1,
+    "failures": []
+  },
+  {
+    "replay": "survival-simulator/logs/entrapment-iteration/hearing-handoff-isolated-tracking-20260919",
+    "seed": 1883894846,
+    "status": "complete",
+    "score": 842.832532253234,
+    "sim_time": 791.6000000001114,
+    "premature_captures": 0,
+    "failures_with_recent_observed_slowdown": 0,
+    "failures_without_same_terrain_speed_advantage": 0,
+    "intentional_delivery_sacrifices": 1,
+    "failures": []
+  }
+]

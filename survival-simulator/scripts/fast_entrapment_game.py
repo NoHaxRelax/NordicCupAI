@@ -2,6 +2,7 @@
 import argparse, gzip, hashlib, json, math, os, sys, time, traceback
 from collections import deque
 from pathlib import Path
+from sprint_benchmark import capture_context
 
 os.environ.setdefault('SDL_VIDEODRIVER','dummy'); os.environ.setdefault('SDL_AUDIODRIVER','dummy')
 os.environ.setdefault('PYGAME_HIDE_SUPPORT_PROMPT','1')
@@ -106,6 +107,7 @@ def main():
                             sprint_speed=before['sprint_speed'],faster_than_predator_on_same_terrain=before['sprint_speed']>15.,
                             biome=before['biome'],recent_steps=list(recent_steps.get(aid,())),
                             action=previous_actions.get(aid),guide_plan=plan if role=='guide' else None))
+                        sprint_death_cases[-1]['speed_and_terrain'] = capture_context(sprint_death_cases[-1])
                     if role=='guide':
                         delivery_sacrifices+=intentional
                         if can_sprint and not intentional:
@@ -142,6 +144,9 @@ def main():
             summary['native_evaluation'].update(predator_deaths_with_sprint_available=sprint_deaths.copy(),
                 sprint_available_predator_death_cases=sprint_death_cases.copy(),
                 premature_predator_deaths_with_sprint_available=sum(not c['intentional_delivery'] for c in sprint_death_cases),
+                sprint_failures_after_recent_observed_slowdown=sum(
+                    not c['intentional_delivery'] and c['speed_and_terrain']['seconds_since_last_observed_slowdown'] is not None
+                    for c in sprint_death_cases),
                 premature_guide_predator_deaths_with_sprint_available=len(premature_guide_deaths),
                 premature_guide_death_cases=premature_guide_deaths.copy(),intentional_delivery_sacrifices=delivery_sacrifices,
                 sprint_benchmark_note='Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable.')
