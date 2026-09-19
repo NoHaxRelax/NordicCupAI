@@ -1,0 +1,269 @@
+[
+  {
+    "name": "guide-no-search",
+    "settings": {
+      "seed": 1883894846,
+      "horizon": 3000.0,
+      "bait_overlap_seconds": 20.0,
+      "bait_food_lead_seconds": 6.0,
+      "guide_lookahead_ticks": 0,
+      "share_guide_paths": true,
+      "bait_reserve_seconds": 0.0,
+      "survival_overrides": {},
+      "release_trap_food": false,
+      "nursery_size": 0,
+      "replay_frames": false,
+      "dt": 0.1,
+      "engine": "verified C++ fastsim",
+      "policy_inputs": "Unmodified observations and simulation time only"
+    },
+    "summary": {
+      "seed": 1883894846,
+      "status": "complete",
+      "frames": 4468,
+      "sim_time": 446.8000000000331,
+      "runtime_seconds": 102.21424263101653,
+      "score": 472.33407776632356,
+      "final_agents": 0,
+      "peak_agents": 43,
+      "total_agents_seen": 96,
+      "predators": 4,
+      "first_bait_time": 31.200000000000173,
+      "maximum_predators_within_40_of_bait": 2,
+      "maximum_predators_continuously_near_bait_30s": 2,
+      "estimated_bait_gap_seconds_after_first_arrival": 42.30000000000033,
+      "longest_estimated_bait_gap_seconds": 36.70000000000025,
+      "policy_metrics": {
+        "site_discoveries": 1,
+        "guide_assignments": 11,
+        "guide_deaths": 11,
+        "guide_releases": 0,
+        "delivery_arrivals": 2,
+        "bait_arrivals": 8,
+        "overlapping_replacements": 5,
+        "estimated_unbaited_seconds": 44.800000000009064,
+        "no_viable_bait_ticks": 2821
+      },
+      "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+      "native_evaluation": {
+        "deaths_by_cause_and_role": {
+          "starvation:gatherer": 67,
+          "predator:guide": 7,
+          "starvation:retired_bait": 5,
+          "starvation:avoiding_predator": 7,
+          "starvation:bait": 3,
+          "predator:avoiding_predator": 4,
+          "starvation:guide": 3
+        },
+        "fruit_eaten": 614,
+        "energy_deaths_before_age_60": {
+          "gatherer": 19,
+          "avoiding_predator": 4,
+          "guide": 2
+        },
+        "ripe_fruit_eaten": 558,
+        "ripe_fraction": 0.9087947882736156,
+        "mean_agent_energy_fraction": 0.2794333479115374
+      }
+    }
+  },
+  {
+    "name": "guide-no-corridor",
+    "settings": {
+      "seed": 1883894846,
+      "horizon": 3000.0,
+      "bait_overlap_seconds": 20.0,
+      "bait_food_lead_seconds": 6.0,
+      "guide_lookahead_ticks": 3,
+      "share_guide_paths": false,
+      "bait_reserve_seconds": 0.0,
+      "survival_overrides": {},
+      "release_trap_food": false,
+      "nursery_size": 0,
+      "replay_frames": false,
+      "dt": 0.1,
+      "engine": "verified C++ fastsim",
+      "policy_inputs": "Unmodified observations and simulation time only"
+    },
+    "summary": {
+      "seed": 1883894846,
+      "status": "complete",
+      "frames": 7663,
+      "sim_time": 766.3000000001057,
+      "runtime_seconds": 189.65596823801752,
+      "score": 808.9165883693905,
+      "final_agents": 0,
+      "peak_agents": 36,
+      "total_agents_seen": 183,
+      "predators": 8,
+      "first_bait_time": 31.200000000000173,
+      "maximum_predators_within_40_of_bait": 3,
+      "maximum_predators_continuously_near_bait_30s": 3,
+      "estimated_bait_gap_seconds_after_first_arrival": 116.49999999999766,
+      "longest_estimated_bait_gap_seconds": 116.39999999999766,
+      "policy_metrics": {
+        "site_discoveries": 1,
+        "guide_assignments": 25,
+        "guide_deaths": 20,
+        "guide_releases": 0,
+        "delivery_arrivals": 3,
+        "bait_arrivals": 20,
+        "overlapping_replacements": 18,
+        "estimated_unbaited_seconds": 119.0000000000265,
+        "no_viable_bait_ticks": 4015
+      },
+      "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+      "native_evaluation": {
+        "deaths_by_cause_and_role": {
+          "starvation:gatherer": 127,
+          "predator:guide": 15,
+          "starvation:retired_bait": 17,
+          "starvation:bait": 3,
+          "starvation:guide": 4,
+          "starvation:avoiding_predator": 6,
+          "predator:avoiding_predator": 11
+        },
+        "fruit_eaten": 1099,
+        "energy_deaths_before_age_60": {
+          "gatherer": 51,
+          "guide": 2,
+          "avoiding_predator": 5
+        },
+        "ripe_fruit_eaten": 1004,
+        "ripe_fraction": 0.913557779799818,
+        "mean_agent_energy_fraction": 0.28312553209085706
+      }
+    }
+  },
+  {
+    "name": "guide-food-only",
+    "settings": {
+      "seed": 1883894846,
+      "horizon": 3000.0,
+      "bait_overlap_seconds": 20.0,
+      "bait_food_lead_seconds": 6.0,
+      "guide_lookahead_ticks": 0,
+      "share_guide_paths": false,
+      "bait_reserve_seconds": 0.0,
+      "survival_overrides": {},
+      "release_trap_food": false,
+      "nursery_size": 0,
+      "replay_frames": false,
+      "dt": 0.1,
+      "engine": "verified C++ fastsim",
+      "policy_inputs": "Unmodified observations and simulation time only"
+    },
+    "summary": {
+      "seed": 1883894846,
+      "status": "complete",
+      "frames": 6536,
+      "sim_time": 653.6000000000801,
+      "runtime_seconds": 133.6823971410049,
+      "score": 691.7181411124043,
+      "final_agents": 0,
+      "peak_agents": 43,
+      "total_agents_seen": 142,
+      "predators": 5,
+      "first_bait_time": 31.200000000000173,
+      "maximum_predators_within_40_of_bait": 2,
+      "maximum_predators_continuously_near_bait_30s": 2,
+      "estimated_bait_gap_seconds_after_first_arrival": 127.49999999999703,
+      "longest_estimated_bait_gap_seconds": 69.10000000000035,
+      "policy_metrics": {
+        "site_discoveries": 1,
+        "guide_assignments": 11,
+        "guide_deaths": 10,
+        "guide_releases": 0,
+        "delivery_arrivals": 5,
+        "bait_arrivals": 13,
+        "overlapping_replacements": 9,
+        "estimated_unbaited_seconds": 130.00000000002882,
+        "no_viable_bait_ticks": 4159
+      },
+      "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+      "native_evaluation": {
+        "deaths_by_cause_and_role": {
+          "starvation:gatherer": 106,
+          "predator:guide": 10,
+          "starvation:retired_bait": 8,
+          "starvation:bait": 5,
+          "starvation:avoiding_predator": 7,
+          "predator:avoiding_predator": 6
+        },
+        "fruit_eaten": 868,
+        "energy_deaths_before_age_60": {
+          "gatherer": 43,
+          "avoiding_predator": 5
+        },
+        "ripe_fruit_eaten": 791,
+        "ripe_fraction": 0.9112903225806451,
+        "mean_agent_energy_fraction": 0.27875147398029737
+      }
+    }
+  },
+  {
+    "name": "guide-lookahead-v1",
+    "settings": {
+      "seed": 1883894846,
+      "horizon": 3000.0,
+      "bait_overlap_seconds": 20.0,
+      "bait_food_lead_seconds": 6.0,
+      "bait_reserve_seconds": 0.0,
+      "survival_overrides": {},
+      "release_trap_food": false,
+      "nursery_size": 0,
+      "replay_frames": true,
+      "dt": 0.1,
+      "engine": "verified C++ fastsim",
+      "policy_inputs": "Unmodified observations and simulation time only"
+    },
+    "summary": {
+      "seed": 1883894846,
+      "status": "complete",
+      "frames": 5799,
+      "sim_time": 579.9000000000633,
+      "runtime_seconds": 142.6518975450017,
+      "score": 592.2311441793273,
+      "final_agents": 0,
+      "peak_agents": 36,
+      "total_agents_seen": 138,
+      "predators": 4,
+      "first_bait_time": 31.200000000000173,
+      "maximum_predators_within_40_of_bait": 3,
+      "maximum_predators_continuously_near_bait_30s": 2,
+      "estimated_bait_gap_seconds_after_first_arrival": 21.90000000000004,
+      "longest_estimated_bait_gap_seconds": 21.90000000000004,
+      "policy_metrics": {
+        "site_discoveries": 1,
+        "guide_assignments": 19,
+        "guide_deaths": 16,
+        "guide_releases": 0,
+        "delivery_arrivals": 1,
+        "bait_arrivals": 15,
+        "overlapping_replacements": 14,
+        "estimated_unbaited_seconds": 24.400000000004994,
+        "no_viable_bait_ticks": 2515
+      },
+      "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+      "native_evaluation": {
+        "deaths_by_cause_and_role": {
+          "starvation:gatherer": 85,
+          "predator:guide": 14,
+          "starvation:retired_bait": 13,
+          "starvation:bait": 2,
+          "starvation:guide": 3,
+          "predator:avoiding_predator": 20,
+          "starvation:avoiding_predator": 1
+        },
+        "fruit_eaten": 882,
+        "energy_deaths_before_age_60": {
+          "gatherer": 34,
+          "avoiding_predator": 1
+        },
+        "ripe_fruit_eaten": 802,
+        "ripe_fraction": 0.909297052154195,
+        "mean_agent_energy_fraction": 0.32724178887625893
+      }
+    }
+  }
+]

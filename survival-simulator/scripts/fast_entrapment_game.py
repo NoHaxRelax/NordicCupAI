@@ -35,6 +35,8 @@ def main():
     p.add_argument('--bait-reserve',type=float,default=0.,help='Reserve a gathering donor this many seconds before estimated expiry')
     p.add_argument('--bait-food-lead',type=float,default=6.,help='Extra dispatch lead for a replacement that could eat en route')
     p.add_argument('--guide-lookahead',type=int,choices=(0,3),default=3,help='Future ticks to search, or 0 for legacy steering')
+    p.add_argument('--guide-distance-min',type=float,default=100.,help='Preferred following distance lower bound')
+    p.add_argument('--guide-distance-max',type=float,default=120.,help='Preferred following distance upper bound')
     p.add_argument('--no-shared-guide-paths',action='store_true',help='Disable guide forecast traffic avoidance for comparison')
     p.add_argument('--survival-config',type=Path,help='Optional JSON overrides for Orchard experiments')
     p.add_argument('--release-trap-food',action='store_true',help='Experimental separation of trap roles from Orchard workforce')
@@ -54,14 +56,16 @@ def main():
     py=PySimulationCore(seed=a.seed); bg=py.env.static_surface.copy(); bg.blit(py.env.shadow_surface,(0,0)); bg.blit(py.env.obstacle_surface,(0,0))
     pygame.image.save(bg,folder/'background.png'); del py
     settings={} if a.survival_config is None else json.loads(a.survival_config.read_text())
-    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths); started=time.monotonic()
+    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths,guide_preferred_distance=(a.guide_distance_min,a.guide_distance_max)); started=time.monotonic()
     obstacles=[(o.x,o.y,o.width,o.height) for o in env.obstacles]; edges=edges_from(obstacles)
     atom(folder/'static.json',dict(width=env.width,height=env.height,edges=edges))
     sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
-    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
+    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,guide_preferred_distance=[a.guide_distance_min,a.guide_distance_max],share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
         policy_inputs='Unmodified observations and simulation time only',sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
     states=sim.step([])['observations']; chunk=[]; history=[]; seen=set(); peak=0; first_bait=None; gap=longest=total_gap=0.; max_near=held30max=0; active={}; tick=0
     summary={}
+    previous_states={}; previous_guide_plans={}; previous_actions={}
+    sprint_deaths={}; premature_guide_deaths=[]; delivery_sacrifices=0
     death_counts={}; early_energy_deaths={}; fruit_count=ripe_count=0; energy_fraction_sum=energy_samples=0
     previous_roles={}
     try:
@@ -75,6 +79,18 @@ def main():
                 fruit_count+=1; ripe_count+=age>=20.
             else:
                 key=kind+':'+role; death_counts[key]=death_counts.get(key,0)+1
+                before=previous_states.get(aid)
+                if kind=='predator' and before is not None:
+                    can_sprint=before['energy']>=before['max_energy']/5
+                    if can_sprint: sprint_deaths[role]=sprint_deaths.get(role,0)+1
+                    if role=='guide':
+                        plan=previous_guide_plans.get(aid,{})
+                        intentional=plan.get('mode')=='hold_at_delivery'
+                        delivery_sacrifices+=intentional
+                        if can_sprint and not intentional:
+                            premature_guide_deaths.append(dict(time=when,agent=aid,energy_before=before['energy'],
+                                energy_at_death=energy,sprint_threshold=before['max_energy']/5,biome=before['biome'],
+                                action=previous_actions.get(aid),guide_plan=plan))
                 if kind=='starvation' and age<60.:
                     early_energy_deaths[role]=early_energy_deaths.get(role,0)+1
         energy_fraction_sum+=sum(s['energy']/s['max_energy'] for s in states);energy_samples+=len(states)
@@ -102,9 +118,18 @@ def main():
                 energy_deaths_before_age_60=early_energy_deaths.copy(),
                 ripe_fruit_eaten=ripe_count,ripe_fraction=ripe_count/fruit_count if fruit_count else None,
                 mean_agent_energy_fraction=energy_fraction_sum/energy_samples if energy_samples else None)
+            summary['native_evaluation'].update(predator_deaths_with_sprint_available=sprint_deaths.copy(),
+                premature_guide_predator_deaths_with_sprint_available=len(premature_guide_deaths),
+                premature_guide_death_cases=premature_guide_deaths.copy(),intentional_delivery_sacrifices=delivery_sacrifices,
+                sprint_benchmark_note='Availability at start of fatal tick. Intentional hold_at_delivery excluded from premature guide failures; terrain/walls can still make escape impossible.')
             atom(folder/'summary.json',summary)
         if terminal:break
         previous_roles=policy.roles.copy()
+        previous_states={s['agent_id']:s for s in states}
+        previous_actions={aid:action.model_dump() for aid,action in actions}
+        previous_guide_plans={track.guide_id:track.memory.get('debug',{}).copy()
+                              if isinstance(track.memory.get('debug'),dict) else {'mode':track.memory.get('debug')}
+                              for track in policy.tracks.values() if track.guide_id is not None}
         states=sim.step(actions)['observations']
     except Exception:
         atom(folder/'error.json',dict(tick=tick,error=traceback.format_exc()));raise

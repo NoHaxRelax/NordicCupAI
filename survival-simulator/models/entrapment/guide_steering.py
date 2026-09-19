@@ -59,6 +59,14 @@ def prioritize(action, bait, edges, agent, memory, target=None):
             low_energy_walk_cap=agent['energy'] < agent['max_energy']/5,
             safe=forecast['predicted_safe'])
         return chosen
+    if memory.get('_lookahead_ticks',3):
+        # No affordable wall-clear forecast exists. Do not silently restore
+        # the legacy fixed predator clearance when lookahead is enabled.
+        debug = memory.get('debug')
+        if not isinstance(debug,dict):
+            debug = {'mode': debug}; memory['debug'] = debug
+        debug['steering'] = dict(safe=False, reason='no_affordable_forecast', selected_move=0.)
+        return dict(move_distance=0.,move_direction=0.,turn_angle=math.atan2(p[1],p[0]))
     origin = to_fixed((0., 0.))
     modifier = TERRAIN[agent['biome']]
     energy = agent.get('energy', math.inf)

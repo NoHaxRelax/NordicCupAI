@@ -23,12 +23,16 @@
       "name": "lucas-bait-nursery-v3-20260919",
       "created_at_utc": "2026-09-19T08:00:41.812Z",
       "hourly_usd": 0.48,
-      "status": "running",
+      "status": "terminated",
       "data_center": "US-CA-2",
-      "purpose": "Paired optional nursery v3 and ordinary bait replacement, full native games"
+      "purpose": "Paired optional nursery v3 and ordinary bait replacement, full native games",
+      "termination_verified_at_utc": "2026-09-19T08:44:22Z",
+      "artifacts": "logs/entrapment-iteration/nursery-v3-paired12-runpod",
+      "completed_games": 24,
+      "compute_cost_upper_estimate_usd": 0.3494
     }
   ],
-  "estimated_spend_usd": 4.891723719847505,
+  "estimated_spend_usd": 5.2511,
   "creation_attempts": [
     {
       "cpu": "cpu3c",
@@ -46,7 +50,7 @@
       "attempts": 1
     }
   ],
-  "result": "Previous pod billing confirmed including disk. Nursery evaluation pod active; retrieve artifacts and terminate after batch.",
-  "estimate_updated_at_utc": "2026-09-19T08:00:41.812Z",
+  "result": "24/24 completed native games backed up; nursery pod deleted (204) and absence verified (404). Nursery billing not posted yet; estimate includes conservative uptime and $0.01 disk allowance.",
+  "estimate_updated_at_utc": "2026-09-19T08:44:22Z",
   "confirmed_spend_usd_before_nursery": 4.891723719847505
 }
