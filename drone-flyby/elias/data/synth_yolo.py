@@ -76,6 +76,14 @@ def _excluded_boxes(store, scene, frame):
     return np.array(out, float).reshape(-1, 4)
 
 
+def _implausible(patch, box, f):
+    from terrain import implausible          # elias/data/terrain.py
+    b = np.array(box, float); b = np.array([max(0, b[0]), max(0, b[1]), min(patch.shape[1]-1, b[2]), min(patch.shape[0]-1, b[3])])
+    if b[2]-b[0] < 3 or b[3]-b[1] < 3:
+        return False
+    return implausible(patch, b, grow=1.0)
+
+
 def _overlaps(box, others, pad=6.0):
     return any(box[0] < o[2]+pad and box[2] > o[0]-pad and box[1] < o[3]+pad and box[3] > o[1]-pad for o in others)
 
@@ -142,6 +150,8 @@ def make_view(win, rng, real_only=False):
             for _try in range(12):
                 ref = np.array([rng.uniform(-10, 960*f+10), rng.uniform(-10, 540*f+10)])
                 box = rendered.label+np.tile(ref, 2)
+                if _G.get('terrain') and _implausible(patch, box, f):
+                    continue          # objects never stand on water or in tree cover (backdrop_study.py)
                 if not _overlaps(box, taken):
                     placed = win._paste(patch, rendered, ref)
                     box = rendered.label+np.tile(placed, 2); taken.append(box); labels.append((c, box)); break
@@ -158,6 +168,7 @@ def make_view(win, rng, real_only=False):
 def _init(kw, extra_dir=None, extra_prob=0.):
     cv2.setNumThreads(1)
     _G['organiser_only'] = os.environ.get('SYNTH_ORGANISER_BOXES', '0') == '1'
+    _G['terrain'] = os.environ.get('SYNTH_TERRAIN', '0') == '1'
     win = SynthWindows(1, **kw); win._setup(); _G['win'] = win
     if extra_dir:
         files = sorted(str(f) for f in Path(extra_dir).rglob('*') if f.suffix.lower() in ('.tif', '.tiff', '.jpg', '.jpeg', '.png'))

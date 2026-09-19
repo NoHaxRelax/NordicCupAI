@@ -23,8 +23,9 @@ import numpy as np
 class Ensemble:
     name = 'elias-ensemble'
 
-    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None):
-        self.route = dict(route or {})
+    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None, context=1.0):
+        self.route = dict(route or {}); self.context = float(context)
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data'))
         import cv2
         threads = cv2.getNumThreads()
         from ultralytics import YOLO
@@ -54,6 +55,13 @@ class Ensemble:
                     used[j] = True; group.append((pool[j][1], pool[j][2], pool[j][3]))
             w = np.array([g[1] for g in group]); merged = (np.stack([g[0] for g in group])*w[:, None]).sum(0)/w.sum()
             rows.append({'label': lab, 'box': merged.tolist(), 'confidence': float(w.sum()/n)})
+        if self.context < 1.0 and rows:
+            # context prior: objects never stand on water or in tree cover, so such boxes keep their place but at
+            # a lower confidence (never deleted: low-confidence extras are nearly free under AP)
+            from terrain import implausible
+            for r in rows:
+                if implausible(image, r['box'], grow=1.0):
+                    r['confidence'] = float(r['confidence'])*self.context
         return rows
 
 
@@ -71,4 +79,5 @@ def build():
     sizes = (sizes*len(weights))[:len(weights)]
     import json
     route = json.loads(os.environ.get('ELIAS_ROUTE', '{}') or '{}')
-    return Ensemble(weights, sizes, device=os.environ.get('DRONE_DEVICE', 'cuda:0'), conf=float(os.environ.get('ELIAS_CONF', '0.03')), route=route)
+    return Ensemble(weights, sizes, device=os.environ.get('DRONE_DEVICE', 'cuda:0'), conf=float(os.environ.get('ELIAS_CONF', '0.03')), route=route,
+                    context=float(os.environ.get('ELIAS_CONTEXT', '1.0') or 1.0))
