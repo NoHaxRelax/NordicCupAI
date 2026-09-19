@@ -172,3 +172,7 @@ Log (newest last)
 - 04:05 f18: crevice pass-through escape is much WORSE (-280..-545 s; 190-214 eaten/game): running any
   distance to a fixed point with a predator behind is deadly, same lesson as the guides. Dropped. Merging anchored
   families -27. f19: dodge side/angle/radius and sprint radius fine-tuning around pred_best_0400.
+- 04:11 f19: dodge fine-tuning within noise (radius 70 +11, angle 1.3 +3); the sidestep SIDE is decisive
+  (mirrored side: -712 s). Step 3 converged at 1507 s (pred_best_0400). f20: colony foraging around the trap
+  (post bonus near the mouth) with a bait on sight, with/without guides, to see whether predators hunting the
+  colony get caught without long guide walks.
