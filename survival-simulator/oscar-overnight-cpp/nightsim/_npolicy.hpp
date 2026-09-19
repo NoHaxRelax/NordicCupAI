@@ -1560,7 +1560,7 @@ public:
     void run_guide(Group& g, std::unordered_map<int64_t, Plan>& plans) {
         if (g.guide < 0 && g.relay >= 0) g.relay = -1;
         if (g.guide >= 0 && (!minds.has(g.guide) || M(g.guide).group != g.id)) {
-            g.ep_died++;
+            g.ep_died++; gstat[6]++;
             if (g.gl_dT > 300.) g.d_far++;
             if (g.gl_npred >= 2) g.d_multi++;
             if (g.gl_speed < 12.) g.d_slow++;
@@ -1580,7 +1580,7 @@ public:
         if (have) { g.guide_pred = pp; g.guide_seen = time; }
         {   // deliveries: count sightings held at the mouth; a new one during/just after a guide episode is a delivery
             int64_t hn = 0; for (auto& q : g.pseen) if (dist_lt(q.p, g.trap.mouth, 40.)) hn++;
-            if (hn > g.held_max && (g.guide >= 0 || time - g.guide_end_t < 6.)) { g.guide_done++; if (g.guide >= 0) { g.guide = -1; g.guide_state = 0; g.guide_end_t = time; g.ep_deliv++; } }
+            if (hn > g.held_max && (g.guide >= 0 || time - g.guide_end_t < 6.)) { g.guide_done++; if (g.guide >= 0) { g.guide = -1; g.guide_state = 0; g.guide_end_t = time; g.ep_deliv++; gstat[7]++; } }
             if (hn > g.held_max) g.held_max = hn;
             if (hn < g.held_max) g.held_max = hn;   // follow drops so the next arrival counts again
         }
@@ -1604,7 +1604,7 @@ public:
                 if (sc > bs) { bs = sc; bg = a; }
             });
             if (bg < 0) return;
-            g.guide = bg; g.guide_state = 1; g.guide_since = time; g.ep_start++; g.guide_sprinting = false; g.ep_chased = g.ep_s3 = g.ep_h = false; g.gl_ticks = 0; g.gl_stuck = 0; g.gl_pos = M(bg).pose->p;
+            g.guide = bg; g.guide_state = 1; g.guide_since = time; g.ep_start++; gstat[11]++; g.guide_sprinting = false; g.ep_chased = g.ep_s3 = g.ep_h = false; g.gl_ticks = 0; g.gl_stuck = 0; g.gl_pos = M(bg).pose->p;
             Mind& m = M(bg);
             if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(bg);
             m.has_post = false;
@@ -1633,6 +1633,7 @@ public:
             g.guide_pred_prev = g.guide_pred; g.guide_has_prev = true; g.guide_dprev = dP;
         }
         bool chasing = time - g.guide_closing_t < 1.5;
+        if (g.guide_state >= 1 && g.guide_state <= 3) gstat[7 + g.guide_state]++;
         if (dbg_log) fprintf(stderr, "[t=%.1f] run_guide g%lld guide %lld state %d relay_p %.0f relay %lld\n", time, (long long)g.id, (long long)g.guide, g.guide_state, P.guide_relay, (long long)g.relay);
         if (P.guide_relay > 0. && g.guide_state == 2) {
             // relay guiding: a fresh member waits on the lane ahead of the guide; when the predator comes within guide_acq of it,
@@ -1669,7 +1670,7 @@ public:
             }
         }
         if (g.guide_state == 1) {
-            if (time - g.guide_seen > P.guide_lost) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
+            if (time - g.guide_seen > P.guide_lost) { gstat[4]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
             if (fresh && (dP <= P.guide_acq || chasing)) { g.guide_state = 2; }
             else {   // get into its hearing range fast: sprint when it is not coming to us
                 double dd, dir, turn; go_to(m, s, g.guide_pred, P.guide_acq - 10., dd, dir, turn);
@@ -1678,11 +1679,11 @@ public:
             }
         }
         if (g.guide_state == 2) {
-            if (time - g.guide_seen > P.guide_lost) { g.guide_state = 1; return; }
+            if (time - g.guide_seen > P.guide_lost) { gstat[0]++; g.guide_state = 1; return; }
             P2 lead_target = g.trap.out;
-            if (P.guide_route > 0.) { P2 nx; if (!route_next(g, ps.p, g.trap.out, 6., nx)) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; } lead_target = nx; }
-            else if (P.guide_clear > 0. && !path_clear(g, ps.p, g.trap.out, 6.)) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
-            if (dP > P.guide_acq && !chasing && time - g.guide_closing_t > 2.) { g.guide_state = 1; return; }
+            if (P.guide_route > 0.) { P2 nx; if (!route_next(g, ps.p, g.trap.out, 6., nx)) { gstat[5]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; } lead_target = nx; }
+            else if (P.guide_clear > 0. && !path_clear(g, ps.p, g.trap.out, 6.)) { gstat[5]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
+            if (dP > P.guide_acq && !chasing && time - g.guide_closing_t > 2.) { gstat[1]++; g.guide_state = 1; return; }
             double dT, angT; local_of(ps, g.trap.out, dT, angT);
             if (P.guide_route > 0. && !(lead_target.x == g.trap.out.x && lead_target.y == g.trap.out.y)) { double dV, angV; local_of(ps, lead_target, dV, angV); angT = angV; }   // steer toward the via point; dT stays the true remaining distance
             if (chasing && !g.ep_chased) { g.ep_chased = true; g.ep_chase++; }
@@ -1699,7 +1700,7 @@ public:
                 else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // predator in the way: circle it, drifting away
                 else if (dP > P.guide_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < P.guide_far + 40.)) {
                     step = walk * pmax(0., (P.guide_far + 20. - dP) / 20.);   // slow down beyond the band, unless it is charging in fast
-                    if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { g.wait_since = -1.; g.guide_state = 1; return; } }
+                    if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { gstat[2]++; g.wait_since = -1.; g.guide_state = 1; return; } }
                     else g.wait_since = -1.;
                 } else g.wait_since = -1.;
                 if (P.guide_wallclear > 0.) dir = steer_clear(m, dir, 30.);
@@ -1710,7 +1711,7 @@ public:
         if (g.guide_state == 3) {
             // Lucas's handoff: back toward the mouth and stop guide_hand from the bait, facing the predator; being
             // eaten here is allowed (the predator then hears the bait and holds at the mouth)
-            if (time - g.guide_seen > P.guide_lost || dP > P.guide_far + 120. || (!chasing && time - g.guide_closing_t > 3.)) { g.guide_state = 1; return; }
+            if (time - g.guide_seen > P.guide_lost || dP > P.guide_far + 120. || (!chasing && time - g.guide_closing_t > 3.)) { gstat[3]++; g.guide_state = 1; return; }
             double dB = dist(ps.p, g.trap.goal);
             if (dB <= P.guide_hand) { if (!g.ep_h) { g.ep_h = true; g.ep_hand++; } plans[g.guide] = Plan{0., 0., fresh ? angP : 0.}; return; }
             double dM, angM; local_of(ps, g.trap.mouth, dM, angM);
@@ -1871,6 +1872,7 @@ public:
     // holds there; the predator (radius 10) cannot enter a 10.1-19.9 gap and stays pressed at the mouth while it hears
     // the agent. No guide, no bait child: the chase itself delivers the predator. Returns true when it planned.
     int64_t refuge_events = 0, refuge_holds = 0, refuge_died_route = 0, refuge_died_hold = 0, refuge_died_exit = 0, refuge_exits = 0, refuge_aborts = 0;
+    int64_t gstat[12] = {};   // guide diagnostics: 0 lead unseen->acq, 1 lead far/not chasing->acq, 2 wait timeout->acq, 3 hand state back->acq, 4 acq lost (end), 5 route/clear fail (end), 6 died (end), 7 delivered (end), 8-10 ticks in state 1/2/3, 11 episodes started
     bool refuge(const AState& s, Plan& pl, double dP, double angP) {
         Mind& m = M(s.aid); Group& g = G(m.group);
         if (!g.anchored || g.sites.empty()) { m.hide_idx = -1; m.refuge_in = false; return false; }

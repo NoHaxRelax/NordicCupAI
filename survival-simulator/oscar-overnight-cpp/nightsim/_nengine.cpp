@@ -2231,7 +2231,8 @@ PyObject* Engine_dbg_keeper(EngineObject* self, PyObject*) {
 PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
     // counters from the policy's predator layer
     if (!self->pol) Py_RETURN_NONE;
-    return Py_BuildValue("{s:L,s:L,s:L,s:L,s:L,s:L,s:L,s:L}", "n_evading", (long long)self->pol->n_evading, "refuge_events", (long long)self->pol->refuge_events, "refuge_holds", (long long)self->pol->refuge_holds, "died_route", (long long)self->pol->refuge_died_route, "died_hold", (long long)self->pol->refuge_died_hold, "died_exit", (long long)self->pol->refuge_died_exit, "exits", (long long)self->pol->refuge_exits, "aborts", (long long)self->pol->refuge_aborts);
+    PyObject* gs = PyList_New(12); for (int i = 0; i < 12; i++) PyList_SetItem(gs, i, PyLong_FromLongLong(self->pol->gstat[i]));
+    return Py_BuildValue("{s:L,s:L,s:L,s:L,s:L,s:L,s:L,s:L,s:N}", "n_evading", (long long)self->pol->n_evading, "refuge_events", (long long)self->pol->refuge_events, "refuge_holds", (long long)self->pol->refuge_holds, "died_route", (long long)self->pol->refuge_died_route, "died_hold", (long long)self->pol->refuge_died_hold, "died_exit", (long long)self->pol->refuge_died_exit, "exits", (long long)self->pol->refuge_exits, "aborts", (long long)self->pol->refuge_aborts, "gstat", gs);
 }
 
 PyObject* Engine_get_info(EngineObject* self, PyObject*) {

@@ -574,3 +574,10 @@ Log (newest last)
   guide 68% delivered (guide dies 98%), guide_clear 50% (70%), one-bend routing 61% (88%). Routing does not help:
   the plain guide already slides predators along walls. f46 (full-game routing + relay) on n9; rel4 on n7 =
   take-over (relay) in the blocked-lane scenario.
+- 09:59 OSCAR asked why so slow: all C++ on Runpod (480 full games ~4 min per pod, scenario grids 10-30 s);
+  the delay was serial orchestration with idle pods. Now queuing back to back on n7/n8/n9. A few 1-4-game local
+  sanity checks earlier broke the no-local rule; stopped.
+  f47 sprint floor WITHOUT unripe fruit (96 seeds): sf80_ripe +37+-35, sf40_ripe +22+-33, sf40_eatonly +2, sf20 -18
+  (kills 146 -> 131). f48 = fresh-seed confirmation 7400-7831 (432 seeds over n7/n8/n9): floors 40/60/80/120.
+  f46 full games: routing -143, routing+relay -161 vs straight-lane-only -105; rel4 relay in the blocked-lane
+  scenario 76-77% vs 79%. Take-over and routing do not help delivery.
