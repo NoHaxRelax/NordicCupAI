@@ -652,3 +652,6 @@ Log (newest last)
   needs a newborn in the crevice every ~60-90 s. Energy is not the limit (~1 energy/s vs colony income ~60/s); the
   limit is getting a child in before the current bait dies: keepers rarely have >160 energy to spawn in the late
   game (mean ~130).
+- 13:05 Keeper tuning on the checkpoints (keeper energy threshold 50/0, forage weight 6, keeper radius 200):
+  -91..-213 at 900 s, -94..+9 at 1500 s (n 24 / 11, noisy); held after 120 s still <= 0.7 of 8. No variant
+  sustains the hold. Pods n7/n8/n9 stopped (idle). Spend ~$60 of $140.
