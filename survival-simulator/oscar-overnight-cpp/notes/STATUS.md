@@ -394,3 +394,8 @@ Log (newest last)
   deaths on exact walls, the remaining suspect is the self-built map (hold point a few units off / entry deflected
   by a wall collision). Exits still 0.4 per game. Stopping rule applied: four narrow iterations, best result ~0
   (r 60, clear path, sprint). Refuge line CLOSED; pod j stopped; all pods idle. Spend ~$39 of $100.
+- 08:16 Tick: one cheap diagnostic before leaving the refuge line for good: why do refugees die WHILE HOLDING
+  (7-14 per game, 0 in the scenario)? Added an engine kill hook (NIGHT_REFLOG=1): at every predator kill of an agent
+  heading to / holding in a refuge it logs believed vs true position, true distance to the hold point and mouth, gap,
+  rear_ok, nearest predator distance and predator count. Pods j, n6 and k cannot restart (hosts full), so a new pod
+  n7 (oscar-claude-night-7, dpm6cy0ejfmh5o, EU-RO-1, $0.96/h) was created for it. Run: 32 games rg_60s.

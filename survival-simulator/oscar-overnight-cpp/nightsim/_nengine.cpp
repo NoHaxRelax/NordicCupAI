@@ -25,6 +25,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstring>
+#include <functional>
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -972,8 +973,10 @@ public:
         a.hearing_int = hearing_int; a.vision_int = vision_int;
         add_agent(a);
     }
+    std::function<void(const Creature&, int)> on_kill;   // nightsim diagnostics: called before an agent is removed
     void kill_agent_at(size_t idx, int cause) {
         const Creature& a = agents[idx];
+        if (on_kill) on_kill(a, cause);
         events.push_back({cause, time, a.id, a.age, a.energy});
         agent_observations.erase(a.id);
         agents.erase(agents.begin() + idx);
@@ -1807,6 +1810,25 @@ PyObject* Engine_policy_init(EngineObject* self, PyObject* args) {
     delete self->pol;
     self->pol = new orchard::Policy(key, P);
     if (getenv("NIGHT_POLLOG")) self->pol->dbg_log = true;
+    if (getenv("NIGHT_REFLOG")) {   // log every predator kill of an agent that was heading to / holding in a refuge: belief vs truth
+        orchard::Policy* pol = self->pol; Engine* eng = self->eng;
+        eng->on_kill = [pol, eng](const Creature& a, int cause) {
+            if (cause != 1 || !pol->minds.has(a.id)) return;
+            auto& m = *pol->minds.at(a.id);
+            if (m.hide_idx < 0 || !pol->groups.has(m.group)) return;
+            auto& g = *pol->groups.at(m.group);
+            if (m.hide_idx >= (int)g.sites.size()) return;
+            const auto& st = g.sites[m.hide_idx];
+            double bx = m.pose->p.x, by = m.pose->p.y;
+            double err = std::hypot(bx - a.x, by - a.y);
+            double dtg = std::hypot(a.x - st.goal.x, a.y - st.goal.y), dbg = std::hypot(bx - st.goal.x, by - st.goal.y);
+            double dtm = std::hypot(a.x - st.mouth.x, a.y - st.mouth.y);
+            // nearest predator (truth)
+            double dp = 1e9; for (auto& p : eng->predators) dp = std::min(dp, std::hypot(p.x - a.x, p.y - a.y));
+            fprintf(stderr, "REFKILL t=%.1f id=%lld in=%d err=%.1f dtrue_goal=%.1f dbelief_goal=%.1f dtrue_mouth=%.1f gap=%.1f rear_ok=%d dpred=%.1f npred=%zu\n",
+                    eng->time, (long long)a.id, m.refuge_in ? 1 : 0, err, dtg, dbg, dtm, st.gap, st.rear_ok ? 1 : 0, dp, eng->predators.size());
+        };
+    } else self->eng->on_kill = nullptr;
     if (cfg && PyDict_Check(cfg) && PyDict_GetItemString(cfg, "_debug_merge")) self->pol->debug_merge = true;
     Py_RETURN_NONE;
 }
