@@ -1,3 +1,27 @@
+# READ FIRST (morning summary, written 04:30 on 19 Sept)
+
+**No predators:** r21s0c2 stays the best policy: 2393 s mean survival, score 2555 over 1465 seeds (previous
+best 2353 / 2492). ~180 variants tried overnight on 512 paired seeds each; nothing beats it. The remaining
+headroom is detecting trees 200-400 units away (oracle +120 s), which no tested change captures.
+
+**With predators (full games, r21s0c2 + evasion, no trap):** 864 s -> 1507 s (score 720 -> 1520) on 192 fresh
+seeds with `pred_best_0400` (artifacts/overnight/configs-all.json): flee only within 70, face within 80, sprint
+within 40, sidestep 1.4 rad off the predator's heading within 80, no shared alarms. Fleeing far, sharing
+alarms, running to crevices, speed selection and population re-tuning all hurt or do nothing.
+
+**Trap (Lucas's crevice bait + guide), ported to C++:** in isolated scenarios one predator is delivered 78%
+of the time (96% when it starts behind the guide), and 1-10 held predators plus one more delivery work 94-98%.
+In full games the trap costs 200-450 s: guides walk ~10 vs the predator's 15 and die en route (87%), baits
+never eat and die in 60-100 s, so predators are held only briefly. Funnel and death-attribution counters, the
+scenario runners (guide.py, escape.py, trapsite.py) and the per-tick tracers (full_dbg.py, guide_dbg.py) are in
+the branch for the next attempt. My reading: guides need fast agents (evolved speed >= 13) and routing around
+obstacles, and baits need a rear-side replenishment path; without both the trap is a net loss.
+
+Everything ran on Runpod (pods cpu-i/j/k + 5 ephemeral pods, all stopped by morning), nothing on the laptop,
+nothing through the competition API. Spend ~$30 of the $100. Branch: survival-simulator/oscar-overnight-cpp.
+Files: BEST.md (best configs), GUIDE.md (trap step 1-2 numbers), results-summary.md (all tables), PLAN.md.
+
+---
 # Overnight status (19 Sept 2026) — read this first on every tick
 
 Rules (Oscar, 23:55): C++ only (nightsim fork: survival/nightsim, engine+policy natively), runs ONLY on Runpod pods
