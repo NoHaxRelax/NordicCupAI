@@ -198,8 +198,7 @@ def propose(index, trials, initial, specs, search_seed):
                             if value != get(initial[0]['config'], p)]
         return trial
     rng = random.Random(search_seed + index*1000003)
-    ranked = sorted((t for t in trials if t.get('summary', {}).get('rank') is not None),
-                    key=lambda t: t['summary']['rank'], reverse=True)
+    ranked = ranked_trials(trials)
     parent = ranked[0] if index-len(initial) < len(specs) else rng.choice(ranked[:5])
     offset = index-len(initial)
     if offset < len(specs):
@@ -223,7 +222,11 @@ def propose(index, trials, initial, specs, search_seed):
         for spec in chosen:
             activate(config, spec['path'])
             put(config, spec['path'], sample(spec, get(config, spec['path']), rng))
-        if offset >= len(specs) and rng.random() < .3:
+        # A space without optional feature blocks (notrap) has nothing to toggle here;
+        # reaching for config['features'] killed every study the moment it finished its
+        # scalar probes and entered evolution, which is exactly where combinations of
+        # settings - the part worth searching - would have been explored.
+        if offset >= len(specs) and config.get('features') and rng.random() < .3:
             feature = rng.choice(list(config['features']))
             config['features'][feature] = not config['features'][feature]
         config = repair(config)
@@ -237,16 +240,57 @@ def propose(index, trials, initial, specs, search_seed):
     raise RuntimeError(f'Could not construct a valid candidate for {label}')
 
 
-def summarize(results, seconds, enabled_count=0, objective='survival'):
+
+def _low_quantile(values, quantile):
+    """A robust stand-in for min(): the value at `quantile` from the bottom.
+
+    quantile=0 returns the outright minimum, preserving the original behaviour
+    exactly. Any larger value ignores the very worst maps, so one catastrophic
+    seed cannot dominate a consistency term computed over dozens of maps. Uses
+    nearest-rank on the sorted sample - no interpolation - so the result is
+    always a score that actually occurred.
+    """
+    if not values:
+        raise ValueError('no values to take a quantile of')
+    ordered = sorted(values)
+    if quantile <= 0:
+        return ordered[0]
+    index = int(quantile*(len(ordered)-1))
+    return ordered[min(index, len(ordered)-1)]
+
+
+def summarize(results, seconds, enabled_count=0, objective='survival', full_seeds=None,
+              tail_quantile=0.0):
+    """`full_seeds`, if given, is the distinct-seed count this study treats as a complete
+    measurement (today's whole --train-seeds list, or --race-max under --race). When the trial
+    was measured on fewer distinct seeds than that - for any reason, including a deliberate
+    --race stop or an interrupted extension - seeds_capped is True, so ranked_trials() can keep
+    it from ever outranking a fully-measured trial. Every existing caller of this function leaves
+    full_seeds at its default (None), so seeds_capped is always False there: this parameter only
+    does anything for --race, which is opt-in.
+    """
+    # Distinct seeds actually measured; independent of mode count, and computed before any
+    # early return so even a failed trial records how far it got.
+    seeds_used = len({r['seed'] for r in results})
+    seeds_capped = full_seeds is not None and seeds_used < full_seeds
     errors = [r for r in results if r['status'] == 'error']
     if errors:
-        return dict(rank=None, errors=len(errors), error=errors[0].get('error', 'case failed'))
+        return dict(rank=None, errors=len(errors), error=errors[0].get('error', 'case failed'),
+                    seeds_used=seeds_used, seeds_capped=seeds_capped)
     if not results or any(r['status'] not in ('horizon', 'extinct') for r in results):
         raise ValueError('Cannot rank interrupted or incomplete trials')
     survival = [min(seconds, r['sim_time']) for r in results]
     average, worst = statistics.mean(survival), min(survival)
     scores = [r['score'] for r in results]
     score, worst_score = statistics.mean(scores), min(scores)
+    # Consistency term. Using the outright minimum lets ONE unlucky map decide a
+    # quarter of the objective: measured over 1383 real trials the worst seed sits
+    # 48% below the trial's own mean (793 vs 1514), so a strong candidate with a
+    # single bad map is penalised roughly 200 points for noise. tail_score is a low
+    # quantile instead - still rewarding consistency, but it takes several bad maps
+    # rather than one to move it. tail_quantile=0 reproduces the old minimum exactly.
+    tail_score = _low_quantile(scores, tail_quantile)
+    tail_survival = _low_quantile(survival, tail_quantile)
     modes = {}
     for mode in sorted({r['mode'] for r in results}):
         subset = [r for r in results if r['mode'] == mode]
@@ -258,13 +302,106 @@ def summarize(results, seconds, enabled_count=0, objective='survival'):
     # cannot discriminate between candidates; score still separates them. Rank
     # stays a comparable 3-tuple either way so callers never need to branch on it.
     if objective == 'score':
-        rank = [score+.25*worst_score, average/seconds, -enabled_count]
+        rank = [score+.25*tail_score, average/seconds, -enabled_count]
     else:
-        rank = [average/seconds+.25*worst/seconds, score, -enabled_count]
-    return dict(rank=rank,
+        rank = [average/seconds+.25*tail_survival/seconds, score, -enabled_count]
+    return dict(rank=rank, tail_quantile=tail_quantile,
+                tail_score=tail_score, tail_survival=tail_survival,
                 mean_survival=average, worst_survival=worst, mean_score=score, worst_score=worst_score,
                 survived=sum(t >= seconds-1e-6 for t in survival), cases=len(results),
-                wall_seconds=sum(r['wall_seconds'] for r in results), modes=modes, errors=0)
+                wall_seconds=sum(r['wall_seconds'] for r in results), modes=modes, errors=0,
+                seeds_used=seeds_used, seeds_capped=seeds_capped)
+
+
+def ranked_trials(trials, allow_capped=False):
+    """Completed trials sorted best-rank-first; the one place every selection decision
+    (evolution parent, report/best.json, refinement finalists, race incumbent) reads rank from.
+
+    Excludes trials --race stopped early (summary['seeds_capped']) unless `allow_capped`: a
+    capped trial was measured on fewer seeds than a fully-measured one, against whatever
+    incumbent existed at the time, so its rank is not on equal footing and must never be allowed
+    to look like a win it was not extended long enough to prove (see race_verdict()). When
+    --race is off, no trial is ever capped, so this is exactly the previous unfiltered sort.
+    Falls back to including capped trials only if excluding them would leave nothing ranked at
+    all - should not happen in the normal search() flow, since the two seed controls are always
+    fully measured before anything else runs (see race_batch()), but this avoids ever raising
+    just because every completed trial so far happens to be capped.
+    """
+    def pool(include_capped):
+        return [t for t in trials if t.get('summary', {}).get('rank') is not None
+                and (include_capped or not t['summary'].get('seeds_capped'))]
+    selected = pool(allow_capped) or pool(True)
+    return sorted(selected, key=lambda t: t['summary']['rank'], reverse=True)
+
+
+def objective_metric(result, seconds, objective):
+    """The scalar summarize() ranks candidates on, for one finished (non-error) case."""
+    return result['score'] if objective == 'score' else min(seconds, result['sim_time'])
+
+
+def paired_case_deltas(candidate_rows, reference_rows, seconds, objective):
+    """Per (seed, mode) objective-metric difference, candidate minus reference.
+
+    Matching by (seed, mode) rather than list position does not depend on evaluate_batch()
+    building both trials' row lists in the same order (it does today, but this does not assume
+    it). A case missing from either side, or an error on either side, is left out of the
+    comparison entirely rather than counted as a zero or a loss - with few enough errors this
+    just shrinks the paired sample; race_verdict() already refuses to decide on too few pairs.
+    """
+    reference_by_key = {(r['seed'], r['mode']): r for r in reference_rows}
+    deltas = []
+    for row in candidate_rows:
+        ref = reference_by_key.get((row['seed'], row['mode']))
+        if ref is None or row['status'] == 'error' or ref['status'] == 'error':
+            continue
+        deltas.append(objective_metric(row, seconds, objective)-objective_metric(ref, seconds, objective))
+    return deltas
+
+
+def race_verdict(deltas, confidence, min_pairs=5, resamples=2000):
+    """One-sided paired-bootstrap futility check for --race: is there strong evidence that
+    whatever candidate these `deltas` (candidate-minus-incumbent, one per shared seed/mode - see
+    paired_case_deltas) came from is BEHIND the incumbent it was compared to?
+
+    Returns (stop, bound). `bound` is a `confidence`-level one-sided upper confidence bound on
+    the true mean of `deltas`, estimated the way paired_intervals() estimates its two-sided
+    interval elsewhere in this file (percentile bootstrap, same resample count): resample
+    `deltas` with replacement `resamples` times, take the mean of each resample, and read off the
+    `confidence` percentile of that distribution. `stop` is True only when `bound` itself is
+    negative - i.e. even the optimistic edge of the bootstrap says the candidate is behind, so
+    there is no plausible reading of this evidence under which extending it would find a winner.
+    Below `min_pairs` paired cases there is not enough evidence to ever call a confident loser,
+    so this always returns (False, None) rather than a bound computed from almost nothing.
+
+    What this does NOT do:
+      - It is a FUTILITY check only, not a promotion check. A False verdict is not evidence the
+        candidate is good; it covers genuine winners AND genuine near-ties AND candidates that
+        are actually behind but whose first-stage seeds did not say so with enough confidence
+        yet. All three get extended to more seeds rather than stopped - that is the point, since
+        the real score distribution across variants is tight (measured: p10/median/p90 roughly
+        1424/1531/1614) and per-map variance for a single candidate is larger than the typical
+        gap between two candidates, so a mean difference from only ~25 noisy maps is expected to
+        flip sign for genuine near-ties. Only the final summarize() rank after a full
+        measurement should be read as "this candidate lost", never this verdict alone.
+      - `confidence` bounds the false-stop rate for ONE candidate's ONE comparison under the
+        bootstrap approximation; it is not a calibrated error rate for a whole study. Racing many
+        candidates against a moving incumbent is itself adaptive selection (screen enough
+        candidates and one clears any fixed bound by chance), and 25-100 paired seeds gives a
+        bootstrap with genuinely coarse resolution - the same "small samples and adaptive
+        selection limit confidence" caveat this repo already states for the research supervisor's
+        promotion bound applies here, just for elimination instead of promotion.
+      - Seeds here are a fixed, shared, deterministic list reused by every candidate ever
+        screened in this study (see race_batch), not independent draws from a larger population.
+        This bound describes relative standing on THESE maps, not generalization to unseen ones -
+        the same distinction the separate held-out validation() phase exists to make properly.
+    """
+    if len(deltas) < min_pairs:
+        return False, None
+    rng = random.Random(8752)
+    boot = sorted(statistics.mean(rng.choices(deltas, k=len(deltas))) for _ in range(resamples))
+    index = min(resamples-1, max(0, round(confidence*resamples)-1))
+    bound = boot[index]
+    return bound < 0, bound
 
 
 def stop_process(process):
@@ -504,20 +641,108 @@ def evaluate_trial(trial, seeds, protocol, args, control, deadline):
     return evaluate_batch([trial], seeds, protocol, args, control, deadline).get(trial['id'])
 
 
+def race_champion(trials):
+    """Best fully-measured trial to race new candidates against, or None before one exists.
+
+    Built on ranked_trials(), so a trial --race itself stopped early can never become the
+    champion other candidates are compared to.
+    """
+    ranked = ranked_trials(trials)
+    return ranked[0] if ranked else None
+
+
+def race_batch(trials, protocol, args, control, deadline, save_trial, state):
+    """Two-stage --race evaluation for one batch of proposed candidates: screen on the first
+    args.race_first training seeds, then extend only the candidates that are not a confident
+    loser against the current champion (race_verdict()) out to args.race_max seeds. See --race
+    help for the CLI contract and race_verdict()'s docstring for what the stopping decision does
+    and does not guarantee.
+
+    The champion is snapshotted once, at the start of this batch, and every candidate in the
+    batch races against that same snapshot. evaluate_batch() interleaves every candidate's games
+    on one shared worker-thread pool, so there is no well-defined moment to swap the champion
+    mid-batch; the NEXT batch (or next call into this one, on resume) sees an updated champion.
+    """
+    champion = race_champion(state['trials'])
+    stage1_seeds = args.train_seeds[:args.race_first]
+    full_seeds = args.train_seeds[:args.race_max]
+    if champion is None or len(stage1_seeds) >= len(full_seeds):
+        # No incumbent yet to race against - only possible while bootstrapping the very first
+        # champion, i.e. the two seed controls that always run before anything else (see
+        # search()) - or the first stage already covers the whole race budget. Either way there
+        # is no decision to make: measure the whole batch to the full budget in one shot, same
+        # as with --race off.
+        evaluate_batch(trials, full_seeds, protocol, args, control, deadline, save_trial)
+        return
+    roster = trials if any(t['id'] == champion['id'] for t in trials) else [champion, *trials]
+    stage1 = evaluate_batch(roster, stage1_seeds, protocol, args, control, deadline)
+    champion_rows = stage1.get(champion['id'])
+    extend = []
+    for trial in trials:
+        rows = stage1.get(trial['id'])
+        if rows is None:
+            continue  # interrupted by STOP/deadline; left unsummarized for the next resume
+        failed = (champion_rows is None or any(r['status'] == 'error' for r in rows)
+                 or any(r['status'] == 'error' for r in champion_rows))
+        if failed:
+            # Can't race without the champion's own stage-1 rows, or once a candidate has
+            # already failed: fall through to today's behaviour and let summarize()/save_trial's
+            # existing error handling take over. save_trial() still derives seeds_capped from
+            # however many seeds `rows` actually covers, so this never mislabels a partial
+            # measurement as complete.
+            save_trial(trial, rows)
+            continue
+        deltas = paired_case_deltas(rows, champion_rows, args.seconds, args.objective)
+        stop, bound = race_verdict(deltas, args.race_confidence)
+        trial['race'] = dict(champion=champion['id'], stage1_seeds=len(stage1_seeds),
+                             paired_cases=len(deltas),
+                             paired_mean=statistics.mean(deltas) if deltas else None,
+                             upper_bound=bound, confidence=args.race_confidence,
+                             decision='stopped' if stop else 'extended')
+        if stop:
+            save_trial(trial, rows)
+        else:
+            extend.append(trial)
+    if not extend:
+        return
+    extra_seeds = full_seeds[len(stage1_seeds):]
+    stage2 = evaluate_batch(extend, extra_seeds, protocol, args, control, deadline)
+    for trial in extend:
+        extra_rows = stage2.get(trial['id'])
+        if extra_rows is None:
+            continue  # interrupted mid-extension; left unsummarized for the next resume
+        save_trial(trial, stage1[trial['id']]+extra_rows)
+
+
 def write_report(out, state, protocol):
-    ranked = sorted((t for t in state['trials'] if t.get('summary', {}).get('rank') is not None),
-                    key=lambda t: t['summary']['rank'], reverse=True)
+    ranked_all = ranked_trials(state['trials'], allow_capped=True)
+    ranked = ranked_trials(state['trials'])
+    racing = bool(protocol.get('race', {}).get('enabled'))
+    header = '| Trial | Variant | Mean survival | Worst survival | Mean score |'
+    rule = '| --- | --- | ---: | ---: | ---: |'
+    if racing:
+        header += ' Seeds |'
+        rule += ' ---: |'
     lines = ['# Policy search results', '',
              'Training results only. Run the separate validation phase before accepting an improvement.', '',
              f"Rank: {protocol['objective']}.", '',
-             '| Trial | Variant | Mean survival | Worst survival | Mean score |',
-             '| --- | --- | ---: | ---: | ---: |']
-    for t in ranked:
+             header, rule]
+    for t in ranked_all:
         s = t['summary']
-        lines.append(f"| {t['id']} | {t['label']} | {s['mean_survival']:.1f} | {s['worst_survival']:.1f} | {s['mean_score']:.2f} |")
+        row = f"| {t['id']} | {t['label']} | {s['mean_survival']:.1f} | {s['worst_survival']:.1f} | {s['mean_score']:.2f} |"
+        if racing:
+            row += f" {s['seeds_used']}{'*' if s.get('seeds_capped') else ''} |"
+        lines.append(row)
     failures = [t for t in state['trials'] if t.get('summary', {}).get('errors')]
     lines += ['', f'Failed trials: {len(failures)}. Errors are retained and never treated as good low-population runs.', '']
-    by_label = {t['label']: t['summary'] for t in ranked}
+    if racing:
+        lines += ["\\* stopped early by --race: paired evidence said it was behind the incumbent "
+                  "at the time, so it was measured on fewer seeds than the fully-measured rows "
+                  "and is excluded from selection (evolution parent/best/finalist) until "
+                  "extended - see protocol.json 'race' and this trial's 'race' entry in "
+                  "study.json. Never a guarantee the candidate is actually worse; see "
+                  "race_verdict() in scripts/optimize_policy.py.", '']
+    by_label = {t['label']: t['summary'] for t in ranked_all}
     effects = {}
     lines += ['## Feature comparisons', '',
               'Training-map differences; interactions and simulation variation can change these effects.', '',
@@ -602,8 +827,14 @@ def search(args, protocol, state, baseline, specs, features, control, deadline):
 
     def save_trial(trial, results):
         trial['case_ids'] = [r['case_id'] for r in results]
+        # Under --race a trial may be finalized on fewer than the full --train-seeds (a
+        # deliberate early stop, or an interrupted extension); full_seeds tells summarize() what
+        # "complete" means for THIS study so it can mark seeds_capped correctly either way. With
+        # --race off this is exactly len(args.train_seeds), so seeds_capped is always False,
+        # matching today's behaviour exactly.
+        full_seeds = args.race_max if args.race else len(args.train_seeds)
         trial['summary'] = summarize(results, args.seconds, sum(trial['config'].get('features', {}).values()),
-                                     args.objective)
+                                        args.objective, tail_quantile=args.tail_quantile, full_seeds=full_seeds)
         write_json(args.out/'study.json', state)
         write_report(args.out, state, protocol)
         if trial['summary'].get('errors') and trial['id'] < 2:
@@ -623,7 +854,10 @@ def search(args, protocol, state, baseline, specs, features, control, deadline):
                 break
             write_json(args.out/'study.json', state)
             print(f"Candidates {[t['id'] for t in batch]} of {total}; {args.workers} game slots", flush=True)
-            evaluate_batch(batch, args.train_seeds, protocol, args, control, deadline, save_trial)
+            if args.race:
+                race_batch(batch, protocol, args, control, deadline, save_trial, state)
+            else:
+                evaluate_batch(batch, args.train_seeds, protocol, args, control, deadline, save_trial)
     write_report(args.out, state, protocol)
 
 
@@ -635,8 +869,7 @@ def refine(args, protocol, state, control, deadline):
     if plan_path.exists():
         plan = read_json(plan_path)
     else:
-        ranked = sorted((t for t in state['trials'] if t.get('summary', {}).get('rank') is not None),
-                        key=lambda t: t['summary']['rank'], reverse=True)
+        ranked = ranked_trials(state['trials'])
         if not ranked:
             raise ValueError('No completed training candidates to refine')
         ids, seen = [], set()
@@ -653,8 +886,12 @@ def refine(args, protocol, state, control, deadline):
     trials = [state['trials'][i] for i in plan['trial_ids']]
 
     def save_trial(trial, results):
-        trial['refinement'] = summarize(results, args.seconds, sum(trial['config']['features'].values()),
-                                        args.objective)
+        # Same guard as the search phase: a space with no feature blocks has no
+        # enabled-feature count, and indexing it here would kill the refinement
+        # stage the same way it killed evolution.
+        trial['refinement'] = summarize(results, args.seconds,
+                                        sum(trial['config'].get('features', {}).values()),
+                                        args.objective, tail_quantile=args.tail_quantile)
         trial['refinement_case_ids'] = [r['case_id'] for r in results]
         write_json(args.out/'study.json', state)
         if trial['id'] < 2 and trial['refinement'].get('errors'):
@@ -710,7 +947,7 @@ def validation(args, protocol, state, control, deadline):
     trials = [dict(state['trials'][0], id='baseline'), dict(selection, id='candidate')]
     outcomes = {}
     def save_trial(trial, results):
-        outcomes[trial['id']] = dict(summary=summarize(results, args.seconds, objective=args.objective), results=results)
+        outcomes[trial['id']] = dict(summary=summarize(results, args.seconds, objective=args.objective, tail_quantile=args.tail_quantile), results=results)
         write_json(args.out/'validation-progress.json', dict(selection=selection, outcomes=outcomes))
     evaluate_batch(trials, args.validation_seeds, protocol, args, control, deadline, save_trial)
     if len(outcomes) != 2:
@@ -802,10 +1039,15 @@ def main():
     parser.add_argument('--family', choices=('all', 'orchard_evasion', 'expert_harvest'), default='all',
                         help='Evaluate one policy family per study; mixing families wastes games on '
                              'parameters that cannot affect the other family')
-    parser.add_argument('--engine', choices=('python', 'fastsim', 'native'), default='python',
-                        help="Simulation backend for every game in this study; 'native' runs the engine "
-                             "and the orchard/evasion policy together in one in-process C++ call and only "
-                             "supports --space notrap --family orchard_evasion")
+    parser.add_argument('--engine', choices=('python', 'fastsim', 'native'), default=None,
+                        help="Simulation backend for every game in this study. Default is 'native' "
+                             "(C++ engine and C++ orchard/evasion policy in one in-process call, ~22x) "
+                             "wherever it is supported, which is --space notrap --family orchard_evasion; "
+                             "everything else defaults to 'python' because no C++ policy exists for it.")
+    parser.add_argument('--tail-quantile', type=float, default=0.1,
+                        help='Quantile used for the consistency term instead of the outright worst '
+                             'map. 0 reproduces min(); 0.1 (default) ignores the bottom ~10%% so a '
+                             'single catastrophic seed cannot eliminate a strong candidate.')
     parser.add_argument('--objective', choices=('survival', 'score'), default='survival',
                         help="Ranking rule for summarize()/best.json. 'survival' (default) keeps every "
                              "existing study's ranking unchanged. 'score' ranks by mean_score + "
@@ -813,6 +1055,31 @@ def main():
                              "given the food economy, so survival barely discriminates between candidates "
                              "while score still does. Recorded in protocol.json, so resuming a study with "
                              "a different --objective is rejected by the existing protocol-equality check.")
+    parser.add_argument('--race', action='store_true',
+                        help="Adaptive seed allocation for the search phase only (refine/validate "
+                             "are unaffected). Off by default: every existing study, including a "
+                             "study already running under the unpatched script, is byte-identical "
+                             "unless this is passed. When on, each new candidate is first screened "
+                             "on --race-first training seeds and paired (same seeds, per-case "
+                             "difference) against the current best completed trial; race_verdict() "
+                             "decides whether that is strong enough evidence of a loss to stop there "
+                             "or whether to extend to --race-max seeds for a precise measurement. "
+                             "See race_verdict()'s docstring for exactly what that decision does "
+                             "and does not guarantee. A candidate stopped early is recorded with "
+                             "fewer seeds_used/seeds_capped=True and is excluded from selection "
+                             "(evolution parent, best.json, refinement finalists) by ranked_trials() "
+                             "until it is extended. Recorded in protocol.json under 'race' only "
+                             "when passed, so it participates in the existing protocol-equality "
+                             "resume check like every other evaluation-rule setting.")
+    parser.add_argument('--race-first', type=int, default=25,
+                        help='--race first-stage seed count: a prefix of --train-seeds')
+    parser.add_argument('--race-max', type=int, default=100,
+                        help='--race seed count for an extended candidate: a longer prefix of '
+                             '--train-seeds, clamped down to however many --train-seeds are given')
+    parser.add_argument('--race-confidence', type=float, default=.9,
+                        help='One-sided confidence for the --race futility bound (race_verdict). '
+                             'Higher stops fewer candidates (safer, less compute saved); lower '
+                             'stops more (more compute saved, higher risk of cutting a real winner).')
     parser.add_argument('--phase', choices=('search', 'refine', 'validate', 'overnight'))
     parser.add_argument('--describe', action='store_true', help='Write defaults/inventory only; run no games')
     parser.add_argument('--hours', type=float, help='Session budget; resume with the same command')
@@ -849,6 +1116,19 @@ def main():
         parser.error('Screening/refinement and validation seeds must not overlap')
     if args.phase in ('refine', 'overnight') and not set(args.train_seeds) <= set(args.refine_seeds):
         parser.error('--refine-seeds must include all screening --train-seeds')
+    if args.race and (args.race_first < 2 or args.race_first > args.race_max
+                      or not .5 < args.race_confidence < 1.):
+        parser.error('--race-first must be >= 2 and <= --race-max, and --race-confidence must be in (0.5, 1)')
+    if args.race:
+        # --race-max/--race-first are seed COUNTS sliced as a deterministic prefix of the same
+        # ordered --train-seeds list (never a fresh draw - see race_batch()), so they can never
+        # exceed how many --train-seeds this study actually has.
+        clamped_max = min(args.race_max, len(args.train_seeds))
+        clamped_first = min(args.race_first, clamped_max)
+        if (clamped_max, clamped_first) != (args.race_max, args.race_first):
+            print(f'Race: only {len(args.train_seeds)} --train-seeds given; clamping '
+                  f'--race-first/--race-max to {clamped_first}/{clamped_max}.', flush=True)
+        args.race_max, args.race_first = clamped_max, clamped_first
     from scripts.search_resources import allocation
     resources = allocation(args.memory_per_worker_gb)
     if args.workers == 0:
@@ -862,7 +1142,15 @@ def main():
         if args.family not in modes:
             parser.error(f'--family {args.family} is not part of the {SPACE} space')
         modes = [args.family]
-    if args.engine == 'native' and modes != ['orchard_evasion']:
+    # C++ is the default wherever a C++ policy exists. Only orchard_evasion has one,
+    # so everything else still resolves to the reference Python engine rather than
+    # failing - an explicit --engine native on those modes is still an error.
+    native_supported = modes == ['orchard_evasion']
+    if args.engine is None:
+        args.engine = 'native' if native_supported else 'python'
+        print(f'Engine: {args.engine}' + ('' if native_supported else
+              ' (no native policy exists for '+'/'.join(modes)+')'), flush=True)
+    if args.engine == 'native' and not native_supported:
         parser.error("--engine native only supports --space notrap --family orchard_evasion "
                      "(no native policy exists for trapping or expert_harvest)")
     module = space()
@@ -886,6 +1174,16 @@ def main():
             engine=args.engine, engine_build=engine_build,
             source_hashes=source_manifest(), environment=versions(), parameter_inventory=specs,
             objective=objective_text)
+        if args.race:
+            # A distinct provenance version, not just a new key: resuming must match this
+            # study's evaluation rule exactly, same as it must already match seeds/objective/
+            # space/source via the protocol-equality check just below. Only ever added when
+            # --race is passed, so a study started without it - including one already running
+            # under the unpatched script - has a protocol.json byte-identical to before this
+            # option existed and is unaffected.
+            protocol['version'] = 5
+            protocol['race'] = dict(enabled=True, first_seeds=args.race_first,
+                                    max_seeds=args.race_max, confidence=args.race_confidence)
         protocol_path = args.out/'protocol.json'
         if protocol_path.exists() and read_json(protocol_path) != protocol:
             raise RuntimeError('Source, environment, seeds, objective or search space changed. Use a new --out directory.')

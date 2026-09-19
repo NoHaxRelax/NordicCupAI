@@ -31,8 +31,15 @@ FAMILIES = ('orchard_evasion', 'expert_harvest')
 
 # Defaults are the `with_predators_best` evasion settings measured upstream on
 # survival-simulator/oscar-overnight-cpp's separate engine port, not here.
+#
+# The wall_* block is the predator-deflection layer (see the policy module). Its
+# default wall_mode=0 is off, and with it off every other wall_* value is dead,
+# so this default configuration is behaviourally identical to the pre-deflection
+# policy - a search that never lifts wall_mode reproduces the old campaign.
 EVASION_DEFAULTS = dict(pred_mode=1, pred_r=70., pred_face_r=80., pred_sprint_r=40.,
-                        pred_dodge_r=80., pred_dodge_ang=1.4, pred_turn_max=1.0)
+                        pred_dodge_r=80., pred_dodge_ang=1.4, pred_turn_max=1.0,
+                        wall_mode=0, wall_engage_r=190., wall_target_gap=35.,
+                        wall_epsilon=0.25, steer_max_ticks=120)
 
 EVASION_RANGES = {
     'evasion.pred_mode': (0, 1),
@@ -42,6 +49,24 @@ EVASION_RANGES = {
     'evasion.pred_dodge_r': (0., 200.),
     'evasion.pred_dodge_ang': (0., math.pi),
     'evasion.pred_turn_max': (.1, math.pi),
+    # 0 off / 1 steer at a wall / 2 hold the pivot only (ablation control).
+    # MEASURED NEGATIVE against wall_mode=0 (see the policy module docstring), so
+    # this is exposed for a rerun, not because it is expected to win. Two things to
+    # know before searching it: there is no native port, and fastsim/_orchard_policy
+    # .cpp resolves config keys by name and ignores the rest, so `--engine native`
+    # would silently evaluate wall_mode=0 instead of failing. fastsim/verify_evasion
+    # .py detects that (23143 divergences at wall_mode=1, 0 at wall_mode=0); pin
+    # this to (0, 0) if a native campaign must not be able to reach it at all.
+    'evasion.wall_mode': (0, 2),
+    # Band ceiling. The floor is fixed at 105 in the policy (charge gate + margin)
+    # and an agent cannot see a predator past its own 200-unit vision radius.
+    'evasion.wall_engage_r': (110., 200.),
+    'evasion.wall_target_gap': (5., 120.),
+    # Facing offset; the policy clamps to [0.05, 0.35] because 0 destroys the pivot
+    # sign and the agent's vision half-angle is pi/6.
+    'evasion.wall_epsilon': (0.05, 0.35),
+    # 1 to 600 ticks == 0.1 s to 60 s of committed steering per engagement.
+    'evasion.steer_max_ticks': (1, 600),
 }
 
 

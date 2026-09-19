@@ -350,8 +350,12 @@ public:
     std::vector<AState> states;
     std::unordered_map<int64_t, size_t> sidx;
     // Reused across observe() calls so the mark-matching grid (see observe()) allocates
-    // nothing once warm - same reuse pattern as cluster_cache / actions_buf below.
-    std::unordered_map<CellK, std::vector<int32_t>, CellHash> marks_grid_scratch;
+    // nothing once warm - same reuse pattern as cluster_cache / actions_buf below. A flat,
+    // sorted vector rather than a hash map: |prev_marks| is tens of entries (occasionally a
+    // couple hundred), where a hash map's per-bucket allocations cost more than they save
+    // over a linear sort + binary search on a small contiguous array.
+    struct MarkCell { int64_t cx, cy; int32_t idx; };
+    std::vector<MarkCell> marks_grid_scratch;
     std::vector<int32_t> marks_cand_scratch;
     const AState& st(int64_t aid) const { return states[sidx.at(aid)]; }
     bool in_states(int64_t aid) const { return sidx.count(aid) > 0; }
@@ -640,20 +644,37 @@ public:
                                                // thr > 0 guard.
             auto& grid = marks_grid_scratch;
             grid.clear();
-            for (size_t i = 0; i < m.prev_marks.size(); i++)
-                grid[cell_of_sized(m.prev_marks[i].q, cellsz)].push_back((int32_t)i);
+            for (size_t i = 0; i < m.prev_marks.size(); i++) {
+                CellK c = cell_of_sized(m.prev_marks[i].q, cellsz);
+                grid.push_back(MarkCell{c.x, c.y, (int32_t)i});
+            }
+            std::sort(grid.begin(), grid.end(), [](const MarkCell& a, const MarkCell& b) {
+                return a.cx != b.cx ? a.cx < b.cx : a.cy < b.cy;
+            });
             auto& cand = marks_cand_scratch;
             for (const Mark& mk : marks) {
                 bool hb = false; double bd = 0; P2 br{};
                 CellK c0 = cell_of_sized(mk.q, cellsz);
                 int64_t n = int_floordiv(mk.win, cellsz) + 1;
                 cand.clear();
-                for (int64_t dx = -n; dx <= n; dx++)
+                for (int64_t dx = -n; dx <= n; dx++) {
+                    int64_t tx = c0.x + dx;
+                    // grid is sorted by (cx, cy): the matching cx run is one contiguous
+                    // lower_bound/upper_bound range, and within it cy is itself ascending,
+                    // so each dy target is found by a second binary search inside that range.
+                    auto xlo = std::lower_bound(grid.begin(), grid.end(), tx,
+                        [](const MarkCell& e, int64_t v) { return e.cx < v; });
+                    auto xhi = std::upper_bound(xlo, grid.end(), tx,
+                        [](int64_t v, const MarkCell& e) { return v < e.cx; });
                     for (int64_t dy = -n; dy <= n; dy++) {
-                        auto it = grid.find(CellK{c0.x + dx, c0.y + dy});
-                        if (it == grid.end()) continue;
-                        for (int32_t idx : it->second) cand.push_back(idx);
+                        int64_t ty = c0.y + dy;
+                        auto ylo = std::lower_bound(xlo, xhi, ty,
+                            [](const MarkCell& e, int64_t v) { return e.cy < v; });
+                        auto yhi = std::upper_bound(ylo, xhi, ty,
+                            [](int64_t v, const MarkCell& e) { return v < e.cy; });
+                        for (auto it = ylo; it != yhi; ++it) cand.push_back(it->idx);
                     }
+                }
                 std::sort(cand.begin(), cand.end());  // restore m.prev_marks order
                 for (int32_t idx : cand) {
                     const Mark& r = m.prev_marks[idx];
