@@ -1211,3 +1211,40 @@ loses 0.02 on validation with 1 win against 6 losses: it was fitting noise. Elia
 add-front, is where the validation headroom sits (+0.062 if every helpful case were known), and the
 fitted policies fire on none of them; the pronoun rule loses 0.018. **Closed: no prompt or post-hoc
 change to the citation edges. The pipeline stays frozen at 0.8084.**
+
+
+## 66. Fable with every other labelled conversation in the prompt, leave-one-out over all 58: the plateau holds
+
+Elias's last medical experiment (2026-09-19, 13:20 to 13:24). Claude Fable 5.1 through the Claude Code
+Workflow tool, one agent per conversation, each reading only its own prompt file (all 58 transcripts
+audited: Read on that one file and the structured answer, no other tool call), 8.6 million tokens.
+Prompt: `units-joint-demo-all-both-val` (`prompts.py JointDemoBoth`): the joint form with the other 57
+labelled conversations as worked examples (39 training from the CSV, 19 validation from the hand labels
+and recovered spans), the served prompt's ASR-spelling and acted-upon notes, clause-and units, turbo
+transcripts, served offsets, about 50k tokens per prompt; the held-out conversation is never among its
+own demos (checked, 0 of 58). Scored by `bench/llm/probe_all.py`: training against the CSV, validation
+against the hand labels, which reproduce the portal to four decimals (entry 65). Answers in
+`bench/results/probe/fable-all/`, result `bench/results/llm/claude-fable-5.1.units-joint-demo-all-both-val.large-v3-turbo.clause-and.json`.
+
+| set | questions | accuracy | positives | mean tIoU | score | served 27B on the same questions |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| training | 390 | 1.000 (0 wrong) | 195 | 0.7030 | 0.8218 | 0.8261 (tIoU 0.7119, 1 wrong) |
+| validation | 190 | 1.000 (0 wrong) | 95 | 0.6808 | 0.8085 | 0.8084 (tIoU 0.6806, 0 wrong) |
+| all | 580 | 1.000 | 290 | 0.6957 | 0.8174 | 0.8203 |
+
+Paired per question, conversation-clustered bootstrap: training -0.0089 tIoU (95 % CI -0.041 to +0.021),
+validation +0.0002 (-0.058 to +0.054), all -0.0059 (-0.036 to +0.021). Identical span on 149 of 195
+training positives and 60 of 95 validation positives; Fable better by more than 0.1 on 35 questions and
+worse on 35. Best-of-two would be 0.7513 (+0.05 tIoU), the same untouchable oracle as entries 61 and 64.
+The disagreements are the familiar ones: both systems cite valid utterances and the annotators chose the
+other mention, or the annotators' granularity (sample_4 q04 "It is, for the asthma" scored on its own,
+sample_37 q02 "Observation." with or without the question), with Fable landing on the annotators' side
+about as often as the 27B does.
+
+**Reading.** With a frontier model, every label we own in the prompt, the served notes and the
+served units, the binary half is perfect and the span half is 0.70 on training and 0.68 on validation,
+the same as the served 27B to the third decimal on validation. Entry 41's plateau (Opus 0.808, Sonnet
+0.805 with 38 demos on sentence units) moves up with the clause units and the notes exactly as the 27B
+did, and no further. The remaining loss is not model capacity or example count; it is which of two
+valid utterances the annotators marked, and the clause-level golds inside longer utterances.
+**Closed: the medical pipeline stays frozen at the served 27B, 0.8084 on validation, for Sunday.**
