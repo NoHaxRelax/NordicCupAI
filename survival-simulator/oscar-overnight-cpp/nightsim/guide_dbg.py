@@ -42,10 +42,14 @@ print('pred added', eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px),
 if RELAY:
     rx, ry = mx + dx * dg * 0.45, my + dy * dg * 0.45
     print('relay placed', eng.dbg_set_agent(relay, rx, ry, math.atan2(gsy - ry, gsx - rx), 300., sp, min(40, 2*sp), 800., 100., 400., 1.57, 1000.), 'at', round(rx), round(ry))
-eng.dbg_freeze([bait, guide])
+eng.dbg_freeze([bait, guide, relay] if RELAY else [bait, guide])
 for _ in range(3):
     eng.dbg_true_poses(); eng.run_policy(1e9, eng.info()['time'] + 0.1)
-eng.dbg_true_poses(); eng.dbg_freeze([bait])
+eng.dbg_true_poses(); eng.dbg_freeze([bait, relay] if RELAY else [bait])
+if RELAY:   # keep the relay frozen (ineligible) until the policy has chosen the intended guide, then release it
+    for _ in range(2):
+        eng.run_policy(1e9, eng.info()['time'] + 0.1); eng.dbg_true_poses()
+    eng.dbg_freeze([bait])
 t0 = eng.info()['time']
 for k in range(60):
     eng.run_policy(t0 + 60, eng.info()['time'] + 0.2)

@@ -344,7 +344,7 @@ struct Params {
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
-    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
+    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
@@ -1604,6 +1604,7 @@ public:
             g.guide_pred_prev = g.guide_pred; g.guide_has_prev = true; g.guide_dprev = dP;
         }
         bool chasing = time - g.guide_closing_t < 1.5;
+        if (dbg_log) fprintf(stderr, "[t=%.1f] run_guide g%lld guide %lld state %d relay_p %.0f relay %lld\n", time, (long long)g.id, (long long)g.guide, g.guide_state, P.guide_relay, (long long)g.relay);
         if (P.guide_relay > 0. && g.guide_state == 2) {
             // relay guiding: a fresh member waits on the lane ahead of the guide; when the predator comes within guide_acq of it,
             // it becomes the guide (the predator switches to its closest agent) and the old guide is released
@@ -1655,7 +1656,7 @@ public:
             if (dT < 12. && chasing && dP < P.guide_far + 30.) { g.guide_state = 3; if (!g.ep_s3) { g.ep_s3 = true; g.ep_state3++; } }
             else {
                 // stay in front of the predator: never pass it, keep it in its senses (< ~200), never let it reach 15
-                double step = walk, dir = angT;
+                double step = (P.guide_lead_sprint > 0. && dP < P.guide_far) ? s.sprint : walk, dir = angT;   // nightsim: sprint-lead inside the band
                 double off = wrap(angT - angP);   // lane direction relative to the predator direction
                 double sgn = off > 0 ? 1. : -1.;
                 bool blocked_ = std::fabs(off) < 1.1;                                               // predator between us and the lane

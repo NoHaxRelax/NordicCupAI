@@ -61,10 +61,14 @@ def one(job):
         hx, hy = mx + ax * back - ay * off, my + ay * back + ax * off
         if eng.dbg_add_predator(hx, hy, math.atan2(gy - hy, gx - hx), 200., False): held_ok += 1
     # settle after teleporting: observations refresh and the policy's poses are re-synced twice (odometry/VO would drift)
-    eng.dbg_freeze([bait, guide])
+    eng.dbg_freeze([bait, guide, relay] if RELAY else [bait, guide])
     for _ in range(3):
         eng.dbg_true_poses(); eng.run_policy(1e9, eng.info()['time'] + 0.1)
-    eng.dbg_true_poses(); eng.dbg_freeze([bait])
+    eng.dbg_true_poses(); eng.dbg_freeze([bait, relay] if RELAY else [bait])
+    if RELAY:   # keep the relay frozen (ineligible) until the policy has chosen the intended guide, then release it
+        for _ in range(2):
+            eng.run_policy(1e9, eng.info()['time'] + 0.1); eng.dbg_true_poses()
+        eng.dbg_freeze([bait])
     t0 = eng.info()['time']; e0 = 300.; killed = {}; dmin = 1e9; near = 0.; t_del = None; states = []
     while eng.info()['time'] < t0 + T:
         eng.run_policy(t0 + T, eng.info()['time'] + 0.5)

@@ -290,3 +290,21 @@ Log (newest last)
   added steer_clear() (recent-edge wall avoidance) for guides (guide_wallclear) and fleeing agents (pred_wallclear).
   Running rel2 (relay on/off x wall-clear, 500-700 units) and esc4 (escape grid with wall-clear) on n6; f34 (relay in
   full games, but with the dead relay code) on j/k.
+- 06:53 f34 (192 seeds, full games with predators, relay code dead so this is guide-trap vs no trap): rf_relay -185+-26,
+  rf_relay_lane400 -133+-26 vs the evasion best (1527 s). Consistent with every earlier full-game trap result.
+  Relay scenario harness bug: during warm-up the intended guide was frozen, so the policy picked the relay agent as
+  guide and no hand-over could ever happen (rel1/rel2 measured nothing). Fixed (relay frozen until the guide is
+  chosen); trace seed 11 now shows relay search -> hand-over at t=2.1 -> handoff state at t=6.5. rel3 running on n6.
+  f35 on j/k (fresh seeds 7200-7391): rf_ref, rf_wall (pred_wallclear), rf_relay (live relay + guide_wallclear), rf_trap.
+  esc4: pred_wallclear in the escape grid 28.7% vs 27.8% kills (noise).
+- 06:55 rel3 (harness fixed, relay engages: search -> hand-over -> handoff in the trace): delivered r_off 95%,
+  r_on 92%, r_wall 95%, r_on_wall 89% (64 valid scenarios each). Relay guiding and wall-clear steering give no gain
+  in the scenario; the plain guide already delivers 95% there. Item 3 relay: closed, negative/noise.
+  f34 funnel (full games, trap_mode 3): ~21 guide episodes per game, ~19 die before the handoff, 1.6 reach state 3,
+  0.24 predators held; 132 kills per game in the reference vs 140 with the trap. The full-game problem is not the
+  last 500 units (scenario) but reaching and holding the predator from wherever the guide starts, with the colony
+  (closer agents) around. Testing sprint-lead (spr1 on n6) as the last item-3 variant.
+  Spend since the overnight start (Runpod billing, my night pods only): ~$29 (i/j/k/n1-n6); burn now $2.88/h (j, k, n6).
+- 06:56 spr1 (sprint-lead: the guide sprints whenever the predator is inside guide_far, 62 valid scenarios):
+  g_off 89%, g_sprint 92%, g_sprint_far100 87% => noise. Item 3 (sprint / relay guiding) closed: the scenario
+  delivery is already ~90-95%; the guide speed gap is not what breaks the full-game trap. n6 stopped (idle).
