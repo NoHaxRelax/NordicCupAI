@@ -1,0 +1,105 @@
+diff --git a/survival-simulator/native_policy/nightsim/_npolicy.hpp b/tmp/nordic-astar-opt-20260919/native_policy/nightsim/_npolicy.hpp
+index bf57841..d983ed5 100644
+--- a/survival-simulator/native_policy/nightsim/_npolicy.hpp
++++ b/tmp/nordic-astar-opt-20260919/native_policy/nightsim/_npolicy.hpp
+@@ -2256,8 +2256,66 @@ public:
+         return bits(a.x) + ":" + bits(a.y) + ":" + bits(b.x) + ":" + bits(b.y) + ":" + bits(r) + ":" + bits(step);
+     }
+     bool astar_route(Group& g, P2 a, P2 b, double r, double step, std::vector<P2>& route) {
+-        if (path_clear(g, a, b, r)) { route = {a, b}; return true; }
+-        if (!clear_of(g, a, r) || !clear_of(g, b, r)) return false;
++        // Per-search broad phase over the exact confirmed-wall snapshot.  Grid
++        // edges and endpoint probes are short and otherwise rescan every wall.
++        // Queries spanning many buckets retain the original implementation.
++        constexpr double WB = 40.;
++        std::unordered_map<int64_t, std::vector<int>> wall_bins;
++        auto bcoord = [](double v) { return (int32_t)std::floor(v / WB); };
++        auto bkey = [](int32_t x, int32_t y) {
++            return (int64_t)((uint64_t)(uint32_t)x << 32 | (uint32_t)y);
++        };
++        for (size_t i = 0; i < g.walls.size(); i++) {
++            const auto& w = g.walls[i]; if (!confirmed(w)) continue;
++            double xmin = w.horiz ? w.lo : w.c, xmax = w.horiz ? w.hi : w.c;
++            double ymin = w.horiz ? w.c : w.lo, ymax = w.horiz ? w.c : w.hi;
++            int32_t x0 = bcoord(xmin), x1 = bcoord(xmax), y0 = bcoord(ymin), y1 = bcoord(ymax);
++            for (int32_t x = x0; x <= x1; x++) for (int32_t y = y0; y <= y1; y++)
++                wall_bins[bkey(x, y)].push_back((int)i);
++        }
++        std::vector<uint32_t> wall_mark(g.walls.size(), 0); uint32_t wall_stamp = 0;
++        auto candidates = [&](double xmin, double xmax, double ymin, double ymax, std::vector<int>& out) {
++            int32_t x0 = bcoord(xmin), x1 = bcoord(xmax), y0 = bcoord(ymin), y1 = bcoord(ymax);
++            if ((int64_t)(x1 - x0 + 1) * (int64_t)(y1 - y0 + 1) > 16) return false;
++            out.clear(); if (++wall_stamp == 0) { std::fill(wall_mark.begin(), wall_mark.end(), 0); wall_stamp = 1; }
++            for (int32_t x = x0; x <= x1; x++) for (int32_t y = y0; y <= y1; y++) {
++                auto it = wall_bins.find(bkey(x, y)); if (it == wall_bins.end()) continue;
++                for (int wi : it->second) if (wall_mark[(size_t)wi] != wall_stamp) {
++                    wall_mark[(size_t)wi] = wall_stamp; out.push_back(wi);
++                }
++            }
++            std::sort(out.begin(), out.end()); // preserve original wall order
++            return true;
++        };
++        std::vector<int> nearby;
++        auto indexed_clear_of = [&](P2 p) {
++            if (p.x < r || p.y < r || p.x > W - r || p.y > H - r) return false;
++            if (!candidates(p.x-r,p.x+r,p.y-r,p.y+r,nearby)) return clear_of(g,p,r);
++            for (int wi : nearby) {
++                const auto& w=g.walls[(size_t)wi];
++                double xmin=w.horiz?w.lo:w.c, xmax=w.horiz?w.hi:w.c;
++                double ymin=w.horiz?w.c:w.lo, ymax=w.horiz?w.c:w.hi;
++                if (p.x < xmin-r || p.x > xmax+r || p.y < ymin-r || p.y > ymax+r) continue;
++                if (seg_dist(p,w) < r) return false;
++            }
++            return true;
++        };
++        auto indexed_path_clear = [&](P2 u, P2 v) {
++            if (!indexed_clear_of(u) || !indexed_clear_of(v)) return false;
++            double xmin=pmin(u.x,v.x), xmax=pmax(u.x,v.x), ymin=pmin(u.y,v.y), ymax=pmax(u.y,v.y);
++            if (!candidates(xmin-r,xmax+r,ymin-r,ymax+r,nearby)) return clear_segment(g,u,v,r);
++            for (int wi : nearby) {
++                const auto& w=g.walls[(size_t)wi];
++                P2 c=w.horiz?P2{w.lo,w.c}:P2{w.c,w.lo}; P2 d=w.horiz?P2{w.hi,w.c}:P2{w.c,w.hi};
++                double cx0=pmin(c.x,d.x),cx1=pmax(c.x,d.x),cy0=pmin(c.y,d.y),cy1=pmax(c.y,d.y);
++                if (xmax < cx0-r || xmin > cx1+r || ymax < cy0-r || ymin > cy1+r) continue;
++                if (segments_cross(u,v,c,d) || point_segment(c,u,v)<r || point_segment(d,u,v)<r
++                        || point_segment(u,c,d)<r || point_segment(v,c,d)<r) return false;
++            }
++            return true;
++        };
++        if (indexed_path_clear(a, b)) { route = {a, b}; return true; }
++        if (!indexed_clear_of(a) || !indexed_clear_of(b)) return false;
+         if (g.route_cache_version != g.wall_version) {
+             g.route_cache.clear(); g.failed_route_cache.clear(); g.route_cache_version = g.wall_version;
+         }
+@@ -2284,19 +2342,19 @@ public:
+         int sx = (int)std::llround(a.x / step), sy = (int)std::llround(a.y / step);
+         for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++) {
+             int x = sx + dx, y = sy + dy; if (x < 0 || y < 0 || x >= grid.nx || y >= grid.ny) continue;
+-            int n = id(x, y); P2 p = point(n); if (grid.blocked[(size_t)n] || !path_clear(g, a, p, r)) continue;
++            int n = id(x, y); P2 p = point(n); if (grid.blocked[(size_t)n] || !indexed_path_clear(a, p)) continue;
+             double c = dist(a, p); if (c < cost[(size_t)n]) { cost[(size_t)n] = c; parent[(size_t)n] = -2; push(Q{c + dist(p, b), c, n}); }
+         }
+         int goal = -1;
+         static const int D[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
+         while (!open.empty()) {
+             Q q = pop(); if (q.cost != cost[(size_t)q.n]) continue;
+-            P2 p = point(q.n); if (path_clear(g, p, b, r)) { goal = q.n; break; }
++            P2 p = point(q.n); if (indexed_path_clear(p, b)) { goal = q.n; break; }
+             int x = q.n / grid.ny, y = q.n % grid.ny;
+             for (auto& d : D) {
+                 int xx = x + d[0], yy = y + d[1]; if (xx < 0 || yy < 0 || xx >= grid.nx || yy >= grid.ny) continue;
+                 int nn = id(xx, yy); if (grid.blocked[(size_t)nn]) continue;
+-                P2 np = point(nn); if (!path_clear(g, p, np, r)) continue;
++                P2 np = point(nn); if (!indexed_path_clear(p, np)) continue;
+                 double nc = q.cost + dist(p, np);
+                 if (nc < cost[(size_t)nn]) { cost[(size_t)nn] = nc; parent[(size_t)nn] = q.n; push(Q{nc + dist(np, b), nc, nn}); }
+             }
+@@ -2310,7 +2368,7 @@ public:
+         std::reverse(raw.begin(), raw.end());
+         route.clear(); route.push_back(a); size_t i = 0;
+         while (i + 1 < raw.size()) {
+-            size_t j = raw.size() - 1; while (j > i + 1 && !path_clear(g, raw[i], raw[j], r)) j--;
++            size_t j = raw.size() - 1; while (j > i + 1 && !indexed_path_clear(raw[i], raw[j])) j--;
+             route.push_back(raw[j]); i = j;
+         }
+         if (g.route_cache.size() >= 256) g.route_cache.clear();

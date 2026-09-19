@@ -1,0 +1,89 @@
+{
+  "config": {
+    "name": "entrapment_final",
+    "path": "/workspace/NordicCupAI/survival-simulator/native_policy/configs/entrapment-final.json",
+    "sha256": "603be4c0a39a580813523f412ee04954abf284d9c162a5e47bc3c61bbceaea7a"
+  },
+  "created_utc": "2026-09-19T12:11:16.455048+00:00",
+  "git_commit": "04173f8ee9d957ff947e6f7d5e73f76ef27750b0",
+  "git_dirty": true,
+  "metric_availability": {
+    "bait_gap_seconds_max": {
+      "reason": "the native API does not expose bait occupancy intervals",
+      "status": "unknown"
+    },
+    "bait_gap_seconds_total": {
+      "reason": "the native API does not expose bait occupancy intervals",
+      "status": "unknown"
+    },
+    "confirmed_predator_retention": {
+      "reason": "the native API has no confirmed-retention event; proximity is not treated as capture",
+      "status": "unknown"
+    },
+    "deaths_by_role": {
+      "reason": "the native API does not expose policy role at death",
+      "status": "unknown"
+    },
+    "premature_captures_with_sprint_available": {
+      "reason": "the native API exposes neither capture events nor sprint availability at capture",
+      "status": "unknown"
+    }
+  },
+  "run": {
+    "bootstrap_seed": 20260919,
+    "games": 25,
+    "horizon": 3000.0,
+    "seed_start": 2026091975,
+    "seeds": [
+      2026091975,
+      2026091976,
+      2026091977,
+      2026091978,
+      2026091979,
+      2026091980,
+      2026091981,
+      2026091982,
+      2026091983,
+      2026091984,
+      2026091985,
+      2026091986,
+      2026091987,
+      2026091988,
+      2026091989,
+      2026091990,
+      2026091991,
+      2026091992,
+      2026091993,
+      2026091994,
+      2026091995,
+      2026091996,
+      2026091997,
+      2026091998,
+      2026091999
+    ],
+    "workers": 8
+  },
+  "runtime": {
+    "cpu_count": 256,
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "native_extension": "/workspace/NordicCupAI/survival-simulator/native_policy/nightsim/_nengine.cpython-313-x86_64-linux-gnu.so",
+    "native_extension_sha256": "010cf40e3d7f04c2c2e2005b14f43d1f4afb1dcbf98a6dfadb75334ea6b36a9f",
+    "numpy": "2.5.3",
+    "numpy_module": "/workspace/venv/lib/python3.13/site-packages/numpy/__init__.py",
+    "numpy_module_sha256": "09295a80660f17925ae23765ce8cbd7ff7ceae968d5f2f89349f1cb74c0b9e11",
+    "platform": "Linux-5.15.0-94-generic-x86_64-with-glibc2.39",
+    "python": "3.13.14 (main, Aug  5 2026, 15:44:26) [Clang 22.1.3 ]",
+    "python_executable": "/root/.local/share/uv/python/cpython-3.13.14-linux-x86_64-gnu/bin/python3.13",
+    "python_executable_sha256": "4419b7eee48ee6189e5237dfd885e4bdca5ac41b57a9e6eef1af761db5e2cbff"
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "evaluate.py": "4fac15a18048e2fc70611f5c3e6022ffa94716f8113079981265c966e41a2141",
+    "nightsim/__init__.py": "fa4d4fa6109092fb473f1c24e09af1cd42afc57257e6395c8605d29fd47d232f",
+    "nightsim/_evaluation.hpp": "2ad7b6b27a2b097188417690c630a3103bebb358c3cff1422ce1c511604b3f0c",
+    "nightsim/_nengine.cpp": "1eddb1ceadb631e9d7e3d61376bdc49ab364ae2fe44e735b0c920f4f7401c640",
+    "nightsim/_npolicy.hpp": "b29ad74c30657783e9f4f86bd35489a57aa8fc5336cc0f4009d147aab2294c0c",
+    "nightsim/entrapment_guide.hpp": "e23a870ee6b568a6056b5fcfeb58409ea63b41dafa906474df62b90d5baa670d"
+  }
+}

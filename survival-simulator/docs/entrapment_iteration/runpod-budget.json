@@ -39,15 +39,24 @@
       "name": "lucas-entrapment-cpp-final100-20260919",
       "created_at_utc": "2026-09-19T12:03:06.500Z",
       "hourly_usd": 0.96,
-      "status": "running",
+      "status": "terminated",
       "data_center": "EUR-IS-1",
       "purpose": "Frozen C++ final100 and matched orchard baseline100; four25-game shards pervariant",
       "incremental_budget_usd": 3.5,
       "delete_by_utc": "2026-09-19T15:30:00Z",
-      "budget_revision_note": "Actual full-game throughput was below pilot estimate. Raised self-imposed final-pod allowance from1.50 to3.50 while staying under original user total10; announced at12:40UTC. No policy or seed changes."
+      "budget_revision_note": "Actual full-game throughput was below pilot estimate. Raised self-imposed final-pod allowance from1.50 to3.50 while staying under original user total10; announced at12:40UTC. No policy or seed changes.",
+      "terminated_at_utc": "2026-09-19T13:21:04Z",
+      "termination_verified_at_utc": "2026-09-19T13:21:05Z",
+      "completed_games": 42,
+      "compute_cost_upper_estimate_usd": 1.24734,
+      "total_cost_conservative_estimate_usd": 1.26,
+      "posted_billing_usd_as_of_check": 0.34708593680988997,
+      "billing_checked_at_utc": "2026-09-19T13:20:00Z",
+      "billing_note": "Posted billing is incomplete. Conservative estimate uses quoted0.96/hour from creation to deletion, plus disk margin; no further pod charges accrue.",
+      "artifacts": "docs/benchmarks/entrapment-cpp-final-100-runpod"
     }
   ],
-  "estimated_spend_usd": 5.2511,
+  "estimated_spend_usd": 6.5111,
   "creation_attempts": [
     {
       "cpu": "cpu3c",
@@ -65,7 +74,7 @@
       "attempts": 1
     }
   ],
-  "result": "Final C++ benchmark running; prior conservative spend5.2511 plus current pod. Revised final allowance3.50 gives total upper allowance8.7511, below user total10.",
-  "estimate_updated_at_utc": "2026-09-19T08:44:22Z",
+  "result": "User stopped final benchmark. All owned final workers stopped; pod deleted and GET404 verified. Final pod estimate1.26; conservative research total6.5111 below original10 budget.",
+  "estimate_updated_at_utc": "2026-09-19T13:21:05Z",
   "confirmed_spend_usd_before_nursery": 4.891723719847505
 }
