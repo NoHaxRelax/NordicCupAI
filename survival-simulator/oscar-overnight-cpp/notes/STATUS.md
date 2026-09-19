@@ -17,8 +17,15 @@ scenario runners (guide.py, escape.py, trapsite.py) and the per-tick tracers (fu
 the branch for the next attempt. My reading: guides need fast agents (evolved speed >= 13) and routing around
 obstacles, and baits need a rear-side replenishment path; without both the trap is a net loss.
 
-Everything ran on Runpod (pods cpu-i/j/k + 5 ephemeral pods, all stopped by morning), nothing on the laptop,
-nothing through the competition API. Spend ~$30 of the $100. Branch: survival-simulator/oscar-overnight-cpp.
+**After 04:30 (per 'run until the budget is spent'):** old-agent decoys, closest-agent-only fleeing, birth gating
+near predators and detection settings: all noise (evasion is converged at ~1500 s). Keeper design (a keeper near
+the crevice rear spawns children as baits): -414 to -506 s. Root cause found: the family's shared map can drift
+by ~75-80 units when an early merge is wrong (1-5% of agents are >30 units off in normal play, but trap games
+amplify it), so baits and guides walk to the wrong spot. Map consistency under merges is the prerequisite for
+any trap work.
+
+Everything ran on Runpod (pods cpu-i/j/k + 5 ephemeral pods, all stopped at 05:30), nothing on the laptop,
+nothing through the competition API. Spend ~$38 of the $100. Branch: survival-simulator/oscar-overnight-cpp.
 Files: BEST.md (best configs), GUIDE.md (trap step 1-2 numbers), results-summary.md (all tables), PLAN.md.
 
 ---
@@ -224,3 +231,12 @@ Log (newest last)
   per Oscar's list: KEEPER role (keeper_mode): the member nearest the crevice rear holds within keeper_r of it and
   spawns a CHILD as the next bait when the current bait's life runs short (100 energy per bait ~ one agent's
   upkeep, no forager sacrificed). f25 tests keeper alone / on sight / with trap-side foraging / with guides.
+- 05:10 KEEPER RESULT (f25/f26, 192 games): keeper-spawned bait children -414..-506 s even after fixing rear
+  entry, obstacle-avoiding approach and stuck-replacement release; held predators ~0.05. Traced root cause: in
+  trap games the family's shared map drifts (median pose error 75 units for ALL members from t~100 in seed
+  7000) because a mis-merged sub-family (one early merge off by ~80) re-maps trees and the majority frame wins;
+  bait children then walk to the wrong spot. In normal play only 1-5% of agents are >30 off (12 seeds, with and
+  without predators), so the survival policy tolerates it, but the trap needs exact absolute positions. Fixing
+  map consistency under merges is the prerequisite for any trap work; out of tonight's scope.
+- 05:10 Work concluded: no productive experiment left inside the agreed scope (P1 converged, evasion converged,
+  trap blocked on pose consistency + bait economics). Pods i/j/k stopped (disks kept). Spend ~$38 of $100.

@@ -65,3 +65,18 @@ cheapest local response wins: a short sidestep at 1.4 rad off the predator's hea
 0.3 rad per tick), sprint only inside 40, face it only inside 80. Speed selection and population re-tuning under
 predators: no gain. Perfect-trap model still promises +900 s if every predator were trapped within 100 s of its
 spawn; the trap pipeline reaches that only in scenarios (step 1), not yet in full games.
+
+## After 04:30: decoys, keeper baits, and the pose-drift finding
+
+| Test (192 games with predators, paired vs pred_best_0400) | Result |
+| --- | --- |
+| old agents walk toward nearby predators (decoy) | -6 s, -19 score; low-energy decoys -34 to -120 |
+| flee only when I am the predator's closest visible agent; no births with a predator within 100-400 | all within noise |
+| detection: sweep rate, hearing/vision selection, watch patience | noise (vision +33 ± 27) |
+| keeper spawns bait children near the crevice rear (rear entry, obstacle-avoiding approach) | -414 to -506 s |
+
+Kill profile (128 games): 140 kills per game, 34% of victims under 20 s old, median energy 72; per-agent kill
+hazard per 100 s rises from 0.6% with 4 predators to 1.4% with 13, so the late game is kill-driven.
+Pose finding: an early wrong family merge (about 80 units) can make the shared map drift to the wrong frame;
+in normal play 1-5% of agents are more than 30 units off, in trap games whole families were 75 off, which
+sends baits and guides to the wrong place. Fix this before any further trap work.

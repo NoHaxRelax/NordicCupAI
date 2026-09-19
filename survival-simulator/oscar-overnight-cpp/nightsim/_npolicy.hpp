@@ -260,6 +260,7 @@ struct Group {
     int64_t d_far = 0, d_multi = 0, d_slow = 0, d_stuck = 0, d_early = 0, d_state1 = 0;
     bool guide_sprinting = false; int64_t held_max = 0; double guide_end_t = -1e9; int64_t ep_deliv = 0; double wait_since = -1.;
     int64_t keeper = -1; bool keeper_spawn = false; double keeper_spawn_t = -1e9; int64_t baits_born = 0;
+    P2 rep_pos{}; int64_t rep_stuck = 0; double rep_since = 0.;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
@@ -340,7 +341,7 @@ struct Params {
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
-    double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60.;
+    double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45.;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -383,7 +384,9 @@ public:
         groups.set(g->id, g); next_group++;
         return g;
     }
+    bool dbg_log = false;
     void transform_group(Group& g, double dth, P2 shift) {
+        if (dbg_log) fprintf(stderr, "[t=%.1f] transform_group g%lld n=%zu dth=%.3f shift=(%.1f,%.1f)\n", time, (long long)g.id, g.agents.size(), dth, shift.x, shift.y);
         auto T = [&](P2 q) { return add(rot(q, dth), shift); };
         g.agents.each([&](int64_t aid) {
             Mind& m = M(aid);
@@ -532,8 +535,8 @@ public:
                 }
             }
             GroupP g;
-            if (!pose) { g = new_group(); pose = mkpose(P2{0., 0.}, 0.); }
-            else g = groups.at(M(parent).group);
+            if (!pose) { g = new_group(); pose = mkpose(P2{0., 0.}, 0.); if (dbg_log) fprintf(stderr, "[t=%.1f] newborn %lld: NO observer -> new group %lld (spawners %zu, new %zu)\n", time, (long long)cid, (long long)g->id, spawners.size(), new_ids.size()); }
+            else { g = groups.at(M(parent).group); if (dbg_log) fprintf(stderr, "[t=%.1f] newborn %lld: parent %lld (%s) pose (%.0f,%.0f)\n", time, (long long)cid, (long long)parent, k < spawners.size() ? "spawner" : "observer", pose->p.x, pose->p.y); }
             auto m = std::make_shared<Mind>();
             m->aid = cid; m->group = g->id; m->pose = pose; m->born = time;
             m->has_eprev = true; m->energy_prev = st(cid).energy;
@@ -583,6 +586,7 @@ public:
     }
     void anchor(Mind& m, const Obs& o) {
         double x1 = o.c[0], y1 = o.c[1], x2 = o.c[2], y2 = o.c[3];
+        if (dbg_log && !G(m.group).anchored) fprintf(stderr, "[t=%.1f] anchor: agent %lld group %lld (n=%zu) edge L=%.0f\n", time, (long long)m.aid, (long long)m.group, G(m.group).agents.size(), hypot2(x2 - x1, y2 - y1));
         double L = hypot2(x2 - x1, y2 - y1);
         double phi = std::atan2(y2 - y1, x2 - x1);
         double theta; P2 cands[4];
@@ -1380,23 +1384,33 @@ public:
         g.trap = g.sites[0]; g.has_trap = true; g.trap_since = time; g.bait = -1; g.rep = -1;
     }
     void bait_plan(Mind& m, const AState& s, const Group::Site& st, Plan& pl) {
+        // enter through the REAR when the site has one (the front mouth is where the predators wait), else the front
         P2 in = sub(st.goal, st.mouth); double nl = norm(in); in = mul(in, 1.0 / pmax(nl, 1e-6));
-        P2 pre = sub(st.mouth, mul(in, 25.));
         const PoseObj& ps = *m.pose;
         double dg = dist(ps.p, st.goal);
         if (dg <= 3.) {
-            // stand still, face out of the mouth
-            double d, ang; local_of(ps, sub(st.mouth, mul(in, 50.)), d, ang);
+            double d, ang; local_of(ps, sub(st.mouth, mul(in, 50.)), d, ang);   // stand still, face out of the front mouth
             pl = Plan{0., 0., std::fabs(ang) > 0.2 ? ang : 0.};
             return;
         }
-        // on the channel axis between pre-mouth point and goal? then walk straight in
-        P2 ax = sub(ps.p, pre); double along = ax.x * in.x + ax.y * in.y;
-        double across = std::fabs(ax.x * in.y - ax.y * in.x);
-        P2 target = (along > -3. && across < 4.) ? st.goal : pre;
-        double d, ang; local_of(ps, target, d, ang);
         double walk = pmin(s.speed, s.sprint);
-        pl = Plan{pmin(walk, d), ang, 0.};
+        P2 target;
+        if (st.rear_ok) {
+            // rear point -> straight down the channel axis to the goal
+            P2 ax = sub(ps.p, st.goal); double across = std::fabs(ax.x * in.y - ax.y * in.x);
+            double along = ax.x * in.x + ax.y * in.y;   // > 0: on the rear side of the goal
+            bool in_channel = across < 4. && along > -1. && along < st.overlap + 25.;
+            target = in_channel ? st.goal : st.rear;
+        } else {
+            P2 pre = sub(st.mouth, mul(in, 25.));
+            P2 ax = sub(ps.p, pre); double along = ax.x * in.x + ax.y * in.y, across = std::fabs(ax.x * in.y - ax.y * in.x);
+            target = (along > -3. && across < 4.) ? st.goal : pre;
+        }
+        double d, ang; local_of(ps, target, d, ang);
+        bool axis_leg = dist_lt(target, st.goal, 1.) ;
+        if (axis_leg) { pl = Plan{pmin(walk, d), ang, 0.}; return; }   // inside the channel: straight along the axis
+        double dd, dir, turn; go_to(m, s, target, 3., dd, dir, turn);   // approach legs use the obstacle-avoiding navigator
+        pl = Plan{dd, dir, turn};
     }
     void run_trap(std::unordered_map<int64_t, Plan>& plans) {
         if (time < P.trap_start) return;
@@ -1416,6 +1430,12 @@ public:
                 g.retired.swap(keep);
             }
             if (g.rep >= 0 && dist_lt(M(g.rep).pose->p, g.trap.goal, 4.)) { if (g.bait >= 0) g.retired.push_back(g.bait); g.bait = g.rep; g.rep = -1; }
+            if (g.rep >= 0) {   // stuck or too slow: release the replacement to normal duty
+                Mind& rm = M(g.rep);
+                if (dist_lt(rm.pose->p, g.rep_pos, 2.)) g.rep_stuck++; else g.rep_stuck = 0;
+                g.rep_pos = rm.pose->p;
+                if (g.rep_stuck > 30 || time - g.rep_since > P.rep_timeout) { g.rep = -1; g.rep_stuck = 0; }
+            }
             double need = OINF;
             if (g.bait >= 0) need = life_left(st(g.bait), M(g.bait));
             bool want_bait = P.bait_on_sight <= 0. || time - g.guide_seen < P.bait_on_sight || g.bait >= 0;   // trap on demand: only after a recent sighting
@@ -1439,7 +1459,7 @@ public:
                         double d = dist(M(a).pose->p, M(g.keeper).pose->p);
                         if (d < bd) { bd = d; nb = a; }
                     });
-                    if (nb >= 0) { g.rep = nb; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
+                    if (nb >= 0) { g.rep = nb; g.rep_since = time; g.rep_stuck = 0; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
                     else if (time - g.keeper_spawn_t > 1.5) g.keeper_spawn = false;
                 }
                 if (g.keeper >= 0 && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
@@ -1461,7 +1481,7 @@ public:
                     if (score > bs) { bs = score; best = a; }
                 });
                 if (best >= 0) {
-                    g.rep = best; Mind& m = M(best);
+                    g.rep = best; g.rep_since = time; g.rep_stuck = 0; Mind& m = M(best);
                     if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(best);
                     m.has_post = false;
                     if (m.has_fruit && g.fruits.has(m.fruit)) g.fruits.at(m.fruit)->has_claim = false;

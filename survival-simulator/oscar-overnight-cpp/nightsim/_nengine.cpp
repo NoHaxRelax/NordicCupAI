@@ -18,6 +18,8 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include <cstdio>
+#include <cstdlib>
 
 #include <algorithm>
 #include <cmath>
@@ -1763,7 +1765,7 @@ bool parse_params(PyObject* d, orchard::Params& P) {
               {"cluster_radius", &P.cluster_radius}, {"spread_weight", &P.spread_weight}, {"low_pop_reserve", &P.low_pop_reserve},
               {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
               {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
-              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"hide_mode", &P.hide_mode}, {"hide_r", &P.hide_r}, {"hide_trigger", &P.hide_trigger}, {"trap_post_w", &P.trap_post_w}, {"trap_post_r", &P.trap_post_r}, {"decoy_old", &P.decoy_old}, {"decoy_e", &P.decoy_e}, {"decoy_r", &P.decoy_r}, {"evade_closest", &P.evade_closest}, {"spawn_pred_r", &P.spawn_pred_r}, {"keeper_mode", &P.keeper_mode}, {"keeper_r", &P.keeper_r}, {"keeper_reserve", &P.keeper_reserve}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"oracle_trees", &P.oracle_trees}, {"oracle_r", &P.oracle_r}, {"age_infer", &P.age_infer}, {"age_fruit", &P.age_fruit}, {"dead_misses", &P.dead_misses}, {"fruit_misses", &P.fruit_misses}, {"occ_walls", &P.occ_walls}, {"vis_margin_tree", &P.vis_margin_tree}, {"vis_margin_fruit", &P.vis_margin_fruit}, {"trap_mode", &P.trap_mode}, {"wall_min_n", &P.wall_min_n}, {"trap_depth", &P.trap_depth}, {"wall_tol", &P.wall_tol}, {"wall_min_obs", &P.wall_min_obs}, {"trap_start", &P.trap_start}, {"bait_margin", &P.bait_margin}, {"bait_min_life", &P.bait_min_life}, {"bait_young_pen", &P.bait_young_pen}, {"trap_keepout", &P.trap_keepout}, {"trap_bait_fixed", &P.trap_bait_fixed}, {"guide_near", &P.guide_near}, {"guide_far", &P.guide_far}, {"guide_acq", &P.guide_acq}, {"guide_min_e", &P.guide_min_e}, {"guide_lost", &P.guide_lost}, {"guide_hand", &P.guide_hand}, {"guide_acq_sprint", &P.guide_acq_sprint}, {"guide_block_ang", &P.guide_block_ang}, {"guide_slow", &P.guide_slow}, {"guide_fastclose", &P.guide_fastclose}, {"guide_side_pen", &P.guide_side_pen}, {"bait_on_sight", &P.bait_on_sight}, {"guide_sprint_until", &P.guide_sprint_until}, {"guide_max_dist", &P.guide_max_dist}, {"guide_lane_w", &P.guide_lane_w}, {"guide_pred_lane_max", &P.guide_pred_lane_max}, {"guide_wait_max", &P.guide_wait_max}, {"test_freeze", &P.test_freeze}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"pred_share", &P.pred_share}, {"pred_dodge_r", &P.pred_dodge_r}, {"pred_dodge_ang", &P.pred_dodge_ang}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}, {"l_births_per_tick", &P.l_births_per_tick}, {"l_emergency_reserve", &P.l_emergency_reserve}, {"l_low_pop_reserve", &P.l_low_pop_reserve}};
+              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"hide_mode", &P.hide_mode}, {"hide_r", &P.hide_r}, {"hide_trigger", &P.hide_trigger}, {"trap_post_w", &P.trap_post_w}, {"trap_post_r", &P.trap_post_r}, {"decoy_old", &P.decoy_old}, {"decoy_e", &P.decoy_e}, {"decoy_r", &P.decoy_r}, {"evade_closest", &P.evade_closest}, {"spawn_pred_r", &P.spawn_pred_r}, {"keeper_mode", &P.keeper_mode}, {"keeper_r", &P.keeper_r}, {"keeper_reserve", &P.keeper_reserve}, {"rep_timeout", &P.rep_timeout}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"oracle_trees", &P.oracle_trees}, {"oracle_r", &P.oracle_r}, {"age_infer", &P.age_infer}, {"age_fruit", &P.age_fruit}, {"dead_misses", &P.dead_misses}, {"fruit_misses", &P.fruit_misses}, {"occ_walls", &P.occ_walls}, {"vis_margin_tree", &P.vis_margin_tree}, {"vis_margin_fruit", &P.vis_margin_fruit}, {"trap_mode", &P.trap_mode}, {"wall_min_n", &P.wall_min_n}, {"trap_depth", &P.trap_depth}, {"wall_tol", &P.wall_tol}, {"wall_min_obs", &P.wall_min_obs}, {"trap_start", &P.trap_start}, {"bait_margin", &P.bait_margin}, {"bait_min_life", &P.bait_min_life}, {"bait_young_pen", &P.bait_young_pen}, {"trap_keepout", &P.trap_keepout}, {"trap_bait_fixed", &P.trap_bait_fixed}, {"guide_near", &P.guide_near}, {"guide_far", &P.guide_far}, {"guide_acq", &P.guide_acq}, {"guide_min_e", &P.guide_min_e}, {"guide_lost", &P.guide_lost}, {"guide_hand", &P.guide_hand}, {"guide_acq_sprint", &P.guide_acq_sprint}, {"guide_block_ang", &P.guide_block_ang}, {"guide_slow", &P.guide_slow}, {"guide_fastclose", &P.guide_fastclose}, {"guide_side_pen", &P.guide_side_pen}, {"bait_on_sight", &P.bait_on_sight}, {"guide_sprint_until", &P.guide_sprint_until}, {"guide_max_dist", &P.guide_max_dist}, {"guide_lane_w", &P.guide_lane_w}, {"guide_pred_lane_max", &P.guide_pred_lane_max}, {"guide_wait_max", &P.guide_wait_max}, {"test_freeze", &P.test_freeze}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"pred_share", &P.pred_share}, {"pred_dodge_r", &P.pred_dodge_r}, {"pred_dodge_ang", &P.pred_dodge_ang}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}, {"l_births_per_tick", &P.l_births_per_tick}, {"l_emergency_reserve", &P.l_emergency_reserve}, {"l_low_pop_reserve", &P.l_low_pop_reserve}};
     for (F& f : fs) {
         PyObject* v = PyDict_GetItemString(d, f.k);
         if (!v) continue;
@@ -1804,6 +1806,7 @@ PyObject* Engine_policy_init(EngineObject* self, PyObject* args) {
     if (!parse_params(cfg, P)) return nullptr;
     delete self->pol;
     self->pol = new orchard::Policy(key, P);
+    if (getenv("NIGHT_POLLOG")) self->pol->dbg_log = true;
     if (cfg && PyDict_Check(cfg) && PyDict_GetItemString(cfg, "_debug_merge")) self->pol->debug_merge = true;
     Py_RETURN_NONE;
 }
@@ -2084,8 +2087,10 @@ PyObject* Engine_dbg_roles(EngineObject* self, PyObject*) {
     if (!self->pol) return L;
     self->pol->groups.each([&](const int64_t& gid, orchard::GroupP& g) {
         double gx = 0, gy = 0; if (g->guide >= 0 && self->pol->minds.has(g->guide)) { auto& mp = self->pol->minds.at(g->guide)->pose; gx = mp->p.x; gy = mp->p.y; }
-        PyObject* t = Py_BuildValue("(LiLLLiLdddddd)", (long long)gid, g->has_trap ? 1 : 0, (long long)g->bait, (long long)g->rep, (long long)g->guide, g->guide_state, (long long)g->retired.size(),
-                                    g->guide_dprev, self->pol->time - g->guide_seen, gx, gy, g->guide_pred.x, g->guide_pred.y);
+        double bx = 0, by = 0; int64_t bb = g->bait >= 0 ? g->bait : g->rep;
+        if (bb >= 0 && self->pol->minds.has(bb)) { auto& mp = self->pol->minds.at(bb)->pose; bx = mp->p.x; by = mp->p.y; }
+        PyObject* t = Py_BuildValue("(LiLLLiLdddddddd)", (long long)gid, g->has_trap ? 1 : 0, (long long)g->bait, (long long)g->rep, (long long)g->guide, g->guide_state, (long long)g->retired.size(),
+                                    g->guide_dprev, self->pol->time - g->guide_seen, gx, gy, g->guide_pred.x, g->guide_pred.y, bx, by);
         PyList_Append(L, t); Py_DECREF(t);
     });
     return L;
@@ -2133,6 +2138,20 @@ PyObject* Engine_dbg_trap(EngineObject* self, PyObject*) {
     return Py_BuildValue("(ddddLLLL(LLLLLLLLLLLL))", best->trap.mouth.x, best->trap.mouth.y, best->trap.goal.x, best->trap.goal.y, (long long)best->bait, (long long)best->retired.size(), (long long)best->guide_done, conf,
                          (long long)best->ep_start, (long long)best->ep_chase, (long long)best->ep_state3, (long long)best->ep_hand, (long long)best->ep_died, (long long)best->ep_lost,
                          (long long)best->d_far, (long long)best->d_multi, (long long)best->d_slow, (long long)best->d_stuck, (long long)best->d_early, (long long)best->baits_born);
+}
+PyObject* Engine_dbg_pose(EngineObject* self, PyObject* args) {
+    // tests: policy pose (x, y, theta, group, anchored) of an agent, or None
+    long long aid; if (!PyArg_ParseTuple(args, "L", &aid)) return nullptr;
+    if (!self->pol || !self->pol->minds.has(aid)) Py_RETURN_NONE;
+    auto& m = *self->pol->minds.at(aid); auto g = self->pol->groups.at(m.group);
+    return Py_BuildValue("(dddLi)", m.pose->p.x, m.pose->p.y, m.pose->theta, (long long)m.group, g->anchored ? 1 : 0);
+}
+PyObject* Engine_dbg_keeper(EngineObject* self, PyObject*) {
+    if (!self->pol) Py_RETURN_NONE;
+    orchard::GroupP best; size_t bn = 0;
+    self->pol->groups.each([&](const int64_t&, orchard::GroupP& g) { if (g->has_trap && g->agents.size() >= bn) { best = g; bn = g->agents.size(); } });
+    if (!best) Py_RETURN_NONE;
+    return Py_BuildValue("(Lidd)", (long long)best->keeper, best->keeper_spawn ? 1 : 0, best->trap.rear.x, best->trap.rear.y);
 }
 PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
     // counters from the policy's predator layer
@@ -2201,6 +2220,8 @@ PyMethodDef Engine_methods[] = {
     {"dbg_pseen", (PyCFunction)Engine_dbg_pseen, METH_NOARGS, "tests: shared predator sightings"},
     {"dbg_pred_info", (PyCFunction)Engine_dbg_pred_info, METH_NOARGS, "tests: predator target/mode"},
     {"dbg_trap", (PyCFunction)Engine_dbg_trap, METH_NOARGS, "tests: current trap of the main group"},
+    {"dbg_pose", (PyCFunction)Engine_dbg_pose, METH_VARARGS, "tests: policy pose of an agent"},
+    {"dbg_keeper", (PyCFunction)Engine_dbg_keeper, METH_NOARGS, "tests: keeper id, spawn flag, rear point"},
     {"dbg_pred_blocked", (PyCFunction)Engine_dbg_pred_blocked, METH_VARARGS, "tests: predator cannot stand here"},
     {"policy_init", (PyCFunction)Engine_policy_init, METH_VARARGS, "policy_init(seed_key, config_dict): native orchard policy"},
     {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
