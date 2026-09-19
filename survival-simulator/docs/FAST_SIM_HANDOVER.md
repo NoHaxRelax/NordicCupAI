@@ -2,9 +2,9 @@
 
 Research branch: **`codex/late250-checkpoints`**. The frozen late-game training
 results are commit **`76433d1`**. This branch contains the engine, native policy,
-experiment runners, configurations and raw results. The current 1,000-map final
-evaluation is still running as of 2026-09-19; do not mistake training gains for
-full-game validation scores.
+experiment runners, configurations and raw results. The 1,000-map final evaluation completed on 2026-09-19; results are in
+`docs/late250/final/RESULTS.md`. Do not mistake training gains for full-game
+validation scores.
 
 ## Why it is fast
 
@@ -128,7 +128,7 @@ The runner refuses to overwrite an existing manifest. Training maps are
 11001–11200; fresh final maps are 12001–13000.
 
 Existing results: `docs/late250/pod-*` includes every trial, per-map score gain,
-timing, winner, checkpoint metadata and provenance. Final results will be added
+timing, winner, checkpoint metadata and provenance. Final results are saved
 under `docs/late250/final` with means, confidence intervals and paired comparisons.
 The watcher is `python scripts/watch_late250.py`; it requires separately authorized
 SSH access to the research pods. No SSH private keys are stored in the repository.
