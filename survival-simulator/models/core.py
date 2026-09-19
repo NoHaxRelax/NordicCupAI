@@ -23,6 +23,8 @@ from models.entrapment.bait_nursery import BaitNursery
 from models.entrapment.guide_lookahead import chase_step
 from models.entrapment.guide_coordinator import GuideCoordinator
 from models.entrapment.bait_travel import ObservedBaitTravel
+from models.entrapment.foraging_safety import ForagingSafety
+from models.entrapment.guide_assignment import detectable_observer
 
 
 def action_for(aid, **kwargs):
@@ -71,7 +73,7 @@ class EntrapmentPolicy:
                  guide_lookahead_ticks=3, share_guide_paths=True,
                  guide_preferred_distance=(100.,120.), guide_reacquire_close=False,
                  guide_contact_forecast=False, guide_orbit_recovery=False, guide_coordination=False,
-                 bait_terrain_estimate=False):
+                 bait_terrain_estimate=False, safe_foraging=False, guide_chased_only=False):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -80,6 +82,9 @@ class EntrapmentPolicy:
         self.bait_food_lead_seconds = float(bait_food_lead_seconds)
         self.bait_navigation = {}
         self.bait_terrain_estimate = bait_terrain_estimate
+        self.safe_foraging = safe_foraging
+        self.guide_chased_only = guide_chased_only
+        self.foraging_safety = ForagingSafety()
         self.bait_travel = ObservedBaitTravel()
         self.guide_corridors = []
         if guide_lookahead_ticks not in (0,3):
@@ -364,6 +369,10 @@ class EntrapmentPolicy:
                 if track.guide_id in states: self.roles[track.guide_id] = 'guide'
                 continue
             available = [aid for aid in track.observers if aid not in self.roles and aid not in assigned]
+            if self.guide_chased_only:
+                edges = self.estimator.groups[track.group].edges
+                available = [aid for aid in available if detectable_observer(track.observers[aid],states[aid],
+                    [(local(self.estimator.poses[aid],e.start),local(self.estimator.poses[aid],e.end)) for e in edges])]
             previous = track.guide_id if track.guide_id in states else None
             if self.guide_coordination:
                 if not track.edges:
@@ -398,6 +407,7 @@ class EntrapmentPolicy:
             if not available: continue
             aid = max(available, key=lambda a: ((self.guide_coordinator.following.get((track.key,a),False)
                                                 if self.guide_coordination else False),
+                                               -track.observers[a]['distance'] if self.guide_chased_only else 0.,
                                                self.orchard.minds[a].old or states[a]['age'] >= 55.,
                                                states[a]['energy'], -track.observers[a]['distance']))
             track.guide_id = aid
@@ -417,6 +427,7 @@ class EntrapmentPolicy:
             self.roles[aid] = 'guide'
             self.metrics['guide_assignments'] += 1
             self.event('guide_assigned', agent=aid, track=track.key,
+                       selection='nearest_detectable_observer' if self.guide_chased_only else 'older_observer',
                        viability=self.guide_coordinator.assessments.get(aid) if self.guide_coordination else None)
 
     def _bait_action(self, aid, s, states):
@@ -569,6 +580,7 @@ class EntrapmentPolicy:
                 for step in range(1,4):
                     points.append(np.asarray(chase_step(points[-1],pose.position+step*delta)))
             self.guide_corridors.append(dict(guide=aid,group=pose.group_id,
+                                             frame_revision=self.estimator.groups[pose.group_id].frame_revision,
                                              points=[list(map(float,p)) for p in points]))
         return actions
 
@@ -596,8 +608,10 @@ class EntrapmentPolicy:
         exploration = {a.agent_id: a for a in self.explorer.actions_for_step(states_list, sim_time)}
         heir_done = {aid: m.heir_done for aid, m in self.orchard.minds.items()}
         unavailable = self.retired_baits | {self.bait, self.incoming} | {t.guide_id for t in self.tracks.values()}
+        if self.safe_foraging: self.foraging_safety.update(self,states)
         orchard = dict(self.orchard(states_list, sim_time,
-                                    unavailable_agents=unavailable if self.release_trap_food else ()))
+                                    unavailable_agents=unavailable if self.release_trap_food else (),
+                                    destination_allowed=self.foraging_safety if self.safe_foraging else None))
         self.roles = {}
         self._find_site()
         if self.site is not None:
@@ -697,6 +711,8 @@ class EntrapmentPolicy:
                     bait_overlap_seconds=self.bait_overlap_seconds,
                     bait_food_lead_seconds=self.bait_food_lead_seconds,
                     bait_terrain_estimate=self.bait_terrain_estimate,
+                    safe_foraging=self.safe_foraging,foraging_safety=self.foraging_safety.snapshot() if self.safe_foraging else None,
+                    guide_chased_only=self.guide_chased_only,
                     guide_lookahead_ticks=self.guide_lookahead_ticks, share_guide_paths=self.share_guide_paths,
                     guide_preferred_distance=self.guide_preferred_distance,
                     guide_reacquire_close=self.guide_reacquire_close,

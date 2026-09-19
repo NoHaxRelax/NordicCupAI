@@ -1,0 +1,382 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 3455,
+  "sim_time": 345.50000000001006,
+  "runtime_seconds": 89.21214087199769,
+  "score": 370.0437542877167,
+  "final_agents": 0,
+  "peak_agents": 40,
+  "total_agents_seen": 84,
+  "predators": 3,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 1,
+  "maximum_predators_continuously_near_bait_30s": 1,
+  "estimated_bait_gap_seconds_after_first_arrival": 36.300000000000246,
+  "longest_estimated_bait_gap_seconds": 36.200000000000244,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 5,
+    "guide_deaths": 4,
+    "guide_releases": 0,
+    "guide_handovers": 0,
+    "delivery_arrivals": 1,
+    "bait_arrivals": 8,
+    "overlapping_replacements": 6,
+    "estimated_unbaited_seconds": 38.800000000004914,
+    "no_viable_bait_ticks": 1284
+  },
+  "events": [
+    {
+      "time": 28.6,
+      "kind": "our_trap_discovered",
+      "group": 1,
+      "site": {
+        "mouth": [
+          232.21331460813593,
+          471.98254216160115
+        ],
+        "inward": [
+          -1.0,
+          0.0
+        ],
+        "cross": [
+          -0.0,
+          -1.0
+        ],
+        "goal": [
+          227.21331460813593,
+          471.98254216160115
+        ],
+        "far": [
+          357.21331460813593,
+          471.98254216160115
+        ],
+        "hold": [
+          307.21331460813593,
+          471.98254216160115
+        ],
+        "gap": 14.399529501640018,
+        "overlap": 62.79824174979524,
+        "runup": [
+          482.21331460813593,
+          471.98254216160115
+        ],
+        "approach_lane_offset": 0.0,
+        "offset_approach": false,
+        "obstacle_indices": [
+          23,
+          22
+        ],
+        "axis": 1,
+        "other_mouth": [
+          169.4150728583407,
+          471.98254216160115
+        ],
+        "replacement_entry": [
+          149.4150728583407,
+          471.98254216160115
+        ],
+        "second_access_clear": true,
+        "second_access_radius": 5.01,
+        "bait_depth": 5.0,
+        "boundary_indices": [],
+        "geometric_replacement_access_only": true,
+        "handoff": [
+          262.21331460813593,
+          471.98254216160115
+        ]
+      }
+    },
+    {
+      "time": 28.6,
+      "kind": "replacement_dispatched",
+      "agent": 6,
+      "current": null,
+      "conservative_travel_seconds": 7.164319508167058,
+      "active_lifetime_seconds": 0.0,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 31.2,
+      "kind": "bait_arrived",
+      "agent": 6,
+      "previous": null,
+      "energy": 110.5064622473246,
+      "age": 5.899999999999995,
+      "conservative_lifetime_seconds": 61.37347446027248
+    },
+    {
+      "time": 43.9,
+      "kind": "guide_assigned",
+      "agent": 3,
+      "track": 0,
+      "viability": null
+    },
+    {
+      "time": 52.1,
+      "kind": "guide_at_delivery",
+      "agent": 3,
+      "track": 0
+    },
+    {
+      "time": 53.0,
+      "kind": "guide_lost",
+      "agent": 3,
+      "track": 0
+    },
+    {
+      "time": 62.0,
+      "kind": "replacement_dispatched",
+      "agent": 8,
+      "current": 6,
+      "conservative_travel_seconds": 38.41246379153238,
+      "active_lifetime_seconds": 30.573474460272486,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 71.4,
+      "kind": "replacement_reassigned",
+      "agent": 8,
+      "replacement": 17
+    },
+    {
+      "time": 71.4,
+      "kind": "replacement_dispatched",
+      "agent": 17,
+      "current": 6,
+      "conservative_travel_seconds": 15.509553023833613,
+      "active_lifetime_seconds": 21.173474460272438,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 82.0,
+      "kind": "bait_arrived",
+      "agent": 17,
+      "previous": 6,
+      "energy": 113.59123354329638,
+      "age": 10.699999999999978,
+      "conservative_lifetime_seconds": 57.58461423021668
+    },
+    {
+      "time": 108.1,
+      "kind": "replacement_dispatched",
+      "agent": 0,
+      "current": 17,
+      "conservative_travel_seconds": 11.593371345078825,
+      "active_lifetime_seconds": 31.48461423021663,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 0.0
+    },
+    {
+      "time": 113.0,
+      "kind": "bait_arrived",
+      "agent": 0,
+      "previous": 17,
+      "energy": 473.73124115021335,
+      "age": 112.99999999999785,
+      "conservative_lifetime_seconds": 33.6063609137219
+    },
+    {
+      "time": 113.0,
+      "kind": "replacement_dispatched",
+      "agent": 25,
+      "current": 0,
+      "conservative_travel_seconds": 29.517796381915925,
+      "active_lifetime_seconds": 33.6063609137219,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 113.1,
+      "kind": "replacement_reassigned",
+      "agent": 25,
+      "replacement": 20
+    },
+    {
+      "time": 113.1,
+      "kind": "replacement_dispatched",
+      "agent": 20,
+      "current": 0,
+      "conservative_travel_seconds": 18.01340358159006,
+      "active_lifetime_seconds": 33.506392800180215,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 0.0
+    },
+    {
+      "time": 119.2,
+      "kind": "bait_arrived",
+      "agent": 20,
+      "previous": 0,
+      "energy": 478.7204975205777,
+      "age": 42.30000000000033,
+      "conservative_lifetime_seconds": 66.2199222978666
+    },
+    {
+      "time": 144.0,
+      "kind": "replacement_dispatched",
+      "agent": 35,
+      "current": 20,
+      "conservative_travel_seconds": 19.232008879186075,
+      "active_lifetime_seconds": 45.212499159241894,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 156.1,
+      "kind": "bait_arrived",
+      "agent": 35,
+      "previous": 20,
+      "energy": 179.86630428445594,
+      "age": 23.20000000000006,
+      "conservative_lifetime_seconds": 54.55075943781901
+    },
+    {
+      "time": 166.5,
+      "kind": "replacement_dispatched",
+      "agent": 29,
+      "current": 35,
+      "conservative_travel_seconds": 18.33854951165243,
+      "active_lifetime_seconds": 44.15075943781894,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 178.0,
+      "kind": "bait_arrived",
+      "agent": 29,
+      "previous": 35,
+      "energy": 274.61107166665647,
+      "age": 61.90000000000061,
+      "conservative_lifetime_seconds": 31.032058223100986
+    },
+    {
+      "time": 178.0,
+      "kind": "replacement_dispatched",
+      "agent": 54,
+      "current": 29,
+      "conservative_travel_seconds": 20.84500829783407,
+      "active_lifetime_seconds": 31.032058223100986,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 193.1,
+      "kind": "bait_arrived",
+      "agent": 54,
+      "previous": 29,
+      "energy": 71.47549006398843,
+      "age": 25.30000000000009,
+      "conservative_lifetime_seconds": 39.3967275739051
+    },
+    {
+      "time": 256.3,
+      "kind": "replacement_dispatched",
+      "agent": 72,
+      "current": null,
+      "conservative_travel_seconds": 40.580659519790146,
+      "active_lifetime_seconds": 0.0,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 280.6,
+      "kind": "bait_arrived",
+      "agent": 72,
+      "previous": null,
+      "energy": 462.4779113130168,
+      "age": 59.00000000000057,
+      "conservative_lifetime_seconds": 49.558444862924226
+    },
+    {
+      "time": 280.6,
+      "kind": "replacement_dispatched",
+      "agent": 81,
+      "current": 72,
+      "conservative_travel_seconds": 40.66454356480544,
+      "active_lifetime_seconds": 49.558444862924226,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 280.6,
+      "kind": "guide_assigned",
+      "agent": 73,
+      "track": 2,
+      "viability": null
+    },
+    {
+      "time": 281.4,
+      "kind": "guide_lost",
+      "agent": 73,
+      "track": 2
+    },
+    {
+      "time": 299.1,
+      "kind": "guide_assigned",
+      "agent": 78,
+      "track": 6,
+      "viability": null
+    },
+    {
+      "time": 303.8,
+      "kind": "guide_assigned",
+      "agent": 83,
+      "track": 7,
+      "viability": null
+    },
+    {
+      "time": 309.6,
+      "kind": "replacement_stalled",
+      "agent": 81
+    },
+    {
+      "time": 309.6,
+      "kind": "guide_assigned",
+      "agent": 81,
+      "track": 5,
+      "viability": null
+    },
+    {
+      "time": 311.6,
+      "kind": "guide_lost",
+      "agent": 83,
+      "track": 7
+    },
+    {
+      "time": 313.0,
+      "kind": "guide_lost",
+      "agent": 78,
+      "track": 6
+    }
+  ],
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 68,
+      "predator:guide": 4,
+      "starvation:retired_bait": 6,
+      "starvation:bait": 2,
+      "starvation:avoiding_predator": 3,
+      "predator:avoiding_predator": 1
+    },
+    "fruit_eaten": 508,
+    "energy_deaths_before_age_60": {
+      "gatherer": 29
+    },
+    "ripe_fruit_eaten": 455,
+    "ripe_fraction": 0.8956692913385826,
+    "mean_agent_energy_fraction": 0.2871395225456566,
+    "predator_deaths_with_sprint_available": {},
+    "sprint_available_predator_death_cases": [],
+    "premature_predator_deaths_with_sprint_available": 0,
+    "sprint_failures_after_recent_observed_slowdown": 0,
+    "premature_guide_predator_deaths_with_sprint_available": 0,
+    "premature_guide_death_cases": [],
+    "intentional_delivery_sacrifices": 1,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable."
+  }
+}

@@ -38,6 +38,7 @@ def main():
     p.add_argument('--bait-overlap',type=float,default=20.,help='Target overlap in seconds for bait replacement')
     p.add_argument('--bait-reserve',type=float,default=0.,help='Reserve a gathering donor this many seconds before estimated expiry')
     p.add_argument('--bait-food-lead',type=float,default=6.,help='Extra dispatch lead for a replacement that could eat en route')
+    p.add_argument('--safe-foraging',action='store_true',help='Filter survival destinations using shared observed predators and trap traffic')
     p.add_argument('--bait-terrain-estimate',action='store_true',help='Use visited biome samples for bait travel estimates; unknown stretches remain river-slow')
     p.add_argument('--guide-lookahead',type=int,choices=(0,3),default=3,help='Future ticks to search, or 0 for legacy steering')
     p.add_argument('--guide-distance-min',type=float,default=100.,help='Preferred following distance lower bound')
@@ -45,6 +46,7 @@ def main():
     p.add_argument('--guide-reacquire-close',action='store_true',help='Experimental close hearing reacquisition (regressed pilot)')
     p.add_argument('--guide-contact-forecast',action='store_true',help='Experimental preservation of sight across sampled predator movements/rest')
     p.add_argument('--guide-orbit-recovery',action='store_true',help='Experimental approach to predator vision around the preferred following radius')
+    p.add_argument('--guide-chased-only',action='store_true',help='Assign the nearest available observer the predator can hear or see')
     p.add_argument('--guide-coordination',action='store_true',help='Require fit guides and permit observation-confirmed nearby handovers')
     p.add_argument('--no-shared-guide-paths',action='store_true',help='Disable guide forecast traffic avoidance for comparison')
     p.add_argument('--survival-config',type=Path,help='Optional JSON overrides for Orchard experiments')
@@ -70,11 +72,11 @@ def main():
     py=PySimulationCore(seed=a.seed); bg=py.env.static_surface.copy(); bg.blit(py.env.shadow_surface,(0,0)); bg.blit(py.env.obstacle_surface,(0,0))
     pygame.image.save(bg,folder/'background.png'); del py
     settings={} if a.survival_config is None else json.loads(a.survival_config.read_text())
-    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths,guide_preferred_distance=(a.guide_distance_min,a.guide_distance_max),guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,bait_terrain_estimate=a.bait_terrain_estimate); started=time.monotonic()
+    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths,guide_preferred_distance=(a.guide_distance_min,a.guide_distance_max),guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,bait_terrain_estimate=a.bait_terrain_estimate,safe_foraging=a.safe_foraging,guide_chased_only=a.guide_chased_only); started=time.monotonic()
     obstacles=[(o.x,o.y,o.width,o.height) for o in env.obstacles]; edges=edges_from(obstacles)
     atom(folder/'static.json',dict(width=env.width,height=env.height,edges=edges))
     sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
-    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,bait_terrain_estimate=a.bait_terrain_estimate,guide_lookahead_ticks=a.guide_lookahead,guide_preferred_distance=[a.guide_distance_min,a.guide_distance_max],share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
+    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,bait_terrain_estimate=a.bait_terrain_estimate,safe_foraging=a.safe_foraging,guide_chased_only=a.guide_chased_only,guide_lookahead_ticks=a.guide_lookahead,guide_preferred_distance=[a.guide_distance_min,a.guide_distance_max],share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
         guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,policy_inputs='Unmodified observations and simulation time only',
         runtime=dict(python=sys.version,platform=platform.platform(),machine=platform.machine(),
             packages={name:version(name) for name in ('numpy','scipy','shapely','pydantic','pygame')},

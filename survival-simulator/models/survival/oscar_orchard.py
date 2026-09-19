@@ -205,6 +205,7 @@ class OrchardPolicy:
         self.last_spawners: list[int] = []
         self.culled: set[int] = set()
         self.decisions: dict[int, tuple] = {}
+        self.destination_allowed = None
         self.metrics = dict(births=0, old_births=0, emergency_births=0, pose_corrections=0, anchors=0, merges=0,
                             deflections=0, stuck_events=0, explore_ticks=0, idle_ticks=0, travel_ticks=0,
                             fruit_ticks=0, waits_started=0, old_detected=0, trees_seen=0, fruits_seen=0,
@@ -618,6 +619,7 @@ class OrchardPolicy:
 
     def _tree_value(self, g: Group, t: Tree, m: Mind, s):
         """Expected fruit energy at a site for this agent, minus travel, or -inf if unaffordable."""
+        if self.destination_allowed is not None and not self.destination_allowed(m.aid,t.p,'tree'): return -INF
         n = len(t.assigned-{m.aid})
         d = math.dist(t.p, m.pose.p)
         reach = self.P['tree_reach']*(self.P['lone_reach_mult'] if len(g.agents) <= 1 else 1.)
@@ -706,6 +708,7 @@ class OrchardPolicy:
                 if f.claimed is not None: continue
                 d = math.dist(f.p, m.pose.p)
                 if not self._ready(f, s['energy'], m.old): continue
+                if self.destination_allowed is not None and not self.destination_allowed(a,f.p,'fruit'): continue
                 owe_heir = (not m.heir_done) and s['age'] >= self.P['heir_age']-5. and s['energy'] < self.P['heir_reserve']+20.
                 if m.old: bucket = 10 if self.P['old_eat_last'] else 5
                 elif a in self.culled: bucket = 10
@@ -786,6 +789,7 @@ class OrchardPolicy:
                 if g.anchored and not (40 < center[0] < W-40 and 40 < center[1] < H-40): continue
                 d = math.dist(center, pose.p)
                 if d > R or d < 60: continue
+                if self.destination_allowed is not None and not self.destination_allowed(m.aid,center,'explore'): continue
                 v = g.cells.get(c)
                 stale = 1.2 if v is None else min(1., (self.time-v[0])/200.)
                 biome = v[1] if v is not None else None
@@ -821,6 +825,7 @@ class OrchardPolicy:
                 if g.anchored and not (60 < center[0] < W-60 and 60 < center[1] < H-60): continue
                 d = math.dist(center, pose.p)
                 if d > R: continue
+                if self.destination_allowed is not None and not self.destination_allowed(m.aid,center,'watch'): continue
                 cover = 0.
                 for ex in range(-k, k+1):
                     for ey in range(-k, k+1):
@@ -835,8 +840,9 @@ class OrchardPolicy:
         return None if best is None else best[1]
 
     # ------------------------------------------------------------ main
-    def __call__(self, states_list, sim_time, *, unavailable_agents=()):
+    def __call__(self, states_list, sim_time, *, unavailable_agents=(), destination_allowed=None):
         self.time = sim_time
+        self.destination_allowed = destination_allowed
         states = {s['agent_id']: s for s in states_list}
         unavailable = set(unavailable_agents).intersection(states)
         for aid in list(self.minds):
@@ -853,6 +859,18 @@ class OrchardPolicy:
         self._merge_groups(states)
         for aid, s in states.items(): self._observe(self.minds[aid], s)
         for g in list(self.groups.values()): self._maintain(g, states)
+        if destination_allowed is not None:
+            for aid,m in self.minds.items():
+                g = self.groups[m.group]
+                if m.post in g.trees and not destination_allowed(aid,g.trees[m.post].p,'tree'):
+                    g.trees[m.post].assigned.discard(aid); m.post = None; m.target_key = None
+                if m.fruit in g.fruits and not destination_allowed(aid,g.fruits[m.fruit].p,'fruit'):
+                    if g.fruits[m.fruit].claimed == aid: g.fruits[m.fruit].claimed = None
+                    m.fruit = None; m.target_key = None
+                for name in ('watch','explore'):
+                    target = getattr(m,name)
+                    if target is not None and not destination_allowed(aid,target[0],name):
+                        setattr(m,name,None); m.target_key = None
         # External bait/guide roles still share observations, but cannot harvest
         # their assigned posts or fruit. Return those claims to the workforce.
         for aid in unavailable:

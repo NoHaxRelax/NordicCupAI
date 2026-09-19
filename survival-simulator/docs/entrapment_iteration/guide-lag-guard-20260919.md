@@ -66,3 +66,11 @@ tracking scored 842.83 / 791.6 seconds with one arrival from 17 assignments
 and 52.5 estimated gap seconds. This is a specific safety repair with native
 counterfactual evidence, not an established full-game performance improvement.
 The separate rear-route reset comparison remains in progress.
+
+The rear-route reset replay completed with the **same 805.35 score, 752.0-second
+lifetime, 82.8-second estimated bait gap and zero premature sprint captures**
+as the narrow guard alone. The reset was not exercised on this trajectory.
+It is a repair of the stale exemption exposed in the broad pilot, not a
+measured gain on the new default trajectory. Oscar's branch was rechecked at
+`4542793`; recent additions concern his separate C++ guiding/holding experiments,
+not new best survival parameters.
