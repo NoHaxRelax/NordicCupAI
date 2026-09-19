@@ -148,6 +148,10 @@ IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, cons
     PR.wall_escape = cfg_get(cfg, "pred_wall_escape", PR.wall_escape);
     PR.wall_look = cfg_get(cfg, "pred_wall_look", PR.wall_look);
     PR.wall_reward = cfg_get(cfg, "pred_wall_reward", PR.wall_reward);
+    PR.trap_bias = cfg_get(cfg, "trap_bias", PR.trap_bias);
+    PR.trap_protect = cfg_get(cfg, "trap_protect", PR.trap_protect);
+    PR.trap_reach = cfg_get(cfg, "trap_reach", PR.trap_reach);
+    PR.trap_active_r = cfg_get(cfg, "trap_active_r", PR.trap_active_r);
         PR.pulse_degrees=cfg_get(cfg,"pulse_degrees",PR.pulse_degrees);
     PR.pulse_ticks=cfg_get(cfg,"pulse_ticks",PR.pulse_ticks);
     PR.pulse_idle=cfg_get(cfg,"pulse_idle",PR.pulse_idle);

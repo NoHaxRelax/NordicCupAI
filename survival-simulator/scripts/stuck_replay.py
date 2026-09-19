@@ -6,10 +6,11 @@ ROOT=pathlib.Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 import numpy as np
 import pygame
 
-def record(seed,folder):
+def record(seed,folder,config=None,label='expanded_local_food'):
     from fastsim.fastpolicy import PolicySimulationCore
     folder.mkdir(parents=True,exist_ok=False);(folder/'chunks').mkdir()
     cfg=json.loads((ROOT/'docs/localfood20/pod-7/expanded_local_food-winner.json').read_text())['config']
+    if config is not None:cfg=config
     sim=PolicySimulationCore(seed=seed,predators=True);sim.policy_init(0,cfg);e=sim._engine
     static=dict(width=1600,height=1200,obstacles=e.obstacles())
     (folder/'static.json').write_text(json.dumps(static))
@@ -31,7 +32,7 @@ def record(seed,folder):
     # Independent whole-game run checks that per-tick recording leaves behavior unchanged.
     check=PolicySimulationCore(seed=seed,predators=True);check.policy_init(0,cfg);check.run_policy(3000.)
     assert check.env.score==row['score'] and check.env.time==row['time']
-    summary=dict(seed=seed,model='expanded_local_food',frames=tick+1,score=row['score'],seconds=row['time'],history=history,recording_matches_full_run=True,recording_wall_seconds=time.monotonic()-start)
+    summary=dict(seed=seed,model=label,config=cfg,frames=tick+1,score=row['score'],seconds=row['time'],history=history,recording_matches_full_run=True,recording_wall_seconds=time.monotonic()-start)
     (folder/'summary.json').write_text(json.dumps(summary));print(json.dumps({k:v for k,v in summary.items() if k!='history'}),flush=True)
 
 from functools import lru_cache

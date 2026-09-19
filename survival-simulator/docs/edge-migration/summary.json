@@ -1,0 +1,67 @@
+[
+  {
+    "arm": "baseline",
+    "n": 16,
+    "mean_score": 1568.8581276254508,
+    "paired_gain": 0.0,
+    "paired_ci95": [
+      0.0,
+      0.0
+    ],
+    "confined_fraction": 0.15059070301825722,
+    "paired_confinement_gain": 0.0,
+    "score_wins": 0
+  },
+  {
+    "arm": "edge_bias",
+    "n": 16,
+    "mean_score": 1667.5024787440598,
+    "paired_gain": 98.64435111860911,
+    "paired_ci95": [
+      -108.56593603640934,
+      305.85463827362753
+    ],
+    "confined_fraction": 0.1543015054544259,
+    "paired_confinement_gain": 0.003710802436168663,
+    "score_wins": 7
+  },
+  {
+    "arm": "edge_protect",
+    "n": 16,
+    "mean_score": 1657.5108759711434,
+    "paired_gain": 88.65274834569281,
+    "paired_ci95": [
+      -124.54833348644418,
+      301.8538301778298
+    ],
+    "confined_fraction": 0.1540865218641801,
+    "paired_confinement_gain": 0.0034958188459228434,
+    "score_wins": 7
+  },
+  {
+    "arm": "gentle",
+    "n": 16,
+    "mean_score": 1739.7671783072185,
+    "paired_gain": 170.90905068176778,
+    "paired_ci95": [
+      -48.44274303370577,
+      390.2608443972413
+    ],
+    "confined_fraction": 0.22046992298867402,
+    "paired_confinement_gain": 0.06987921997041678,
+    "score_wins": 9
+  },
+  {
+    "arm": "urgent",
+    "n": 16,
+    "mean_score": 1549.025853768384,
+    "paired_gain": -19.83227385706678,
+    "paired_ci95": [
+      -130.323465529917,
+      90.65891781578344
+    ],
+    "confined_fraction": 0.1925204024244696,
+    "paired_confinement_gain": 0.04192969940621237,
+    "score_wins": 5
+  }
+]
