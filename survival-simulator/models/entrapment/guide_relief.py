@@ -5,7 +5,7 @@ predator state, simulator coordinates, or hidden terrain enters this module.
 All times returned by this module are seconds relative to the current tick.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import math
 from typing import Hashable, Iterable
 
@@ -89,7 +89,8 @@ def forecast_travel(agent: AgentForecastInput, *, wants_sprint: bool = True,
 
     while elapsed < horizon and energy > 0 and remaining > 1e-9:
         can_sprint = wants_sprint and energy >= agent.max_energy * SPRINT_CUTOFF_FRACTION
-        requested = agent.sprint_speed if can_sprint else min(agent.speed,agent.sprint_speed)
+        requested = (agent.sprint_speed if can_sprint
+                     else min(agent.speed, agent.sprint_speed))
         requested = min(requested, remaining / agent.terrain_progress)
         walk = min(requested, agent.speed)
         movement_cost = walk * WALK_COST_PER_UNIT + max(0.0, requested-walk) * SPRINT_COST_PER_UNIT
@@ -129,9 +130,38 @@ def forecast_travel(agent: AgentForecastInput, *, wants_sprint: bool = True,
                           arrives, arrives and arrival < cutoff)
 
 
+def _after_wait(agent: AgentForecastInput, delay: float) -> AgentForecastInput | None:
+    """Project a stationary, unfed donor to dispatch using native idle/age loss."""
+    energy, age, elapsed = agent.energy, agent.age, 0.0
+    while elapsed + 1e-9 < delay and energy > 0:
+        step = min(TICK_SECONDS, delay-elapsed)
+        energy -= step * agent.biome_drain_per_second
+        age += step
+        # Native old-age loss is per simulation tick, not scaled by dt.
+        if age > 60.0:
+            energy -= 0.01 * age
+        elapsed += step
+    if energy <= 0:
+        return None
+    return replace(agent, energy=energy, age=age)
+
+
+def _sprint_reserve(agent: AgentForecastInput, seconds: float) -> float:
+    """Energy above cutoff needed for a short full-speed handover sprint."""
+    ticks = math.ceil(seconds / TICK_SECONDS)
+    requested = agent.sprint_speed
+    walk = min(requested, agent.speed)
+    move = walk * WALK_COST_PER_UNIT + max(0.0, requested-walk) * SPRINT_COST_PER_UNIT
+    # Age loss is evaluated at dispatch age. This is a small reserve, not a
+    # future-life proof; plan_relief is expected to run again on every DTO.
+    old = 0.01 * (agent.age + seconds) if agent.age + seconds > 60.0 else 0.0
+    return ticks * (move + TICK_SECONDS * agent.biome_drain_per_second + old)
+
+
 def plan_relief(current: AgentForecastInput,
                 candidates: Iterable[AgentForecastInput], *, rendezvous: object,
                 handover_margin: float = 2.0, preparation_time: float = 0.5,
+                handover_sprint_seconds: float = 0.5,
                 sprint_required_to_bait: bool = True,
                 replacement_at_rendezvous: bool = False,
                 replacement_sees_predator: bool = False,
@@ -143,8 +173,8 @@ def plan_relief(current: AgentForecastInput,
     ordinary predator sightings; a planned or merely arrived replacement is
     insufficient.
     """
-    if handover_margin < 0 or preparation_time < 0:
-        raise ValueError("handover_margin and preparation_time must be nonnegative")
+    if handover_margin < 0 or preparation_time < 0 or handover_sprint_seconds < 0:
+        raise ValueError("relief timing values must be nonnegative")
     guide = forecast_travel(current, wants_sprint=True)
     failure_deadline = min(guide.death_time,
                            guide.sprint_cutoff_time if sprint_required_to_bait else math.inf)
@@ -153,11 +183,42 @@ def plan_relief(current: AgentForecastInput,
     for candidate in candidates:
         if not candidate.available or candidate.agent_id == current.agent_id:
             continue
-        forecast = forecast_travel(candidate, wants_sprint=False)
-        latest_dispatch = failure_deadline - handover_margin - forecast.arrival_time
-        feasible = (forecast.arrives and forecast.arrival_time + handover_margin < forecast.death_time
-                    and latest_dispatch >= preparation_time)
-        rows.append((candidate, forecast, latest_dispatch, feasible))
+        immediate = forecast_travel(candidate, wants_sprint=False)
+        reserve = _sprint_reserve(candidate, handover_sprint_seconds)
+
+        def at(delay):
+            delayed = _after_wait(candidate, delay)
+            if delayed is None:
+                return None, False
+            forecast = forecast_travel(delayed, wants_sprint=False)
+            absolute_arrival = delay + forecast.arrival_time
+            enough_energy = (forecast.energy_at_arrival >=
+                             candidate.max_energy * SPRINT_CUTOFF_FRACTION + reserve)
+            feasible = (forecast.arrives and enough_energy
+                        and absolute_arrival + handover_margin < failure_deadline)
+            return forecast, feasible
+
+        _, immediate_feasible = at(0.0)
+        latest_dispatch = -math.inf
+        delayed_forecast = immediate
+        if immediate_feasible:
+            high = min(600.0, max(0.0, failure_deadline-handover_margin))
+            low = 0.0
+            # Feasibility only worsens in this stationary/no-food projection.
+            for _ in range(32):
+                middle = (low+high)/2
+                probe, okay = at(middle)
+                if okay:
+                    low, delayed_forecast = middle, probe
+                else:
+                    high = middle
+            latest_dispatch = math.floor((low+1e-9)/TICK_SECONDS) * TICK_SECONDS
+            delayed_forecast, quantized_feasible = at(latest_dispatch)
+            if not quantized_feasible:
+                latest_dispatch = -math.inf
+        feasible = immediate_feasible and latest_dispatch >= preparation_time
+        rows.append((candidate, delayed_forecast, latest_dispatch, feasible,
+                     immediate, reserve))
 
     feasible_rows = [row for row in rows if row[3]]
     # Prefer the donor that can stay productive longest, then the safer arrival.
@@ -171,7 +232,9 @@ def plan_relief(current: AgentForecastInput,
         "failure_deadline": failure_deadline,
         "needs_relief": needs_relief,
         "candidates": {row[0].agent_id: {"forecast": row[1],
-                         "latest_dispatch": row[2], "feasible": row[3]} for row in rows},
+                         "latest_dispatch": row[2], "feasible": row[3],
+                         "immediate_forecast": row[4],
+                         "handover_sprint_energy_reserve": row[5]} for row in rows},
         "handover_confirmed": confirmed,
     }
     if not needs_relief:
@@ -180,7 +243,7 @@ def plan_relief(current: AgentForecastInput,
     if chosen is None:
         return ReliefPlan(None, rendezvous, None, failure_deadline, False,
                           "no observed-map donor can meet the handover deadline", diagnostics)
-    candidate, _, latest_dispatch, _ = chosen
+    candidate, _, latest_dispatch, _, _, _ = chosen
     return ReliefPlan(candidate.agent_id, rendezvous, max(0.0, latest_dispatch),
                       failure_deadline, confirmed,
                       "handover confirmed" if confirmed else "reserve selected; await dispatch/observed handover",
