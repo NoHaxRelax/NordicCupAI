@@ -1,0 +1,52 @@
+{
+  "commit": "6e49081d845dae6f650b4e3d365f383ea4f31ee8",
+  "simulation_run": false,
+  "competition_validation_attempt": false,
+  "results": [
+    {
+      "config": "rank1_pod-03.json",
+      "synthetic_steps": 30,
+      "actions_identical": true,
+      "audit": {
+        "env_loaded": false,
+        "transport": "json",
+        "process_start": "spawn",
+        "policy_seed": 0,
+        "policy_seed_used": true,
+        "mode": "orchard_evasion",
+        "baseline": false,
+        "policy_class": "models.orchard_evasion_policy.OrchardEvasionPolicy"
+      }
+    },
+    {
+      "config": "rank2_pod-04.json",
+      "synthetic_steps": 30,
+      "actions_identical": true,
+      "audit": {
+        "env_loaded": false,
+        "transport": "json",
+        "process_start": "spawn",
+        "policy_seed": 0,
+        "policy_seed_used": true,
+        "mode": "orchard_evasion",
+        "baseline": false,
+        "policy_class": "models.orchard_evasion_policy.OrchardEvasionPolicy"
+      }
+    },
+    {
+      "config": "rank3_pod-00-v2.json",
+      "synthetic_steps": 30,
+      "actions_identical": true,
+      "audit": {
+        "env_loaded": false,
+        "transport": "json",
+        "process_start": "spawn",
+        "policy_seed": 0,
+        "policy_seed_used": true,
+        "mode": "orchard_evasion",
+        "baseline": false,
+        "policy_class": "models.orchard_evasion_policy.OrchardEvasionPolicy"
+      }
+    }
+  ]
+}

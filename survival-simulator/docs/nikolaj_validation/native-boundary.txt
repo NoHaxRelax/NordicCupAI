@@ -1,0 +1,18 @@
+include list:
+  includes ok: _orchard_policy.cpp
+  includes ok: _orchard.hpp
+  includes ok: _evasion.hpp
+  includes ok: policy_abi.hpp
+  includes ok: policy_iface.hpp
+identifiers:
+  identifiers ok: _orchard_policy.cpp
+  identifiers ok: _orchard.hpp
+  identifiers ok: _evasion.hpp
+  identifiers ok: policy_abi.hpp
+  identifiers ok: policy_iface.hpp
+published surface:
+  surface ok: AState = public state fields; Obs = angle, coords, distance, has_id, has_rel_dir, id, rel_dir, type
+object symbols:
+  symbols ok: _orchard_policy.o has no Python C-API references (31 undefined symbols, all libstdc++/libm)
+
+boundary intact: the policy translation unit cannot reach the engine
