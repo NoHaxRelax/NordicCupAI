@@ -1,0 +1,362 @@
+[
+  {
+    "model": "expanded_food_baseline",
+    "n": 1000,
+    "mean": 1676.3745945149064,
+    "ci95": [
+      1652.491261091998,
+      1700.997741994827
+    ],
+    "steps": 16935431,
+    "interface_us_per_tick": 0.26680989512460596,
+    "policy_us_per_tick": 485.15807037482546,
+    "engine_us_per_tick": 410.02745249985077,
+    "loop_wall_us_per_tick": 895.4885142138987,
+    "loop_cpu_us_per_tick": 888.7070933089332
+  },
+  {
+    "model": "congestion_pricing",
+    "n": 1000,
+    "mean": 1648.5798472656975,
+    "ci95": [
+      1622.5703756355454,
+      1675.1573932353194
+    ],
+    "steps": 16553740,
+    "interface_us_per_tick": 0.3683468057369513,
+    "policy_us_per_tick": 8714.058068053926,
+    "engine_us_per_tick": 477.2001714789528,
+    "loop_wall_us_per_tick": 9191.669662029668,
+    "loop_cpu_us_per_tick": 9159.455277708725
+  },
+  {
+    "model": "net_energy_fruit",
+    "n": 1000,
+    "mean": 1641.7368782910053,
+    "ci95": [
+      1615.250125386413,
+      1668.0770265498338
+    ],
+    "steps": 16447885,
+    "interface_us_per_tick": 0.35664140173645426,
+    "policy_us_per_tick": 8134.2951056625825,
+    "engine_us_per_tick": 456.7984856879775,
+    "loop_wall_us_per_tick": 8591.492701661764,
+    "loop_cpu_us_per_tick": 8560.111935909024
+  },
+  {
+    "model": "cooperative_harvest",
+    "n": 1000,
+    "mean": 1640.8885956427562,
+    "ci95": [
+      1616.7798595438176,
+      1665.6246296842871
+    ],
+    "steps": 16497441,
+    "interface_us_per_tick": 0.36836091373201457,
+    "policy_us_per_tick": 8826.24515076423,
+    "engine_us_per_tick": 486.7535075920562,
+    "loop_wall_us_per_tick": 9313.410078384095,
+    "loop_cpu_us_per_tick": 9284.924176718983
+  },
+  {
+    "model": "late_auction",
+    "n": 1000,
+    "mean": 1639.3566673113392,
+    "ci95": [
+      1612.9030270789026,
+      1666.1646694160995
+    ],
+    "steps": 16387114,
+    "interface_us_per_tick": 0.35141035084030053,
+    "policy_us_per_tick": 7594.7788766107315,
+    "engine_us_per_tick": 440.6963710440411,
+    "loop_wall_us_per_tick": 8035.86849477852,
+    "loop_cpu_us_per_tick": 8009.032707619353
+  },
+  {
+    "model": "shared_food_control",
+    "n": 1000,
+    "mean": 1637.432556862466,
+    "ci95": [
+      1611.6222056289555,
+      1663.061181074166
+    ],
+    "steps": 16391080,
+    "interface_us_per_tick": 0.3520088383437821,
+    "policy_us_per_tick": 8280.767674871271,
+    "engine_us_per_tick": 459.1432899218355,
+    "loop_wall_us_per_tick": 8740.304136900986,
+    "loop_cpu_us_per_tick": 8719.533214600746
+  },
+  {
+    "model": "leave_empty_area",
+    "n": 1000,
+    "mean": 1612.3827946549388,
+    "ci95": [
+      1586.544504033922,
+      1638.0082506672434
+    ],
+    "steps": 16117841,
+    "interface_us_per_tick": 0.3285940020750918,
+    "policy_us_per_tick": 5442.592211216441,
+    "engine_us_per_tick": 364.15738923674706,
+    "loop_wall_us_per_tick": 5807.118436982906,
+    "loop_cpu_us_per_tick": 5786.80759209785
+  },
+  {
+    "model": "local_food_baseline",
+    "n": 1000,
+    "mean": 1608.646738553173,
+    "ci95": [
+      1582.0424201188262,
+      1634.680062767117
+    ],
+    "steps": 16347702,
+    "interface_us_per_tick": 0.2647174695256862,
+    "policy_us_per_tick": 526.5141879132002,
+    "engine_us_per_tick": 424.04304455341793,
+    "loop_wall_us_per_tick": 950.8576224826584,
+    "loop_cpu_us_per_tick": 946.2959354935635
+  },
+  {
+    "model": "mobile_colony",
+    "n": 1000,
+    "mean": 1605.3513717771445,
+    "ci95": [
+      1579.1716193968257,
+      1630.6790625894644
+    ],
+    "steps": 15946873,
+    "interface_us_per_tick": 0.3377324736956267,
+    "policy_us_per_tick": 6060.6945833424525,
+    "engine_us_per_tick": 386.9006080812834,
+    "loop_wall_us_per_tick": 6447.97396275784,
+    "loop_cpu_us_per_tick": 6418.772094641251
+  },
+  {
+    "model": "fruit_auction",
+    "n": 1000,
+    "mean": 1602.1692731065084,
+    "ci95": [
+      1571.866969359758,
+      1631.1453525186075
+    ],
+    "steps": 15924766,
+    "interface_us_per_tick": 0.34705400518915,
+    "policy_us_per_tick": 7445.612077350273,
+    "engine_us_per_tick": 428.96399583447567,
+    "loop_wall_us_per_tick": 7874.964376588266,
+    "loop_cpu_us_per_tick": 7845.416599545827
+  },
+  {
+    "model": "renewal_sites",
+    "n": 1000,
+    "mean": 1597.5090234363136,
+    "ci95": [
+      1572.1077871406508,
+      1623.0353637535313
+    ],
+    "steps": 15874542,
+    "interface_us_per_tick": 0.32595617120796305,
+    "policy_us_per_tick": 5041.5408318538575,
+    "engine_us_per_tick": 350.49558247028483,
+    "loop_wall_us_per_tick": 5392.40243501948,
+    "loop_cpu_us_per_tick": 5369.937269916449
+  },
+  {
+    "model": "late_food_capacity",
+    "n": 1000,
+    "mean": 1596.9446157885232,
+    "ci95": [
+      1570.3281149760908,
+      1623.0961010071921
+    ],
+    "steps": 16133140,
+    "interface_us_per_tick": 0.35722512852426747,
+    "policy_us_per_tick": 8014.885563151873,
+    "engine_us_per_tick": 456.0931481906188,
+    "loop_wall_us_per_tick": 8471.37749359579,
+    "loop_cpu_us_per_tick": 8440.06267561572
+  },
+  {
+    "model": "late_positioning",
+    "n": 1000,
+    "mean": 1584.0180938706924,
+    "ci95": [
+      1560.8797630857882,
+      1607.3201265438395
+    ],
+    "steps": 15820061,
+    "interface_us_per_tick": 0.36748444914340095,
+    "policy_us_per_tick": 8529.893694201812,
+    "engine_us_per_tick": 472.64453544641833,
+    "loop_wall_us_per_tick": 9002.948299873307,
+    "loop_cpu_us_per_tick": 8974.882125704067
+  },
+  {
+    "model": "shared_one_tick",
+    "n": 1000,
+    "mean": 1579.6632332937759,
+    "ci95": [
+      1551.59047420633,
+      1606.750651261795
+    ],
+    "steps": 15758523,
+    "interface_us_per_tick": 0.36176097341102337,
+    "policy_us_per_tick": 8704.288660458726,
+    "engine_us_per_tick": 476.49855131702384,
+    "loop_wall_us_per_tick": 9181.1918564328,
+    "loop_cpu_us_per_tick": 9146.725455923248
+  },
+  {
+    "model": "budget_breeding",
+    "n": 1000,
+    "mean": 1578.4413717523562,
+    "ci95": [
+      1551.8224536606058,
+      1604.8785500343347
+    ],
+    "steps": 15996920,
+    "interface_us_per_tick": 0.3470473416757726,
+    "policy_us_per_tick": 7195.714759417813,
+    "engine_us_per_tick": 425.8430182628906,
+    "loop_wall_us_per_tick": 7621.94606036387,
+    "loop_cpu_us_per_tick": 7593.032471089185
+  },
+  {
+    "model": "safe_food",
+    "n": 1000,
+    "mean": 1574.8662226326771,
+    "ci95": [
+      1547.5611119806028,
+      1601.4605802858773
+    ],
+    "steps": 15788411,
+    "interface_us_per_tick": 0.33014301901565646,
+    "policy_us_per_tick": 5156.864256868788,
+    "engine_us_per_tick": 362.14339916379174,
+    "loop_wall_us_per_tick": 5519.376911584896,
+    "loop_cpu_us_per_tick": 5497.809535228213
+  },
+  {
+    "model": "safe_harvest",
+    "n": 1000,
+    "mean": 1574.320384268041,
+    "ci95": [
+      1546.239068323267,
+      1601.818872045591
+    ],
+    "steps": 15642384,
+    "interface_us_per_tick": 0.3547061988760793,
+    "policy_us_per_tick": 7486.614058460398,
+    "engine_us_per_tick": 441.22193753349876,
+    "loop_wall_us_per_tick": 7928.232548951682,
+    "loop_cpu_us_per_tick": 7904.3543690371625
+  },
+  {
+    "model": "shared_alerts",
+    "n": 1000,
+    "mean": 1570.0387628617664,
+    "ci95": [
+      1544.3039366793892,
+      1595.2315265380346
+    ],
+    "steps": 15942216,
+    "interface_us_per_tick": 0.3219997448911745,
+    "policy_us_per_tick": 5282.1429602604185,
+    "engine_us_per_tick": 357.0158459367882,
+    "loop_wall_us_per_tick": 5639.520949678013,
+    "loop_cpu_us_per_tick": 5620.459505781066
+  },
+  {
+    "model": "scarcity_economy",
+    "n": 1000,
+    "mean": 1556.8409589582875,
+    "ci95": [
+      1527.911336096002,
+      1585.3650452802724
+    ],
+    "steps": 15440866,
+    "interface_us_per_tick": 0.36109163333196465,
+    "policy_us_per_tick": 7183.875731619911,
+    "engine_us_per_tick": 424.1314365843211,
+    "loop_wall_us_per_tick": 7608.40957046606,
+    "loop_cpu_us_per_tick": 7590.83085670046
+  },
+  {
+    "model": "scheduled_breeding_baseline",
+    "n": 1000,
+    "mean": 1556.3017242230512,
+    "ci95": [
+      1530.359562571913,
+      1582.21507516089
+    ],
+    "steps": 15657097,
+    "interface_us_per_tick": 0.2530429180454078,
+    "policy_us_per_tick": 522.7014670950815,
+    "engine_us_per_tick": 392.81268646467475,
+    "loop_wall_us_per_tick": 915.8028692248633,
+    "loop_cpu_us_per_tick": 910.3440265856435
+  },
+  {
+    "model": "aging_efficiency",
+    "n": 1000,
+    "mean": 1550.1460388054227,
+    "ci95": [
+      1522.7588614442898,
+      1576.8386897815863
+    ],
+    "steps": 15684501,
+    "interface_us_per_tick": 0.366449585485697,
+    "policy_us_per_tick": 8444.781278325081,
+    "engine_us_per_tick": 477.960164421871,
+    "loop_wall_us_per_tick": 8923.150212319983,
+    "loop_cpu_us_per_tick": 8886.454009688481
+  },
+  {
+    "model": "food_capacity",
+    "n": 1000,
+    "mean": 1548.0421155531212,
+    "ci95": [
+      1521.3534419353048,
+      1574.7821163931405
+    ],
+    "steps": 15716341,
+    "interface_us_per_tick": 0.2528213888334441,
+    "policy_us_per_tick": 5167.372769359103,
+    "engine_us_per_tick": 341.27011597896734,
+    "loop_wall_us_per_tick": 5508.934661229799,
+    "loop_cpu_us_per_tick": 5491.044760644733
+  },
+  {
+    "model": "rock_aware_posts",
+    "n": 1000,
+    "mean": 1464.205500518585,
+    "ci95": [
+      1439.3403742816222,
+      1489.173403037055
+    ],
+    "steps": 14499877,
+    "interface_us_per_tick": 0.3468573444450598,
+    "policy_us_per_tick": 8022.572901386474,
+    "engine_us_per_tick": 417.19203097378,
+    "loop_wall_us_per_tick": 8440.153656134875,
+    "loop_cpu_us_per_tick": 8418.297093170997
+  },
+  {
+    "model": "fruit_centroid_posts",
+    "n": 1000,
+    "mean": 1438.3009606711312,
+    "ci95": [
+      1411.9942349074802,
+      1464.166555757457
+    ],
+    "steps": 14094643,
+    "interface_us_per_tick": 0.3058184907556722,
+    "policy_us_per_tick": 5707.40734101552,
+    "engine_us_per_tick": 324.71451624627883,
+    "loop_wall_us_per_tick": 6032.467140861602,
+    "loop_cpu_us_per_tick": 6013.890364699411
+  }
+]

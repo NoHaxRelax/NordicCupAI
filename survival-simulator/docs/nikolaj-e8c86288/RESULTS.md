@@ -15,4 +15,4 @@ Compute, summed timing divided by summed ticks:
 
 Loop wall time includes CPU scheduling under concurrent load. Timing is not directly comparable to a different CPU.
 
-The sharedfood20 Runpod panel is still running. Matching seed numbers do not guarantee matching trajectories across CPUs: upstream documents NumPy floating-point differences between CPU families. Policy, engine revision, Python/NumPy and CPU provenance differ. A cross-panel score difference must not be presented as a clean isolated policy effect. This is the checked-in recommended rank1, not an unavailable winner from untracked studies.
+The sharedfood20 Runpod panel is complete; see [its results](../sharedfood20/FINDINGS.md). Matching seed numbers do not guarantee matching trajectories across CPUs: upstream documents NumPy floating-point differences between CPU families. Policy, engine revision, Python/NumPy and CPU provenance differ. A cross-panel score difference must not be presented as a clean isolated policy effect. This is the checked-in recommended rank1, not an unavailable winner from untracked studies.
