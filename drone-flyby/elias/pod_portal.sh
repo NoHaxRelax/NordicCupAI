@@ -7,8 +7,9 @@ cd "$(dirname "$0")/.." || exit 1
 VP="$HOME/venvs/nordic-drone/Scripts/python.exe"; OUT=elias/out/portal/$TAG; mkdir -p "$OUT"
 POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-42960} root@${POD_HOST:-149.36.0.173}"
 PROBE="$POD"   # the pod curling its own tunnel URL goes out through Cloudflare, which is an outside check
+[ -n "${DIRECT_URL:-}" ] && PROBE="bash -c"   # a direct public port is probed from the laptop instead
 timeout 60 $POD 'pkill -f "[a]pi.py"; pkill -f "[c]loudflared tunnel"; sleep 2; true'
-timeout 300 $POD "cd /root/work/drone-flyby && IMGSZ=${IMGSZ:-1280} ANSWER_CLASSES='${ANSWER_CLASSES:-}' CLASS_EXTENT='${CLASS_EXTENT:-}' HEDGE='${HEDGE:-0}' BOX_SCALE='${BOX_SCALE:-}' bash elias/pod_serve.sh $W '$WIN' > /root/logs/serve_start.log 2>&1; cat /root/logs/serve.url"
+timeout 300 $POD "cd /root/work/drone-flyby && IMGSZ=${IMGSZ:-1280} ANSWER_CLASSES='${ANSWER_CLASSES:-}' CLASS_EXTENT='${CLASS_EXTENT:-}' HEDGE='${HEDGE:-0}' BOX_SCALE='${BOX_SCALE:-}' AUTO_BAND='${AUTO_BAND:-1}' DETECTOR='${DETECTOR:-ultralytics}' ELIAS_WEIGHTS='${ELIAS_WEIGHTS:-}' ELIAS_ROUTE='${ELIAS_ROUTE:-}' ELIAS_CONTEXT='${ELIAS_CONTEXT:-1.0}' ELIAS_CONF='${ELIAS_CONF:-0.05}' CUE_EVERY='${CUE_EVERY:-0}' CUE_PX='${CUE_PX:-40}' CUE_CONF='${CUE_CONF:-0.4}' CUE_COOLDOWN='${CUE_COOLDOWN:-12}' CUE_KIND='${CUE_KIND:-all}' CUE_CLASSES='${CUE_CLASSES:-}' DIRECT_URL='${DIRECT_URL:-}' bash elias/pod_serve.sh $W '$WIN' > /root/logs/serve_start.log 2>&1; cat /root/logs/serve.url"
 URL=$(timeout 30 $POD 'cat /root/logs/serve.url' | awk '{print $2}')
 [ -z "$URL" ] && { echo "no URL"; exit 1; }
 for _ in $(seq 1 40); do timeout 30 $PROBE "curl -sf -m 8 $URL/ > /dev/null" && { echo "reachable from outside: $URL"; break; }; sleep 5; done
@@ -31,5 +32,7 @@ import json, glob
 rows = [json.loads(l) for f in glob.glob("/root/logs/serve/*.jsonl") for l in open(f) if l.strip()]
 rows = [r for r in rows if "frame_index" in r and r.get("status") != None]
 idx = sorted(r["frame_index"] for r in rows); ms = sorted(r.get("total_ms", 0) for r in rows)
-print(f"server saw {len(idx)} frames, {max(idx)-min(idx)+1-len(set(idx))} gaps, server ms median {ms[len(ms)//2]:.0f} p95 {ms[int(len(ms)*.95)]:.0f}, emitted {sum(1 for r in rows if r.get(\"emitted\", True))}")
+em = sum(1 for r in rows if r.get("emitted", True)); slow = [(r["frame_index"], int(r.get("total_ms", 0))) for r in rows if r.get("total_ms", 0) > 1500]
+print(f"server saw {len(idx)} frames, {max(idx)-min(idx)+1-len(set(idx))} gaps, server ms median {ms[len(ms)//2]:.0f} p95 {ms[int(len(ms)*.95)]:.0f}, emitted {em}, slow {slow[:8]}")
 PY' | tee "$OUT/server.txt"
+for f in $(timeout 30 $POD 'ls /root/logs/serve/*.jsonl 2>/dev/null | grep -v warmup'); do timeout 120 scp -q -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -P ${POD_PORT:-42960} root@${POD_HOST:-149.36.0.173}:$f "$OUT/" && echo "run log $OUT/$(basename $f)"; done

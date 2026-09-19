@@ -21,6 +21,11 @@ Configuration is by environment variables (defaults in brackets):
   DRONE_OVERVIEW_BETWEEN_SIDES  L0 between the L1 sides (0 = L1 centre)     [1]
   DRONE_CAMERA_MODE         l1 (upper L1 sweep) | l2_top (native L2 sweep of the top row) [l1]
   DRONE_REVISIT_EVERY, DRONE_REVISIT_MIN_AGE  every k-th frame aim L2 at the oldest reachable track [0, 6]
+  DRONE_CUE_EVERY, DRONE_CUE_PX, DRONE_CUE_CONF, DRONE_CUE_COOLDOWN  zoom on cue: at most one native look per k
+                            frames at the most urgent unconfirmed, small (< px delivered) or weak (< conf) track,
+                            one look per track per cooldown frames; 0 = off                [0, 40, 0.4, 12]
+  DRONE_CUE_KIND, DRONE_CUE_CLASSES  'unconfirmed' cues only never-confirmed tracks; a comma list limits cues to
+                            those classes (empty = any)                                     [all, empty]
   DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
   DRONE_LOG_DIR             per-sequence diagnostics JSONL                  [unset]
   DRONE_CV_THREADS          cap OpenCV/torch CPU threads per process (0 = default) [0]
@@ -58,6 +63,12 @@ SETTINGS = {
     'camera_mode': os.environ.get('DRONE_CAMERA_MODE', 'l1'),
     'revisit_every': int(os.environ.get('DRONE_REVISIT_EVERY', '0')),
     'revisit_min_age': float(os.environ.get('DRONE_REVISIT_MIN_AGE', '6')),
+    'cue_every': int(os.environ.get('DRONE_CUE_EVERY', '0')),
+    'cue_px': float(os.environ.get('DRONE_CUE_PX', '40')),
+    'cue_conf': float(os.environ.get('DRONE_CUE_CONF', '0.4')),
+    'cue_cooldown': int(os.environ.get('DRONE_CUE_COOLDOWN', '12')),
+    'cue_kind': os.environ.get('DRONE_CUE_KIND', 'all'),
+    'cue_classes': [c for c in os.environ.get('DRONE_CUE_CLASSES', '').split(',') if c],
     'log_dir': os.environ.get('DRONE_LOG_DIR') or None,
     'max_sessions': 4,
 }
@@ -174,7 +185,9 @@ class Session:
                                      vertical_fraction=SETTINGS['vertical_fraction'],
                                      overview_between_sides=SETTINGS['overview_between_sides'],
                                      camera_mode=SETTINGS['camera_mode'],
-                                     revisit_every=SETTINGS['revisit_every'], revisit_min_age=SETTINGS['revisit_min_age'])
+                                     revisit_every=SETTINGS['revisit_every'], revisit_min_age=SETTINGS['revisit_min_age'],
+                                     cue_every=SETTINGS['cue_every'], cue_px=SETTINGS['cue_px'], cue_conf=SETTINGS['cue_conf'],
+                                     cue_cooldown=SETTINGS['cue_cooldown'], cue_kind=SETTINGS['cue_kind'], cue_classes=SETTINGS['cue_classes'])
 
     def record(self, row):
         if self.log:

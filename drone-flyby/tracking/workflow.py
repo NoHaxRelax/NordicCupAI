@@ -9,7 +9,7 @@ from dataclasses import asdict
 
 import numpy as np
 
-from .motion import CalibrationError, MotionModel, ViewGeometry, calibrate_images, finite
+from .motion import CalibrationError, MotionModel, ProjectionError, ViewGeometry, calibrate_images, finite
 from .revisit import Detection, RevisitConfig, RevisitTracker, frame_rows
 
 
@@ -212,7 +212,8 @@ class DroneTrackingWorkflow:
         self.band = {'band': band, 'dx_per_tick': round(dx, 2), 'dy_per_tick': round(dy, 2)}
 
     def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False, camera_mode='l1',
-                 revisit_every=0, revisit_min_age=6.):
+                 revisit_every=0, revisit_min_age=6., cue_every=0, cue_px=40., cue_conf=0.4, cue_cooldown=12,
+                 cue_kind='all', cue_classes=()):
         self.config = config or RevisitConfig()
         self.prior = self.config.load_prior()
         self.observe_motion = observe_motion
@@ -223,6 +224,17 @@ class DroneTrackingWorkflow:
             raise ValueError('Revisit settings must be nonnegative')
         self.revisit_every = int(revisit_every)
         self.revisit_min_age = float(revisit_min_age)
+        # Optional zoom on cue: at most one native look per cue_every frames at the most urgent track that is still
+        # unconfirmed, was only ever seen small (under cue_px delivered pixels) or sits under cue_conf.
+        if cue_every < 0 or cue_px < 0 or cue_cooldown < 0 or not 0 <= cue_conf <= 1:
+            raise ValueError('Cue settings must be nonnegative and cue_conf in [0,1]')
+        self.cue_every, self.cue_px, self.cue_conf, self.cue_cooldown = int(cue_every), float(cue_px), float(cue_conf), int(cue_cooldown)
+        if cue_kind not in ('all', 'unconfirmed'):
+            raise ValueError("cue_kind must be 'all' (unconfirmed, small or weak tracks) or 'unconfirmed'")
+        self.cue_kind = cue_kind
+        self.cue_classes = frozenset(cue_classes or ())   # empty: any class
+        self.last_cue_frame = None
+        self.cued = {}
         self.sequence_id = None
         self.tracker = None
         self.warmup = None
@@ -291,11 +303,16 @@ class DroneTrackingWorkflow:
         else:
             self.warmup = None
             self.tracker.update(detections, view, motion, frame, detector_ran=detector_ran)
+            events = list(self.tracker.events)
+            if focus_box is None and self.cue_every:
+                cue = self.cue_track(request, motion, frame)
+                if cue is not None:
+                    focus_box, cued_id = cue
+                    events.append({'event': 'cue', 'track_id': cued_id, 'box': [round(v, 1) for v in focus_box]})
             if focus_box is None and self.revisit_every and frame % self.revisit_every == 0:
                 focus_box = self.stale_track(request, motion)
             response = self.tracker.response(request, tick=motion,
                 requested_view=self.camera.next_view(request, focus_box=focus_box))
-            events = self.tracker.events
         self.motion_tick = motion; self.last_frame = frame; self.last_request_id = request['request_id']
         self.previous = (image.copy(), view) if image is not None else None
         self.last_response = copy.deepcopy(response)
@@ -304,6 +321,58 @@ class DroneTrackingWorkflow:
                             'camera_feedback': request.get('camera_command_feedback'),
                             'tracks': self.tracker.predictions(motion) if self.tracker else []}
         return response
+
+    def cue_track(self, request, tick, frame):
+        """(forecast box, track id) of the most urgent track that deserves one native look, or None.
+
+        Candidates: tracks never confirmed whole (provisional entries and transient partials), tracks only ever seen
+        under cue_px delivered pixels and tracks under cue_conf. The next frame's L2 view must reach the box in one
+        legal move and hold it whole; one cue per cue_every frames overall and per cue_cooldown frames per track.
+        Urgency is the position along the flight direction: the object closest to leaving the frame goes first.
+        Only from an L1 view: L2 is two steps from the overview."""
+        constraints = request['camera_constraints']; view = request['view']
+        if view['resolution_level'] != 1 or 2 not in constraints['allowed_resolution_levels']:
+            return None
+        if self.last_cue_frame is not None and frame-self.last_cue_frame < self.cue_every:
+            return None
+        bounds = next((b for b in constraints['center_bounds'] if b['resolution_level'] == 2), None)
+        if bounds is None:
+            return None
+        current = np.array([view['center_x'], view['center_y']], float)
+        limit = float(constraints['maximum_center_delta'])
+        low = np.array([bounds['minimum_center_x'], bounds['minimum_center_y']], float)
+        high = np.array([bounds['maximum_center_x'], bounds['maximum_center_y']], float)
+        half = np.array([bounds.get('width', 960), bounds.get('height', 540)], float)/2   # native pixels at L2
+        band = getattr(self, 'band', None) or {}
+        dx, dy = float(band.get('dx_per_tick', 0.)), float(band.get('dy_per_tick', 1.))
+        best = None
+        for row in self.tracker.predictions(tick):
+            if self.cue_classes and row['object_id'] not in self.cue_classes:
+                continue
+            track = self.tracker.tracks.get(row['track_id'])
+            unconfirmed = row['provisional'] or row['observations'] == 0
+            small = track is not None and 0 < track.seen_pixels < self.cue_px
+            if not (unconfirmed or (self.cue_kind == 'all' and (small or row['confidence'] < self.cue_conf))):
+                continue
+            if frame-self.cued.get(row['track_id'], -10**9) < self.cue_cooldown:
+                continue
+            try:
+                box = self.tracker.model.box(np.array(row['bbox_source_xyxy'], float), tick, tick+1.)
+            except ProjectionError:
+                continue
+            centre = (box[:2]+box[2:])/2
+            target = np.clip(centre, low, high)
+            if np.linalg.norm(target-current) > limit:
+                continue
+            if np.any(box[:2] < target-half+2) or np.any(box[2:] > target+half-2):
+                continue
+            urgency = float(centre[0]*np.sign(dx)) if abs(dx) > abs(dy) else float(centre[1]*np.sign(dy) if dy else centre[1])
+            if best is None or urgency > best[0]:
+                best = (urgency, box.tolist(), row['track_id'])
+        if best is None:
+            return None
+        self.last_cue_frame = frame; self.cued[best[2]] = frame
+        return best[1], best[2]
 
     def stale_track(self, request, tick):
         """Box of the oldest-anchored track a one-step L2 move can reach, or None."""
