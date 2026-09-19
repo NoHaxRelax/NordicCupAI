@@ -29,6 +29,19 @@ concealed run (score x 13 = class AP), unless marked otherwise.
 Totals: F3 0.694 (night), 0.678 (same day); F5 0.614. If your per-class table has a class under ours, route that class
 to our checkpoint (section 3). Helicopter is the one you said was weak for you.
 
+## 1b. Your endpoint measured per class tonight (organiser truth)
+
+Saturday from 23:12 your server (`/api` says checkpoint 02) was validated through a class-filtering proxy on Elias's
+laptop (`elias/proxy_portal.sh`: only that class's boxes reach the portal, score x 13 = your AP on the class). The proxy
+adds a laptop hop and a tunnel, so allow a tenth for latency, not more.
+
+| class | yours (checkpoint 02, via proxy) | ours (F3, night pod) | gain from routing the class to F3 |
+|---|---:|---:|---:|
+| helicopter | **0.29** | 0.96 | about +0.05 on the total |
+
+Your helicopter run also carried `Frame 84: ignored camera request L1 (960, 540) from L2 (2291, 1175): center movement
+1474.72px exceeds the limit` (section 4: the 1102 px L1 limit applies to the move that changes level too).
+
 ## 2. The 13th class is ta-ta, and the team labels miss objects
 
 Three leaning walkers on the red apron, frames 27 to 53, x about 1870, body 19 x 33 px native (10 x 16 delivered at
