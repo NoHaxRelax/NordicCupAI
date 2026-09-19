@@ -191,6 +191,15 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
   API differences under 0.03 as noise; rank configurations on the local proxy and confirm the top one with repeats.
   Tracker knobs (birth, update, confidence floor) and the band height are settled: L1-only top-band sweep, 0.284.
 
+- 20:25 speed batch 10 applied (bounded GPU spectra store: 66 -> 22 GB peak per 16-process recording, rows
+  identical); two recordings per pod fit again and POSED_CACHE=1500 is no longer needed. Bank finding: the tank and
+  medium-plane track sprites are worth +0.05 on the validation proxy (0.233 -> 0.284); routing (tank, planes, ta-ta
+  native at L1) 0.255 at 1.8 s/frame.
+
+- 21:00 new best proxy 0.305 = L1-only sweep with all auto track sprites (95-sprite bank now deployed on both pods,
+  86-sprite backup kept). Detector-side ranking on the validation scene: bank coverage > gates v9 > everything else.
+  Y-A13 submitted from pod 1; Y-A14 (gates only, no verifier) recording on pod 1 as the last detector knob.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.

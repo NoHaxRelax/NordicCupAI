@@ -554,3 +554,37 @@ update .5, detector floor .15) is neutral; 0.284 is the L1-only sweep's local ce
 Y-A2 rerun on the API (19:35, uuid cb481c4d): **0.209** with 180/249 frames delivered (first run 0.235 with 191).
 The API score of a fixed recording moves with the frames the organizer's pacing delivers: about 0.0025 per frame,
 so two attempts of the same recording differ by 0.02-0.03. Configuration differences below that need repeats.
+
+Recording Y-A8 (L1-only sweep, class gates v11 fitted on the final code + verifier v1): proxy 0.240 (gates v9:
+0.284). Gates fitted on the later passes reject more validation-scene objects than the pass-9 gates although their
+training out-of-fold numbers are equal or better; gates v9 stay deployed. Not submitted.
+
+Recording Y-A9 (L1-only sweep with L1 at DELIVERED resolution, factor 1): proxy 0.184 (native L1: 0.284) at 1.4 s
+per frame instead of 2.7 s. L1 stays native for the score; per-class routing (planes and ta-ta native, the rest
+delivered) is the only cheaper option left and is tested as Y-A11.
+
+Recording Y-A11 (L1-only sweep, routing: tank, planes and ta-ta at native L1, other classes at delivered
+resolution): proxy 0.255 at 1.8 s per frame (all native: 0.284 at 2.7 s; all delivered: 0.184 at 1.4 s). The
+routing recovers most of the native score for a third less time; which classes to keep native is now a
+speed-versus-recall knob for the live endpoint. Not submitted (below the all-native recording).
+
+Recording Y-A10 (L1-only sweep with the 68-sprite bank from before the track sprites): proxy 0.233 (86-sprite bank
+with the tank and medium-plane track sprites: 0.284). The auto-cut training-split track sprites are worth +0.05 on
+the validation scene, the largest single detector gain of the day. Y-A13 tests restoring the launcher and jet-plane
+auto sprites that were dropped for hurting the training gate.
+
+Validation API, attempt Y-C-l1-rev3 full run from pod 1 (20:40, uuid ad1604f7): **0.164** (proxy 0.193, 179/249
+frames). Confirms the proxy ordering: L1-only sweep 0.235/0.209 > L1 sweep + revisits 0.164.
+
+Recording Y-A12 (L1-only sweep, bank without the large-tower box-mask sprite): proxy 0.284 = Y-A2. The crude
+tower sprite neither helps nor hurts on the validation scene; it stays in the bank pending Oscar's review sheet.
+
+## Recording Y-A13 (20:55): L1-only sweep with ALL track sprites (tank, medium plane, launcher c-047-078, jet-plane c): proxy **0.305**
+
+The launcher and jet-plane auto sprites that were dropped after pass 10 (they widened the training gate) add
++0.021 on the validation scene on top of the 0.284 of the 86-sprite bank. Validation recall beats training-gate
+tightness here; the 92-sprite bank (`bank-allauto`) becomes the deployed bank on both pods. Submitted from pod 1.
+
+Validation API, attempt Y-A13-allauto from pod 1 (21:05, full run first try): **0.2342** with 179/249 frames (Y-A2:
+0.2346 with 191 frames, 0.209 with 180). Per delivered frame the 95-sprite bank is ahead, matching the proxy
+(0.305 vs 0.284); on the API the difference sits inside the delivery noise.

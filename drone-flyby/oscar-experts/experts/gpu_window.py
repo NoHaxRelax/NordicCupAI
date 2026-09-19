@@ -58,6 +58,16 @@ def _scene(image, gray, high, dev):
     return entry[2], entry[3]
 
 
+def _trim(dev):
+    """Give cached allocator blocks back to the GPU when this process holds more than the reserve cap: with 16 worker
+    processes per view each keeping its largest batch's temporaries, the cached blocks alone filled an A100."""
+    try:
+        if torch.cuda.memory_reserved(dev) > _RESERVE_CAP:
+            torch.cuda.empty_cache()
+    except Exception:
+        pass
+
+
 def _reflect(idx, n):
     """cv2.BORDER_REFLECT (fedcba|abcdef|fedcba) for indices within one period of the edge."""
     idx = torch.where(idx < 0, -idx - 1, idx)
@@ -68,6 +78,11 @@ _SPEC = {}   # (id(tmask), Fh, Fw, device) -> (tmask kept alive, row in the buck
 _STORE = {}  # (Fh, Fw, device) -> dict(fk, fm, count, energy tensors with capacity, n used, keep list)
 _INFO = {}   # id(tmask) -> (tmask kept alive, mask pixel count)
 _SPEC_LOCK = threading.Lock()
+# Device memory per process (many worker processes share one GPU): spectra store budget and batch working-set size
+_SPEC_BUDGET = float(os.environ.get('DRONE_EXPERT_WINDOW_GPU_MB', '512')) * 2 ** 20
+_RESERVE_CAP = float(os.environ.get('DRONE_EXPERT_WINDOW_GPU_RESERVE_MB', '1536')) * 2 ** 20  # allocator cache kept between batches
+_SPEC_BYTES = [0]
+_BATCH_ELEMS = int(os.environ.get('DRONE_EXPERT_WINDOW_BATCH_ELEMS', str(2 ** 21)))  # windows x Fh x Fw per GPU batch
 
 
 def _mask_count(tmask):
@@ -93,11 +108,11 @@ def _kernel_spectra_locked(poses, Fh, Fw, dev):
     """conj FFT of the centred masked kernel (2 channels) and of the mask for each pose, cached per pose and FFT size in
     one contiguous store per size, gathered with a single index; poses repeat heavily (15-degree headings, fixed offsets)."""
     bkey = (Fh, Fw, str(dev))
+    new_bytes = len(poses) * 3 * Fh * (Fw // 2 + 1) * 16  # upper bound for this call's new spectra (complex128, 3 planes)
+    if _SPEC_BYTES[0] + new_bytes > _SPEC_BUDGET:  # per-process device budget: flush everything and give the memory back
+        _STORE.clear(); _SPEC.clear(); _SPEC_BYTES[0] = 0
+        torch.cuda.empty_cache()
     store = _STORE.get(bkey)
-    if store is not None and store['n'] + len(poses) > 6000:  # bound memory: flush this size's cache
-        _STORE.pop(bkey); store = None
-        for k in [k for k in _SPEC if k[1:] == bkey]:
-            _SPEC.pop(k)
     rows, missing, seen = [], [], {}
     for tg, th, tmask in poses:
         key = (id(tmask), Fh, Fw, str(dev))
@@ -128,6 +143,7 @@ def _kernel_spectra_locked(poses, Fh, Fw, dev):
             for name in ('fk', 'fm', 'count', 'energy'):
                 store[name] = torch.cat([store[name][:base], new[name]])
         store['n'] = base + len(missing)
+        _SPEC_BYTES[0] += len(missing) * 3 * Fh * (Fw // 2 + 1) * 16
         for j, (key, _, _, tmask) in enumerate(missing):
             _SPEC[key] = (tmask, base + j); store['keep'].append(tmask)
         rows = [base + (-1 - r) if r < 0 else r for r in rows]
@@ -157,8 +173,9 @@ def match_many(image, gray, high, margin, requests, dev):
         return out
     sg, sh = _scene(image, gray, high, dev)
     for (Fh, Fw), items in buckets.items():
-        for first in range(0, len(items), 512):
-            chunk = items[first:first + 512]
+        step = max(1, min(512, _BATCH_ELEMS // (Fh * Fw)))  # bounded working set (float64, ~15 temporaries of this size)
+        for first in range(0, len(items), step):
+            chunk = items[first:first + step]
             n = len(chunk)
             x0 = torch.as_tensor([c[1] for c in chunk], device=dev); y0 = torch.as_tensor([c[2] for c in chunk], device=dev)
             ys = _reflect(y0[:, None] + torch.arange(Fh, device=dev)[None] - margin, H).clamp(0, H - 1)  # (n, Fh)
@@ -185,6 +202,7 @@ def match_many(image, gray, high, margin, requests, dev):
             for j, (i, x0_, y0_) in enumerate(chunk):
                 py, px = divmod(int(idx[j]), P)
                 out[i] = (float(peak[j]), x0_ + px - margin, y0_ + py - margin)
+    _trim(dev)
     return out
 
 
@@ -208,8 +226,9 @@ def local_many(image, gray, high, requests, dev):
         buckets.setdefault((-(-wh // 16) * 16, -(-ww // 16) * 16), []).append(i)
     sg, sh = _scene(image, gray, high, dev)
     for (Fh, Fw), items in buckets.items():
-        for first in range(0, len(items), 256):
-            chunk = items[first:first + 256]
+        step = max(1, min(256, _BATCH_ELEMS // (Fh * Fw)))
+        for first in range(0, len(items), step):
+            chunk = items[first:first + step]
             n = len(chunk)
             x0 = torch.as_tensor([prepared[i][0] for i in chunk], device=dev); y0 = torch.as_tensor([prepared[i][1] for i in chunk], device=dev)
             ys = y0[:, None] + torch.arange(Fh, device=dev)[None]; xs = x0[:, None] + torch.arange(Fw, device=dev)[None]
@@ -261,4 +280,5 @@ def local_many(image, gray, high, requests, dev):
                 cand = np.where(ok, score, -np.inf)
                 b = int(np.argmax(cand))  # first maximum in offset order
                 out[i] = (float(score[b]), int(corners[b, 0]), int(corners[b, 1]), float(vis[b]))
+    _trim(dev)
     return out

@@ -25,6 +25,16 @@ def _nbytes(entry):
     return sum(t.numel() * t.element_size() for t in entry)
 
 
+def _response_eager(numerator, total, total2, count, energy, weights):
+    denominator = ((total2 - total.square() / count).clamp_min(0) * energy).sqrt()
+    maps = torch.where(denominator > 1e-6, numerator / denominator.clamp_min(1e-6), torch.zeros_like(numerator)).clamp(-1, 1)
+    response = (weights * maps).sum(1)
+    return response, torch.nn.functional.max_pool2d(response[:, None], 5, 1, 2)[:, 0]
+
+
+_response = _response_eager
+
+
 def _smooth(n):
     """Smallest m >= n whose prime factors are all in (2, 3, 5, 7)."""
     m = n
@@ -171,25 +181,21 @@ class SharedProposer:
                 meta = self._meta(group)
                 entry = (torch.fft.rfft2(k), torch.fft.rfft2(m), meta['count'], meta['energy'])
                 del k, m
-                if cacheable:
-                    # byte-budgeted cache (DRONE_PROPOSER_CACHE_GB, default 4): a 12-entry cache thrashed on every view,
-                    # since one view needs 24-60 chunks; oldest entries are evicted first
+                if cacheable and self.cache_bytes + _nbytes(entry) <= CACHE_BYTES:
+                    # byte-budgeted cache (DRONE_PROPOSER_CACHE_GB, default 4), filled once and never evicted: every view walks
+                    # the same chunks in the same order, so LRU over a working set larger than the budget never hits,
+                    # while a static cache hits on the fraction that fits
                     self.fft_cache[cache_key] = entry
                     self.cache_bytes += _nbytes(entry)
-                    while self.cache_bytes > CACHE_BYTES and len(self.fft_cache) > 1:
-                        self.cache_bytes -= _nbytes(self.fft_cache.pop(next(iter(self.fft_cache))))
             else:
                 entry = self.fft_cache[cache_key]
             kf, mf, count, energy = entry
             numerator = torch.fft.irfft2(sf * kf.conj(), s=(FH, FW))
             total = torch.fft.irfft2(sf * mf.conj(), s=(FH, FW))
             total2 = torch.fft.irfft2(sqf * mf.conj(), s=(FH, FW))
-            denominator = ((total2 - total.square() / count).clamp_min(0) * energy).sqrt()
-            maps = torch.where(denominator > 1e-6, numerator / denominator.clamp_min(1e-6), torch.zeros_like(numerator)).clamp(-1, 1)
             meta = self._meta(group)
             weights = meta['weights']
-            response = (weights * maps).sum(1)  # (n, H, W), valid positions are top-left corners
-            local_max = torch.nn.functional.max_pool2d(response[:, None], 5, 1, 2)[:, 0]
+            response, local_max = _response(numerator, total, total2, count, energy, weights)  # (n, H, W), valid positions are top-left corners
             # Peaks: a local maximum above the kernel's threshold inside its valid region (top-left y <= H-h, x <= W-w); per
             # kernel the best peaks*4 by score, ties in row-major order. The GPU keeps each kernel's top peaks*4+8 (topk, no
             # nonzero sync) and copies them to pinned memory asynchronously; the host reads chunk i-1's peaks while the GPU
