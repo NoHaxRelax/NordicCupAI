@@ -31,6 +31,7 @@ def world(env):
 def main():
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('--seed',type=int,default=1883894846)
     p.add_argument('--seconds',type=float,default=3000); p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--bait-overlap',type=float,default=20.,help='Target overlap in seconds for bait replacement')
     default_fast = Path(os.environ.get('FASTSIM_ROOT', ROOT))
     p.add_argument('--fastsim',type=Path,default=default_fast,
                    help='Simulator source root containing fastsim/ (or set FASTSIM_ROOT)')
@@ -44,11 +45,11 @@ def main():
     # A separate Python initialization produces the identical static native background.
     py=PySimulationCore(seed=a.seed); bg=py.env.static_surface.copy(); bg.blit(py.env.shadow_surface,(0,0)); bg.blit(py.env.obstacle_surface,(0,0))
     pygame.image.save(bg,folder/'background.png'); del py
-    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed); started=time.monotonic()
+    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap); started=time.monotonic()
     obstacles=[(o.x,o.y,o.width,o.height) for o in env.obstacles]; edges=edges_from(obstacles)
     atom(folder/'static.json',dict(width=env.width,height=env.height,edges=edges))
-    sources=[*sorted((ROOT/'models').rglob('*.py')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
-    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,dt=sim.dt,engine='verified C++ fastsim',
+    sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
+    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,dt=sim.dt,engine='verified C++ fastsim',
         policy_inputs='Unmodified observations and simulation time only',sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
     states=sim.step([])['observations']; chunk=[]; history=[]; seen=set(); peak=0; first_bait=None; gap=longest=total_gap=0.; max_near=held30max=0; active={}; tick=0
     summary={}

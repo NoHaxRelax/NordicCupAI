@@ -39,7 +39,9 @@ def avoid_predators(action, state, bait=None, shared_predators=()):
             # Leave room for one native 15-unit predator move after our step.
             contact = max(contact, max(0., 31.-path.distance(Point(p))))
             hearing = max(hearing, max(0., 76.-distance))
-            if distance <= 265.:
+            # Hearing crosses walls; vision does not.
+            sight_blocked = any(LineString([p, q]).intersects(w) for w in walls)
+            if distance <= 265. and not sight_blocked:
                 if heading is None:
                     vision = max(vision, 265.-distance)
                 else:
@@ -56,18 +58,21 @@ def avoid_predators(action, state, bait=None, shared_predators=()):
         return rank, q
 
     original = assess(desired_length, action.move_direction)
-    if original is not None and not any(original[0][:5]):
+    here = assess(0., 0.)
+    exposed = here is not None and (here[0][0] or here[0][3] > 0. or here[0][4] > 0.)
+    if not exposed and original is not None and not any(original[0][:5]):
         return action, False
     best = None
-    for length in sorted({0., min(state['speed'], cap), cap, desired_length}):
+    lengths = {cap} if exposed else {0., min(state['speed'], cap), cap, desired_length}
+    for length in sorted(lengths):
         angles = [action.move_direction] if not length else [action.move_direction]+[i*math.tau/48 for i in range(48)]
         for direction in angles:
             value = assess(length, direction)
             if value is not None and (best is None or value[0] < best[0]):
                 best = (value[0], length, direction)
     if best is None:
-        return action.model_copy(update={'move_distance': 0., 'spawn_agent': False}), True
+        return action.model_copy(update={'move_distance': 0.}), True
     _, length, direction = best
     turn = min(predators, key=lambda p: p['distance'])['angle'] if predators else action.turn_angle
     return action.model_copy(update=dict(move_distance=length, move_direction=direction,
-                                         turn_angle=turn, spawn_agent=False)), True
+                                         turn_angle=turn)), True

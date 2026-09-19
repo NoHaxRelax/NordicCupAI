@@ -25,3 +25,27 @@ needed. Recorded manifests preserve policy and engine source hashes.
 The viewer must remain in a persistent foreground terminal session. A child
 backgrounded from a transient shell exited and made the first link fail.
 Reload the page after recording completes to obtain the full frame range.
+
+## Direct overlapping bait replacement (2026-09-19)
+
+Exploration continues until our trap detector finds a site. Normal agents then
+use Oscar's upstream tuned Orchard module and best configuration (a7a7d634),
+with movement overrides for predator avoidance and dedicated bait/guide roles.
+Normal reproduction is no longer suppressed merely because an agent is old
+or currently avoiding a predator.
+
+Replacement bait walks through the rear entrance directly to the bait spot.
+There is no entrance standby role. `--bait-overlap 20` sets the target overlap
+in seconds, using conservative travel and remaining-life estimates; actual
+overlap is not guaranteed. Stalled replacements are released for reassignment.
+Bait travel uses wall pathfinding and the normal-agent predator avoidance filter,
+discarding the route after an avoidance move so it is recalculated. On the final
+rear approach, observed predators within 40 units of the bait are exempted;
+other observed predators still trigger avoidance. This proximity classification
+is an estimate, not proof of capture. Arrived bait stays in place.
+
+The same-seed replay is stored locally at
+`logs/entrapment-iteration/interactive-overlap20-avoidance-v2-20260919`, served on port 9069.
+Every frame is retained. Its manifest includes the JSON survival configuration
+as well as Python and C++ source hashes. This single game is for visual inspection,
+not a reliability benchmark.
