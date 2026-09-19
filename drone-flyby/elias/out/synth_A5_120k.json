@@ -1,0 +1,1567 @@
+{
+ "file": "elias\\out\\synth_A5_120k.npz",
+ "source": "synthetic",
+ "generator": "elias/data/synth.py (v2)",
+ "n": 120000,
+ "counts_class_x_level": {
+  "hangar": [
+   1947,
+   1980,
+   2073
+  ],
+  "helicopter": [
+   0,
+   0,
+   0
+  ],
+  "jet_plane": [
+   2029,
+   1921,
+   2050
+  ],
+  "large_launcher": [
+   1957,
+   1981,
+   2062
+  ],
+  "large_tower": [
+   1956,
+   2034,
+   2010
+  ],
+  "medium_launcher": [
+   1981,
+   2052,
+   1967
+  ],
+  "medium_plane": [
+   2025,
+   1978,
+   1997
+  ],
+  "mine_roller": [
+   1947,
+   2015,
+   2038
+  ],
+  "small_launcher": [
+   2041,
+   2006,
+   1953
+  ],
+  "small_plane": [
+   2053,
+   1983,
+   1964
+  ],
+  "small_tower": [
+   2027,
+   1973,
+   2000
+  ],
+  "ta-ta": [
+   2050,
+   1988,
+   1962
+  ],
+  "tank": [
+   2044,
+   1966,
+   1990
+  ],
+  "condor": [
+   1986,
+   1982,
+   2032
+  ],
+  "jammer": [
+   1979,
+   1948,
+   2073
+  ],
+  "spacecraft": [
+   2048,
+   1917,
+   2035
+  ],
+  "background": [
+   9961,
+   10022,
+   10017
+  ]
+ },
+ "counts_scale": {
+  "1": 11540,
+  "2": 51989,
+  "4": 53506,
+  "8": 2965
+ },
+ "negatives": {
+  "total": 30000,
+  "pure_background": 14899,
+  "hard_off_centre": 15101
+ },
+ "classes_without_sprite": [
+  "helicopter"
+ ],
+ "sprites_used": {
+  "jammer": [
+   {
+    "id": "inst:reference-f000000-x1152-y0960-L2:0",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 519,
+    "positives": 738
+   },
+   {
+    "id": "cut:helsinki-f000002-jammer",
+    "scene": "helsinki",
+    "frame": 2,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 496,
+    "positives": 719
+   },
+   {
+    "id": "cut:helsinki-f000003-jammer",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 511,
+    "positives": 770
+   },
+   {
+    "id": "cut:helsinki-f000005-jammer",
+    "scene": "helsinki",
+    "frame": 5,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 532,
+    "positives": 732
+   },
+   {
+    "id": "cut:helsinki-f000006-jammer",
+    "scene": "helsinki",
+    "frame": 6,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 534,
+    "positives": 736
+   },
+   {
+    "id": "cut:helsinki-f000008-jammer",
+    "scene": "helsinki",
+    "frame": 8,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 552,
+    "positives": 807
+   },
+   {
+    "id": "cut:helsinki-f000009-jammer",
+    "scene": "helsinki",
+    "frame": 9,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 566,
+    "positives": 771
+   },
+   {
+    "id": "cut:helsinki-f000011-jammer",
+    "scene": "helsinki",
+    "frame": 11,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 589,
+    "positives": 727
+   }
+  ],
+  "small_launcher": [
+   {
+    "id": "inst:reference-f000000-x1728-y0000-L2:0",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 41,
+    "positives": 786
+   },
+   {
+    "id": "cut:helsinki-f000003-small_launcher",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 57,
+    "positives": 841
+   },
+   {
+    "id": "cut:helsinki-f000007-small_launcher",
+    "scene": "helsinki",
+    "frame": 7,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 59,
+    "positives": 711
+   },
+   {
+    "id": "cut:helsinki-f000010-small_launcher",
+    "scene": "helsinki",
+    "frame": 10,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 58,
+    "positives": 723
+   },
+   {
+    "id": "cut:helsinki-f000014-small_launcher",
+    "scene": "helsinki",
+    "frame": 14,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 68,
+    "positives": 762
+   },
+   {
+    "id": "cut:helsinki-f000017-small_launcher",
+    "scene": "helsinki",
+    "frame": 17,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 70,
+    "positives": 748
+   },
+   {
+    "id": "cut:helsinki-f000021-small_launcher",
+    "scene": "helsinki",
+    "frame": 21,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 78,
+    "positives": 688
+   },
+   {
+    "id": "cut:helsinki-f000024-small_launcher",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 75,
+    "positives": 741
+   }
+  ],
+  "mine_roller": [
+   {
+    "id": "inst:reference-f000000-x1728-y1728-L2:0",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 692,
+    "positives": 2985
+   },
+   {
+    "id": "cut:helsinki-f000001-mine_roller",
+    "scene": "helsinki",
+    "frame": 1,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 800,
+    "positives": 3015
+   }
+  ],
+  "large_launcher": [
+   {
+    "id": "inst:reference-f000000-x3264-y0192-L2:0",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 2536,
+    "positives": 787
+   },
+   {
+    "id": "cut:helsinki-f000003-large_launcher",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 2355,
+    "positives": 742
+   },
+   {
+    "id": "cut:helsinki-f000005-large_launcher",
+    "scene": "helsinki",
+    "frame": 5,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 2503,
+    "positives": 724
+   },
+   {
+    "id": "cut:helsinki-f000008-large_launcher",
+    "scene": "helsinki",
+    "frame": 8,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 2858,
+    "positives": 740
+   },
+   {
+    "id": "cut:helsinki-f000010-large_launcher",
+    "scene": "helsinki",
+    "frame": 10,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 2854,
+    "positives": 771
+   },
+   {
+    "id": "cut:helsinki-f000013-large_launcher",
+    "scene": "helsinki",
+    "frame": 13,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 2978,
+    "positives": 735
+   },
+   {
+    "id": "cut:helsinki-f000015-large_launcher",
+    "scene": "helsinki",
+    "frame": 15,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3045,
+    "positives": 745
+   },
+   {
+    "id": "cut:helsinki-f000018-large_launcher",
+    "scene": "helsinki",
+    "frame": 18,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3150,
+    "positives": 756
+   }
+  ],
+  "spacecraft": [
+   {
+    "id": "inst:reference-f000003-x1344-y0576-L2:0",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 563,
+    "positives": 735
+   },
+   {
+    "id": "cut:helsinki-f000000-spacecraft",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 614,
+    "positives": 741
+   },
+   {
+    "id": "cut:helsinki-f000006-spacecraft",
+    "scene": "helsinki",
+    "frame": 6,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 695,
+    "positives": 724
+   },
+   {
+    "id": "cut:helsinki-f000009-spacecraft",
+    "scene": "helsinki",
+    "frame": 9,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 721,
+    "positives": 750
+   },
+   {
+    "id": "cut:helsinki-f000012-spacecraft",
+    "scene": "helsinki",
+    "frame": 12,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 716,
+    "positives": 717
+   },
+   {
+    "id": "cut:helsinki-f000015-spacecraft",
+    "scene": "helsinki",
+    "frame": 15,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 795,
+    "positives": 797
+   },
+   {
+    "id": "cut:helsinki-f000018-spacecraft",
+    "scene": "helsinki",
+    "frame": 18,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 843,
+    "positives": 753
+   },
+   {
+    "id": "cut:helsinki-f000021-spacecraft",
+    "scene": "helsinki",
+    "frame": 21,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 887,
+    "positives": 783
+   }
+  ],
+  "small_plane": [
+   {
+    "id": "inst:reference-f000003-x1728-y1536-L2:0",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 309,
+    "positives": 751
+   },
+   {
+    "id": "cut:helsinki-f000000-small_plane",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 361,
+    "positives": 751
+   },
+   {
+    "id": "cut:helsinki-f000001-small_plane",
+    "scene": "helsinki",
+    "frame": 1,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 383,
+    "positives": 764
+   },
+   {
+    "id": "cut:helsinki-f000002-small_plane",
+    "scene": "helsinki",
+    "frame": 2,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 391,
+    "positives": 722
+   },
+   {
+    "id": "cut:helsinki-f000004-small_plane",
+    "scene": "helsinki",
+    "frame": 4,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 407,
+    "positives": 704
+   },
+   {
+    "id": "cut:helsinki-f000005-small_plane",
+    "scene": "helsinki",
+    "frame": 5,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 408,
+    "positives": 770
+   },
+   {
+    "id": "cut:helsinki-f000006-small_plane",
+    "scene": "helsinki",
+    "frame": 6,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 395,
+    "positives": 778
+   },
+   {
+    "id": "cut:helsinki-f000007-small_plane",
+    "scene": "helsinki",
+    "frame": 7,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 416,
+    "positives": 760
+   }
+  ],
+  "jet_plane": [
+   {
+    "id": "inst:reference-f000004-x1920-y0000-L2:0",
+    "scene": "helsinki",
+    "frame": 4,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 585,
+    "positives": 1206
+   },
+   {
+    "id": "cut:helsinki-f000007-jet_plane",
+    "scene": "helsinki",
+    "frame": 7,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 708,
+    "positives": 1192
+   },
+   {
+    "id": "cut:helsinki-f000010-jet_plane",
+    "scene": "helsinki",
+    "frame": 10,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 669,
+    "positives": 1277
+   },
+   {
+    "id": "cut:helsinki-f000021-jet_plane",
+    "scene": "helsinki",
+    "frame": 21,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 932,
+    "positives": 1192
+   },
+   {
+    "id": "cut:helsinki-f000024-jet_plane",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1021,
+    "positives": 1133
+   }
+  ],
+  "condor": [
+   {
+    "id": "inst:reference-f000005-x2496-y1536-L2:0",
+    "scene": "helsinki",
+    "frame": 5,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3589,
+    "positives": 775
+   },
+   {
+    "id": "cut:helsinki-f000000-condor",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3719,
+    "positives": 777
+   },
+   {
+    "id": "cut:helsinki-f000001-condor",
+    "scene": "helsinki",
+    "frame": 1,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3780,
+    "positives": 736
+   },
+   {
+    "id": "cut:helsinki-f000002-condor",
+    "scene": "helsinki",
+    "frame": 2,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3834,
+    "positives": 761
+   },
+   {
+    "id": "cut:helsinki-f000003-condor",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 3804,
+    "positives": 717
+   },
+   {
+    "id": "cut:helsinki-f000006-condor",
+    "scene": "helsinki",
+    "frame": 6,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 4125,
+    "positives": 733
+   },
+   {
+    "id": "cut:helsinki-f000007-condor",
+    "scene": "helsinki",
+    "frame": 7,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 4119,
+    "positives": 711
+   },
+   {
+    "id": "cut:helsinki-f000008-condor",
+    "scene": "helsinki",
+    "frame": 8,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 4276,
+    "positives": 790
+   }
+  ],
+  "ta-ta": [
+   {
+    "id": "inst:reference-f000010-x0768-y0576-L2:0",
+    "scene": "helsinki",
+    "frame": 10,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 136,
+    "positives": 803
+   },
+   {
+    "id": "cut:helsinki-f000000-ta-ta",
+    "scene": "helsinki",
+    "frame": 0,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 184,
+    "positives": 701
+   },
+   {
+    "id": "cut:helsinki-f000003-ta-ta",
+    "scene": "helsinki",
+    "frame": 3,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 188,
+    "positives": 766
+   },
+   {
+    "id": "cut:helsinki-f000007-ta-ta",
+    "scene": "helsinki",
+    "frame": 7,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 184,
+    "positives": 705
+   },
+   {
+    "id": "cut:helsinki-f000014-ta-ta",
+    "scene": "helsinki",
+    "frame": 14,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 177,
+    "positives": 747
+   },
+   {
+    "id": "cut:helsinki-f000017-ta-ta",
+    "scene": "helsinki",
+    "frame": 17,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 178,
+    "positives": 751
+   },
+   {
+    "id": "cut:helsinki-f000021-ta-ta",
+    "scene": "helsinki",
+    "frame": 21,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 175,
+    "positives": 784
+   },
+   {
+    "id": "cut:helsinki-f000024-ta-ta",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 169,
+    "positives": 743
+   }
+  ],
+  "small_tower": [
+   {
+    "id": "inst:reference-f000015-x2496-y1776-L2:0",
+    "scene": "helsinki",
+    "frame": 15,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1066,
+    "positives": 1171
+   },
+   {
+    "id": "cut:helsinki-f000008-small_tower",
+    "scene": "helsinki",
+    "frame": 8,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1101,
+    "positives": 1217
+   },
+   {
+    "id": "cut:helsinki-f000010-small_tower",
+    "scene": "helsinki",
+    "frame": 10,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1122,
+    "positives": 1218
+   },
+   {
+    "id": "cut:helsinki-f000013-small_tower",
+    "scene": "helsinki",
+    "frame": 13,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1146,
+    "positives": 1236
+   },
+   {
+    "id": "cut:helsinki-f000018-small_tower",
+    "scene": "helsinki",
+    "frame": 18,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1238,
+    "positives": 1158
+   }
+  ],
+  "medium_launcher": [
+   {
+    "id": "inst:reference-f000018-x3456-y0000-L2:0",
+    "scene": "helsinki",
+    "frame": 18,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 136,
+    "positives": 6000
+   }
+  ],
+  "hangar": [
+   {
+    "id": "inst:reference-f000022-x0000-y0000-L2:0",
+    "scene": "helsinki",
+    "frame": 22,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 13823,
+    "positives": 1957
+   },
+   {
+    "id": "cut:helsinki-f000023-hangar",
+    "scene": "helsinki",
+    "frame": 23,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 13863,
+    "positives": 2051
+   },
+   {
+    "id": "cut:helsinki-f000024-hangar",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 14075,
+    "positives": 1992
+   }
+  ],
+  "medium_plane": [
+   {
+    "id": "inst:reference-f000022-x0384-y0000-L2:0",
+    "scene": "helsinki",
+    "frame": 22,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 333,
+    "positives": 1471
+   },
+   {
+    "id": "cut:helsinki-f000021-medium_plane",
+    "scene": "helsinki",
+    "frame": 21,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 397,
+    "positives": 1498
+   },
+   {
+    "id": "cut:helsinki-f000023-medium_plane",
+    "scene": "helsinki",
+    "frame": 23,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 418,
+    "positives": 1515
+   },
+   {
+    "id": "cut:helsinki-f000024-medium_plane",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 434,
+    "positives": 1516
+   }
+  ],
+  "tank": [
+   {
+    "id": "inst:reference-f000024-x0384-y1344-L2:0",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 626,
+    "positives": 728
+   },
+   {
+    "id": "cut:helsinki-f000001-tank",
+    "scene": "helsinki",
+    "frame": 1,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 402,
+    "positives": 736
+   },
+   {
+    "id": "cut:helsinki-f000004-tank",
+    "scene": "helsinki",
+    "frame": 4,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 424,
+    "positives": 768
+   },
+   {
+    "id": "cut:helsinki-f000008-tank",
+    "scene": "helsinki",
+    "frame": 8,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 463,
+    "positives": 738
+   },
+   {
+    "id": "cut:helsinki-f000011-tank",
+    "scene": "helsinki",
+    "frame": 11,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 518,
+    "positives": 761
+   },
+   {
+    "id": "cut:helsinki-f000014-tank",
+    "scene": "helsinki",
+    "frame": 14,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 543,
+    "positives": 772
+   },
+   {
+    "id": "cut:helsinki-f000017-tank",
+    "scene": "helsinki",
+    "frame": 17,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 570,
+    "positives": 750
+   },
+   {
+    "id": "cut:helsinki-f000021-tank",
+    "scene": "helsinki",
+    "frame": 21,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 622,
+    "positives": 747
+   }
+  ],
+  "large_tower": [
+   {
+    "id": "cut:helsinki-f000007-large_tower",
+    "scene": "helsinki",
+    "frame": 7,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 926,
+    "positives": 1978
+   },
+   {
+    "id": "cut:helsinki-f000009-large_tower",
+    "scene": "helsinki",
+    "frame": 9,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 952,
+    "positives": 2052
+   },
+   {
+    "id": "cut:helsinki-f000024-large_tower",
+    "scene": "helsinki",
+    "frame": 24,
+    "zoom": 2,
+    "native_pixels": true,
+    "mask_px": 1118,
+    "positives": 1970
+   }
+  ]
+ },
+ "sprites_dropped": [
+  {
+   "id": "inst:reference-f000000-x2496-y1344-L1:0",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:condor",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 5,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:jammer",
+   "class_name": "jammer",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:large_launcher",
+   "class_name": "large_launcher",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:medium_launcher",
+   "class_name": "medium_launcher",
+   "scene": "helsinki",
+   "frame": 18,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:medium_plane",
+   "class_name": "medium_plane",
+   "scene": "helsinki",
+   "frame": 24,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:mine_roller__reference",
+   "class_name": "mine_roller",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:small_launcher",
+   "class_name": "small_launcher",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:small_plane",
+   "class_name": "small_plane",
+   "scene": "helsinki",
+   "frame": 3,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "lib:ta-ta",
+   "class_name": "ta-ta",
+   "scene": "helsinki",
+   "frame": 10,
+   "zoom": 1,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000022-hangar",
+   "class_name": "hangar",
+   "scene": "helsinki",
+   "frame": 22,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000004-jet_plane",
+   "class_name": "jet_plane",
+   "scene": "helsinki",
+   "frame": 4,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000000-large_launcher",
+   "class_name": "large_launcher",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000022-medium_plane",
+   "class_name": "medium_plane",
+   "scene": "helsinki",
+   "frame": 22,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000000-mine_roller",
+   "class_name": "mine_roller",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000000-small_launcher",
+   "class_name": "small_launcher",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000003-small_plane",
+   "class_name": "small_plane",
+   "scene": "helsinki",
+   "frame": 3,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000015-small_tower",
+   "class_name": "small_tower",
+   "scene": "helsinki",
+   "frame": 15,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000010-ta-ta",
+   "class_name": "ta-ta",
+   "scene": "helsinki",
+   "frame": 10,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000024-tank",
+   "class_name": "tank",
+   "scene": "helsinki",
+   "frame": 24,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000005-condor",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 5,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000000-jammer",
+   "class_name": "jammer",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "cut:helsinki-f000003-spacecraft",
+   "class_name": "spacecraft",
+   "scene": "helsinki",
+   "frame": 3,
+   "zoom": 2,
+   "reason": "duplicate of an earlier entry (same class, scene, frame, zoom and box)"
+  },
+  {
+   "id": "inst:reference-f000000-x1152-y0960-L1:0",
+   "class_name": "jammer",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000000-x1728-y0000-L1:0",
+   "class_name": "small_launcher",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000000-x1728-y1728-L0:0",
+   "class_name": "mine_roller",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000000-x1728-y1728-L1:0",
+   "class_name": "mine_roller",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000000-x2496-y1152-L1:0",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000000-x3264-y0192-L1:0",
+   "class_name": "large_launcher",
+   "scene": "helsinki",
+   "frame": 0,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000001-x2496-y1344-L1:0",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 1,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000002-x1152-y1344-L0:0",
+   "class_name": "jammer",
+   "scene": "helsinki",
+   "frame": 2,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000003-x1344-y0576-L0:0",
+   "class_name": "spacecraft",
+   "scene": "helsinki",
+   "frame": 3,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000003-x1344-y0576-L1:0",
+   "class_name": "spacecraft",
+   "scene": "helsinki",
+   "frame": 3,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000003-x1728-y1536-L1:0",
+   "class_name": "small_plane",
+   "scene": "helsinki",
+   "frame": 3,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000004-x0576-y0000-L1:0",
+   "class_name": "tank",
+   "scene": "helsinki",
+   "frame": 4,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000004-x1920-y0000-L1:0",
+   "class_name": "jet_plane",
+   "scene": "helsinki",
+   "frame": 4,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000005-x2496-y1536-L0:0",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 5,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000005-x2496-y1536-L1:0",
+   "class_name": "condor",
+   "scene": "helsinki",
+   "frame": 5,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000007-x1728-y1728-L0:0",
+   "class_name": "small_plane",
+   "scene": "helsinki",
+   "frame": 7,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000007-x1920-y0000-L0:0",
+   "class_name": "jet_plane",
+   "scene": "helsinki",
+   "frame": 7,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000010-x0768-y0576-L0:0",
+   "class_name": "ta-ta",
+   "scene": "helsinki",
+   "frame": 10,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000010-x0768-y0576-L1:0",
+   "class_name": "ta-ta",
+   "scene": "helsinki",
+   "frame": 10,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000010-x1536-y0768-L0:0",
+   "class_name": "small_launcher",
+   "scene": "helsinki",
+   "frame": 10,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000014-x3456-y0960-L0:0",
+   "class_name": "large_launcher",
+   "scene": "helsinki",
+   "frame": 14,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000015-x2496-y1776-L0:0",
+   "class_name": "small_tower",
+   "scene": "helsinki",
+   "frame": 15,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000015-x2496-y1776-L1:0",
+   "class_name": "small_tower",
+   "scene": "helsinki",
+   "frame": 15,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000015-x3456-y0000-L0:0",
+   "class_name": "medium_launcher",
+   "scene": "helsinki",
+   "frame": 15,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000018-x3456-y0000-L1:0",
+   "class_name": "medium_launcher",
+   "scene": "helsinki",
+   "frame": 18,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000021-x0576-y0960-L0:0",
+   "class_name": "tank",
+   "scene": "helsinki",
+   "frame": 21,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000022-x0000-y0000-L1:0",
+   "class_name": "hangar",
+   "scene": "helsinki",
+   "frame": 22,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000024-x0000-y0000-L0:0",
+   "class_name": "hangar",
+   "scene": "helsinki",
+   "frame": 24,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000024-x0384-y0000-L0:0",
+   "class_name": "medium_plane",
+   "scene": "helsinki",
+   "frame": 24,
+   "zoom": 0,
+   "reason": "zoom 0 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "inst:reference-f000024-x0384-y0000-L1:0",
+   "class_name": "medium_plane",
+   "scene": "helsinki",
+   "frame": 24,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "lib:hangar",
+   "class_name": "hangar",
+   "scene": "helsinki",
+   "frame": 23,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "lib:large_launcher__reference",
+   "class_name": "large_launcher",
+   "scene": "helsinki",
+   "frame": 14,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  },
+  {
+   "id": "lib:large_tower",
+   "class_name": "large_tower",
+   "scene": "helsinki",
+   "frame": 12,
+   "zoom": 1,
+   "reason": "zoom 1 mask, the class has zoom 2 sprites in this scene"
+  }
+ ],
+ "ground_limits": {
+  "grey_min": 96.56709401709402,
+  "blue_share_max": 0.5185986928104576,
+  "water_share_max": 0.02,
+  "structure_share_max": 0.37249029624621255,
+  "edge_density_max": 0.2786457131872357,
+  "red_share_max": 0.2,
+  "rings_measured": 259,
+  "open_ground_share_of_cells": 0.1947
+ },
+ "background_modes_drawn": "not counted with --workers > 1",
+ "class_margins_ltrb_px": {
+  "jammer": [
+   4.0,
+   5.0,
+   2.0,
+   1.5
+  ],
+  "small_launcher": [
+   7.0,
+   11.0,
+   6.0,
+   8.5
+  ],
+  "mine_roller": [
+   4.5,
+   4.5,
+   3.0,
+   3.0
+  ],
+  "large_launcher": [
+   10.0,
+   32.0,
+   22.0,
+   1.5
+  ],
+  "spacecraft": [
+   3.0,
+   4.5,
+   2.0,
+   4.5
+  ],
+  "small_plane": [
+   5.0,
+   7.0,
+   6.5,
+   2.5
+  ],
+  "jet_plane": [
+   22.0,
+   18.0,
+   11.0,
+   17.0
+  ],
+  "condor": [
+   36.0,
+   22.5,
+   25.0,
+   42.5
+  ],
+  "ta-ta": [
+   3.0,
+   3.0,
+   5.0,
+   1.0
+  ],
+  "small_tower": [
+   1.0,
+   11.0,
+   12.0,
+   5.0
+  ],
+  "medium_launcher": [
+   21.0,
+   13.0,
+   12.0,
+   15.0
+  ],
+  "hangar": [
+   8.0,
+   27.0,
+   8.0,
+   1.0
+  ],
+  "medium_plane": [
+   6.5,
+   5.5,
+   6.0,
+   5.0
+  ],
+  "tank": [
+   6.0,
+   7.0,
+   10.0,
+   10.0
+  ],
+  "large_tower": [
+   4.0,
+   6.0,
+   4.0,
+   4.0
+  ]
+ },
+ "parameters": {
+  "n": 120000,
+  "sprite_banks": [
+   "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\oscar-sprite-synthetic\\sprite-bank\\bank.json",
+   "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\elias\\sprites\\bank.json"
+  ],
+  "sprite_scenes": [
+   "helsinki"
+  ],
+  "background_scenes": [
+   "helsinki"
+  ],
+  "rot_max": 180.0,
+  "rot_max_per_class": {},
+  "seed": 4,
+  "neg_frac": 0.25,
+  "level_probs": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "center_jitter": 6.0,
+  "jitter_prob": 0.5,
+  "neg_guard": 10.0,
+  "lossless_prob": 0.25,
+  "bg_open_prob": 0.7,
+  "bg_near_frac": 0.5,
+  "warp_interp": [
+   "lanczos4",
+   "nearest"
+  ],
+  "sprite_blur_max": 0.0,
+  "distractor_prob": 0.3,
+  "strip_prob": 0.15,
+  "post_noise": 0,
+  "max_bg_frames": 48,
+  "frame_cache": "C:\\Users\\edlun\\Desktop\\lucky shots\\NordicCupAI-drone\\drone-flyby\\elias\\out\\frame_cache",
+  "recut_native": true,
+  "exclude_sprite_ids": [],
+  "exclude_tracks": [],
+  "min_recut_mask_px": 300
+ },
+ "fixed_parameters": {
+  "scale_jitter": [
+   0.92,
+   1.08
+  ],
+  "sprite_brightness": 0.08,
+  "sprite_contrast": 0.08,
+  "sprite_gamma": [
+   0.9,
+   1.1
+  ],
+  "global_brightness": 0.04,
+  "global_contrast": 0.04,
+  "global_gamma": [
+   0.95,
+   1.05
+  ],
+  "strip_max_window_px": 20,
+  "solid_alpha": 0.8,
+  "mask": "bank alpha >= solid_alpha, warped linearly, cut at 0.5, 3x3 Gaussian feather",
+  "near_ring_px": [
+   100,
+   500
+  ],
+  "ground_cell_px": 8,
+  "hard_negative_distance": "U(1, 2) x max(0.78 x longer side, (neg_guard + 0.5) window px)",
+  "keepout_px": {
+   "helsinki": 0,
+   "validation": 96
+  },
+  "reduction": "INTER_AREA by f, then INTER_AREA by s/f"
+ },
+ "throughput": {
+  "workers": 6,
+  "samples": 120000,
+  "setup_seconds": 0.0,
+  "generation_seconds": 44.971,
+  "samples_per_second": 2668.4,
+  "samples_per_second_including_setup": 2595.5,
+  "png_frames_decoded_this_run": null,
+  "note": "generation_seconds for workers > 1 includes worker start-up; for workers = 1 the first sample (sprite loading, frame cache opening) is counted as setup and generated a second time inside the timed loop"
+ },
+ "notes": [
+  "Negatives follow the real_crops.py convention: box_w, box_h and size_px are those of the object that fixed level and scale. Pure background: track 'background', off (0, 0).",
+  "Hard negatives: track 'hardneg:<sprite id>', `off` is the offset of the off-centre object (window px).",
+  "Positives record the true sub-pixel offset of the label box centre: within +-0.5 window px for the centred share, up to +-(center_jitter + 0.5) for the jittered share.",
+  "Backgrounds cut from `validation` are noisy: its labels are incomplete, so a background or negative window can contain an unlabelled object.",
+  "background_modes_drawn counts every sample_patch call of this process, the setup sample included; 'relaxed' = the wanted mode found nothing in 120 tries.",
+  "Ground limits are measured on the rings around the labelled boxes of the background scenes. Known limit: large pale flat roofs pass as open ground, so on urban frames some objects still stand on roofs."
+ ]
+}

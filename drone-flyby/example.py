@@ -90,6 +90,9 @@ def _windows(text):
 
 
 ANSWER_WINDOWS = _windows(os.environ.get('DRONE_ANSWER_WINDOWS', ''))
+# Per-class diagnosis on the portal: emit only these classes. The portal score times the number of classes
+# present in its ground truth (13 on validation) is then that class's AP against organiser ground truth.
+ANSWER_CLASSES = {c.strip() for c in os.environ.get('DRONE_ANSWER_CLASSES', '').split(',') if c.strip()}
 
 
 def _emit(frame_index):
@@ -223,11 +226,12 @@ def predict(request: DroneFlybyPredictRequestDto) -> DroneFlybyPredictResponseDt
         tracking_ms = (time.perf_counter()-tracking_started)*1000
         requested = answer.get('requested_view')
         full_rows = answer['annotations']
+        shown = [a for a in full_rows if not ANSWER_CLASSES or a['object_id'] in ANSWER_CLASSES]
         emitted = _emit(req['frame_index'])
         response = DroneFlybyPredictResponseDto(
             request_id=req['request_id'], frame=req['frame'],
             annotations=[DroneFlybyPredictionDto(object_id=a['object_id'], bbox=list(a['bbox']),
-                                                 confidence=float(a['confidence'])) for a in (full_rows if emitted else [])],
+                                                 confidence=float(a['confidence'])) for a in (shown if emitted else [])],
             requested_view=RequestedViewDto(**requested) if requested else None)
         total_ms = (time.perf_counter()-started)*1000
         session.record({'frame': req['frame'], 'frame_index': req['frame_index'], 'level': req['view']['resolution_level'],
