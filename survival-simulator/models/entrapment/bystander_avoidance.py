@@ -21,13 +21,15 @@ def avoid_predators(action, state, bait=None, shared_predators=(), guided_paths=
     headings = [math.atan2(-p[1], -p[0])-o['rel_dir'] if 'rel_dir' in o else None
                 for p, o in zip(positions, predators)]
     corridors = [LineString(points) for points in guided_paths if len(points) >= 2]
-    # Reserve the incoming predator's swept hearing area and anticipated
-    # forward cones. These are forecasts shared by its guide, not sightings.
+    # Forecasts are traffic hints, not extra simultaneously present predators.
+    # Mixing these points into current sightings can make fleeing the far end
+    # of a forecast path send an agent straight into the actual predator.
+    forecast_positions, forecast_headings = [], []
     for points in guided_paths:
         for previous, point in zip(points, points[1:]):
             if math.dist(previous,point) > .1:
-                positions.append(point)
-                headings.append(math.atan2(point[1]-previous[1],point[0]-previous[0]))
+                forecast_positions.append(point)
+                forecast_headings.append(math.atan2(point[1]-previous[1],point[0]-previous[0]))
     cap = state['sprint_speed'] if state['energy'] >= state['max_energy']/5 else min(state['speed'],state['sprint_speed'])
     modifier = TERRAIN[state['biome']]
     desired_length = min(cap, action.move_distance)
@@ -57,22 +59,34 @@ def avoid_predators(action, state, bait=None, shared_predators=(), guided_paths=
                     bearing = abs(math.atan2(math.sin(bearing), math.cos(bearing)))
                     if bearing < math.radians(40):
                         vision = max(vision, min(265.-distance, distance*(math.radians(40)-bearing)))
+        forecast_contact = forecast_hearing = forecast_vision = 0.
         for corridor in corridors:
             distance = path.distance(corridor)
-            contact = max(contact, max(0., 31.-distance))
-            hearing = max(hearing, max(0., 76.-distance))
+            forecast_contact = max(forecast_contact, max(0., 31.-distance))
+            forecast_hearing = max(forecast_hearing, max(0., 76.-distance))
+        for p, heading in zip(forecast_positions, forecast_headings):
+            distance = math.dist(p,q)
+            if distance <= 265. and not any(LineString([p,q]).intersects(w) for w in walls):
+                bearing = abs(math.atan2(math.sin(math.atan2(q[1]-p[1],q[0]-p[0])-heading),
+                                         math.cos(math.atan2(q[1]-p[1],q[0]-p[0])-heading)))
+                if bearing < math.radians(40):
+                    forecast_vision = max(forecast_vision,min(265.-distance,distance*(math.radians(40)-bearing)))
         # A retained predator may lie up to 40 units from bait: reserve its
         # 60-unit hearing radius plus margin without needing hidden positions.
         trap = max(0., 105.-math.dist(q, bait)) if bait is not None else 0.
         crosses_trap = bait is not None and path.distance(Point(bait)) < min(105., math.hypot(*bait))-1e-6
-        rank = (contact > 0., contact, crosses_trap, max(hearing, trap), vision,
+        # Escape from current sightings has strict priority over the trap's
+        # keep-out zone and an uncertain guide corridor. Outside current danger,
+        # those forecasts still prevent agents from entering approaching traffic.
+        rank = (contact > 0., contact, hearing, vision,
+                crosses_trap, trap, forecast_contact, forecast_hearing, forecast_vision,
                 math.dist(q, desired), length)
         return rank, q
 
     original = assess(desired_length, action.move_direction)
     here = assess(0., 0.)
-    exposed = here is not None and (here[0][0] or here[0][3] > 0. or here[0][4] > 0.)
-    if not exposed and original is not None and not any(original[0][:5]):
+    exposed = here is not None and any(here[0][:4])
+    if not exposed and original is not None and not any(original[0][:9]):
         return action, False
     best = None
     lengths = {cap} if exposed else {0., min(state['speed'], cap), cap, desired_length}

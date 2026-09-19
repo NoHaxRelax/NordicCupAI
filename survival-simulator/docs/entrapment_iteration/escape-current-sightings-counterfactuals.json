@@ -1,0 +1,101 @@
+{
+  "seed": 1883894846,
+  "source_replay": "survival-simulator/logs/entrapment-iteration/guide-coordination-control-20260919",
+  "changed_source_sha256": "af3b121fa6ce5250ccf09b3c1b9d1f07aa6ef0a1e0787ae3faada037b3f4c840",
+  "note": "Single native tick. Local DTO and estimated corridors only; no future-survival claim.",
+  "cases": [
+    {
+      "agent": 9,
+      "time": 127.49999999999703,
+      "original": {
+        "agent_id": 9,
+        "move_distance": 20,
+        "move_direction": 0.39269908169872414,
+        "turn_angle": -0.25532282187547306,
+        "spawn_agent": false
+      },
+      "changed": {
+        "agent_id": 9,
+        "move_distance": 20,
+        "move_direction": 2.8797932657906435,
+        "turn_angle": -0.25532282187547306,
+        "spawn_agent": false
+      },
+      "original_alive_after_tick": false,
+      "original_deaths": [
+        [
+          "predator",
+          127.49999999999703,
+          9,
+          68.60000000000038,
+          338.97738728530777
+        ]
+      ],
+      "maximum_replay_position_error": 0.0,
+      "changed_alive_after_tick": true,
+      "changed_deaths": []
+    },
+    {
+      "agent": 92,
+      "time": 444.40000000003255,
+      "original": {
+        "agent_id": 92,
+        "move_distance": 20,
+        "move_direction": 6.021385919380436,
+        "turn_angle": 0.2840385366149274,
+        "spawn_agent": false
+      },
+      "changed": {
+        "agent_id": 92,
+        "move_distance": 20,
+        "move_direction": 3.4033920413889427,
+        "turn_angle": 0.2840385366149274,
+        "spawn_agent": false
+      },
+      "original_alive_after_tick": false,
+      "original_deaths": [
+        [
+          "predator",
+          444.40000000003255,
+          92,
+          52.500000000000476,
+          228.22497209890628
+        ]
+      ],
+      "maximum_replay_position_error": 0.0,
+      "changed_alive_after_tick": true,
+      "changed_deaths": []
+    },
+    {
+      "agent": 109,
+      "time": 577.1000000000627,
+      "original": {
+        "agent_id": 109,
+        "move_distance": 20,
+        "move_direction": 0.2617993877991494,
+        "turn_angle": -0.3073220211585235,
+        "spawn_agent": false
+      },
+      "changed": {
+        "agent_id": 109,
+        "move_distance": 20,
+        "move_direction": 2.8797932657906435,
+        "turn_angle": -0.3073220211585235,
+        "spawn_agent": false
+      },
+      "original_alive_after_tick": false,
+      "original_deaths": [
+        [
+          "predator",
+          577.1000000000627,
+          109,
+          64.50000000000061,
+          184.56299207537336
+        ]
+      ],
+      "maximum_replay_position_error": 0.0,
+      "changed_alive_after_tick": true,
+      "changed_deaths": []
+    }
+  ]
+}
