@@ -104,7 +104,7 @@ sends baits and guides to the wrong place. Fix this before any further trap work
 | 4 turn-rate escape (committed heading 5/10/20 ticks, with/without facing) | escape grid + full games | 1152 / 192 | -409..-488 s vs the per-tick sidestep |
 | 5 late-only trap (from 900/1200 s, 8-13 predators) | full games | 192 | -18..-96 s, 0.03 predators held |
 | wall-clear steering for fleeing agents (pred_wallclear) | escape grid (esc4) | 1152 | kills 28.7% vs 27.8% (noise) |
-| wall-clear steering for fleeing agents | full games (f35) | 192 | +42 +- 27 s (104/192 wins); confirmation f36 on 576 more seeds |
+| wall-clear steering for fleeing agents | full games (f35 + f36) | 192 + 576 | +42 +- 27 on 192, then -22 +- 15 on 576; pooled -6 +- 13 (noise) |
 
 Full-game trap funnel (f34/f35, per game): 21-26 guide episodes, 19-22 guide deaths before the handoff, 1.6-2.1
 reach the handoff state, 0.04-0.24 predators held; kills per game 132 (no trap) vs 140-147 (trap). The scenario

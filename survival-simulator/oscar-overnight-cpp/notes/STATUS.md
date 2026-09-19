@@ -1,14 +1,14 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: pods j and k running the last confirmation (f36: pred_wallclear on 576 seeds), n6 and all others stopped.
+STATE: IDLE. All pods stopped (j, k, n6 at 07:05; disks are wiped on restart: bootstrap + deploy again).
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
 
 **Best configs (unchanged since 06:20, both in best-configs.json):** no predators r21s0c2: 2432 s / score 2599
-(768 fresh seeds); with predators pred_best_0400: 1533 s / 1543 (768 fresh seeds). Candidate on top of
-pred_best_0400: pred_wallclear=1 (fleeing agents steer around recently seen walls): +42 +- 27 s on 192 seeds,
-confirmation on 576 more seeds running (f36); adopt only if the pooled result is > 2 SE.
+(768 fresh seeds); with predators pred_best_0400: 1533 s / 1543 (768 fresh seeds). The last candidate, pred_wallclear=1
+(fleeing agents steer around recently seen walls), was +42 +- 27 s on 192 seeds but -22 +- 15 on 576 fresh seeds
+(pooled 768: -6 +- 13): noise, not adopted. Nothing from the 06:00-07:05 items changes the shipped configs.
 
 **06:00-07:10, the five follow-up items (details in results-summary.md, last table):**
 1. Anchor (localisation) fix ported to orchard.py; lockstep parity with the C++ policy confirmed.
@@ -311,3 +311,6 @@ Log (newest last)
   rf_trap (guide trap, no relay) -175+-27; rf_relay (relay live) -174+-28 => relay changes nothing in full games.
   Trap funnel again: 26 guide episodes, 22 guide deaths, 0.04 predators held. Confirming rf_wall on 576 more
   seeds (f36 on j/k, seeds 7400-7975).
+- 07:03 f36 (576 fresh seeds 7400-7975): rf_wall -22+-15 s vs rf_ref; pooled with f35 (768 seeds) -6+-13, 381/768 wins
+  => pred_wallclear is noise (the +42 on 192 seeds was a fluctuation). Not adopted. Pods j, k stopped; all pods idle.
+  Night-pod spend ~$30 of $100. Branch pushed. Nothing through the API; no simulation on the laptop.

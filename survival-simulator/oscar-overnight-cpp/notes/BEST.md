@@ -41,5 +41,5 @@ in the Python policy (research/orchard/orchard.py, anchor candidate order); not 
 ## 07:10 19 Sept: follow-up items
 Best configs unchanged: r21s0c2 (no predators), pred_best_0400 (with predators). Relay guiding, sprint-lead,
 wall-clear for guides, turn-rate escape, late-only trap, near-colony trap: none beats the shipped configs (see
-results-summary.md). Candidate: `pred_wallclear=1` on top of pred_best_0400 (+42 +- 27 s on 192 seeds; f36
-confirmation on 576 more seeds pending at the time of writing; adopt only if the pooled 768-seed result is > 2 SE).
+results-summary.md). `pred_wallclear=1` on top of pred_best_0400 was +42 +- 27 s on 192 seeds but -22 +- 15 on 576 fresh seeds
+(pooled 768: -6 +- 13): noise, not adopted. Shipped configs unchanged.
