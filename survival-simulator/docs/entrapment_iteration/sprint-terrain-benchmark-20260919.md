@@ -51,3 +51,17 @@ preceding three seconds. All 14 still count; no general survival guarantee
 has been achieved. These runs use the earlier 55-unit handoff and corrected
 escape, before the isolated-tracking change. Exact case diagnostics are in
 `sprint-terrain-pc-partial-20260919.json`; remaining comparison jobs continue.
+
+The slowdown case was guide 160 on seed 204871: repeated forest/swamp
+transitions from 545.9 to 547.4 seconds accompanied an observed gap shrinking
+from 115 to 43 units; at the fatal 547.9-second tick it saw a predator 24.72
+units away and requested walking despite sprint availability. This is a
+concrete failure to investigate, not proof that a particular crossing alone
+caused capture.
+
+A local attempt to reproduce PC seed 730951 diverged despite identical saved
+policy and C++ source hashes; even bait energy at 15.1 seconds differed at
+floating-point precision. It did not reproduce the original guide-36 death
+and must not be presented as that replay. A same-machine replay is being
+recorded on PC. New manifests record numerical library versions, platform,
+thread configuration and engine binary hash to help track reproducibility.

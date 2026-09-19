@@ -1,5 +1,7 @@
 """Run the ordinary policy on the verified C++ engine and record native-sprite replay chunks."""
 import argparse, gzip, hashlib, json, math, os, sys, time, traceback
+import platform
+from importlib.metadata import version
 from collections import deque
 from pathlib import Path
 from sprint_benchmark import capture_context
@@ -74,6 +76,10 @@ def main():
     sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
     atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,bait_terrain_estimate=a.bait_terrain_estimate,guide_lookahead_ticks=a.guide_lookahead,guide_preferred_distance=[a.guide_distance_min,a.guide_distance_max],share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
         guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,policy_inputs='Unmodified observations and simulation time only',
+        runtime=dict(python=sys.version,platform=platform.platform(),machine=platform.machine(),
+            packages={name:version(name) for name in ('numpy','scipy','shapely','pydantic','pygame')},
+            numerical_threads={name:os.environ.get(name) for name in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')},
+            engine_binary_sha256=hashlib.sha256(Path(sys.modules['fastsim._engine'].__file__).read_bytes()).hexdigest()),
         loaded_modules=dict(policy=str(Path(policy_module.__file__).resolve()),engine=str(Path(fastsim.__file__).resolve())),
         sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
     states=sim.step([])['observations']; chunk=[]; history=[]; seen=set(); peak=0; first_bait=None; gap=longest=total_gap=0.; max_near=held30max=0; active={}; tick=0
