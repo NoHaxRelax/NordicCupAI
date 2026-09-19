@@ -158,3 +158,7 @@ Log (newest last)
   1385; dodge radius 80 +36; angle 0.5 or radius 40 -90..-100. f13 continues (radius 80/100, angle 1.0/1.4, combos).
 - 03:37 f13: dodge radius 80 + angle 1.4: 1444 s / score 1462 (from 923 at 02:40). f14: angle 1.57/1.8,
   radius 100, flee radius 90/100 with matching dodge radius, sprint radius 50.
+- 03:42 f14: dodge converged (radius 80-100, angle 1.4; 1.57/1.8 and flee 90/100 worse). BEST WITH PREDATORS:
+  'pred_best_0342' in configs-all.json = r21s0c2 + flee within 80 (face 120), own sightings, sprint within 40,
+  sidestep 1.4 rad within 80: 1444 s / score 1462 on 192 seeds (from 888 without predator logic). f15 re-tunes
+  population parameters under predators (cap, reserves, speed selection).
