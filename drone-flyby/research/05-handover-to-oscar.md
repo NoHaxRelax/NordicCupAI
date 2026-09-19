@@ -47,9 +47,13 @@ classes would have to average 0.99, which no pipeline of ours reaches. So the pr
 to a home laptop to Sweden and back) costs your pipeline far more than the tenth it costs ours. The cause is not measured; every one of the four runs carried
 an ignored camera request, and your notes mention replay divergence when answers arrive late. Treat the table as a lower
 bound on your classes. ta-ta is exactly 0.0 where the other three classes keep a score through the same path, which is
-what our checkpoint without walker sprites does. A calibration run of your endpoint through
-the same proxy with no class filter is queued (`elias/out/logs/portal_session4.log`); your native score divided by that
-number is the factor to apply. Better still, measure the classes on your side: the class filter is five lines in
+what our checkpoint without walker sprites does. **Calibration, 23:47:** your endpoint through the same proxy with no class filter scores 0.309 against your native 0.705
+to 0.727, a factor of about 2.3. The proxy forwarded only 133 of the 249 frames: one forwarded frame took 307 ms median
+(p95 421 ms) from the laptop to your server and back, because the laptop re-uploads each frame image over a home line,
+and at a 333 ms frame interval every second frame is lost. So the table says little beyond ta-ta; scaled by 2.3 it
+reads helicopter about 0.67, medium_launcher about 0.29, small_launcher about 0.24, and the per-class loss need not be
+uniform. A second pass with the proxy on a datacentre pod in Oslo (no home uplink in the path) is planned for the same
+night; its numbers replace these. Better still, measure the classes on your side: the class filter is five lines in
 `example.py` (`DRONE_ANSWER_CLASSES`, commit ccb13ac).
 
 Your helicopter run also carried `Frame 84: ignored camera request L1 (960, 540) from L2 (2291, 1175): center movement
