@@ -1,0 +1,162 @@
+{
+ "none": {
+  "setup": "none"
+ },
+ "none_cap12": {
+  "setup": "none",
+  "params": {
+   "cap_max": 12
+  }
+ },
+ "pol_all": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "free_all": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "young_all": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "fed_all": {
+  "setup": "hold_all",
+  "supply": "fed",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "fed_all_cap12": {
+  "setup": "hold_all",
+  "supply": "fed",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "cap_max": 12
+  }
+ },
+ "old_all": {
+  "setup": "hold_all",
+  "supply": "old",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "nest_a": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 150,
+   "fuel_lead": 40,
+   "fuel_age": 40,
+   "held_r": 60
+  }
+ },
+ "nest_c": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60
+  }
+ },
+ "nest_c_cap12": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60,
+   "cap_max": 12
+  }
+ },
+ "nest_c_cap8": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60,
+   "cap_max": 8
+  }
+ }
+}

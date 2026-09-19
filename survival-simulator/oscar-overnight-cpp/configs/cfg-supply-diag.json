@@ -1,0 +1,48 @@
+{
+ "none": {
+  "setup": "none"
+ },
+ "young_all": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "pol_all": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "nest_c": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60
+  }
+ }
+}

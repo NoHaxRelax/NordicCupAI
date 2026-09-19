@@ -1,0 +1,119 @@
+{
+ "none": {
+  "setup": "none"
+ },
+ "young_all": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "pol_s": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "trap_sticky": 1
+  }
+ },
+ "nest_s": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60,
+   "trap_sticky": 1
+  }
+ },
+ "nest_s_cap8": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60,
+   "trap_sticky": 1,
+   "cap_max": 8
+  }
+ },
+ "young_c": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "site_center_w": 0.3
+  }
+ },
+ "pol_s_c": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "trap_sticky": 1,
+   "site_center_w": 0.3
+  }
+ },
+ "nest_s_c": {
+  "setup": "hold_all",
+  "supply": "policy",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "keeper_mode": 1,
+   "keeper_post_w": 3,
+   "keeper_reserve": 50,
+   "nest_mode": 1,
+   "nest_r": 250,
+   "fuel_lead": 70,
+   "fuel_age": 60,
+   "held_r": 60,
+   "trap_sticky": 1,
+   "site_center_w": 0.3
+  }
+ }
+}

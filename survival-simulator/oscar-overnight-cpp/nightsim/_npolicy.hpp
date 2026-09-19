@@ -265,6 +265,7 @@ struct Group {
     int64_t d_far = 0, d_multi = 0, d_slow = 0, d_stuck = 0, d_early = 0, d_state1 = 0;
     bool guide_sprinting = false; int64_t held_max = 0; double guide_end_t = -1e9; int64_t ep_deliv = 0; double wait_since = -1.;
     int64_t keeper = -1; bool keeper_spawn = false; double keeper_spawn_t = -1e9; int64_t baits_born = 0;
+    int64_t cadet = -1, n_cadets = 0, n_sent = 0, n_arrived = 0, n_rep_timeout = 0; double sent_e = 0., sent_age = 0.;
     int64_t relay = -1; int64_t relays_done = 0;
     P2 rep_pos{}; int64_t rep_stuck = 0; double rep_since = 0.;
     struct PredSeen { P2 p; double heading; };
@@ -350,6 +351,11 @@ struct Params {
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0., trap_min_cd = 0., evade_ignore_held = 0., bait_rot_margin = 100., pred_hide = 0., pred_hide_min = 60., pred_hide_w = 25., pred_hide_t = 0., birth_fruit_k = 0., birth_fruit_r = 80.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
+    // nightsim nest (keeper_mode > 0): fruit within nest_r of the rear entrance is reserved for the keeper and its newborn
+    // 'cadet'; the keeper breeds when the bait has < fuel_lead s left, the cadet eats (top priority) and goes in just in time
+    // (need < travel + fuel_margin) or once it is fuel_age old
+    double nest_mode = 0., nest_r = 150., fuel_lead = 40., fuel_margin = 8., fuel_age = 40.;
+    double held_r = 40., site_center_w = 0., trap_sticky = 0.;   // nightsim: evade_ignore_held radius around the mouth
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -900,6 +906,7 @@ public:
         int64_t n = others_n(t.assigned, m.aid);
         double reach = P.tree_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
         if (dist_gt(t.p, m.pose->p, reach)) return -OINF;
+        if (nest_on(g) && m.aid != g.keeper && m.aid != g.cadet && dist_lt(t.p, g.trap.rear, P.nest_r)) return -OINF;   // nightsim nest
         double d = dist(t.p, m.pose->p);
         double walk = pmax(1., pmin(s.speed, s.sprint) * MOVE_PENALTY[s.biome]);
         double travel_t = d / walk / 10.;
@@ -1022,12 +1029,14 @@ public:
             double reach = m.old ? P.old_reach : P.fruit_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
             for (auto& f : g.near_fruits(m.pose->p, reach)) {
                 if (f->has_claim) continue;
+                if (nest_on(g) && a != g.keeper && a != g.cadet && dist_lt(f->p, g.trap.rear, P.nest_r)) continue;   // nightsim nest: reserved
                 double d = dist(f->p, m.pose->p);
                 bool bf = !m.old && below_floor(s);
                 if (!ready(*f, (bf && P.sprint_floor_unripe > 0.) ? -OINF : s.energy, m.old)) continue;
                 bool owe_heir = (!m.heir_done) && s.age >= P.heir_age - 5. && s.energy < P.heir_reserve + 20.;
                 int64_t bucket;
-                if (m.old) bucket = P.old_eat_last ? 10 : 5;
+                if (nest_on(g) && a == g.cadet) bucket = -2;   // nightsim nest: the cadet fuels up first
+                else if (m.old) bucket = P.old_eat_last ? 10 : 5;
                 else if (culled.count(a)) bucket = 10;
                 else if (P.child_prio > 0. && s.age < 60. && s.energy < 0.2 * s.max_energy + P.child_prio) bucket = -1;
                 else if (bf) bucket = -1;   // below the sprint floor: eat first   // nightsim: walk-capped newborns eat first (the engine forbids sprinting below 20% of max energy)
@@ -1409,7 +1418,8 @@ public:
                     if (P.trap_rear_only > 0. && !rear_ok) continue;   // nightsim: only crevices a replacement can enter from behind
                     if (P.trap_min_cd > 0. && n && dist_lt(goal, cen, P.trap_min_cd)) continue;   // nightsim: keep the trap out of the colony's foraging area
                     Group::Site st{goal, mouth, pt(m_along - 60. * inward, xc + lane_off), rear, hi - lo, gap, 0., rear_ok};
-                    st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? P.site_dist_w * dist(goal, cen) : 0.);
+                    st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? P.site_dist_w * dist(goal, cen) : 0.)
+                             - P.site_center_w * dist(goal, P2{W / 2., H / 2.});   // nightsim: prefer a central trap (close to everything)
                     g.sites.push_back(st);
                 }
             }
@@ -1418,6 +1428,11 @@ public:
     }
 
     // ------------------------------------------------------------ bait (nightsim, trap_mode >= 2)
+    bool nest_on(const Group& g) const { return P.nest_mode > 0. && P.keeper_mode > 0. && P.trap_mode >= 2. && g.has_trap; }
+    bool is_cadet(int64_t aid) {
+        if (P.nest_mode <= 0. || !minds.has(aid)) return false;
+        Group& g = G(M(aid).group); return g.has_trap && g.cadet == aid;
+    }
     bool is_trap_role(int64_t aid) {
         if (P.trap_mode < 2. || !minds.has(aid)) return false;
         Group& g = G(M(aid).group);
@@ -1436,6 +1451,7 @@ public:
         if (g.has_trap) {   // keep the current site while it is still reported (within 6 units)
             for (auto& st : g.sites) if (dist_lt(st.goal, g.trap.goal, 6.)) { g.trap = st; return; }
             if (g.bait >= 0 && minds.has(g.bait) && dist_lt(M(g.bait).pose->p, g.trap.goal, 6.)) return;   // bait already holding
+            if (P.trap_sticky > 0.) return;   // nightsim: never abandon a chosen trap (held predators keep waiting at its mouth)
         }
         g.trap = g.sites[0]; g.has_trap = true; g.trap_since = time; g.bait = -1; g.rep = -1;
     }
@@ -1491,6 +1507,7 @@ public:
                 g.leaving.swap(keep);
             }
             if (g.rep >= 0 && dist_lt(M(g.rep).pose->p, g.trap.goal, 4.)) {
+                g.n_arrived++;
                 if (g.bait >= 0) { if (P.bait_rotate > 0. && g.trap.rear_ok) { g.leaving.push_back(g.bait); g.baits_rotated++; } else g.retired.push_back(g.bait); }
                 g.bait = g.rep; g.rep = -1;
             }
@@ -1498,7 +1515,7 @@ public:
                 Mind& rm = M(g.rep);
                 if (dist_lt(rm.pose->p, g.rep_pos, 2.)) g.rep_stuck++; else g.rep_stuck = 0;
                 g.rep_pos = rm.pose->p;
-                if (g.rep_stuck > 30 || time - g.rep_since > P.rep_timeout) { g.rep = -1; g.rep_stuck = 0; }
+                if (g.rep_stuck > 30 || time - g.rep_since > P.rep_timeout) { g.rep = -1; g.rep_stuck = 0; g.n_rep_timeout++; }
             }
             double need = OINF;
             if (g.bait >= 0) need = life_left(st(g.bait), M(g.bait));
@@ -1507,27 +1524,48 @@ public:
             if (P.keeper_mode > 0.) {
                 // keeper: the member nearest the rear entrance holds a post there and spawns the next bait as a child
                 if (g.keeper >= 0 && (!minds.has(g.keeper) || M(g.keeper).group != g.id || M(g.keeper).old || is_trap_role(g.keeper))) g.keeper = -1;
+                if (g.cadet >= 0 && (!minds.has(g.cadet) || M(g.cadet).group != g.id || is_trap_role(g.cadet))) g.cadet = -1;
                 if (g.keeper < 0) {
                     int64_t bk = -1; double bd = OINF;
                     g.agents.each([&](int64_t a) {
-                        if (is_trap_role(a) || M(a).old || st(a).age > P.heir_age - 10.) return;
+                        if (is_trap_role(a) || a == g.cadet || M(a).old || st(a).age > P.heir_age - 10.) return;
                         double d = dist(M(a).pose->p, g.trap.rear) - 0.2 * st(a).energy;   // near the rear, energetic, young
                         if (d < bd) { bd = d; bk = a; }
                     });
                     g.keeper = bk;
                 }
                 // adopt the keeper's newborn as the replacement bait
-                if (g.keeper_spawn && g.rep < 0) {
+                if (g.keeper_spawn && g.rep < 0 && (P.nest_mode <= 0. || g.cadet < 0)) {
                     int64_t nb = -1; double bd = 60.;
                     g.agents.each([&](int64_t a) {
-                        if (is_trap_role(a) || a == g.keeper || st(a).age > 2.) return;
+                        if (is_trap_role(a) || a == g.keeper || a == g.cadet || st(a).age > 2.) return;
                         double d = dist(M(a).pose->p, M(g.keeper).pose->p);
                         if (d < bd) { bd = d; nb = a; }
                     });
-                    if (nb >= 0) { g.rep = nb; g.rep_since = time; g.rep_stuck = 0; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
+                    if (nb >= 0 && P.nest_mode > 0.) { g.cadet = nb; g.n_cadets++; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
+                    else if (nb >= 0) { g.rep = nb; g.rep_since = time; g.rep_stuck = 0; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
                     else if (time - g.keeper_spawn_t > 1.5) g.keeper_spawn = false;
                 }
-                if (g.keeper >= 0 && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
+                if (P.nest_mode > 0.) {
+                    // the cadet goes in just in time (or once it gets old); the keeper breeds the next one fuel_lead s ahead
+                    if (g.cadet >= 0 && g.rep < 0 && want_bait) {
+                        const AState& cs = st(g.cadet); Mind& cm = M(g.cadet);
+                        double walk = pmax(1., pmin(cs.speed, cs.sprint)) * 10.;
+                        double travel = dist(cm.pose->p, g.trap.goal) / walk + 2.;
+                        if (g.bait < 0 || need < travel + P.fuel_margin || cs.age >= P.fuel_age) {
+                            g.rep = g.cadet; g.rep_since = time; g.rep_stuck = 0; g.cadet = -1; g.n_sent++; g.sent_e += cs.energy; g.sent_age += cs.age;
+                            if (cm.has_post && g.trees.has(cm.post)) g.trees.at(cm.post)->assigned.discard(g.rep);
+                            cm.has_post = false;
+                            if (cm.has_fruit && g.fruits.has(cm.fruit)) g.fruits.at(cm.fruit)->has_claim = false;
+                            cm.has_fruit = false;
+                        }
+                    }
+                    if (g.keeper >= 0 && g.rep < 0 && g.cadet < 0 && want_bait && (g.bait < 0 || need < P.fuel_lead)) {
+                        const AState& ks = st(g.keeper);
+                        if (dist_lt(M(g.keeper).pose->p, g.trap.rear, P.keeper_r) && ks.energy > 100. + P.keeper_reserve) { g.keeper_spawn = true; g.keeper_spawn_t = time; }
+                    }
+                }
+                else if (g.keeper >= 0 && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
                     const AState& ks = st(g.keeper);
                     if (dist_lt(M(g.keeper).pose->p, g.trap.rear, P.keeper_r) && ks.energy > 100. + P.keeper_reserve) { g.keeper_spawn = true; g.keeper_spawn_t = time; }
                 }
@@ -1557,16 +1595,20 @@ public:
             if (P.keeper_mode > 0. && g.keeper >= 0) {
                 Mind& km = M(g.keeper); const AState& ks = st(g.keeper);
                 double dk = dist(km.pose->p, g.trap.rear);
-                bool needed = g.rep < 0 && (g.bait < 0 || need < P.bait_margin + 60.) && ks.energy > 100. + P.keeper_reserve;
+                bool needed = P.nest_mode > 0. ? (g.rep < 0 && g.cadet < 0 && (g.bait < 0 || need < P.fuel_lead + 30.))
+                                               : (g.rep < 0 && (g.bait < 0 || need < P.bait_margin + 60.) && ks.energy > 100. + P.keeper_reserve);
                 if (dk > P.keeper_r && needed) { double dd, dir, turn; go_to(km, ks, g.trap.rear, P.keeper_r * 0.6, dd, dir, turn); plans[g.keeper] = Plan{dd, dir, turn}; }
             }
             for (int64_t a : {g.bait, g.rep}) if (a >= 0) bait_plan(M(a), st(a), g.trap, plans[a]);
+            if (P.nest_mode > 0. && g.cadet >= 0 && !M(g.cadet).has_fruit) {   // nightsim nest: no fruit to eat -> wait at the rear
+                double dd, dir, turn; go_to(M(g.cadet), st(g.cadet), g.trap.rear, 20., dd, dir, turn); plans[g.cadet] = Plan{dd, dir, turn};
+            }
             for (int64_t a : g.retired) plans[a] = Plan{0., 0., 0.};
             for (int64_t a : g.leaving) { double dd, dir, turn; go_to(M(a), st(a), g.trap.rear, 0., dd, dir, turn); plans[a] = Plan{dd, dir, turn}; }
             if (P.trap_mode >= 3.) run_guide(g, plans);
             // everyone else keeps clear of the mouth so the held predators' closest agent stays the bait
             g.agents.each([&](int64_t a) {
-                if (a == g.bait || a == g.rep || a == g.guide || a == g.keeper || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
+                if (a == g.bait || a == g.rep || a == g.guide || a == g.keeper || a == g.cadet || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
                 Mind& m = M(a); double d = dist(m.pose->p, g.trap.mouth);
                 if (d < P.trap_keepout) {
                     double dd, ang; local_of(*m.pose, g.trap.mouth, dd, ang);
@@ -1688,7 +1730,7 @@ public:
                 P2 spot = add(ps.p, mul(u, pmin(P.guide_relay_ahead, dl - 20.)));
                 int64_t br = -1; double bs = OINF;
                 g.agents.each([&](int64_t a) {
-                    if (is_trap_role(a) || frozen.count(a) || M(a).old || st(a).energy < P.guide_min_e) return;
+                    if (is_trap_role(a) || a == g.cadet || frozen.count(a) || M(a).old || st(a).energy < P.guide_min_e) return;
                     double d = dist(M(a).pose->p, spot);
                     if (d < P.guide_relay_r && d < bs) { bs = d; br = a; }
                 });
@@ -1883,7 +1925,7 @@ public:
         if (P.pred_share > 0.) {
             const PoseObj& ps = *m.pose;
             for (auto& q : G(m.group).pseen) {
-                if (P.evade_ignore_held > 0. && G(m.group).has_trap && G(m.group).bait >= 0 && dist_lt(q.p, G(m.group).trap.mouth, 40.)) continue;   // nightsim: held at the mouth
+                if (P.evade_ignore_held > 0. && G(m.group).has_trap && G(m.group).bait >= 0 && dist_lt(q.p, G(m.group).trap.mouth, P.held_r)) continue;   // nightsim: held at the mouth
                 double d, ang; local_of(ps, q.p, d, ang);
                 double rel = wrap(std::atan2(ps.p.y - q.p.y, ps.p.x - q.p.x) - q.heading);
                 th.push_back(Th{d, ang, rel});
@@ -1891,7 +1933,7 @@ public:
         } else {
             Group& gg = G(m.group); bool ign = P.evade_ignore_held > 0. && gg.has_trap && gg.bait >= 0;
             for (const Obs& o : *s.obs) if (o.type == 2) {
-                if (ign && dist_lt(polar(*m.pose, o), gg.trap.mouth, 40.)) continue;   // nightsim: held at the mouth
+                if (ign && dist_lt(polar(*m.pose, o), gg.trap.mouth, P.held_r)) continue;   // nightsim: held at the mouth
                 th.push_back(Th{o.distance, o.angle, o.has_rel_dir ? o.rel_dir : OPI});
             }
         }
@@ -2264,7 +2306,7 @@ public:
         for (int64_t aid : order) {
             const AState& s = st(aid); Mind& m = M(aid);
             const Plan& pl = plans[aid];
-            bool spawn = spawn_set.count(aid) > 0 && P.no_spawn <= 0. && !is_trap_role(aid);
+            bool spawn = spawn_set.count(aid) > 0 && P.no_spawn <= 0. && !is_trap_role(aid) && !is_cadet(aid);
             if (P.keeper_mode > 0.) { Group& gk = G(m.group); if (gk.keeper == aid && gk.keeper_spawn && s.energy > 101.) spawn = true; }
             if (spawn && P.spawn_pred_r > 0.) for (const Obs& o : *s.obs) if (o.type == 2 && o.distance < P.spawn_pred_r) { spawn = false; break; }
             bool ok = spawn && s.energy - cost_now(pl.dist, pl.turn, s) > 100.;

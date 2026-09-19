@@ -711,3 +711,27 @@ Log (newest last)
   -> CONFIRMED on 400 fresh seeds: cmb_dp30 (s1c16 + s1c0 changes + dist_pen 0.3) +103+-19 s, score +85+-20
   (~1608 s / 1600); c16c0 +92+-19. New best saved as best_1310 (configs-all.json). S3: 32 configs around it.
 - 15:22 OSCAR: stop all Runpod runs, keep the pods (CPUs reserved). All jobs, queues and queue daemons killed on n11-n19; n10 had already been stopped by my first call before his correction and was started again (its disk is fresh, no jobs). Nothing running.
+
+## 19 Sept afternoon: can the colony keep a trap supplied? (Oscar's PC, WSL Ubuntu, supply.py + supply_ana.py)
+Checkpoint forks of best_1310 (map building on) at 900 and 1500 s; every trap variant starts from a working crevice
+trap with all current predators moved to the mouth. Paired survival vs continuing without a trap:
+
+| variant | t0 900 | t0 1500 |
+| --- | --- | --- |
+| every predator held (oracle guides) + free immortal bait, colony-alive time | +632 +- 55 | +359 +- 60 |
+| oracle guides + youngest agent teleported in, never below 5 agents | +491 +- 54 | +330 +- 55 |
+| oracle guides + youngest agent teleported in (no floor) | +370 +- 54 | +148 +- 53 |
+| oracle guides + fuelled youngest / oldest-useful | +315 / +267 | +146 / +132 |
+| no guides (only t0 predators held) + free bait / youngest | +112 / +96 | +201 / +39 |
+| policy walk-in replacement, sticky trap (oracle guides) | -216 +- 62 | -141 +- 37 |
+| keeper nest with reserved fruit, sticky (cap 8 / central trap) | -197 (-290 / -315) | -207 |
+
+- Colony at 900: 14.5 agents, 26 births/100 s, mean energy 110; at 1500: 6.6 agents, 12 births/100 s.
+- Supply is affordable: the min-5 young supply keeps ~80% of the free-bait value. The value needs every NEW
+  predator held too (guides); without guiding it is ~+100.
+- Policy walk-in fails on delivery: without trap_sticky the policy abandoned its site 73% of the time (bait present
+  ~20%); with trap_sticky=1 bait present only 25-45% at 900 (oracle 95%). Keeper rarely breeds (colony is poor),
+  cadets enter with ~75-90 energy. Population caps and site_center_w (central trap) showed no gain.
+- Caveat: free-bait rows' raw surv is inflated (the immortal bait keeps the game alive to 3000); use colony-alive time.
+- New policy params (all default off, base game bit-identical): nest_mode, nest_r, fuel_lead, fuel_margin, fuel_age,
+  held_r, site_center_w, trap_sticky. New hook dbg_nest.
