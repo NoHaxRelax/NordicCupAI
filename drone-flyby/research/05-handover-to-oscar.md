@@ -40,7 +40,7 @@ adds a laptop hop and a tunnel, so allow a tenth for latency, not more.
 | helicopter | **0.29** | 0.96 | about +0.05 on the total |
 
 Your helicopter run also carried `Frame 84: ignored camera request L1 (960, 540) from L2 (2291, 1175): center movement
-1474.72px exceeds the limit` (section 4: the 1102 px L1 limit applies to the move that changes level too).
+1474.72px exceeds the L2 limit` (section 4: a move that changes level is bound by the limit of the level it leaves, 551 px at L2).
 
 ## 2. The 13th class is ta-ta, and the team labels miss objects
 
