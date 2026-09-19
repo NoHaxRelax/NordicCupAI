@@ -230,9 +230,16 @@ class Navigator:
         if np.linalg.norm(route.destination - position) <= 4.:
             route.status, route.remaining, route.progress_at = "arrived", 0., now
             return NavigationResult(route.destination.copy(), False, 0., route.status)
-        if route.status == "blocked":
-            return NavigationResult(None, True, route.remaining, route.status)
         changed = route.revision != self.revision
+        if route.status == "blocked":
+            # Candidates may continue gathering after a failed bait-route probe.
+            # Do not permanently cache failure from their old location/map.
+            if not changed and now-route.progress_at < 3.:
+                return NavigationResult(None, True, route.remaining, route.status)
+            route.points = []
+            route.retries = 0
+            route.progress_at = now
+            route.status = "retrying"
         if changed and route.points:
             path = [position] + route.points
             if not all(self._clear(a, b) for a, b in zip(path, path[1:])):

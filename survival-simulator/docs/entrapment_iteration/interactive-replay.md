@@ -78,3 +78,19 @@ Completed same-seed run (`78c2556`): score 497.24, extinction at 477.5 seconds,
 4,775 frames, runtime 114.8 seconds. Eight bait arrivals and five overlaps;
 estimated gaps still totalled 91.2 seconds (longest 86.4 seconds). This does
 not establish reliable continuity despite more overlapping handoffs.
+
+## Blocked-route retry and earlier overlap experiment
+
+Replaying the saved observations showed all ten highest-energy candidates
+rejected as route-blocked at 250 seconds. Navigator returned cached `blocked`
+before checking geometry revisions, so candidate probes could stay rejected
+after agents moved. Failed routes now retry on changed geometry or after three
+seconds. This applies to the shared navigator, including exploration.
+
+Before that fix, overlap 60 on the same seed scored 670.33 and lasted 632.2
+seconds, versus 497.24 / 477.5 seconds for overlap 20. It produced 14 bait
+arrivals and 12 overlaps, but still 139.7 seconds of estimated gaps, almost all
+in one late gap. Earlier dispatch alone does not establish continuity.
+
+The route-retry experiment retains overlap 20 to isolate that change:
+`logs/entrapment-iteration/interactive-route-retry-20260919`, port 9071.
