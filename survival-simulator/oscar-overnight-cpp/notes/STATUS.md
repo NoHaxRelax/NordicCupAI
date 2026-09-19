@@ -176,3 +176,6 @@ Log (newest last)
   (mirrored side: -712 s). Step 3 converged at 1507 s (pred_best_0400). f20: colony foraging around the trap
   (post bonus near the mouth) with a bait on sight, with/without guides, to see whether predators hunting the
   colony get caught without long guide walks.
+- 04:19 f20: bait on sight now costs -455 s against the stronger evasion; foraging around the trap does not get
+  predators caught (held 0.05-0.17); with guides -603. Trap integration is negative in every form tested tonight.
+  esc3: single-predator escape grid for the new evasion (per speed / distance / bearing).
