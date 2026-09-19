@@ -24,7 +24,8 @@ def main():
     parser.add_argument('--timeout',type=float,default=1800.)
     args=parser.parse_args()
     args.out.mkdir(parents=True,exist_ok=True)
-    recipes=json.loads(args.configs.read_text())['variants']
+    specification=json.loads(args.configs.read_text())
+    recipes=specification['variants']
     def run(seed,name,recipe):
         folder=args.out/f'{seed}-{name}'
         folder.mkdir(exist_ok=True)
@@ -33,7 +34,7 @@ def main():
         command=[sys.executable,str(ROOT/'scripts/fast_entrapment_game.py'),
                  '--fastsim',str(args.fastsim.resolve()),'--seed',str(seed),
                  '--seconds','3000','--out',str(folder),'--summary-only',
-                 '--survival-config',str(config),*recipe.get('args',[])]
+                 '--survival-config',str(config),*specification.get('common_args',[]),*recipe.get('args',[])]
         if (folder/'manifest.json').exists():
             return dict(seed=seed,variant=name,status='refused_existing_run')
         try:

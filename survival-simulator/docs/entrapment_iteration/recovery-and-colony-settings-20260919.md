@@ -31,6 +31,11 @@ enough to ensure that recovery leaves an escape available later. Some mutated
 agents also have sprint speed below predator sprint speed. Keep this variant
 out of the default until it is improved.
 
+The default remains v2. Use `--guide-reacquire-close` to reproduce this
+experimental behavior with the current runner. The remote frozen source was
+taken before the flag existed, when v3 was unconditional; the checked-in
+settings specification now enables it explicitly for reproducibility.
+
 ## Paired settings comparison on free PC CPUs
 
 Oscar's `survival-simulator/oscar-overnight-cpp` now contains newer settings at

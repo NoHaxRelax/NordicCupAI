@@ -99,7 +99,7 @@ def search(action,bait,agent,memory,positions,target_index,geometry,walls,
         HORIZON*action['move_distance']*modifier*math.cos(action['move_direction']),
         HORIZON*action['move_distance']*modifier*math.sin(action['move_direction']))]
     following_distance = memory.get('_preferred_predator_distance',(100.,120.))
-    reacquiring = bool(memory.get('_predator_not_following',False))
+    reacquiring = bool(memory.get('_reacquire_close',False) and memory.get('_predator_not_following',False))
     # The following gap is useful only after contact is established. Keeping
     # 100 units away from a predator looking elsewhere prevents reacquisition.
     preferred_min,preferred_max = (0.,55.) if reacquiring else following_distance
