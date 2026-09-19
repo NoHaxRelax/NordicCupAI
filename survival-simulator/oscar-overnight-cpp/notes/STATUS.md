@@ -217,3 +217,4 @@ Log (newest last)
   age 32, median energy 72; 9% of kills (>=150 energy) carry 23% of the penalty; kills peak at 250-750 s. f23
   tests: flee only when I am the predator's closest visible agent (evade_closest), and no births while a
   predator is within 100/200/400 (spawn_pred_r).
+- 04:41 f23: closest-agent-only fleeing and birth gating near predators: all within noise (+2..-32). Evasion family saturated at ~1500 s. f24: detection side (sweep rate, hearing/vision selection, watch patience, explore threshold) with predators.
