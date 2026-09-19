@@ -41,7 +41,33 @@ def _walking_action(plan, agent, turn):
                 move_direction=plan['dir'], turn_angle=turn)
 
 
-def _return_to_predator(bait, edges, agent, memory, to_local, turn):
+def _return_to_predator(bait, edges, agent, memory, to_local, turn, predator=None):
+    if memory.get('_orbit_recovery',False) and predator is not None and 'rel_dir' in predator:
+        # A slow guide cannot escape a faster direct chase from hearing range.
+        # Reach the front of the predator's cone around the preferred radius.
+        p=(predator['distance']*math.cos(predator['angle']),
+           predator['distance']*math.sin(predator['angle']))
+        bearing=math.atan2(-p[1],-p[0])
+        heading=bearing-predator['rel_dir']
+        wrap=lambda angle: math.atan2(math.sin(angle),math.cos(angle))
+        radius=sum(memory.get('_preferred_predator_distance',(100.,120.)))/2
+        difference=wrap(heading-bearing)
+        turns=[difference] if abs(difference)<=.4 else [.4,-.4]
+        options=[]
+        for delta in turns:
+            target=(p[0]+radius*math.cos(bearing+delta),p[1]+radius*math.sin(bearing+delta))
+            cache=memory.setdefault('_recovery_orbit_positive' if delta>=0 else '_recovery_orbit_negative',{})
+            plan=navigation_plan(bait,edges,target,cache)
+            if plan is not None:
+                cost=plan['dist']+radius*abs(wrap(difference-delta))
+                options.append((cost,plan,target))
+        if options:
+            _,plan,target=min(options,key=lambda row:row[0])
+            memory['_lost_ticks']=memory.get('_lost_ticks',0)+1
+            memory['debug']=dict(mode='orbit_to_predator_view',route=plan,
+                predator_distance=predator['distance'],contact_goal=target,preferred_radius=radius,
+                predator_view_error=abs(difference))
+            return _walking_action(plan,agent,turn)
     memory['_lost_ticks'] = memory.get('_lost_ticks', 0) + 1
     lost_ticks = memory['_lost_ticks']
     last = memory.get('_last_predator_fixed')
@@ -172,7 +198,7 @@ def _guide(bait, edges, agent, context, memory):
                                                    predator['distance']*math.sin(predator['angle'])))
         memory['_last_contact_position_fixed'] = to_fixed((0., 0.))
     if predator is None or not_following:
-        action = _return_to_predator(bait, edges, agent, memory, to_local, turn)
+        action = _return_to_predator(bait, edges, agent, memory, to_local, turn, predator)
         memory['debug']['following_check'] = memory['_following_debug']
         return action
     if memory.get('_lost_ticks', 0):
