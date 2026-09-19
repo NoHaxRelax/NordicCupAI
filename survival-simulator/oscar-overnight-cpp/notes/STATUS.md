@@ -247,3 +247,8 @@ Log (newest last)
   and require the playable interior; also snap an anchored agent to boundary evidence for any error size (was < 40).
   Pods j/k restarting (container disks are wiped on restart: bootstrap + deploy needed) for paired re-tests of both
   shipped configs on their confirmation seeds.
+- 05:49 After the anchor fix: pose error >30 units 2/1/1/0/0% (no predators) and 1/2/1/3/0% (predators) at
+  100/300/600/1000/1500 s (was 3/3/3/1/1 and 3/5/1/3/0); trap-mode family drift gone (median 0); the keeper's bait
+  child reaches the goal and holds ~55 s. Keeper now holds a post near the rear (keeper_post_w) and only walks over
+  when a bait is needed. Running: regression of both shipped configs on their own seeds (j: 512 no-predator,
+  k: 576 with predators) and f27 keeper A/B on i (96 seeds).
