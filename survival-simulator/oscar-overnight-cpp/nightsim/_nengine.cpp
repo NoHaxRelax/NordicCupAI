@@ -974,6 +974,8 @@ public:
         add_agent(a);
     }
     std::function<void(const Creature&, int)> on_kill;   // nightsim diagnostics: called before an agent is removed
+    struct DeathRec { int cause; double t, age, e, maxe, speed, sprint, x, y; int npred150; double dpred; int prest, nearwall, pop, npred, evading, old, haspost; };
+    std::vector<DeathRec> death_log;
     void kill_agent_at(size_t idx, int cause) {
         const Creature& a = agents[idx];
         if (on_kill) on_kill(a, cause);
@@ -1828,6 +1830,18 @@ PyObject* Engine_policy_init(EngineObject* self, PyObject* args) {
             fprintf(stderr, "REFKILL t=%.1f id=%lld in=%d err=%.1f dtrue_goal=%.1f dbelief_goal=%.1f dtrue_mouth=%.1f gap=%.1f rear_ok=%d dpred=%.1f npred=%zu\n",
                     eng->time, (long long)a.id, m.refuge_in ? 1 : 0, err, dtg, dbg, dtm, st.gap, st.rear_ok ? 1 : 0, dp, eng->predators.size());
         };
+    } else if (getenv("NIGHT_DEATHS")) {   // per-death record for the failure diagnosis (all causes)
+        orchard::Policy* pol = self->pol; Engine* eng = self->eng;
+        eng->on_kill = [pol, eng](const Creature& a, int cause) {
+            Engine::DeathRec r{}; r.cause = cause; r.t = eng->time; r.age = a.age; r.e = a.energy; r.maxe = a.max_energy; r.speed = a.speed; r.sprint = a.sprint_speed; r.x = a.x; r.y = a.y;
+            r.dpred = 1e9; r.npred150 = 0; r.prest = 0;
+            for (auto& p : eng->predators) { double d = std::hypot(p.x - a.x, p.y - a.y); if (d < 150.) r.npred150++; if (d < r.dpred) { r.dpred = d; r.prest = p.resting ? 1 : 0; } }
+            r.nearwall = eng->is_position_free(a.x - 15., a.y - 15., 30., 30.) ? 0 : 1;
+            r.pop = (int)eng->agents.size(); r.npred = (int)eng->predators.size();
+            r.evading = 0; r.old = 0; r.haspost = 0;
+            if (pol->minds.has(a.id)) { auto& m = *pol->minds.at(a.id); r.evading = (eng->time - m.evade_t < 1.0) ? 1 : 0; r.old = m.old ? 1 : 0; r.haspost = m.has_post ? 1 : 0; }
+            if (eng->death_log.size() < 20000) eng->death_log.push_back(r);
+        };
     } else self->eng->on_kill = nullptr;
     if (cfg && PyDict_Check(cfg) && PyDict_GetItemString(cfg, "_debug_merge")) self->pol->debug_merge = true;
     Py_RETURN_NONE;
@@ -2055,6 +2069,16 @@ PyObject* Engine_dbg_free(EngineObject* self, PyObject* args) {
 PyObject* Engine_dbg_pred_life(EngineObject* self, PyObject* args) {
     double v; if (!PyArg_ParseTuple(args, "d", &v)) return nullptr; g_pred_life = v; Py_RETURN_NONE;
 }
+PyObject* Engine_dbg_deaths(EngineObject* self, PyObject*) {
+    // diagnostics: drain the per-death log (NIGHT_DEATHS=1): (cause, t, age, e, maxe, speed, sprint, x, y, npred150, dpred, prest, nearwall, pop, npred, evading, old, haspost)
+    PyObject* L = PyList_New(0);
+    for (auto& r : self->eng->death_log) {
+        PyObject* t = Py_BuildValue("(iddddddddidiiiiiii)", r.cause, r.t, r.age, r.e, r.maxe, r.speed, r.sprint, r.x, r.y, r.npred150, r.dpred, r.prest, r.nearwall, r.pop, r.npred, r.evading, r.old, r.haspost);
+        PyList_Append(L, t); Py_DECREF(t);
+    }
+    self->eng->death_log.clear();
+    return L;
+}
 PyObject* Engine_dbg_walls(EngineObject* self, PyObject*) {
     // policy wall faces of anchored groups: [(gid, horiz, c, lo, hi, solid, n, n_obs, confirmed)]
     PyObject* L = PyList_New(0);
@@ -2263,6 +2287,7 @@ PyMethodDef Engine_methods[] = {
     {"dbg_eval", (PyCFunction)Engine_dbg_eval, METH_NOARGS, "tests: policy predator counters"},
     {"dbg_pred_life", (PyCFunction)Engine_dbg_pred_life, METH_VARARGS, "tests: park predators older than T (perfect-trap model)"},
     {"dbg_walls", (PyCFunction)Engine_dbg_walls, METH_NOARGS, "tests: policy wall faces"},
+    {"dbg_deaths", (PyCFunction)Engine_dbg_deaths, METH_NOARGS, "diagnostics: per-death records"},
     {"dbg_sites", (PyCFunction)Engine_dbg_sites, METH_NOARGS, "tests: policy trap sites"},
     {"dbg_keep_agents", (PyCFunction)Engine_dbg_keep_agents, METH_VARARGS, "tests: keep first n agents"},
     {"dbg_load_walls", (PyCFunction)Engine_dbg_load_walls, METH_NOARGS, "tests: true walls into the policy map"},

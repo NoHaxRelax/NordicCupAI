@@ -499,3 +499,11 @@ Log (newest last)
   on 192 FRESH seeds 7400-7591 (f42: rf_ref, pa_1, pa_2) before believing it.
 - 09:22 f42 (192 fresh seeds 7400-7591): pa_1 -21+-26, pa_2 -25+-26; pooled with f41 (288 seeds) pa_1 +5+-20,
   151/288 wins. Noise, not adopted. Pod n7 stopped; all pods idle; ~$47 of $100 spent. Branch pushed.
+- 09:26 OSCAR (09:35): "run a diagnosis on what categories are going wrong ... take them one by one."
+  D1: per-death record from the engine (NIGHT_DEATHS=1, dbg_deaths): cause, time, age, energy, max energy, speed,
+  sprint, position, predators within 150, nearest predator distance and whether it rests, near a wall, population,
+  predator count, plus policy state (evading in the last second, old, has a post). Runner attaches 'deaths' to the
+  row. Plan: 192 games of pred_best_0400 on n7, then categories one by one: (1) deaths by cause x age class x time
+  window; (2) kills by escape capability (walk-capped / sprint <= 15 / sprint-capable), ambush vs seen, several
+  predators, cornered at a wall, resting predator; (3) starvation by age class and post; (4) the last 300 s of each
+  game; (5) foraging economy under predators vs the no-predator baseline. Then attack the biggest category first.

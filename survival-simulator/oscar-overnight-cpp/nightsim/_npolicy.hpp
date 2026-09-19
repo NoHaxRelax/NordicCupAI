@@ -231,6 +231,7 @@ struct Mind {
     bool has_watch = false; P2 watch_p{}; double watch_t = 0;
     int hide_idx = -1; double hide_t = -1e9;   // nightsim: crevice pass-through escape
     bool refuge_in = false; double refuge_pred_t = -1e9; int refuge_bad = 0;   // nightsim: refuge (hold inside a narrow gap)
+    double evade_t = -1e9;   // nightsim diagnostics: last tick this agent evaded
     double dodge_head = 0.; int64_t dodge_left = 0;   // nightsim: committed dodge heading (pred_dodge_hold)
 };
 using MindP = std::shared_ptr<Mind>;
@@ -2024,7 +2025,7 @@ public:
         std::unordered_set<int64_t> spawn_set;
         std::unordered_map<int64_t, Plan> plans;
         for (const AState& s : states) plans[s.aid] = act(M(s.aid), s);
-        if (P.pred_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid)) evade(s, plans[s.aid]);
+        if (P.pred_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid) && evade(s, plans[s.aid])) M(s.aid).evade_t = time;
         if (P.refuge_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid)) refuge_exit(s, plans[s.aid]);
         if (P.trap_mode >= 2.) run_trap(plans);
         if (P.test_freeze > 0.) for (const AState& s : states) plans[s.aid] = Plan{0., 0., 0.};
