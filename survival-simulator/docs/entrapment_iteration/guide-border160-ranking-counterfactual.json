@@ -1,0 +1,158 @@
+{
+  "seed": 204871,
+  "agent": 160,
+  "time": 547.900000000056,
+  "maximum_replay_position_error": 0.0,
+  "original": {
+    "agent_id": 160,
+    "move_distance": 10.0,
+    "move_direction": -0.52359878,
+    "turn_angle": 0.16473637565980329,
+    "spawn_agent": false
+  },
+  "changed": {
+    "agent_id": 160,
+    "move_distance": 0.0,
+    "move_direction": 0.1487481556670436,
+    "turn_angle": -0.011721751164577555,
+    "spawn_agent": false
+  },
+  "alive_after_tick": false,
+  "original_forecast": {
+    "horizon_ticks": 3,
+    "horizon_seconds": 0.3,
+    "capture_radius": 15.0,
+    "extra_predator_clearance": 0.0,
+    "preferred_distance": [
+      100.0,
+      120.0
+    ],
+    "reacquiring_contact": false,
+    "following_distance": [
+      100.0,
+      120.0
+    ],
+    "predicted_safe": false,
+    "capture_scenarios": 72,
+    "sampled_scenarios": 72,
+    "contact_forecast": false,
+    "contact_loss_scenarios": 0,
+    "minimum_separation": 3.42,
+    "observation_lag_estimated": true,
+    "expanded": 179,
+    "terrain_samples": 10,
+    "terrain_scenarios": [
+      "observed_samples",
+      "river_next_tick",
+      "river_in_two_ticks"
+    ],
+    "guide_path": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        4.33012700791794,
+        -2.500000019059925
+      ],
+      [
+        18.06213936925463,
+        12.040695855212954
+      ],
+      [
+        26.722393385090513,
+        17.040695893332803
+      ]
+    ],
+    "predator_path": [
+      [
+        19.225424767694193,
+        -0.023761909746134346
+      ],
+      [
+        17.484018871953936,
+        -14.922335851781027
+      ],
+      [
+        8.636651912034822,
+        -2.809363554424296
+      ],
+      [
+        20.3011169766568,
+        6.6214505544537605
+      ]
+    ],
+    "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+  },
+  "changed_forecast": {
+    "horizon_ticks": 3,
+    "horizon_seconds": 0.3,
+    "capture_radius": 15.0,
+    "extra_predator_clearance": 0.0,
+    "preferred_distance": [
+      100.0,
+      120.0
+    ],
+    "reacquiring_contact": false,
+    "following_distance": [
+      100.0,
+      120.0
+    ],
+    "predicted_safe": false,
+    "capture_scenarios": 63,
+    "sampled_scenarios": 81,
+    "immediate_capture_scenarios": 27,
+    "contact_forecast": false,
+    "contact_loss_scenarios": 0,
+    "minimum_separation": 7.07,
+    "observation_lag_estimated": true,
+    "observation_lag_method": "public_chase_with_sampled_speed_and_rest",
+    "lag_guard_triggered": true,
+    "expanded": 162,
+    "terrain_samples": 10,
+    "terrain_scenarios": [
+      "observed_samples",
+      "river_next_tick",
+      "river_in_two_ticks"
+    ],
+    "guide_path": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "predator_path": [
+      [
+        9.720019064565209,
+        -0.1139408633082491
+      ],
+      [
+        12.937391989699293,
+        -9.286741122577862
+      ],
+      [
+        15.341260622863757,
+        5.519386514130124
+      ],
+      [
+        12.214101229593904,
+        -9.151021596385553
+      ]
+    ],
+    "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+  },
+  "search_sha256": "a32374f5d2badbabea8a272d15bc6eaeca462d883e31f4ed8606c3ca058674d2",
+  "note": "Single native counterfactual tick; policy rebuilt from ordinary DTOs. No future-survival claim."
+}

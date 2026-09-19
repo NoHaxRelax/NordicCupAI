@@ -1,0 +1,66 @@
+--- a/models/entrapment/guide_lookahead.py
++++ b/models/entrapment/guide_lookahead.py
+@@ -172,6 +172,9 @@
+     forecast_headings = list(initial_headings)
+     if _project_lag:
+         forecast, forecast_headings = initial_predators()
++    emergency_away = round(wrap(math.atan2(-forecast[target_index][1],
++                                           -forecast[target_index][0])), 3)
++    emergency_key = (round(agent['sprint_speed'], 2), emergency_away)
+     nodes = [Node((0.,0.),0.,agent['energy'],forecast,forecast_headings,None,
+                   [(0.,0.)],[0.],[[p] for p in forecast],[])]
+     expanded = 0
+@@ -236,6 +239,15 @@
+             if key in seen: continue
+             seen.add(key);nodes.append(node)
+             if len(nodes)>=BEAM: break
++        # The lag guard is an emergency search. Keep one full-sprint action
++        # directly away from the projected stale sighting even when nominal
++        # route/contact ranking would discard that first-action family.
++        if _project_lag and emergency_key not in seen:
++            away = next((node for rank,node in choices
++                         if (round(node.first['move_distance'],2),
++                             round(node.first['move_direction'],3)) == emergency_key), None)
++            if away is not None:
++                nodes.append(away)
+ 
+     # Check surviving paths with possible physical speeds and pivot signs.
+     # The nominal search avoids a full branching game-tree explosion.
+@@ -243,7 +255,8 @@
+     contact_forecast = bool(memory.get('_contact_forecast',False))
+     motion_scenarios = PREDATOR_MOTION + (((0.,1.),) if _project_lag or contact_forecast else ())
+     for order,node in enumerate(nodes):
+-        captures = 0; worst_tick = HORIZON+1; minimum = math.inf; scenarios = 0; contact_losses=0
++        captures = 0; immediate_captures = 0; worst_tick = HORIZON+1
++        minimum = math.inf; scenarios = 0; contact_losses=0
+         for cap,terrain in motion_scenarios:
+             for bias in (-1.,0.,1.):
+                 # Current biome is observed. Future starts may land in river,
+@@ -267,11 +280,15 @@
+                         separation = min(math.dist(q,p) for p in preds)
+                         minimum = min(minimum,separation)
+                         if separation<CAPTURE_RADIUS:
+-                            captured=True;worst_tick=min(worst_tick,depth);break
++                            captured=True
++                            immediate_captures += depth == 0
++                            worst_tick=min(worst_tick,depth);break
+                     captures+=captured;scenarios+=1;contact_losses+=lost_contact
+-        checked.append(((captures>0,-worst_tick,captures,contact_losses if contact_forecast else 0,order),
+-                        node,captures,scenarios,minimum,contact_losses))
+-    _,winner,captures,scenarios,minimum,contact_losses = min(checked,key=lambda x:x[0])
++        checked.append(((captures>0,immediate_captures,-worst_tick,captures,
++                         contact_losses if contact_forecast else 0,order),
++                        node,captures,immediate_captures,scenarios,minimum,contact_losses))
++    _,winner,captures,immediate_captures,scenarios,minimum,contact_losses = min(
++        checked,key=lambda x:x[0])
+     if not _project_lag:
+         first = winner.first
+         q = (first['move_distance']*current_modifier*math.cos(first['move_direction']),
+@@ -294,6 +311,7 @@
+         capture_radius=CAPTURE_RADIUS,extra_predator_clearance=0.,preferred_distance=[preferred_min,preferred_max],
+         reacquiring_contact=reacquiring,following_distance=list(following_distance),
+         predicted_safe=captures==0,capture_scenarios=captures,sampled_scenarios=scenarios,
++        immediate_capture_scenarios=immediate_captures,
+         contact_forecast=contact_forecast,contact_loss_scenarios=contact_losses,
+         minimum_separation=round(minimum,2),observation_lag_estimated=lagged if _project_lag else velocity_estimated,
+         observation_lag_method='public_chase_with_sampled_speed_and_rest' if _project_lag else 'velocity_with_public_chase_capture_guard',
