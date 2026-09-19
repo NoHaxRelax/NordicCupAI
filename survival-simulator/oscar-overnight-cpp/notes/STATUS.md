@@ -150,3 +150,5 @@ Log (newest last)
   radius 300: -61. More agents get eaten (94 vs 60 per game) but the colony forages instead of fleeing: the
   economy matters more than the kills. f10 pushes further (60/80, no share, combos). Spend since 23:00 CEST:
   ~$20 on my CPU pods (well within the $100).
+- 03:23 f10: flee radius 80 + no shared sightings: 1239 s / score 1260 (evade baseline 923, no logic 888).
+  Trend continues: flee less. f11: radius 50-80, sprint radius 40/60, face radius 80, dodge off.
