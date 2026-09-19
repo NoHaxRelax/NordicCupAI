@@ -8,9 +8,9 @@ hook in `.claude/settings.json`; the agent never writes `.claude/EVAL_UNLOCK`). 
 > Oscar's pipeline scored 0.705 to 0.727 on full public runs Saturday afternoon (leaderboard best 0.7269). **The attempt
 > is this endpoint; Oscar's is the fallback.** The pieces he can take from here are in `05-handover-to-oscar.md`.
 
-> **Pods.** The serving pod is `jxpw8hwrqyjf5d` (elias-claude-serve-no2, RTX 4090, EUR-NO-1, 0.74 USD/h, created
-> Saturday 23:46, kept running for the attempt): HOST `149.36.0.150`, SSH_PORT `40957`, PUBLIC_PORT **`40958`**
-> (`elias/out/logs/pod2.env`). If it is gone, create a new one (last section) and use its HOST, SSH_PORT and PUBLIC_PORT
+> **Pods.** None running (Sunday 01:00: the measuring pod `jxpw8hwrqyjf5d` was terminated on Elias's instruction; Oscar
+> mines the validation set overnight). **Sunday morning: create the serving pod first** (last section, about two minutes
+> from create to first run; a Secure Cloud RTX 4090 in EUR-NO-1, 0.74 USD/h) and use its HOST, SSH_PORT and PUBLIC_PORT
 > below. Round trip Oslo to the Helsinki server 40 to 70 ms; a US pod had 250 ms and lost frames. Every other pod on the
 > account is Oscar's or Lucas's.
 
