@@ -33,3 +33,15 @@ Survival correlates weakly with the map's tree count (+0.1) and more with the co
 | + evasion (face, back away, sprint < 90) | 64 | 963 s, 116 eaten (score +282 ± 50) |
 | Perfect-trap model: every predator trapped T s after spawn | 53 each | T=600: +205 s; 300: +481; 100: +922; 30: +1167 |
 | One agent vs one fresh predator, 30 s (walk speed 10/15/20) | 288 per variant | caught ~60%/20%/8% with evasion; 79% without |
+
+## Phase 2 (predators), 02:00-03:15: one problem at a time
+
+| Step | Test | Result |
+| --- | --- | --- |
+| 1. One predator to the trap | 2337 scenarios per setting (true walls and poses, bait frozen 9 units inside a crevice, guide and predator placed with clear lines) | 78% delivered; 96% when the predator starts behind the guide, 80% beside, 53% between guide and trap. Lever: keep the predator inside its 60-unit hearing (band 45-70); bait never died |
+| 2. Several predators | 1, 3, 6, 10 predators already held at the mouth, one more delivered | 94-98% delivered and all still held; capacity is not a constraint |
+| Full games with predators (192 seeds) | no predator logic / evasion / evasion + trap machinery | 888 s / 923 s / 700 s: the trap costs ~220 s |
+| Why: guide funnel in full games | 2206 guide episodes | 97% establish a chase, 13% reach the lane point, 1% reach the handoff; 87% of guides die en route, 79% of those walk slower than 12 (predator sprints 15) |
+
+A standing bait alone costs ~170 s. Guides in full games fail for reasons absent from the scenario: agents walk ~10,
+distances of 300-1000 units, no routing around obstacles, several predators, predators busy with other agents.

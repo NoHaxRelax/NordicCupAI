@@ -131,3 +131,7 @@ Log (newest last)
   predators near 18%, in ACQUIRE 20%, stuck 9%. Colony agents walk ~10 vs predator 15: a walking guide loses 5/tick.
   f6: sprint hysteresis (sprint until 70/90 once triggered), assignment limited to predators within 250/400 and
   candidates near the lane.
+- 03:05 f6: sprint hysteresis and assignment limits change nothing (guides still die en route: 'slow' deaths
+  unchanged). Root cause is structural: colony agents walk ~10 vs predator 15; a guide cannot outrun a fresh
+  predator over hundreds of units. f7: guide only predators already within 300 of the trap; speed selection
+  (fit_speed 3, cap 20) with predators, with and without heir selection.
