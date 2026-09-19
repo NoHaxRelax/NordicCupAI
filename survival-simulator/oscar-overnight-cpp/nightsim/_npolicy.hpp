@@ -345,7 +345,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -874,6 +874,8 @@ public:
                 + P.fit_hear * std::pow(s.hear / 50., 2.0)
                 + P.fit_energy * pmin(2., s.max_energy / 500.) + P.fit_speed * pmin(P.fit_speed_cap, pmin(s.speed, s.sprint) / 10.));
     }
+    // nightsim (Oscar 09:45): keep agents above the engine's sprint cap (20% of max energy) plus a margin
+    bool below_floor(const AState& s) const { return P.sprint_floor > 0. && s.energy < 0.2 * s.max_energy + P.sprint_floor; }
     bool ready(const FruitM& f, double energy = OINF, bool old = false) const {
         if (time < f.born_hi + P.fruit_min_wait) return false;
         if (f.born_lo == -OINF) return true;
@@ -1019,12 +1021,14 @@ public:
             for (auto& f : g.near_fruits(m.pose->p, reach)) {
                 if (f->has_claim) continue;
                 double d = dist(f->p, m.pose->p);
-                if (!ready(*f, s.energy, m.old)) continue;
+                bool bf = !m.old && below_floor(s);
+                if (!ready(*f, bf ? -OINF : s.energy, m.old)) continue;
                 bool owe_heir = (!m.heir_done) && s.age >= P.heir_age - 5. && s.energy < P.heir_reserve + 20.;
                 int64_t bucket;
                 if (m.old) bucket = P.old_eat_last ? 10 : 5;
                 else if (culled.count(a)) bucket = 10;
-                else if (P.child_prio > 0. && s.age < 60. && s.energy < 0.2 * s.max_energy + P.child_prio) bucket = -1;   // nightsim: walk-capped newborns eat first (the engine forbids sprinting below 20% of max energy)
+                else if (P.child_prio > 0. && s.age < 60. && s.energy < 0.2 * s.max_energy + P.child_prio) bucket = -1;
+                else if (bf) bucket = -1;   // below the sprint floor: eat first   // nightsim: walk-capped newborns eat first (the engine forbids sprinting below 20% of max energy)
                 else if (owe_heir) bucket = 0;
                 else if (full) bucket = 9;
                 else if (P.feed_breed) bucket = s.energy < reserve() + 20. ? 1 : 2 + int_floordiv(s.energy, 120);
@@ -2053,6 +2057,7 @@ public:
             bool ok;
             if (m.old) ok = left > 101.;
             else ok = left > P.heir_reserve || (P.heir_at_food && at_food && left > 130.);
+            if (ok && !m.old && P.sprint_floor > 0. && P.sprint_floor_breed > 0. && left - 100. < 0.2 * s.max_energy + P.sprint_floor) ok = false;
             if (ok && P.heir_needs_site && !at_food && young_now >= capv && pop > 2) ok = false;
             if (ok) { spawn_set.insert(aid); m.heir_done = true; young_now++; }
         }
@@ -2092,6 +2097,7 @@ public:
                     double thr = (double)young.size() < P.cap_min ? pmin(reserve(), P.low_pop_reserve) : reserve();
                     if (left <= thr) continue;
                 }
+                if (P.sprint_floor > 0. && P.sprint_floor_breed > 0. && left - 100. < 0.2 * s.max_energy + P.sprint_floor) continue;   // nightsim: stay above the sprint floor after paying for the child
                 Group& g = G(m.group);
                 bool food = (m.has_post && g.trees.has(m.post) && !g.trees.at(m.post)->dead) || !g.near_fruits(m.pose->p, 90.).empty();
                 if (!food) continue;

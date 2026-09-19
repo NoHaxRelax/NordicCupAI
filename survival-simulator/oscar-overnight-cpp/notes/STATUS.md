@@ -542,3 +542,11 @@ Log (newest last)
   (parent pays 100, the child brings 75), but 148 extra deaths per game push the population from ~40 to ~10 by
   1000 s while predators grow to 9-13. The no-predator optimum was a SMALL population (cap_mult 0.5); under
   predators a larger cap may sustain births against kills. f44: cap_mult 0.7 / 1.0 and heir reserve variants.
+- 09:44 OSCAR: keep agents at higher energy in general; adapt the survival policy to the predator context
+  ("the whole point is to adapt each policy to work with each other"). Implemented sprint_floor: every non-old
+  agent should stay above 20% of its max energy (the engine's sprint cap) plus sprint_floor. Below it: claims fruit
+  first and accepts unripe fruit; heirs are only spawned if the parent stays above the floor after paying 100
+  (sprint_floor_breed). f45 (after f44 on n7): floor 40 / 80 / 120, and 80 without the breeding rule.
+- 09:45 f44 population cap under predators (96 seeds): cap_mult 0.8 +26+-33, 1.0 +5+-38, 1.0 with lower
+  reserves -5+-36, 0.65 with lower reserves -17+-34. Noise; a larger cap just creates more children that die
+  (created 436 -> 478-500, kills 146 -> 159-175). The equilibrium is not cap-limited under predators.
