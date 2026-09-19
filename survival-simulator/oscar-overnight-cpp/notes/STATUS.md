@@ -437,3 +437,15 @@ Log (newest last)
   Local check (4 seeds, 300 s): phantom face length 33.9% -> 13.6%, missed 44.6% -> 23.0%, sites 52 -> 9 of
   which 7 valid (was 11 of 52), top-1 valid 3/3. Running on n7: mc1/mc2 (32 games each, map metrics with/without
   the fix), then f38 = full-game refuge A/B on the corrected map (rg_60s, rg_100s, rg_100v with wall_conflict).
+- 08:35 mc1 baseline (32 games, 600 s, with predators, current map code): 1286 confirmed faces per game,
+  phantom 37.3% of face length, missed 48.0%; 23 crevice sites per game, 15% valid in truth, TOP-1 VALID 3%.
+  That is the number behind the whole trap line: 97% of the time the policy's best crevice was not a real crevice
+  (the guide/bait scenarios loaded true walls, so they never saw this). mc2 (same games, wall_conflict=1) and the
+  refuge A/B on the corrected map are running on n7.
+- 08:44 mc2 (same 32 games, wall_conflict=1): phantom 37.3% -> 18.8%, missed 48.0% -> 27.5%; sites per game
+  23.3 -> 5.2, valid 15% -> 49%, top-1 valid 3% -> 35%. f38 refuge A/B on the corrected map (96 seeds):
+  rg_60s_wc +13+-32 (50/96 wins; first non-negative refuge result), rg_100s_wc -17+-33, rg_100v_wc -65+-34;
+  hold deaths 4.1 per game at r 60 (was 6.7), refugees still never exit. wall_conflict is now the DEFAULT in
+  nightsim (it only affects map-building modes: trap/hide/refuge/occ_walls; the shipped configs build no map, so
+  they are unchanged). Half the sites are still invalid: testing stricter confirmation (two distinct observers,
+  wall_min_obs=2; or 20 observations, wall_min_n=20) on the map metric only (mc3).
