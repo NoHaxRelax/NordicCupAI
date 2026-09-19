@@ -285,3 +285,8 @@ Log (newest last)
   8-13): -18..-96 s, held predators ~0.03; late colonies (5-10 agents) cannot afford baits either. Item 3 (relay
   guiding) implemented (guide_relay: a fresh member waits 180 ahead on the lane, takes over when the predator
   comes within 45); scenario A/B at 500/700 units running on n6.
+- 06:46 Relay bug: the relay block sat after the LEAD state's early return, so it never ran (rel1 identical
+  on/off). Moved it before the state machine. Trace also showed a guide circling into the boundary wall and dying:
+  added steer_clear() (recent-edge wall avoidance) for guides (guide_wallclear) and fleeing agents (pred_wallclear).
+  Running rel2 (relay on/off x wall-clear, 500-700 units) and esc4 (escape grid with wall-clear) on n6; f34 (relay in
+  full games, but with the dead relay code) on j/k.

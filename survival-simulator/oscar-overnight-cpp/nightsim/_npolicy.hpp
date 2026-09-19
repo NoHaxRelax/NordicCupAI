@@ -344,7 +344,7 @@ struct Params {
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
-    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
+    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
@@ -1604,6 +1604,40 @@ public:
             g.guide_pred_prev = g.guide_pred; g.guide_has_prev = true; g.guide_dprev = dP;
         }
         bool chasing = time - g.guide_closing_t < 1.5;
+        if (P.guide_relay > 0. && g.guide_state == 2) {
+            // relay guiding: a fresh member waits on the lane ahead of the guide; when the predator comes within guide_acq of it,
+            // it becomes the guide (the predator switches to its closest agent) and the old guide is released
+            if (g.relay >= 0 && (!minds.has(g.relay) || M(g.relay).group != g.id || g.relay == g.guide)) g.relay = -1;
+            P2 to_lane = sub(g.trap.out, ps.p); double dl = norm(to_lane);
+            if (g.relay < 0 && dl > P.guide_relay_min) {
+                P2 u = mul(to_lane, 1.0 / pmax(dl, 1e-6));
+                P2 spot = add(ps.p, mul(u, pmin(P.guide_relay_ahead, dl - 20.)));
+                int64_t br = -1; double bs = OINF;
+                g.agents.each([&](int64_t a) {
+                    if (is_trap_role(a) || frozen.count(a) || M(a).old || st(a).energy < P.guide_min_e) return;
+                    double d = dist(M(a).pose->p, spot);
+                    if (d < P.guide_relay_r && d < bs) { bs = d; br = a; }
+                });
+                if (dbg_log) fprintf(stderr, "[t=%.1f] relay search: guide %lld dl=%.0f spot=(%.0f,%.0f) members=%zu -> %lld (best d %.0f)\n", time, (long long)g.guide, dl, spot.x, spot.y, g.agents.size(), (long long)br, bs);
+                if (br >= 0) { g.relay = br; Mind& rm = M(br); if (rm.has_post && g.trees.has(rm.post)) g.trees.at(rm.post)->assigned.discard(br); rm.has_post = false; rm.has_fruit = false; }
+            }
+            if (g.relay >= 0) {
+                Mind& rm = M(g.relay); const AState& rs = st(g.relay);
+                P2 u = mul(to_lane, 1.0 / pmax(dl, 1e-6));
+                P2 spot = add(ps.p, mul(u, pmin(P.guide_relay_ahead, dl - 20.)));
+                double dpr = dist(rm.pose->p, g.guide_pred);
+                if (dbg_log) fprintf(stderr, "[t=%.1f] relay %lld dpr=%.0f fresh=%d chasing=%d\n", time, (long long)g.relay, dpr, fresh, chasing);
+                if (fresh && dpr < P.guide_acq && chasing) {   // hand over
+                    int64_t old_g = g.guide; g.guide = g.relay; g.relay = -1; g.relays_done++;
+                    g.guide_dprev = -1.; g.guide_has_prev = false; g.guide_sprinting = false; g.wait_since = -1.;
+                    (void)old_g;   // the old guide returns to normal duty (it is now behind the predator)
+                    return;
+                }
+                double dd, dir, turn; go_to(rm, rs, spot, 6., dd, dir, turn);
+                double dP2, angP2; local_of(*rm.pose, g.guide_pred, dP2, angP2);
+                plans[g.relay] = Plan{dd, dir, dP2 < 150. ? angP2 : turn};
+            }
+        }
         if (g.guide_state == 1) {
             if (time - g.guide_seen > P.guide_lost) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
             if (fresh && (dP <= P.guide_acq || chasing)) { g.guide_state = 2; }
@@ -1634,40 +1668,9 @@ public:
                     if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { g.wait_since = -1.; g.guide_state = 1; return; } }
                     else g.wait_since = -1.;
                 } else g.wait_since = -1.;
+                if (P.guide_wallclear > 0.) dir = steer_clear(m, dir, 30.);
                 plans[g.guide] = Plan{pmin(step, pmax(dT, 1.)), dir, angP};
                 return;
-            }
-        }
-        if (P.guide_relay > 0. && g.guide_state == 2) {
-            // relay guiding: a fresh member waits on the lane ahead of the guide; when the predator comes within guide_acq of it,
-            // it becomes the guide (the predator switches to its closest agent) and the old guide is released
-            if (g.relay >= 0 && (!minds.has(g.relay) || M(g.relay).group != g.id || g.relay == g.guide)) g.relay = -1;
-            P2 to_lane = sub(g.trap.out, ps.p); double dl = norm(to_lane);
-            if (g.relay < 0 && dl > P.guide_relay_min) {
-                P2 u = mul(to_lane, 1.0 / pmax(dl, 1e-6));
-                P2 spot = add(ps.p, mul(u, pmin(P.guide_relay_ahead, dl - 20.)));
-                int64_t br = -1; double bs = OINF;
-                g.agents.each([&](int64_t a) {
-                    if (is_trap_role(a) || frozen.count(a) || M(a).old || st(a).energy < P.guide_min_e) return;
-                    double d = dist(M(a).pose->p, spot);
-                    if (d < P.guide_relay_r && d < bs) { bs = d; br = a; }
-                });
-                if (br >= 0) { g.relay = br; Mind& rm = M(br); if (rm.has_post && g.trees.has(rm.post)) g.trees.at(rm.post)->assigned.discard(br); rm.has_post = false; rm.has_fruit = false; }
-            }
-            if (g.relay >= 0) {
-                Mind& rm = M(g.relay); const AState& rs = st(g.relay);
-                P2 u = mul(to_lane, 1.0 / pmax(dl, 1e-6));
-                P2 spot = add(ps.p, mul(u, pmin(P.guide_relay_ahead, dl - 20.)));
-                double dpr = dist(rm.pose->p, g.guide_pred);
-                if (fresh && dpr < P.guide_acq && chasing) {   // hand over
-                    int64_t old_g = g.guide; g.guide = g.relay; g.relay = -1; g.relays_done++;
-                    g.guide_dprev = -1.; g.guide_has_prev = false; g.guide_sprinting = false; g.wait_since = -1.;
-                    (void)old_g;   // the old guide returns to normal duty (it is now behind the predator)
-                    return;
-                }
-                double dd, dir, turn; go_to(rm, rs, spot, 6., dd, dir, turn);
-                double dP2, angP2; local_of(*rm.pose, g.guide_pred, dP2, angP2);
-                plans[g.relay] = Plan{dd, dir, dP2 < 150. ? angP2 : turn};
             }
         }
         if (g.guide_state == 3) {
@@ -1680,6 +1683,30 @@ public:
             plans[g.guide] = Plan{pmin(walk, dB - P.guide_hand), angM, fresh ? angP : 0.};
             return;
         }
+    }
+
+
+    // nightsim: adjust a desired heading (agent-relative) so the next `look` units do not cross a recently seen wall
+    double steer_clear(Mind& m, double dir_rel, double look) {
+        const PoseObj& pose = *m.pose;
+        std::vector<std::pair<P2, P2>> recent;
+        for (auto& e : m.edges)
+            if (time - e.t < 25. && point_segment(pose.p, e.a, e.b) < look + 10.) recent.push_back({e.a, e.b});
+        if (recent.empty()) return dir_rel;
+        auto clear = [&](double h) {
+            P2 q = add(pose.p, mul(unit(h), look));
+            for (auto& ab : recent)
+                if (segments_cross(pose.p, q, ab.first, ab.second) || point_segment(q, ab.first, ab.second) < 7.) return false;
+            return true;
+        };
+        double heading = pose.theta + dir_rel;
+        if (clear(heading)) return dir_rel;
+        for (int k = 1; k < 12; k++)
+            for (int sgn : {1, -1}) {
+                double h = heading + (double)(sgn * k) * OPI / 12;
+                if (clear(h)) return wrap(h - pose.theta);
+            }
+        return dir_rel;
     }
 
     // ------------------------------------------------------------ predators (nightsim)
@@ -1769,6 +1796,7 @@ public:
         double walk = pmin(s.speed, s.sprint);
         double step = nr->d < P.pred_sprint_r ? s.sprint : walk;
         double turn = P.pred_face > 0. ? nr->ang : 0.;
+        if (P.pred_wallclear > 0.) away = steer_clear(mm, away, 25.);
         pl = Plan{step, away, turn};
         n_evading++;
         return true;

@@ -1,5 +1,5 @@
 """Debug one guide scenario: prints site geometry vs true obstacles, then a per-0.5 s trace. usage: guide_dbg.py SEED DG DP BEAR SPEED"""
-import sys, json, math, pathlib
+import sys, json, math, pathlib, os
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 import nightsim
 from nightsim.trapsite import grade
@@ -9,7 +9,8 @@ CFG = sys.argv[7] if len(sys.argv) > 7 else '/workspace/night/cfg-r21.json'; LAB
 kw = json.load(open(CFG))[LAB]
 sim = nightsim.SimulationCore(seed=seed, predators=False); eng = sim._engine
 sim.step([]); eng.pop_events()
-ags = eng.dbg_keep_agents(2); bait, guide = ags[0][0], ags[1][0]
+RELAY = int(os.environ.get('NIGHT_RELAY', '0'))
+ags = eng.dbg_keep_agents(3 if RELAY else 2); bait, guide = ags[0][0], ags[1][0]; relay = ags[2][0] if RELAY else None
 cfg = dict(kw, trap_mode=3, merge_anchored=1, pred_mode=1, pred_share=1, no_spawn=1, trap_bait_fixed=bait, trap_start=0)
 eng.policy_init(nightsim.seed_key(seed), cfg)
 eng.run_policy(1e9, eng.info()['time'] + 0.1); print('true poses', eng.dbg_true_poses(), 'walls loaded groups', eng.dbg_load_walls())
@@ -38,6 +39,9 @@ gsx, gsy, px, py, phi = found
 eng.dbg_set_agent(bait, gx, gy, 0., 400., 10., 20., 500., 100., 400., 1.57, 1000.)
 eng.dbg_set_agent(guide, gsx, gsy, math.atan2(py - gsy, px - gsx), 300., sp, min(40, 2*sp), 800., 100., 400., 1.57, 1000.)
 print('pred added', eng.dbg_add_predator(px, py, math.atan2(gsy - py, gsx - px), 200., False))
+if RELAY:
+    rx, ry = mx + dx * dg * 0.45, my + dy * dg * 0.45
+    print('relay placed', eng.dbg_set_agent(relay, rx, ry, math.atan2(gsy - ry, gsx - rx), 300., sp, min(40, 2*sp), 800., 100., 400., 1.57, 1000.), 'at', round(rx), round(ry))
 eng.dbg_freeze([bait, guide])
 for _ in range(3):
     eng.dbg_true_poses(); eng.run_policy(1e9, eng.info()['time'] + 0.1)
@@ -49,6 +53,9 @@ for k in range(60):
     ag = {a[0]: a for a in eng.agents()}; pr = eng.predators()
     g = ag.get(guide); p = pr[0] if pr else None
     r = eng.dbg_roles(); ps = eng.dbg_pseen(); pi = eng.dbg_pred_info()
+    if RELAY:
+        ra = [a for a in ags if a[0] == relay]; rp = eng.dbg_pose(relay)
+        print(f"   relay true {(round(ra[0][1]), round(ra[0][2])) if ra else None} pol {(round(rp[0]), round(rp[1]), rp[3]) if rp else None} guide grp {eng.dbg_pose(guide)[3] if eng.dbg_pose(guide) else None}")
     d = math.hypot(g[1]-p[0], g[2]-p[1]) if g and p else None
     dm = math.hypot(p[0]-mx, p[1]-my) if p else None
     b_ = ag.get(bait); dbait = math.hypot(p[0]-b_[1], p[1]-b_[2]) if b_ and p else None
