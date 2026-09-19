@@ -596,3 +596,18 @@ Log (newest last)
   Edge 3 (2 bystanders, old harness): 81% (GE 300), 86% (GE 700), 0.5-0.6 bystanders killed per scenario.
   Next: map-based wall avoidance for the backwards walk (guide_mapclear 20/35/50) on blocked lanes (n7 GE 700,
   n9 GE 300).
+- 10:59 DELIVERY EDGE CASES (nightsim/guide.py, guide energy 700 unless noted; "blocked" = straight lane to
+  the trap may be blocked; delivery = predator held at the mouth; guide death allowed per Oscar):
+  1 guide + 1 predator: clear 95%, blocked 83-84% (128 seeds), GE 300 blocked 75%. Oscar: ~90% is high enough.
+  Failure physics (tick traces): the policy's predator sighting is one tick old (believes gap ~15 larger), sprint
+  costs 11x walking (5.5 vs 0.5 energy per tick), obstacles deflect the backwards walk, and beyond 60 the predator
+  tracks only by sight (lost behind the crevice's own walls). Ruled out on 308-960 scenarios each: wider bands,
+  lag-compensated controller, pivot-mode leading (70-76% clear, predator lost), hybrid pivot/tight, map wall
+  avoidance, routing, relay, backwards walking only without sprint (75% clear / 47% blocked).
+  Trap distance ("trap in the middle"): 94% from 100, 91% from 200, 87% from 300, 83% from 500, 80% from 700
+  (GE 300: 65% from 700).
+  2 predators: current guide 71% clear / 57% blocked; second predator AHEAD (toward the trap) 50-58% vs behind
+  82%; 30-50% of scenarios end with the guide killed within 3 s. New multi-predator local planner (guide_plan=2:
+  24 headings x walk/sprint scored against every sensed predator with the one-tick lag, known walls, progress,
+  sprint cost; only when 2+ predators within 150): 76% clear (+5, ~2 SE) / 59% blocked (noise); 1-predator
+  cases unchanged (84%). 3 predators: 43-47% with or without.

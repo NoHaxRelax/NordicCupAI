@@ -345,7 +345,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1627,7 +1627,7 @@ public:
             if (g.guide_has_prev) {   // predator approaching us: its own displacement points at us
                 P2 mv = sub(g.guide_pred, g.guide_pred_prev); P2 to = sub(ps.p, g.guide_pred_prev);
                 double nm = norm(mv), nt = norm(to);
-                if (nm > 0.5 && nt > 1. && (mv.x * to.x + mv.y * to.y) / (nm * nt) > 0.8 && dP < g.guide_dprev + 0.5) g.guide_closing_t = time;
+                if (nm > 0.5 && nt > 1. && (mv.x * to.x + mv.y * to.y) / (nm * nt) > P.guide_chase_cos && dP < g.guide_dprev + 0.5) g.guide_closing_t = time;
                 if (g.guide_dprev >= 0.) closing_rate = g.guide_dprev - dP;
             }
             g.guide_pred_prev = g.guide_pred; g.guide_has_prev = true; g.guide_dprev = dP;
@@ -1671,9 +1671,10 @@ public:
         }
         if (g.guide_state == 1) {
             if (time - g.guide_seen > P.guide_lost) { gstat[4]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
-            if (fresh && (dP <= P.guide_acq || chasing)) { g.guide_state = 2; }
+            double acq_r = P.guide_ctrl > 0. ? P.guide_ctrl_acq : P.guide_acq;   // nightsim guide_ctrl: never walk into a charging predator
+            if (fresh && (dP <= acq_r || chasing)) { g.guide_state = 2; }
             else {   // get into its hearing range fast: sprint when it is not coming to us
-                double dd, dir, turn; go_to(m, s, g.guide_pred, P.guide_acq - 10., dd, dir, turn);
+                double dd, dir, turn; go_to(m, s, g.guide_pred, acq_r - 10., dd, dir, turn);
                 if (P.guide_acq_sprint > 0. && dP > 80. && !chasing) dd = pmin(s.sprint, pmax(0., dP - 45.));
                 plans[g.guide] = Plan{dd, dir, turn}; return;
             }
@@ -1694,15 +1695,47 @@ public:
                 double off = wrap(angT - angP);   // lane direction relative to the predator direction
                 double sgn = off > 0 ? 1. : -1.;
                 bool blocked_ = std::fabs(off) < 1.1;                                               // predator between us and the lane
-                if (dP < P.guide_near) g.guide_sprinting = true;                                    // too close: start sprinting
-                else if (dP > P.guide_sprint_until) g.guide_sprinting = false;                     // hysteresis: keep sprinting until this far
+                // nightsim guide_pv: in the open (far from the lane point, clear line of sight to the predator in the map) keep it
+                // beyond 1.5 x hearing so it only pivots (~10.6/tick) and a walking guide holds the gap; near walls use the tight band
+                double b_near = P.guide_near, b_until = P.guide_sprint_until, b_far = P.guide_far;
+                if (P.guide_pv > 0. && dT > P.guide_pv_dT && path_clear(g, ps.p, g.guide_pred, 1.)) { b_near = P.guide_pv_near; b_until = P.guide_pv_near + 2.; b_far = P.guide_pv_far; }
+                if (P.guide_ctrl > 0.) {   // nightsim: sprint exactly when a walk step would leave less than guide_gap after the predator's worst-case 15 step
+                    g.guide_sprinting = dP - P.guide_lag + walk * MOVE_PENALTY[s.biome] - 15. < P.guide_gap;   // guide_lag: the sighting is one predator step old
+                } else if (dP < b_near) g.guide_sprinting = true;                                    // too close: start sprinting
+                else if (dP > b_until) g.guide_sprinting = false;                     // hysteresis: keep sprinting until this far
                 if (g.guide_sprinting) { step = s.sprint; dir = wrap(angP + (blocked_ ? sgn * P.guide_block_ang : OPI)); }
                 else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // predator in the way: circle it, drifting away
-                else if (dP > P.guide_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < P.guide_far + 40.)) {
-                    step = walk * pmax(0., (P.guide_far + 20. - dP) / 20.);   // slow down beyond the band, unless it is charging in fast
+                else if (dP > b_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < b_far + 40.)) {
+                    step = walk * pmax(0., (b_far + 20. - dP) / 20.);   // slow down beyond the band, unless it is charging in fast
                     if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { gstat[2]++; g.wait_since = -1.; g.guide_state = 1; return; } }
                     else g.wait_since = -1.;
                 } else g.wait_since = -1.;
+                int n_near_ = 0; for (auto& q : g.pseen) if (dist_lt(q.p, ps.p, 150.) && !dist_lt(q.p, g.trap.mouth, 40.)) n_near_++;
+                if (P.guide_plan > 0. && (P.guide_plan < 1.5 || n_near_ >= 2)) {   // nightsim: local planner against ALL sensed predators (+ known walls); mode 2 = only with 2+ predators within 150
+                    std::vector<P2> preds;
+                    for (auto& q : g.pseen) if (dist_lt(q.p, ps.p, 250.) && !dist_lt(q.p, g.trap.mouth, 40.)) preds.push_back(q.p);
+                    if (preds.empty()) preds.push_back(g.guide_pred);
+                    double pen = MOVE_PENALTY[s.biome];
+                    P2 lane = g.trap.out; double base = std::atan2(lane.y - ps.p.y, lane.x - ps.p.x);
+                    double best_sc = -OINF, best_h = ps.theta + dir, best_st = step;
+                    for (int k = 0; k < 24; k++) {
+                        double h = base + (double)k * 2. * OPI / 24.;
+                        for (int spr = 0; spr < 2; spr++) {
+                            double st_ = spr ? s.sprint : walk;
+                            P2 q = add(ps.p, mul(unit(h), st_ * pen));
+                            if (!path_clear(g, ps.p, add(ps.p, mul(unit(h), st_ * pen + 6.)), 5.)) continue;
+                            double mg = OINF;
+                            for (const P2& pj : preds) mg = pmin(mg, dist(q, pj) - 15.);   // sighting is one step old: its next step closes ~15 more
+                            double prog = dist(ps.p, lane) - dist(q, lane);
+                            double sc;
+                            if (mg >= P.guide_safe) sc = 1000. + 3. * prog - (spr ? P.guide_sprint_pen : 0.) - (mg > P.guide_keep ? 2. * (mg - P.guide_keep) : 0.);
+                            else sc = 10. * mg + 0.5 * prog - (spr ? 0.5 : 0.);
+                            if (sc > best_sc) { best_sc = sc; best_h = h; best_st = st_; }
+                        }
+                    }
+                    dir = wrap(best_h - ps.theta); step = best_st; g.guide_sprinting = best_st > walk + 0.1;
+                }
+                if (dbg_log) fprintf(stderr, "[t=%.1f] LEAD guide %lld pose (%.0f,%.0f) pred_belief (%.0f,%.0f) dP=%.1f fresh=%d chasing=%d sprinting=%d blocked=%d step=%.1f dT=%.0f\n", time, (long long)g.guide, ps.p.x, ps.p.y, g.guide_pred.x, g.guide_pred.y, dP, fresh ? 1 : 0, chasing ? 1 : 0, g.guide_sprinting ? 1 : 0, blocked_ ? 1 : 0, step, dT);
                 if (P.guide_wallclear > 0.) dir = steer_clear(m, dir, 30.);
                 if (P.guide_mapclear > 0.) {   // nightsim: keep the next guide_mapclear units of the (backwards) walk clear of known walls in the group map
                     auto clear_h = [&](double h) { return path_clear(g, ps.p, add(ps.p, mul(unit(h), P.guide_mapclear)), 6.); };
