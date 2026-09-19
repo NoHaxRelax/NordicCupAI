@@ -1,0 +1,185 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 4284,
+  "sim_time": 428.4000000000289,
+  "runtime_seconds": 170.86439672802226,
+  "score": 440.33719859765694,
+  "final_agents": 0,
+  "peak_agents": 30,
+  "total_agents_seen": 73,
+  "predators": 5,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 1,
+  "maximum_predators_continuously_near_bait_30s": 1,
+  "estimated_bait_gap_seconds_after_first_arrival": 2.2000000000000006,
+  "longest_estimated_bait_gap_seconds": 2.1000000000000005,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 16,
+    "guide_deaths": 13,
+    "guide_releases": 0,
+    "delivery_arrivals": 1,
+    "bait_arrivals": 9,
+    "overlapping_replacements": 7,
+    "estimated_unbaited_seconds": 4.700000000000514,
+    "no_viable_bait_ticks": 2382
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 32,
+      "predator:guide": 10,
+      "starvation:retired_bait": 7,
+      "predator:avoiding_predator": 17,
+      "starvation:avoiding_predator": 1,
+      "starvation:guide": 4,
+      "starvation:bait": 2
+    },
+    "fruit_eaten": 552,
+    "energy_deaths_before_age_60": {
+      "gatherer": 13,
+      "avoiding_predator": 1,
+      "guide": 2
+    },
+    "ripe_fruit_eaten": 491,
+    "ripe_fraction": 0.8894927536231884,
+    "mean_agent_energy_fraction": 0.33289686917116457,
+    "predator_deaths_with_sprint_available": {
+      "guide": 1
+    },
+    "premature_guide_predator_deaths_with_sprint_available": 1,
+    "premature_guide_death_cases": [
+      {
+        "time": 353.1000000000118,
+        "agent": 64,
+        "energy_before": 198.07643593386047,
+        "energy_at_death": 197.43918372669057,
+        "sprint_threshold": 100.0,
+        "biome": "grassland",
+        "action": {
+          "agent_id": 64,
+          "move_distance": 10.0,
+          "move_direction": 1.5811957,
+          "turn_angle": -0.2340625207499681,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 40.09,
+          "handoff_distance": 738.82,
+          "mode": "sprint",
+          "route": {
+            "dist": 738.821037918887,
+            "dist_to_point": 7.999999999999812,
+            "dir": 0.388644932849109,
+            "waypoints": [
+              [
+                7.403387130960027,
+                3.031478020559021
+              ],
+              [
+                395.87481172851165,
+                135.15833462610883
+              ],
+              [
+                596.3965132106791,
+                301.86480491054783
+              ],
+              [
+                656.1228454841356,
+                301.6319682955644
+              ]
+            ],
+            "clearance": 5.01,
+            "mode": "rejoin_predator_lane",
+            "replans": 22
+          },
+          "reacquisitions": 0,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 3,
+            "sampled_scenarios": 81,
+            "contact_forecast": true,
+            "contact_loss_scenarios": 21,
+            "minimum_separation": 11.05,
+            "observation_lag_estimated": false,
+            "expanded": 169,
+            "terrain_samples": 9,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -0.10399185762678734,
+                9.999459270057923
+              ],
+              [
+                -0.10399194216156198,
+                36.374512629201305
+              ],
+              [
+                -8.516632795240787,
+                61.371930767376355
+              ]
+            ],
+            "predator_path": [
+              [
+                40.08586543097345,
+                0.41688281024853696
+              ],
+              [
+                25.0882465611193,
+                0.1496221984952491
+              ],
+              [
+                10.681493093531127,
+                4.3263978118286035
+              ],
+              [
+                0.11654055063313429,
+                7.3893665949397285
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 10,
+            "sprint_selected": false,
+            "energy": 198.076,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      }
+    ],
+    "intentional_delivery_sacrifices": 1,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Intentional hold_at_delivery excluded from premature guide failures; terrain/walls can still make escape impossible."
+  }
+}

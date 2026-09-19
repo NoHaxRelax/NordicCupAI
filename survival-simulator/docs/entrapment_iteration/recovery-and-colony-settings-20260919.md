@@ -59,3 +59,32 @@ Interpreter: `/home/lucas/entrapment-research-20260918/.venv/bin/python`.
 No paid pod is running for this comparison. Each process saves source hashes,
 all native metrics and its exact settings. Infrastructure failures remain
 separate from game outcomes.
+
+## Subsequent controlled probes
+
+- Contact forecasting v4 (`--guide-contact-forecast`, code `1e6453a`) samples
+  resting as well as moving predators and prefers paths retaining sight across
+  those possibilities. Dev seed: **440.34 score, 428.4 s, 1/16 delivery
+  arrivals, 1 premature sprint-available guide capture**. It regressed and
+  remains disabled by default. All frames and compact summary/manifest saved.
+- Frontal orbit v5 (`--guide-orbit-recovery`, code `44aef71`) approaches the
+  front of a visible predator at the configured preferred radius while the
+  not-following latch is true. It retains the same capture checks and leaves
+  blind recovery unchanged. Local run folder:
+  `logs/entrapment-iteration/guide-orbit-v5-20260919`. Evaluation ongoing.
+- A separate local run uses newer Oscar settings with the default v2 guide:
+  `logs/entrapment-iteration/oscar-latest-v2-guide-20260919`. This isolates
+  settings from recovery changes; evaluation ongoing.
+
+The five v3 premature captures involved sprint traits 11.39, 13.34, 11.39,
+11.39 and 11.39 in swamp. They had sprint energy, but sprint was slower than
+the predator's native 15-unit direct chase. One even had walking trait 12.60
+above its sprint trait. Native movement clamps to sprint speed first, even
+when walking. Commit `d8daafb` corrects guide, bystander, relief and bait-travel
+forecasts for this case. A focused probe verified both guide and avoidance
+commands respect 11.39 with walking trait 12.60 and low energy. The in-flight
+runs above predate this correction and retain their original source hashes.
+
+No new Runpod pod was created. Six PC jobs remain the free paired screen;
+their frozen files must not be edited while it runs. Retrieve the final
+`results.json` and per-game manifests/summaries before drawing conclusions.
