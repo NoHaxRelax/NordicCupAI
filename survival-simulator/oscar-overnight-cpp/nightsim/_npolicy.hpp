@@ -233,6 +233,7 @@ struct Mind {
     bool refuge_in = false; double refuge_pred_t = -1e9; int refuge_bad = 0;   // nightsim: refuge (hold inside a narrow gap)
     double evade_t = -1e9;   // nightsim diagnostics: last tick this agent evaded
     double dodge_head = 0.; int64_t dodge_left = 0;   // nightsim: committed dodge heading (pred_dodge_hold)
+    double kite_prev_d = -1., kite_prev_step = 0.; double kite_t = -1e9;   // exploit layer: pivot-mode kiting
 };
 using MindP = std::shared_ptr<Mind>;
 
@@ -359,7 +360,16 @@ struct Params {
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
-           trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
+           trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;
+    // stuck-spot guiding (nightsim, _nstuck.hpp; off unless sg_mode > 0)
+    double sg_mode = 0., sg_t0 = 0., sg_t1 = 600., sg_pred_r = 400., sg_guide_r = 250., sg_min_e = 120., sg_dist_w = 0.3, sg_side_pen = 300.,
+           sg_cap = 3., sg_occ_r = 35., sg_near = 45., sg_far = 80., sg_wait = 6., sg_lost = 8., sg_timeout = 90., sg_arrive = 6., sg_escape = 0.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
+    // exploit layer (nightsim): overflow teleport into the bottom-right boundary corner (turn X, then move_direction X ->
+    // direction+X = inf -> NaN position -> clamped to (W-5,H-5) inside both boundary walls; predators cannot reach it).
+    // tp_mode 0 off, 1 rescue: arm when a predator facing us is within tp_r; 2 rescue only when we cannot sprint.
+    // tp_ins_t: from this time keep >=1 prisoner with energy > tp_ins_keep alive (insurance), sending the richest agent
+    // with energy >= tp_ins_e. tp_last_n: when <= this many free agents remain (after tp_last_t), all go in.
+    double dg_pre = 1., dg_r = 0., dg_lam = 0.5, dg_cap = 40., dg_walls = 1., dg_pspeed = 15., kite_r = 0., kite_rel = 0.7, kite_min = 95., kite_sleep = 1., tp_mode = 0., tp_r = 45., tp_rel = 0.8, tp_ins_t = OINF, tp_ins_e = 300., tp_ins_keep = 60., tp_last_n = 0., tp_last_t = 0., tp_last_e = 0., tp_ins_age = 1e9, tp_ins_agew = 0., tp_min_free = 0.;
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
            pred_dodge_r = 0., pred_dodge_ang = 1.5708, pred_dodge_hold = 0., pred_dodge_hold_face = 1.;
     double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN, l_births_per_tick = NAN, l_emergency_reserve = NAN, l_low_pop_reserve = NAN;
@@ -1937,6 +1947,81 @@ public:
                 th.push_back(Th{o.distance, o.angle, o.has_rel_dir ? o.rel_dir : OPI});
             }
         }
+        if (P.dg_r > 0.) {   // exploit: exact predator pursuit law -> 2-ply lookahead dodge (agent frame, agent at origin, heading 0)
+            bool near = false;
+            for (const Th& t : th) if (t.d < P.dg_r) near = true;
+            if (near) {
+                struct PS { double x, y, h; };
+                std::vector<PS> ps0;
+                for (const Th& t : th) if (t.d < 150.) ps0.push_back(PS{t.d * std::cos(t.ang), t.d * std::sin(t.ang), wrap(t.ang + OPI - t.rel)});
+                auto pstep = [&](PS& q, double ax, double ay) {
+                    double vx = ax - q.x, vy = ay - q.y, dd = std::sqrt(vx * vx + vy * vy);
+                    double a = wrap(std::atan2(vy, vx) - q.h), st = std::min(P.dg_pspeed, dd);
+                    if (std::fabs(a) > 0.05) { double ts = std::max(-0.3, std::min(0.3, 0.5 * a)); q.x += st * std::cos(q.h + ts); q.y += st * std::sin(q.h + ts); q.h += ts; }
+                    else { q.x += st * std::cos(q.h + a); q.y += st * std::sin(q.h + a); }
+                    return std::hypot(ax - q.x, ay - q.y);
+                };
+                if (P.dg_pre > 0.) for (PS& q : ps0) pstep(q, 0., 0.);   // observations precede the predator's move: catch up one step
+                double walk = pmin(s.speed, s.sprint);
+                bool can_sprint = s.energy >= s.max_energy / 5. + 6.;
+                struct Mv { double dir, dist, cost; };
+                std::vector<Mv> mv; mv.push_back(Mv{0., 0., 0.});
+                for (int k = 0; k < 16; k++) {
+                    double dir = -OPI + k * OPI / 8.;
+                    mv.push_back(Mv{dir, walk, walk * 0.05});
+                    if (can_sprint && s.sprint > walk + 1.) mv.push_back(Mv{dir, s.sprint, walk * 0.05 + (s.sprint - walk) * 0.5});
+                }
+                const PoseObj& pso = *m.pose; Group& gw = G(m.group);
+                bool usew = P.dg_walls > 0. && gw.anchored && !gw.walls.empty();
+                auto blocked = [&](double ax, double ay) {
+                    if (!usew) return false;
+                    double c = std::cos(pso.theta), sn = std::sin(pso.theta);
+                    P2 w{pso.p.x + ax * c - ay * sn, pso.p.y + ax * sn + ay * c};
+                    return !clear_of(gw, w, 5.5);
+                };
+                double best = -OINF; const Mv* bm = nullptr;
+                for (const Mv& a1 : mv) {
+                    double x1 = a1.dist * std::cos(a1.dir), y1 = a1.dist * std::sin(a1.dir);
+                    if (a1.dist > 0. && blocked(x1, y1)) continue;
+                    std::vector<PS> p1 = ps0; double m1 = OINF;
+                    for (PS& q : p1) m1 = std::min(m1, pstep(q, x1, y1));
+                    double v1;
+                    if (m1 < 15.) v1 = -1000. + m1;
+                    else {
+                        double b2 = -OINF;
+                        for (const Mv& a2 : mv) {
+                            double x2 = x1 + a2.dist * std::cos(a2.dir), y2 = y1 + a2.dist * std::sin(a2.dir);
+                            if (a2.dist > 0. && blocked(x2, y2)) continue;
+                            std::vector<PS> p2 = p1; double m2 = OINF;
+                            for (PS& q : p2) m2 = std::min(m2, pstep(q, x2, y2));
+                            double v = m2 < 15. ? -500. + m2 : std::min(m2, P.dg_cap) - P.dg_lam * 0.5 * a2.cost;
+                            b2 = std::max(b2, v);
+                        }
+                        v1 = std::min(std::min(m1, P.dg_cap), b2) - P.dg_lam * a1.cost;
+                    }
+                    if (v1 > best) { best = v1; bm = &a1; }
+                }
+                if (bm) { pl = Plan{bm->dist, bm->dir, 0.}; n_evading++; return true; }
+            }
+        }
+        if (P.kite_r > 0.) {   // exploit: a predator >= 90 away that we face only pivots (radial closing 10.6, 7.8 when tired);
+            // face it and walk straight away so it never reaches the 90 direct-chase radius and exhausts itself.
+            const Th* kt = nullptr;
+            for (const Th& t : th) if (t.d < P.kite_r && std::fabs(t.rel) < P.kite_rel && (!kt || t.d < kt->d)) kt = &t;
+            bool close = false;
+            for (const Th& t : th) if (t.d < P.pred_r || (std::fabs(t.rel) < 0.5 && t.d < P.pred_face_r)) close = true;
+            if (kt && !close && kt->d >= P.pred_r) {
+                bool asleep = P.kite_sleep > 0. && m.kite_prev_d > 0. && time - m.kite_t < 0.15 && kt->d > m.kite_prev_d + m.kite_prev_step - 2.;
+                m.kite_prev_d = kt->d; m.kite_t = time;
+                if (!asleep && kt->d >= P.kite_min - 30.) {
+                    double walk = pmin(s.speed, s.sprint);
+                    pl = Plan{walk, wrap(kt->ang + OPI), kt->ang};
+                    m.kite_prev_step = walk; n_evading++;
+                    return true;
+                }
+                m.kite_prev_step = 0.;
+            } else { m.kite_prev_d = -1.; }
+        }
         const Th* nr = nullptr; double vx = 0., vy = 0.;
         for (const Th& t : th) {
             bool facing = std::fabs(t.rel) < 0.5;
@@ -2155,12 +2240,77 @@ public:
     }
 
     std::unordered_set<int64_t> frozen;   // tests only
+#include "_nstuck.hpp"
     bool late_on = false;
     void apply_late() {
         auto ov = [](double& dst, double v) { if (!std::isnan(v)) dst = v; };
         ov(P.fruit_reach, P.l_fruit_reach); ov(P.tree_reach, P.l_tree_reach); ov(P.watch_reach, P.l_watch_reach); ov(P.explore_energy, P.l_explore_energy); ov(P.cap_min, P.l_cap_min); ov(P.cap_mult, P.l_cap_mult); ov(P.cap_tree_slack, P.l_cap_tree_slack); ov(P.cap_hard_min, P.l_cap_hard_min); ov(P.sweep_rate, P.l_sweep_rate); ov(P.watch_patience, P.l_watch_patience); ov(P.explore_radius, P.l_explore_radius); ov(P.old_reach, P.l_old_reach); ov(P.dist_pen, P.l_dist_pen); ov(P.births_per_tick, P.l_births_per_tick); ov(P.emergency_reserve, P.l_emergency_reserve); ov(P.low_pop_reserve, P.l_low_pop_reserve);
     }
+    // ---- exploit layer: corner prisoners (see Params tp_*)
+    std::unordered_set<int64_t> tp_pris, tp_armed, tp_seen;
+    std::unordered_map<int64_t, double> tp_eprev;
+    int64_t tp_n = 0, tp_n_ins = 0, tp_n_last = 0, tp_n_kids = 0; double tp_t_free = 0.;
+    static constexpr double TP_X = 1e308;
     std::vector<Act> call(std::vector<AState>&& sts, double sim_time) {
+        if (P.tp_mode <= 0. && !(sim_time >= P.tp_ins_t) && P.tp_last_n <= 0.) return call_inner(std::move(sts), sim_time);
+        std::vector<Act> out; std::vector<AState> free_s;
+        for (AState& s : sts) {
+            bool is_new = !tp_seen.count(s.aid); tp_seen.insert(s.aid);
+            if (is_new && !minds.has(s.aid)) {
+                for (const Obs& o : *s.obs) if (o.type == 1 && o.has_id && o.distance < 1e-6 && tp_pris.count(o.id)) { tp_pris.insert(s.aid); tp_n_kids++; break; }
+            }
+            if (tp_armed.count(s.aid)) {   // second tick: teleport, reset heading to exactly 0
+                tp_armed.erase(s.aid); tp_pris.insert(s.aid);
+                out.push_back(Act{s.aid, 0., TP_X, -TP_X, false}); tp_n++;
+                continue;
+            }
+            if (tp_pris.count(s.aid)) {
+                double drop = tp_eprev.count(s.aid) ? pmax(0.1, tp_eprev[s.aid] - s.energy) : 0.1;
+                tp_eprev[s.aid] = s.energy;
+                bool spawn = s.energy > 100.5 && s.energy - 2.5 * drop < 101.;   // last moment: convert 100 into a 75-energy prisoner child
+                out.push_back(Act{s.aid, 0., 0., 0., spawn});
+                continue;
+            }
+            free_s.push_back(s);
+        }
+        std::unordered_set<int64_t> arm_now;
+        if (P.tp_mode > 0.) for (const AState& s : free_s) {
+            for (const Obs& o : *s.obs) {
+                if (o.type != 2 || o.distance >= P.tp_r) continue;
+                if (o.has_rel_dir && std::fabs(o.rel_dir) > P.tp_rel) continue;
+                if (P.tp_mode >= 2. && s.energy >= s.max_energy / 5. + 6.) continue;
+                if ((double)free_s.size() < P.tp_min_free) continue;
+                arm_now.insert(s.aid); break;
+            }
+        }
+        if (sim_time >= P.tp_ins_t) {
+            bool have = false;
+            for (int64_t a : tp_pris) (void)a;
+            for (const AState& s : sts) if (tp_pris.count(s.aid) && s.energy > P.tp_ins_keep) { have = true; break; }
+            for (int64_t a : tp_armed) (void)a, have = true;
+            if (!have) {
+                const AState* best = nullptr;
+                auto val = [&](const AState& s) { return s.energy - P.tp_ins_agew * s.age; };
+                for (const AState& s : free_s) if (!arm_now.count(s.aid) && s.energy >= P.tp_ins_e && s.age <= P.tp_ins_age && (!best || val(s) > val(*best))) best = &s;
+                if (best && (double)free_s.size() - 1. < P.tp_min_free) best = nullptr;
+                if (best) { arm_now.insert(best->aid); tp_n_ins++; }
+            }
+        }
+        if (P.tp_last_n > 0. && sim_time >= P.tp_last_t && (double)free_s.size() <= P.tp_last_n)
+            for (const AState& s : free_s) if (!arm_now.count(s.aid) && s.energy >= P.tp_last_e) { arm_now.insert(s.aid); tp_n_last++; }
+        if (!free_s.empty()) tp_t_free = sim_time;
+        std::vector<Act> inner = call_inner(std::move(free_s), sim_time);
+        for (Act& a : inner) {
+            if (arm_now.count(a.aid)) {
+                a.turn = TP_X; tp_armed.insert(a.aid);
+                if (a.spawn) { a.spawn = false; last_spawners.erase(std::remove(last_spawners.begin(), last_spawners.end(), a.aid), last_spawners.end()); }
+            }
+            out.push_back(a);
+        }
+        std::sort(out.begin(), out.end(), [](const Act& x, const Act& y) { return x.aid < y.aid; });
+        return out;
+    }
+    std::vector<Act> call_inner(std::vector<AState>&& sts, double sim_time) {
         time = sim_time;
         if (!late_on && time >= P.late_t) { late_on = true; apply_late(); }
         states = std::move(sts);
@@ -2219,6 +2369,7 @@ public:
         if (P.pred_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid) && evade(s, plans[s.aid])) M(s.aid).evade_t = time;
         if (P.refuge_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid)) refuge_exit(s, plans[s.aid]);
         if (P.trap_mode >= 2.) run_trap(plans);
+        if (P.sg_mode > 0.) run_sg(plans);
         if (P.test_freeze > 0.) for (const AState& s : states) plans[s.aid] = Plan{0., 0., 0.};
         for (int64_t a : frozen) if (plans.count(a)) plans[a] = Plan{0., 0., 0.};
         int64_t young_now = (int64_t)young.size();

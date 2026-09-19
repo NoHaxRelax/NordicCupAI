@@ -735,3 +735,34 @@ trap with all current predators moved to the mouth. Paired survival vs continuin
 - Caveat: free-bait rows' raw surv is inflated (the immortal bait keeps the game alive to 3000); use colony-alive time.
 - New policy params (all default off, base game bit-identical): nest_mode, nest_r, fuel_lead, fuel_margin, fuel_age,
   held_r, site_center_w, trap_sticky. New hook dbg_nest.
+
+### From step 0 (SUP6, trap set up at 10 s, 60 seeds, failed set-ups count as the no-trap game)
+| variant | mean score | reached 3000 |
+| --- | --- | --- |
+| no trap (best_1310) | 1605 +- 44 | 0/60 |
+| teleported youngest bait, floor 5, all predators teleported to the mouth | 2194 +- 81 | 1/60 |
+| free immortal bait (score corrected to colony-alive time) | 2317 +- 69 | 0/60 |
+| policy walk-in, predators teleported | 1655 +- 62 | 0/60 |
+These are ceilings (debug teleports). SUP7 = 1000 seeds from 10 s with a fully rule-abiding trap variant
+(real_trap: trap_mode 3 guides, keeper, near-trap filters, trap_sticky, held_r 60, policy-built map).
+
+## 19 Sept evening: can traps help the late game? (LG1-LG3, Oscar's PC, 200 seeds, forks at 1500/1800)
+Harness fixes first: (1) predators are now only held while a bait is really at the hold point (the old floor-5
+variants were inflated: the harness kept holding predators with no bait; SUP5/SUP6 "min5" rows are invalid);
+(2) the first oracle bait is re-placed on the hold point (the policy walked it ~10 deeper in its first tick, so the
+gate never fired in LG1: LG1 free_all/young/old/T300 rows = "existing predators only").
+Late-game deaths without a trap: starvation 72% (1500) / 80% (1900); colony 6.1 agents, mean energy 90, nobody >300.
+
+| from 1500 (n=100) | dSurv | whole-game avg |
+| --- | --- | --- |
+| all predators held forever, free bait | +273 +- 44 | +141 |
+| only predators present at t0 held, free bait | +127 +- 33 | +66 |
+| all held 600 s / 300 s then released | +121 / -14 | +64 / -5 |
+| youngest agent supplied / + never below 3 | +65 / +73 | +36 / +40 |
+| fuelled youngest / + floor 3 | +43 / +65 | +24 / +36 |
+| agent nearest death supplied | +30 | +18 |
+| our real guides + free bait (LG1, existing held) | +54 vs +89 without guides | guides add no held predators late |
+From 1800 (n=42): ceiling +243 (+52 whole game), existing-only +141, young supply +90, 600-s hold +164.
+Conclusion: a late-game trap can add at most ~+140 to the average (perfect, free, from 1500); any real bait supply
+leaves <= ~+40 even with teleported delivery and perfect guiding; short holds hurt (a released pile kills).
+Clean step-0 ceilings (SUP6, ungated so valid): young supply 2052 +- 73, free bait 2317 +- 69, no trap 1605.

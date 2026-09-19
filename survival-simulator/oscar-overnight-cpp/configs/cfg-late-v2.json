@@ -1,0 +1,79 @@
+{
+ "none": {
+  "setup": "none"
+ },
+ "free_all": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "free_roam": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 0,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "young_all": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "old_all": {
+  "setup": "hold_all",
+  "supply": "old",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "free_all_T300": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  },
+  "hold_T": 300
+ },
+ "free_all_T600": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  },
+  "hold_T": 600
+ }
+}

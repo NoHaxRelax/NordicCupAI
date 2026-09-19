@@ -1,0 +1,50 @@
+{
+ "none": {
+  "setup": "none"
+ },
+ "real_trap": {
+  "setup": "none",
+  "params": {
+   "trap_mode": 3,
+   "keeper_mode": 1,
+   "keeper_post_w": 3.0,
+   "guide_relay": 0,
+   "guide_plan": 3,
+   "guide_safe": 30,
+   "guide_pred_lane_max": 200,
+   "guide_max_dist": 200,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "trap_sticky": 1,
+   "held_r": 60
+  }
+ },
+ "young_all_min5": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  },
+  "min_colony": 5,
+  "anchor": 1
+ },
+ "free_all": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  },
+  "anchor": 1
+ }
+}

@@ -1,0 +1,121 @@
+{
+ "none": {
+  "setup": "none"
+ },
+ "free_all": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "free_roam": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 0,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "free_guides": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 0,
+  "params": {
+   "trap_mode": 3,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "keeper_mode": 0,
+   "guide_relay": 0,
+   "guide_plan": 3,
+   "guide_safe": 30,
+   "trap_sticky": 1,
+   "guide_pred_lane_max": 200,
+   "guide_max_dist": 200
+  }
+ },
+ "free_guides_far": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 0,
+  "params": {
+   "trap_mode": 3,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "keeper_mode": 0,
+   "guide_relay": 0,
+   "guide_plan": 3,
+   "guide_safe": 30,
+   "trap_sticky": 1
+  }
+ },
+ "young_all": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ },
+ "young_guides": {
+  "setup": "hold_all",
+  "supply": "young",
+  "hold_new": 0,
+  "params": {
+   "trap_mode": 3,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60,
+   "keeper_mode": 0,
+   "guide_relay": 0,
+   "guide_plan": 3,
+   "guide_safe": 30,
+   "trap_sticky": 1,
+   "guide_pred_lane_max": 200,
+   "guide_max_dist": 200
+  }
+ },
+ "free_all_T300": {
+  "setup": "hold_all",
+  "supply": "free",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  },
+  "hold_T": 300
+ },
+ "old_all": {
+  "setup": "hold_all",
+  "supply": "old",
+  "hold_new": 1,
+  "params": {
+   "trap_mode": 2,
+   "trap_min_cd": 200,
+   "evade_ignore_held": 1,
+   "site_safe": 4,
+   "held_r": 60
+  }
+ }
+}

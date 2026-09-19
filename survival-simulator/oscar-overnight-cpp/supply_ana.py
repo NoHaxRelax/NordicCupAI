@@ -8,6 +8,10 @@ def ms(x):
     return f'{S.mean(x):+6.0f}±{se:3.0f}'
 
 rows = [json.loads(l) for l in open(sys.argv[1])]
+for r in rows:   # immortal-bait variants: the game only ends with the bait, so use the time the last non-bait agent died
+    ce = (r.get('sup') or {}).get('colony_end')
+    if ce is not None and r['label'].startswith('free') and 'surv' in r:
+        r['score'] = r['score'] - (r['surv'] - ce); r['surv'] = ce
 by = collections.defaultdict(dict)
 for r in rows: by[(r['seed'], r['t0'])][r['label']] = r
 labels = list(dict.fromkeys(r['label'] for r in rows))
@@ -47,5 +51,7 @@ for t0 in t0s:
             extra += (f' nest: cadets {S.mean(z["cadets"] for z in nz):4.1f} sent {S.mean(z["sent"] for z in nz):4.1f} arrived {S.mean(z["arrived"] for z in nz):4.1f}'
                       f' timeouts {S.mean(z["timeouts"] for z in nz):3.1f} e@send {S.mean(z["sent_e"] for z in nz if z["sent"]) if any(z["sent"] for z in nz) else 0:4.0f}'
                       f' age@send {S.mean(z["sent_age"] for z in nz if z["sent"]) if any(z["sent"] for z in nz) else 0:4.1f}')
+        n_all = sum(1 for k, v in by.items() if k[1] == t0)
+        extra += f'  whole-game avg {S.mean(dc) * len(P) / max(1, n_all):+5.0f}'
         print(f'  {l:11s} n={len(P):3d} dSurv {ms(ds)} dScore {ms(dc)}  3000: {full:4.0%} vs {fulln:4.0%}  held {held(2)}/{held(5)}/{held(11)}/{held(29)}'
               f'  kills300 {k3:4.1f} vs {k3n:4.1f} starved300 {s3:5.1f} vs {s3n:5.1f}{extra}' + (f'  skips {dict(skips)}' if skips else ''))

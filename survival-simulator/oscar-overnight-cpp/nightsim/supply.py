@@ -42,6 +42,7 @@ def place_pred(eng, i, mx, my, ax, ay, gx, gy, k0):
 
 def setup_trap(eng, params, spec):
     """lategame.py hold_all: policy picks crevice + bait; bait teleported in; all predators to the mouth. -> dict or skip reason"""
+    if spec.get('anchor'): eng.dbg_true_poses()   # early checkpoints: anchor every group (true poses) so a site can be picked
     if spec.get('true_walls', 1): eng.dbg_load_walls()
     eng.dbg_set_params(dict(params, trap_mode=1))
     eng.run_policy(HORIZON, eng.info()['time'] + 2.2)
@@ -91,8 +92,8 @@ def continue_trap(eng, spec, T, t_end):
     face = math.atan2(ay, ax)
     cur = T['bait']; baits = [cur]
     sup = dict(n=0, ages=[], fed=0., dry=0, moved=0, secs=0, bait_s=0, moved_s=0, notrap_s=0, retired_max=0, roles_max=0)
-    if supply != 'policy':
-        eng.dbg_freeze(baits); eng.dbg_set_params({'trap_bait_fixed': cur})
+    if supply != 'policy':   # oracle supply: put the first bait back on the hold point (the policy walks it ~10 deeper in its first tick)
+        eng.dbg_teleport(cur, gx, gy, face); eng.dbg_freeze(baits); eng.dbg_set_params({'trap_bait_fixed': cur})
     t_start = eng.info()['time']; probe = []; traj = []; nid0 = eng.info()['next_agent_id']
     next_traj = (math.floor(t_start / 50.) + 1) * 50.
     while eng.agents() and eng.info()['time'] < t_end - 1e-6:
@@ -100,33 +101,42 @@ def continue_trap(eng, spec, T, t_end):
         now = eng.info()['time']
         A = {a[0]: a for a in eng.agents()}
         if not A: break
-        if supply == 'free':
+        active = now - t_start < spec.get('hold_T', 1e9)   # optional limited trap: after hold_T no supply, no holding
+        if not active:
+            supply_now = 'none'
+            if supply == 'free' and not sup.get('ended') and cur in A:   # the immortal bait ages normally from now on
+                a = A[cur]; eng.dbg_set_agent(cur, a[1], a[2], a[3], a[5], a[7], a[8], a[6], a[9], a[10], a[12], a[4])
+            sup['ended'] = 1
+        else: supply_now = supply
+        if supply_now == 'free':
             if cur not in A:   # died anyway (eaten): next one from the colony, then immortal
                 cur = min(A.values(), key=lambda a: a[4])[0]; eng.dbg_teleport(cur, gx, gy, face)
                 baits.append(cur); sup['n'] += 1; sup['ages'].append(round(A[cur][4], 1))
                 eng.dbg_freeze([b for b in baits if b in A]); eng.dbg_set_params({'trap_bait_fixed': cur})
             a = A[cur]
             eng.dbg_set_agent(cur, a[1], a[2], a[3], a[6], a[7], a[8], a[6], a[9], a[10], a[12], 1e7)
-        elif supply in ('young', 'fed', 'old'):
+        elif supply_now in ('young', 'fed', 'old'):
             if cur not in A or time_to_death(A[cur]) < 3.:
                 cands = [a for a in A.values() if a[0] not in baits]
                 if len(cands) < spec.get('min_colony', 1): cands = []   # smarter supply: never take one of the last few agents
                 if cands:
-                    if supply == 'old':   # the cheapest sacrifice: the agent closest to death that can still hold >= 30 s
+                    if supply_now == 'old':   # the cheapest sacrifice: the agent closest to death that can still hold >= 30 s
                         life = {a[0]: time_to_death(a, 400.) for a in cands}
                         ok = [a for a in cands if life[a[0]] >= 30.]
                         nb = min(ok, key=lambda a: life[a[0]]) if ok else max(cands, key=lambda a: life[a[0]])
                     else: nb = min(cands, key=lambda a: a[4])
                     eng.dbg_teleport(nb[0], gx, gy, face)
-                    if supply == 'fed': sup['fed'] += fuel(eng, nb[0])
+                    if supply_now == 'fed': sup['fed'] += fuel(eng, nb[0])
                     cur = nb[0]; baits.append(cur); sup['n'] += 1; sup['ages'].append(round(nb[4], 1))
                     eng.dbg_freeze([b for b in baits if b in A]); eng.dbg_set_params({'trap_bait_fixed': cur})
                 else: sup['dry'] += 1
-        if hold_new:
+        bait_here = any(math.hypot(a[1] - gx, a[2] - gy) < 6. for a in eng.agents())
+        if hold_new and active and (bait_here or not spec.get('hold_gate', 1)):   # oracle guides only while a bait holds the crevice
             prs = eng.predators(); k = held_count(eng, mx, my)
             for i, p in enumerate(prs):
                 if math.hypot(p[0] - mx, p[1] - my) >= 50:
                     if place_pred(eng, i, mx, my, ax, ay, gx, gy, k): k += 1; sup['moved'] += 1
+        if 'colony_end' not in sup and not any(x not in baits for x in A): sup['colony_end'] = round(now, 1)   # only baits left
         # diagnostics: is a live agent holding the goal, is the policy's trap still where the predators are held
         sup['secs'] += 1
         if any(math.hypot(a[1] - gx, a[2] - gy) < 6. for a in A.values()): sup['bait_s'] += 1
