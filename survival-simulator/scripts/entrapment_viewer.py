@@ -54,7 +54,7 @@ class Replay:
         self.env.draw(self.screen)
         # Role rings identify agents while preserving the native game rendering.
         colors = dict(guide=(0, 220, 255), bait=(255, 235, 40), replacement_bait=(255, 150, 30),
-                      retired_bait=(230, 220, 120))
+                      retired_bait=(230, 220, 120), bait_candidate=(160, 100, 255))
         scale = self.screen.get_width()/self.env.width
         font = pygame.font.SysFont('monospace', 12)
         for a in self.env.agents:

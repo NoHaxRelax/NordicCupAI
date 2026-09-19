@@ -660,10 +660,11 @@ class OrchardPolicy:
                 value += self.P['spread_weight']*60.*min(1., gap/max(1., s['vision_range']))
         return value
 
-    def _assign_posts(self, g: Group, states):
+    def _assign_posts(self, g: Group, states, unavailable=()):
         sites = [t for t in g.trees.values()]
         agents = sorted(g.agents, key=lambda a: states[a]['energy'])
         for a in agents:
+            if a in unavailable: continue
             m = self.minds[a]
             if m.old: continue
             keep = m.post is not None and m.post in g.trees and self._site_ok(g, g.trees[m.post], a)
@@ -685,13 +686,14 @@ class OrchardPolicy:
                 t = best[1]; m.post = t.id; t.assigned.add(a); m.explore = None; m.target_key = None; m.post_since = self.time
                 self.metrics['post_changes'] += 1; self.metrics['post_dist'] += math.dist(t.p, m.pose.p)
 
-    def _assign_fruits(self, g: Group, states):
+    def _assign_fruits(self, g: Group, states, unavailable=()):
         """Ready fruit goes to the hungriest agent that can reach it, then by distance."""
         for a in g.agents:
             m = self.minds[a]
             if m.fruit is not None and (m.fruit not in g.fruits or g.fruits[m.fruit].claimed != a): m.fruit = None
         pairs = []
         for a in g.agents:
+            if a in unavailable: continue
             m = self.minds[a]
             if m.fruit is not None: continue
             s = states[a]
@@ -831,9 +833,10 @@ class OrchardPolicy:
         return None if best is None else best[1]
 
     # ------------------------------------------------------------ main
-    def __call__(self, states_list, sim_time):
+    def __call__(self, states_list, sim_time, *, unavailable_agents=()):
         self.time = sim_time
         states = {s['agent_id']: s for s in states_list}
+        unavailable = set(unavailable_agents).intersection(states)
         for aid in list(self.minds):
             if aid in states: continue
             m = self.minds.pop(aid); g = self.groups[m.group]; g.agents.discard(aid)
@@ -848,19 +851,27 @@ class OrchardPolicy:
         self._merge_groups(states)
         for aid, s in states.items(): self._observe(self.minds[aid], s)
         for g in list(self.groups.values()): self._maintain(g, states)
+        # External bait/guide roles still share observations, but cannot harvest
+        # their assigned posts or fruit. Return those claims to the workforce.
+        for aid in unavailable:
+            m = self.minds[aid]; g = self.groups[m.group]
+            if m.post in g.trees: g.trees[m.post].assigned.discard(aid)
+            if m.fruit in g.fruits and g.fruits[m.fruit].claimed == aid:
+                g.fruits[m.fruit].claimed = None
+            m.post = m.fruit = None
         # surplus young agents above the cap (lowest fitness first) only get leftover fruit and no heirs
         self.culled = set()
         if self.P['cull']:
-            young_ids = [a for a, m in self.minds.items() if not m.old]
+            young_ids = [a for a, m in self.minds.items() if not m.old and a not in unavailable]
             surplus = len(young_ids)-self._cap()
             if surplus > 0:
                 ranked = sorted(young_ids, key=lambda a: (self._fitness(states[a]), states[a]['energy']))
                 self.culled = set(ranked[:surplus])
         for g in self.groups.values():
-            self._assign_posts(g, states); self._assign_fruits(g, states)
+            self._assign_posts(g, states, unavailable); self._assign_fruits(g, states, unavailable)
         # ---- reproduction plan (global) ----
-        young = [a for a, m in self.minds.items() if not m.old]
-        cap = self._cap(); pop = len(states)
+        young = [a for a, m in self.minds.items() if not m.old and a not in unavailable]
+        cap = self._cap(); pop = len(states)-len(unavailable)
         births_allowed = max(0, cap-len(young))
         spawn_set = set()
         def cost_now(m, dist, turn, s):
@@ -871,11 +882,11 @@ class OrchardPolicy:
         # decisions first (movement), then births are decided with known costs
         plans = {}
         for aid, s in states.items():
-            plans[aid] = self._act(self.minds[aid], s, states)
+            plans[aid] = (0., 0., 0., 'external') if aid in unavailable else self._act(self.minds[aid], s, states)
         # 1. heirs: every senescent agent leaves one replacement (its energy is lost otherwise)
         young_now = len(young)
         fit = {aid: self._fitness(s) for aid, s in states.items()}
-        elders = sorted((aid for aid, m in self.minds.items() if m.old or states[aid]['age'] >= self.P['heir_age']),
+        elders = sorted((aid for aid, m in self.minds.items() if aid not in unavailable and (m.old or states[aid]['age'] >= self.P['heir_age'])),
                         key=lambda a: -states[a]['energy'])
         yfit = sorted(fit[a] for a in young) or [0.]
         median_fit = yfit[len(yfit)//2]
@@ -910,6 +921,7 @@ class OrchardPolicy:
         # 2. emergency: tiny population
         if pop <= 2:
             for aid, s in states.items():
+                if aid in unavailable: continue
                 m = self.minds[aid]
                 dist, direction, turn, mode = plans[aid]
                 if aid not in spawn_set and s['energy']-cost_now(m, dist, turn, s) > self.P['emergency_reserve']:
@@ -919,6 +931,7 @@ class OrchardPolicy:
         if slots > 0:
             cands = []
             for aid, s in states.items():
+                if aid in unavailable: continue
                 m = self.minds[aid]
                 if aid in spawn_set or s['biome'] == 'river': continue
                 dist, direction, turn, mode = plans[aid]

@@ -61,10 +61,14 @@ class Track:
 
 
 class EntrapmentPolicy:
-    def __init__(self, seed=0, *, bait_overlap_seconds=20.):
+    def __init__(self, seed=0, *, bait_overlap_seconds=20., bait_reserve_seconds=0., survival_settings=None):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
+        if not math.isfinite(bait_reserve_seconds) or bait_reserve_seconds < 0.:
+            raise ValueError('bait_reserve_seconds must be finite and nonnegative')
+        self.bait_reserve_seconds = float(bait_reserve_seconds)
+        self.reserved_bait = None
         config = load_config()
         # Nikolaj's survey-gap harvesting is deliberately disabled. Our detector
         # alone selects traps. Stay in his exploration phase until we find one.
@@ -72,6 +76,7 @@ class EntrapmentPolicy:
         planner = load_planner_config().model_copy(update={'population_after_alignment': False})
         self.explorer = ExpertPolicy(config, planner)
         settings = json.loads((Path(__file__).parent / 'survival/oscar_best_config.json').read_text())
+        settings.update(survival_settings or {})
         self.orchard = OrchardPolicy(seed=seed, **settings)
         self.site = None
         self.site_group = None
@@ -126,6 +131,7 @@ class EntrapmentPolicy:
             self.event('site_invalidated_by_mapping')
             self.site = None
             self.bait = self.incoming = None
+            self.reserved_bait = None
             self.bait_progress = None
             self.retired_baits.clear()
             self.entered_rear.clear()
@@ -159,7 +165,7 @@ class EntrapmentPolicy:
             if life < travel + 15.: continue
             old = self.orchard.minds[aid].old or s['age'] >= 55.
             deadline = math.inf if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
-            choices.append((travel+5. < deadline, -travel, old, life-travel,
+            choices.append((travel+5. < deadline, old and self.bait_reserve_seconds > 0., -travel, old, life-travel,
                             s['energy'], aid, travel))
         return max(choices)[-2:] if choices else None
 
@@ -230,6 +236,11 @@ class EntrapmentPolicy:
             active_life = 0. if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
             due = self.bait is None or (selected is not None and
                     active_life <= selected[1]+self.bait_overlap_seconds)
+            # Reserve a donor while it still gathers food. It cannot reproduce
+            # or become a guide until the handoff, but never waits at the entry.
+            self.reserved_bait = (selected[0] if selected is not None and not due
+                                  and self.bait_reserve_seconds > 0.
+                                  and active_life <= selected[1]+self.bait_reserve_seconds else None)
             if selected is None:
                 self.metrics['no_viable_bait_ticks'] += 1
             elif due:
@@ -238,6 +249,8 @@ class EntrapmentPolicy:
                 self.event('replacement_dispatched', agent=self.incoming, current=self.bait,
                            conservative_travel_seconds=selected[1], active_lifetime_seconds=active_life,
                            target_overlap_seconds=self.bait_overlap_seconds)
+        if self.incoming is not None: self.reserved_bait = None
+        if self.reserved_bait is not None: self.roles[self.reserved_bait] = 'bait_candidate'
         for aid in self.retired_baits: self.roles[aid] = 'retired_bait'
         if self.bait is not None: self.roles[self.bait] = 'bait'
         if self.incoming is not None: self.roles[self.incoming] = 'replacement_bait'
@@ -398,7 +411,8 @@ class EntrapmentPolicy:
         if not states: return []
         exploration = {a.agent_id: a for a in self.explorer.actions_for_step(states_list, sim_time)}
         heir_done = {aid: m.heir_done for aid, m in self.orchard.minds.items()}
-        orchard = dict(self.orchard(states_list, sim_time))
+        unavailable = self.retired_baits | {self.bait, self.incoming} | {t.guide_id for t in self.tracks.values()}
+        orchard = dict(self.orchard(states_list, sim_time, unavailable_agents=unavailable))
         self.roles = {}
         self._find_site()
         self._bait_roles(states)
@@ -435,7 +449,7 @@ class EntrapmentPolicy:
                 track = next(t for t in self.tracks.values() if t.guide_id == aid)
                 action = self._guide_action(track, s)
             else:
-                role = 'explorer' if self.site is None else 'gatherer'
+                role = 'bait_candidate' if aid == self.reserved_bait else ('explorer' if self.site is None else 'gatherer')
                 action = exploration[aid] if self.site is None else orchard[aid]
                 bait_local = None
                 if self.site is not None and self.bait is not None:
@@ -443,10 +457,10 @@ class EntrapmentPolicy:
                     if pose is not None and pose.group_id == self.site_group:
                         bait_local = local(pose, self.site['goal'])
                 action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
-                if avoiding:
+                if avoiding and aid != self.reserved_bait:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
-            if role in ('bait', 'replacement_bait', 'retired_bait', 'guide'):
+            if role in ('bait', 'replacement_bait', 'retired_bait', 'guide', 'bait_candidate'):
                 action = action.model_copy(update={'spawn_agent': False})
             if orchard[aid].spawn_agent and not action.spawn_agent:
                 self.orchard.minds[aid].heir_done = heir_done.get(aid, False)
@@ -478,6 +492,7 @@ class EntrapmentPolicy:
     def snapshot(self):
         return dict(phase='exploration' if self.site is None else 'orchard_and_entrapment',
                     bait_overlap_seconds=self.bait_overlap_seconds,
+                    bait_reserve_seconds=self.bait_reserve_seconds, reserved_bait=self.reserved_bait,
                     site=self.site, site_group=self.site_group, bait=self.bait, incoming=self.incoming,
                     roles=self.roles.copy(), metrics=self.metrics.copy(), map=self.map_stats,
                     estimated_agents={aid: dict(position=p.position.tolist(), heading=p.heading,

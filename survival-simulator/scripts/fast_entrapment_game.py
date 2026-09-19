@@ -32,6 +32,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('--seed',type=int,default=1883894846)
     p.add_argument('--seconds',type=float,default=3000); p.add_argument('--out',type=Path,required=True)
     p.add_argument('--bait-overlap',type=float,default=20.,help='Target overlap in seconds for bait replacement')
+    p.add_argument('--bait-reserve',type=float,default=0.,help='Reserve a gathering donor this many seconds before estimated expiry')
+    p.add_argument('--survival-config',type=Path,help='Optional JSON overrides for Orchard experiments')
     default_fast = Path(os.environ.get('FASTSIM_ROOT', ROOT))
     p.add_argument('--fastsim',type=Path,default=default_fast,
                    help='Simulator source root containing fastsim/ (or set FASTSIM_ROOT)')
@@ -45,16 +47,29 @@ def main():
     # A separate Python initialization produces the identical static native background.
     py=PySimulationCore(seed=a.seed); bg=py.env.static_surface.copy(); bg.blit(py.env.shadow_surface,(0,0)); bg.blit(py.env.obstacle_surface,(0,0))
     pygame.image.save(bg,folder/'background.png'); del py
-    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap); started=time.monotonic()
+    settings={} if a.survival_config is None else json.loads(a.survival_config.read_text())
+    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings); started=time.monotonic()
     obstacles=[(o.x,o.y,o.width,o.height) for o in env.obstacles]; edges=edges_from(obstacles)
     atom(folder/'static.json',dict(width=env.width,height=env.height,edges=edges))
     sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
-    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,dt=sim.dt,engine='verified C++ fastsim',
+    atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,dt=sim.dt,engine='verified C++ fastsim',
         policy_inputs='Unmodified observations and simulation time only',sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
     states=sim.step([])['observations']; chunk=[]; history=[]; seen=set(); peak=0; first_bait=None; gap=longest=total_gap=0.; max_near=held30max=0; active={}; tick=0
     summary={}
+    death_counts={}; fruit_count=ripe_count=0; energy_fraction_sum=energy_samples=0
+    previous_roles={}
     try:
       for tick in range(round(a.seconds/sim.dt)+1):
+        # Native evaluator events never enter the policy's observation inputs.
+        native_events=[]
+        for kind, when, aid, age, energy in sim.pop_events():
+            role=previous_roles.get(aid,'unassigned')
+            native_events.append(dict(kind=kind,time=when,agent=aid,age=age,energy=energy,role=role))
+            if kind=='fruit':
+                fruit_count+=1; ripe_count+=age>=20.
+            else:
+                key=kind+':'+role; death_counts[key]=death_counts.get(key,0)+1
+        energy_fraction_sum+=sum(s['energy']/s['max_energy'] for s in states);energy_samples+=len(states)
         now=env.time; terminal=not states or now>=a.seconds; actions=[] if terminal else policy(states,now); debug=policy.snapshot()
         holding=set(policy.retired_baits)|{policy.bait,policy.incoming}; baits=[x for x in env.agents if x.agent_id in holding and policy.site is not None and policy._arrival(x.agent_id)]
         if baits and first_bait is None:first_bait=now
@@ -68,13 +83,17 @@ def main():
         held30=sum(now-t>=30 for t in active.values());held30max=max(held30max,held30);max_near=max(max_near,near)
         seen.update(s['agent_id'] for s in states);peak=max(peak,len(states)); metrics=dict(agents=len(states),predators=len(env.predators),fruit=len(env.fruits),score=env.score,near_bait=near,held30=held30,bait_present_estimated=bool(baits),bait_energy=[b.energy for b in baits])
         if tick%10==0:history.append(dict(time=now,**metrics))
-        chunk.append(dict(tick=tick,time=now,world=world(env),policy=debug,input=states,actions=[x.model_dump() for _,x in actions],evaluation=metrics))
+        chunk.append(dict(tick=tick,time=now,world=world(env),policy=debug,input=states,actions=[x.model_dump() for _,x in actions],evaluation=metrics,native_events=native_events))
         if len(chunk)==100 or terminal:
             first=tick-len(chunk)+1
             with gzip.open(folder/'chunks'/f'{first//100:05d}.json.gz','wt',compresslevel=1) as h:json.dump(chunk,h,separators=(',',':'),allow_nan=False)
             chunk=[];summary=dict(seed=a.seed,status='complete' if terminal else 'running',frames=tick+1,sim_time=now,runtime_seconds=time.monotonic()-started,score=env.score,final_agents=len(states),peak_agents=peak,total_agents_seen=len(seen),predators=len(env.predators),first_bait_time=first_bait,maximum_predators_within_40_of_bait=max_near,maximum_predators_continuously_near_bait_30s=held30max,estimated_bait_gap_seconds_after_first_arrival=total_gap,longest_estimated_bait_gap_seconds=longest,policy_metrics=policy.metrics,events=policy.events,history=history,metric_note='Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.')
+            summary['native_evaluation']=dict(deaths_by_cause_and_role=death_counts.copy(),fruit_eaten=fruit_count,
+                ripe_fruit_eaten=ripe_count,ripe_fraction=ripe_count/fruit_count if fruit_count else None,
+                mean_agent_energy_fraction=energy_fraction_sum/energy_samples if energy_samples else None)
             atom(folder/'summary.json',summary)
         if terminal:break
+        previous_roles=policy.roles.copy()
         states=sim.step(actions)['observations']
     except Exception:
         atom(folder/'error.json',dict(tick=tick,error=traceback.format_exc()));raise
