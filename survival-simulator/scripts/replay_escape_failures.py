@@ -20,6 +20,9 @@ def main():
     parser.add_argument('folder', type=Path)
     parser.add_argument('--fastsim', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--include-guides', action='store_true',
+                        help='Also compare premature guide captures against observation-only escape')
+    parser.add_argument('--agent', type=int, help='Restrict counterfactuals to this agent ID')
     args = parser.parse_args()
     sys.path.insert(0,str(args.fastsim))
     from fastsim import SimulationCore
@@ -29,7 +32,8 @@ def main():
 
     summary = json.loads((args.folder/'summary.json').read_text())
     cases = [c for c in summary['native_evaluation']['sprint_available_predator_death_cases']
-             if not c['intentional_delivery'] and c['role']!='guide']
+             if not c['intentional_delivery'] and (args.include_guides or c['role']!='guide')
+             and (args.agent is None or c['agent']==args.agent)]
     fatal_times = {round(c['time'],6) for c in cases}
     rows = []
     for path in sorted((args.folder/'chunks').glob('*.json.gz')):
