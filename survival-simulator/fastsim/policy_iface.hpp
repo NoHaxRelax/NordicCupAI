@@ -36,6 +36,7 @@ struct GroupRow {
 class IPolicy {
 public:
     virtual ~IPolicy() {}
+    virtual void copy_parameters(const IPolicy& other) = 0;
     // Decide for `n` agents. The returned reference points at an internal buffer that
     // stays valid until the next call; nothing is copied out and nothing is allocated
     // once the buffers have grown to their working size.

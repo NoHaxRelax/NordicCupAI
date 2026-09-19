@@ -89,7 +89,9 @@ void fill_states(Engine* e, std::vector<polabi::AState>& out) {
 
 PyObject* PE_policy_init(PolicyEngineObject* self, PyObject* args) {
     PyObject *key_obj, *cfg = nullptr;
-    if (!PyArg_ParseTuple(args, "O|O", &key_obj, &cfg)) return nullptr;
+    int preserve_memory = 0;
+    if (!PyArg_ParseTuple(args, "O|Op", &key_obj, &cfg, &preserve_memory)) return nullptr;
+    if (preserve_memory && !self->pol) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
     PyObject* seq = PySequence_Fast(key_obj, "seed_key must be a sequence");
     if (!seq) return nullptr;
     std::vector<uint32_t> key;
@@ -129,8 +131,13 @@ PyObject* PE_policy_init(PolicyEngineObject* self, PyObject* args) {
     const char* err = nullptr;
     polabi::IPolicy* p = polabi::make_policy(key.data(), key.size(), c, &err);
     if (!p) { PyErr_SetString(PyExc_ValueError, err ? err : "policy configuration rejected"); return nullptr; }
-    polabi::destroy_policy(self->pol);
-    self->pol = p;
+    if (preserve_memory) {
+        self->pol->copy_parameters(*p);
+        polabi::destroy_policy(p);
+    } else {
+        polabi::destroy_policy(self->pol);
+        self->pol = p;
+    }
     Py_RETURN_NONE;
 }
 

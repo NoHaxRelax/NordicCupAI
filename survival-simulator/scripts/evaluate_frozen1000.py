@@ -6,6 +6,8 @@ from multiprocessing import Pool
 import numpy as np
 ROOT=pathlib.Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from fastsim.fastpolicy import PolicySimulationCore
+SEED_START=10001
+EXTRA_SOURCES=[]
 
 def configs():
     result={p.parent.name:json.loads(p.read_text())['config'] for p in sorted((ROOT/'docs/families20').glob('*/winner.json'))}
@@ -28,8 +30,8 @@ def main():
     ap.add_argument('--workers',type=int,default=32);a=ap.parse_args();assert 0<=a.shard<10
     out=pathlib.Path(a.out);out.mkdir(parents=True,exist_ok=True)
     if (out/'manifest.json').exists():raise RuntimeError('Refusing to overwrite existing run')
-    cfg=configs();seeds=list(range(10001+a.shard*100,10101+a.shard*100))
-    files=list((ROOT/'fastsim').glob('*.cpp'))+list((ROOT/'fastsim').glob('*.hpp'))+[pathlib.Path(__file__)]
+    cfg=configs();seeds=list(range(SEED_START+a.shard*100,SEED_START+100+a.shard*100))
+    files=list((ROOT/'fastsim').glob('*.cpp'))+list((ROOT/'fastsim').glob('*.hpp'))+[pathlib.Path(__file__)]+EXTRA_SOURCES
     manifest=dict(shard=a.shard,seeds=seeds,configs=cfg,policy_seed=0,horizon=3000.,predators=True,workers=a.workers,
       python=sys.version,numpy=np.__version__,profile=True,start_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
       sources={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in files},

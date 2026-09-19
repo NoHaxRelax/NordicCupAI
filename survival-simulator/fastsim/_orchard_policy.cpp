@@ -56,6 +56,13 @@ public:
     orchard::EvasionPolicy pol;
     PolicyImpl(const std::vector<uint32_t>& key, const orchard::Params& P, const orchard::PredParams& PR)
         : pol(key, P, PR) {}
+    void copy_parameters(const IPolicy& other) override {
+        const auto& source = static_cast<const PolicyImpl&>(other);
+        pol.P = source.pol.P;
+        pol.PRED = source.pol.PRED;
+        // Keep RNG, odometry, groups, fruit claims and every agent's memory.
+        pol.cluster_cache.clear();
+    }
 
     const std::vector<Act>& call(const AState* states, size_t n, double sim_time) override {
         return pol.call(states, n, sim_time);
