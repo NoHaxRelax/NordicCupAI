@@ -635,3 +635,20 @@ Log (newest last)
   nightsim/hold.py: 8 colony agents spread 60-250 around a true crevice, bait placed by the policy, one awake
   predator put at the mouth, 600 s; h1 on n7/n8/n9: base / rear-only / + rotation / + rotation at 150 energy /
   + colony posts near the trap.
+- 13:02 OSCAR: the trap probably cannot be kept going toward the end; test late-game checkpoints where the
+  trap is working, see how far resources stretch, optimize the policy. nightsim/lategame.py forks one game state
+  at T0 into paired variants (hooks dbg_set_params / dbg_teleport / dbg_move_predator / dbg_set_energy).
+  Pitfalls found and fixed on the way: bait rotation with an energy trigger churned the whole colony through the
+  crevice (fixed: replacements must have rot_e + 100); the policy's own crevice at T0 is often not real (bait eaten
+  at once) -> trap variants now load the true walls and use only validated crevices ("working trap" by
+  construction; 24 of 93 checkpoints at 900 s have one).
+  RESULTS (paired vs continuing without a trap): at 900 s every predator moved to a real crevice with a bait:
+  4.4 of 8.2 held after 30 s, 2.0 after 60 s, ~0.1 after 120 s; first bait alive 50% / 21-33% / ~0% even with
+  500 energy. Plain bait policy -399 s (900) / -125 (1500); bait with 120-240 s of life left: NO agent in the late
+  colony qualifies. Keeper (a parent behind the crevice spawns each new bait): -108..-133 (900), -87..+9 (1500),
+  but the hold still decays the same way (0.1 held at 120 s).
+  ROOT CAUSE (engine): every agent has a hidden max age of 60-120 s; past it, energy drains 0.1 x age per second
+  (~10/s at age 100). No bait can last more than ~2 minutes from its own birth, whatever its energy. A working trap
+  needs a newborn in the crevice every ~60-90 s. Energy is not the limit (~1 energy/s vs colony income ~60/s); the
+  limit is getting a child in before the current bait dies: keepers rarely have >160 energy to spawn in the late
+  game (mean ~130).

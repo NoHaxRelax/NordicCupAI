@@ -347,7 +347,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0., trap_min_cd = 0., evade_ignore_held = 0., bait_rot_margin = 100.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1398,6 +1398,7 @@ public:
                     bool rear_ok = clear_of(g, rear, 5.5) && clear_of(g, pt((end == 0 ? hi : lo) + 8. * inward, xc), 5.5);
                     if (P.site_safe > 0. && rear_ok && hi - lo < 2. * depth) continue;   // open rear too close to the hold point
                     if (P.trap_rear_only > 0. && !rear_ok) continue;   // nightsim: only crevices a replacement can enter from behind
+                    if (P.trap_min_cd > 0. && n && dist_lt(goal, cen, P.trap_min_cd)) continue;   // nightsim: keep the trap out of the colony's foraging area
                     Group::Site st{goal, mouth, pt(m_along - 60. * inward, xc + lane_off), rear, hi - lo, gap, 0., rear_ok};
                     st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? P.site_dist_w * dist(goal, cen) : 0.);
                     g.sites.push_back(st);
@@ -1532,6 +1533,7 @@ public:
                     double life = life_left(s, m) - travel;
                     if (g.bait >= 0 && need > travel + P.bait_margin) return;   // not needed yet for this candidate
                     if (life < P.bait_min_life) return;
+                    if (P.bait_rot_e > 0. && s.energy < P.bait_rot_e + P.bait_rot_margin) return;   // nightsim: a replacement must not need replacing itself right away
                     double score = (m.old ? 1000. : 0.) + (m.old ? 0. : s.age) - travel - (m.old ? 0. : P.bait_young_pen);
                     if (score > bs) { bs = score; best = a; }
                 });
@@ -1872,12 +1874,17 @@ public:
         if (P.pred_share > 0.) {
             const PoseObj& ps = *m.pose;
             for (auto& q : G(m.group).pseen) {
+                if (P.evade_ignore_held > 0. && G(m.group).has_trap && G(m.group).bait >= 0 && dist_lt(q.p, G(m.group).trap.mouth, 40.)) continue;   // nightsim: held at the mouth
                 double d, ang; local_of(ps, q.p, d, ang);
                 double rel = wrap(std::atan2(ps.p.y - q.p.y, ps.p.x - q.p.x) - q.heading);
                 th.push_back(Th{d, ang, rel});
             }
         } else {
-            for (const Obs& o : *s.obs) if (o.type == 2) th.push_back(Th{o.distance, o.angle, o.has_rel_dir ? o.rel_dir : OPI});
+            Group& gg = G(m.group); bool ign = P.evade_ignore_held > 0. && gg.has_trap && gg.bait >= 0;
+            for (const Obs& o : *s.obs) if (o.type == 2) {
+                if (ign && dist_lt(polar(*m.pose, o), gg.trap.mouth, 40.)) continue;   // nightsim: held at the mouth
+                th.push_back(Th{o.distance, o.angle, o.has_rel_dir ? o.rel_dir : OPI});
+            }
         }
         const Th* nr = nullptr; double vx = 0., vy = 0.;
         for (const Th& t : th) {
