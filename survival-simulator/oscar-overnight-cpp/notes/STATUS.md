@@ -206,3 +206,9 @@ Log (newest last)
 - 04:24 f21 final confirmation, 576 fresh seeds: pred_best_0400 1492 s / score 1502 vs 887 / 732 without
   predator logic (+605±16 s). Experiment agenda exhausted for the night; stopping pods i/j/k (disks kept) to save
   budget. Restart with night.sh (pods.txt) if needed.
+- 04:28 Resumed per Oscar's 'run until the budget is spent' ($30 of $100 used): cpu-i/j/k restarted (new
+  ports in pods.txt; the old venvs under /workspace/users were gone, rebuilt at /workspace/night/.venv). Score
+  accounting with predators (576 seeds): pred_best_0400 = survival 1492 + fruit 130 - penalty 120 (146 kills at a
+  mean 82 energy each). Next problem (Oscar's list): make the OLD agents the ones that get eaten. decoy_old/decoy_e:
+  a senescent (or low-energy) agent within decoy_r of a predator walks toward it so it is the predator's closest
+  target; f22 tests radius 80/150/250 and energy thresholds 40/80 on j/k; kp on i records every kill (t, age, energy).

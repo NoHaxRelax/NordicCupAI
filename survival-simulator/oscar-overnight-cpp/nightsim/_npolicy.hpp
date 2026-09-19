@@ -338,6 +338,7 @@ struct Params {
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
+    double decoy_old = 0., decoy_e = 0., decoy_r = 150.;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -1623,6 +1624,17 @@ public:
         }
         if (!nr) return false;
         if (P.hide_mode > 0. && hide_through(s, pl, nr->d)) return true;
+        {   // decoy (nightsim): an agent that is dying anyway walks TOWARD the nearest predator so it becomes the
+            // predator's closest target instead of a young forager; its low energy costs little score
+            Mind& m = M(s.aid);
+            bool dying = (P.decoy_old > 0. && m.old) || (P.decoy_e > 0. && s.energy < P.decoy_e && s.age > 40.);
+            if (dying && nr->d < P.decoy_r) {
+                double walk = pmin(s.speed, s.sprint);
+                pl = Plan{pmin(walk, nr->d), nr->ang, nr->ang};
+                n_evading++;
+                return true;
+            }
+        }
         double away = std::atan2(vy, vx);
         if (nr->d < P.pred_dodge_r) {
             // predator heading in agent frame points along (bearing to predator + pi - rel); step perpendicular to it,

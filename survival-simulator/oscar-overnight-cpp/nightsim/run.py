@@ -43,12 +43,12 @@ def one(job):
     sim = nightsim.SimulationCore(seed=seed, predators=predators)
     eng = sim._engine
     state = sim.step([])
-    fe = 0.; eaten = 0; pd = 0; sd = 0; pen = 0.
+    fe = 0.; eaten = 0; pd = 0; sd = 0; pen = 0.; kills = []
     def events():
         nonlocal fe, eaten, pd, sd, pen
         for kind, t, aid, age, energy in eng.pop_events():
             if kind == 'fruit': eaten += 1; fe += energy
-            elif kind == 'predator': pd += 1; pen += energy/100
+            elif kind == 'predator': pd += 1; pen += energy/100; kills.append((round(t), round(age), round(energy)))
             else: sd += 1
     events()
     kw = dict(kw); pl = kw.pop('test_pred_life', 0.)
@@ -86,7 +86,8 @@ def one(job):
     return dict(label=label, seed=seed, surv=round(info['time'], 1), score=round(info['score'], 3), fruit=round(fe/1000, 3),
                 eaten=eaten, peak=peak, created=info['next_agent_id'], pdeaths=pd, sdeaths=sd, penalty=round(pen, 3),
                 trees_d=last and last[0], fruits_d=last and last[1], preds=len(eng.predators()), traj=traj,
-                wall=round(time.perf_counter()-t0, 1), **({'fates': fates} if DIAG_FROM > 0 else {}), **({'tail': tail} if TAIL > 0 else {}))
+                wall=round(time.perf_counter()-t0, 1), **({'fates': fates} if DIAG_FROM > 0 else {}), **({'tail': tail} if TAIL > 0 else {}),
+                **({'kills': kills} if os.environ.get('NIGHT_KILLS') else {}))
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
