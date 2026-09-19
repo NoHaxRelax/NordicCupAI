@@ -12,9 +12,9 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 
 | # | item | expected | hours | status | evidence |
 |---|---|---|---:|---|---|
-| A1 | Retrain the F3 recipe with the unlabelled validation objects fixed: keep-out zones for 19 tracks, 42 new sprites (18 leaning ta-ta, 18 second small_tower, 6 second medium_launcher) | ta-ta 0 to about 0.5, small_tower and tank back to 0.86/0.93, medium_launcher up; +0.05 to +0.08 on validation | 3 | DOING, measuring | F4 weights `elias/out/weights/F4_fixed_m1280.last.pt`. Laptop per-class so far: small_tower 0.93 (F3 0.80). ta-ta 0.00 with the size prior: the tracker replaced the detector's box with the flat Helsinki prior (31x25 on a 19x33 walker); rerun with `DRONE_CLASS_EXTENT` detector pending. medium_launcher 0.11 with detector extents (F3 0.14): the loss is false positives on dark blobs, see B1. Laptop runs score about a tenth under pod runs (0.627 vs 0.694 for the same model) |
-| A2 | P2 detection head (stride 4) on the same data, YOLO26m-p2 at 1280 | small_launcher and ta-ta at L1 (10 to 15 px delivered) | 2 + 1.5 h GPU | TODO | VisDrone standard trick: arXiv 2512.07379, SAHI arXiv 2202.06934 |
-| A3 | Large backbone (yolo26l) on the FIXED data | unknown; lost to medium on the old data (0.39 vs 0.42) | 0.5 + 2 h GPU | TODO, needs a pod | Elias asked for the big-model check |
+| A1 | Retrain the F3 recipe with the unlabelled validation objects fixed: keep-out zones for 19 tracks, 42 new sprites (18 leaning ta-ta, 18 second small_tower, 6 second medium_launcher) | ta-ta 0 to about 0.5, small_tower and tank back to 0.86/0.93, medium_launcher up; +0.05 to +0.08 on validation | 3 | F4 (laptop, batch 2) REJECTED: thirds 0.235+0.227+0.068 = 0.53 against 0.63 for the deployed model on the same laptop; large_launcher confidence 0.93 to 0.39, small_launcher boxes 173 to 46 per run. Batch 2 starves the normalisation layers. F5 = same data at batch 16 on a Secure 4090 pod, DOING since 14:07 | F4 weights `elias/out/weights/F4_fixed_m1280.last.pt`. Laptop per-class so far: small_tower 0.93 (F3 0.80). ta-ta 0.00 with the size prior: the tracker replaced the detector's box with the flat Helsinki prior (31x25 on a 19x33 walker); rerun with `DRONE_CLASS_EXTENT` detector pending. medium_launcher 0.11 with detector extents (F3 0.14): the loss is false positives on dark blobs, see B1. Laptop runs score about a tenth under pod runs (0.627 vs 0.694 for the same model) |
+| A2 | P2 detection head (stride 4) on the same data, YOLO26m-p2 at 1280 | small_launcher and ta-ta at L1 (10 to 15 px delivered) | 2 + 1.5 h GPU | DOING: pod 4cezfts69abgzf (F7_fixed_mp2_1280, batch 8, pretrained from yolo26m) | VisDrone standard trick: arXiv 2512.07379, SAHI arXiv 2202.06934 |
+| A3 | Large backbone (yolo26l) on the FIXED data | unknown; lost to medium on the old data (0.39 vs 0.42) | 0.5 + 2 h GPU | DOING: pod z02n16fwh2u1ob (F6_fixed_l1280, batch 8) | Elias asked for the big-model check |
 | A4 | Spend the latency headroom: 1536 input, flip averaging, two-checkpoint ensemble (`elias/ensemble.py`) | +0.02 to +0.05 at detector level | 2 | TODO | 110 ms of a 300 ms budget used on an RTX 5090; laptop 85 ms at 1280 |
 | A5 | DINOv2 prototype verifier (DE-ViT style): one prototype per class from the sprites, re-rank YOLO boxes by similarity, never delete | +0.02 like the CNN verifier, maybe more on sibling confusion | 3 | TODO | github.com/mlzxy/devit (MIT, weights). The CNN verifier relabelling HURT (0.329 to 0.258): re-rank only |
 | A6 | ZoomDet learned warp inside the view | +8 mAP on SeaDronesSee in the paper | 6 + training | REJECTED for this deadline | arXiv 2602.07512; too new to trust for one attempt |
@@ -24,20 +24,23 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 | A10 | Second small_launcher sprites from the unlabelled ones | | 1 | BLOCKED | GrabCut returns slivers on 25 px objects; needs a manual mask or a bigger box recipe |
 | A12 | Shadow-free walker sprites: the 18 ta-ta sprites include the cast shadow, so the detector's walker box is 31x56 on a 19x33 body; re-cut with `--grow 0.05 --no-growth --suffix=-tight` gives 12 to 16 x 29 px bodies (`elias/out/extra_sprites_tata_tight.jpg`) | ta-ta boxes match the organiser convention if it excludes shadows | 0.5 + 1.6 h GPU | TODO, decide after the ta-ta rerun | which convention the truth uses is unknown; the replay with three box sizes scored AP 0.74 |
 | A11 | Jammer, condor, spacecraft never measured on a real unseen instance | unknown | | BLOCKED | absent from validation; only Helsinki (training set) has them |
+| A13 | Terrain-aware pasting: the generator refuses paste positions whose surroundings are water or forest (`SYNTH_TERRAIN=1`, `elias/data/terrain.py`) | fewer false positives on dark blobs in trees (the medium_launcher loss); the detector stops learning objects in forest | 0.5 + 25 min GPU | IMPLEMENTED 15:15, retrain F8 pending on pod 1 after F5 | `elias/backdrop_study.py`: random ground 24 % forest and 15 % water; objects 6 % tree cover and 0 % on water (the water hits are a beach next to water); `elias/out/backdrop_sheet.jpg` |
 
 ## B. Answer policy (what we emit)
 
 | # | item | expected | hours | status | evidence |
 |---|---|---|---:|---|---|
-| B1 | Sibling-class hedging: for launcher, plane and tower detections also emit the sibling classes at lower confidence | confusion stops being a miss; absent classes cost nothing, low-confidence extras cost almost nothing | 1 | IMPLEMENTED, untested: `DRONE_HEDGE_FACTOR` in example.py (0 = off), groups launchers, planes, towers, tank/mine_roller | scorer analysis in `research/02-night-report.md`; test with one-class runs for medium_launcher, medium_plane, large_tower |
+| B1 | Sibling-class hedging: for launcher, plane and tower detections also emit the sibling classes at lower confidence | confusion stops being a miss; absent classes cost nothing, low-confidence extras cost almost nothing | 1 | IMPLEMENTED; first test on the regressed F4 gave no gain (medium_launcher 0.083 with hedging against 0.11 without; medium_plane 0.0, run possibly void by CPU load). Retest on F5 | scorer analysis in `research/02-night-report.md`; test with one-class runs for medium_launcher, medium_plane, large_tower |
 | B2 | Confidence floor and thresholds (`DRONE_CONF=0.05 BIRTH 0.25 UPDATE 0.15`) re-tuned for the new model | +0.10 was the gain of lowering them the first time | 1 | TODO | |
 | B3 | Emit forecast boxes for retired tracks at a low confidence instead of dropping them | small | 1 | TODO | low-confidence extras are nearly free |
+| B5 | Context prior at runtime: boxes whose surroundings are water or forest keep their place at confidence x `ELIAS_CONTEXT` (never deleted) | precision on the classes with forest false positives | 0.5 | IMPLEMENTED 15:15 in `elias/ensemble.py`, untested; test with a medium_launcher one-class run at 0.5 | same study |
+| B4 | Per-class routing across several models: each class answered by the model that measured best on it (`ELIAS_ROUTE` in `elias/ensemble.py`, `DRONE_DETECTOR=elias.ensemble:build`) | takes every per-class win, e.g. F4's small_tower 0.93 | 1 + measurements | IMPLEMENTED 14:40, untested; needs per-class portal numbers for every candidate model | Elias's reframe: bandwidth is not a constraint on a pod, about 25 ms per model on a 4090 |
 
 ## C. Camera policy
 
 | # | item | expected | hours | status | evidence |
 |---|---|---|---:|---|---|
-| C0 | Per-class box extents: `DRONE_CLASS_EXTENT` detector for ta-ta (leans) and medium_launcher (validation instance smaller than Helsinki's); the size prior stays for the rest | ta-ta from 0 | 0 | DOING, measuring | the night's note: prior helps towers and small_launcher, hurts medium_launcher |
+| C0 | Per-class box extents: `DRONE_CLASS_EXTENT` detector for ta-ta (leans) and medium_launcher (validation instance smaller than Helsinki's); the size prior stays for the rest | ta-ta from 0 | 0 | measured on F4: ta-ta still 0.0 with detector extents, because the learned box included the shadow (31x56); medium_launcher 0.11. Keep the switch, re-measure on F5 which has shadow-free walker sprites |
 | C1 | Zoom to L2 on cue: sweep at L1; when a detection is small or ambiguous, spend the next frame at L2 on its forecast position, then return | simulator 0.82 to 0.93 against 0.75 for the sweep at a 16 px recogniser; the only route to ta-ta (0 of the L1 looks, 22 to 26 L2 hits) | 4 to 6 | TODO, after B1 | `elias/policy_sim.py` policies `cued`, `cued_lcr` |
 | C2 | Mid-life refresh: a lower-band look every ~8 frames so forecasts (hold 8 to 12 frames) get renewed during the ~16 frames below the band | part of the tracker's 0.08 | 2 | TODO, simulate first | add a policy to `policy_sim.py` |
 | C3 | Density-crop rule: zoom where several noticed objects cluster so one L2 look pays for many | small | 2 | TODO, simulate first | ClusDet / DMNet family, survey doi 10.1007/s10462-025-11150-9 |
@@ -58,6 +61,18 @@ Status codes: TODO, DOING, DONE, REJECTED (with the number that killed it), BLOC
 | D4 | Pick the final weights and settings, write them in `elias/README.md` deploy block | 0.5 | TODO | |
 | D5 | Elias queues the evaluation attempt; nobody else, no agent | | TODO Sunday | hook `.claude/hooks/block-evaluation.py` |
 | D6 | Terminate every agent pod afterwards, check `list-pods` | | TODO | |
+
+## Pods live on 2026-09-19 afternoon (terminate when done, D6)
+
+- y8fvk8xgo7qhuy elias-drone-retrain-f5b, 47.47.180.99:14002, F5 (yolo26m, batch 16) and the pod-served measurements
+- z02n16fwh2u1ob elias-drone-train-f6-large, 47.47.180.123:15250, F6 (yolo26l)
+- 4cezfts69abgzf elias-drone-train-f7-p2, 47.47.180.74:19599, F7 (yolo26m-p2)
+- all Secure RTX 4090 at 0.74 USD/h; frames on the pods are JPEG 95 re-encodes of the 4K PNGs (upload speed)
+
+## Notes from Elias and Oscar (2026-09-19 15:00)
+
+- Mixture of experts is the deployment model: one detector per class is fine, bandwidth is not a constraint on a pod. B4 implements it.
+- Helicopter: measured 0.96 AP on the portal for the deployed model last night (F3 per-class table in `02-night-report.md`), so on our pipeline it is not a weak class; Oscar's concern may be his own pipeline or the evaluation flight's different look (the Helsinki-trained window classifier scored 0 on validation helicopters before sprites from both scenes were used).
 
 ## E. Known unknowns
 
