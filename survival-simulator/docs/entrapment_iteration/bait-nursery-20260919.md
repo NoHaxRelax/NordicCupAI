@@ -78,3 +78,20 @@ A temporary 16-vCPU Runpod CPU3 pod, n0d6kz5mjuzd6a, was created at
 08:00:41 UTC for the paired comparison. Compute price is $0.48/hour plus
 disk; the previous pod's actual billing was $4.8917 including disk. Budget
 remains $10 total. The free PC continues the immutable v1 batch.
+
+Completed v3 development-seed pilot: score **1095.08**, extinction at **1056.9
+seconds**, versus 872.19 / 821.3 for nursery disabled. Two observed nursery
+children, one successful bait arrival. Eighteen total bait arrivals and sixteen
+overlaps, but **284.3 seconds of estimated gaps**, almost all one terminal
+coverage collapse. Mean energy 28.4%, 90.8% ripe fruit; fifteen non-guide
+predator victims, including two replacement baits (native counts in summary). This
+single-map increase is not evidence of general reliability. Every-frame replay
+is `logs/entrapment-iteration/nursery-v3-pilot-20260919`, port **9076**.
+
+Runpod v3 paired comparison uses 12 workers and these 12 seeds:
+204871, 917263, 605319, 148027, 730951, 392681, 584107, 829631, 176453,
+963217, 418759, 256903. Each seed runs nursery sizes 0 and 2 for the full
+3000-second horizon or natural extinction, with normal energy and predators.
+Source bundle frozen at 36d731e; Python 3.13.14, NumPy 2.5.3, Pydantic 2.13.5,
+SciPy 1.18.1, Shapely 2.1.2 and pygame 2.6.1. The portable pinned native
+extension imports and steps successfully on the CPU pod.

@@ -13,6 +13,7 @@ def main():
     p.add_argument('--fastsim',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--workers',type=int,default=6)
+    p.add_argument('--sizes',type=int,nargs='+',choices=range(5),default=[0,2])
     p.add_argument('--seeds',type=int,nargs='+',default=[204871,917263,605319,148027,730951,392681])
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
     script=Path(__file__).with_name('fast_entrapment_game.py')
@@ -35,7 +36,7 @@ def main():
                         children_observed=len(children), children_arriving_as_bait=len(children & arrivals)))
     rows=[]
     with ThreadPoolExecutor(max_workers=a.workers) as pool:
-        jobs=[pool.submit(run,seed,size) for seed in a.seeds for size in (0,2)]
+        jobs=[pool.submit(run,seed,size) for seed in a.seeds for size in a.sizes]
         for future in as_completed(jobs):
             row=future.result();rows.append(row)
             temp=a.out/'results.tmp';temp.write_text(json.dumps(rows,indent=2));temp.replace(a.out/'results.json')

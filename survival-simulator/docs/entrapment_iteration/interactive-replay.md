@@ -107,3 +107,11 @@ three-waypoint fallback route. The same-seed real-game run was identical to
 retry-only (no improvement on this map); broader-map benefit is unverified.
 Its full replay is `logs/entrapment-iteration/interactive-visibility-routes-20260919`,
 port 9072. No Runpod compute was used for these experiments.
+
+## Optional bait nursery v3
+
+Replay port 9076: two local food gatherers produce and reserve observed
+offspring for bait, with the game's normal birth cost and energy. Score
+1095.08, extinction 1056.9 seconds; two children observed, one delivered as
+bait. Estimated bait gaps still 284.3 seconds. Nursery parents have green
+rings and children pink rings. Default policy keeps this experiment off.
