@@ -57,6 +57,10 @@ class RevisitConfig:
     # three views keeps its frames. Never for tracks that left the frame.
     retired_ticks: float = 0.
     retired_scale: float = .3
+    # A whole detection of ANOTHER class over an existing track cannot relabel it (the class is fixed at birth), but
+    # with alt_scale > 0 it is emitted for this frame under its own label at confidence x alt_scale: when the
+    # track was born with the wrong class, the right class still gets its box (0 = off).
+    alt_scale: float = 0.
     # 'any': a silent detector counts as a miss whenever the predicted box lies whole inside the view
     # (the original rule). 'seen': only when the view also gives the object at least
     # miss_size_fraction of the smallest delivered size at which this track was ever detected whole.
@@ -106,6 +110,8 @@ class RevisitConfig:
             raise ValueError('Need positive retirement count and at least four history slots')
         if self.retired_ticks < 0 or not 0 <= self.retired_scale <= 1:
             raise ValueError('retired_ticks must be nonnegative and retired_scale in [0,1]')
+        if not 0 <= self.alt_scale <= 1:
+            raise ValueError('alt_scale must lie in [0,1]')
 
     @property
     def needs_prior(self):
@@ -219,6 +225,7 @@ class RevisitTracker:
         self.prior = self.config.load_prior()
         self.tracks = {}
         self.retired = []      # (track, tick retired) still forecast at low confidence, see retired_ticks
+        self.conflicts = []    # this frame's whole detections of another class over a track, see alt_scale
         self.next_id = 1
         self.last_frame = None
         self.last_tick = None
@@ -338,7 +345,7 @@ class RevisitTracker:
                 track.last_seen_tick = tick; track.last_seen_frame = frame_index; track.visible_misses = 0
                 self.events.append({'event': 'partial_seen', 'track_id': identity})
             matched_detections.add(index); matched_tracks.add(identity)
-        self.transients = []
+        self.transients = []; self.conflicts = []
         for index, (d, box, complete) in enumerate(kept):
             if index in matched_detections:
                 continue
@@ -351,6 +358,8 @@ class RevisitTracker:
             # not enough to create a second prediction for the same object.
             if any(overlap(box, p) > .5 for p in predictions.values()):
                 self.events.append({'event': 'conflicting_detection', 'label': d.label})
+                if self.config.alt_scale > 0 and complete:
+                    self.conflicts.append({'object_id': d.label, 'bbox_source_xyxy': box.tolist(), 'confidence': float(d.confidence)})
                 continue
             if not complete or d.confidence < self.config.birth_confidence:
                 entering = None
@@ -445,6 +454,15 @@ class RevisitTracker:
                              'last_seen_frame': track.last_seen_frame, 'anchor_tick': track.history[-1][0],
                              'observations': len(track.history), 'adapted': False, 'provisional': True, 'retired': True})
             self.retired = keep
+        if self.conflicts and self.last_tick is not None and tick == self.last_tick:
+            for n, row in enumerate(self.conflicts):
+                clipped = clip_box(row['bbox_source_xyxy'], self.model.source_size, self.config.clip_last_index)
+                if clipped is None:
+                    continue
+                rows.append({'track_id': f'alt-{n}', 'object_id': row['object_id'], 'bbox': (clipped/size).tolist(),
+                             'bbox_source_xyxy': clipped.tolist(), 'confidence': float(row['confidence']*self.config.alt_scale),
+                             'last_seen_frame': self.last_frame, 'anchor_tick': tick, 'observations': 0, 'adapted': False,
+                             'provisional': True, 'alternative': True})
         if self.config.emit_partials and self.last_tick is not None and tick == self.last_tick:
             for row in self.transients:
                 clipped = clip_box(row['bbox_source_xyxy'], self.model.source_size, self.config.clip_last_index)
