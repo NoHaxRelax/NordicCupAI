@@ -1,6 +1,6 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (n7 at 08:55 after f39; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again). Spend ~$45 of $100.
+STATE: IDLE. All pods stopped (n7 at 09:05 after f40; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again). Spend ~$46 of $100.
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
@@ -42,7 +42,12 @@ missed 28%, sites valid 49%, top-1 valid 35% (52% with wall_min_n 20). The shipp
 are unchanged. Every trap/bait/guide/refuge result of the night before 08:45 ran on the broken map; the guide and
 bait SCENARIOS loaded true walls and never saw it. Re-run on the corrected map (f39, 96 seeds): the guide trap is
 still -180 +- 37 (lane-restricted -145), 0.07-0.18 predators held, 0.3 handoffs per game: the trap fails on
-delivery, not on the map. The refuge becomes +13 +- 32 at radius 60 (noise). Nothing changes the shipped configs.
+delivery, not on the map. With guide_clear (a guide needs a straight wall-free walk to the lane point, released
+otherwise; f40) guide deaths fall 15 -> 4 per game and the cost to -105 +- 37 (-91 lane-restricted), but 40 of 56
+episodes per game are released and handoffs stay at 0.3: in a real map the lane is rarely clear for long. The
+refuge becomes +13 +- 32 at radius 60 (noise). Nothing changes the shipped configs. Final decomposition of the
+trap's cost: baits ~-57, guides' lost time ~-40, deliveries ~0. A trap that pays needs a new delivery idea, not
+more fixes to this one.
 
 **What the full-game trap funnel says (per game, f35/f37):** 17-26 guide episodes, 7-11 guide deaths (classes: far
 from the trap and slow walk dominate; several predators near is rare), 0.26-0.29 handoffs, 0.04-0.09 predators
@@ -475,3 +480,7 @@ Log (newest last)
   route deaths 92 -> 8-16 per game. guide_clear=1: a guide is only chosen if its straight walk to the lane point
   crosses no known wall, and is released if that stops being true while leading (the corrected map makes this
   check meaningful now). f40 on n7 (96 seeds): rf_ref, rf_trap_wc, rf_trap_clear, rf_trap_clear_lane300.
+- 09:01 f40 (96 seeds): guide_clear: rf_trap_clear -105+-37, rf_trap_clear_lane300 -91+-36 vs rf_trap_wc -180+-37;
+  guide deaths 15.2 -> 4.4 (kills per game 146 -> 132, below the reference 138), episodes released 40 of 56
+  (lane blocked), handoffs 0.3, held 0.14-0.17, baits 20 per game. Guide deaths are solved; delivery is not.
+  Trap line closed for the night with a full cost decomposition. Pod n7 stopped; all pods idle; ~$46 of $100.
