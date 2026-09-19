@@ -52,10 +52,15 @@ def main():
                    help='Simulator source root containing fastsim/ (or set FASTSIM_ROOT)')
     a=p.parse_args(); folder=a.out; folder.mkdir(parents=True,exist_ok=True); (folder/'chunks').mkdir(exist_ok=True)
     if (folder/'summary.json').exists(): p.error('output already contains a run')
-    sys.path[:0]=[str(a.fastsim.resolve()),str(ROOT)]
+    # Load only the engine from --fastsim. That checkout may also contain an
+    # older models/ package; it must not shadow the policy being benchmarked.
+    sys.path.insert(0,str(a.fastsim.resolve()))
     import pygame
+    import fastsim
     from fastsim import SimulationCore
+    sys.path.insert(0,str(ROOT))
     from src.core import SimulationCore as PySimulationCore
+    import models.core as policy_module
     from models.core import EntrapmentPolicy
     # A separate Python initialization produces the identical static native background.
     py=PySimulationCore(seed=a.seed); bg=py.env.static_surface.copy(); bg.blit(py.env.shadow_surface,(0,0)); bg.blit(py.env.obstacle_surface,(0,0))
@@ -66,7 +71,9 @@ def main():
     atom(folder/'static.json',dict(width=env.width,height=env.height,edges=edges))
     sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
     atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,guide_preferred_distance=[a.guide_distance_min,a.guide_distance_max],share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
-        guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,policy_inputs='Unmodified observations and simulation time only',sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
+        guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,policy_inputs='Unmodified observations and simulation time only',
+        loaded_modules=dict(policy=str(Path(policy_module.__file__).resolve()),engine=str(Path(fastsim.__file__).resolve())),
+        sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
     states=sim.step([])['observations']; chunk=[]; history=[]; seen=set(); peak=0; first_bait=None; gap=longest=total_gap=0.; max_near=held30max=0; active={}; tick=0
     summary={}
     previous_states={}; previous_guide_plans={}; previous_actions={}

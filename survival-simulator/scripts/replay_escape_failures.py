@@ -21,8 +21,9 @@ def main():
     parser.add_argument('--fastsim', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
     args = parser.parse_args()
-    sys.path[:0] = [str(args.fastsim),str(ROOT)]
+    sys.path.insert(0,str(args.fastsim))
     from fastsim import SimulationCore
+    sys.path.insert(0,str(ROOT))
     from models.entrapment.bystander_avoidance import avoid_predators
     from src.utils.DTOs import ActionRequest
 
