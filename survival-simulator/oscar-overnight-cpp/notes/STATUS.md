@@ -521,3 +521,24 @@ Log (newest last)
   die per game (113 eaten, 72 starved). Levers to test one by one: (a) choose a child's traits so the cap does not
   bind at birth (max energy such that 20% < 75), if the policy chooses traits; (b) children claim fruit first until
   they are above the cap; (c) spawn only where ripe fruit is free right now; (d) fewer late births.
+- 09:35 OSCAR: "you are not utilizing the fact that we can walk backwards; Lucas nailed that." Checked the
+  engine (predator_act): the predator direct-chases (15/tick, turn cap 0.3) when the agent faces AWAY (|rel_dir| >
+  pi/2) OR when the distance is below 1.5 x its hearing radius (= 90); otherwise it takes a 45-degree pivot step
+  (closing ~10.6/tick). The policy does face the predator while fleeing (pred_face=1 default), but fleeing starts
+  only within 70 (pred_r) or when the predator faces us within 80 (pred_face_r), i.e. always INSIDE 90 where the
+  facing changes nothing. Facing at longer range for FLEEING was tested at 03:54 (far facing clearly worse: too
+  much foraging lost). Where it should matter is GUIDING: my hold band was 45-70 (inside hearing 60) so the
+  predator sprinted 15 at a guide walking 10; a 95-150 band keeps it in pivot mode (10.6) so a walking guide
+  nearly holds distance and only sprints back out when it gets inside 95. Scenario piv1 on n7 (after f43).
+- 09:37 f43 newborn levers (96 seeds): fem (breeder fitness no longer rewards high max energy, weight -0.3)
+  +17+-35, cp_fem (+ newborns claim fruit first) +19+-37, fe0 -27+-38, cp alone -39+-33: all noise. Selection on
+  max energy is too slow/indirect within one game, and feeding newborns first does not get them above the cap
+  before the predators arrive (they are born next to the parent's tree where the predators hunt).
+- 09:38 piv1 (guide scenario, 62 valid, T 120): hold band 95-150 (predator kept in pivot mode) delivers 56%
+  vs 89% for the current 45-70 band; guides die 77% vs 100%. Beyond 90 the predator tracks the guide by vision
+  only (pi/3 cone, line of sight) and loses it; inside 90 it hears it through walls. So backwards walking is
+  already used where it can be, and leading in pivot mode trades a few guide deaths for many lost predators.
+  Next category from the diagnosis: the colony's equilibrium. Each child kill costs the colony only ~25 energy
+  (parent pays 100, the child brings 75), but 148 extra deaths per game push the population from ~40 to ~10 by
+  1000 s while predators grow to 9-13. The no-predator optimum was a SMALL population (cap_mult 0.5); under
+  predators a larger cap may sustain births against kills. f44: cap_mult 0.7 / 1.0 and heir reserve variants.
