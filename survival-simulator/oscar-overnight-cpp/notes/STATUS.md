@@ -108,3 +108,9 @@ Log (newest last)
 - 02:36 STEP 2 (holding): K=1/3/6/10 predators already held + one delivered: 94-98% delivered, all held,
   bait never dies. Now f1: FULL GAMES with predators, 192 seeds: no predator logic vs evasion vs evasion+trap
   (site finder, bait with replacement, guide), tracking held predators and guides used per 250 s.
+- 02:40 f1 FULL GAMES with predators (192 seeds): no predator logic 888 s (232 eaten/game); evasion 923 s
+  (60 eaten; score +248); evasion+trap 695 s (-193 vs evasion): the trap machinery costs agents (bait/replacement
+  stand in the crevice without food; guides die before delivering; sightings sparse) and held ~0.1 predators.
+  Trace (seed 6000): site found at 100 s, first predator 120 s, colony 40 -> 15 agents by 200 s (7 eaten in 10 s),
+  guides assigned 3x but never delivered, 1 predator held briefly at 270-290 s. f2 tests trap-on-demand (bait only
+  after a sighting within 60/120 s) and no keep-out.

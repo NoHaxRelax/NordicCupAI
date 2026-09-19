@@ -330,7 +330,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., guide_acq = 55., guide_min_e = 60., guide_lost = 10., guide_hand = 40.;
+    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_acq = 55., guide_min_e = 60., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
@@ -1390,6 +1390,7 @@ public:
             if (!g.anchored) return;
             pick_trap(g);
             if (!g.has_trap) return;
+            for (auto& q : g.pseen) if (!dist_lt(q.p, g.trap.mouth, 40.)) { g.guide_seen = time; break; }
             if (P.trap_bait_fixed >= 0. && minds.has((int64_t)P.trap_bait_fixed)) g.bait = (int64_t)P.trap_bait_fixed;
             if (g.bait >= 0 && (!minds.has(g.bait) || M(g.bait).group != g.id)) g.bait = -1;
             if (g.rep >= 0 && (!minds.has(g.rep) || M(g.rep).group != g.id)) g.rep = -1;
@@ -1402,7 +1403,8 @@ public:
             if (g.rep >= 0 && dist_lt(M(g.rep).pose->p, g.trap.goal, 4.)) { if (g.bait >= 0) g.retired.push_back(g.bait); g.bait = g.rep; g.rep = -1; }
             double need = OINF;
             if (g.bait >= 0) need = life_left(st(g.bait), M(g.bait));
-            if (P.trap_bait_fixed < 0. && g.rep < 0 && (g.bait < 0 || need < P.bait_margin + 60.)) {
+            bool want_bait = P.bait_on_sight <= 0. || time - g.guide_seen < P.bait_on_sight || g.bait >= 0;   // trap on demand: only after a recent sighting
+            if (P.trap_bait_fixed < 0. && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
                 int64_t best = -1; double bs = -OINF;
                 g.agents.each([&](int64_t a) {
                     if (a == g.bait || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
@@ -1445,7 +1447,6 @@ public:
     // guide_near..guide_far), 3 DELIVER (back through the mouth past the bait, out the rear or stop deeper), 4 DONE.
     void run_guide(Group& g, std::unordered_map<int64_t, Plan>& plans) {
         if (g.guide >= 0 && (!minds.has(g.guide) || M(g.guide).group != g.id)) { g.guide = -1; g.guide_state = 0; }
-        if (g.bait < 0) return;
         // nearest shared predator sighting that is not already held at the mouth
         bool have = false; P2 pp{}; double best = OINF;
         for (auto& q : g.pseen) {
@@ -1454,6 +1455,7 @@ public:
             if (d < best) { best = d; pp = q.p; have = true; }
         }
         if (have) { g.guide_pred = pp; g.guide_seen = time; }
+        if (g.bait < 0) return;
         if (g.guide < 0) {
             if (!have) return;
             int64_t bg = -1; double bs = -OINF;
