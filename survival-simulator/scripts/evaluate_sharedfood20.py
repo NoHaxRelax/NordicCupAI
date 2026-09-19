@@ -11,5 +11,6 @@ def configs():
     out['local_food_baseline']=json.loads((run.ROOT/'docs/late250/pod-0/local_food-winner.json').read_text())['config']
     out['scheduled_breeding_baseline']=json.loads((run.ROOT/'docs/families20/scheduled_breeding/winner.json').read_text())['config']
     return out
+run.MAX_SECONDS=10800
 run.configs=configs;run.SEED_START=19001;run.EXTRA_SOURCES=[pathlib.Path(__file__)]
 if __name__=='__main__':run.main()

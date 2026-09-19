@@ -8,6 +8,7 @@ ROOT=pathlib.Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from fastsim.fastpolicy import PolicySimulationCore
 SEED_START=10001
 EXTRA_SOURCES=[]
+MAX_SECONDS=3600
 
 def configs():
     result={p.parent.name:json.loads(p.read_text())['config'] for p in sorted((ROOT/'docs/families20').glob('*/winner.json'))}
@@ -43,8 +44,8 @@ def main():
     with Pool(a.workers)as pool,open(out/'games.jsonl','w',buffering=1)as f:
         it=pool.imap_unordered(one,jobs)
         for _ in jobs:
-            remaining=3600-(time.monotonic()-start)
-            if remaining<=0:raise TimeoutError('One-hour shard fail-safe')
+            remaining=MAX_SECONDS-(time.monotonic()-start)
+            if remaining<=0:raise TimeoutError(f'{MAX_SECONDS}-second shard fail-safe')
             row=it.next(timeout=remaining);f.write(json.dumps(row)+'\n');count+=1
             if count%100==0:print(json.dumps(dict(shard=a.shard,games=count,total=len(jobs),elapsed=time.monotonic()-start)),flush=True)
     (out/'complete.json').write_text(json.dumps(dict(games=count,elapsed_seconds=time.monotonic()-start))+'\n')
