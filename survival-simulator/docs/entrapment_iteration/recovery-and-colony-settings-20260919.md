@@ -71,10 +71,15 @@ separate from game outcomes.
   front of a visible predator at the configured preferred radius while the
   not-following latch is true. It retains the same capture checks and leaves
   blind recovery unchanged. Local run folder:
-  `logs/entrapment-iteration/guide-orbit-v5-20260919`. Evaluation ongoing.
+  `logs/entrapment-iteration/guide-orbit-v5-20260919`. Completed: **558.56
+  score, 546.8 s, 2/23 arrivals, 3 premature sprint-available captures**.
+  Also regressed; default remains off. Native replay at `http://localhost:9079/`.
 - A separate local run uses newer Oscar settings with the default v2 guide:
   `logs/entrapment-iteration/oscar-latest-v2-guide-20260919`. This isolates
-  settings from recovery changes; evaluation ongoing.
+  settings from recovery changes. Completed: **771.25 score, 737.3 s,
+  3/49 arrivals, 2 premature sprint-available guide captures**, versus v2's
+  784.88, 750.4 s, 2/19 arrivals and zero such captures. This one seed does
+  not establish which survival settings are better; await the paired screen.
 
 The five v3 premature captures involved sprint traits 11.39, 13.34, 11.39,
 11.39 and 11.39 in swamp. They had sprint energy, but sprint was slower than
@@ -88,3 +93,13 @@ runs above predate this correction and retain their original source hashes.
 No new Runpod pod was created. Six PC jobs remain the free paired screen;
 their frozen files must not be edited while it runs. Retrieve the final
 `results.json` and per-game manifests/summaries before drawing conclusions.
+
+## Next coordinator issue to address
+
+`_track_predators` retains any living assigned guide before considering fresh
+observers as replacements. Shared sightings can keep the track alive even
+when its assigned guide has lost sight and spends its energy in recovery.
+The replay also assigned guides with energy 43, 59 and 63, already below the
+sprint threshold. The Sol relief helper is not yet connected to this role
+logic. Handover and candidate viability now deserve priority over more local
+steering variants: none of the three steering probes improved the dev game.
