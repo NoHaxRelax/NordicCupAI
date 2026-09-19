@@ -55,3 +55,14 @@ and with the rear-route reset. Both keep every frame. Do not report their
 interim scores as completed benchmarks. The original PC forest/swamp failure
 is also being recorded on its original machine, to inspect the repeated
 border crossings with exact state reproduction. No paid compute was used.
+
+## Completed guard-only pilot
+
+Seed 1883894846: **805.35 score / 752.0 seconds**, normal extinction,
+295.60 seconds wall time, all frames retained. **Zero premature sprint-
+available captures**, two delivery arrivals from 25 assignments, and
+82.8 estimated bait-gap seconds. The prior 44-unit handoff with isolated
+tracking scored 842.83 / 791.6 seconds with one arrival from 17 assignments
+and 52.5 estimated gap seconds. This is a specific safety repair with native
+counterfactual evidence, not an established full-game performance improvement.
+The separate rear-route reset comparison remains in progress.
