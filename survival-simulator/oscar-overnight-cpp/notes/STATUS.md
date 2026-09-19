@@ -152,3 +152,5 @@ Log (newest last)
   ~$20 on my CPU pods (well within the $100).
 - 03:23 f10: flee radius 80 + no shared sightings: 1239 s / score 1260 (evade baseline 923, no logic 888).
   Trend continues: flee less. f11: radius 50-80, sprint radius 40/60, face radius 80, dodge off.
+- 03:27 f11: flee radius optimum ~80 (50/60/70 worse by 20-40 s); sprint radius 40/60 +20; dodge off -97.
+  Best with predators now e_r80_ns_spr40: 1262 s / score 1283. f12 tunes the dodge (radius 40-100, angle) and facing.
