@@ -357,6 +357,7 @@ struct Params {
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
+    double evade_search = 0., evade_energy = 0., evade_goal = 0., pred_cone = 0.5;
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
            pred_dodge_r = 0., pred_dodge_ang = 1.5708, pred_dodge_hold = 0., pred_dodge_hold_face = 1.;
     double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN, l_births_per_tick = NAN, l_emergency_reserve = NAN, l_low_pop_reserve = NAN;
@@ -1873,6 +1874,7 @@ public:
     // weighted threats (sprint inside pred_sprint_r), face the nearest (pred_face), and inside pred_dodge_r step
     // sideways (perpendicular, away from the predator's heading) to exploit its 0.3 rad/tick turn cap.
     #include "../models/avoidance/native_corner.hpp"
+    #include "../models/avoidance/native_escape_search.hpp"
 
     bool evade(const AState& s, Plan& pl) {
         if(P.corner_mode>0. && corner_steer(s,pl))return true;
@@ -1891,13 +1893,14 @@ public:
         }
         const Th* nr = nullptr; double vx = 0., vy = 0.;
         for (const Th& t : th) {
-            bool facing = std::fabs(t.rel) < 0.5;
+            bool facing = std::fabs(t.rel) < P.pred_cone;
             if (!(t.d < P.pred_r || (facing && t.d < P.pred_face_r))) continue;
             double w = 1.0 / pmax(t.d, 15.);
             vx -= std::cos(t.ang) * w; vy -= std::sin(t.ang) * w;
             if (!nr || t.d < nr->d) nr = &t;
         }
         if (!nr) return false;
+        if (P.evade_search > 0. && escape_search(s, pl, th, nr->ang)) { n_evading++; return true; }
         if (P.evade_closest > 0. && nr->d > P.evade_closest) {   // predators chase their closest agent: if another visible agent is nearer to it, keep foraging
             P2 pp{std::cos(nr->ang) * nr->d, std::sin(nr->ang) * nr->d};
             for (const Obs& o : *s.obs) {
