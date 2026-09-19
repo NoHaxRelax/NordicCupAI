@@ -39,3 +39,28 @@ that a wandering predator will remain facing that way indefinitely.
 
 Build: `python nightsim/build.py` (from survival-simulator).
 Batch: `python nightsim/run.py --configs docs/avoidance/native-corner-configs.json --seeds 1-16 --predators --workers 3 --out logs/avoidance/results.jsonl`.
+
+## Completed comparisons and tracking correction
+
+On seeds 1–16, native shared avoidance scored 1583.63, nearest-corner v1
+1597.74, and sparse-corner v1 1583.68. With deliberate gaze offset and the
+original non-shared avoidance settings, nearest ±10 scored 1661.29,
+nearest ±20 scored 1646.24 and sparse-corner ±10 scored 1571.52.
+None beat the original 1763.68 avoidance baseline.
+
+**The early directional counters are invalid.** A new nearest sighting could
+replace the predator being steered. In the displayed seed-1 replay, all three
+apparent successes switched targets; the original predators were roughly
+44°, 47°, and 146° off target. See `target-switch-audit.json`. This is why a
+provisional alignment count must not be presented as an achieved ±10° exit.
+
+The current C++ controller matches consecutive sightings by position and
+heading, rejecting ambiguous matches and jumps. A new inexpensive variant
+only starts within 30° of the desired direction and spends at most two
+seconds trying. A fresh paired comparison on seeds 17–32 is running.
+This is research code; directional steering is not established as beneficial.
+
+The full-game native recorder is `scripts/record_native_avoidance.py`.
+It uses native `policy_act` and ordinary actions, retaining each tick for
+`scripts/entrapment_viewer.py`. Example current review URL:
+http://localhost:9092/?time=786.1 (historical target-switch failure).

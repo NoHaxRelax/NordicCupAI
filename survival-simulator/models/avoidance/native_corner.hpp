@@ -18,10 +18,25 @@ bool corner_steer(const AState& s, Plan& pl) {
     Mind& m=M(s.aid);Group& g=G(m.group);const PoseObj& ps=*m.pose;
     if(!g.anchored || time<m.corner_retry)return false;
     const Obs* o=nullptr;
-    for(const Obs& x:*s.obs)if(x.type==2 && x.has_rel_dir && (!o || x.distance<o->distance))o=&x;
+    double match=OINF,second=OINF;
+    for(const Obs& x:*s.obs)if(x.type==2 && x.has_rel_dir) {
+        double score=x.distance;
+        if(m.corner_phase) {
+            P2 q=polar(ps,x);double hh=wrap(ps.theta+x.angle+OPI-x.rel_dir);
+            double shift=dist(q,m.corner_pred),turn=std::fabs(wrap(hh-m.corner_heading));
+            if(shift>22. || turn>.75)continue;
+            score=shift+20.*turn;
+        }
+        if(score<match){second=match;match=score;o=&x;}else second=pmin(second,score);
+    }
+    if(m.corner_phase && second-match<8.)o=nullptr; // ambiguous identity is not success
     if(!o) {if(m.corner_phase){corner_missed++;m.corner_phase=0;m.corner_retry=time+8.;}return false;}
     P2 p=polar(ps,*o);double h=wrap(ps.theta+o->angle+OPI-o->rel_dir);
     bool seen=o->distance<=60. || (o->distance<=250. && std::fabs(wrap(o->rel_dir))<=OPI/6.);
+    if(m.corner_phase && dist(p,m.corner_pred)>45.) {
+        // A different nearest sighting or a localization jump is not an aligned exit.
+        corner_missed++;m.corner_phase=0;m.corner_retry=time+8.;return false;
+    }
     if(!m.corner_phase) {
         if(!seen || o->distance<90. || s.energy<0.35*s.max_energy || s.sprint<=15.)return false;
         // One nearby observer steers; other gatherers retain Oscar's escape.
@@ -29,7 +44,10 @@ bool corner_steer(const AState& s, Plan& pl) {
             P2 q=M(other.aid).pose->p;double d=dist(q,p),a=wrap(std::atan2(q.y-p.y,q.x-p.x)-h);
             if(d<o->distance-5. && (d<=60. || (d<=250. && std::fabs(a)<=OPI/6.)))return false;
         }
-        m.corner_goal=corner_for(g,p);m.corner_phase=1;m.corner_start=time;corner_started++;
+        m.corner_goal=corner_for(g,p);
+        double initial_error=std::fabs(wrap(std::atan2(m.corner_goal.y-p.y,m.corner_goal.x-p.x)-h));
+        if(initial_error>P.corner_start_angle*OPI/180.)return false;
+        m.corner_phase=1;m.corner_start=time;corner_started++;
     }
     double want=std::atan2(m.corner_goal.y-p.y,m.corner_goal.x-p.x);
     double error=std::fabs(wrap(h-want)),tol=P.corner_tolerance*OPI/180.;
@@ -65,14 +83,17 @@ bool corner_steer(const AState& s, Plan& pl) {
     for(double length:{pmin(s.speed,cap),cap})for(int i=0;i<48;i++) {
         double direction=TAU*i/48.;P2 q=add(ps.p,mul(unit(direction),length*MOVE_PENALTY[s.biome]));
         if(!clear(ps.p,q,5.01))continue;
-        double face=std::atan2(p.y-q.y,p.x-q.x),worst=0.;
+        // A small deliberate gaze offset selects the watched-predator strafe side.
+        // Centering on a stale sighting left the side sensitive to tiny errors.
+        double sign=wrap(want-h)>=0.?1.:-1.;
+        double face=std::atan2(p.y-q.y,p.x-q.x)-sign*P.corner_gaze,worst=0.;
         for(double speed:{11.*MOVE_PENALTY[s.biome],15.}) {
             auto lag=pred(p,h,ps.p,ps.theta,speed);auto next=pred(lag.first,lag.second,q,face,speed);
             double d=dist(q,next.first),err=std::fabs(wrap(next.second-want));
             double risk=d<15.?1e6+(15.-d)*1e4:0.;
             for(auto& other:g.pseen)if(dist(other.p,p)>20. && dist(q,other.p)<40.)risk+=1e5;
             double spacing=pmax(0.,95.-d)+pmax(0.,d-125.);
-            double objective=m.corner_phase==2 ? (visible(next.first,next.second,q)?100.:0.)+20.*pmax(0.,err-tol)+err : err*40.+spacing*3.;
+            double objective=m.corner_phase==2 ? (visible(next.first,next.second,q)?100.:0.)+1000.*pmax(0.,err-tol)+err : err*40.+spacing*3.;
             worst=pmax(worst,risk+objective);
         }
         double cost=0.05*pmin(length,s.speed)+.5*pmax(0.,length-s.speed);

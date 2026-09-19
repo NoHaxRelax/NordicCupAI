@@ -334,7 +334,7 @@ struct AState {
 };
 
 struct Params {
-    double corner_mode=0.,corner_tolerance=10.,corner_budget=3.;
+    double corner_mode=0.,corner_tolerance=10.,corner_budget=3.,corner_gaze=.25,corner_start_angle=180.;
     double cap_mult = 0.3, cap_min = 4, cap_max = 20, n0 = 80., tree_half = 600., tree_slots = 1,
            breed_reserve = 200., emergency_reserve = 105., ripen_wait = 20., sweep_rate = 0.03,
            explore_radius = 450., fit_vision = 1.0, fit_hear = 0.3, fit_energy = 0.2, births_per_tick = 3,

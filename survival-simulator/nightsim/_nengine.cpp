@@ -1752,7 +1752,7 @@ bool parse_params(PyObject* d, orchard::Params& P) {
     if (!d || d == Py_None) return true;
     if (!PyDict_Check(d)) { PyErr_SetString(PyExc_TypeError, "config must be a dict"); return false; }
     struct F { const char* k; double* v; };
-    F fs[] = {{"corner_mode", &P.corner_mode}, {"corner_tolerance", &P.corner_tolerance}, {"corner_budget", &P.corner_budget},{"cap_mult", &P.cap_mult}, {"cap_min", &P.cap_min}, {"cap_max", &P.cap_max}, {"n0", &P.n0},
+    F fs[] = {{"corner_start_angle", &P.corner_start_angle}, {"corner_gaze", &P.corner_gaze}, {"corner_mode", &P.corner_mode}, {"corner_tolerance", &P.corner_tolerance}, {"corner_budget", &P.corner_budget},{"cap_mult", &P.cap_mult}, {"cap_min", &P.cap_min}, {"cap_max", &P.cap_max}, {"n0", &P.n0},
               {"tree_half", &P.tree_half}, {"tree_slots", &P.tree_slots}, {"breed_reserve", &P.breed_reserve},
               {"emergency_reserve", &P.emergency_reserve}, {"ripen_wait", &P.ripen_wait}, {"sweep_rate", &P.sweep_rate},
               {"explore_radius", &P.explore_radius}, {"fit_vision", &P.fit_vision}, {"fit_hear", &P.fit_hear},
