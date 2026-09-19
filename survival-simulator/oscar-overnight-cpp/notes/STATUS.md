@@ -710,3 +710,4 @@ Log (newest last)
   random configs): random draws mostly far worse; structural fruit-at-birth neutral/negative. S2 around the winners
   -> CONFIRMED on 400 fresh seeds: cmb_dp30 (s1c16 + s1c0 changes + dist_pen 0.3) +103+-19 s, score +85+-20
   (~1608 s / 1600); c16c0 +92+-19. New best saved as best_1310 (configs-all.json). S3: 32 configs around it.
+- 15:22 OSCAR: stop all Runpod runs, keep the pods (CPUs reserved). All jobs, queues and queue daemons killed on n11-n19; n10 had already been stopped by my first call before his correction and was started again (its disk is fresh, no jobs). Nothing running.
