@@ -274,3 +274,8 @@ Log (newest last)
   final fresh-seed measurement of both shipped configs with the fixed policy (768 seeds each, j/k).
 - 06:22 f31: site nearest the colony -43..-79; trap line closed. Final 768-seed numbers recorded in BEST.md.
   Pods i/j/k stopped. Waiting for new direction from Oscar (tick continues at a low cadence).
+- 06:32 Item 1 done: anchor fix ported to research/orchard/orchard.py; lockstep parity (nightsim/parity.py,
+  Python policy vs native on one engine): 6 seeds x 800 s, zero divergent decisions. Pod i cannot restart (host
+  full) -> new pod n6 (jjys2nbbrba2v3). Running f32 (items 2+5): trap only from 900/1200 s when predators are
+  many, with keeper, near-colony sites, and lane-limited guides. Coded item 4: committed dodge heading
+  (pred_dodge_hold ticks: run past/behind the predator, then walk away).

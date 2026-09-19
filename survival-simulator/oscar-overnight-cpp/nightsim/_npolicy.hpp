@@ -230,6 +230,7 @@ struct Mind {
     double repost_at = 0., post_since = -OINF, last_site = 0.;
     bool has_watch = false; P2 watch_p{}; double watch_t = 0;
     int hide_idx = -1; double hide_t = -1e9;   // nightsim: crevice pass-through escape
+    double dodge_head = 0.; int64_t dodge_left = 0;   // nightsim: committed dodge heading (pred_dodge_hold)
 };
 using MindP = std::shared_ptr<Mind>;
 
@@ -347,7 +348,7 @@ struct Params {
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
-           pred_dodge_r = 0., pred_dodge_ang = 1.5708;
+           pred_dodge_r = 0., pred_dodge_ang = 1.5708, pred_dodge_hold = 0., pred_dodge_hold_face = 1.;
     double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN, l_births_per_tick = NAN, l_emergency_reserve = NAN, l_low_pop_reserve = NAN;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
          old_eat_last = true, heir_needs_site = true;
@@ -1714,11 +1715,22 @@ public:
             }
         }
         double away = std::atan2(vy, vx);
+        Mind& mm = M(s.aid);
+        if (mm.dodge_left > 0) {   // committed: keep the chosen absolute heading (walk after the first sprint ticks)
+            mm.dodge_left--;
+            double dir = wrap(mm.dodge_head - mm.pose->theta);
+            double walk = pmin(s.speed, s.sprint);
+            double step = (nr->d < P.pred_sprint_r) ? s.sprint : walk;
+            pl = Plan{step, dir, P.pred_face > 0. && P.pred_dodge_hold_face > 0. ? nr->ang : 0.};
+            n_evading++;
+            return true;
+        }
         if (nr->d < P.pred_dodge_r) {
             // predator heading in agent frame points along (bearing to predator + pi - rel); step perpendicular to it,
             // on the side that increases the angle the predator must turn
             double side = nr->rel >= 0. ? 1. : -1.;
             away = wrap(nr->ang + OPI + side * P.pred_dodge_ang);
+            if (P.pred_dodge_hold > 0.) { mm.dodge_head = wrap(mm.pose->theta + away); mm.dodge_left = (int64_t)P.pred_dodge_hold; }
         }
         double walk = pmin(s.speed, s.sprint);
         double step = nr->d < P.pred_sprint_r ? s.sprint : walk;
