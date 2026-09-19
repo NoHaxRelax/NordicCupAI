@@ -23,6 +23,8 @@ Run: `python scripts/optimize_avoidance16.py --out logs/avoidance/bayes16 --work
 - 2,784 complete games in total, horizon 3,000 simulated seconds or extinction.
 - Score is the objective. Angle counters do not determine success or selection.
 - Both corner variants target ±10 degrees; that is not a guaranteed result.
+- Each family also tunes reaction/sprint distances, so rankings compare tuned
+  policy packages rather than isolating a mechanism in an ablation.
 - Small training sets and sixteen trials make this a bounded search, not proof
   that any family has reached its best possible settings.
 
