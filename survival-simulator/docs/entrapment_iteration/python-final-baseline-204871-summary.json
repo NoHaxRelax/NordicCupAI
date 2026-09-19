@@ -1,0 +1,64 @@
+{
+  "seed": 204871,
+  "status": "complete",
+  "frames": 8620,
+  "sim_time": 862.0000000001274,
+  "runtime_seconds": 1390.382106612029,
+  "score": 870.3703058864592,
+  "final_agents": 0,
+  "peak_agents": 50,
+  "total_agents_seen": 204,
+  "predators": 9,
+  "first_bait_time": 30.90000000000017,
+  "maximum_predators_within_40_of_bait": 5,
+  "maximum_predators_continuously_near_bait_30s": 4,
+  "estimated_bait_gap_seconds_after_first_arrival": 171.59999999999454,
+  "longest_estimated_bait_gap_seconds": 93.89999999999894,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 50,
+    "guide_deaths": 40,
+    "guide_releases": 0,
+    "guide_handovers": 0,
+    "delivery_arrivals": 4,
+    "bait_arrivals": 15,
+    "overlapping_replacements": 13,
+    "estimated_unbaited_seconds": 175.80000000003906,
+    "no_viable_bait_ticks": 4016
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 107,
+      "starvation:retired_bait": 13,
+      "starvation:guide": 9,
+      "starvation:avoiding_predator": 8,
+      "predator:guide": 34,
+      "predator:avoiding_predator": 27,
+      "starvation:bait": 2,
+      "predator:replacement_bait": 2,
+      "predator:gatherer": 2
+    },
+    "fruit_eaten": 1743,
+    "energy_deaths_before_age_60": {
+      "gatherer": 29,
+      "avoiding_predator": 4
+    },
+    "ripe_fruit_eaten": 1553,
+    "ripe_fraction": 0.8909925415949512,
+    "mean_agent_energy_fraction": 0.36000548964966256,
+    "predator_deaths_with_sprint_available": {
+      "guide": 13,
+      "avoiding_predator": 10,
+      "replacement_bait": 2,
+      "gatherer": 2
+    },
+    "premature_predator_deaths_with_sprint_available": 24,
+    "sprint_failures_after_recent_observed_slowdown": 1,
+    "premature_guide_predator_deaths_with_sprint_available": 10,
+    "intentional_delivery_sacrifices": 4,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable."
+  },
+  "source_commit": "8764dce",
+  "source_note": "Frozen Python combined policy with narrow public-lag guard; native physics. Independent development seed; not in final C++100."
+}

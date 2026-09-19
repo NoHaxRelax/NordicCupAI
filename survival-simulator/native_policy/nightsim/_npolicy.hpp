@@ -1,6 +1,8 @@
 // Native port of the orchard policy (fastsim/policy/orchard_ref.py + best-config.json).
-// Included by _engine.cpp after the Engine class. Decision-identical to the Python
-// policy: CPython's math.hypot/math.dist algorithm, round(), float % and //, dict
+// Included by _nengine.cpp after the Engine class. The orchard foundation
+// reproduces Python arithmetic/container semantics; the entrapment additions
+// are a native adaptation, not a decision-identical port of models/core.py.
+// Foundation details: CPython's math.hypot/math.dist algorithm, round(), float % and //, dict
 // insertion order, int-set iteration order (PySetEmu) and random.Random are all
 // reproduced, and every expression keeps Python's evaluation order.
 //
@@ -208,6 +210,8 @@ struct CellV { double last; int biome; };  // biome -1 = None
 
 struct Mind {
     int64_t aid; int64_t group; Pose pose; double born;
+    bool guide_sample_valid=false; int guide_sample_tick=0; P2 guide_sample{};
+    std::vector<std::pair<P2,double>> terrain_samples;
     bool has_last = false; LastAction last_action{};
     bool spawned_ok = false;
     Pose prev_pose;  // null = None
@@ -267,11 +271,22 @@ struct Group {
     int64_t keeper = -1; bool keeper_spawn = false; double keeper_spawn_t = -1e9; int64_t baits_born = 0;
     int64_t relay = -1; int64_t relays_done = 0;
     P2 rep_pos{}; int64_t rep_stuck = 0; double rep_since = 0.;
+    bool rep_entered_rear = false;
+    double rep_progress = OINF, rep_progress_t = -1e9;
+    double bait_gap_since = -1.;
+    int64_t bait_arrivals = 0, bait_overlaps = 0, replacement_failures = 0;
+    double bait_gap_seconds = 0.;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
     struct PredMark { P2 p; double t; };
     std::vector<PredMark> pmem;   // nightsim: recent predator sightings (pred_avoid_*)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
+    struct NavGrid { uint64_t version = 0; double step = 0., radius = 0.; int nx = 0, ny = 0; std::vector<char> blocked; };
+    uint64_t wall_version = 1;
+    std::vector<NavGrid> nav_grids;
+    uint64_t route_cache_version = 0;
+    std::unordered_map<std::string, std::vector<P2>> route_cache;
+    std::unordered_set<std::string> failed_route_cache;
 
     template <class T>
     static void list_remove(std::unordered_map<CellK, std::vector<T>, CellHash>& grid, const CellK& c, const T& obj) {
@@ -346,14 +361,16 @@ struct Params {
            cap_hard_min = 2, nursery_bonus = 0.;
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
+    double entrapment_lookahead = 0., explore_until_trap = 0.;
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 1., bait_rotate = 0., bait_rot_e = 0.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
-    double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
-           trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
+    double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 5., wall_tol = 8., wall_min_obs = 2.,
+           trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.,
+           bait_overlap_seconds = 20., bait_food_lead_seconds = 6., bait_progress_timeout = 8.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
     double pred_mode = 0., pred_r = 200., pred_sprint_r = 90., pred_face = 1., pred_face_r = 260., pred_share = 0.,
            pred_dodge_r = 0., pred_dodge_ang = 1.5708, pred_dodge_hold = 0., pred_dodge_hold_face = 1.;
     double late_t = OINF, l_fruit_reach = NAN, l_tree_reach = NAN, l_watch_reach = NAN, l_explore_energy = NAN, l_cap_min = NAN, l_cap_mult = NAN, l_cap_tree_slack = NAN, l_cap_hard_min = NAN, l_sweep_rate = NAN, l_watch_patience = NAN, l_explore_radius = NAN, l_old_reach = NAN, l_dist_pen = NAN, l_births_per_tick = NAN, l_emergency_reserve = NAN, l_low_pop_reserve = NAN;
@@ -403,6 +420,8 @@ public:
             for (auto& e : m.edges) { e.a = T(e.a); e.b = T(e.b); }
             for (auto& b : m.blocked) b.p = T(b.p);
             for (auto& h : m.hear_hist) h.p = T(h.p);
+            for (auto& t : m.terrain_samples) t.first = T(t.first);
+            if (m.guide_sample_valid) m.guide_sample = T(m.guide_sample);
             if (m.has_explore) m.explore_p = T(m.explore_p);
             if (m.has_watch) m.watch_p = T(m.watch_p);
             if (m.has_detour) m.detour_dir = wrap(m.detour_dir + dth);
@@ -410,6 +429,20 @@ public:
         });
         g.trees.each([&](const int64_t&, TreeP& t) { t->p = T(t->p); });
         g.fruits.each([&](const int64_t&, FruitP& f) { f->p = T(f->p); });
+        for (auto& w : g.walls) {
+            P2 a = w.horiz ? P2{w.lo, w.c} : P2{w.c, w.lo};
+            P2 b = w.horiz ? P2{w.hi, w.c} : P2{w.c, w.hi};
+            P2 normal = w.horiz ? P2{0., w.solid} : P2{w.solid, 0.};
+            a = T(a); b = T(b); normal = rot(normal, dth);
+            w.horiz = std::fabs(a.y - b.y) < std::fabs(a.x - b.x);
+            w.c = w.horiz ? .5 * (a.y + b.y) : .5 * (a.x + b.x);
+            w.lo = w.horiz ? pmin(a.x, b.x) : pmin(a.y, b.y);
+            w.hi = w.horiz ? pmax(a.x, b.x) : pmax(a.y, b.y);
+            w.solid = (w.horiz ? normal.y : normal.x) < 0. ? -1. : 1.;
+            w.cs = {w.c}; w.los = {w.lo}; w.his = {w.hi};
+        }
+        if (!g.walls.empty()) g.wall_version++;
+        g.nav_grids.clear(); g.route_cache.clear(); g.failed_route_cache.clear(); g.route_cache_version = 0;
         g.rebuild_grids();
         ODict<CellK, CellV, CellHash> cells;
         g.cells.each([&](const CellK& c, CellV& v) {
@@ -423,6 +456,11 @@ public:
     }
     void merge(Group& ga, Group& gb, double dth, P2 shift) {
         transform_group(gb, dth, shift);
+        auto occupied = [&](const Group& g) {
+            return g.has_trap && (g.bait >= 0 || g.rep >= 0 || g.guide >= 0 || !g.retired.empty() || !g.leaving.empty());
+        };
+        bool ga_active = occupied(ga), gb_active = occupied(gb);
+        bool same_trap = ga.has_trap && gb.has_trap && dist_lt(ga.trap.goal, gb.trap.goal, 6.);
         gb.agents.each([&](int64_t aid) { M(aid).group = ga.id; ga.agents.add(aid); });
         for (const int64_t& tk : gb.trees.key_list()) {
             TreeP t = gb.trees.at(tk);
@@ -459,6 +497,56 @@ public:
             if (e) { e->last = pmax(e->last, v.last); if (e->biome < 0) e->biome = v.biome; }
             else ga.cells.set(c, v);
         });
+        // Both anchored maps are in the same public frame here. Preserve all
+        // confirmed wall evidence and coalesce repeated observations of a face.
+        for (auto& src : gb.walls) {
+            Group::Wall* dst = nullptr;
+            for (auto& w : ga.walls)
+                if (w.horiz == src.horiz && w.solid == src.solid && std::fabs(w.c - src.c) <= P.wall_tol
+                        && std::fabs(w.lo - src.lo) <= 2. * P.wall_tol && std::fabs(w.hi - src.hi) <= 2. * P.wall_tol) { dst = &w; break; }
+            if (!dst) { ga.walls.push_back(src); continue; }
+            dst->n += src.n; dst->n_conf += src.n_conf; dst->n_obs += src.n_obs; dst->t = pmax(dst->t, src.t);
+            dst->cs.insert(dst->cs.end(), src.cs.begin(), src.cs.end());
+            dst->los.insert(dst->los.end(), src.los.begin(), src.los.end());
+            dst->his.insert(dst->his.end(), src.his.begin(), src.his.end());
+            auto trim_median = [](std::vector<double>& v) {
+                std::sort(v.begin(), v.end());
+                double m = v[v.size() / 2];
+                if (v.size() > 31) { size_t lo = (v.size() - 31) / 2; v = std::vector<double>(v.begin() + lo, v.begin() + lo + 31); }
+                return m;
+            };
+            dst->c = trim_median(dst->cs); dst->lo = trim_median(dst->los); dst->hi = trim_median(dst->his);
+        }
+        if (!gb.walls.empty()) ga.wall_version++;
+        ga.nav_grids.clear(); ga.route_cache.clear(); ga.failed_route_cache.clear(); ga.route_cache_version = 0;
+
+        auto append_unique = [](std::vector<int64_t>& out, int64_t aid) {
+            if (aid >= 0 && std::find(out.begin(), out.end(), aid) == out.end()) out.push_back(aid);
+        };
+        if (gb_active && !ga_active) {
+            ga.sites = gb.sites; ga.sites_t = gb.sites_t; ga.has_trap = gb.has_trap; ga.trap = gb.trap;
+            ga.trap_since = gb.trap_since; ga.bait = gb.bait; ga.rep = gb.rep; ga.retired = gb.retired; ga.leaving = gb.leaving;
+            ga.guide = gb.guide; ga.guide_state = gb.guide_state; ga.guide_since = gb.guide_since; ga.guide_seen = gb.guide_seen;
+            ga.guide_pred = gb.guide_pred; ga.relay = gb.relay; ga.keeper = gb.keeper;
+            ga.rep_pos = gb.rep_pos; ga.rep_stuck = gb.rep_stuck; ga.rep_since = gb.rep_since;
+            ga.rep_entered_rear = gb.rep_entered_rear; ga.rep_progress = gb.rep_progress; ga.rep_progress_t = gb.rep_progress_t;
+            ga.bait_gap_since = gb.bait_gap_since;
+        } else if (gb_active && ga_active) {
+            if (same_trap) {
+                if (ga.bait < 0) ga.bait = gb.bait; else if (gb.bait != ga.bait) append_unique(ga.retired, gb.bait);
+                if (ga.rep < 0) { ga.rep = gb.rep; ga.rep_entered_rear = gb.rep_entered_rear; ga.rep_progress = gb.rep_progress; ga.rep_progress_t = gb.rep_progress_t; }
+                for (int64_t a : gb.retired) append_unique(ga.retired, a);
+                for (int64_t a : gb.leaving) append_unique(ga.leaving, a);
+            } else {
+                // merge() cannot retain two independent trap state machines. Keep
+                // the secondary bait holding its already occupied site; release
+                // its travelling replacement and guide rather than redirect them.
+                append_unique(ga.retired, gb.bait);
+                for (int64_t a : gb.retired) append_unique(ga.retired, a);
+            }
+        }
+        ga.bait_arrivals += gb.bait_arrivals; ga.bait_overlaps += gb.bait_overlaps;
+        ga.replacement_failures += gb.replacement_failures; ga.bait_gap_seconds += gb.bait_gap_seconds;
         ga.anchored = ga.anchored || gb.anchored;
         groups.erase(gb.id);
     }
@@ -979,7 +1067,7 @@ public:
         std::stable_sort(agents.begin(), agents.end(), [&](int64_t a, int64_t b) { return st(a).energy < st(b).energy; });
         for (int64_t a : agents) {
             Mind& m = M(a);
-            if (m.old) continue;
+            if (m.old || is_trap_role(a)) continue;
             bool keep = m.has_post && g.trees.has(m.post) && site_ok(*g.trees.at(m.post));
             if (keep && (time < m.repost_at || time - m.post_since < P.min_stay)) continue;
             double cur_v = -OINF;
@@ -1015,7 +1103,7 @@ public:
         std::vector<FPair> pairs;
         g.agents.each([&](int64_t a) {
             Mind& m = M(a);
-            if (m.has_fruit) return;
+            if (m.has_fruit || is_trap_role(a)) return;
             const AState& s = st(a);
             if (s.age > P.no_eat_age) return;
             bool full = s.energy > s.max_energy - 30.;
@@ -1334,20 +1422,34 @@ public:
             if (w.horiz != horiz || std::fabs(w.c - c) > P.wall_tol) continue;
             if (std::fabs(w.lo - lo) > 2. * P.wall_tol || std::fabs(w.hi - hi) > 2. * P.wall_tol) continue;
             if (w.solid != solid) {   // same face seen with the opposite solid side: a mis-posed observer, not a second wall
-                if (P.wall_conflict > 0.) { w.n_conf++; if (w.n_conf > w.n) { w.solid = solid; std::swap(w.n, w.n_conf); } return; }
+                if (P.wall_conflict > 0.) {
+                    bool was = w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs && w.n_conf * 4 <= w.n;
+                    double old_solid = w.solid; w.n_conf++; if (w.n_conf > w.n) { w.solid = solid; std::swap(w.n, w.n_conf); }
+                    bool now = w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs && w.n_conf * 4 <= w.n;
+                    if (was != now || old_solid != w.solid) g.wall_version++;
+                    return;
+                }
                 continue;
             }
+            bool was = w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs && (P.wall_conflict <= 0. || w.n_conf * 4 <= w.n);
+            double old_c = w.c, old_lo = w.lo, old_hi = w.hi;
             size_t k = (size_t)(w.n % 31);
             if (w.cs.size() < 31) { w.cs.push_back(c); w.los.push_back(lo); w.his.push_back(hi); }
             else { w.cs[k] = c; w.los[k] = lo; w.his[k] = hi; }
             w.c = median_of(w.cs); w.lo = median_of(w.los); w.hi = median_of(w.his);
+            // Failed searches require exact geometry, unlike revalidated successful routes.
+            if (old_c != w.c || old_lo != w.lo || old_hi != w.hi) g.failed_route_cache.clear();
             if (who != w.obs1 && who != w.obs2) { if (w.obs1 < 0) w.obs1 = who; else if (w.obs2 < 0) w.obs2 = who; w.n_obs++; }
-            w.n++; w.t = time; return;
+            w.n++; w.t = time;
+            bool now = w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs && (P.wall_conflict <= 0. || w.n_conf * 4 <= w.n);
+            if (was != now || (now && (std::fabs(old_c - w.c) > .5 || std::fabs(old_lo - w.lo) > .5 || std::fabs(old_hi - w.hi) > .5))) g.wall_version++;
+            return;
         }
         if (g.walls.size() < 4000) {
             Group::Wall w{horiz, c, lo, hi, solid, time, 1};
             w.cs = {c}; w.los = {lo}; w.his = {hi}; w.obs1 = who; w.n_obs = 1;
             g.walls.push_back(w);
+            g.wall_version++;
         }
     }
     bool confirmed(const Group::Wall& w) const { return w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs && (P.wall_conflict <= 0. || w.n_conf * 4 <= w.n); }
@@ -1355,7 +1457,29 @@ public:
         if (p.x < r || p.y < r || p.x > W - r || p.y > H - r) return false;
         for (size_t i = 0; i < g.walls.size(); i++) {
             if ((int)i == skip1 || (int)i == skip2 || !confirmed(g.walls[i])) continue;
-            if (seg_dist(p, g.walls[i]) < r) return false;
+            const auto& w = g.walls[i];
+            double xmin = w.horiz ? w.lo : w.c, xmax = w.horiz ? w.hi : w.c;
+            double ymin = w.horiz ? w.c : w.lo, ymax = w.horiz ? w.c : w.hi;
+            if (p.x < xmin - r || p.x > xmax + r || p.y < ymin - r || p.y > ymax + r) continue;
+            if (seg_dist(p, w) < r) return false;
+        }
+        return true;
+    }
+    bool clear_segment(const Group& g, P2 a, P2 b, double r, int skip1 = -1, int skip2 = -1) const {
+        if (!clear_of(g, a, r, skip1, skip2) || !clear_of(g, b, r, skip1, skip2)) return false;
+        double ab_min_x = pmin(a.x, b.x), ab_max_x = pmax(a.x, b.x);
+        double ab_min_y = pmin(a.y, b.y), ab_max_y = pmax(a.y, b.y);
+        for (size_t i = 0; i < g.walls.size(); i++) {
+            if ((int)i == skip1 || (int)i == skip2 || !confirmed(g.walls[i])) continue;
+            const auto& w = g.walls[i];
+            P2 c = w.horiz ? P2{w.lo, w.c} : P2{w.c, w.lo};
+            P2 d = w.horiz ? P2{w.hi, w.c} : P2{w.c, w.hi};
+            double cd_min_x = pmin(c.x, d.x), cd_max_x = pmax(c.x, d.x);
+            double cd_min_y = pmin(c.y, d.y), cd_max_y = pmax(c.y, d.y);
+            if (ab_max_x < cd_min_x - r || ab_min_x > cd_max_x + r
+                    || ab_max_y < cd_min_y - r || ab_min_y > cd_max_y + r) continue;
+            if (segments_cross(a, b, c, d) || point_segment(c, a, b) < r || point_segment(d, a, b) < r
+                    || point_segment(a, c, d) < r || point_segment(b, c, d) < r) return false;
         }
         return true;
     }
@@ -1374,11 +1498,8 @@ public:
                 double gap = B.c - A.c;
                 if (gap < 10.1 || gap > 19.9) continue;
                 double lo = pmax(A.lo, B.lo), hi = pmin(A.hi, B.hi);
-                // safe depth: a predator (r=10) can push its centre to xmin = sqrt(100 - (gap/2)^2) outside the mouth line
-                // (it only has to clear the face END points), so 9 deep is unsafe for gaps wider than ~16; hold deeper
-                double xmin = std::sqrt(pmax(0., 100. - (gap / 2) * (gap / 2)));
-                double depth = P.site_safe > 0. ? pmax(P.trap_depth, 15. - xmin + P.site_safe) : P.trap_depth;
-                if (hi - lo < pmax(10.3, depth + 6.)) continue;
+                if (hi - lo < 20.) continue;
+                double depth = P.trap_depth;
                 double xc = A.c + gap / 2;
                 for (int end = 0; end < 2; end++) {
                     double m_along = end == 0 ? lo : hi, inward = end == 0 ? 1. : -1.;
@@ -1395,9 +1516,9 @@ public:
                         if (ok) { lane = true; lane_off = off; break; }
                     }
                     if (!lane) continue;
-                    bool rear_ok = clear_of(g, rear, 5.5) && clear_of(g, pt((end == 0 ? hi : lo) + 8. * inward, xc), 5.5);
-                    if (P.site_safe > 0. && rear_ok && hi - lo < 2. * depth) continue;   // open rear too close to the hold point
-                    if (P.trap_rear_only > 0. && !rear_ok) continue;   // nightsim: only crevices a replacement can enter from behind
+                    // The full radius-5.01 rear route must be known clear, not merely its endpoints.
+                    bool rear_ok = clear_segment(g, rear, goal, 5.01);
+                    if (!rear_ok) continue;
                     Group::Site st{goal, mouth, pt(m_along - 60. * inward, xc + lane_off), rear, hi - lo, gap, 0., rear_ok};
                     st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? P.site_dist_w * dist(goal, cen) : 0.);
                     g.sites.push_back(st);
@@ -1413,13 +1534,30 @@ public:
         Group& g = G(M(aid).group);
         return g.has_trap && (g.bait == aid || g.rep == aid || g.guide == aid || g.relay == aid || std::find(g.retired.begin(), g.retired.end(), aid) != g.retired.end() || std::find(g.leaving.begin(), g.leaving.end(), aid) != g.leaving.end());
     }
-    double life_left(const AState& s, const Mind& m) const {
-        // idle life with no food, assuming senescence from age 60 (earliest possible)
-        double E = s.energy, age = s.age;
-        if (m.old) return E / (1. + 0.1 * pmax(age, 60.));
-        double young = pmax(0., 60. - age);
-        if (E <= young) return E;
-        return young + (E - young) / (1. + 0.1 * pmax(age + young, 60.));
+    double life_left(const AState& s, const Mind&, double energy_cost = 0.) const {
+        // Same conservative closed form as models/core.py: reserve two energy,
+        // then solve the quadratic senescence loss after age 60.
+        double energy = pmax(0., s.energy - energy_cost - 2.);
+        double young = pmin(energy, pmax(0., 60. - s.age));
+        energy -= young;
+        double age = s.age + young, b = 1. + .1 * age;
+        double old = energy > 0. ? 2. * energy / (b + std::sqrt(b * b + .2 * energy)) : 0.;
+        return young + old;
+    }
+    struct BaitEstimate { double distance, seconds, energy_cost; };
+    BaitEstimate bait_estimate(Group& g, const Mind& m, const AState& s, const Group::Site& site, bool entered) {
+        P2 unused{}; double route = 0.;
+        if (entered) {
+            if (!route_next(g, m.pose->p, site.goal, 5.01, unused, &route)) return BaitEstimate{OINF, OINF, OINF};
+        } else {
+            double approach = 0.;
+            if (!route_next(g, m.pose->p, site.rear, 5.01, unused, &approach)) return BaitEstimate{OINF, OINF, OINF};
+            route = approach + dist(site.rear, site.goal);
+        }
+        // River speed and walking cost make the time/energy estimate conservative
+        // without consulting hidden terrain.
+        double walk = pmax(.1, pmin(s.speed, s.sprint));
+        return BaitEstimate{route, route / (walk * .3 * 10.), route / .3 * .05};
     }
     void pick_trap(Group& g) {
         if (g.sites.empty()) return;
@@ -1428,9 +1566,10 @@ public:
             if (g.bait >= 0 && minds.has(g.bait) && dist_lt(M(g.bait).pose->p, g.trap.goal, 6.)) return;   // bait already holding
         }
         g.trap = g.sites[0]; g.has_trap = true; g.trap_since = time; g.bait = -1; g.rep = -1;
+        g.rep_entered_rear = false; g.rep_progress = OINF; g.rep_progress_t = time;
     }
-    void bait_plan(Mind& m, const AState& s, const Group::Site& st, Plan& pl) {
-        // enter through the REAR when the site has one (the front mouth is where the predators wait), else the front
+    void bait_plan(Group& g, Mind& m, const AState& s, const Group::Site& st, double deadline, Plan& pl) {
+        // Always enter through the verified rear route; never wait at its entrance.
         P2 in = sub(st.goal, st.mouth); double nl = norm(in); in = mul(in, 1.0 / pmax(nl, 1e-6));
         const PoseObj& ps = *m.pose;
         double dg = dist(ps.p, st.goal);
@@ -1440,23 +1579,41 @@ public:
             return;
         }
         double walk = pmin(s.speed, s.sprint);
-        P2 target;
-        if (st.rear_ok) {
-            // rear point -> straight down the channel axis to the goal
-            P2 ax = sub(ps.p, st.goal); double across = std::fabs(ax.x * in.y - ax.y * in.x);
-            double along = ax.x * in.x + ax.y * in.y;   // > 0: on the rear side of the goal
-            bool in_channel = across < 4. && along > -1. && along < st.overlap + 25.;
-            target = in_channel ? st.goal : st.rear;
-        } else {
-            P2 pre = sub(st.mouth, mul(in, 25.));
-            P2 ax = sub(ps.p, pre); double along = ax.x * in.x + ax.y * in.y, across = std::fabs(ax.x * in.y - ax.y * in.x);
-            target = (along > -3. && across < 4.) ? st.goal : pre;
+        // A collision detour can push the replacement back through the exposed front.
+        if (m.aid == g.rep && g.rep_entered_rear && (sub(ps.p, st.mouth).x * in.x + sub(ps.p, st.mouth).y * in.y) < 0.)
+            g.rep_entered_rear = false;
+        if (m.aid == g.rep && !g.rep_entered_rear && dist_lt(ps.p, st.rear, 3.)) g.rep_entered_rear = true;
+        bool entered_rear = m.aid == g.bait || g.rep_entered_rear;
+        P2 target = entered_rear ? st.goal : st.rear;
+
+        // A non-full replacement may take one nearby, observed ripe fruit only
+        // when the detour still meets both the handoff deadline and energy reserve.
+        if (!entered_rear && s.energy < s.max_energy && deadline < OINF) {
+            BaitEstimate base = bait_estimate(g, m, s, st, false);
+            bool have = false; double best_extra = OINF; P2 best{};
+            for (const Obs& o : *s.obs) {
+                if (o.type != 0 || o.distance > 60.) continue;
+                P2 fruit = polar(ps, o); FruitP known;
+                for (auto& f : g.near_fruits(fruit, 8.)) if (ready(*f) && (!known || dist(f->p, fruit) < dist(known->p, fruit))) known = f;
+                if (!known || !clear_segment(g, ps.p, fruit, 5.01) || !clear_segment(g, fruit, target, 5.01)) continue;
+                double extra = dist(ps.p, fruit) + dist(fruit, target) - dist(ps.p, target);
+                double travel = base.seconds + extra / (pmax(.1, pmin(s.speed, s.sprint)) * .3 * 10.) + .2;
+                double cost = base.energy_cost + extra / .3 * .05;
+                if (extra <= 30. && travel + 5. < deadline && life_left(s, m, cost) >= travel + 15. && extra < best_extra) {
+                    have = true; best_extra = extra; best = fruit;
+                }
+            }
+            if (have) target = best;
         }
-        double d, ang; local_of(ps, target, d, ang);
-        bool axis_leg = dist_lt(target, st.goal, 1.) ;
+        P2 waypoint{};
+        if (!route_next(g, ps.p, target, 5.01, waypoint)) { pl = Plan{0., 0., .2}; return; }
+        double d, ang; local_of(ps, waypoint, d, ang);
+        bool axis_leg = entered_rear && dist_lt(target, st.goal, 1.);
         if (axis_leg) { pl = Plan{pmin(walk, d), ang, 0.}; return; }   // inside the channel: straight along the axis
-        double dd, dir, turn; go_to(m, s, target, 3., dd, dir, turn);   // approach legs use the obstacle-avoiding navigator
-        pl = Plan{dd, dir, turn};
+        // A* already proves radius-5.01 clearance. The orchard navigator's
+        // separate 7-unit heuristic would steer away from valid narrow routes.
+        double distance, direction; local_of(ps, waypoint, distance, direction);
+        pl = Plan{pmin(walk, distance), direction, pmax(-P.travel_turn,pmin(P.travel_turn,direction))};
     }
     void run_trap(std::unordered_map<int64_t, Plan>& plans) {
         if (time < P.trap_start) return;
@@ -1468,7 +1625,9 @@ public:
             for (auto& q : g.pseen) if (!dist_lt(q.p, g.trap.mouth, 40.)) { g.guide_seen = time; break; }
             if (P.trap_bait_fixed >= 0. && minds.has((int64_t)P.trap_bait_fixed)) g.bait = (int64_t)P.trap_bait_fixed;
             if (g.bait >= 0 && (!minds.has(g.bait) || M(g.bait).group != g.id)) g.bait = -1;
-            if (g.rep >= 0 && (!minds.has(g.rep) || M(g.rep).group != g.id)) g.rep = -1;
+            if (g.rep >= 0 && (!minds.has(g.rep) || M(g.rep).group != g.id)) {
+                g.rep = -1; g.rep_entered_rear = false; g.replacement_failures++;
+            }
             // replacement reached the goal -> it becomes the bait (the old bait stays there until it dies)
             {
                 std::vector<int64_t> keep;
@@ -1481,14 +1640,27 @@ public:
                 g.leaving.swap(keep);
             }
             if (g.rep >= 0 && dist_lt(M(g.rep).pose->p, g.trap.goal, 4.)) {
-                if (g.bait >= 0) { if (P.bait_rotate > 0. && g.trap.rear_ok) { g.leaving.push_back(g.bait); g.baits_rotated++; } else g.retired.push_back(g.bait); }
+                bool overlap = g.bait >= 0 && dist_lt(M(g.bait).pose->p, g.trap.goal, 4.);
+                if (overlap) {
+                    g.bait_overlaps++;
+                    if (P.bait_rotate > 0. && g.trap.rear_ok) { g.leaving.push_back(g.bait); g.baits_rotated++; }
+                    else g.retired.push_back(g.bait);
+                }
                 g.bait = g.rep; g.rep = -1;
+                g.rep_entered_rear = false; g.rep_progress = OINF; g.bait_arrivals++;
             }
-            if (g.rep >= 0) {   // stuck or too slow: release the replacement to normal duty
+            bool bait_ready = g.bait >= 0 && dist_lt(M(g.bait).pose->p, g.trap.goal, 4.);
+            if (!bait_ready && g.bait_gap_since < 0.) g.bait_gap_since = time;
+            if (bait_ready && g.bait_gap_since >= 0.) { g.bait_gap_seconds += time - g.bait_gap_since; g.bait_gap_since = -1.; }
+            if (g.rep >= 0) {   // release a replacement after eight seconds without route progress
                 Mind& rm = M(g.rep);
-                if (dist_lt(rm.pose->p, g.rep_pos, 2.)) g.rep_stuck++; else g.rep_stuck = 0;
+                BaitEstimate estimate = bait_estimate(g, rm, st(g.rep), g.trap, g.rep_entered_rear);
+                if (estimate.distance < g.rep_progress - 2.) { g.rep_progress = estimate.distance; g.rep_progress_t = time; }
                 g.rep_pos = rm.pose->p;
-                if (g.rep_stuck > 30 || time - g.rep_since > P.rep_timeout) { g.rep = -1; g.rep_stuck = 0; }
+                if (time - g.rep_progress_t > P.bait_progress_timeout) {
+                    g.rep = -1; g.rep_stuck = 0; g.rep_entered_rear = false; g.rep_progress = OINF;
+                    g.replacement_failures++;
+                }
             }
             double need = OINF;
             if (g.bait >= 0) need = life_left(st(g.bait), M(g.bait));
@@ -1514,7 +1686,7 @@ public:
                         double d = dist(M(a).pose->p, M(g.keeper).pose->p);
                         if (d < bd) { bd = d; nb = a; }
                     });
-                    if (nb >= 0) { g.rep = nb; g.rep_since = time; g.rep_stuck = 0; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
+                    if (nb >= 0) { g.rep = nb; g.rep_since = time; g.rep_stuck = 0; g.rep_entered_rear = false; g.rep_progress = OINF; g.rep_progress_t = time; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
                     else if (time - g.keeper_spawn_t > 1.5) g.keeper_spawn = false;
                 }
                 if (g.keeper >= 0 && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
@@ -1522,21 +1694,34 @@ public:
                     if (dist_lt(M(g.keeper).pose->p, g.trap.rear, P.keeper_r) && ks.energy > 100. + P.keeper_reserve) { g.keeper_spawn = true; g.keeper_spawn_t = time; }
                 }
             }
-            if (P.keeper_mode <= 0. && P.trap_bait_fixed < 0. && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
+            if (P.keeper_mode <= 0. && P.trap_bait_fixed < 0. && g.rep < 0 && want_bait) {
                 int64_t best = -1; double bs = -OINF;
+                double best_travel = OINF;
                 g.agents.each([&](int64_t a) {
-                    if (a == g.bait || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
+                    if (is_trap_role(a)) return;
                     const AState& s = st(a); Mind& m = M(a);
-                    double walk = pmax(1., pmin(s.speed, s.sprint)) * 10.;
-                    double travel = dist(m.pose->p, g.trap.goal) / walk + 2.;
-                    double life = life_left(s, m) - travel;
-                    if (g.bait >= 0 && need > travel + P.bait_margin) return;   // not needed yet for this candidate
-                    if (life < P.bait_min_life) return;
-                    double score = (m.old ? 1000. : 0.) + (m.old ? 0. : s.age) - travel - (m.old ? 0. : P.bait_young_pen);
-                    if (score > bs) { bs = score; best = a; }
+                    // Best-case lower bounds: straight rear route, fastest public
+                    // terrain and minimum walking cost. Failure here proves the
+                    // radius-aware conservative route cannot be viable either.
+                    double lower_distance = dist(m.pose->p, g.trap.rear) + dist(g.trap.rear, g.trap.goal);
+                    double walk = pmax(.1, pmin(s.speed, s.sprint));
+                    double lower_travel = lower_distance / (walk * 10.);
+                    double upper_life = life_left(s, m, lower_distance * .05);
+                    if (upper_life < pmax(P.bait_min_life, lower_travel + 15.)) return;
+                    BaitEstimate estimate = bait_estimate(g, m, s, g.trap, false);
+                    double travel = estimate.seconds;
+                    double life = life_left(s, m, estimate.energy_cost);
+                    if (life < pmax(P.bait_min_life, travel + 15.)) return;
+                    bool meets_deadline = g.bait < 0 || travel + 5. < need;
+                    double score = (meets_deadline ? 1000000. : 0.) + (m.old ? 1000. : 0.)
+                                 + (m.old ? 0. : s.age) - travel - (m.old ? 0. : P.bait_young_pen);
+                    if (score > bs) { bs = score; best = a; best_travel = travel; }
                 });
-                if (best >= 0) {
-                    g.rep = best; g.rep_since = time; g.rep_stuck = 0; Mind& m = M(best);
+                double food_lead = best >= 0 && st(best).energy < st(best).max_energy - 30. ? P.bait_food_lead_seconds : 0.;
+                bool due = g.bait < 0 || (best >= 0 && need <= best_travel + P.bait_overlap_seconds + food_lead);
+                if (best >= 0 && due) {
+                    g.rep = best; g.rep_since = time; g.rep_stuck = 0; g.rep_entered_rear = false;
+                    g.rep_progress = OINF; g.rep_progress_t = time; Mind& m = M(best);
                     if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(best);
                     m.has_post = false;
                     if (m.has_fruit && g.fruits.has(m.fruit)) g.fruits.at(m.fruit)->has_claim = false;
@@ -1549,7 +1734,8 @@ public:
                 bool needed = g.rep < 0 && (g.bait < 0 || need < P.bait_margin + 60.) && ks.energy > 100. + P.keeper_reserve;
                 if (dk > P.keeper_r && needed) { double dd, dir, turn; go_to(km, ks, g.trap.rear, P.keeper_r * 0.6, dd, dir, turn); plans[g.keeper] = Plan{dd, dir, turn}; }
             }
-            for (int64_t a : {g.bait, g.rep}) if (a >= 0) bait_plan(M(a), st(a), g.trap, plans[a]);
+            if (g.bait >= 0) bait_plan(g, M(g.bait), st(g.bait), g.trap, OINF, plans[g.bait]);
+            if (g.rep >= 0) bait_plan(g, M(g.rep), st(g.rep), g.trap, need, plans[g.rep]);
             for (int64_t a : g.retired) plans[a] = Plan{0., 0., 0.};
             for (int64_t a : g.leaving) { double dd, dir, turn; go_to(M(a), st(a), g.trap.rear, 0., dd, dir, turn); plans[a] = Plan{dd, dir, turn}; }
             if (P.trap_mode >= 3.) run_guide(g, plans);
@@ -1567,10 +1753,109 @@ public:
     }
 
 
+    // Public sensing only: no simulator state or predator identity is available here.
+    bool predator_detects(Group& g, P2 predator, double heading, P2 agent) const {
+        double d=dist(predator,agent);
+        if (d<=60.) return true;
+        if (d>250. || std::fabs(wrap(std::atan2(agent.y-predator.y,agent.x-predator.x)-heading))>OPI/6.) return false;
+        for (const auto& w:g.walls) if (confirmed(w)) {
+            P2 a=w.horiz?P2{w.lo,w.c}:P2{w.c,w.lo};
+            P2 b=w.horiz?P2{w.hi,w.c}:P2{w.c,w.hi};
+            if (segments_cross(predator,agent,a,b)) return false;
+        }
+        return true;
+    }
+    void run_native_guide(Group& g, std::unordered_map<int64_t, Plan>& plans) {
+        if (g.guide>=0 && (!minds.has(g.guide) || M(g.guide).group!=g.id)) {
+            g.ep_died++; g.guide=-1; g.guide_state=0;
+        }
+        if (g.bait<0 || !minds.has(g.bait) || dist(M(g.bait).pose->p,g.trap.goal)>6.) {
+            g.guide=-1; g.guide_state=0; return;
+        }
+        auto held=[&](P2 p) { return dist(p,g.trap.goal)<=60.; };
+        if (g.guide<0) {
+            int64_t best=-1; double score=-OINF; P2 target{};
+            g.agents.each([&](int64_t aid) {
+                if (is_trap_role(aid) || frozen.count(aid)) return;
+                Mind& m=M(aid); const AState& s=st(aid);
+                if (s.energy < pmax(P.guide_min_e,s.max_energy*.2+10.)) return;
+                for (const auto& o:*s.obs) if (o.type==2) {
+                    P2 p=polar(*m.pose,o);
+                    double heading=m.pose->theta+o.angle+OPI-(o.has_rel_dir?o.rel_dir:0.);
+                    if (held(p) || !predator_detects(g,p,heading,m.pose->p)) continue;
+                    // Reuse an agent already pursued. Prefer retirement only when
+                    // enough life remains to be useful; proximity still matters.
+                    double travel=dist(m.pose->p,g.trap.out)/(pmax(.1,pmin(s.speed,s.sprint))*.5*10.);
+                    if (life_left(s,m)<travel+3.) continue;
+                    double value=(m.old?30.:0.)-o.distance+.02*s.energy;
+                    if (value>score) { score=value; best=aid; target=p; }
+                }
+            });
+            if (best<0) return;
+            g.guide=best; g.guide_state=2; g.guide_since=time; g.guide_seen=time;
+            g.guide_pred=target; g.guide_has_prev=false; g.ep_start++; g.ep_h=false; g.ep_chased=true;
+            Mind& m=M(best);
+            if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(best);
+            if (m.has_fruit && g.fruits.has(m.fruit)) g.fruits.at(m.fruit)->has_claim=false;
+            m.has_post=false; m.has_fruit=false; m.guide_sample_valid=false;
+        }
+        Mind& m=M(g.guide); const AState& s=st(g.guide); const auto& ps=*m.pose;
+        const Obs* target=nullptr; double closest=OINF;
+        for (const auto& o:*s.obs) if (o.type==2) {
+            P2 p=polar(ps,o);
+            if (held(p) && dist(p,g.guide_pred)>40.) continue;
+            double d=dist(p,g.guide_pred);
+            if (d<closest) { closest=d; target=&o; }
+        }
+        if (!target) {
+            double d,ang; local_of(ps,g.guide_pred,d,ang);
+            if (time-g.guide_seen>2.) { g.guide=-1; g.guide_state=0; g.ep_lost++; return; }
+            // Reacquire from the last public sighting; the shared safety pass
+            // still runs if the role is released. Never use an unseen true pose.
+            double dd,dir,turn; go_to(m,s,g.guide_pred,100.,dd,dir,turn);
+            plans[g.guide]=Plan{dd,dir,ang}; return;
+        }
+        g.guide_pred=polar(ps,*target); g.guide_seen=time;
+        double ph=ps.theta+target->angle+OPI-(target->has_rel_dir?target->rel_dir:0.);
+        bool following=predator_detects(g,g.guide_pred,ph,ps.p);
+        P2 outward=sub(g.trap.mouth,g.trap.goal); outward=mul(outward,1./pmax(norm(outward),1e-6));
+        P2 delivery=add(g.trap.goal,mul(outward,P.guide_hand-1.));
+        double dB=dist(ps.p,g.trap.goal);
+        bool in_front=sub(ps.p,g.trap.mouth).x*outward.x+sub(ps.p,g.trap.mouth).y*outward.y>=0.;
+        if (dB<=P.guide_hand && in_front && following) {
+            g.guide_state=3;
+            if (!g.ep_h) { g.ep_h=true; g.ep_hand++; }
+            plans[g.guide]=Plan{0.,0.,target->angle}; return;
+        }
+        g.guide_state=dB<100.?3:2; g.ep_h=false;
+        P2 destination=following?delivery:g.guide_pred;
+        P2 waypoint=destination;
+        route_next(g,ps.p,destination,5.01,waypoint);
+        double dd,dir,turn; go_to(m,s,waypoint,following?1.:50.,dd,dir,turn);
+        entrapment_guide::Input input;
+        input.agent={s.energy,s.max_energy,s.age,s.speed,s.sprint,MOVE_PENALTY[s.biome]};
+        input.nominal={dd,dir,target->angle}; input.tick=(int)std::llround(time*10.);
+        input.reacquiring=!following; input.preferred_min=P.guide_near; input.preferred_max=P.guide_far;
+        auto local=[&](P2 p) { P2 q=rot(sub(p,ps.p),-ps.theta); return entrapment_guide::P2{q.x,q.y}; };
+        input.bait=local(g.trap.goal); input.route_waypoints.push_back(local(waypoint));
+        for (const auto& o:*s.obs) if (o.type==2) {
+            if (&o==target) input.target_index=input.predators.size();
+            input.predators.push_back({o.distance,o.angle,o.rel_dir,o.has_rel_dir});
+        }
+        auto wall=[&](P2 a,P2 b) { if (point_segment(ps.p,a,b)<350.) input.walls.push_back({local(a),local(b)}); };
+        for (const auto& w:g.walls) if (confirmed(w)) wall(w.horiz?P2{w.lo,w.c}:P2{w.c,w.lo},w.horiz?P2{w.hi,w.c}:P2{w.c,w.hi});
+        for (const auto& t:m.terrain_samples) input.terrain_samples.push_back({local(t.first),t.second,0.});
+        if (m.guide_sample_valid) input.previous={true,m.guide_sample_tick,local(m.guide_sample)};
+        auto result=entrapment_guide::search(input);
+        m.guide_sample_valid=true; m.guide_sample_tick=input.tick; m.guide_sample=g.guide_pred;
+        plans[g.guide]=result.found?Plan{result.plan.move_distance,result.plan.move_direction,result.plan.turn_angle}:Plan{dd,dir,target->angle};
+    }
+
     // ------------------------------------------------------------ guide (nightsim, trap_mode >= 3): one predator to the trap
     // states: 1 ACQUIRE (get within guide_acq so it locks on), 2 LEAD (face it, back toward the lane point, keep
     // guide_near..guide_far), 3 DELIVER (back through the mouth past the bait, out the rear or stop deeper), 4 DONE.
     void run_guide(Group& g, std::unordered_map<int64_t, Plan>& plans) {
+        if (P.entrapment_lookahead > 0.) { run_native_guide(g, plans); return; }
         if (g.guide < 0 && g.relay >= 0) g.relay = -1;
         if (g.guide >= 0 && (!minds.has(g.guide) || M(g.guide).group != g.id)) {
             g.ep_died++; gstat[6]++;
@@ -1881,8 +2166,17 @@ public:
         }
         const Th* nr = nullptr; double vx = 0., vy = 0.;
         for (const Th& t : th) {
-            bool facing = std::fabs(t.rel) < 0.5;
-            if (!(t.d < P.pred_r || (facing && t.d < P.pred_face_r))) continue;
+            bool facing = std::fabs(t.rel) < OPI/6.;
+            bool danger=t.d<P.pred_r || (facing && t.d<P.pred_face_r);
+            if (P.entrapment_lookahead>0.) {
+                const auto& ps=*m.pose; Group& g=G(m.group);
+                P2 pred=add(ps.p,mul(unit(ps.theta+t.ang),t.d));
+                double ph=ps.theta+t.ang+OPI-t.rel;
+                P2 next=add(ps.p,mul(unit(ps.theta+pl.direction),pl.dist*MOVE_PENALTY[s.biome]));
+                P2 pred_next=add(pred,mul(unit(ph),15.));
+                danger=predator_detects(g,pred,ph,ps.p) || predator_detects(g,pred_next,ph,next);
+            }
+            if (!danger) continue;
             double w = 1.0 / pmax(t.d, 15.);
             vx -= std::cos(t.ang) * w; vy -= std::sin(t.ang) * w;
             if (!nr || t.d < nr->d) nr = &t;
@@ -1937,24 +2231,97 @@ public:
     }
 
 
-    // nightsim: one-bend route from a to b through known walls: returns the next waypoint (b itself when the straight
-    // line is clear, else a via point at +-25/50/75 degrees at 0.5 or 0.35/0.7 of the distance), or false
-    bool route_next(Group& g, P2 a, P2 b, double r, P2& next) {
-        if (path_clear(g, a, b, r)) { next = b; return true; }
-        double L = dist(a, b); if (L < 1.) return false;
-        double base = std::atan2(b.y - a.y, b.x - a.x);
-        for (double frac : {0.5, 0.35, 0.7})
-            for (double deg : {25., -25., 50., -50., 75., -75.}) {
-                double ang = base + deg * OPI / 180.; double len = frac * L / std::cos(deg * OPI / 180.);
-                P2 via{a.x + len * std::cos(ang), a.y + len * std::sin(ang)};
-                if (via.x < 20. || via.y < 20. || via.x > W - 20. || via.y > H - 20.) continue;
-                if (path_clear(g, a, via, r) && path_clear(g, via, b, r)) { next = via; return true; }
-            }
-        return false;
+    bool path_clear(Group& g, P2 a, P2 b, double r) { return clear_segment(g, a, b, r); }
+    Group::NavGrid& nav_grid(Group& g, double step, double r) {
+        for (auto& grid : g.nav_grids)
+            if (grid.version == g.wall_version && grid.step == step && std::fabs(grid.radius - r) < .01) return grid;
+        if (g.nav_grids.size() >= 6) g.nav_grids.erase(g.nav_grids.begin());
+        Group::NavGrid grid; grid.version = g.wall_version; grid.step = step; grid.radius = r;
+        grid.nx = (int)std::floor(W / step) + 1; grid.ny = (int)std::floor(H / step) + 1;
+        grid.blocked.assign((size_t)grid.nx * (size_t)grid.ny, 1);
+        for (int x = 0; x < grid.nx; x++) for (int y = 0; y < grid.ny; y++) {
+            P2 p{(double)x * step, (double)y * step};
+            grid.blocked[(size_t)x * (size_t)grid.ny + (size_t)y] = clear_of(g, p, r) ? 0 : 1;
+        }
+        g.nav_grids.push_back(std::move(grid)); return g.nav_grids.back();
     }
-    bool path_clear(Group& g, P2 a, P2 b, double r) {
-        double L = dist(a, b); int n = (int)(L / 6.) + 1;
-        for (int k = 0; k <= n; k++) { double t = (double)k / (double)n; if (!clear_of(g, P2{a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t}, r)) return false; }
+    static std::string route_key(P2 a, P2 b, double r, double step) {
+        auto qs = [&](double v) { return (int64_t)std::floor(v / step); };
+        auto qg = [](double v) { return (int64_t)std::llround(v / 2.); };
+        return std::to_string(qs(a.x)) + ":" + std::to_string(qs(a.y)) + ":" + std::to_string(qg(b.x)) + ":"
+             + std::to_string(qg(b.y)) + ":" + std::to_string((int64_t)std::llround(r * 10.)) + ":" + std::to_string((int)step);
+    }
+    static std::string exact_route_key(P2 a, P2 b, double r, double step) {
+        auto bits = [](double v) { uint64_t u; std::memcpy(&u, &v, sizeof(u)); return std::to_string(u); };
+        return bits(a.x) + ":" + bits(a.y) + ":" + bits(b.x) + ":" + bits(b.y) + ":" + bits(r) + ":" + bits(step);
+    }
+    bool astar_route(Group& g, P2 a, P2 b, double r, double step, std::vector<P2>& route) {
+        if (path_clear(g, a, b, r)) { route = {a, b}; return true; }
+        if (!clear_of(g, a, r) || !clear_of(g, b, r)) return false;
+        if (g.route_cache_version != g.wall_version) {
+            g.route_cache.clear(); g.failed_route_cache.clear(); g.route_cache_version = g.wall_version;
+        }
+        std::string failed_key = exact_route_key(a, b, r, step) + ":" + std::to_string(g.wall_version);
+        if (g.failed_route_cache.count(failed_key)) return false;
+        std::string key = route_key(a, b, r, step);
+        auto cached = g.route_cache.find(key);
+        if (cached != g.route_cache.end()) {
+            route = cached->second; if (!route.empty()) { route[0] = a; route.back() = b; }
+            bool valid = route.size() >= 2;
+            for (size_t i = 0; valid && i + 1 < route.size(); i++) valid = path_clear(g, route[i], route[i + 1], r);
+            if (valid) return true;
+            g.route_cache.erase(cached);
+        }
+        auto& grid = nav_grid(g, step, r); int N = grid.nx * grid.ny;
+        auto id = [&](int x, int y) { return x * grid.ny + y; };
+        auto point = [&](int n) { return P2{(double)(n / grid.ny) * step, (double)(n % grid.ny) * step}; };
+        struct Q { double f, cost; int n; };
+        struct Greater { bool operator()(const Q& x, const Q& y) const { return x.f > y.f || (x.f == y.f && x.n > y.n); } };
+        std::vector<Q> open;
+        auto push = [&](Q q) { open.push_back(q); std::push_heap(open.begin(), open.end(), Greater{}); };
+        auto pop = [&]() { std::pop_heap(open.begin(), open.end(), Greater{}); Q q = open.back(); open.pop_back(); return q; };
+        std::vector<double> cost((size_t)N, OINF); std::vector<int> parent((size_t)N, -1);
+        int sx = (int)std::llround(a.x / step), sy = (int)std::llround(a.y / step);
+        for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++) {
+            int x = sx + dx, y = sy + dy; if (x < 0 || y < 0 || x >= grid.nx || y >= grid.ny) continue;
+            int n = id(x, y); P2 p = point(n); if (grid.blocked[(size_t)n] || !path_clear(g, a, p, r)) continue;
+            double c = dist(a, p); if (c < cost[(size_t)n]) { cost[(size_t)n] = c; parent[(size_t)n] = -2; push(Q{c + dist(p, b), c, n}); }
+        }
+        int goal = -1;
+        static const int D[8][2] = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
+        while (!open.empty()) {
+            Q q = pop(); if (q.cost != cost[(size_t)q.n]) continue;
+            P2 p = point(q.n); if (path_clear(g, p, b, r)) { goal = q.n; break; }
+            int x = q.n / grid.ny, y = q.n % grid.ny;
+            for (auto& d : D) {
+                int xx = x + d[0], yy = y + d[1]; if (xx < 0 || yy < 0 || xx >= grid.nx || yy >= grid.ny) continue;
+                int nn = id(xx, yy); if (grid.blocked[(size_t)nn]) continue;
+                P2 np = point(nn); if (!path_clear(g, p, np, r)) continue;
+                double nc = q.cost + dist(p, np);
+                if (nc < cost[(size_t)nn]) { cost[(size_t)nn] = nc; parent[(size_t)nn] = q.n; push(Q{nc + dist(np, b), nc, nn}); }
+            }
+        }
+        if (goal < 0) {
+            if (g.failed_route_cache.size() >= 256) g.failed_route_cache.clear();
+            g.failed_route_cache.insert(std::move(failed_key));
+            return false;
+        }
+        std::vector<P2> raw{b}; for (int n = goal; n >= 0; n = parent[(size_t)n]) raw.push_back(point(n)); raw.push_back(a);
+        std::reverse(raw.begin(), raw.end());
+        route.clear(); route.push_back(a); size_t i = 0;
+        while (i + 1 < raw.size()) {
+            size_t j = raw.size() - 1; while (j > i + 1 && !path_clear(g, raw[i], raw[j], r)) j--;
+            route.push_back(raw[j]); i = j;
+        }
+        if (g.route_cache.size() >= 256) g.route_cache.clear();
+        g.route_cache[key] = route; return true;
+    }
+    // Confirmed-wall A*: 20-unit grid first, 10-unit retry; greedy visibility smoothing.
+    bool route_next(Group& g, P2 a, P2 b, double r, P2& next, double* route_length = nullptr) {
+        std::vector<P2> route;
+        if (!astar_route(g, a, b, r, 20., route) && !astar_route(g, a, b, r, 10., route)) return false;
+        next = route.size() > 1 ? route[1] : b;
+        if (route_length) { *route_length = 0.; for (size_t i = 1; i < route.size(); i++) *route_length += dist(route[i - 1], route[i]); }
         return true;
     }
     // refuge (nightsim, refuge_mode): a chased agent that is already close to a narrow gap steps 9 deep into it and
@@ -2106,7 +2473,14 @@ public:
         std::sort(nw.begin(), nw.end());
         if (!nw.empty()) register_new(nw);
         merge_groups();
-        for (const AState& s : states) observe(M(s.aid), s);
+        for (const AState& s : states) {
+            observe(M(s.aid), s);
+            auto& m=M(s.aid);
+            if (m.terrain_samples.empty() || dist(m.terrain_samples.back().first,m.pose->p)>4.) {
+                if (m.terrain_samples.size()>=64) m.terrain_samples.erase(m.terrain_samples.begin());
+                m.terrain_samples.push_back({m.pose->p,MOVE_PENALTY[s.biome]});
+            }
+        }
         if (P.oracle_trees > 0.) apply_oracle();
         if (P.pred_mode > 0.) share_predators();
         if (P.trap_mode > 0. || P.hide_mode > 0. || P.refuge_mode > 0.) groups.each([&](const int64_t&, GroupP& g) { if (g->anchored && time - g->sites_t >= 2.) find_sites(*g); });
@@ -2140,9 +2514,31 @@ public:
         std::unordered_set<int64_t> spawn_set;
         std::unordered_map<int64_t, Plan> plans;
         for (const AState& s : states) plans[s.aid] = act(M(s.aid), s);
+        if (P.explore_until_trap > 0.) for (const AState& s : states) {
+            Mind& m=M(s.aid); Group& g=G(m.group);
+            if (g.has_trap || !g.sites.empty() || m.old || s.energy < P.explore_energy || m.has_fruit) continue;
+            if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(s.aid);
+            m.has_post=false;
+            if (!m.has_explore || time>m.explore_until || dist(m.explore_p,m.pose->p)<25.) {
+                P2 target{}; double until=0.;
+                m.has_explore=explore_target(m,g,s,target,until);
+                if (m.has_explore) { m.explore_p=target; m.explore_until=until; }
+            }
+            if (m.has_explore) {
+                P2 target=m.explore_p, next{};
+                if (g.anchored && route_next(g,m.pose->p,target,5.01,next)) target=next;
+                double dd,dir,turn; go_to(m,s,target,3.,dd,dir,turn);
+                plans[s.aid]=Plan{dd,dir,turn};
+            }
+        }
         if (P.pred_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid) && evade(s, plans[s.aid])) M(s.aid).evade_t = time;
         if (P.refuge_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid)) refuge_exit(s, plans[s.aid]);
         if (P.trap_mode >= 2.) run_trap(plans);
+        if (P.entrapment_lookahead > 0.) for (const AState& s:states) {
+            Group& g=G(M(s.aid).group);
+            bool incoming=g.rep==s.aid && !g.rep_entered_rear;
+            if ((!is_trap_role(s.aid) || incoming) && evade(s,plans[s.aid])) M(s.aid).evade_t=time;
+        }
         if (P.test_freeze > 0.) for (const AState& s : states) plans[s.aid] = Plan{0., 0., 0.};
         for (int64_t a : frozen) if (plans.count(a)) plans[a] = Plan{0., 0., 0.};
         int64_t young_now = (int64_t)young.size();
@@ -2158,7 +2554,7 @@ public:
         double median_fit = yfit[yfit.size() / 2];
         for (int64_t aid : elders) {
             Mind& m = M(aid); const AState& s = st(aid);
-            if (m.heir_done || s.biome == RIVER || (culled.count(aid) && !m.old)) continue;
+            if (is_trap_role(aid) || m.heir_done || s.biome == RIVER || (culled.count(aid) && !m.old)) continue;
             if (P.heir_select && (double)young.size() >= P.select_min_young && fit[aid] < median_fit - P.heir_slack) continue;
             const Plan& pl = plans[aid];
             Group& g = G(m.group);
@@ -2173,7 +2569,7 @@ public:
         }
         for (int64_t aid : elders) {
             Mind& m = M(aid); const AState& s = st(aid);
-            if (!m.old || spawn_set.count(aid)) continue;
+            if (is_trap_role(aid) || !m.old || spawn_set.count(aid)) continue;
             Group& g = G(m.group);
             TreeP site;
             if (m.has_post && g.trees.has(m.post)) site = g.trees.at(m.post);
@@ -2187,7 +2583,7 @@ public:
         if (pop <= 2) {
             for (const AState& s : states) {
                 const Plan& pl = plans[s.aid];
-                if (!spawn_set.count(s.aid) && s.energy - cost_now(pl.dist, pl.turn, s) > P.emergency_reserve) {
+                if (!is_trap_role(s.aid) && !spawn_set.count(s.aid) && s.energy - cost_now(pl.dist, pl.turn, s) > P.emergency_reserve) {
                     spawn_set.insert(s.aid); young_now++;
                 }
             }
@@ -2198,7 +2594,7 @@ public:
             std::vector<Cand> cands;
             for (const AState& s : states) {
                 Mind& m = M(s.aid);
-                if (spawn_set.count(s.aid) || s.biome == RIVER) continue;
+                if (is_trap_role(s.aid) || spawn_set.count(s.aid) || s.biome == RIVER) continue;
                 const Plan& pl = plans[s.aid];
                 double left = s.energy - cost_now(pl.dist, pl.turn, s);
                 if (m.old) {

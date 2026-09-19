@@ -38,6 +38,9 @@
 #include <numpy/arrayobject.h>
 #include <numpy/ufuncobject.h>
 
+
+#include "entrapment_guide.hpp"
+
 namespace {
 
 // ----------------------------------------------------------------------------
@@ -1596,6 +1599,7 @@ public:
 };
 
 #include "_npolicy.hpp"
+#include "_evaluation.hpp"
 
 // ----------------------------------------------------------------------------
 // Python bindings
@@ -1605,6 +1609,7 @@ struct EngineObject {
     PyObject_HEAD
     Engine* eng;
     orchard::Policy* pol;
+    NativeEvaluation* evaluation;
 };
 
 // Policy input exactly as the state dict the Python policy receives.
@@ -1752,7 +1757,8 @@ bool parse_params(PyObject* d, orchard::Params& P) {
     if (!d || d == Py_None) return true;
     if (!PyDict_Check(d)) { PyErr_SetString(PyExc_TypeError, "config must be a dict"); return false; }
     struct F { const char* k; double* v; };
-    F fs[] = {{"cap_mult", &P.cap_mult}, {"cap_min", &P.cap_min}, {"cap_max", &P.cap_max}, {"n0", &P.n0},
+    F fs[] = {{"entrapment_lookahead", &P.entrapment_lookahead}, {"explore_until_trap", &P.explore_until_trap}, {"bait_overlap_seconds", &P.bait_overlap_seconds}, {"bait_food_lead_seconds", &P.bait_food_lead_seconds}, {"bait_progress_timeout", &P.bait_progress_timeout},
+              {"cap_mult", &P.cap_mult}, {"cap_min", &P.cap_min}, {"cap_max", &P.cap_max}, {"n0", &P.n0},
               {"tree_half", &P.tree_half}, {"tree_slots", &P.tree_slots}, {"breed_reserve", &P.breed_reserve},
               {"emergency_reserve", &P.emergency_reserve}, {"ripen_wait", &P.ripen_wait}, {"sweep_rate", &P.sweep_rate},
               {"explore_radius", &P.explore_radius}, {"fit_vision", &P.fit_vision}, {"fit_hear", &P.fit_hear},
@@ -1809,6 +1815,9 @@ PyObject* Engine_policy_init(EngineObject* self, PyObject* args) {
     if (key.empty()) key.push_back(0);
     orchard::Params P;
     if (!parse_params(cfg, P)) return nullptr;
+    if (P.oracle_trees != 0.) { PyErr_SetString(PyExc_ValueError, "Hidden tree information is disabled in this controller"); return nullptr; }
+    delete self->evaluation;
+    self->evaluation = new NativeEvaluation;
     delete self->pol;
     self->pol = new orchard::Policy(key, P);
     if (getenv("NIGHT_POLLOG")) self->pol->dbg_log = true;
@@ -1909,6 +1918,7 @@ PyObject* Engine_run_policy(EngineObject* self, PyObject* args) {
     double horizon, stop_at;
     if (!PyArg_ParseTuple(args, "dd", &horizon, &stop_at)) return nullptr;
     if (!self->pol) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
+    if (g_pred_life > 0.) { PyErr_SetString(PyExc_ValueError, "Artificial predator retirement is disabled for native games"); return nullptr; }
     Engine* e = self->eng;
     long steps = 0; size_t peak = e->agents.size();
     Py_BEGIN_ALLOW_THREADS
@@ -1929,16 +1939,15 @@ PyObject* Engine_run_policy(EngineObject* self, PyObject* args) {
                 last_pose[a.id] = {mp->p.x, mp->p.y};
             }
         }
-        if (self->pol->P.oracle_trees > 0.) {
-            self->pol->oracle_p.clear(); self->pol->oracle_age.clear();
-            for (const Tree& t : e->trees) { self->pol->oracle_p.push_back(orchard::P2{t.x, t.y}); self->pol->oracle_age.push_back(t.age); }
-        }
         auto acts = self->pol->call(policy_states(e), e->time);
+        self->evaluation->start(*e,*self->pol,acts);
+        size_t first_event=e->events.size();
         for (const auto& a : acts) {
             Engine::Action ea{a.aid, a.dist, true, a.direction, a.turn, a.spawn};
             e->agent_step(ea);
         }
         e->non_agent_step();
+        self->evaluation->finish(*e,first_event);
         if (g_pred_life > 0.) {
             for (auto& pr : e->predators) {
                 pr.age += e->dt;
@@ -1951,6 +1960,11 @@ PyObject* Engine_run_policy(EngineObject* self, PyObject* args) {
     }
     Py_END_ALLOW_THREADS
     return Py_BuildValue("(ln)", steps, (Py_ssize_t)peak);
+}
+
+PyObject* Engine_evaluation(EngineObject* self, PyObject*) {
+    if (!self->evaluation) { PyErr_SetString(PyExc_RuntimeError, "policy_init first"); return nullptr; }
+    return self->evaluation->as_dict();
 }
 
 PyObject* Engine_agents(EngineObject* self, PyObject*) {
@@ -2310,12 +2324,14 @@ PyMethodDef Engine_methods[] = {
     {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
     {"policy_minds", (PyCFunction)Engine_policy_minds, METH_NOARGS, "debug: native minds"},
     {"policy_groups", (PyCFunction)Engine_policy_groups, METH_NOARGS, "debug: native groups"},
+    {"evaluation", (PyCFunction)Engine_evaluation, METH_NOARGS, "Spectator-only cumulative native policy metrics"},
     {"run_policy", (PyCFunction)Engine_run_policy, METH_VARARGS, "run_policy(horizon, stop_at) -> (steps, peak_agents); native policy + engine loop"},
     {nullptr, nullptr, 0, nullptr}};
 
 void Engine_dealloc(EngineObject* self) {
     delete self->eng;
     delete self->pol;
+    delete self->evaluation;
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -2340,6 +2356,7 @@ int Engine_init(EngineObject* self, PyObject* args, PyObject* kwds) {
     delete self->eng;
     delete self->pol;
     self->pol = nullptr;
+    delete self->evaluation; self->evaluation = nullptr;
     Py_BEGIN_ALLOW_THREADS
     self->eng = new Engine(w, h, cs, na, np_, nf, nt, key, dt, preds != 0);
     Py_END_ALLOW_THREADS
