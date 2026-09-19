@@ -636,3 +636,214 @@ indistinguishable on the API within the delivery noise; the proxy separates them
 
 Recording Y-A20 (sprite caps 16, i.e. every sprite of every class): proxy 0.314 (caps 12: 0.315) at 3.6 s per frame.
 Saturated; caps 12 stay deployed. Training-only levers are exhausted for this session.
+
+## Continuation on the 4-GPU pod (morning of 20 Sep local): baseline Z-A-base proxy 0.315, 249 camera moves applied, 0 refused
+
+The policy already keeps every move legal (limits in dtos.py equal the organizer's), so the API camera errors were
+replay divergence only. Per-class losses of the baseline (987 labels, 409 hit = 41%):
+
+| class | GT | hit | answered | ever in view | raw hits in view | note |
+|---|---|---|---|---|---|---|
+| tank | 164 | 116 | 174 | 70 | 48 | found 69% when seen; the rest never enters a view |
+| medium_plane | 66 | 63 | 80 | 28 | 23 | solved |
+| jet_plane | 112 | 63 | 67 | 50 | 26 | half found in view |
+| small_launcher | 97 | 64 | 167 | 42 | 39 | in-view recall fine, 77 confident false boxes |
+| large_launcher | 149 | 42 | 138 | 33 | 3 | detector barely fires on the validation launchers |
+| helicopter | 105 | 27 | 45 | 36 | 8 | boxes now right-sized (w/h 1.01/1.10); recall low |
+| hangar | 69 | 34 | 61 | 28 | 6 | |
+| large_tower, small_tower, mine_roller | 96, 45, 52 | 0 | 0 | 22, 23, 18 | 0 | validation-scene looks absent from the training bank |
+| medium_launcher | 32 | 0 | 193 | 13 | 0 | answers 2x wider than Oscar's labels (organizer-style box margins), 172 with conf > .5 |
+
+Reachable without validation-scene sprites: coverage (tank, jet plane) and in-view recall of jet plane/hangar.
+Being tested: L0 overviews with the current bank and caps (Z-A-ov), band lowered 15% (Z-A-v15).
+
+Recording Z-A-v15 (L1-only sweep, band lowered by 15% of its range): proxy 0.257 (top band 0.315). The top edge is
+where objects enter; every lower band tested loses. Band settled at the top.
+
+Recording Z-A-ov (L1 sweep + L0 overviews between sides, current 95-sprite bank and caps 12): proxy 0.229
+(L1-only 0.315). The verdict on L0 overview frames holds with the better detector: they cost coverage at L1 and
+add false tracks. Z-A-w6 (six-waypoint L1 sweep) recording.
+
+Recording Z-A-w6 (six-waypoint L1 sweep: left, centre-left, centre, right, centre-right, centre): proxy 0.276
+(four-waypoint 0.315). A longer cycle revisits each side later, and objects at the top edge leave before the
+camera returns; wider coverage per cycle loses to revisit frequency. Z-A-w2 (sides only) and Z-A-w4q (left,
+centre-left, right, centre-right) recording.
+
+## Recording Z-A-w2 (sides-only L1 sweep, DRONE_L1_WAYPOINTS=2): proxy **0.334**, new best (four-waypoint 0.315)
+
+Requesting only the two sides lets the policy's legal-step clamp produce the intermediate views (960 -> 2061 -> 2880
+-> 1779 -> 960): each side is revisited every third frame instead of every fourth, and the centre is still covered
+by the clamped steps. Six waypoints 0.276, quarter positions (Z-A-w4q) recording. Submitted from the 4-GPU pod.
+
+## Per-object failure analysis on the Higgsfield synthetic VALIDATION set (Oscar's request, 20 Sep): `eval_synthetic.py`
+
+216 composites on dev backgrounds, 363 pasted reviewed sprites (rotated by quarter turns, half of them mirrored,
+scale 0.9-1.1, Higgsfield-blended), run through the deployed pipeline (proposer, expert, gate v9, verifier v1).
+
+| class | objects | found | lost at gate | box (IoU .2-.5) | pose | no proposal |
+|---|---|---|---|---|---|---|
+| large_launcher | 21 | 86% | 0 | 5% | 10% | 0 |
+| medium_launcher | 12 | 92% | 0 | 0 | 0 | 0 |
+| hangar | 18 | 78% | 22% | 0 | 0 | 0 |
+| condor | 15 | 67% | 33% | 0 | 0 | 0 |
+| jet_plane | 30 | 63% | 10% | 27% | 0 | 0 |
+| small_tower | 24 | 62% | 33% | 4% | 0 | 0 |
+| mine_roller | 24 | 54% | 46% | 0 | 0 | 0 |
+| tank | 39 | 51% | 44% | 5% | 0 | 0 |
+| small_plane | 30 | 43% | 7% | 40% | 10% | 0 |
+| small_launcher | 33 | 42% | 9% | 9% | 0 | 39% |
+| spacecraft | 36 | 39% | 39% | 22% | 0 | 0 |
+| jammer | 27 | 33% | 44% | 7% | 15% | 0 |
+| medium_plane | 27 | 26% | 15% | 52% | 7% | 0 |
+| ta-ta | 27 | 0% | 22% | 52% | 26% | 0 |
+
+Unflipped sprites are found 72% (204), mirrored ones 19% (159): jet_plane 15/15 vs 4/15, spacecraft 12/12 vs 2/24,
+tank 16/21 vs 4/18, small_plane 12/15 vs 1/15, medium_plane 7/12 vs 0/15, jammer 9/15 vs 0/12. Zoom: L0 39%,
+L1 51%, L2 56%. The verifier rejected nothing (it was trained on these composites' cousins).
+Reading per object:
+- Gate v9 is the biggest loss on new backgrounds: it rejects 44-46% of true tanks, jammers and mine rollers and 33-39%
+  of towers, condors and spacecraft, mostly mirrored ones. The gate learned the training tiles' background and
+  sprite statistics (rim contrast, colour distance, competitor margins), i.e. it is overfitted to the sprites and
+  their backgrounds. Gate-free recording on the real scene running (Z-A-nogate).
+- Mirrors: the heading sweep covers rotations, never mirror images, so a mirrored sprite lands slightly off in pose
+  and then fails the gate or the IoU. A mirrored copy of every sprite in the bank is being tested (bank-mirror).
+- Box failures for planes, spacecraft and ta-ta are 1.3-1.6x too large against the synthetic tight boxes: the
+  synthetic labels are the sprite extent while our boxes carry the organizer's margins (the real labels do too), so
+  this is mostly a label-convention difference, but mirrored planes also land off-centre.
+- ta-ta is broken end to end on composites (0/27): tight boxes plus pose failures; small launchers fail at the
+  proposal stage on dev backgrounds (colour blob depends on the background).
+
+## Synthetic composites, per object (19 Sep, Oscar's step-back request)
+
+Pipeline: proposer -> expert -> gate v9 -> verifier v1, current bank (95 sprites, caps 12), delivered scale per zoom.
+Outcome per pasted object: found / gate (true object reached the gate and was rejected) / box (found but IoU < 0.5
+against the tight synthetic box) / pose / proposal (never proposed).
+
+| set | bank | found unflipped | found mirrored | L0 / L1 / L2 |
+|---|---|---|---|---|
+| validation composites (216, dev backgrounds) | 95 | 72% | 19% | 39 / 51 / 56% |
+| validation composites | 190 (mirror of every sprite) | 69% | 50% | 44 / 64 / 74% |
+| training composites (531, train backgrounds) | 95 | 55% | 22% | 31 / 42 / 42% |
+
+Per class on the validation composites with the mirrored bank (found / gate-rejected / box):
+condor 80/0/0, hangar 78/22/0, jammer 41/59/0, jet_plane 97/0/3, large_launcher 90/0/10, medium_launcher 100/0/0,
+medium_plane 22/26/41, mine_roller 54/46/0, small_launcher 42/9/9 (39% never proposed), small_plane 60/23/13,
+small_tower 79/21/0, spacecraft 67/28/6, ta-ta 4/33/37 (26% pose), tank 69/26/5.
+
+Training composites with the 95-sprite bank are worse than the validation ones for the same reason: the gate
+rejects 75% of condors, 67% of small launchers, 50% of hangars, 48% of jammers, 45% of medium planes, 39% of
+mine rollers even on training backgrounds. The gate is fitted on real training tiles; pasted sprites at random
+scale and heading have different feature statistics (competitor scores, colour stats), so gate rejection here is
+partly a synthetic artefact. Whether the gate hurts on the real validation scene is the Z-A-nogate recording.
+
+Reading per object:
+- Mirrored poses are the largest single gap: 19% -> 50% just by adding mirrored sprites. Cost: 2x proposer kernels.
+- The gate is the second: jammer, mine roller, tank, spacecraft, small tower lose 21-59% at the gate.
+- Box convention: medium_plane and ta-ta boxes miss IoU 0.5 against tight boxes (organizer boxes carry margins,
+  synthetic boxes are tight, so the box column is partly a label-convention artefact; ta-ta is real: 4% found).
+- small_launcher: 39% never proposed (too small at delivered scale; needs a lower proposer threshold or L2 only).
+- Perspective distortion is not testable on 2D pastes; the sets contain none.
+
+## Speed-motivated A/Bs on the sides-only sweep (baseline Z-A-w2 0.334)
+- Z-A-h30 (proposer heading step 30 instead of 15, half the kernels): 0.294 (-0.04). Not free.
+- Z-A-nogate (no logistic gate, verifier only): 0.287 (-0.047). The gate helps on the real scene, so the synthetic
+  gate rejections are mostly a paste artefact (feature statistics of pasted sprites), not a gate bug. Gate stays.
+- Z-A-w2 on the validation API (full run, 149 requests): **0.246**, 16 errors. New expert-pipeline API best (V-D 0.239).
+  Proxy 0.334 -> API 0.246, the usual delivery/replay gap.
+- Z-A-cap12 (max_candidates 24->12, colour candidates 12->6, ta-ta colour 30->15): 0.320 (-0.014). Cheap but not free.
+- Z-A-off0 (fine_offsets (0.,) instead of (-8, 0, 8); one alternative heading as before): 0.324 (-0.010).
+- Z-A-hyb (speed batch 13: shared proposer on delivered 960x540 pixels, experts at native scale, DRONE_PROPOSER_FACTORS=1,1,1): 0.237 (-0.097).
+  Same loss as the delivered-L1 test: the coarse peak search on delivered pixels loses the small objects. Not viable as is.
+- Z-A-mirror (190-sprite mirrored bank, caps still 12): 0.326 (-0.008). Per class vs Z-A-w2: hangar 0.54 -> 0.73,
+  helicopter 0.26 -> 0.32, medium_plane 0.95 -> 0.78, tank 0.65 -> 0.59, large_launcher 0.22 -> 0.12; the four zero
+  classes stay at zero. Mirrors help the few-sprite classes and crowd out originals in the capped classes (the cap of 12
+  now holds 6 originals + 6 mirrors). Next config to test: mirrors only for classes with fewer than 6 sprites, or
+  caps 24 for medium_plane / tank / large_launcher with the mirrored bank.
+- Z-A-scales (scales 1/1.25/1.5 for large_tower, small_tower, mine_roller, large_launcher; 1/1.5/2 for medium_launcher): 0.325 (-0.009).
+  The four zero classes stay at zero and large_launcher drops 0.22 -> 0.125; every other class is identical. Size is not
+  what blocks the towers, the mine roller or the medium launcher; the failure is earlier (proposal or gate) and needs a
+  stage-by-stage check on the real frames.
+
+## Real-frame stage analysis (eval_real.py: L1 view centred on each labelled object, delivered-then-upsampled like the live detector)
+Small sample (every 10th frame, up to 20 objects per class), current pipeline:
+| class | objects | found | gate | box | pose | proposal |
+|---|---|---|---|---|---|---|
+| helicopter | 10 | 30% | 20% | 10% | 30% | 10% |
+| large_launcher | 15 | 7% | 0 | 13% | 80% | 0 |
+| large_tower | 9 | 22% | 0 | 44% | 33% | 0 |
+| medium_launcher | 3 | 33% | 0 | 67% | 0 | 0 |
+| mine_roller | 5 | 0 | 0 | 0 | 60% | 40% |
+| small_tower | 4 | 0 | 50% | 50% | 0 | 0 |
+"pose" = proposals lie on the object (score 0.4-0.5) but none survives the 24-candidate cut, so no fine pose is fitted;
+"box" = pose right, box IoU 0.2-0.5. Larger sample (every 3rd frame, 40 per class, all 11 classes) and the same with the
+scale sweep are running as runs/real-val-big and runs/real-val-scales.
+Box details from the small sample (pred vs local GT): large_tower boxes 1.4-2.3x too WIDE (height about right), small_tower
+1.5-2x too wide, medium_launcher 1.6x too wide, helicopter 1.6x too wide; large_launcher boxes too small (0.6-0.9x) and
+shifted down by up to 60 px (shadow). Towers are vertical objects: rotating the sprite by "heading" emulates the perspective
+lean but the axis-aligned box of the rotated organizer box balloons in width. The local GT boxes are tight around the
+object. large_launcher and mine_roller: the true proposals (score 0.4-0.5) lose the 24-candidate cut to background
+peaks scoring 0.6-0.98 that the expert then ACCEPTS (13-22 accepted per view = the 77 FPs).
+
+## Oracle replay on the validation API (Oscar's box-positioning check)
+oracle-gt: the LOCAL ground truth of the validation scene (all 987 labelled instances, normalised full-frame boxes,
+confidence 1, same camera path as Z-A-w2) replayed to the validation API: **0.329** (186 requests, 16 camera errors).
+Perfect answers against the local labels score 0.33 on the API. Z-A-w2 (0.334 local proxy) scored 0.246 = 75% of that
+ceiling. So the local scene's labels cover only about a third of what the organizer scores; the missing two thirds
+are objects no local run has ever labelled, and the local proxy cannot see them. Box positioning is not the gap.
+The local validation scene (data/drone/reconstructed-validation) is complete at native resolution for 245 of 249
+frames (manifest native_coverage 1.0), so the frames contain every object; only the labels are incomplete
+(run_metadata: "participant pseudo-labels, incomplete", 37 tracks, 987 boxes, 4 objects per frame). The missing
+objects are visible in the local frames and can be labelled locally.
+Single-class API replays of Z-A-w2 (same camera path; the per-class scores add up to the full score):
+| replay | API score |
+|---|---|
+| oracle-gt (local labels) | 0.329 |
+| only-medium_plane | 0.054 |
+| only-tank | 0.052 |
+| only-jet_plane | 0.037 |
+| only-hangar | 0.045 |
+| only-small_launcher | 0.012 (94 frames) |
+| only-helicopter | 0.017 |
+| only-large_launcher | 0.003 |
+
+## Frame delivery on the validation API (from the replay-server logs)
+Every API run lasts 83-84 s = 249 frames x 333 ms: the organizer sends frames on a fixed clock and SKIPS a frame
+whenever the previous request has not returned. Frames that reached the replay server (which answers in ~1 ms):
+oracle-gt 185/249, only-medium_plane 178/249, Z-A-w2 151/249; gaps of 2 (one frame skipped) 45-60 times per run,
+occasional gaps of 10-25 frames. The round trip organizer -> Runpod HTTP proxy (EUR-IS-1) -> pod exceeds 333 ms a
+third of the time. Unanswered frames can only score zero, so delivery alone caps the score at 0.6-0.75 of what the
+answers are worth, independent of the detector. Levers: a pod/data centre closer to the organizer, a direct TCP port
+instead of the HTTP proxy, and answering every request within a few ms. The same cap applies to every team run.
+- Z-A-proute (speed batch 15, delivered-pixel proposer for large_launcher/helicopter/tank/large_tower): 0.279 (-0.055);
+  tank 0.65 -> 0.41, helicopter 0.26 -> 0.01, large_launcher 0.22 -> 0.10. Proposer stays native for every class.
+Reading of the single-class scores: local AP medium_plane 0.95 / tank 0.65 / jet_plane 0.55 vs API single-class 0.054 /
+0.052 / 0.037. If the organizer averages over 16 classes these are AP 0.86 / 0.83 / 0.60 on the API, i.e. tank scores
+HIGHER on the API than against the local labels (its local "false positives" are real tanks); if over 11 classes,
+0.59 / 0.57 / 0.41. oracle-only-<class> replays (local labels of one class only) are queued to pin down the class count.
+Drone main (09:20 UTC): the run O replay (0.511) was served from pod 1 (EUR-IS-1) through a cloudflared quick tunnel,
+ran 83 s with no errors; how many of the 249 frames reached its server was never captured (the log would be on the
+stopped pod 1). So the frame-loss cap may or may not have applied to the team's best score; it needs one measured run.
+E2E Drone Agent (09:30 UTC): run O's replay received 249/249 frames through a cloudflared quick tunnel started ON the
+pod (`cloudflared tunnel --no-autoupdate --protocol http2 --url http://127.0.0.1:PORT`); its live runs lost 0-3 frames,
+all attributable to slow answers. So the third of frames lost is the Runpod HTTP proxy path only. Switched: tunnel on
+the 4-GPU pod (tunnel-url file), every replay above is being resubmitted through it (log: single-class-runs.log after
+the TUNNEL BATCH line). Proxy-path single-class scores so far: medium_plane 0.054, tank 0.052, hangar 0.045,
+jet_plane 0.037, small_launcher 0.012 (94 frames delivered).
+Proxy-path single-class sum: 0.054+0.052+0.037+0.045+0.012+0.017+0.003 = 0.220 vs the full run's 0.246 (the
+rest is ta-ta/condor/medium_launcher answers, measured next through the tunnel). large_launcher gets almost no API
+credit (0.003) although it scores 0.22 against the local labels: its local hits are tracker carries of pseudo-label
+tracks, not real detections (raw hits 3/33 in view).
+Partial results (pod stopped on Oscar's instruction before the runs finished; same objects compared with the baseline):
+| variant | objects | baseline found | variant found | reading |
+|---|---|---|---|---|
+| box = posed mask extent (tight 0) | 96 | 13 | 7 | worse: large_tower box failures unchanged 16/16, large_launcher 5 -> 1 found |
+| box = mask extent + 5% | 96 | 13 | 8 | same |
+| max_candidates 64 | 59 | 7 | 8 | large_launcher 5 -> 6 found, pose 29 -> 25; mine_roller still 0 |
+So the box failures are not the rotated-box inflation alone: the fitted pose itself is off (IoU 0.2-0.5 with the
+mask extent too), and a larger candidate cut barely helps. For towers, mine roller, medium launcher, helicopter and
+large launcher the training sprites (one instance each) simply do not match the validation instances well enough for
+template matching. Fixes left: validation-scene sprites (Oscar's decision) or a learned detector.
+
+## Pod state, 09:20 UTC
+4-GPU pod mcybpfvl2uovkh stopped on Oscar's instruction (disk kept: project copies, banks, runs, logs, tunnel binary).
+API runs paused on Oscar's instruction until a change can plausibly score above 0.6.

@@ -236,6 +236,31 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 - For Oscar: review the auto sprites (auto-sprites-review-sheet.png); decide on validation-scene sprites; the live
   policy needs legal camera steps (L1 1102 px, L2 551 px, no L0->L2).
 
+## Continuation (Oscar via the babysitter, morning of 20 Sep local): keep working until told to stop
+- Instruction: make sensible calls on open items except the sprite review and validation-scene sprites; implement
+  legal camera steps in the live policy if testable; keep closing the gap to run O with proxy A/Bs; validate the best
+  configuration occasionally; one pod at a time, stopped when idle; heartbeat on. About $24 of budget left.
+- Blocked at restart: neither stopped pod can start ("not enough free GPUs on the host machine"); retrying on each
+  heartbeat. Meanwhile drafting the camera-step clamp from the laptop copy of the harness if one exists.
+
+- Legal camera steps: closed without a code change. The team's policy (tracking/workflow.py next_view) already clamps
+  every move to the request's maximum_center_delta and changes levels one at a time, and the local evaluator uses the
+  organizer's exact limits (dtos.py: L0 2203, L1 1102, L2 551 px; L0<->L2 not allowed). The "movement exceeds" errors
+  on the API came from recorded replays: the replay serves camera requests computed against the local camera state,
+  so on the organizer they can be illegal; a live endpoint is not affected. Verified by the refused-move count of the
+  baseline recording on the 4-GPU pod.
+- Working on the speed session's 4-GPU pod (mcybpfvl2uovkh, $6.36/h) while my pods' hosts are full: copies at
+  /workspace/experts/project-mine (caps 12, batches 1-12) and /workspace/live-expert/drone-flyby.
+
+- Hardware fallback (speed session): one H200 SXM ($4.59/h, EUR-IS-4) runs the pipeline about 2x an A100 with
+  bit-identical proposals (L1 view 1.16 s); their stopped test pod oscar-claude-speed-h200 (59l6qq32yr9yz7) can take a
+  clone of the tree if the A100 hosts stay full. The 4-GPU pod ($6.36/h) is only marginally faster than the H200.
+
+- Coverage A/B on the 4-GPU pod: baseline L1-only sweep 0.315 (only 70 of 164 tank labels ever enter a view);
+  band lowered 15% 0.257 (rejected); L0 overviews with the current bank (Z-A-ov) and a six-waypoint L1 sweep
+  (DRONE_L1_WAYPOINTS=6 in my harness copy's tracking/workflow.py: left, centre-left, centre, right, centre-right,
+  centre; every step legal) are recording.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.
