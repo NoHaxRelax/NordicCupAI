@@ -169,3 +169,6 @@ Log (newest last)
   (population 39 -> 24 -> 16 -> 10 by 1000 s), starvation 290/game vs kills 132. f18 tests Oscar's 'hide behind a
   wall': agents flee INTO the nearest known crevice with an open rear and out the other side (predators cannot
   follow through a 10-20 gap; hide_mode, radius 150/250/400).
+- 04:05 f18: crevice pass-through escape is much WORSE (-280..-545 s; 190-214 eaten/game): running any
+  distance to a fixed point with a predator behind is deadly, same lesson as the guides. Dropped. Merging anchored
+  families -27. f19: dodge side/angle/radius and sprint radius fine-tuning around pred_best_0400.
