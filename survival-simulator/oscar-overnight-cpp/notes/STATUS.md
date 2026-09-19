@@ -399,3 +399,13 @@ Log (newest last)
   heading to / holding in a refuge it logs believed vs true position, true distance to the hold point and mouth, gap,
   rear_ok, nearest predator distance and predator count. Pods j, n6 and k cannot restart (hosts full), so a new pod
   n7 (oscar-claude-night-7, dpm6cy0ejfmh5o, EU-RO-1, $0.96/h) was created for it. Run: 32 games rg_60s.
+- 08:21 ref6 diagnostic (32 games rg_60s, 394 refugee kills logged, NIGHT_REFLOG): HOLDING deaths (n=175):
+  pose error median 0.0 (163/175 under 2 units), TRUE distance to the hold point median 1.7 (151/175 within 3),
+  true distance to the mouth median 10.9, gap median 13.7, nearest predator at death median 11.2, 8 predators on
+  the map. So the agent really is at the hold point and a predator still reaches it: the SITE is wrong, not the
+  pose. A predator cannot be 11 units from a point 11 deep inside a real 13.7-wide gap, so at least one of the
+  two map faces is not real geometry (a face extended past its true end, or a phantom face), and the predator walks
+  in from the side the map calls walled. EN ROUTE deaths (n=219): pose error median 10 (113/219 above 10 units),
+  i.e. the runner's own pose is off, consistent with wall-collision deflection during the run. Both are map/pose
+  consistency failures, not the refuge logic. One last variant: refuge_verify (hold only while both faces are
+  actually observed at gap/2 +- 3 on both sides; otherwise abort to normal evasion).
