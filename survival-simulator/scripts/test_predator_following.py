@@ -49,7 +49,7 @@ class FollowTests(unittest.TestCase):
                                                 and abs(wrap(h-predator.direction))<1e-6
                                                 for q,h,_ in candidates))
 
-    def feed(self,memory,tick,p,g=(260.,130.),gh=math.pi,ph=0.,visible=True):
+    def feed(self,memory,tick,p,g=(260.,130.),gh=math.pi,ph=0.,visible=True,others=()):
         def local(point):
             dx,dy=point[0]-g[0],point[1]-g[1]
             return dx*math.cos(gh)+dy*math.sin(gh),-dx*math.sin(gh)+dy*math.cos(gh)
@@ -57,8 +57,13 @@ class FollowTests(unittest.TestCase):
         q=local(p)
         pred=dict(type='Predator',distance=math.hypot(*q),angle=math.atan2(q[1],q[0]),
                   rel_dir=wrap(math.atan2(g[1]-p[1],g[0]-p[0])-ph)) if visible else None
+        observations=[pred] if pred else []
+        for other in others:
+            q=local(other)
+            observations.append(dict(type='Predator',distance=math.hypot(*q),angle=math.atan2(q[1],q[0]),
+                                     rel_dir=wrap(math.atan2(g[1]-other[1],g[0]-other[0]))))
         return predator_is_not_following(pred,local((355.,245.)),edges,
-                                          dict(observations=[pred] if pred else []),dict(tick=tick),memory)
+                                          dict(observations=observations),dict(tick=tick),memory)
 
     def test_stale_dto_compares_against_previous_guide_pose(self):
         memory={}
@@ -98,6 +103,21 @@ class FollowTests(unittest.TestCase):
         self.assertEqual(memory['_following_debug']['status'],'possible_predator_switch')
         memory['_predator_not_following']=True
         self.assertTrue(self.feed(memory,3,(100.,130.)))
+
+    def test_distant_crowd_does_not_hide_a_lost_or_following_target(self):
+        memory={}; other=[(100.,250.)]
+        self.assertFalse(self.feed(memory,1,(165.,130.),others=other))
+        self.assertFalse(self.feed(memory,2,(180.,130.),others=other))
+        self.assertNotEqual(memory['_following_debug']['status'],'ambiguous_identity_or_missing_heading')
+        self.assertFalse(self.feed(memory,3,(175.,130.),others=other))
+        self.assertTrue(self.feed(memory,4,(170.,130.),others=other))
+        self.assertFalse(self.feed(memory,5,(185.,130.),others=other))
+
+    def test_overlapping_predators_retain_the_latch(self):
+        memory={'_predator_not_following':True}
+        self.assertTrue(self.feed(memory,1,(180.,130.),others=[(185.,130.)]))
+        self.assertTrue(self.feed(memory,2,(195.,130.),others=[(200.,130.)]))
+        self.assertEqual(memory['_following_debug']['status'],'ambiguous_identity_or_missing_heading')
 
 
 if __name__=='__main__':

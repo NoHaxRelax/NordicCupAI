@@ -89,10 +89,22 @@ def predator_is_not_following(predator, bait, edges, agent, context, memory):
         memory['_following_mismatches']=0
         memory['_following_debug']=dict(status='not_observed',not_following=result)
         return result
-    if 'rel_dir' not in predator or sum(o['type']=='Predator' for o in agent['observations'])!=1:
+    sightings = [o for o in agent['observations'] if o['type']=='Predator']
+    selected = next((i for i,o in enumerate(sightings) if o is predator),None)
+    if selected is None:
+        selected = next((i for i,o in enumerate(sightings) if o==predator),None)
+    point = (predator['distance']*math.cos(predator['angle']),predator['distance']*math.sin(predator['angle']))
+    # Seeing the trapped crowd need not erase evidence about an isolated new
+    # arrival. Two possible 15-unit movements plus observation tolerance bound
+    # identity confusion; retain unknown only when another sighting is close.
+    crowded = selected is None or any(math.dist(point,
+        (o['distance']*math.cos(o['angle']),o['distance']*math.sin(o['angle']))) <= 2*(15.+POSITION_TOLERANCE)
+        for i,o in enumerate(sightings) if i!=selected)
+    if 'rel_dir' not in predator or crowded:
         memory.pop('_following_sample',None)
         memory['_following_mismatches']=0
-        memory['_following_debug']=dict(status='ambiguous_identity_or_missing_heading',not_following=result)
+        memory['_following_debug']=dict(status='ambiguous_identity_or_missing_heading',not_following=result,
+                                       observed_predators=len(sightings))
         return result
 
     to_fixed,_=fixed_frame(bait,edges)
@@ -135,4 +147,5 @@ def predator_is_not_following(predator, bait, edges, agent, context, memory):
         status=(min(matched,key=lambda row:row[0]+row[1])[2] if matched else 'incompatible_motion'),
         not_following=result,consecutive_mismatches=count,candidate_count=len(candidates),
         closest_position_error=round(nearest[0],4),closest_heading_error=round(nearest[1],4))
+    memory['_following_debug']['observed_predators']=len(sightings)
     return result

@@ -27,12 +27,15 @@ from shapely.geometry import LineString
 from shapely.ops import unary_union
 from models.entrapment.guide_pathfinding import fixed_frame, navigation_plan
 from models.entrapment.predator_following import predator_is_not_following
-from models.entrapment.guide_steering import prioritize, HEARING_TARGET
+from models.entrapment.guide_steering import prioritize
 
 
 LOST_WAIT_TICKS = 5  # Hold for 0.5 seconds before returning to last contact.
 REACQUIRE_ARRIVAL_DISTANCE = 12.0
-DELIVERY_ARRIVAL_DISTANCE = 1.0
+# A predator can eat the guide from almost 15 units away. Stopping 55 units
+# from bait can therefore leave the predator outside its 60-unit hearing
+# radius after the meal. Keep one unit of margin for a hearing-only handoff.
+DELIVERY_BAIT_DISTANCE = 60.0 - 15.0 - 1.0
 
 
 def _walking_action(plan, agent, turn):
@@ -206,15 +209,23 @@ def _guide(bait, edges, agent, context, memory):
         memory.pop('_recovery_navigation', None)
     memory['_lost_ticks'] = 0
 
-    delivery_ready = (math.hypot(*bait) <= HEARING_TARGET
-                      or math.hypot(*context['handoff']) <= DELIVERY_ARRIVAL_DISTANCE)
+    bait_distance = math.hypot(*bait)
+    front_side = True
+    if 'mouth' in context:
+        mouth = context['mouth']
+        inward = (bait[0]-mouth[0],bait[1]-mouth[1])
+        front_side = -sum(mouth[k]*inward[k] for k in range(2)) <= 1e-6
+    # Reaching an arbitrary waypoint is insufficient: the catch itself must
+    # leave the predator hearing bait, on the delivery side of the crevice.
+    delivery_ready = bait_distance <= DELIVERY_BAIT_DISTANCE+1e-6 and front_side
     if context.get('vision_delivery'):
         delivery_ready = (math.hypot(*context['handoff']) <= 2.
                           and _bait_visible_for_handoff(predator, bait, edges, memory))
     if delivery_ready:
         memory['debug'] = dict(mode='hold_at_delivery',
                                handoff_distance=math.hypot(*context['handoff']),
-                               bait_distance=math.hypot(*bait),
+                               bait_distance=bait_distance,
+                               delivery_bait_limit=DELIVERY_BAIT_DISTANCE,
                                predator_distance=predator['distance'],
                                following_check=memory['_following_debug'])
         return dict(move_distance=0., move_direction=0., turn_angle=turn)

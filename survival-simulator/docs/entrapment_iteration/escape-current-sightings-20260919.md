@@ -105,5 +105,9 @@ These are visited points, not biome polygons; interpolation can miss a border.
 The estimate is not a safety proof, remains opt-in, and is recalculated while
 travelling. A simple numerical check gave 0.8 seconds for 80 observed forest
 units at walking speed 10 and 2.67 seconds for the same unknown route. The
-full native replay is running in
-`logs/entrapment-iteration/escape-bait-terrain-20260919`. No outcome claimed yet.
+full native replay completed in
+`logs/entrapment-iteration/escape-bait-terrain-20260919`: **626.58 score /
+601.3 seconds**, 86.6 estimated bait-gap seconds, and one premature guide
+capture with sprint available. The victim had sprint speed 10.56 in swamp,
+below predator sprint speed 15 even on equal terrain. This option regressed
+on the dev seed and remains off. Summary and exact source manifest are saved.

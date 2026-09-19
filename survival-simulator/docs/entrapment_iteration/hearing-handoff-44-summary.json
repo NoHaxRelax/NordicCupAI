@@ -1,0 +1,773 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 7916,
+  "sim_time": 791.6000000001114,
+  "runtime_seconds": 226.9721984800126,
+  "score": 842.5634500015911,
+  "final_agents": 0,
+  "peak_agents": 47,
+  "total_agents_seen": 174,
+  "predators": 6,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 3,
+  "maximum_predators_continuously_near_bait_30s": 3,
+  "estimated_bait_gap_seconds_after_first_arrival": 52.500000000000476,
+  "longest_estimated_bait_gap_seconds": 52.400000000000475,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 16,
+    "guide_deaths": 15,
+    "guide_releases": 0,
+    "guide_handovers": 0,
+    "delivery_arrivals": 1,
+    "bait_arrivals": 22,
+    "overlapping_replacements": 20,
+    "estimated_unbaited_seconds": 55.00000000001195,
+    "no_viable_bait_ticks": 3489
+  },
+  "events": [
+    {
+      "time": 28.6,
+      "kind": "our_trap_discovered",
+      "group": 1,
+      "site": {
+        "mouth": [
+          232.21331460813593,
+          471.98254216160115
+        ],
+        "inward": [
+          -1.0,
+          0.0
+        ],
+        "cross": [
+          -0.0,
+          -1.0
+        ],
+        "goal": [
+          227.21331460813593,
+          471.98254216160115
+        ],
+        "far": [
+          357.21331460813593,
+          471.98254216160115
+        ],
+        "hold": [
+          307.21331460813593,
+          471.98254216160115
+        ],
+        "gap": 14.399529501640018,
+        "overlap": 62.79824174979524,
+        "runup": [
+          482.21331460813593,
+          471.98254216160115
+        ],
+        "approach_lane_offset": 0.0,
+        "offset_approach": false,
+        "obstacle_indices": [
+          23,
+          22
+        ],
+        "axis": 1,
+        "other_mouth": [
+          169.4150728583407,
+          471.98254216160115
+        ],
+        "replacement_entry": [
+          149.4150728583407,
+          471.98254216160115
+        ],
+        "second_access_clear": true,
+        "second_access_radius": 5.01,
+        "bait_depth": 5.0,
+        "boundary_indices": [],
+        "geometric_replacement_access_only": true,
+        "handoff": [
+          262.21331460813593,
+          471.98254216160115
+        ]
+      }
+    },
+    {
+      "time": 28.6,
+      "kind": "replacement_dispatched",
+      "agent": 6,
+      "current": null,
+      "conservative_travel_seconds": 7.164319508167058,
+      "active_lifetime_seconds": 0.0,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 31.2,
+      "kind": "bait_arrived",
+      "agent": 6,
+      "previous": null,
+      "energy": 110.5064622473246,
+      "age": 5.899999999999995,
+      "conservative_lifetime_seconds": 61.37347446027248
+    },
+    {
+      "time": 43.9,
+      "kind": "guide_assigned",
+      "agent": 3,
+      "track": 0,
+      "viability": null
+    },
+    {
+      "time": 52.1,
+      "kind": "guide_at_delivery",
+      "agent": 3,
+      "track": 0
+    },
+    {
+      "time": 53.0,
+      "kind": "guide_lost",
+      "agent": 3,
+      "track": 0
+    },
+    {
+      "time": 62.0,
+      "kind": "replacement_dispatched",
+      "agent": 8,
+      "current": 6,
+      "conservative_travel_seconds": 38.41246379153238,
+      "active_lifetime_seconds": 30.573474460272486,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 71.4,
+      "kind": "replacement_reassigned",
+      "agent": 8,
+      "replacement": 17
+    },
+    {
+      "time": 71.4,
+      "kind": "replacement_dispatched",
+      "agent": 17,
+      "current": 6,
+      "conservative_travel_seconds": 15.509553023833613,
+      "active_lifetime_seconds": 21.173474460272438,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 82.0,
+      "kind": "bait_arrived",
+      "agent": 17,
+      "previous": 6,
+      "energy": 113.59123354329627,
+      "age": 10.699999999999978,
+      "conservative_lifetime_seconds": 57.584614230216665
+    },
+    {
+      "time": 98.5,
+      "kind": "replacement_dispatched",
+      "agent": 20,
+      "current": 17,
+      "conservative_travel_seconds": 22.970583048431443,
+      "active_lifetime_seconds": 41.084614230216665,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 113.3,
+      "kind": "bait_arrived",
+      "agent": 20,
+      "previous": 17,
+      "energy": 309.7291143755933,
+      "age": 36.50000000000025,
+      "conservative_lifetime_seconds": 56.249464726689176
+    },
+    {
+      "time": 119.6,
+      "kind": "replacement_dispatched",
+      "agent": 29,
+      "current": 20,
+      "conservative_travel_seconds": 24.814861371564636,
+      "active_lifetime_seconds": 49.94946472668896,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 127.8,
+      "kind": "bait_arrived",
+      "agent": 29,
+      "previous": 20,
+      "energy": 221.20654668435859,
+      "age": 15.89999999999996,
+      "conservative_lifetime_seconds": 65.6395276513193
+    },
+    {
+      "time": 148.8,
+      "kind": "replacement_dispatched",
+      "agent": 30,
+      "current": 29,
+      "conservative_travel_seconds": 18.675284534472926,
+      "active_lifetime_seconds": 44.63952765131916,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 160.4,
+      "kind": "bait_arrived",
+      "agent": 30,
+      "previous": 29,
+      "energy": 485.207968952227,
+      "age": 48.40000000000042,
+      "conservative_lifetime_seconds": 61.175495737001434
+    },
+    {
+      "time": 194.9,
+      "kind": "replacement_dispatched",
+      "agent": 63,
+      "current": 30,
+      "conservative_travel_seconds": 23.663071890317713,
+      "active_lifetime_seconds": 39.65224811295822,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 209.7,
+      "kind": "bait_arrived",
+      "agent": 63,
+      "previous": 30,
+      "energy": 211.82220651960554,
+      "age": 30.20000000000016,
+      "conservative_lifetime_seconds": 51.87379980466874
+    },
+    {
+      "time": 229.5,
+      "kind": "replacement_dispatched",
+      "agent": 74,
+      "current": 63,
+      "conservative_travel_seconds": 6.2086541650471,
+      "active_lifetime_seconds": 32.0737998046686,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 231.7,
+      "kind": "bait_arrived",
+      "agent": 74,
+      "previous": 63,
+      "energy": 167.17985853095703,
+      "age": 14.199999999999966,
+      "conservative_lifetime_seconds": 61.04944219021646
+    },
+    {
+      "time": 234.2,
+      "kind": "guide_assigned",
+      "agent": 78,
+      "track": 1,
+      "viability": null
+    },
+    {
+      "time": 236.7,
+      "kind": "guide_lost",
+      "agent": 78,
+      "track": 1
+    },
+    {
+      "time": 236.7,
+      "kind": "guide_assigned",
+      "agent": 49,
+      "track": 1,
+      "viability": null
+    },
+    {
+      "time": 240.9,
+      "kind": "guide_assigned",
+      "agent": 69,
+      "track": 2,
+      "viability": null
+    },
+    {
+      "time": 245.2,
+      "kind": "guide_lost",
+      "agent": 49,
+      "track": 1
+    },
+    {
+      "time": 250.9,
+      "kind": "guide_lost",
+      "agent": 69,
+      "track": 2
+    },
+    {
+      "time": 250.9,
+      "kind": "guide_assigned",
+      "agent": 57,
+      "track": 2,
+      "viability": null
+    },
+    {
+      "time": 275.7,
+      "kind": "guide_lost",
+      "agent": 57,
+      "track": 2
+    },
+    {
+      "time": 278.6,
+      "kind": "guide_assigned",
+      "agent": 77,
+      "track": 3,
+      "viability": null
+    },
+    {
+      "time": 281.3,
+      "kind": "replacement_dispatched",
+      "agent": 99,
+      "current": 74,
+      "conservative_travel_seconds": 27.36616920856564,
+      "active_lifetime_seconds": 14.191073160787289,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 298.2,
+      "kind": "bait_arrived",
+      "agent": 99,
+      "previous": 74,
+      "energy": 188.7094401830348,
+      "age": 28.000000000000128,
+      "conservative_lifetime_seconds": 51.28854006888634
+    },
+    {
+      "time": 306.9,
+      "kind": "guide_lost",
+      "agent": 77,
+      "track": 3
+    },
+    {
+      "time": 310.2,
+      "kind": "replacement_dispatched",
+      "agent": 101,
+      "current": 99,
+      "conservative_travel_seconds": 34.336941847768294,
+      "active_lifetime_seconds": 39.388540068886265,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 311.4,
+      "kind": "guide_assigned",
+      "agent": 105,
+      "track": 4,
+      "viability": null
+    },
+    {
+      "time": 330.9,
+      "kind": "bait_arrived",
+      "agent": 101,
+      "previous": 99,
+      "energy": 112.19267103173665,
+      "age": 32.100000000000186,
+      "conservative_lifetime_seconds": 38.69298377411902
+    },
+    {
+      "time": 336.2,
+      "kind": "replacement_dispatched",
+      "agent": 84,
+      "current": 101,
+      "conservative_travel_seconds": 7.4041255060969755,
+      "active_lifetime_seconds": 33.39298377411899,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 338.8,
+      "kind": "bait_arrived",
+      "agent": 84,
+      "previous": 101,
+      "energy": 299.69499877553847,
+      "age": 102.59999999999845,
+      "conservative_lifetime_seconds": 23.7840033661001
+    },
+    {
+      "time": 340.9,
+      "kind": "replacement_dispatched",
+      "agent": 109,
+      "current": 84,
+      "conservative_travel_seconds": 29.79885015034051,
+      "active_lifetime_seconds": 21.684772121605267,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 356.3,
+      "kind": "guide_lost",
+      "agent": 105,
+      "track": 4
+    },
+    {
+      "time": 358.8,
+      "kind": "bait_arrived",
+      "agent": 109,
+      "previous": 84,
+      "energy": 109.16230672295315,
+      "age": 36.70000000000025,
+      "conservative_lifetime_seconds": 34.2865514383942
+    },
+    {
+      "time": 358.8,
+      "kind": "replacement_dispatched",
+      "agent": 111,
+      "current": 109,
+      "conservative_travel_seconds": 36.333740685153735,
+      "active_lifetime_seconds": 34.2865514383942,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 380.9,
+      "kind": "bait_arrived",
+      "agent": 111,
+      "previous": 109,
+      "energy": 375.53789029691836,
+      "age": 46.9000000000004,
+      "conservative_lifetime_seconds": 53.003441390077754
+    },
+    {
+      "time": 386.7,
+      "kind": "replacement_dispatched",
+      "agent": 114,
+      "current": 111,
+      "conservative_travel_seconds": 21.45297226584424,
+      "active_lifetime_seconds": 47.203441390077565,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 400.3,
+      "kind": "bait_arrived",
+      "agent": 114,
+      "previous": 111,
+      "energy": 218.9159821138377,
+      "age": 44.000000000000355,
+      "conservative_lifetime_seconds": 40.3110027577567
+    },
+    {
+      "time": 400.3,
+      "kind": "replacement_dispatched",
+      "agent": 117,
+      "current": 114,
+      "conservative_travel_seconds": 18.427113138719616,
+      "active_lifetime_seconds": 40.3110027577567,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 412.0,
+      "kind": "bait_arrived",
+      "agent": 117,
+      "previous": 114,
+      "energy": 185.73100368710888,
+      "age": 35.600000000000236,
+      "conservative_lifetime_seconds": 44.20350034160972
+    },
+    {
+      "time": 413.0,
+      "kind": "replacement_dispatched",
+      "agent": 119,
+      "current": 117,
+      "conservative_travel_seconds": 23.435342390005466,
+      "active_lifetime_seconds": 43.20350034160971,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 427.9,
+      "kind": "bait_arrived",
+      "agent": 119,
+      "previous": 117,
+      "energy": 95.23792611449515,
+      "age": 29.50000000000015,
+      "conservative_lifetime_seconds": 38.84150827613309
+    },
+    {
+      "time": 427.9,
+      "kind": "replacement_dispatched",
+      "agent": 126,
+      "current": 119,
+      "conservative_travel_seconds": 23.667127734984735,
+      "active_lifetime_seconds": 38.84150827613309,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 443.0,
+      "kind": "bait_arrived",
+      "agent": 126,
+      "previous": 119,
+      "energy": 187.7365659657159,
+      "age": 27.700000000000124,
+      "conservative_lifetime_seconds": 51.44618805138974
+    },
+    {
+      "time": 444.3,
+      "kind": "guide_assigned",
+      "agent": 118,
+      "track": 7,
+      "viability": null
+    },
+    {
+      "time": 444.6,
+      "kind": "replacement_dispatched",
+      "agent": 131,
+      "current": 126,
+      "conservative_travel_seconds": 24.068204298165938,
+      "active_lifetime_seconds": 49.846188051389724,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 456.2,
+      "kind": "guide_lost",
+      "agent": 118,
+      "track": 7
+    },
+    {
+      "time": 456.2,
+      "kind": "guide_assigned",
+      "agent": 123,
+      "track": 7,
+      "viability": null
+    },
+    {
+      "time": 459.9,
+      "kind": "bait_arrived",
+      "agent": 131,
+      "previous": 126,
+      "energy": 97.34401819123224,
+      "age": 23.90000000000007,
+      "conservative_lifetime_seconds": 43.99539271829443
+    },
+    {
+      "time": 461.0,
+      "kind": "replacement_dispatched",
+      "agent": 124,
+      "current": 131,
+      "conservative_travel_seconds": 27.93666807953014,
+      "active_lifetime_seconds": 42.895392718294424,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 477.0,
+      "kind": "guide_lost",
+      "agent": 123,
+      "track": 7
+    },
+    {
+      "time": 482.1,
+      "kind": "bait_arrived",
+      "agent": 124,
+      "previous": 131,
+      "energy": 244.38833007626167,
+      "age": 66.90000000000047,
+      "conservative_lifetime_seconds": 26.711206531497396
+    },
+    {
+      "time": 505.1,
+      "kind": "replacement_dispatched",
+      "agent": 144,
+      "current": 124,
+      "conservative_travel_seconds": 24.243759006928244,
+      "active_lifetime_seconds": 19.8490166759415,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 520.1,
+      "kind": "bait_arrived",
+      "agent": 144,
+      "previous": 124,
+      "energy": 86.16647475262019,
+      "age": 16.79999999999997,
+      "conservative_lifetime_seconds": 48.718818632176294
+    },
+    {
+      "time": 520.1,
+      "kind": "replacement_dispatched",
+      "agent": 145,
+      "current": 144,
+      "conservative_travel_seconds": 23.07998913927293,
+      "active_lifetime_seconds": 48.718818632176294,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 523.8,
+      "kind": "guide_assigned",
+      "agent": 147,
+      "track": 8,
+      "viability": null
+    },
+    {
+      "time": 525.3,
+      "kind": "guide_lost",
+      "agent": 147,
+      "track": 8
+    },
+    {
+      "time": 534.8,
+      "kind": "bait_arrived",
+      "agent": 145,
+      "previous": 144,
+      "energy": 129.29979614232326,
+      "age": 31.400000000000176,
+      "conservative_lifetime_seconds": 41.39401136736577
+    },
+    {
+      "time": 541.3,
+      "kind": "replacement_dispatched",
+      "agent": 151,
+      "current": 145,
+      "conservative_travel_seconds": 31.571733754908404,
+      "active_lifetime_seconds": 34.894011367365735,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 561.6,
+      "kind": "bait_arrived",
+      "agent": 151,
+      "previous": 145,
+      "energy": 220.4004777069734,
+      "age": 27.000000000000114,
+      "conservative_lifetime_seconds": 55.6548305374548
+    },
+    {
+      "time": 578.0,
+      "kind": "guide_assigned",
+      "agent": 152,
+      "track": 11,
+      "viability": null
+    },
+    {
+      "time": 650.7,
+      "kind": "replacement_dispatched",
+      "agent": 160,
+      "current": 151,
+      "conservative_travel_seconds": 24.266159401073704,
+      "active_lifetime_seconds": 5.95528575936574,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 656.7,
+      "kind": "guide_assigned",
+      "agent": 161,
+      "track": 12,
+      "viability": null
+    },
+    {
+      "time": 667.6,
+      "kind": "guide_lost",
+      "agent": 161,
+      "track": 12
+    },
+    {
+      "time": 691.7,
+      "kind": "replacement_dispatched",
+      "agent": 168,
+      "current": null,
+      "conservative_travel_seconds": 29.429058090174408,
+      "active_lifetime_seconds": 0.0,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 709.5,
+      "kind": "bait_arrived",
+      "agent": 168,
+      "previous": null,
+      "energy": 136.87194556800762,
+      "age": 27.900000000000126,
+      "conservative_lifetime_seconds": 45.38322532916498
+    },
+    {
+      "time": 712.0,
+      "kind": "guide_assigned",
+      "agent": 171,
+      "track": 21,
+      "viability": null
+    },
+    {
+      "time": 713.3,
+      "kind": "guide_assigned",
+      "agent": 159,
+      "track": 23,
+      "viability": null
+    },
+    {
+      "time": 718.4,
+      "kind": "guide_lost",
+      "agent": 159,
+      "track": 23
+    },
+    {
+      "time": 719.2,
+      "kind": "guide_lost",
+      "agent": 171,
+      "track": 21
+    },
+    {
+      "time": 721.2,
+      "kind": "guide_assigned",
+      "agent": 172,
+      "track": 25,
+      "viability": null
+    },
+    {
+      "time": 723.8,
+      "kind": "guide_lost",
+      "agent": 172,
+      "track": 25
+    },
+    {
+      "time": 730.6,
+      "kind": "guide_assigned",
+      "agent": 173,
+      "track": 26,
+      "viability": null
+    },
+    {
+      "time": 734.5,
+      "kind": "guide_lost",
+      "agent": 173,
+      "track": 26
+    }
+  ],
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 119,
+      "predator:guide": 8,
+      "starvation:retired_bait": 20,
+      "starvation:guide": 7,
+      "starvation:avoiding_predator": 13,
+      "predator:avoiding_predator": 4,
+      "starvation:bait": 2,
+      "predator:replacement_bait": 1
+    },
+    "fruit_eaten": 1098,
+    "energy_deaths_before_age_60": {
+      "gatherer": 45,
+      "guide": 2,
+      "avoiding_predator": 9
+    },
+    "ripe_fruit_eaten": 1008,
+    "ripe_fraction": 0.9180327868852459,
+    "mean_agent_energy_fraction": 0.2675757340252775,
+    "predator_deaths_with_sprint_available": {},
+    "sprint_available_predator_death_cases": [],
+    "premature_predator_deaths_with_sprint_available": 0,
+    "premature_guide_predator_deaths_with_sprint_available": 0,
+    "premature_guide_death_cases": [],
+    "intentional_delivery_sacrifices": 1,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable."
+  }
+}
