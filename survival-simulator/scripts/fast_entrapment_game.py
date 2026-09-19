@@ -1,5 +1,6 @@
 """Run the ordinary policy on the verified C++ engine and record native-sprite replay chunks."""
 import argparse, gzip, hashlib, json, math, os, sys, time, traceback
+from collections import deque
 from pathlib import Path
 
 os.environ.setdefault('SDL_VIDEODRIVER','dummy'); os.environ.setdefault('SDL_AUDIODRIVER','dummy')
@@ -40,6 +41,7 @@ def main():
     p.add_argument('--guide-reacquire-close',action='store_true',help='Experimental close hearing reacquisition (regressed pilot)')
     p.add_argument('--guide-contact-forecast',action='store_true',help='Experimental preservation of sight across sampled predator movements/rest')
     p.add_argument('--guide-orbit-recovery',action='store_true',help='Experimental approach to predator vision around the preferred following radius')
+    p.add_argument('--guide-coordination',action='store_true',help='Require fit guides and permit observation-confirmed nearby handovers')
     p.add_argument('--no-shared-guide-paths',action='store_true',help='Disable guide forecast traffic avoidance for comparison')
     p.add_argument('--survival-config',type=Path,help='Optional JSON overrides for Orchard experiments')
     p.add_argument('--release-trap-food',action='store_true',help='Experimental separation of trap roles from Orchard workforce')
@@ -59,16 +61,17 @@ def main():
     py=PySimulationCore(seed=a.seed); bg=py.env.static_surface.copy(); bg.blit(py.env.shadow_surface,(0,0)); bg.blit(py.env.obstacle_surface,(0,0))
     pygame.image.save(bg,folder/'background.png'); del py
     settings={} if a.survival_config is None else json.loads(a.survival_config.read_text())
-    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths,guide_preferred_distance=(a.guide_distance_min,a.guide_distance_max),guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery); started=time.monotonic()
+    sim=SimulationCore(seed=a.seed); env=sim.env; policy=EntrapmentPolicy(seed=a.seed,bait_overlap_seconds=a.bait_overlap,bait_reserve_seconds=a.bait_reserve,survival_settings=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,share_guide_paths=not a.no_shared_guide_paths,guide_preferred_distance=(a.guide_distance_min,a.guide_distance_max),guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination); started=time.monotonic()
     obstacles=[(o.x,o.y,o.width,o.height) for o in env.obstacles]; edges=edges_from(obstacles)
     atom(folder/'static.json',dict(width=env.width,height=env.height,edges=edges))
     sources=[*sorted((ROOT/'models').rglob('*.py')),*sorted((ROOT/'models').rglob('*.json')),Path(__file__),a.fastsim/'fastsim/_engine.cpp']
     atom(folder/'manifest.json',dict(seed=a.seed,horizon=a.seconds,bait_overlap_seconds=a.bait_overlap,bait_food_lead_seconds=a.bait_food_lead,guide_lookahead_ticks=a.guide_lookahead,guide_preferred_distance=[a.guide_distance_min,a.guide_distance_max],share_guide_paths=not a.no_shared_guide_paths,bait_reserve_seconds=a.bait_reserve,survival_overrides=settings,release_trap_food=a.release_trap_food,nursery_size=a.nursery_size,replay_frames=not a.summary_only,dt=sim.dt,engine='verified C++ fastsim',
-        guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,policy_inputs='Unmodified observations and simulation time only',sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
+        guide_reacquire_close=a.guide_reacquire_close,guide_contact_forecast=a.guide_contact_forecast,guide_orbit_recovery=a.guide_orbit_recovery,guide_coordination=a.guide_coordination,policy_inputs='Unmodified observations and simulation time only',sources={str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in sources}))
     states=sim.step([])['observations']; chunk=[]; history=[]; seen=set(); peak=0; first_bait=None; gap=longest=total_gap=0.; max_near=held30max=0; active={}; tick=0
     summary={}
     previous_states={}; previous_guide_plans={}; previous_actions={}
     sprint_deaths={}; premature_guide_deaths=[]; delivery_sacrifices=0
+    sprint_death_cases=[]; recent_steps={}
     death_counts={}; early_energy_deaths={}; fruit_count=ripe_count=0; energy_fraction_sum=energy_samples=0
     previous_roles={}
     try:
@@ -86,9 +89,16 @@ def main():
                 if kind=='predator' and before is not None:
                     can_sprint=before['energy']>=before['max_energy']/5
                     if can_sprint: sprint_deaths[role]=sprint_deaths.get(role,0)+1
+                    plan=previous_guide_plans.get(aid,{})
+                    intentional=role=='guide' and plan.get('mode')=='hold_at_delivery'
+                    if can_sprint:
+                        sprint_death_cases.append(dict(time=when,agent=aid,role=role,
+                            intentional_delivery=intentional,energy_before=before['energy'],
+                            sprint_threshold=before['max_energy']/5,speed=before['speed'],
+                            sprint_speed=before['sprint_speed'],faster_than_predator_on_same_terrain=before['sprint_speed']>15.,
+                            biome=before['biome'],recent_steps=list(recent_steps.get(aid,())),
+                            action=previous_actions.get(aid),guide_plan=plan if role=='guide' else None))
                     if role=='guide':
-                        plan=previous_guide_plans.get(aid,{})
-                        intentional=plan.get('mode')=='hold_at_delivery'
                         delivery_sacrifices+=intentional
                         if can_sprint and not intentional:
                             premature_guide_deaths.append(dict(time=when,agent=aid,energy_before=before['energy'],
@@ -122,14 +132,21 @@ def main():
                 ripe_fruit_eaten=ripe_count,ripe_fraction=ripe_count/fruit_count if fruit_count else None,
                 mean_agent_energy_fraction=energy_fraction_sum/energy_samples if energy_samples else None)
             summary['native_evaluation'].update(predator_deaths_with_sprint_available=sprint_deaths.copy(),
+                sprint_available_predator_death_cases=sprint_death_cases.copy(),
+                premature_predator_deaths_with_sprint_available=sum(not c['intentional_delivery'] for c in sprint_death_cases),
                 premature_guide_predator_deaths_with_sprint_available=len(premature_guide_deaths),
                 premature_guide_death_cases=premature_guide_deaths.copy(),intentional_delivery_sacrifices=delivery_sacrifices,
-                sprint_benchmark_note='Availability at start of fatal tick. Intentional hold_at_delivery excluded from premature guide failures; terrain/walls can still make escape impossible.')
+                sprint_benchmark_note='Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable.')
             atom(folder/'summary.json',summary)
         if terminal:break
         previous_roles=policy.roles.copy()
         previous_states={s['agent_id']:s for s in states}
         previous_actions={aid:action.model_dump() for aid,action in actions}
+        recent_steps={aid:recent_steps.get(aid,deque(maxlen=30)) for aid in previous_states}
+        for aid,s in previous_states.items():
+            recent_steps[aid].append(dict(time=now,biome=s['biome'],energy=s['energy'],
+                nearest_observed_predator=min((o['distance'] for o in s['observations'] if o['type']=='Predator'),default=None),
+                action=previous_actions.get(aid)))
         previous_guide_plans={track.guide_id:track.memory.get('debug',{}).copy()
                               if isinstance(track.memory.get('debug'),dict) else {'mode':track.memory.get('debug')}
                               for track in policy.tracks.values() if track.guide_id is not None}

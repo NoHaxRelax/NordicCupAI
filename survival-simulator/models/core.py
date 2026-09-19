@@ -21,6 +21,7 @@ from models.entrapment.my_guide import guide
 from models.entrapment.bystander_avoidance import avoid_predators
 from models.entrapment.bait_nursery import BaitNursery
 from models.entrapment.guide_lookahead import chase_step
+from models.entrapment.guide_coordinator import GuideCoordinator
 
 
 def action_for(aid, **kwargs):
@@ -60,6 +61,7 @@ class Track:
     edges: list = field(default_factory=list)
     completed_at: float | None = None
     held_since: float | None = None
+    guide_last_saw: float | None = None
 
 
 class EntrapmentPolicy:
@@ -67,7 +69,7 @@ class EntrapmentPolicy:
                  release_trap_food=False, nursery_size=0, bait_food_lead_seconds=6.,
                  guide_lookahead_ticks=3, share_guide_paths=True,
                  guide_preferred_distance=(100.,120.), guide_reacquire_close=False,
-                 guide_contact_forecast=False, guide_orbit_recovery=False):
+                 guide_contact_forecast=False, guide_orbit_recovery=False, guide_coordination=False):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -82,6 +84,8 @@ class EntrapmentPolicy:
         self.guide_reacquire_close = guide_reacquire_close
         self.guide_contact_forecast = guide_contact_forecast
         self.guide_orbit_recovery = guide_orbit_recovery
+        self.guide_coordination = guide_coordination
+        self.guide_coordinator = GuideCoordinator()
         low,high = guide_preferred_distance
         if not all(math.isfinite(x) for x in (low,high)) or not 0. < low <= high:
             raise ValueError('guide_preferred_distance must be finite, positive and ordered')
@@ -120,6 +124,7 @@ class EntrapmentPolicy:
         self.map_stats = {}
         self.now = 0.
         self.metrics = dict(site_discoveries=0, guide_assignments=0, guide_deaths=0, guide_releases=0,
+                            guide_handovers=0,
                             delivery_arrivals=0, bait_arrivals=0, overlapping_replacements=0,
                             estimated_unbaited_seconds=0., no_viable_bait_ticks=0)
         self.last_time = None
@@ -316,6 +321,8 @@ class EntrapmentPolicy:
                 used.add(track.key)
                 track.observers[aid] = obs
         if self.site is None or self.bait is None or not self._arrival(self.bait): return
+        if self.guide_coordination:
+            self.guide_coordinator.update(self.estimator.groups[self.site_group],states,self.now,self.tracks.values())
         assigned = {t.guide_id for t in self.tracks.values() if t.guide_id is not None}
         for track in self.tracks.values():
             if track.group != self.site_group: continue
@@ -329,23 +336,70 @@ class EntrapmentPolicy:
                 track.memory = {}
                 track.completed_at = None
             if track.guide_id in states:
-                self.roles[track.guide_id] = 'guide'
-                continue
+                if track.guide_id in track.observers:
+                    track.guide_last_saw = self.now
+                if not self.guide_coordination:
+                    self.roles[track.guide_id] = 'guide'
+                    continue
             # Predators already near the trap do not need a second delivery.
-            if math.dist(track.position, self.site['goal']) < 60.: continue
+            if math.dist(track.position, self.site['goal']) < 60.:
+                if track.guide_id in states: self.roles[track.guide_id] = 'guide'
+                continue
             available = [aid for aid in track.observers if aid not in self.roles and aid not in assigned]
+            previous = track.guide_id if track.guide_id in states else None
+            if self.guide_coordination:
+                if not track.edges:
+                    track.edges = [(tuple(e.start),tuple(e.end)) for e in self.estimator.groups[track.group].edges]
+                fit = []
+                for candidate in available:
+                    if candidate in self.nursery.members: continue
+                    pose = self.estimator.poses[candidate]
+                    self.guide_coordinator.observe(track.key,candidate,track.observers[candidate],
+                        local(pose,self.site['goal']),[(local(pose,a),local(pose,b)) for a,b in track.edges],
+                        states[candidate],round(self.now*10))
+                    if self.guide_coordinator.assess(candidate,states[candidate],pose,
+                                                    self.site['handoff'],self.now)['viable']:
+                        fit.append(candidate)
+                available = fit
+                if previous is not None:
+                    old_pose = self.estimator.poses[previous]
+                    old_fit = self.guide_coordinator.assess(previous,states[previous],old_pose,
+                                                           self.site['handoff'],self.now)['viable']
+                    blind = track.guide_last_saw is None or self.now-track.guide_last_saw > 1.
+                    needs_relief = not old_fit or blind or track.memory.get('_predator_not_following',False)
+                    # Never release an old guide merely because somebody can
+                    # reach it: require consecutive compatible predator motion
+                    # toward a nearer, fit observer. Identities are inferred.
+                    available = [candidate for candidate in available if needs_relief
+                        and self.guide_coordinator.following.get((track.key,candidate),False)
+                        and track.observers[candidate]['distance']+old_pose.uncertainty+
+                            self.estimator.poses[candidate].uncertainty+2. < math.dist(old_pose.position,track.position)]
+                    if not available:
+                        self.roles[previous] = 'guide'
+                        continue
             if not available: continue
-            aid = max(available, key=lambda a: (self.orchard.minds[a].old or states[a]['age'] >= 55.,
+            aid = max(available, key=lambda a: ((self.guide_coordinator.following.get((track.key,a),False)
+                                                if self.guide_coordination else False),
+                                               self.orchard.minds[a].old or states[a]['age'] >= 55.,
                                                states[a]['energy'], -track.observers[a]['distance']))
             track.guide_id = aid
             # Snapshot of observed static geometry gives guiding a stable fixed
             # frame. New local edges still enter native contact avoidance.
             track.edges = [(tuple(e.start), tuple(e.end)) for e in self.estimator.groups[track.group].edges]
             track.memory = {}
+            track.completed_at = None
+            track.guide_last_saw = self.now
+            if previous is not None:
+                self.metrics['guide_handovers'] += 1
+                self.event('guide_handover', previous=previous, agent=aid, track=track.key,
+                           reason='nearer_fit_observer_with_consecutive_following_motion')
+                # Keep the old guide out of another assignment this tick; its
+                # ordinary action will receive the normal predator avoidance.
             assigned.add(aid)
             self.roles[aid] = 'guide'
             self.metrics['guide_assignments'] += 1
-            self.event('guide_assigned', agent=aid, track=track.key)
+            self.event('guide_assigned', agent=aid, track=track.key,
+                       viability=self.guide_coordinator.assessments.get(aid) if self.guide_coordination else None)
 
     def _bait_action(self, aid, s, states):
         pose = self.estimator.poses[aid]
@@ -619,6 +673,8 @@ class EntrapmentPolicy:
                     guide_reacquire_close=self.guide_reacquire_close,
                     guide_contact_forecast=self.guide_contact_forecast,
                     guide_orbit_recovery=self.guide_orbit_recovery,
+                    guide_coordination=self.guide_coordination,
+                    guide_coordinator=self.guide_coordinator.snapshot() if self.guide_coordination else None,
                     bait_navigation=self.bait_navigation, guide_corridors=self.guide_corridors,
                     bait_reserve_seconds=self.bait_reserve_seconds, reserved_bait=self.reserved_bait,
                     release_trap_food=self.release_trap_food,
