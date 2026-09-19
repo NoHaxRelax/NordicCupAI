@@ -22,6 +22,7 @@ from models.entrapment.bystander_avoidance import avoid_predators
 from models.entrapment.bait_nursery import BaitNursery
 from models.entrapment.guide_lookahead import chase_step
 from models.entrapment.guide_coordinator import GuideCoordinator
+from models.entrapment.bait_travel import ObservedBaitTravel
 
 
 def action_for(aid, **kwargs):
@@ -69,7 +70,8 @@ class EntrapmentPolicy:
                  release_trap_food=False, nursery_size=0, bait_food_lead_seconds=6.,
                  guide_lookahead_ticks=3, share_guide_paths=True,
                  guide_preferred_distance=(100.,120.), guide_reacquire_close=False,
-                 guide_contact_forecast=False, guide_orbit_recovery=False, guide_coordination=False):
+                 guide_contact_forecast=False, guide_orbit_recovery=False, guide_coordination=False,
+                 bait_terrain_estimate=False):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -77,6 +79,8 @@ class EntrapmentPolicy:
             raise ValueError('bait_food_lead_seconds must be finite and nonnegative')
         self.bait_food_lead_seconds = float(bait_food_lead_seconds)
         self.bait_navigation = {}
+        self.bait_terrain_estimate = bait_terrain_estimate
+        self.bait_travel = ObservedBaitTravel()
         self.guide_corridors = []
         if guide_lookahead_ticks not in (0,3):
             raise ValueError('guide_lookahead_ticks must be 0 or 3')
@@ -188,8 +192,8 @@ class EntrapmentPolicy:
             plan = self.navigator.steer(aid, pose.position, rear, self.now)
             if plan.blocked or not math.isfinite(plan.remaining): continue
             distance = plan.remaining + float(np.linalg.norm(rear-goal))
-            travel = distance/(max(.1, min(s['speed'],s['sprint_speed']))*.3*10.)
-            walk_cost = distance/.3*.05 + 6.
+            estimate = self._bait_travel(aid,s,distance,include_goal=True)
+            travel,walk_cost = estimate['seconds'],estimate['walk_cost']
             life = remaining_life(s['energy']-walk_cost, s['age'])
             if life < travel + 15.: continue
             old = self.orchard.minds[aid].old or s['age'] >= 55.
@@ -199,11 +203,24 @@ class EntrapmentPolicy:
                             s['energy'], aid, travel))
         return max(choices)[-2:] if choices else None
 
+    def _bait_travel(self, aid, state, distance, *, include_goal):
+        if not math.isfinite(distance):
+            return dict(seconds=math.inf,walk_cost=math.inf,distance=distance,known_fraction=0.,method='blocked')
+        if not self.bait_terrain_estimate:
+            return dict(seconds=distance/(max(.1,min(state['speed'],state['sprint_speed']))*.3*10.),
+                        walk_cost=distance/.3*.05+6.,distance=distance,known_fraction=0.,method='all_river')
+        pose = self.estimator.poses[aid]
+        route = self.navigator.routes[aid]
+        points = [pose.position]+route.points
+        if include_goal: points.append(self.site['goal'])
+        return self.bait_travel.estimate(points,state)
+
     def _bait_roles(self, states):
         if self.site is None: return
         group = self.estimator.groups.get(self.site_group)
         if group is None: return
         self.navigator.update(group, self.now)
+        if self.bait_terrain_estimate: self.bait_travel.update(group,self.now)
         self.navigator.prune(states)
         self.retired_baits.intersection_update(states)
         self.entered_rear.intersection_update(states)
@@ -237,8 +254,9 @@ class EntrapmentPolicy:
             # Avoidance and ageing can invalidate the dispatch estimate.
             # Reassign early when another viable agent can beat that deadline.
             remaining = distance + (0. if entered else math.dist(target, self.site['goal']))
-            travel = remaining/(max(.1, min(states[aid]['speed'],states[aid]['sprint_speed']))*.3*10.)
-            life = remaining_life(states[aid]['energy']-remaining/.3*.05-6., states[aid]['age'])
+            estimate = self._bait_travel(aid,states[aid],remaining,include_goal=not entered)
+            travel = estimate['seconds']
+            life = remaining_life(states[aid]['energy']-estimate['walk_cost'], states[aid]['age'])
             deadline = math.inf if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
             if not entered and (travel+5. >= deadline or life < travel+15.):
                 alternative = self._select_bait(states, self.retired_baits | {self.bait, aid}
@@ -416,6 +434,9 @@ class EntrapmentPolicy:
             if int(self.now*10) % 30 == 0: self.navigator.release(aid)
             return action_for(aid, turn_angle=.2)
         waypoint = plan.waypoint
+        remaining = plan.remaining+(0. if aid in self.entered_rear else math.dist(rear,self.site['goal']))
+        estimate = self._bait_travel(aid,s,remaining,include_goal=aid not in self.entered_rear)
+        info['travel_estimate'] = estimate
         # No food waits or assumed food gains: even if the fruit disappears,
         # this short detour must leave enough energy and handoff time.
         if (aid not in self.entered_rear and self.bait in states
@@ -439,9 +460,8 @@ class EntrapmentPolicy:
                 extra = max(0., float(np.linalg.norm(fruit-pose.position)+np.linalg.norm(waypoint-fruit)-math.sqrt(length2)))
                 if extra > 30.:
                     skip('long_detour'); continue
-                total = plan.remaining+math.dist(rear, self.site['goal'])+extra
-                travel = total/(max(.1, min(s['speed'],s['sprint_speed']))*.3*10.)+.2
-                life = remaining_life(s['energy']-total/.3*.05-6., s['age'])
+                travel = estimate['seconds']+extra/(max(.1,min(s['speed'],s['sprint_speed']))*.3*10.)+.2
+                life = remaining_life(s['energy']-estimate['walk_cost']-extra/.3*.05,s['age'])
                 if travel+5. < deadline and life >= travel+15.:
                     options.append((extra, o['distance'], fruit))
                 else:
@@ -668,6 +688,7 @@ class EntrapmentPolicy:
         return dict(phase='exploration' if self.site is None else 'orchard_and_entrapment',
                     bait_overlap_seconds=self.bait_overlap_seconds,
                     bait_food_lead_seconds=self.bait_food_lead_seconds,
+                    bait_terrain_estimate=self.bait_terrain_estimate,
                     guide_lookahead_ticks=self.guide_lookahead_ticks, share_guide_paths=self.share_guide_paths,
                     guide_preferred_distance=self.guide_preferred_distance,
                     guide_reacquire_close=self.guide_reacquire_close,

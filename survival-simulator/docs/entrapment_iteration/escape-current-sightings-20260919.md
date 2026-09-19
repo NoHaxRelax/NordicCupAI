@@ -83,3 +83,24 @@ in `/home/lucas/colony-settings-20260919`. No paid pods were started.
 
 Two additional local replays test existing options separately on the dev
 seed: `--release-trap-food` and `--bait-reserve 90`. They are not yet adopted.
+
+The release-food replay completed at **441.04 score / 418.1 seconds**, with
+18.5 estimated seconds without bait and zero sprint-available captures.
+It regressed markedly and remains off. The reservation replay is still running.
+
+## Observed-terrain bait ETA probe
+
+The all-river estimate may reject a donor that can reach bait through faster
+visited terrain. `--bait-terrain-estimate` tests a more local estimate using
+`models/entrapment/bait_travel.py`: sample the planned route every eight units,
+use the slowest observed biome within 12 units (including pose uncertainty),
+and retain river speed on unknown stretches. Bait selection, revalidation and
+fruit-detour checks share the same estimate. The normal overlap, 15-second
+useful-lifetime requirement and six-energy travel reserve remain in place.
+
+These are visited points, not biome polygons; interpolation can miss a border.
+The estimate is not a safety proof, remains opt-in, and is recalculated while
+travelling. A simple numerical check gave 0.8 seconds for 80 observed forest
+units at walking speed 10 and 2.67 seconds for the same unknown route. The
+full native replay is running in
+`logs/entrapment-iteration/escape-bait-terrain-20260919`. No outcome claimed yet.

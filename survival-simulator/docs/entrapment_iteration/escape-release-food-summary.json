@@ -1,0 +1,57 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 4181,
+  "sim_time": 418.10000000002657,
+  "runtime_seconds": 199.3454146909935,
+  "score": 441.04335780990823,
+  "final_agents": 0,
+  "peak_agents": 25,
+  "total_agents_seen": 89,
+  "predators": 5,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 1,
+  "maximum_predators_continuously_near_bait_30s": 1,
+  "estimated_bait_gap_seconds_after_first_arrival": 18.499999999999993,
+  "longest_estimated_bait_gap_seconds": 18.39999999999999,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 22,
+    "guide_deaths": 18,
+    "guide_releases": 0,
+    "guide_handovers": 0,
+    "delivery_arrivals": 1,
+    "bait_arrivals": 10,
+    "overlapping_replacements": 8,
+    "estimated_unbaited_seconds": 21.00000000000422,
+    "no_viable_bait_ticks": 2255
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 49,
+      "predator:guide": 10,
+      "starvation:retired_bait": 8,
+      "starvation:avoiding_predator": 6,
+      "predator:avoiding_predator": 5,
+      "starvation:guide": 9,
+      "starvation:bait": 2
+    },
+    "fruit_eaten": 585,
+    "energy_deaths_before_age_60": {
+      "gatherer": 22,
+      "avoiding_predator": 2,
+      "guide": 6
+    },
+    "ripe_fruit_eaten": 526,
+    "ripe_fraction": 0.8991452991452992,
+    "mean_agent_energy_fraction": 0.26468645999127544,
+    "predator_deaths_with_sprint_available": {},
+    "sprint_available_predator_death_cases": [],
+    "premature_predator_deaths_with_sprint_available": 0,
+    "premature_guide_predator_deaths_with_sprint_available": 0,
+    "premature_guide_death_cases": [],
+    "intentional_delivery_sacrifices": 1,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable."
+  }
+}
