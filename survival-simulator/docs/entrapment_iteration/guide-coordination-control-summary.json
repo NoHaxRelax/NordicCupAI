@@ -1,0 +1,1296 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 7504,
+  "sim_time": 750.4000000001021,
+  "runtime_seconds": 267.4452688879974,
+  "score": 784.8764462710988,
+  "final_agents": 0,
+  "peak_agents": 28,
+  "total_agents_seen": 140,
+  "predators": 8,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 4,
+  "maximum_predators_continuously_near_bait_30s": 4,
+  "estimated_bait_gap_seconds_after_first_arrival": 81.69999999999963,
+  "longest_estimated_bait_gap_seconds": 81.59999999999964,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 19,
+    "guide_deaths": 16,
+    "guide_releases": 0,
+    "guide_handovers": 0,
+    "delivery_arrivals": 2,
+    "bait_arrivals": 17,
+    "overlapping_replacements": 15,
+    "estimated_unbaited_seconds": 84.20000000001859,
+    "no_viable_bait_ticks": 3922
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 92,
+      "predator:guide": 9,
+      "starvation:retired_bait": 15,
+      "predator:avoiding_predator": 11,
+      "starvation:guide": 7,
+      "starvation:avoiding_predator": 4,
+      "starvation:bait": 2
+    },
+    "fruit_eaten": 909,
+    "energy_deaths_before_age_60": {
+      "gatherer": 43,
+      "guide": 3,
+      "avoiding_predator": 2
+    },
+    "ripe_fruit_eaten": 839,
+    "ripe_fraction": 0.922992299229923,
+    "mean_agent_energy_fraction": 0.28770019825754184,
+    "predator_deaths_with_sprint_available": {
+      "avoiding_predator": 3
+    },
+    "sprint_available_predator_death_cases": [
+      {
+        "time": 127.49999999999703,
+        "agent": 9,
+        "role": "avoiding_predator",
+        "intentional_delivery": false,
+        "energy_before": 345.0962289002764,
+        "sprint_threshold": 100.0,
+        "speed": 8.937320609371199,
+        "sprint_speed": 20,
+        "faster_than_predator_on_same_terrain": true,
+        "biome": "desert",
+        "recent_steps": [
+          {
+            "time": 124.5999999999972,
+            "biome": "swamp",
+            "energy": 378.2553352384137,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 124.69999999999719,
+            "biome": "swamp",
+            "energy": 378.15288425229005,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 124.79999999999718,
+            "biome": "swamp",
+            "energy": 378.0504332661664,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 124.89999999999718,
+            "biome": "swamp",
+            "energy": 377.94798228004277,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 124.99999999999717,
+            "biome": "swamp",
+            "energy": 377.8455312939191,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.09999999999717,
+            "biome": "swamp",
+            "energy": 377.7430803077955,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.19999999999716,
+            "biome": "swamp",
+            "energy": 377.64062932167184,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.29999999999715,
+            "biome": "swamp",
+            "energy": 377.5381783355482,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.39999999999715,
+            "biome": "swamp",
+            "energy": 377.43572734942455,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.49999999999714,
+            "biome": "swamp",
+            "energy": 377.3332763633009,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.59999999999714,
+            "biome": "swamp",
+            "energy": 377.23082537717727,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.69999999999713,
+            "biome": "swamp",
+            "energy": 377.1283743910536,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.79999999999713,
+            "biome": "swamp",
+            "energy": 377.02592340493,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.89999999999712,
+            "biome": "swamp",
+            "energy": 376.92347241880634,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 125.99999999999712,
+            "biome": "swamp",
+            "energy": 376.8210214326827,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.09999999999711,
+            "biome": "swamp",
+            "energy": 376.71857044655906,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.1999999999971,
+            "biome": "swamp",
+            "energy": 376.6161194604354,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.2999999999971,
+            "biome": "swamp",
+            "energy": 376.51366847431177,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.39999999999709,
+            "biome": "swamp",
+            "energy": 376.41121748818813,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.49999999999709,
+            "biome": "swamp",
+            "energy": 376.3087665020645,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.59999999999708,
+            "biome": "swamp",
+            "energy": 376.20631551594084,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.69999999999708,
+            "biome": "swamp",
+            "energy": 376.1038645298172,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.79999999999707,
+            "biome": "swamp",
+            "energy": 376.00141354369356,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.89999999999706,
+            "biome": "swamp",
+            "energy": 375.8989625575699,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0154,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 126.99999999999706,
+            "biome": "swamp",
+            "energy": 375.7965115714463,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 20,
+              "move_direction": 2.748893571891069,
+              "turn_angle": 1.3702333937603501,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 127.09999999999705,
+            "biome": "swamp",
+            "energy": 369.5002264278567,
+            "nearest_observed_predator": 92.40215158730147,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 20,
+              "move_direction": 1.3089969389957472,
+              "turn_angle": -0.014401723840785863,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 127.19999999999705,
+            "biome": "swamp",
+            "energy": 363.41972859653544,
+            "nearest_observed_predator": 83.47206480943495,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 20,
+              "move_direction": 1.1780972450961724,
+              "turn_angle": -0.21956709549296693,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 127.29999999999704,
+            "biome": "swamp",
+            "energy": 357.3065776821644,
+            "nearest_observed_predator": 70.53176204865537,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 20,
+              "move_direction": 1.1780972450961724,
+              "turn_angle": -0.14790492654153908,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 127.39999999999704,
+            "biome": "swamp",
+            "energy": 351.2048321562147,
+            "nearest_observed_predator": 57.20434368000141,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 20,
+              "move_direction": 0.916297857297023,
+              "turn_angle": -0.19099331484648996,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 127.49999999999703,
+            "biome": "desert",
+            "energy": 345.0962289002764,
+            "nearest_observed_predator": 42.22623635004884,
+            "action": {
+              "agent_id": 9,
+              "move_distance": 20,
+              "move_direction": 0.39269908169872414,
+              "turn_angle": -0.25532282187547306,
+              "spawn_agent": false
+            }
+          }
+        ],
+        "action": {
+          "agent_id": 9,
+          "move_distance": 20,
+          "move_direction": 0.39269908169872414,
+          "turn_angle": -0.25532282187547306,
+          "spawn_agent": false
+        },
+        "guide_plan": null
+      },
+      {
+        "time": 444.40000000003255,
+        "agent": 92,
+        "role": "avoiding_predator",
+        "intentional_delivery": false,
+        "energy_before": 233.34736753574464,
+        "sprint_threshold": 100.0,
+        "speed": 11.161801556205516,
+        "sprint_speed": 20,
+        "faster_than_predator_on_same_terrain": true,
+        "biome": "swamp",
+        "recent_steps": [
+          {
+            "time": 441.5000000000319,
+            "biome": "swamp",
+            "energy": 296.96187049412464,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 441.6000000000319,
+            "biome": "swamp",
+            "energy": 296.8618704941246,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 441.70000000003193,
+            "biome": "swamp",
+            "energy": 296.7618704941246,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 441.80000000003196,
+            "biome": "swamp",
+            "energy": 296.66187049412457,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 441.900000000032,
+            "biome": "swamp",
+            "energy": 296.56187049412455,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.000000000032,
+            "biome": "swamp",
+            "energy": 296.4618704941245,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.100000000032,
+            "biome": "swamp",
+            "energy": 296.3618704941245,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.20000000003205,
+            "biome": "swamp",
+            "energy": 296.2618704941245,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.30000000003207,
+            "biome": "swamp",
+            "energy": 296.16187049412446,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.4000000000321,
+            "biome": "swamp",
+            "energy": 296.06187049412443,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.5000000000321,
+            "biome": "swamp",
+            "energy": 295.9618704941244,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.60000000003214,
+            "biome": "swamp",
+            "energy": 295.8618704941244,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.70000000003216,
+            "biome": "swamp",
+            "energy": 295.76187049412437,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.8000000000322,
+            "biome": "swamp",
+            "energy": 295.66187049412434,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 442.9000000000322,
+            "biome": "swamp",
+            "energy": 295.5618704941243,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.00000000003223,
+            "biome": "swamp",
+            "energy": 295.4618704941243,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 0.0,
+              "move_direction": 1.5083730038459695,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.10000000003225,
+            "biome": "swamp",
+            "energy": 295.3618704941243,
+            "nearest_observed_predator": 116.18064349709735,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 11.161801556205516,
+              "move_direction": -1.5722892652823182,
+              "turn_angle": -0.25,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.2000000000323,
+            "biome": "swamp",
+            "energy": 294.663991680541,
+            "nearest_observed_predator": 109.61202189206877,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 5.235987755982989,
+              "turn_angle": 0.3276531059601915,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.3000000000323,
+            "biome": "swamp",
+            "energy": 289.5346547694005,
+            "nearest_observed_predator": 100.89981594593118,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.974188368183839,
+              "turn_angle": 0.11059003217802665,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.4000000000323,
+            "biome": "swamp",
+            "energy": 284.43986451941515,
+            "nearest_observed_predator": 95.30830570970436,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.974188368183839,
+              "turn_angle": 0.16005153363002034,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.50000000003234,
+            "biome": "swamp",
+            "energy": 279.337202226981,
+            "nearest_observed_predator": 90.28678140835297,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.974188368183839,
+              "turn_angle": 0.16973763219649918,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.60000000003237,
+            "biome": "swamp",
+            "energy": 274.23299834408067,
+            "nearest_observed_predator": 85.43816591287518,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.974188368183839,
+              "turn_angle": 0.17958358265309116,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.7000000000324,
+            "biome": "swamp",
+            "energy": 269.12722742949575,
+            "nearest_observed_predator": 77.7582603444023,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.974188368183839,
+              "turn_angle": 0.1285228343464162,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.8000000000324,
+            "biome": "swamp",
+            "energy": 264.0295830854018,
+            "nearest_observed_predator": 69.76370883603435,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 5.105088062083413,
+              "turn_angle": 0.1520914803654163,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 443.90000000003243,
+            "biome": "swamp",
+            "energy": 258.92818767479196,
+            "nearest_observed_predator": 60.86652952032504,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 5.235987755982989,
+              "turn_angle": 0.1752057042934858,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 444.00000000003246,
+            "biome": "swamp",
+            "energy": 253.82311352118825,
+            "nearest_observed_predator": 51.124521517114474,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 5.235987755982989,
+              "turn_angle": 0.20689659944893268,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 444.1000000000325,
+            "biome": "swamp",
+            "energy": 248.71299560496954,
+            "nearest_observed_predator": 42.04510349453456,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 5.235987755982989,
+              "turn_angle": 0.26039623852665805,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 444.2000000000325,
+            "biome": "swamp",
+            "energy": 243.594362956738,
+            "nearest_observed_predator": 34.0464151685625,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.1887902047863905,
+              "turn_angle": 0.3378097824061532,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 444.3000000000325,
+            "biome": "swamp",
+            "energy": 238.46340956033575,
+            "nearest_observed_predator": 35.474419257268636,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 4.319689898685966,
+              "turn_angle": 0.2441188701325796,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 444.40000000003255,
+            "biome": "swamp",
+            "energy": 233.34736753574464,
+            "nearest_observed_predator": 35.60175576072512,
+            "action": {
+              "agent_id": 92,
+              "move_distance": 20,
+              "move_direction": 6.021385919380436,
+              "turn_angle": 0.2840385366149274,
+              "spawn_agent": false
+            }
+          }
+        ],
+        "action": {
+          "agent_id": 92,
+          "move_distance": 20,
+          "move_direction": 6.021385919380436,
+          "turn_angle": 0.2840385366149274,
+          "spawn_agent": false
+        },
+        "guide_plan": null
+      },
+      {
+        "time": 577.1000000000627,
+        "agent": 109,
+        "role": "avoiding_predator",
+        "intentional_delivery": false,
+        "energy_before": 189.68909319386924,
+        "sprint_threshold": 100.0,
+        "speed": 11.161801556205516,
+        "sprint_speed": 20,
+        "faster_than_predator_on_same_terrain": true,
+        "biome": "swamp",
+        "recent_steps": [
+          {
+            "time": 574.200000000062,
+            "biome": "swamp",
+            "energy": 189.27096357227748,
+            "nearest_observed_predator": 172.84215159815034,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.300000000062,
+            "biome": "swamp",
+            "energy": 188.6128734944672,
+            "nearest_observed_predator": 168.23331402596327,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.400000000062,
+            "biome": "swamp",
+            "energy": 187.95478341665694,
+            "nearest_observed_predator": 163.53006178978922,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.5000000000621,
+            "biome": "swamp",
+            "energy": 187.29669333884667,
+            "nearest_observed_predator": 150.55992328128022,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -4.440892098500626e-16,
+              "turn_angle": -4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.6000000000621,
+            "biome": "swamp",
+            "energy": 186.6386032610364,
+            "nearest_observed_predator": 137.6522398950663,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.7000000000621,
+            "biome": "swamp",
+            "energy": 185.98051318322612,
+            "nearest_observed_predator": 133.99024799971124,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -4.440892098500626e-16,
+              "turn_angle": -4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.8000000000621,
+            "biome": "swamp",
+            "energy": 245.3224231054162,
+            "nearest_observed_predator": 130.49738587159786,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -8.881784197001252e-16,
+              "turn_angle": -8.881784197001252e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 574.9000000000622,
+            "biome": "swamp",
+            "energy": 244.66433302760592,
+            "nearest_observed_predator": 117.7386963470744,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -1.4266692930442615,
+              "turn_angle": -0.25,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.0000000000622,
+            "biome": "swamp",
+            "energy": 243.96645421402266,
+            "nearest_observed_predator": 110.16449321738104,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -1.1766692930442615,
+              "turn_angle": -0.25,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.1000000000622,
+            "biome": "swamp",
+            "energy": 243.2685754004394,
+            "nearest_observed_predator": 112.45601791853389,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -0.9266692930442613,
+              "turn_angle": -0.25,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.2000000000622,
+            "biome": "swamp",
+            "energy": 242.57069658685614,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -0.6766692930442613,
+              "turn_angle": -0.25,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.3000000000623,
+            "biome": "swamp",
+            "energy": 241.87281777327289,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -0.4266692930442595,
+              "turn_angle": -0.25,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.4000000000623,
+            "biome": "swamp",
+            "energy": 241.17493895968963,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -0.1766692930442595,
+              "turn_angle": -0.1766692930442595,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.5000000000623,
+            "biome": "swamp",
+            "energy": 240.4887310905988,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -4.440892098500626e-16,
+              "turn_angle": -4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.6000000000623,
+            "biome": "swamp",
+            "energy": 239.83064101278853,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 4.440892098500626e-16,
+              "turn_angle": 4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.7000000000623,
+            "biome": "swamp",
+            "energy": 239.17255093497826,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 8.881784197001252e-16,
+              "turn_angle": 8.881784197001252e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.8000000000624,
+            "biome": "swamp",
+            "energy": 238.514460857168,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 4.440892098500626e-16,
+              "turn_angle": 4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 575.9000000000624,
+            "biome": "swamp",
+            "energy": 237.85637077935772,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": -4.440892098500626e-16,
+              "turn_angle": -4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.0000000000624,
+            "biome": "swamp",
+            "energy": 237.19828070154745,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.1000000000624,
+            "biome": "swamp",
+            "energy": 236.54019062373717,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 11.161801556205516,
+              "move_direction": 4.440892098500626e-16,
+              "turn_angle": 4.440892098500626e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.2000000000625,
+            "biome": "swamp",
+            "energy": 235.8821005459269,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 2.8797932657906435,
+              "turn_angle": 1.6694963687368407,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.3000000000625,
+            "biome": "swamp",
+            "energy": 230.53920264666095,
+            "nearest_observed_predator": 83.876082690282,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.4398966328953218,
+              "turn_angle": -0.11179261458423895,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.4000000000625,
+            "biome": "swamp",
+            "energy": 225.44422099974122,
+            "nearest_observed_predator": 78.88976510873468,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.3089969389957472,
+              "turn_angle": -0.13230862919747022,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.5000000000625,
+            "biome": "swamp",
+            "energy": 220.34597412768323,
+            "nearest_observed_predator": 72.8857860478178,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.1780972450961724,
+              "turn_angle": -0.14434081431519985,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.6000000000626,
+            "biome": "swamp",
+            "energy": 215.24581227388757,
+            "nearest_observed_predator": 65.79260473411429,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.1780972450961724,
+              "turn_angle": -0.15831787572196632,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.7000000000626,
+            "biome": "swamp",
+            "energy": 210.1434259016791,
+            "nearest_observed_predator": 58.96721969835806,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.0471975511965976,
+              "turn_angle": -0.17901991591154598,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.8000000000626,
+            "biome": "swamp",
+            "energy": 205.0377446974424,
+            "nearest_observed_predator": 51.203856473172685,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.0471975511965976,
+              "turn_angle": -0.2023139473867781,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 576.9000000000626,
+            "biome": "swamp",
+            "energy": 199.92835613295188,
+            "nearest_observed_predator": 43.904990541864976,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 1.0471975511965976,
+              "turn_angle": -0.24100949030314656,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 577.0000000000626,
+            "biome": "swamp",
+            "energy": 194.81280898153057,
+            "nearest_observed_predator": 37.32208821818695,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 0.39269908169872414,
+              "turn_angle": -0.292334545506149,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 577.1000000000627,
+            "biome": "swamp",
+            "energy": 189.68909319386924,
+            "nearest_observed_predator": 25.44353850119181,
+            "action": {
+              "agent_id": 109,
+              "move_distance": 20,
+              "move_direction": 0.2617993877991494,
+              "turn_angle": -0.3073220211585235,
+              "spawn_agent": false
+            }
+          }
+        ],
+        "action": {
+          "agent_id": 109,
+          "move_distance": 20,
+          "move_direction": 0.2617993877991494,
+          "turn_angle": -0.3073220211585235,
+          "spawn_agent": false
+        },
+        "guide_plan": null
+      }
+    ],
+    "premature_predator_deaths_with_sprint_available": 3,
+    "premature_guide_predator_deaths_with_sprint_available": 0,
+    "premature_guide_death_cases": [],
+    "intentional_delivery_sacrifices": 2,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable."
+  }
+}

@@ -103,3 +103,19 @@ The replay also assigned guides with energy 43, 59 and 63, already below the
 sprint threshold. The Sol relief helper is not yet connected to this role
 logic. Handover and candidate viability now deserve priority over more local
 steering variants: none of the three steering probes improved the dev game.
+
+## Coordination probe and partial PC results
+
+The fit-guide coordination probe (`68b3b25`) also failed to improve the dev
+game: 754.39 vs 784.88 score, still two deliveries, and more ordinary-agent
+predator deaths. Keep `--guide-coordination` optional. Details and both exact
+manifests are in `guide-coordination-20260919.md` and adjacent JSON files.
+
+The free-PC screen has returned one complete game (current settings, seed
+204871: score 1043.25, lifetime 1005.8 seconds) and five infrastructure timeouts
+at its 1800-second wall limit. These do not provide a paired settings result.
+`colony-settings-partial-20260919.json` records the partial snapshot; full
+downloaded artifacts are under `logs/entrapment-iteration/colony-settings-pc-20260919`.
+The other ten jobs continue in the unchanged remote source. Future reruns of
+timeouts need a longer wall limit; do not classify them as extinctions or draw
+a mean from only the runs which happened to finish quickly.

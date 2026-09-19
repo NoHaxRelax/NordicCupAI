@@ -53,3 +53,34 @@ games use seed 1883894846, maximum 3000 seconds, and every frame is saved:
 
 The latter replay is served at `http://localhost:9080/`. Manifests record exact
 source hashes and flags. These runs use local CPU; no new Runpod cost.
+
+## Completed paired result
+
+Both games ended in extinction. Code: `68b3b25`; the control reproduced the
+earlier default score exactly. No handover occurred, so this pair does not
+validate the handover path in a real game.
+
+| Measurement | Control | Fit-guide experiment |
+| --- | ---: | ---: |
+| Score | 784.88 | 754.39 |
+| Lifetime (seconds) | 750.4 | 719.5 |
+| Delivery arrivals / assignments | 2 / 19 | 2 / 5 |
+| Premature sprint-available guide captures | 0 | 0 |
+| Premature sprint-available captures, all roles | 3 | 3 |
+| Predator deaths, all roles | 20 | 27 |
+| Estimated seconds without bait after first arrival | 81.7 | 71.7 |
+| Runtime (seconds) | 267.45 | 217.20 |
+| Saved frames | 7,504 | 7,195 |
+
+The experiment reduced guide assignments but did not increase deliveries,
+reduce sprint-available deaths or improve score. It shifted more predator
+deaths onto ordinary evading agents. Do not interpret 2/5 vs 2/19 as a proven
+capture-rate improvement. **Keep it disabled by default.**
+
+The three control failures were evading agents with sprint trait 20. One had
+recently moved from swamp into desert; two had only swamp observations in the
+recorded three-second history. The experiment's three failures were also
+evading agents: one had sprint 20 in swamp, two had sprint 11.39; one of those
+crossed swamp, grassland and river in its recent history. These observations
+identify cases to replay, not a proof that the last action alone caused death.
+The all-agent zero-premature-capture benchmark remains unmet.
