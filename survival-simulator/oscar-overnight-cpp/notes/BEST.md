@@ -21,3 +21,4 @@ tree knowledge within 400 units +146 s.
 | + flee only within 80, own sightings only (`e_r80_ns` in cfg-f11.json) | 1239 | 1260 | 130 |
 Trap machinery (bait + guides) in full games: -200 s so far (see STATUS/GUIDE).
 | + dodge radius 80, angle 1.4 (`pred_best_0342`, 03:42) | 1444 | 1462 | 139 |
+| + flee within 70, face within 80 (`pred_best_0400`, confirmed on fresh seeds 7000-7191, 04:00) | 1507 | 1520 | 142 |

@@ -164,3 +164,8 @@ Log (newest last)
   population parameters under predators (cap, reserves, speed selection).
 - 03:48 f15: population parameters under predators: all within noise or worse (cap 0.35 -58, heir reserve 200 -67, speed selection -47). f16: facing range 80-300, sprint radius 20-30, shared sightings with far facing.
 - 03:54 f16: facing range 80 +28, flee 70 +31 (noise), far facing / shared sightings clearly worse. Evasion converged ~1450-1475 s. f17: confirmation on fresh seeds 7000-7191 + death profile.
+- 03:58 f17 CONFIRMED on fresh seeds 7000-7191: no logic 864 s, evasion v0 959, pred_best_0342 1422,
+  + flee 70 / face 80 = 1507 s / score 1520 (+85±25) => 'pred_best_0400'. Death profile: 37 kills per 250 s early
+  (population 39 -> 24 -> 16 -> 10 by 1000 s), starvation 290/game vs kills 132. f18 tests Oscar's 'hide behind a
+  wall': agents flee INTO the nearest known crevice with an open rear and out the other side (predators cannot
+  follow through a 10-20 gap; hide_mode, radius 150/250/400).

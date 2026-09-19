@@ -229,6 +229,7 @@ struct Mind {
     bool heir_done = false;
     double repost_at = 0., post_since = -OINF, last_site = 0.;
     bool has_watch = false; P2 watch_p{}; double watch_t = 0;
+    int hide_idx = -1; double hide_t = -1e9;   // nightsim: crevice pass-through escape
 };
 using MindP = std::shared_ptr<Mind>;
 
@@ -336,6 +337,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80.;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -663,7 +665,7 @@ public:
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
             if (!found) m.edges.push_back(EdgeMem{a, b, time});
-            if ((P.trap_mode > 0. || P.occ_walls > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
+            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
         }
         {
             std::vector<EdgeMem> keep;
@@ -1616,6 +1618,7 @@ public:
             if (!nr || t.d < nr->d) nr = &t;
         }
         if (!nr) return false;
+        if (P.hide_mode > 0. && hide_through(s, pl, nr->d)) return true;
         double away = std::atan2(vy, vx);
         if (nr->d < P.pred_dodge_r) {
             // predator heading in agent frame points along (bearing to predator + pi - rel); step perpendicular to it,
@@ -1627,6 +1630,39 @@ public:
         double step = nr->d < P.pred_sprint_r ? s.sprint : walk;
         double turn = P.pred_face > 0. ? nr->ang : 0.;
         pl = Plan{step, away, turn};
+        n_evading++;
+        return true;
+    }
+
+
+    // crevice pass-through escape (nightsim, hide_mode): run into the nearest known crevice with an open rear and out the
+    // other side; the predator (radius 10) cannot follow through a 10-20 wide gap and must go around the obstacle
+    bool hide_through(const AState& s, Plan& pl, double dP) {
+        Mind& m = M(s.aid); Group& g = G(m.group);
+        if (!g.anchored || g.sites.empty()) return false;
+        const PoseObj& ps = *m.pose;
+        if (m.hide_idx < 0 || m.hide_idx >= (int)g.sites.size() || time - m.hide_t > 12.) {
+            if (dP > P.hide_trigger) return false;
+            int best = -1; double bd = P.hide_r;
+            for (size_t i = 0; i < g.sites.size(); i++) {
+                const auto& st_ = g.sites[i];
+                if (!st_.rear_ok) continue;
+                double d = dist(st_.mouth, ps.p);
+                if (d < bd) { bd = d; best = (int)i; }
+            }
+            if (best < 0) return false;
+            m.hide_idx = best; m.hide_t = time;
+        }
+        const Group::Site& st_ = g.sites[m.hide_idx];
+        P2 in = sub(st_.goal, st_.mouth); in = mul(in, 1.0 / pmax(norm(in), 1e-6));
+        P2 pre = sub(st_.mouth, mul(in, 25.));
+        P2 rel = sub(ps.p, pre); double along = rel.x * in.x + rel.y * in.y, across = std::fabs(rel.x * in.y - rel.y * in.x);
+        P2 target = (along > -3. && across < 4.) ? st_.rear : pre;
+        double d, ang; local_of(ps, target, d, ang);
+        if (dist_lt(ps.p, st_.rear, 6.)) { m.hide_idx = -1; return false; }   // through: back to normal (evade again if needed)
+        double walk = pmin(s.speed, s.sprint);
+        double step = dP < P.pred_sprint_r ? s.sprint : walk;
+        pl = Plan{pmin(step, d), ang, ang};
         n_evading++;
         return true;
     }
@@ -1669,7 +1705,7 @@ public:
         for (const AState& s : states) observe(M(s.aid), s);
         if (P.oracle_trees > 0.) apply_oracle();
         if (P.pred_mode > 0.) share_predators();
-        if (P.trap_mode > 0.) groups.each([&](const int64_t&, GroupP& g) { if (g->anchored && time - g->sites_t >= 2.) find_sites(*g); });
+        if (P.trap_mode > 0. || P.hide_mode > 0.) groups.each([&](const int64_t&, GroupP& g) { if (g->anchored && time - g->sites_t >= 2.) find_sites(*g); });
         {
             std::vector<GroupP> gl;
             groups.each([&](const int64_t&, GroupP& g) { gl.push_back(g); });
