@@ -257,7 +257,7 @@ struct Group {
     // last known guide status (for death attribution): distance to lane point, predators within 120, walk speed, stuck ticks, ticks alive
     double gl_dT = 0., gl_speed = 0.; int64_t gl_npred = 0, gl_stuck = 0, gl_ticks = 0; P2 gl_pos{};
     int64_t d_far = 0, d_multi = 0, d_slow = 0, d_stuck = 0, d_early = 0, d_state1 = 0;
-    bool guide_sprinting = false;
+    bool guide_sprinting = false; int64_t held_max = 0; double guide_end_t = -1e9; int64_t ep_deliv = 0; double wait_since = -1.;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
@@ -336,7 +336,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
+    double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
            trap_start = 60., bait_margin = 15., bait_min_life = 25., bait_young_pen = 50., trap_keepout = 80.;   // DIAGNOSTIC ONLY (engine truth): anchored groups know every live tree and its age   // no_spawn: tests only
@@ -1460,7 +1460,7 @@ public:
             if (g.gl_stuck >= 5) g.d_stuck++;
             if (g.gl_ticks < 30) g.d_early++;
             if (g.guide_state == 1) g.d_state1++;
-            g.guide = -1; g.guide_state = 0;
+            g.guide = -1; g.guide_state = 0; g.guide_end_t = time;
         }
         // nearest shared predator sighting that is not already held at the mouth
         bool have = false; P2 pp{}; double best = OINF;
@@ -1471,6 +1471,12 @@ public:
             if (d < best) { best = d; pp = q.p; have = true; }
         }
         if (have) { g.guide_pred = pp; g.guide_seen = time; }
+        {   // deliveries: count sightings held at the mouth; a new one during/just after a guide episode is a delivery
+            int64_t hn = 0; for (auto& q : g.pseen) if (dist_lt(q.p, g.trap.mouth, 40.)) hn++;
+            if (hn > g.held_max && (g.guide >= 0 || time - g.guide_end_t < 6.)) { g.guide_done++; if (g.guide >= 0) { g.guide = -1; g.guide_state = 0; g.guide_end_t = time; g.ep_deliv++; } }
+            if (hn > g.held_max) g.held_max = hn;
+            if (hn < g.held_max) g.held_max = hn;   // follow drops so the next arrival counts again
+        }
         if (g.bait < 0) return;
         if (g.guide < 0) {
             if (!have) return;
@@ -1543,8 +1549,11 @@ public:
                 else if (dP > P.guide_sprint_until) g.guide_sprinting = false;                     // hysteresis: keep sprinting until this far
                 if (g.guide_sprinting) { step = s.sprint; dir = wrap(angP + (blocked_ ? sgn * P.guide_block_ang : OPI)); }
                 else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // predator in the way: circle it, drifting away
-                else if (dP > P.guide_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < P.guide_far + 40.))
+                else if (dP > P.guide_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < P.guide_far + 40.)) {
                     step = walk * pmax(0., (P.guide_far + 20. - dP) / 20.);   // slow down beyond the band, unless it is charging in fast
+                    if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { g.wait_since = -1.; g.guide_state = 1; return; } }
+                    else g.wait_since = -1.;
+                } else g.wait_since = -1.;
                 plans[g.guide] = Plan{pmin(step, pmax(dT, 1.)), dir, angP};
                 return;
             }

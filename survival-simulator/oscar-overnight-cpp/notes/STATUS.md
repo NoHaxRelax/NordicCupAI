@@ -135,3 +135,8 @@ Log (newest last)
   unchanged). Root cause is structural: colony agents walk ~10 vs predator 15; a guide cannot outrun a fresh
   predator over hundreds of units. f7: guide only predators already within 300 of the trap; speed selection
   (fit_speed 3, cap 20) with predators, with and without heir selection.
+- 03:10 f7: speed selection with predators +8 s (noise); lane-limited guiding still -200 s. 0.2-s full-game
+  trace shows a real delivery (guide eaten as it entered the handoff, predator held 26 from the bait for 10+ s)
+  that the 'guides done' counter missed, plus two waste modes: the next guide walks to the STALE position of the
+  now-held predator, and guides wait beyond the band for predators busy elsewhere. Fixes: deliveries counted as
+  sightings newly held at the mouth, guide released on delivery, waiting timeout 6 s -> re-acquire. f8 running.
