@@ -1,0 +1,350 @@
+{
+  "games": 2784,
+  "elapsed_seconds": 1331.318184375763,
+  "validation": {
+    "sprint_reserve": {
+      "idea": "Preserve energy needed for future sprinting",
+      "n": 32,
+      "mean": 1283.494875,
+      "median": 1264.192,
+      "std": 306.85044854138374,
+      "delta": -250.66253125,
+      "paired_interval": [
+        -342.50768125,
+        -158.21461328125025
+      ],
+      "interval_level": 0.95,
+      "wins": 6,
+      "ties": 0,
+      "mean_predator_deaths": 87.90625,
+      "mean_runtime_seconds": 7.94375
+    },
+    "three_step": {
+      "idea": "Choose movement using three-step pursuit approximation",
+      "n": 32,
+      "mean": 969.4190000000001,
+      "median": 904.745,
+      "std": 271.50221594283715,
+      "delta": -564.73840625,
+      "paired_interval": [
+        -685.8882632812499,
+        -439.59627968750027
+      ],
+      "interval_level": 0.95,
+      "wins": 2,
+      "ties": 0,
+      "mean_predator_deaths": 196.25,
+      "mean_runtime_seconds": 10.7125
+    },
+    "wall_clear": {
+      "idea": "Deflect escapes around observed walls",
+      "n": 32,
+      "mean": 1631.79271875,
+      "median": 1659.3519999999999,
+      "std": 320.36954775557535,
+      "delta": 97.63531250000001,
+      "paired_interval": [
+        -25.444512500000013,
+        219.53191640625
+      ],
+      "interval_level": 0.95,
+      "wins": 20,
+      "ties": 0,
+      "mean_predator_deaths": 150.5625,
+      "mean_runtime_seconds": 14.45
+    },
+    "sparse_corner": {
+      "idea": "Steer toward one observed sparse corner, target \u00b110 degrees",
+      "n": 32,
+      "mean": 1410.115125,
+      "median": 1366.5279999999998,
+      "std": 374.02182350479876,
+      "delta": -124.04228125,
+      "paired_interval": [
+        -241.41639062499996,
+        1.5253093749999755
+      ],
+      "interval_level": 0.95,
+      "wins": 10,
+      "ties": 0,
+      "mean_predator_deaths": 143.46875,
+      "mean_runtime_seconds": 13.1875
+    },
+    "energy_escape": {
+      "idea": "Choose one-step cone exits with an energy price",
+      "n": 32,
+      "mean": 1104.774125,
+      "median": 1089.067,
+      "std": 250.88325675664885,
+      "delta": -429.38328125,
+      "paired_interval": [
+        -527.3464984375,
+        -329.82445625
+      ],
+      "interval_level": 0.95,
+      "wins": 3,
+      "ties": 0,
+      "mean_predator_deaths": 173.09375,
+      "mean_runtime_seconds": 11.16875
+    },
+    "nearest_corner": {
+      "idea": "Steer toward nearest corner, target \u00b110 degrees",
+      "n": 32,
+      "mean": 1391.4726249999999,
+      "median": 1387.931,
+      "std": 360.64934912842705,
+      "delta": -142.68478125000001,
+      "paired_interval": [
+        -272.9599015625,
+        -16.996074218750074
+      ],
+      "interval_level": 0.95,
+      "wins": 10,
+      "ties": 0,
+      "mean_predator_deaths": 163.5625,
+      "mean_runtime_seconds": 13.275
+    },
+    "cone_trigger": {
+      "idea": "Tune facing-angle threshold for reacting",
+      "n": 32,
+      "mean": 1453.04728125,
+      "median": 1393.6015,
+      "std": 392.8994835634201,
+      "delta": -81.11012500000001,
+      "paired_interval": [
+        -205.0935703125,
+        45.78446796874995
+      ],
+      "interval_level": 0.95,
+      "wins": 11,
+      "ties": 0,
+      "mean_predator_deaths": 162.5,
+      "mean_runtime_seconds": 13.928125
+    },
+    "safe_births": {
+      "idea": "Delay reproduction near a seen predator",
+      "n": 32,
+      "mean": 1442.2363125000002,
+      "median": 1404.9145,
+      "std": 345.10337510463273,
+      "delta": -91.92109374999998,
+      "paired_interval": [
+        -197.22717578125,
+        19.330391406249923
+      ],
+      "interval_level": 0.95,
+      "wins": 12,
+      "ties": 0,
+      "mean_predator_deaths": 149.46875,
+      "mean_runtime_seconds": 13.478125000000002
+    },
+    "sidestep": {
+      "idea": "Tuned sideways escape",
+      "n": 32,
+      "mean": 1424.6930625,
+      "median": 1399.9505,
+      "std": 332.41699047498696,
+      "delta": -109.46434375000003,
+      "paired_interval": [
+        -231.06801093750008,
+        6.8104414062497005
+      ],
+      "interval_level": 0.95,
+      "wins": 12,
+      "ties": 0,
+      "mean_predator_deaths": 150.4375,
+      "mean_runtime_seconds": 14.33125
+    },
+    "closest_only": {
+      "idea": "Forage when another visible agent is closer",
+      "n": 32,
+      "mean": 1578.71940625,
+      "median": 1522.4735,
+      "std": 353.573623065232,
+      "delta": 44.56199999999998,
+      "paired_interval": [
+        -74.98547343750003,
+        161.22550937499997
+      ],
+      "interval_level": 0.95,
+      "wins": 18,
+      "ties": 0,
+      "mean_predator_deaths": 155.84375,
+      "mean_runtime_seconds": 14.253125
+    },
+    "radial": {
+      "idea": "Walk or sprint directly away",
+      "n": 32,
+      "mean": 1199.30840625,
+      "median": 1150.663,
+      "std": 290.2288461639682,
+      "delta": -334.84899999999993,
+      "paired_interval": [
+        -453.74401718750005,
+        -211.14941953125
+      ],
+      "interval_level": 0.95,
+      "wins": 7,
+      "ties": 0,
+      "mean_predator_deaths": 158.1875,
+      "mean_runtime_seconds": 11.91875
+    },
+    "committed": {
+      "idea": "Keep an escape heading for several ticks",
+      "n": 32,
+      "mean": 1414.50171875,
+      "median": 1363.353,
+      "std": 449.32847999791966,
+      "delta": -119.6556875,
+      "paired_interval": [
+        -244.83222578124997,
+        11.831011718749973
+      ],
+      "interval_level": 0.95,
+      "wins": 9,
+      "ties": 0,
+      "mean_predator_deaths": 157.28125,
+      "mean_runtime_seconds": 12.828125
+    },
+    "shared": {
+      "idea": "React to current group sightings",
+      "n": 32,
+      "mean": 1423.28515625,
+      "median": 1333.9675,
+      "std": 303.33411777222193,
+      "delta": -110.87225000000001,
+      "paired_interval": [
+        -216.77403515625,
+        0.8741109374999945
+      ],
+      "interval_level": 0.95,
+      "wins": 10,
+      "ties": 0,
+      "mean_predator_deaths": 145.90625,
+      "mean_runtime_seconds": 13.865625000000001
+    },
+    "look_away": {
+      "idea": "Escape without turning gaze toward predator",
+      "n": 32,
+      "mean": 1487.79590625,
+      "median": 1500.6005,
+      "std": 341.95859777562015,
+      "delta": -46.36150000000002,
+      "paired_interval": [
+        -166.43052734375007,
+        67.77095781249999
+      ],
+      "interval_level": 0.95,
+      "wins": 16,
+      "ties": 0,
+      "mean_predator_deaths": 148.65625,
+      "mean_runtime_seconds": 14.678125
+    },
+    "memory": {
+      "idea": "Avoid orchard posts near remembered predators",
+      "n": 32,
+      "mean": 1533.437375,
+      "median": 1443.4005,
+      "std": 313.1139241364282,
+      "delta": -0.7200312500000159,
+      "paired_interval": [
+        -94.58472734375006,
+        95.12015859374992
+      ],
+      "interval_level": 0.95,
+      "wins": 17,
+      "ties": 0,
+      "mean_predator_deaths": 146.46875,
+      "mean_runtime_seconds": 15.071875
+    },
+    "fruit_escape": {
+      "idea": "Choose one-step cone exits favoring the orchard direction",
+      "n": 32,
+      "mean": 1347.9056874999999,
+      "median": 1297.6190000000001,
+      "std": 318.41129659481226,
+      "delta": -186.25171875,
+      "paired_interval": [
+        -299.9084109374999,
+        -62.37909375000005
+      ],
+      "interval_level": 0.95,
+      "wins": 7,
+      "ties": 0,
+      "mean_predator_deaths": 151.9375,
+      "mean_runtime_seconds": 13.990625
+    },
+    "baseline": {
+      "idea": "Unchanged Oscar Orchard avoidance",
+      "n": 32,
+      "mean": 1534.1574062500001,
+      "median": 1586.961,
+      "std": 254.2815296679037,
+      "delta": 0.0,
+      "paired_interval": [
+        0.0,
+        0.0
+      ],
+      "interval_level": 0.95,
+      "wins": 0,
+      "ties": 32,
+      "mean_predator_deaths": 159.0,
+      "mean_runtime_seconds": 15.950000000000001
+    }
+  },
+  "confirmation": {
+    "wall_clear": {
+      "idea": "Deflect escapes around observed walls",
+      "n": 64,
+      "mean": 1536.566515625,
+      "median": 1522.98,
+      "std": 397.11822016827534,
+      "delta": 45.77484374999999,
+      "paired_interval": [
+        -68.58820078125001,
+        158.65885410156258
+      ],
+      "interval_level": 0.975,
+      "wins": 36,
+      "ties": 0,
+      "mean_predator_deaths": 155.875,
+      "mean_runtime_seconds": 14.459375
+    },
+    "closest_only": {
+      "idea": "Forage when another visible agent is closer",
+      "n": 64,
+      "mean": 1520.5902500000002,
+      "median": 1527.8180000000002,
+      "std": 398.84037977350414,
+      "delta": 29.798578124999995,
+      "paired_interval": [
+        -65.49764140625001,
+        125.88668671874997
+      ],
+      "interval_level": 0.975,
+      "wins": 35,
+      "ties": 0,
+      "mean_predator_deaths": 152.484375,
+      "mean_runtime_seconds": 14.3828125
+    },
+    "baseline": {
+      "idea": "Unchanged Oscar Orchard avoidance",
+      "n": 64,
+      "mean": 1490.791671875,
+      "median": 1451.492,
+      "std": 451.4828041168083,
+      "delta": 0.0,
+      "paired_interval": [
+        0.0,
+        0.0
+      ],
+      "interval_level": 0.975,
+      "wins": 0,
+      "ties": 64,
+      "mean_predator_deaths": 145.0625,
+      "mean_runtime_seconds": 14.175
+    }
+  },
+  "highest_confirmation_mean": "wall_clear",
+  "evidence_of_improvement": []
+}
