@@ -15,4 +15,4 @@ not a fresh reproduction of the historical Python training runs before fixes.
 
 Runpod CPU pools rejected 32/16/8 CPU3c and 16 CPU5c requests, and an A4500
 request was also unavailable. Dedicated pod zmml46gemukrm5 has 16 CPUs attached
-to an L40S; GPU is unused. $1.09/hour, 10 GB disposable disk. Remove after download.
+to an L40S; GPU is unused. $1.09/hour, 10 GB disposable disk. Leave running after download, as explicitly requested by the user. Ongoing cost: $1.09/hour.
