@@ -1061,3 +1061,41 @@ windowing defect silently truncates contexts and would train on amputated inputs
 than four held-out conversations (+-0.092 per-score interval is wider than anything being measured).
 Given entry 59 - headroom <= 0.024 against a measurement resolution of +-0.030 - this is a curiosity
 to run only if time is free, not a path to a better submission.
+
+
+## 62. The temporal-overlap page: the served 27B and the zero-shot extractors side by side
+
+Elias asked to see the temporal overlap (tIoU) of the served 27B configuration and of "the BERT model"
+per question, to judge whether each could cover for the other's weakness. `bench/overlap_page.py`
+builds `bench/ref/overlap.html` (gitignored like `timeline.html`; served at
+http://localhost:9060/overlap.html by `bench/ref/oracle_server.py`) from the entry-61 files, which were
+only in a session scratchpad and are now committed under `bench/results/probe/extractors/`: the
+incumbent replay of the `units-fewshot-both ... p4` run, the zero-shot spans and tIoU of
+`deepset/deberta-v3-large-squad2` and `deepset/roberta-base-squad2`, and the probe scripts. Every number
+on the page is recomputed from the spans and asserted equal to the stored tIoU files; all match entry 61.
+Nikolaj's fine-tune was never trained (research/10), so the extractor level is a zero-shot floor.
+
+The page: a scatter of per-question tIoU (27B against the extractor, questions where the extractor is
+ahead by 0.25 or more highlighted), a table of span-combination rules, and one timeline per gold question
+with the annotated passage, the 27B span and both extractor spans on a local time axis, transcript words
+on hover, filters by conversation, sort by 27B loss or extractor gain.
+
+| span rule, mean tIoU over the 195 gold questions | with DeBERTa | with RoBERTa |
+| --- | ---: | ---: |
+| 27B alone (served) | 0.7119 | 0.7119 |
+| extractor alone | 0.4117 | 0.4108 |
+| pick the better per question (perfect router) | 0.7458 (score +0.020) | 0.7512 (+0.024) |
+| union of the two spans | 0.5349 | 0.5710 |
+| intersection when they overlap, else 27B | 0.6507 | 0.6059 |
+| extractor when the two spans do not touch, else 27B | 0.5035 | 0.5536 |
+| extractor when the 27B span is long, best in-sample cut | 0.7119 (never routes) | 0.7119 |
+| best of all three per question | 0.7658 (score +0.032) | |
+
+Rescues (27B below 0.5, extractor at 0.5 or more): 10 with DeBERTa, 12 with RoBERTa; the reverse 73 and
+83. On the 27B's 16 whole misses DeBERTa is also 0 on 16 and points at the same wrong passage on 11
+(RoBERTa 14 and 6). Both below 0.5 on 40 questions, same wrong passage on 23.
+
+**Reading.** The complementarity exists only under a router that is always right. Every rule that can
+actually be computed from the two spans scores below the 27B alone, and the 27B's whole misses are
+shared, so there is nothing for a zero-shot extractor to cover. The only untested route stays the
+fine-tune, and it would have to clear 0.7119 on its own (research/10, entry 61).
