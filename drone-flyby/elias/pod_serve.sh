@@ -9,7 +9,7 @@ mkdir -p /root/logs/serve; rm -f /root/logs/serve.url /root/logs/serve/*.jsonl
 [ -x /root/cloudflared ] || { wget -q -O /root/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 && chmod +x /root/cloudflared; }
 export DRONE_DETECTOR=ultralytics DRONE_WEIGHTS="$W" DRONE_DEVICE=cuda:0 DRONE_IMGSZ=${IMGSZ:-1280} DRONE_PORT=9053 DRONE_LOG_DIR=/root/logs/serve \
        DRONE_OVERVIEW_BETWEEN_SIDES=0 DRONE_MISS_RULE=seen DRONE_CONF=0.05 DRONE_BIRTH_CONFIDENCE=0.25 DRONE_UPDATE_CONFIDENCE=0.15 \
-       DRONE_ANSWER_WINDOWS="$WIN" DRONE_ANSWER_CLASSES="${ANSWER_CLASSES:-}"
+       DRONE_ANSWER_WINDOWS="$WIN" DRONE_ANSWER_CLASSES="${ANSWER_CLASSES:-}" \n       DRONE_CLASS_EXTENT="${CLASS_EXTENT:-{\}}" DRONE_HEDGE_FACTOR="${HEDGE:-0}" DRONE_BOX_SCALE="${BOX_SCALE:-{\}}"
 nohup python api.py > /root/logs/api.log 2>&1 &
 nohup /root/cloudflared tunnel --url http://localhost:9053 --no-autoupdate > /root/logs/tunnel.log 2>&1 &
 for _ in $(seq 1 60); do

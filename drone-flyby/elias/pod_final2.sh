@@ -14,11 +14,11 @@ python elias/data/synth_yolo.py --out /root/data/final2 --n ${N_VIEWS:-12000} --
   --extra-bg /root/ucm --extra-bg-prob 0.4 2>&1 | tail -4
 echo "=== $(date -Is) train"
 yolo detect train model=${MODEL:-yolo26m.pt} data=/root/data/final2/data.yaml imgsz=${IMGSZ:-1280} batch=${BATCH:-16} epochs=${EPOCHS:-5} name=${NAME:-F5_fixed_m1280} \
-  save_period=1 device=0 workers=12 amp=True patience=0 plots=False exist_ok=True project=/root/runs $AUG > /root/logs/final2_train.log 2>&1 || echo "FAILED"
+  save_period=1 device=0 workers=12 amp=True patience=0 plots=False exist_ok=True project=/root/runs $AUG ${EXTRA:-} > /root/logs/final2_train.log 2>&1 || echo "FAILED"
 cp /root/runs/${NAME:-F5_fixed_m1280}/weights/last.pt /root/out/${NAME:-F5_fixed_m1280}.last.pt 2>/dev/null
 python - <<'PY'
 import csv, glob
-for d in glob.glob('/root/runs/F5_*/results.csv'):
+for d in glob.glob('/root/runs/*/results.csv'):
     rows = list(csv.DictReader(open(d))); k = [c for c in rows[0] if 'mAP50(B)' in c][0]
     print('RESULT', d.split('/')[3], 'in-scene real-view mAP50 per epoch:', ' '.join(f'{float(r[k]):.3f}' for r in rows))
 PY

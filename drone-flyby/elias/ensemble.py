@@ -6,6 +6,10 @@ Each model runs on the delivered view at its own input size. Detections of the s
 (IoU >= 0.5) are merged into one box: coordinates averaged with confidence weights, confidence = the mean
 over ALL models (a model that stays silent counts as 0), so agreement is rewarded and a lone detection is
 kept at reduced confidence instead of being dropped (low-confidence boxes are nearly free under AP).
+
+Per-class routing (ELIAS_ROUTE, JSON like {"small_tower": 1, "ta-ta": 1}): a routed class is taken from that ONE
+model only, at that model's own confidence, so the model that measured best on a class answers for it; classes
+without a route are merged across models as above. Measure each model per class on the portal, route, re-measure.
 """
 from __future__ import annotations
 
@@ -19,7 +23,8 @@ import numpy as np
 class Ensemble:
     name = 'elias-ensemble'
 
-    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True):
+    def __init__(self, weights, sizes, device='cuda:0', conf=0.03, half=True, route=None):
+        self.route = dict(route or {})
         import cv2
         threads = cv2.getNumThreads()
         from ultralytics import YOLO
@@ -36,7 +41,9 @@ class Ensemble:
                 r = m.predict(image, imgsz=size, device=self.device, conf=self.conf, half=self.half, verbose=False)[0]
             per.append([(m.names[int(c)], np.array([x1, y1, x2, y2]), float(s)) for x1, y1, x2, y2, s, c in r.boxes.data.cpu().tolist()])
         rows, n = [], len(self.models)
-        pool = sorted([(lab, box, s, k) for k, dets in enumerate(per) for lab, box, s in dets], key=lambda d: -d[2])
+        for lab, k in self.route.items():                      # routed classes: one model answers, its own confidence
+            rows += [{'label': l, 'box': b.tolist(), 'confidence': s} for l, b, s in per[k] if l == lab]
+        pool = sorted([(lab, box, s, k) for k, dets in enumerate(per) for lab, box, s in dets if lab not in self.route], key=lambda d: -d[2])
         used = [False]*len(pool)
         for i, (lab, box, s, k) in enumerate(pool):
             if used[i]:
@@ -62,4 +69,6 @@ def build():
         raise ValueError('elias.ensemble:build needs ELIAS_WEIGHTS="a.pt,b.pt"')
     sizes = [int(v) for v in os.environ.get('ELIAS_IMGSZ', '1280').split(',')]
     sizes = (sizes*len(weights))[:len(weights)]
-    return Ensemble(weights, sizes, device=os.environ.get('DRONE_DEVICE', 'cuda:0'), conf=float(os.environ.get('ELIAS_CONF', '0.03')))
+    import json
+    route = json.loads(os.environ.get('ELIAS_ROUTE', '{}') or '{}')
+    return Ensemble(weights, sizes, device=os.environ.get('DRONE_DEVICE', 'cuda:0'), conf=float(os.environ.get('ELIAS_CONF', '0.03')), route=route)
