@@ -1,0 +1,41 @@
+# Bait nursery prototype
+
+Optional `--nursery-size 2`, default off pending paired evaluation. Two young
+gatherers settle near recently observed trees on the rear side of the trap,
+120–300 units from bait and within 220 units of the rear entrance. The chosen
+food area needs a clear agent-width route to that entrance. If no suitable
+observed trees exist, the nursery does not activate. No food is artificially
+spawned and no evaluator information enters the policy.
+
+Nursery members gather Orchard-assigned ripe fruit within 160 units of their
+camp, use wall pathfinding, avoid predators and are exempt from guide/bait
+recruitment while assigned. At age 55 they return to the ordinary role pool.
+When bait is running low and no replacement is travelling, a nearby parent
+with at least max(300, 70% capacity) energy can reproduce. Birth requests are
+spaced by 15 seconds and limited when two children younger than 15 seconds
+already occupy the food area. Children join the normal population and bait
+selection; none waits at the trap entrance. This is a prototype, not verified
+continuous bait production. It does not yet preferentially allocate all local
+food to nursery parents or explicitly track which parent produced each donor.
+
+Local every-frame pilot: `logs/entrapment-iteration/nursery-pilot-20260919`,
+viewer port 9075. Green rings identify nursery gatherers.
+
+Free remote CPU experiment:
+
+- `ssh pc` reports 12 CPUs. Six workers run twelve full games: baseline and
+  nursery on seeds 204871, 917263, 605319, 148027, 730951, 392681.
+- Isolated remote source: `/home/lucas/entrapment-nursery-20260919`.
+- Interpreter: `/home/lucas/entrapment-research-20260918/.venv/bin/python`.
+- Results: `logs/nursery-paired6/results.json` plus per-game summaries/manifests.
+- Native extension uses the same pinned C++ source and Python 3.13.14 ABI.
+  The existing portable compiled module imports and runs; the host lacks a C++
+  compiler. No server or unrelated process was stopped.
+- `scripts/compare_bait_nursery.py` runs isolated subprocesses, bounds each job
+  to 1800 wall seconds, and reports infrastructure errors separately.
+- Remote games use `--summary-only`; only the local pilot records every frame.
+
+Runpod MCP and CPU catalog were verified. No new pod was rented: the free PC
+is the first paired screen. The existing ledger estimates $4.88 spent of $10,
+leaving approximately $5.12 for broader validation if justified. Other users'
+pods are not part of this work and were left untouched.

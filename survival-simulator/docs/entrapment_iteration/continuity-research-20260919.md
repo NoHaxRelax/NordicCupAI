@@ -44,6 +44,13 @@ mean energy 27.6% of capacity. R21: 119 gatherer energy deaths; 25 guides and
 Energy depletion/ageing dominates deaths. Ripe-fruit timing alone is unlikely
 to solve the colony failure.
 
+Age matters: in the unchanged/default-settings 1015.7-second run, 67 of 159
+gatherer energy deaths occurred before age 60 (38 before age 30); median age
+was 72.1. The remaining deaths may include normal senescence, which should not
+all be attributed to failed food collection. Of 31 predator victims, only 12
+were guides, so the guide-only-victim target is also unmet. Future recordings
+include the pre-age-60 death count directly and log energy/age on bait arrival.
+
 Next integration correction: bait/guides previously retained tree and fruit
 claims even though their movement was overridden. The optional Orchard
 `unavailable_agents` hook retains their observations but releases those claims

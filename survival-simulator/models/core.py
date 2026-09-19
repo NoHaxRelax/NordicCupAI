@@ -19,6 +19,7 @@ from models.survival.oscar_orchard import OrchardPolicy, MOVE_PENALTY
 from models.entrapment.observed_trap_sites import observed_rectangles, available_sites
 from models.entrapment.my_guide import guide
 from models.entrapment.bystander_avoidance import avoid_predators
+from models.entrapment.bait_nursery import BaitNursery
 
 
 def action_for(aid, **kwargs):
@@ -62,7 +63,7 @@ class Track:
 
 class EntrapmentPolicy:
     def __init__(self, seed=0, *, bait_overlap_seconds=20., bait_reserve_seconds=0., survival_settings=None,
-                 release_trap_food=False):
+                 release_trap_food=False, nursery_size=0):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -71,6 +72,7 @@ class EntrapmentPolicy:
         self.bait_reserve_seconds = float(bait_reserve_seconds)
         self.reserved_bait = None
         self.release_trap_food = release_trap_food
+        self.nursery = BaitNursery(nursery_size)
         config = load_config()
         # Nikolaj's survey-gap harvesting is deliberately disabled. Our detector
         # alone selects traps. Stay in his exploration phase until we find one.
@@ -155,7 +157,7 @@ class EntrapmentPolicy:
         rear, goal = np.array(self.site['replacement_entry']), np.array(self.site['goal'])
         for aid, s in states.items():
             pose = self.estimator.poses[aid]
-            if (aid in excluded or pose.group_id != self.site_group or pose.uncertainty > 8.
+            if (aid in excluded or aid in self.nursery.members or pose.group_id != self.site_group or pose.uncertainty > 8.
                     or self.bait_retry_after.get(aid, 0.) > self.now): continue
             # Route through the rear entrance, never through the predator mass.
             plan = self.navigator.steer(aid, pose.position, rear, self.now)
@@ -195,7 +197,9 @@ class EntrapmentPolicy:
             if previous is not None and self._arrival(previous):
                 self.retired_baits.add(previous)
                 self.metrics['overlapping_replacements'] += 1
-            self.event('bait_arrived', agent=self.bait, previous=previous)
+            self.event('bait_arrived', agent=self.bait, previous=previous,
+                       energy=states[self.bait]['energy'], age=states[self.bait]['age'],
+                       conservative_lifetime_seconds=remaining_life(states[self.bait]['energy'], states[self.bait]['age']))
         # Retry with another candidate if the current traveller gets stuck.
         if self.incoming is not None:
             aid = self.incoming
@@ -418,6 +422,10 @@ class EntrapmentPolicy:
                                     unavailable_agents=unavailable if self.release_trap_food else ()))
         self.roles = {}
         self._find_site()
+        if self.site is not None:
+            self.navigator.update(self.estimator.groups[self.site_group], self.now)
+        self.nursery.update(self, states, 0. if self.bait not in states else
+                            remaining_life(states[self.bait]['energy'], states[self.bait]['age']))
         self._bait_roles(states)
         self._track_predators(states)
         actions = {}
@@ -452,15 +460,17 @@ class EntrapmentPolicy:
                 track = next(t for t in self.tracks.values() if t.guide_id == aid)
                 action = self._guide_action(track, s)
             else:
-                role = 'bait_candidate' if aid == self.reserved_bait else ('explorer' if self.site is None else 'gatherer')
-                action = exploration[aid] if self.site is None else orchard[aid]
+                role = ('nursery_farmer' if aid in self.nursery.members else 'bait_candidate'
+                        if aid == self.reserved_bait else 'explorer' if self.site is None else 'gatherer')
+                action = (self.nursery.action(self,aid,s) if aid in self.nursery.members else
+                          exploration[aid] if self.site is None else orchard[aid])
                 bait_local = None
                 if self.site is not None and self.bait is not None:
                     pose = self.estimator.poses.get(aid)
                     if pose is not None and pose.group_id == self.site_group:
                         bait_local = local(pose, self.site['goal'])
                 action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
-                if avoiding and aid != self.reserved_bait:
+                if avoiding and aid != self.reserved_bait and aid not in self.nursery.members:
                     role = 'avoiding_predator'
                 self.roles[aid] = role
             if role in ('bait', 'replacement_bait', 'retired_bait', 'guide', 'bait_candidate'):
@@ -497,6 +507,7 @@ class EntrapmentPolicy:
                     bait_overlap_seconds=self.bait_overlap_seconds,
                     bait_reserve_seconds=self.bait_reserve_seconds, reserved_bait=self.reserved_bait,
                     release_trap_food=self.release_trap_food,
+                    nursery=self.nursery.snapshot(),
                     site=self.site, site_group=self.site_group, bait=self.bait, incoming=self.incoming,
                     roles=self.roles.copy(), metrics=self.metrics.copy(), map=self.map_stats,
                     estimated_agents={aid: dict(position=p.position.tolist(), heading=p.heading,
