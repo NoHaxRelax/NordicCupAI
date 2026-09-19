@@ -15,6 +15,7 @@ These are development runs on one repeatedly used seed, not a validation set.
 | Small high-energy colony, overlap 60 | 222.5 | 231.14 | 0.1 |
 | Reserve donor at 60, dispatch overlap 20 | 1015.7 | 1058.04 | 242.1 |
 | Reserve donor + Oscar r21 settings | 711.7 | 737.89 | 169.6 |
+| Separate trap roles from Orchard workforce | 458.0 | 483.07 | 14.5 |
 
 The high-energy variant consumed six of its twelve agents as bait and only
 produced twelve agents total. Its only predator victim was a guide. Near-zero
@@ -47,7 +48,10 @@ Next integration correction: bait/guides previously retained tree and fruit
 claims even though their movement was overridden. The optional Orchard
 `unavailable_agents` hook retains their observations but releases those claims
 and excludes them from productive population/birth planning. Core supplies
-current bait, incoming bait, retired bait and guides. Reserved donors remain
+current bait, incoming bait, retired bait and guides when `--release-trap-food`
+is enabled. It is **off by default** after the negative same-seed result above;
+the structural correction also changes birth planning and needs finer ablation.
+Reserved donors remain
 normal gatherers with reproduction and guide reassignment suppressed. Newly
 assigned roles release their claims on the next tick.
 
@@ -56,3 +60,11 @@ Each manifest records source hashes, survival overrides and overlap/reservation
 settings. Policy and food-allocation changes need independent-map validation;
 the observed-position bait-gap and predator-proximity metrics still do not
 prove physical retention or replacement access for every predator.
+
+Further upstream audit found that our Python Orchard copy still lacked the
+boundary-anchor fix implemented in Oscar's native `_npolicy.hpp` at `02d185b`.
+The small port chooses the wall side from the observed signed offset, accepts
+only positions inside the 30-unit boundary walls plus agent radius, and permits
+large corrections when direct boundary evidence contradicts odometry. It does
+not substitute hidden world coordinates. An isolated same-seed run records its
+effect; two fresh-seed baseline runs (204871 and 917263) were started beforehand.

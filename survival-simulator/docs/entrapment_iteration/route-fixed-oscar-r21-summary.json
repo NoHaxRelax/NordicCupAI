@@ -1,0 +1,46 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 7117,
+  "sim_time": 711.7000000000933,
+  "runtime_seconds": 206.58682159200544,
+  "score": 737.8933207054505,
+  "final_agents": 0,
+  "peak_agents": 33,
+  "total_agents_seen": 182,
+  "predators": 7,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 1,
+  "maximum_predators_continuously_near_bait_30s": 1,
+  "estimated_bait_gap_seconds_after_first_arrival": 169.59999999999465,
+  "longest_estimated_bait_gap_seconds": 151.79999999999566,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 32,
+    "guide_deaths": 25,
+    "guide_releases": 0,
+    "delivery_arrivals": 2,
+    "bait_arrivals": 10,
+    "overlapping_replacements": 7,
+    "estimated_unbaited_seconds": 172.1000000000385,
+    "no_viable_bait_ticks": 5101
+  },
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 119,
+      "predator:bait_candidate": 1,
+      "predator:guide": 25,
+      "starvation:retired_bait": 7,
+      "starvation:guide": 3,
+      "starvation:avoiding_predator": 6,
+      "predator:avoiding_predator": 17,
+      "predator:replacement_bait": 1,
+      "starvation:bait": 3
+    },
+    "fruit_eaten": 1054,
+    "ripe_fruit_eaten": 858,
+    "ripe_fraction": 0.8140417457305503,
+    "mean_agent_energy_fraction": 0.19848320314981363
+  }
+}

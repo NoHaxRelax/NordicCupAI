@@ -378,14 +378,16 @@ class OrchardPolicy:
         phi = math.atan2(y2-y1, x2-x1)
         if L > 1500:   # top/bottom wall, absolute direction +x
             theta = wrap(-phi)
-            cands = [(0., 30.), (0., H-30.), (0., 0.), (0., H)]
+            offset = rot((x1, y1), theta)
+            cands = [(0., H-30.), (0., H)] if offset[1] > 0 else [(0., 30.), (0., 0.)]
         else:          # left/right wall, absolute direction +y
             theta = wrap(math.pi/2-phi)
-            cands = [(30., 0.), (W-30., 0.), (0., 0.), (W, 0.)]
+            offset = rot((x1, y1), theta)
+            cands = [(W-30., 0.), (W, 0.)] if offset[0] > 0 else [(30., 0.), (0., 0.)]
         best = None
         for sx, sy in cands:
             px, py = sub((sx, sy), rot((x1, y1), theta))
-            if 4 <= px <= W-4 and 4 <= py <= H-4:
+            if 35 <= px <= W-35 and 35 <= py <= H-35:
                 best = (px, py); break
         if best is None: return
         g = self.groups[m.group]
@@ -396,7 +398,7 @@ class OrchardPolicy:
             self.metrics['anchors'] += 1
         else:
             err = sub(new.p, m.pose.p)
-            if 0.5 < norm(err) < 40:
+            if norm(err) > 0.5:
                 m.pose.p = new.p; self.metrics['pose_corrections'] += 1
 
     def _observe(self, m: Mind, s):

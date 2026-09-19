@@ -61,7 +61,8 @@ class Track:
 
 
 class EntrapmentPolicy:
-    def __init__(self, seed=0, *, bait_overlap_seconds=20., bait_reserve_seconds=0., survival_settings=None):
+    def __init__(self, seed=0, *, bait_overlap_seconds=20., bait_reserve_seconds=0., survival_settings=None,
+                 release_trap_food=False):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
@@ -69,6 +70,7 @@ class EntrapmentPolicy:
             raise ValueError('bait_reserve_seconds must be finite and nonnegative')
         self.bait_reserve_seconds = float(bait_reserve_seconds)
         self.reserved_bait = None
+        self.release_trap_food = release_trap_food
         config = load_config()
         # Nikolaj's survey-gap harvesting is deliberately disabled. Our detector
         # alone selects traps. Stay in his exploration phase until we find one.
@@ -412,7 +414,8 @@ class EntrapmentPolicy:
         exploration = {a.agent_id: a for a in self.explorer.actions_for_step(states_list, sim_time)}
         heir_done = {aid: m.heir_done for aid, m in self.orchard.minds.items()}
         unavailable = self.retired_baits | {self.bait, self.incoming} | {t.guide_id for t in self.tracks.values()}
-        orchard = dict(self.orchard(states_list, sim_time, unavailable_agents=unavailable))
+        orchard = dict(self.orchard(states_list, sim_time,
+                                    unavailable_agents=unavailable if self.release_trap_food else ()))
         self.roles = {}
         self._find_site()
         self._bait_roles(states)
@@ -493,6 +496,7 @@ class EntrapmentPolicy:
         return dict(phase='exploration' if self.site is None else 'orchard_and_entrapment',
                     bait_overlap_seconds=self.bait_overlap_seconds,
                     bait_reserve_seconds=self.bait_reserve_seconds, reserved_bait=self.reserved_bait,
+                    release_trap_food=self.release_trap_food,
                     site=self.site, site_group=self.site_group, bait=self.bait, incoming=self.incoming,
                     roles=self.roles.copy(), metrics=self.metrics.copy(), map=self.map_stats,
                     estimated_agents={aid: dict(position=p.position.tolist(), heading=p.heading,
