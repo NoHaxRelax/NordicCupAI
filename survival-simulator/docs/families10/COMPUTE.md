@@ -1,5 +1,18 @@
 # Compute status
 
+## Completed experiment
+
+Access was restored; ten jobs launched at approximately 13:53:53 UTC on
+2026-09-19. Every family completed 30 trials and 100 unseen games; sidestep also
+completed 100 unchanged-control games. Total 10,700 experiment games, plus a
+32-game pilot (18.37 seconds). The slowest job took 628.55 seconds, about 10.5
+minutes. Summed job time was 4618.62 pod-seconds, or **$1.23 attributed active
+compute**, excluding setup and existing pod uptime. All CPU pods remain running.
+The user removed the historical $10 research cap after launch.
+
+Results are downloaded in each family folder and source frozen at ba12af6.
+The old access-blocker notes below describe the initial state, not current status.
+
 Our unused GPU pod `zmml46gemukrm5` (`lucas-nikolaj100-20260919`) was deleted
 on 2026-09-19. Runpod returned HTTP 204 and it disappeared from inventory.
 Its previous 100-game results were already backed up and committed.

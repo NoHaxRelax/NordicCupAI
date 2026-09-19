@@ -1,7 +1,7 @@
 # Ten-family experiment
 
-Status: prepared, not yet run on Runpod. All ten Oscar CPU pods rejected the
-existing team SSH key on 2026-09-19. No tuning results are claimed.
+Status: complete. SSH access was restored and all ten families finished 30 trials
+and their 100-map evaluations. See RESULTS.md and the per-family raw artifacts.
 
 Build and public-ABI boundary checks passed. Four full local smoke games (seed
 5999, separate from both experiment panels) completed with baseline, gaze,
@@ -44,7 +44,9 @@ are outside hearing range. It is not a guarantee of successful evasion.
 Use one existing 32-vCPU Oscar pod per family, with 32 worker processes and
 single-threaded BLAS. Each process runs the entire simulator and policy in C++.
 The per-pod job deadline is 1200 seconds (20 minutes): ten jobs at $0.96/hour
-cost at most $3.20 of attributed active compute. These already-running pods
+cost at most $3.20 of attributed active compute. The user subsequently removed
+the historical $10 research cap; this run retained its existing deadline.
+These already-running pods
 continue billing outside the job interval and are left running as requested.
 Run a 32-map pilot before launching the ten jobs; reduce training-panel size only
 with a documented protocol revision before any optimization sees results.
