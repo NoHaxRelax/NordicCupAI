@@ -1,6 +1,6 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (j again at 07:20 after the last test f37; disks are wiped on restart: bootstrap + deploy again).
+STATE: IDLE. All pods stopped (j at 08:15 after the refuge line; k could not get a port; disks are wiped on restart: bootstrap + deploy again).
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
@@ -18,6 +18,15 @@ nothing simulated on the laptop except single-game traces.
    the scenario harness let the policy pick the relay agent as guide; fixed and re-run.
 4. Turn-rate escape variants: -409..-488 s; the per-tick sidestep against the predator's current heading stays.
 5. Late-only trap with 8-13 predators: -18..-96 s, 0.03 predators held.
+
+**07:25-08:15, the refuge design (my call while Oscar was away, reasoning logged at 07:25):** a chased agent already
+near a narrow gap steps into it and holds; the predator cannot enter and stays at the mouth. Scenario: kills 41% ->
+20%, predator held 146 of 200 ticks. Full games: -284 s at first (82% of refugees died en route: they ran at walls
+on the far side of the obstacle), then with a clear-path check + sprint -28 +- 33, then radius 60 -14 +- 38: never
+positive. Two defects remain: 7-14 refugees per game die while holding (0 in the scenario; not the gap-width
+geometry, which was fixed and changed nothing, so most likely the self-built map places the hold point a few units
+off), and refugees never leave (the predator never does), so each one is a lost forager. Closed at 08:15; code stays
+behind refuge_* parameters (default off) with the harness nightsim/refuge.py and death-attribution counters.
 
 **What the full-game trap funnel says (per game, f35/f37):** 17-26 guide episodes, 7-11 guide deaths (classes: far
 from the trap and slow walk dominate; several predators near is rare), 0.26-0.29 handoffs, 0.04-0.09 predators
@@ -380,3 +389,8 @@ Log (newest last)
   within 15 of it for gaps wider than ~16 (the scenario site had gap 18.6 and the predator got to 17). Same at an
   open rear end when the gap is short. ref5: site_safe=4 (hold depth = 15 - xmin + 4, open-rear sites need length
   >= 2 x depth), radius 60/100/150, slow-only variant.
+- 08:14 ref5 (96 seeds, safe hold depth site_safe=4): rg_60s -14+-38, rg_100s_slow -67, rg_150s -85, rg_100s -120;
+  hold deaths unchanged (6-14 per game) => the gap-width geometry was not the cause; with the scenario at 0 hold
+  deaths on exact walls, the remaining suspect is the self-built map (hold point a few units off / entry deflected
+  by a wall collision). Exits still 0.4 per game. Stopping rule applied: four narrow iterations, best result ~0
+  (r 60, clear path, sprint). Refuge line CLOSED; pod j stopped; all pods idle. Spend ~$39 of $100.

@@ -117,3 +117,16 @@ predator, keeping its attention with closer colony members around, and the bait 
 Relay scenario harness bug (rel1/rel2 were void): the intended guide was frozen during the warm-up ticks, so
 the policy picked the relay agent as guide. Fixed in guide.py/guide_dbg.py (relay frozen until the guide is
 chosen).
+
+## 07:25-08:15, refuge design (chased agent holds inside a narrow gap; no guide, no bait child)
+
+| Test | Seeds | Result |
+| --- | ---: | --- |
+| scenario ref1: agent 20-80 from a graded gap, predator 60-100 behind, walk 10/13/16 | 1920 valid | kills 41% -> 20% (r 100), predator held 146/200 ticks; walk 10: 68-74% -> 20-23% at <= 40 units |
+| full games ref2: refuge r 60/100, all / slow-only, with posts near gaps | 128 | -146..-284 s; kills UP (141 -> 160-179) |
+| ref3 death attribution | 96 | 113 attempts/game: 92 die en route, 10 holding, 0 exiting, 0.3 exits |
+| ref4 clear straight path to the gap + sprint | 96 | attempts 20-36, route deaths 8-16; -28 +- 33 (r 100), -44 (r 60), -59 (slow-only); no sprint -125 |
+| ref5 safe hold depth for wide gaps / open rears | 96 | -14 +- 38 (r 60), -67 (slow), -85 (r 150), -120 (r 100); hold deaths unchanged 6-14/game |
+
+Conclusion: the refuge is the first trap-family mechanism that is clearly positive in the narrow test, but in full
+games it never beats evasion alone: refugees die while holding (map placement, not gap geometry) and never leave.

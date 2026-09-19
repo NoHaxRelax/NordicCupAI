@@ -47,3 +47,7 @@ results-summary.md). `pred_wallclear=1` on top of pred_best_0400 was +42 +- 27 s
 ## 07:20 19 Sept: trap cost decomposition (f37, 192 seeds, vs pred_best_0400)
 Baits alone -57 +- 27 s; baits + guides -140 +- 27; guides restricted to predators within 300 of the trap -158 +- 28.
 No trap variant tested tonight is positive. Shipped configs unchanged.
+
+## 08:15 19 Sept: refuge design (refuge_mode, default off)
+Best full-game result -14 +- 38 s (refuge_r 60, refuge_clear 1, refuge_sprint 1, site_safe 4) vs pred_best_0400:
+not adopted. Shipped configs unchanged.
