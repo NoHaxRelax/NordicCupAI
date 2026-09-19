@@ -252,3 +252,9 @@ Log (newest last)
   child reaches the goal and holds ~55 s. Keeper now holds a post near the rear (keeper_post_w) and only walks over
   when a bait is needed. Running: regression of both shipped configs on their own seeds (j: 512 no-predator,
   k: 576 with predators) and f27 keeper A/B on i (96 seeds).
+- 05:59 REGRESSION OF THE ANCHOR FIX (paired on the shipped configs' own seeds): no predators +13±18 s
+  (512 seeds), with predators +16±16 (576) => the fix is kept; both shipped configs now run on the fixed policy.
+  Keeper with exact positions (f27, 96 seeds): -45±35 (was -450); bait present 20-40% of the time, 24 baits/game,
+  held 0.05-0.1 (predators still do not come by themselves); keeper+guides -187; old-agent bait -481.
+  Running: f28 keeper continuity (keeper_r 200/300, reserve 20, post radius 400), f29 guides with exact positions,
+  f30 keeper confirmation on 192 more seeds.

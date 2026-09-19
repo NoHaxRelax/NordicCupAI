@@ -27,3 +27,7 @@ Trap machinery (bait + guides) in full games: -200 s so far (see STATUS/GUIDE).
 Both best configurations (full parameter dicts) are in `best-configs.json`; pass either as the policy kwargs
 (`nightsim/run.py --configs`, or `--kw` in the Python harnesses; the predator keys are ignored by the old Python
 policy, which lacks the evasion layer).
+
+06:00: policy code change kept: anchor() wall-side fix + boundary snap (nightsim/_npolicy.hpp). Paired regression on
+the shipped configs: +13 ± 18 s (no predators, 512 seeds), +16 ± 16 s (with predators, 576 seeds). The same bug exists
+in the Python policy (research/orchard/orchard.py, anchor candidate order); not ported there tonight.
