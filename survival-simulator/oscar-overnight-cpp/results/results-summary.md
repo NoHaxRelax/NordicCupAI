@@ -45,3 +45,23 @@ Survival correlates weakly with the map's tree count (+0.1) and more with the co
 
 A standing bait alone costs ~170 s. Guides in full games fail for reasons absent from the scenario: agents walk ~10,
 distances of 300-1000 units, no routing around obstacles, several predators, predators busy with other agents.
+
+## Step 3: not losing agents to predators (03:15-04:10, full games with predators, 192 seeds per row, paired)
+
+| Evasion | Survival | Score | Eaten per game |
+| --- | ---: | ---: | ---: |
+| none (r21s0c2 as is) | 864-888 | 720-728 | 215-232 |
+| v0: flee within 200, shared alarms, sidestep 0.8 rad within 60 | 923-959 | 976-1014 | 59-60 |
+| flee within 100 | 1120 | 1165 | 94 |
+| flee within 80, own sightings only | 1239 | 1260 | 130 |
+| + sprint within 40 | 1262 | 1283 | 129 |
+| + sidestep 1.2 rad | 1364 | 1385 | 133 |
+| + sidestep radius 80, 1.4 rad | 1444 | 1462 | 139 |
+| + flee within 70, face within 80 (`pred_best_0400`; confirmed on fresh seeds 7000-7191) | 1507 | 1520 | 142 |
+
+Lessons: the colony dies of the economy (starvation 290 per game), not of the kills (132); fleeing far, sharing
+alarms, and running to a refuge (crevice pass-through: -280 to -545 s) all cost more than they save. The
+cheapest local response wins: a short sidestep at 1.4 rad off the predator's heading (its direct chase turns at most
+0.3 rad per tick), sprint only inside 40, face it only inside 80. Speed selection and population re-tuning under
+predators: no gain. Perfect-trap model still promises +900 s if every predator were trapped within 100 s of its
+spawn; the trap pipeline reaches that only in scenarios (step 1), not yet in full games.
