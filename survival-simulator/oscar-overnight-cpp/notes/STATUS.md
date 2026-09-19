@@ -507,3 +507,17 @@ Log (newest last)
   window; (2) kills by escape capability (walk-capped / sprint <= 15 / sprint-capable), ambush vs seen, several
   predators, cornered at a wall, resting predator; (3) starvation by age class and post; (4) the last 300 s of each
   game; (5) foraging economy under predators vs the no-predator baseline. Then attack the biggest category first.
+- 09:30 D1 RESULT (192 games, pred_best_0400, per-death records, diag_ana.py on runs/d1-n7.jsonl):
+  448 agents created per game; 148 killed, 299 starve. KILLS: 82% are walk-capped agents (energy below 20% of
+  their max energy, so the engine forbids sprinting), 76% are children under 60 s, 95% were already evading (they
+  saw it coming and simply cannot outrun 15/tick at walk 10), 28% were within 15 of an obstacle, 22% had 2+
+  predators within 150; only 12% were sprint-capable uncapped agents. Mean energy at death 82.
+  STARVATION: 70% adults, 24% children (mean age 29 s), 94% had a post; per-agent fruit income is HIGHER than in
+  the no-predator baseline (1380-1600 vs ~1000 energy per agent per 250 s), so starvation is the same churn the
+  no-predator policy has (537 created and starving per game there), not a predator effect.
+  TIME: kills 53 (0-500 s), 66 (500-1000, pop ~20), 25 (1000-1500, pop ~10), 4 after; last 300 s: 19 kills + 22
+  starvation from ~10 agents, 13 predators. THE category: newborns. A child is born with 75 energy and a max
+  energy of 500-800, so it is walk-capped (75 < 20% x max) until it has eaten 25-85 energy; 185 of 448 children
+  die per game (113 eaten, 72 starved). Levers to test one by one: (a) choose a child's traits so the cap does not
+  bind at birth (max energy such that 20% < 75), if the policy chooses traits; (b) children claim fruit first until
+  they are above the cap; (c) spawn only where ripe fruit is free right now; (d) fewer late births.
