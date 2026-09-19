@@ -259,6 +259,7 @@ struct Group {
     double gl_dT = 0., gl_speed = 0.; int64_t gl_npred = 0, gl_stuck = 0, gl_ticks = 0; P2 gl_pos{};
     int64_t d_far = 0, d_multi = 0, d_slow = 0, d_stuck = 0, d_early = 0, d_state1 = 0;
     bool guide_sprinting = false; int64_t held_max = 0; double guide_end_t = -1e9; int64_t ep_deliv = 0; double wait_since = -1.;
+    int64_t keeper = -1; bool keeper_spawn = false; double keeper_spawn_t = -1e9; int64_t baits_born = 0;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
@@ -339,6 +340,7 @@ struct Params {
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
     double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
+    double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60.;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
     double oracle_r = 600., age_infer = 0., age_fruit = 0., dead_misses = 1., fruit_misses = 1., occ_walls = 0., vis_margin_tree = 20., vis_margin_fruit = 8.;
     double oracle_trees = 0., trap_mode = 0., test_freeze = 0., wall_min_n = 6., trap_depth = 9., wall_tol = 8., wall_min_obs = 2.,
@@ -1417,7 +1419,35 @@ public:
             double need = OINF;
             if (g.bait >= 0) need = life_left(st(g.bait), M(g.bait));
             bool want_bait = P.bait_on_sight <= 0. || time - g.guide_seen < P.bait_on_sight || g.bait >= 0;   // trap on demand: only after a recent sighting
-            if (P.trap_bait_fixed < 0. && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
+            if (P.keeper_mode > 0.) {
+                // keeper: the member nearest the rear entrance holds a post there and spawns the next bait as a child
+                if (g.keeper >= 0 && (!minds.has(g.keeper) || M(g.keeper).group != g.id || M(g.keeper).old || is_trap_role(g.keeper))) g.keeper = -1;
+                if (g.keeper < 0) {
+                    int64_t bk = -1; double bd = OINF;
+                    g.agents.each([&](int64_t a) {
+                        if (is_trap_role(a) || M(a).old) return;
+                        double d = dist(M(a).pose->p, g.trap.rear);
+                        if (d < bd) { bd = d; bk = a; }
+                    });
+                    g.keeper = bk;
+                }
+                // adopt the keeper's newborn as the replacement bait
+                if (g.keeper_spawn && g.rep < 0) {
+                    int64_t nb = -1; double bd = 60.;
+                    g.agents.each([&](int64_t a) {
+                        if (is_trap_role(a) || a == g.keeper || st(a).age > 2.) return;
+                        double d = dist(M(a).pose->p, M(g.keeper).pose->p);
+                        if (d < bd) { bd = d; nb = a; }
+                    });
+                    if (nb >= 0) { g.rep = nb; g.keeper_spawn = false; g.baits_born++; Mind& m = M(nb); m.has_post = false; m.has_fruit = false; }
+                    else if (time - g.keeper_spawn_t > 1.5) g.keeper_spawn = false;
+                }
+                if (g.keeper >= 0 && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
+                    const AState& ks = st(g.keeper);
+                    if (dist_lt(M(g.keeper).pose->p, g.trap.rear, P.keeper_r) && ks.energy > 100. + P.keeper_reserve) { g.keeper_spawn = true; g.keeper_spawn_t = time; }
+                }
+            }
+            if (P.keeper_mode <= 0. && P.trap_bait_fixed < 0. && g.rep < 0 && want_bait && (g.bait < 0 || need < P.bait_margin + 60.)) {
                 int64_t best = -1; double bs = -OINF;
                 g.agents.each([&](int64_t a) {
                     if (a == g.bait || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
@@ -1438,12 +1468,17 @@ public:
                     m.has_fruit = false;
                 }
             }
+            if (P.keeper_mode > 0. && g.keeper >= 0) {
+                Mind& km = M(g.keeper); const AState& ks = st(g.keeper);
+                double dk = dist(km.pose->p, g.trap.rear);
+                if (dk > P.keeper_r) { double dd, dir, turn; go_to(km, ks, g.trap.rear, P.keeper_r * 0.6, dd, dir, turn); plans[g.keeper] = Plan{dd, dir, turn}; }
+            }
             for (int64_t a : {g.bait, g.rep}) if (a >= 0) bait_plan(M(a), st(a), g.trap, plans[a]);
             for (int64_t a : g.retired) plans[a] = Plan{0., 0., 0.};
             if (P.trap_mode >= 3.) run_guide(g, plans);
             // everyone else keeps clear of the mouth so the held predators' closest agent stays the bait
             g.agents.each([&](int64_t a) {
-                if (a == g.bait || a == g.rep || a == g.guide || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
+                if (a == g.bait || a == g.rep || a == g.guide || a == g.keeper || std::find(g.retired.begin(), g.retired.end(), a) != g.retired.end()) return;
                 Mind& m = M(a); double d = dist(m.pose->p, g.trap.mouth);
                 if (d < P.trap_keepout) {
                     double dd, ang; local_of(*m.pose, g.trap.mouth, dd, ang);
@@ -1846,6 +1881,7 @@ public:
             const AState& s = st(aid); Mind& m = M(aid);
             const Plan& pl = plans[aid];
             bool spawn = spawn_set.count(aid) > 0 && P.no_spawn <= 0. && !is_trap_role(aid);
+            if (P.keeper_mode > 0.) { Group& gk = G(m.group); if (gk.keeper == aid && gk.keeper_spawn && s.energy > 101.) spawn = true; }
             if (spawn && P.spawn_pred_r > 0.) for (const Obs& o : *s.obs) if (o.type == 2 && o.distance < P.spawn_pred_r) { spawn = false; break; }
             bool ok = spawn && s.energy - cost_now(pl.dist, pl.turn, s) > 100.;
             m.spawned_ok = ok;

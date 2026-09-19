@@ -218,3 +218,9 @@ Log (newest last)
   tests: flee only when I am the predator's closest visible agent (evade_closest), and no births while a
   predator is within 100/200/400 (spawn_pred_r).
 - 04:41 f23: closest-agent-only fleeing and birth gating near predators: all within noise (+2..-32). Evasion family saturated at ~1500 s. f24: detection side (sweep rate, hearing/vision selection, watch patience, explore threshold) with predators.
+- 04:49 f24 (detection): fit_vision 2 +33±27, others noise. Late game IS kill-driven: per-agent kill
+  hazard per 100 s rises 0.6% (4 predators, t=500) -> 1.4% (13 predators, t=1500); a dying colony loses 19 agents
+  in its last 300 s with 13 predators and 15 trees alive. => the many-predator regime needs the trap. New design
+  per Oscar's list: KEEPER role (keeper_mode): the member nearest the crevice rear holds within keeper_r of it and
+  spawns a CHILD as the next bait when the current bait's life runs short (100 energy per bait ~ one agent's
+  upkeep, no forager sacrificed). f25 tests keeper alone / on sight / with trap-side foraging / with guides.
