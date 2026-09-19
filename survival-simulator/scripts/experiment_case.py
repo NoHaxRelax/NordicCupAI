@@ -45,64 +45,86 @@ def evaluate(request, output, stop_file):
         if request.get('engine_build', engine_build) != engine_build:
             raise ValueError('Requested engine build differs from the executing build')
         result.update(engine=engine, engine_build=engine_build)
-        sim = create(engine, seed=request['seed'])
-        if request.get('diagnostics', {}).get('enabled', False):
-            from scripts.research_diagnostics import Diagnostics
-            diagnostics = Diagnostics(sim.env, output.parent/'diagnostics', request, sim.dt)
-        states = observations(sim, engine)
-        peak, ids = len(states), {s['agent_id'] for s in states}
-        limit = round(request['seconds']/sim.dt)
-        next_progress, next_stop_check, status = 0., 0., 'horizon'
-        samples = []
-        policy_rpc_wall, max_policy_rpc_wall, agent_decisions = 0., 0., 0
-        with ExperimentActor(request['mode'], request['config'], request['baseline'], request['policy_seed'],
-                             diagnostics=diagnostics is not None) as actor:
-            for tick in range(limit):
+        if engine == 'native':
+            # Whole game runs as ONE in-process C++ call (fastsim.fastpolicy.
+            # PolicySimulationCore): no per-tick Python loop, no ExperimentActor/
+            # JSON-IPC worker, and no mid-game stop-file polling - the only way to
+            # abort early is the subprocess wall-clock timeout in optimize_policy.py.
+            if request['mode'] != 'orchard_evasion':
+                raise ValueError("Engine 'native' only supports mode 'orchard_evasion'; "
+                                 "no native policy exists for trapping or expert_harvest")
+            if request.get('diagnostics', {}).get('enabled', False):
+                raise ValueError("Engine 'native' does not support per-tick diagnostics")
+            if stop_file.exists():
+                result.update(status='interrupted')
+            else:
+                from fastsim.fastpolicy import PolicySimulationCore
+                from models.notrap_config import orchard_kwargs
+                sim = PolicySimulationCore(seed=request['seed'], predators=True)
+                sim.policy_init(request['policy_seed'], orchard_kwargs(request['config']))
+                _steps, peak_agents, _ns_iface, _ns_policy, _ns_engine = sim.run_policy(request['seconds'])
+                status = 'extinct' if not sim.env.agents else 'horizon'
+                result.update(status=status, predators_enabled=True, peak_agents=peak_agents,
+                              final_predators=len(sim.env.predators))
+        else:
+            sim = create(engine, seed=request['seed'])
+            if request.get('diagnostics', {}).get('enabled', False):
+                from scripts.research_diagnostics import Diagnostics
+                diagnostics = Diagnostics(sim.env, output.parent/'diagnostics', request, sim.dt)
+            states = observations(sim, engine)
+            peak, ids = len(states), {s['agent_id'] for s in states}
+            limit = round(request['seconds']/sim.dt)
+            next_progress, next_stop_check, status = 0., 0., 'horizon'
+            samples = []
+            policy_rpc_wall, max_policy_rpc_wall, agent_decisions = 0., 0., 0
+            with ExperimentActor(request['mode'], request['config'], request['baseline'], request['policy_seed'],
+                                 diagnostics=diagnostics is not None) as actor:
+                for tick in range(limit):
+                    if not states:
+                        status = 'extinct'
+                        break
+                    wall_now = time.monotonic()
+                    if wall_now >= next_stop_check:
+                        heartbeat = stop_file.parent/'heartbeat'
+                        abandoned = not heartbeat.exists() or time.time()-heartbeat.stat().st_mtime > 90.
+                        if stop_file.exists() or abandoned:
+                            status = 'interrupted'
+                            break
+                        next_stop_check = wall_now+.5
+                    if diagnostics:
+                        diagnostics.before(tick, states)
+                    call_started = time.perf_counter()
+                    decisions = actor(states, sim.env.time)
+                    call_seconds = time.perf_counter()-call_started
+                    policy_rpc_wall += call_seconds
+                    max_policy_rpc_wall = max(max_policy_rpc_wall, call_seconds)
+                    agent_decisions += len(states)
+                    if diagnostics:
+                        diagnostics.decision(decisions, actor.last_audit)
+                    state = sim.step([(aid, ActionRequest.model_validate(a)) for aid, a in decisions])
+                    if diagnostics:
+                        diagnostics.after()
+                    elif engine == 'fastsim':
+                        sim.pop_events()
+                    states = state['observations']
+                    peak = max(peak, len(states))
+                    ids.update(s['agent_id'] for s in states)
+                    elapsed = time.monotonic()-started
+                    if elapsed >= next_progress:
+                        sample = dict(sim_time=sim.env.time, horizon=request['seconds'],
+                                      score=sim.env.score, alive=len(states), wall_seconds=elapsed)
+                        samples.append(sample)
+                        write_json(output.parent/'progress.json', dict(result, **sample))
+                        next_progress = elapsed+10.
                 if not states:
                     status = 'extinct'
-                    break
-                wall_now = time.monotonic()
-                if wall_now >= next_stop_check:
-                    heartbeat = stop_file.parent/'heartbeat'
-                    abandoned = not heartbeat.exists() or time.time()-heartbeat.stat().st_mtime > 90.
-                    if stop_file.exists() or abandoned:
-                        status = 'interrupted'
-                        break
-                    next_stop_check = wall_now+.5
-                if diagnostics:
-                    diagnostics.before(tick, states)
-                call_started = time.perf_counter()
-                decisions = actor(states, sim.env.time)
-                call_seconds = time.perf_counter()-call_started
-                policy_rpc_wall += call_seconds
-                max_policy_rpc_wall = max(max_policy_rpc_wall, call_seconds)
-                agent_decisions += len(states)
-                if diagnostics:
-                    diagnostics.decision(decisions, actor.last_audit)
-                state = sim.step([(aid, ActionRequest.model_validate(a)) for aid, a in decisions])
-                if diagnostics:
-                    diagnostics.after()
-                elif engine == 'fastsim':
-                    sim.pop_events()
-                states = state['observations']
-                peak = max(peak, len(states))
-                ids.update(s['agent_id'] for s in states)
-                elapsed = time.monotonic()-started
-                if elapsed >= next_progress:
-                    sample = dict(sim_time=sim.env.time, horizon=request['seconds'],
-                                  score=sim.env.score, alive=len(states), wall_seconds=elapsed)
-                    samples.append(sample)
-                    write_json(output.parent/'progress.json', dict(result, **sample))
-                    next_progress = elapsed+10.
-            if not states:
-                status = 'extinct'
-            result.update(status=status, sim_time=sim.env.time, score=sim.env.score,
-                          final_agents=len(states), peak_agents=peak, total_agents=len(ids),
-                          final_predators=len(sim.env.predators), predators_enabled=True, audit=actor.last_audit,
-                          policy_rpc_wall_seconds=policy_rpc_wall, max_policy_rpc_wall_seconds=max_policy_rpc_wall,
-                          agent_decisions=agent_decisions,
-                          policy_rpc_seconds_per_1000_agent_decisions=1000*policy_rpc_wall/max(1, agent_decisions),
-                          samples=samples)
+                result.update(status=status, sim_time=sim.env.time, score=sim.env.score,
+                              final_agents=len(states), peak_agents=peak, total_agents=len(ids),
+                              final_predators=len(sim.env.predators), predators_enabled=True, audit=actor.last_audit,
+                              policy_rpc_wall_seconds=policy_rpc_wall, max_policy_rpc_wall_seconds=max_policy_rpc_wall,
+                              agent_decisions=agent_decisions,
+                              policy_rpc_seconds_per_1000_agent_decisions=1000*policy_rpc_wall/max(1, agent_decisions),
+                              samples=samples)
     except KeyboardInterrupt:
         result.update(status='interrupted')
     except Exception:

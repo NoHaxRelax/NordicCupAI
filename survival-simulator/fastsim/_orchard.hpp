@@ -114,6 +114,10 @@ struct CellK { int64_t x, y; };
 inline bool operator==(const CellK& a, const CellK& b) { return a.x == b.x && a.y == b.y; }
 struct CellHash { size_t operator()(const CellK& c) const { return std::hash<int64_t>()(c.x * 1000003LL ^ c.y); } };
 inline CellK cell_of(P2 p) { return {(int64_t)std::floor(p.x / CELL), (int64_t)std::floor(p.y / CELL)}; }
+// Same idea as cell_of, but for an arbitrary bucket size (used by the mark-matching
+// grid below, whose natural scale - a few units - has nothing to do with the world's
+// CELL=100 tree/fruit grid).
+inline CellK cell_of_sized(P2 p, double cellsize) { return {(int64_t)std::floor(p.x / cellsize), (int64_t)std::floor(p.y / cellsize)}; }
 inline int64_t py_round(double x) {  // round(float) -> int, half to even
     double r = std::round(x);
     if (std::fabs(x - r) == 0.5) r = 2.0 * std::round(x / 2.0);
@@ -345,6 +349,10 @@ public:
     // per-call state
     std::vector<AState> states;
     std::unordered_map<int64_t, size_t> sidx;
+    // Reused across observe() calls so the mark-matching grid (see observe()) allocates
+    // nothing once warm - same reuse pattern as cluster_cache / actions_buf below.
+    std::unordered_map<CellK, std::vector<int32_t>, CellHash> marks_grid_scratch;
+    std::vector<int32_t> marks_cand_scratch;
     const AState& st(int64_t aid) const { return states[sidx.at(aid)]; }
     bool in_states(int64_t aid) const { return sidx.count(aid) > 0; }
     Mind& M(int64_t aid) { return *minds.at(aid); }
@@ -606,12 +614,51 @@ public:
         marks_of(pose, obs, wf, wt, marks);
         if (moved && !marks.empty() && !m.prev_marks.empty()) {
             std::vector<P2> pairs;
+            // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): this was a plain
+            // |marks| x |prev_marks| double loop (with the dist_cmp prune above it, still
+            // used below) - measured at 59% of native policy time with avg |marks| ~45 and
+            // spikes to 234 in busy scenes, i.e. genuinely quadratic, not just constant-factor
+            // bound. Replaced with a uniform grid over prev_marks so each mk only ever tests
+            // candidates in its own 3x3 neighbourhood, same offset-formula guarantee
+            // `Group::near` already relies on elsewhere in this file: with cell size >= any
+            // query radius used here, those 9 cells are PROVABLY a superset of every r within
+            // `mk.win` of `mk.q` - no r that could ever satisfy `dd < mk.win` is excluded.
+            // Any r outside the 3x3 block therefore never affects hb/bd/br, so dropping it
+            // from consideration cannot change which r ends up chosen.
+            // What DOES have to be preserved is order: the original loop keeps the first r
+            // (in m.prev_marks order) to reach the minimum dd, since ties use strict `<`. The
+            // grid buckets are built by scanning prev_marks in order (append-only), but
+            // gathering candidates from several buckets does not itself preserve that global
+            // order, so candidates are explicitly re-sorted by original index before the
+            // inner comparison runs - making the sequence of dist_cmp/dist calls and hb/bd
+            // updates on the reduced candidate set identical, term for term, to what the
+            // original full scan would have produced.
+            double cellsz = 2. * pmax(wf, wt);
+            if (!(cellsz > 0.)) cellsz = 1.;  // degenerate config (win <= 0): grid shape is
+                                               // irrelevant there since dd < mk.win can never
+                                               // hold anyway (dd >= 0) - see dist_cmp's own
+                                               // thr > 0 guard.
+            auto& grid = marks_grid_scratch;
+            grid.clear();
+            for (size_t i = 0; i < m.prev_marks.size(); i++)
+                grid[cell_of_sized(m.prev_marks[i].q, cellsz)].push_back((int32_t)i);
+            auto& cand = marks_cand_scratch;
             for (const Mark& mk : marks) {
                 bool hb = false; double bd = 0; P2 br{};
-                for (const Mark& r : m.prev_marks) {
+                CellK c0 = cell_of_sized(mk.q, cellsz);
+                int64_t n = int_floordiv(mk.win, cellsz) + 1;
+                cand.clear();
+                for (int64_t dx = -n; dx <= n; dx++)
+                    for (int64_t dy = -n; dy <= n; dy++) {
+                        auto it = grid.find(CellK{c0.x + dx, c0.y + dy});
+                        if (it == grid.end()) continue;
+                        for (int32_t idx : it->second) cand.push_back(idx);
+                    }
+                std::sort(cand.begin(), cand.end());  // restore m.prev_marks order
+                for (int32_t idx : cand) {
+                    const Mark& r = m.prev_marks[idx];
                     // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): prune with
-                    // dist_cmp before paying for the exact CPython math.dist. This loop is
-                    // |marks| x |prev_marks| and measured at 71% of the whole native policy.
+                    // dist_cmp before paying for the exact CPython math.dist.
                     // `dd < mk.win && (!hb || dd < bd)` is exactly `dd < lim` for the lim
                     // below, and dist_cmp only answers when the squared distance settles it
                     // with a 1e-12 relative margin - the same primitive dist_lt/dist_gt use

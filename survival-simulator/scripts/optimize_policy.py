@@ -27,6 +27,7 @@ import uuid
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.experiment_case import write_json
+from scripts.simulation_backend import identity as engine_identity
 
 # Selected once in main(); 'trapping' keeps the original search unchanged.
 SPACES = dict(trapping='models.experiment_config', notrap='models.notrap_config')
@@ -280,11 +281,15 @@ def stop_process(process):
 
 
 def case_request(trial, seed, mode, protocol):
-    identity = dict(protocol=digest(protocol), seed=seed, mode=mode, seconds=protocol['seconds'],
-                    policy_seed=protocol['policy_seed'], baseline=trial['baseline'],
-                    config=None if trial['baseline'] else trial['config'])
-    return dict(case_id=digest(identity), seed=seed, mode=mode, seconds=protocol['seconds'],
-                policy_seed=protocol['policy_seed'], baseline=trial['baseline'], config=trial['config'])
+    # protocol['engine']/['engine_build'] flow into digest(protocol) below, so a case
+    # computed under one engine can never satisfy a request under another: cache
+    # identity, not just the executing evaluator, is engine-specific.
+    key = dict(protocol=digest(protocol), seed=seed, mode=mode, seconds=protocol['seconds'],
+              policy_seed=protocol['policy_seed'], baseline=trial['baseline'],
+              config=None if trial['baseline'] else trial['config'])
+    return dict(case_id=digest(key), seed=seed, mode=mode, seconds=protocol['seconds'],
+                policy_seed=protocol['policy_seed'], baseline=trial['baseline'], config=trial['config'],
+                engine=protocol.get('engine', 'python'), engine_build=protocol.get('engine_build'))
 
 
 def retryable_case_error(result):
@@ -772,6 +777,10 @@ def main():
     parser.add_argument('--family', choices=('all', 'orchard_evasion', 'expert_harvest'), default='all',
                         help='Evaluate one policy family per study; mixing families wastes games on '
                              'parameters that cannot affect the other family')
+    parser.add_argument('--engine', choices=('python', 'fastsim', 'native'), default='python',
+                        help="Simulation backend for every game in this study; 'native' runs the engine "
+                             "and the orchard/evasion policy together in one in-process C++ call and only "
+                             "supports --space notrap --family orchard_evasion")
     parser.add_argument('--phase', choices=('search', 'refine', 'validate', 'overnight'))
     parser.add_argument('--describe', action='store_true', help='Write defaults/inventory only; run no games')
     parser.add_argument('--hours', type=float, help='Session budget; resume with the same command')
@@ -821,6 +830,9 @@ def main():
         if args.family not in modes:
             parser.error(f'--family {args.family} is not part of the {SPACE} space')
         modes = [args.family]
+    if args.engine == 'native' and modes != ['orchard_evasion']:
+        parser.error("--engine native only supports --space notrap --family orchard_evasion "
+                     "(no native policy exists for trapping or expert_harvest)")
     module = space()
     defaults, inventory, validate = module.defaults, module.inventory, module.validate
     FEATURES = getattr(module, 'FEATURES', ())
@@ -829,10 +841,14 @@ def main():
     args.out = args.out.resolve()
     args.out.mkdir(parents=True, exist_ok=True)
     with study_lock(args.out/'study.lock'):
-        protocol = dict(version=3, baseline=SPACE_BASELINES[SPACE], space=SPACE,
+        # Fail fast (before any game starts) if the requested engine is not built,
+        # stale, or built against a different Python/NumPy on this host.
+        engine_build = engine_identity(args.engine)
+        protocol = dict(version=4, baseline=SPACE_BASELINES[SPACE], space=SPACE,
             train_seeds=args.train_seeds, validation_seeds=args.validation_seeds,
             refine_seeds=args.refine_seeds, finalists=args.finalists,
             modes=modes, predators_enabled=True, seconds=args.seconds, policy_seed=args.policy_seed, search_seed=args.search_seed,
+            engine=args.engine, engine_build=engine_build,
             source_hashes=source_manifest(), environment=versions(), parameter_inventory=specs,
             objective='mean_survival/horizon + .25*worst_survival/horizon; then mean_score; then fewer features')
         protocol_path = args.out/'protocol.json'

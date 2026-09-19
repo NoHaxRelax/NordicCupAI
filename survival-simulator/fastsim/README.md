@@ -128,19 +128,29 @@ struct: no JSON, no dicts, no Python objects, no per-tick allocation. Measured a
 
 | run | wall | note |
 |---|---|---|
-| Python policy, fastsim engine, per tick | 100.1 s | policy = 92.1% |
-| native policy, driven per tick from Python | 25.6 s | same decisions, Python boundary |
-| native policy, `run_policy` | 20.9 s | **4.8x end to end** |
+| Python policy, fastsim engine, per tick | 99.6 s | policy = 92.0% of it |
+| native policy, driven per tick from Python | 25.0 s | same decisions, Python objects per tick |
+| native policy, `run_policy` | 21.4 s | **4.65x end to end** (seed 6: 4.41x) |
 
-Native split: policy 76.0%, engine 23.9%, interface 0.02%. Within the policy,
-`observe` is ~62% and its mark-matching loop alone ~46%; see "Known slowness" below.
+All four produce the same score to four decimals, as they must. Native split:
+policy 76%, engine 24%, interface 0.019% (4.4 ms out of 22.9 s). Within the policy,
+`observe` is 71% and its mark-matching loop alone 59%.
+
+The gap between `run_policy` and the per-tick native run is the *in-process* Python
+boundary, and it is modest (0-17% across runs, inside run-to-run noise). The
+boundary that actually costs is the production one - `sanitize_states`, JSON, and a
+multiprocessing pipe, measured elsewhere at 31% of policy-side cost and ~1 GB
+serialized per game - and this design removes it entirely rather than shrinking it.
 
 ### Known slowness
 
 The native policy is only about 5x faster than the Python one, not the 20-50x a port
-usually gives. Profiling (`policy_profile(True)` then `policy_phases()`) puts 46% of
-it in the visual-odometry mark-matching loop in `observe()`, which is
-|marks| x |prev_marks| exact CPython `math.dist` calls. Pruning it with the existing
-`dist_cmp` already took the full game from 32 s to 21 s. Breaking the remaining
-quadratic (a sorted band over `prev_marks`) is the obvious next step; it must keep
-the original iteration order so ties still resolve to the same mark.
+usually gives, so the end-to-end win is 4.4-4.7x rather than the order of magnitude
+the engine port's 34x might suggest. Profiling (`policy_profile(True)` then
+`policy_phases()`) puts 59% of native policy time in the visual-odometry
+mark-matching loop in `observe()`: |marks| x |prev_marks| exact CPython `math.dist`
+calls. Pruning it with the existing `dist_cmp` (bit-identical: the squared distance
+only decides the clear cases) already cut a full game from about 32 s to 21 s.
+Breaking the remaining quadratic - a sorted band over `prev_marks`, since only marks
+within `win` can ever match - is the obvious next step, and must keep the original
+iteration order so ties still resolve to the same mark.
