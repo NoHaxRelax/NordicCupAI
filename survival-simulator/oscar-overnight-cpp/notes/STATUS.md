@@ -328,3 +328,31 @@ Log (newest last)
   sighting gate (predators are seen almost continuously); lane300 halves guide episodes (17 vs 23) and deaths (7 vs 10)
   but the survival cost is the same. Trap line closed with a full cost decomposition: baits ~-57, guides ~-85..-100.
   Pod j stopped. All pods stopped. Night-pod spend ~$31 of $100.
+- 07:26 Peer relayed Oscar's standing order: when waiting on his decision, make the sensible call, note it,
+  continue. DECISION: try the "refuge" design, the one trap idea not yet tested that avoids the two proven killers
+  (long guide walks, child baits that never eat). Reasoning: predators kill 132 agents per game and hunt where the
+  colony is; a chased agent that is already within ~60 units of a narrow gap can step 9 deep into it (a predator,
+  radius 10, cannot enter a 10.1-19.9 gap and cannot get within 19 of it), and the predator then stays pressed at
+  the mouth for as long as it hears the agent (60 through walls). That is exactly Lucas's held-predator geometry
+  without a guide: the chase itself delivers the predator, and the refugee is an agent that would otherwise have
+  been eaten (low-energy agents cannot sprint and are caught ~100% in the open). f18's crevice PASS-THROUGH
+  (-280..-545) differs on all three counts: it ran up to 150-400 units to the gap, went out the other side (no hold),
+  and ran on the pre-fix drifting map. Steps: R1 implement refuge_mode (stay at the site goal, leave when no
+  predator is sensed for refuge_leave s or through the rear); R2 scenario: agent 30/60/90 from a mouth, predator
+  50/80/110 behind, walk 10/13/16 -> kill rate and predator ticks held vs plain evasion; R3 full games 192 seeds:
+  refuge radius 60/100, with and without foraging posts near crevices (trap_post_w). Budget for this: <= $5.
+  Pods j and k restarting.
+- 07:32 R1 done: refuge_mode implemented in nightsim/_npolicy.hpp (refuge(): pick the nearest known site
+  whose mouth is within refuge_r and not nearer to the predator than to us, go pre-point -> goal (9 deep), hold;
+  refuge_exit(): hold refuge_leave s after the last sensed predator, then walk out to the pre-point). Harness
+  nightsim/refuge.py (agent da outside a graded site, predator dp behind it, added after the warm-up). Harness
+  lessons: dp < 60 is unwinnable by construction (one-tick observation delay, first tick wanders). Local sanity
+  (seed 8/9/14/15/16, da 40, dp 80, walk 10): plain evasion 3/5 killed, survivors 480-765 away; refuge 0/5 killed,
+  all in the gap, predator held ~197 of 200 ticks. ref1 grid on j: 64 seeds x da 20-80 x dp 60-100 x walk 10/13/16.
+  Pod k never got a port after 10 min (stuck starting): stopped; j alone is enough.
+- 07:33 R2 ref1 (1920 valid scenarios, 64 seeds, agent 150 energy): kill rate 41% plain evasion -> 20% with
+  refuge_r 100 (25% with r 60); predator held 146 of 200 ticks on average (0 without). By walk speed: 10: 68-74% ->
+  20-23% (da <= 40), 39-49% (da 60-80, r 100); 13: 37-51% -> 14-18%; 16: no change (5-15%, fast agents escape in
+  the open anyway). First trap-family mechanism that is clearly positive in the narrow test at zero extra cost.
+  R3 ref2 on j (128 seeds 7200-7327, 6 configs): rf_ref, rg_60, rg_100, rg_100_slow (only agents that cannot
+  outrun a predator), rg_100_post (posts near known gaps, refuge_post_w 1), rg_100_slow_post.

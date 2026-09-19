@@ -230,6 +230,7 @@ struct Mind {
     double repost_at = 0., post_since = -OINF, last_site = 0.;
     bool has_watch = false; P2 watch_p{}; double watch_t = 0;
     int hide_idx = -1; double hide_t = -1e9;   // nightsim: crevice pass-through escape
+    bool refuge_in = false; double refuge_pred_t = -1e9;   // nightsim: refuge (hold inside a narrow gap)
     double dodge_head = 0.; int64_t dodge_left = 0;   // nightsim: committed dodge heading (pred_dodge_hold)
 };
 using MindP = std::shared_ptr<Mind>;
@@ -341,7 +342,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -684,7 +685,7 @@ public:
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
             if (!found) m.edges.push_back(EdgeMem{a, b, time});
-            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
+            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0. || P.refuge_mode > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
         }
         {
             std::vector<EdgeMem> keep;
@@ -936,6 +937,10 @@ public:
         if (P.trap_post_w > 0. && g.has_trap) {   // nightsim: prefer posts around the trap so hunting predators pass its mouth
             double dm = dist(t.p, g.trap.mouth);
             if (dm > P.trap_keepout) value += P.trap_post_w * 60. * pmax(0., 1. - dm / P.trap_post_r);
+        }
+        if (P.refuge_post_w > 0. && !g.sites.empty()) {   // nightsim: prefer posts near a known narrow gap (refuge within reach when chased)
+            double dm = OINF; for (auto& st_ : g.sites) dm = pmin(dm, dist(t.p, st_.mouth));
+            if (dm > 20.) value += P.refuge_post_w * 60. * pmax(0., 1. - dm / P.refuge_post_r);
         }
         if (P.keeper_post_w > 0. && g.has_trap && g.keeper == m.aid) {   // the keeper prefers posts near the rear entrance
             double dr = dist(t.p, g.trap.rear);
@@ -1764,6 +1769,7 @@ public:
                 if (dist(q, pp) < nr->d - 8.) return false;
             }
         }
+        if (P.refuge_mode > 0. && refuge(s, pl, nr->d, nr->ang)) return true;
         if (P.hide_mode > 0. && hide_through(s, pl, nr->d)) return true;
         {   // decoy (nightsim): an agent that is dying anyway walks TOWARD the nearest predator so it becomes the
             // predator's closest target instead of a young forager; its low energy costs little score
@@ -1803,6 +1809,63 @@ public:
         return true;
     }
 
+
+    // refuge (nightsim, refuge_mode): a chased agent that is already close to a narrow gap steps 9 deep into it and
+    // holds there; the predator (radius 10) cannot enter a 10.1-19.9 gap and stays pressed at the mouth while it hears
+    // the agent. No guide, no bait child: the chase itself delivers the predator. Returns true when it planned.
+    int64_t refuge_events = 0, refuge_holds = 0;
+    bool refuge(const AState& s, Plan& pl, double dP, double angP) {
+        Mind& m = M(s.aid); Group& g = G(m.group);
+        if (!g.anchored || g.sites.empty()) { m.hide_idx = -1; m.refuge_in = false; return false; }
+        const PoseObj& ps = *m.pose;
+        if (P.refuge_slow_only > 0. && !m.refuge_in && m.hide_idx < 0) {   // only agents that cannot outrun a predator (15/tick)
+            bool low = s.energy < 0.2 * s.max_energy;
+            if (!low && s.sprint > 15.5) return false;
+        }
+        if (m.hide_idx < 0 || m.hide_idx >= (int)g.sites.size()) {
+            if (dP > P.refuge_trigger) return false;
+            P2 pp = add(ps.p, mul(unit(ps.theta + angP), dP));
+            int best = -1; double bd = P.refuge_r;
+            for (size_t i = 0; i < g.sites.size(); i++) {
+                const auto& st_ = g.sites[i];
+                double d = dist(st_.mouth, ps.p);
+                if (d >= bd) continue;
+                if (dist(st_.mouth, pp) < d + 5.) continue;   // the predator is nearer to the mouth than we are: do not run at it
+                bd = d; best = (int)i;
+            }
+            if (best < 0) return false;
+            m.hide_idx = best; m.hide_t = time; m.refuge_in = false; refuge_events++;
+        }
+        const Group::Site& st_ = g.sites[m.hide_idx];
+        m.refuge_pred_t = time;
+        if (dist_lt(ps.p, st_.goal, 3.)) { m.refuge_in = true; refuge_holds++; pl = Plan{0., 0., 0.}; n_evading++; return true; }   // hold
+        P2 in = sub(st_.goal, st_.mouth); in = mul(in, 1.0 / pmax(norm(in), 1e-6));
+        P2 pre = sub(st_.mouth, mul(in, 25.));
+        P2 rel = sub(ps.p, pre); double along = rel.x * in.x + rel.y * in.y, across = std::fabs(rel.x * in.y - rel.y * in.x);
+        P2 target = (along > -3. && across < 4.) ? st_.goal : pre;
+        double d, ang; local_of(ps, target, d, ang);
+        double walk = pmin(s.speed, s.sprint);
+        double step = dP < P.pred_sprint_r ? s.sprint : walk;
+        pl = Plan{pmin(step, d), ang, ang};
+        n_evading++;
+        return true;
+    }
+    // refuge exit (called for every agent each tick): keep holding for refuge_leave s after the last sensed predator,
+    // then walk out to the lane point and return to normal duty
+    bool refuge_exit(const AState& s, Plan& pl) {
+        Mind& m = M(s.aid);
+        if (m.hide_idx < 0) return false;
+        Group& g = G(m.group);
+        if (m.hide_idx >= (int)g.sites.size()) { m.hide_idx = -1; m.refuge_in = false; return false; }
+        if (time - m.refuge_pred_t < P.refuge_leave) { if (m.refuge_in) { pl = Plan{0., 0., 0.}; return true; } return false; }
+        const Group::Site& st_ = g.sites[m.hide_idx];
+        P2 in = sub(st_.goal, st_.mouth); in = mul(in, 1.0 / pmax(norm(in), 1e-6));
+        P2 pre = sub(st_.mouth, mul(in, 25.));
+        if (!m.refuge_in || dist_lt(m.pose->p, pre, 4.)) { m.hide_idx = -1; m.refuge_in = false; return false; }
+        double d, ang; local_of(*m.pose, pre, d, ang);
+        pl = Plan{pmin(pmin(s.speed, s.sprint), d), ang, ang};
+        return true;
+    }
 
     // crevice pass-through escape (nightsim, hide_mode): run into the nearest known crevice with an open rear and out the
     // other side; the predator (radius 10) cannot follow through a 10-20 wide gap and must go around the obstacle
@@ -1874,7 +1937,7 @@ public:
         for (const AState& s : states) observe(M(s.aid), s);
         if (P.oracle_trees > 0.) apply_oracle();
         if (P.pred_mode > 0.) share_predators();
-        if (P.trap_mode > 0. || P.hide_mode > 0.) groups.each([&](const int64_t&, GroupP& g) { if (g->anchored && time - g->sites_t >= 2.) find_sites(*g); });
+        if (P.trap_mode > 0. || P.hide_mode > 0. || P.refuge_mode > 0.) groups.each([&](const int64_t&, GroupP& g) { if (g->anchored && time - g->sites_t >= 2.) find_sites(*g); });
         {
             std::vector<GroupP> gl;
             groups.each([&](const int64_t&, GroupP& g) { gl.push_back(g); });
@@ -1906,6 +1969,7 @@ public:
         std::unordered_map<int64_t, Plan> plans;
         for (const AState& s : states) plans[s.aid] = act(M(s.aid), s);
         if (P.pred_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid)) evade(s, plans[s.aid]);
+        if (P.refuge_mode > 0.) for (const AState& s : states) if (!is_trap_role(s.aid)) refuge_exit(s, plans[s.aid]);
         if (P.trap_mode >= 2.) run_trap(plans);
         if (P.test_freeze > 0.) for (const AState& s : states) plans[s.aid] = Plan{0., 0., 0.};
         for (int64_t a : frozen) if (plans.count(a)) plans[a] = Plan{0., 0., 0.};
