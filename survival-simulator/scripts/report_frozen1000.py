@@ -31,7 +31,7 @@ def main():
       '|---|---:|---|---:|---:|---:|']
     for r in result:
         lines.append(f"| {r['model']} | {r['mean']:.1f} | {r['ci95'][0]:.1f}–{r['ci95'][1]:.1f} | {r['policy_us_per_tick']:.1f} | {r['loop_cpu_us_per_tick']:.1f} | {r['loop_wall_us_per_tick']:.1f} |")
-    for baseline in (a.reference,'original_baseline'):
+    for baseline in dict.fromkeys([a.reference]+(['original_baseline'] if 'original_baseline' in scores else [])):
         lines+=['',f'## Paired differences versus {baseline}','', '| Model | Mean difference | 95% paired CI |','|---|---:|---|']
         for r in result:
             n=r['model']

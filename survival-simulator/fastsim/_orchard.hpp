@@ -242,6 +242,8 @@ struct Mind {
 };
 using MindP = std::shared_ptr<Mind>;
 
+struct SharedPred { P2 p; double heading; bool has_heading; };
+
 struct Group {
     int64_t id;
     IntSet agents;
@@ -251,6 +253,9 @@ struct Group {
     std::unordered_map<CellK, std::vector<TreeP>, CellHash> tgrid;
     std::unordered_map<CellK, std::vector<FruitP>, CellHash> fgrid;
     ODict<CellK, CellV, CellHash> cells;
+    bool shared_seeded=false;
+    std::vector<EdgeMem> walls;
+    std::vector<SharedPred> predators; // current public sightings, rebuilt each tick
     bool anchored = false;
     int64_t next_tree = 0, next_fruit = 0;
     std::unordered_set<int64_t> seen_trees, seen_fruits;
@@ -329,6 +334,11 @@ struct Params {
            cap_hard_min = 2, nursery_bonus = 0.;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
          old_eat_last = true, heir_needs_site = true;
+    double share_obs=0., econ_start=0., econ_radius=180., econ_horizon=40.,
+           cap_budget=0., crowd_weight=0., fruit_auction=0., auction_cost=1.,
+           fruit_net=-1e9, food_risk=0., post_opt=0., rock_penalty=0.,
+           relocate_after=0., relocate_energy=70., renewal_weight=0.,
+           budget_reserve=0., aging_food=0.;
     bool feed_breed = false;  // feed_mode == 'breed' (else 'hungry')
 };
 
@@ -385,6 +395,7 @@ public:
         });
         g.trees.each([&](const int64_t&, TreeP& t) { t->p = T(t->p); });
         g.fruits.each([&](const int64_t&, FruitP& f) { f->p = T(f->p); });
+        for(auto& e:g.walls) {e.a=T(e.a);e.b=T(e.b);}
         g.rebuild_grids();
         ODict<CellK, CellV, CellHash> cells;
         g.cells.each([&](const CellK& c, CellV& v) {
@@ -434,6 +445,7 @@ public:
             if (e) { e->last = pmax(e->last, v.last); if (e->biome < 0) e->biome = v.biome; }
             else ga.cells.set(c, v);
         });
+        for(const auto& e:gb.walls) remember_wall(ga,e);
         ga.anchored = ga.anchored || gb.anchored;
         groups.erase(gb.id);
     }
@@ -469,6 +481,119 @@ public:
                 if (changed) break;
             }
             if (!changed) return;
+        }
+    }
+
+    // Relative reports become globally usable only once their frames are aligned.
+    // No engine positions are available here. Two simultaneous fruit IDs provide
+    // a rigid transform; anchored groups already use the same boundary frame.
+    // Native adaptation of Nikolaj's _shared_landmark_transform at 77eb2a2:
+    // exact directed rock lengths; >=2 nonparallel endpoint matches; reject
+    // ambiguous placements and excessive candidates. Boundary faces/caps excluded.
+    bool stone_transform(const Group& moving,const Group& reference,double& out_th,P2& out_shift) {
+        struct Match {size_t a,b;double th;P2 shift;};std::vector<Match> matches;
+        auto rock=[](const EdgeMem& e){double d=dist(e.a,e.b);return d>1e-5&&d<200.&&std::abs(d-30.)>1e-5;};
+        for(size_t i=0;i<moving.walls.size();i++)if(rock(moving.walls[i]))
+            for(size_t j=0;j<reference.walls.size();j++)if(rock(reference.walls[j])) {
+                const auto& a=moving.walls[i];const auto& b=reference.walls[j];
+                if(std::abs(dist(a.a,a.b)-dist(b.a,b.b))>1e-5)continue;
+                P2 av=sub(a.b,a.a),bv=sub(b.b,b.a);
+                double th=wrap(pm::atan2(bv.y,bv.x)-pm::atan2(av.y,av.x));
+                matches.push_back({i,j,th,sub(b.a,rot(a.a,th))});
+                if(matches.size()>128)return false;
+            }
+        bool have=false;size_t best_n=0;double best_err=OINF;
+        for(const auto& h:matches) {
+            std::vector<const Match*> support;double error=0.;
+            for(const auto& mm:matches) {
+                if(std::abs(wrap(mm.th-h.th))>1e-7)continue;
+                const auto& a=moving.walls[mm.a];const auto& b=reference.walls[mm.b];
+                double err=pmax(dist(add(rot(a.a,h.th),h.shift),b.a),dist(add(rot(a.b,h.th),h.shift),b.b));
+                if(err<=2.){support.push_back(&mm);error+=err*err;}
+            }
+            bool independent=false;
+            for(size_t a=0;a<support.size();a++)for(size_t b=a+1;b<support.size();b++) {
+                if(support[a]->a==support[b]->a||support[a]->b==support[b]->b)continue;
+                const auto& ea=reference.walls[support[a]->b];const auto& eb=reference.walls[support[b]->b];
+                P2 av=sub(ea.b,ea.a),bv=sub(eb.b,eb.a);
+                if(std::abs(av.x*bv.y-av.y*bv.x)>.25*norm(av)*norm(bv))independent=true;
+            }
+            if(!independent)continue;
+            bool outside=false;
+            if(reference.anchored)for(const auto& e:moving.walls)for(P2 q:{e.a,e.b}) {
+                q=add(rot(q,h.th),h.shift);
+                if(q.x < -2.||q.y < -2.||q.x > W+2.||q.y > H+2.)outside=true;
+            }
+            if(outside)continue;
+            if(have&&(std::abs(wrap(out_th-h.th))>1e-7||dist(out_shift,h.shift)>2.))return false;
+            if(!have||support.size()>best_n||(support.size()==best_n&&error<best_err)){
+                out_th=h.th;out_shift=h.shift;best_n=support.size();best_err=error;
+            }have=true;
+        }return have;
+    }
+    void merge_shared_frames() {
+        if(!P.share_obs) return;
+        bool changed=true;
+        while(changed) {
+            changed=false;auto ids=groups.key_list();
+            for(size_t i=0;i<ids.size()&&!changed;i++) for(size_t j=i+1;j<ids.size()&&!changed;j++) {
+                GroupP ga=groups.at(ids[i]),gb=groups.at(ids[j]);
+                if(ga->anchored&&gb->anchored) {merge(*ga,*gb,0.,{0.,0.});changed=true;break;}
+                if((int64_t)std::llround(time*10.)%10==0) {
+                    GroupP ref=gb->anchored?gb:ga,mov=gb->anchored?ga:gb;
+                    double th=0.;P2 shift{};
+                    if(stone_transform(*mov,*ref,th,shift)) {merge(*ref,*mov,th,shift);changed=true;break;}
+                }
+                std::unordered_map<int64_t,P2> fa,fb;
+                for(const auto& stt:states) {
+                    Mind& m=M(stt.aid);if(m.group!=ga->id&&m.group!=gb->id)continue;
+                    auto& f=m.group==ga->id?fa:fb;
+                    for(const auto& o:*stt.obs)if(o.type==0&&o.has_id)f.emplace(o.id,polar(*m.pose,o));
+                }
+                std::vector<int64_t> common;
+                for(const auto& kv:fa)if(fb.count(kv.first))common.push_back(kv.first);
+                std::sort(common.begin(),common.end());
+                for(size_t a=0;a<common.size()&&!changed;a++)for(size_t b=a+1;b<common.size()&&!changed;b++) {
+                    P2 va=sub(fa.at(common[b]),fa.at(common[a])),vb=sub(fb.at(common[b]),fb.at(common[a]));
+                    if(norm(va)<30.||std::abs(norm(va)-norm(vb))>3.)continue;
+                    double th=wrap(pm::atan2(va.y,va.x)-pm::atan2(vb.y,vb.x));
+                    P2 shift=sub(fa.at(common[a]),rot(fb.at(common[a]),th));
+                    if(gb->anchored&&!ga->anchored)merge(*gb,*ga,-th,mul(rot(shift,-th),-1.));
+                    else merge(*ga,*gb,th,shift);
+                    changed=true;
+                }
+            }
+        }
+    }
+    static void remember_wall(Group& g,const EdgeMem& edge) {
+        for(auto& e:g.walls) if((dist_lt(e.a,edge.a,6)&&dist_lt(e.b,edge.b,6))||
+            (dist_lt(e.a,edge.b,6)&&dist_lt(e.b,edge.a,6))) {e.t=pmax(e.t,edge.t);return;}
+        g.walls.push_back(edge);
+        if(g.walls.size()>1024){auto it=std::min_element(g.walls.begin(),g.walls.end(),[](const EdgeMem&a,const EdgeMem&b){return a.t<b.t;});g.walls.erase(it);}
+    }
+    void shared_reports() {
+        if(!P.share_obs)return;
+        groups.each([&](const int64_t&,GroupP& g){g->predators.clear();});
+        groups.each([&](const int64_t&,GroupP& g){if(!g->shared_seeded){
+            g->agents.each([&](int64_t a){for(const auto& e:M(a).edges)remember_wall(*g,e);});
+            g->shared_seeded=true;
+        }});
+        for(const auto& ss:states) {
+            Mind& m=M(ss.aid);Group& g=G(m.group);
+            for(const auto& o:*ss.obs)if(o.type==2) {
+                P2 q=polar(*m.pose,o);bool found=false;
+                for(const auto& p:g.predators)if(dist_lt(p.p,q,5.)){found=true;break;}
+                if(!found)g.predators.push_back({q,wrap(m.pose->theta+o.angle+OPI-o.rel_dir),o.has_rel_dir});
+            }
+        }
+        for(const auto& ss:states) {
+            Mind& m=M(ss.aid);Group& g=G(m.group);
+            if((int64_t)std::llround(time*10.)%10!=0&&!m.edges.empty())continue;
+            m.edges.clear();
+            for(const auto& e:g.walls)if(point_segment(m.pose->p,e.a,e.b)<350.)
+                m.edges.push_back(e);
+            std::stable_sort(m.edges.begin(),m.edges.end(),[&](const EdgeMem&a,const EdgeMem&b){return point_segment(m.pose->p,a.a,a.b)<point_segment(m.pose->p,b.a,b.b);});
+            if(m.edges.size()>150)m.edges.resize(150);
         }
     }
 
@@ -601,7 +726,42 @@ public:
             }
         }
     }
+    // Native adaptation of Nikolaj's nonparallel-stone relocalization. Known
+    // directed lengths/offsets vote for a pose; every matched shape must agree.
+    void relocalize_stones(Mind& m,const std::vector<Obs>& obs) {
+        Group& g=G(m.group);
+        struct Candidates {P2 direction;std::vector<P2> points;};std::vector<Candidates> cs;
+        size_t total=0;
+        for(const auto& o:obs)if(o.type==4){
+            P2 a=rot({o.c[0],o.c[1]},m.pose->theta),b=rot({o.c[2],o.c[3]},m.pose->theta),v=sub(b,a);
+            double len=norm(v);if(len<1e-5||len>=200.||std::abs(len-30.)<1e-5)continue;
+            bool duplicate=false;
+            Candidates c{mul(v,1./len),{}};
+            for(const auto& e:g.walls)if(norm(sub(sub(e.b,e.a),v))<1e-5)c.points.push_back(sub(e.a,a));
+            if(c.points.empty())continue;
+            for(const auto& old:cs)if(old.points.size()==c.points.size()&&dist(old.points[0],c.points[0])<1e-5)duplicate=true;
+            if(duplicate)continue;
+            total+=c.points.size();if(total>128)return;cs.push_back(c);
+        }
+        bool independent=false;
+        for(size_t i=0;i<cs.size();i++)for(size_t j=i+1;j<cs.size();j++)if(std::abs(cs[i].direction.x*cs[j].direction.y-cs[i].direction.y*cs[j].direction.x)>.25)independent=true;
+        if(!independent)return;
+        bool have=false;P2 best{};
+        for(const auto& c:cs)for(P2 seed:c.points){
+            P2 sum{};bool ok=true;
+            for(const auto& other:cs){double near=OINF;P2 q{};for(P2 candidate:other.points)if(dist(seed,candidate)<near){near=dist(seed,candidate);q=candidate;}
+                if(near>2.){ok=false;break;}sum=add(sum,q);}
+            if(!ok)continue;P2 candidate=mul(sum,1./cs.size());
+            if(g.anchored&&(candidate.x<5.||candidate.y<5.||candidate.x>W-5.||candidate.y>H-5.))continue;
+            if(have&&dist(best,candidate)>2.)return;best=candidate;have=true;
+        }
+        if(have&&dist(m.pose->p,best)>.5)m.pose->p=best;
+    }
     void observe(Mind& m, const AState& s) {
+        if(P.share_obs){
+            for(const auto& o:*s.obs)if(o.type==4&&hypot2(o.c[2]-o.c[0],o.c[3]-o.c[1])>1000)anchor(m,o);
+            relocalize_stones(m,*s.obs);
+        }
         Group& g = G(m.group);
         Pose posep = m.pose;  // may go stale if anchoring transforms the group (as in Python)
         PoseObj& pose = *posep;
@@ -700,6 +860,7 @@ public:
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
             if (!found) m.edges.push_back(EdgeMem{a, b, time});
+            if(P.share_obs)remember_wall(g,{a,b,time});
         }
         {
             std::vector<EdgeMem> keep;
@@ -849,6 +1010,41 @@ public:
     }
 
     // ------------------------------------------------------------ economy
+    bool economic() const {return time>=P.econ_start;}
+    double fruit_energy(const FruitM& f) const {
+        double age=f.born_lo==-OINF?20.:pmax(0.,time-(f.born_lo+f.born_hi)*.5);
+        return pmin(60.,20.+2.*age);
+    }
+    double drain(const AState& s) const {
+        // max_age is private: use its public distribution until aging is observed.
+        double chance=pmax(0.,pmin(1.,(s.age-60.)/60.));
+        auto mm=minds.get(s.aid);if(mm&&(*mm)->old)chance=1.;
+        return 1.+.1*s.age*chance;
+    }
+    double food_budget(Group& g,P2 q,double radius) {
+        double value=0.;
+        for(auto& f:g.near_fruits(q,radius))value+=fruit_energy(*f);
+        for(auto& t:g.near_trees(q,radius))if(!t->dead) {
+            auto cell=g.cells.get(cell_of(t->p));int b=cell?cell->biome:-1;
+            double life=pmax(0.,pmin(P.econ_horizon,t->first+(t->fresh?58.:55.)-time));
+            double immature=t->fresh?pmax(0.,t->first+20.-time):0.;
+            value+=pmax(0.,life-immature)*fruit_rate_or(b,.08)*60.;
+        }
+        return value;
+    }
+    double danger(Group& g,P2 q) const {
+        double v=0.;for(const auto& p:g.predators) {
+            double d=dist(q,p.p);if(d>280.)continue;
+            bool sees=d<=65.||!p.has_heading||std::abs(wrap(pm::atan2(q.y-p.p.y,q.x-p.p.x)-p.heading))<OPI/6+.15;
+            if(sees)v+=pmax(0.,1.-d/280.);
+        }return v;
+    }
+    double route_estimate(Mind& m,P2 target) const {
+        double direct=dist(m.pose->p,target),best=direct;
+        for(const auto& e:m.edges)if(segments_cross(m.pose->p,target,e.a,e.b))
+            best=pmax(best,pmin(dist(m.pose->p,e.a)+dist(e.a,target),dist(m.pose->p,e.b)+dist(e.b,target))+12.);
+        return best; // lower-complexity detour estimate, not exact shortest path
+    }
     double n_est() const { return P.n0 * pm::pow(0.5, time / P.tree_half); }
     int64_t cap() {
         double r = (double)py_round(P.cap_mult * n_est());
@@ -863,6 +1059,18 @@ public:
             });
             double lim = pmax(P.cap_hard_min, (double)known * P.tree_slots + P.cap_tree_slack);
             ci = (int64_t)pmin((double)ci, lim);
+        }
+        if(economic()&&P.cap_budget>0.) {
+            double food=0.;groups.each([&](const int64_t&,GroupP& g){
+                g->fruits.each([&](const int64_t&,FruitP& f){food+=fruit_energy(*f);});
+                g->trees.each([&](const int64_t&,TreeP& t){if(t->dead)return;
+                    auto c=g->cells.get(cell_of(t->p));double rate=fruit_rate_or(c?c->biome:-1,.08);
+                    double life=pmax(0.,pmin(P.econ_horizon,t->first+(t->fresh?58.:55.)-time));
+                    food+=pmax(0.,life-(t->fresh?pmax(0.,t->first+20.-time):0.))*rate*60.;
+                });
+            });
+            double supported=food/pmax(1.,P.econ_horizon*1.5+25.);
+            ci=(int64_t)pmax(2.,pmin(P.cap_max,(1.-P.cap_budget)*ci+P.cap_budget*supported));
         }
         return ci;
     }
@@ -943,6 +1151,12 @@ public:
             });
             if (any) value += P.spread_weight * 60. * pmin(1., gap / pmax(1., s.vr));
         }
+        if(economic()&&(P.crowd_weight>0.||P.food_risk>0.||P.rock_penalty>0.)) {
+            double competitors=0.;g.agents.each([&](int64_t a){if(a!=m.aid&&M(a).has_post&&g.trees.has(M(a).post)&&dist_lt(t.p,g.trees.at(M(a).post)->p,P.econ_radius))competitors++;});
+            value-=P.crowd_weight*(future+here)*competitors/(1.+competitors);
+            value-=P.food_risk*danger(g,t.p);
+            if(P.rock_penalty>0.)value-=P.rock_penalty*(route_estimate(m,t.p)-d);
+        }
         return value;
     }
 
@@ -1008,7 +1222,22 @@ public:
                 else if (full) bucket = 9;
                 else if (P.feed_breed) bucket = s.energy < reserve() + 20. ? 1 : 2 + int_floordiv(s.energy, 120);
                 else bucket = int_floordiv(s.energy, 60);
-                pairs.push_back(FPair{bucket, -fitness(s), d, a, f->id});
+                double utility=fitness(s);
+                if(economic()&&(P.fruit_auction>0.||P.fruit_net>-1e8)) {
+                    double route=(P.rock_penalty>0.?route_estimate(m,f->p):d);
+                    double arrival=route/pmax(1.,pmin(s.speed,s.sprint)*MOVE_PENALTY[s.biome])/10.;
+                    double energy=pmin(fruit_energy(*f)+2.*arrival,pmax(0.,s.max_energy-s.energy));
+                    double cost=.05*route+arrival*drain(s);
+                    if(energy-cost<P.fruit_net||time+arrival>f->born_hi+49.)continue;
+                    if(P.fruit_auction>0.) {
+                        bucket=0;
+                        utility=(energy-P.auction_cost*cost)/(1.+arrival);
+                        utility+=30./pmax(1.,s.energy/drain(s));
+                        utility+=2.*fitness(s)-P.aging_food*(drain(s)-1.);
+                        utility-=P.food_risk*danger(g,f->p);
+                    }
+                }
+                pairs.push_back(FPair{bucket, -utility, d, a, f->id});
             }
         });
         std::sort(pairs.begin(), pairs.end(), [](const FPair& x, const FPair& y) {
@@ -1108,6 +1337,10 @@ public:
                 int biome = v ? v->biome : -1;
                 double w = biome >= 0 ? tree_rate_or(biome, 0.6) : 0.6;
                 double score = stale * w - 0.6 * d / R;
+                if(economic()) {
+                    score+=P.renewal_weight*w*pm::pow(.5,time/300.);
+                    score-=P.food_risk*.01*danger(g,center);
+                }
                 for (auto& q : others) if (dist_lt(center, q, 130)) { score -= 0.5; break; }
                 for (auto& b : m.blocked) if (dist_lt(center, b.p, 40) && b.until > time) { score -= 1.; break; }
                 for (auto& e : m.edges)
@@ -1156,11 +1389,38 @@ public:
                         cover += w;
                     }
                 double score = cover - d * 0.02 + rng.uniform(0, .2);
+                if(economic()) {
+                    score+=P.renewal_weight*food_budget(g,center,130.)/60.;
+                    score-=P.food_risk*.1*danger(g,center);
+                    for(const auto& e:m.edges)if(segments_cross(pose.p,center,e.a,e.b)){score-=P.rock_penalty*10.;break;}
+                }
                 if (!hb || score > bs) { hb = true; bs = score; bc = center; }
             }
         if (!hb) return false;
         out = bc;
         return true;
+    }
+
+    P2 economic_post(Mind& m,Group& g,TreeM& tree,const AState& s) {
+        P2 best=m.pose->p;double bv=-OINF;
+        auto fruits=g.near_fruits(tree.p,100.);
+        for(int k=-1;k<9;k++) {
+            P2 q=k<0?m.pose->p:k==0?tree.p:add(tree.p,mul(unit(k*TAU/8.),45.));
+            if(g.anchored&&(q.x<7||q.x>W-7||q.y<7||q.y>H-7))continue;
+            bool blocked=false;double wallcost=0.;
+            for(const auto& e:m.edges){if(point_segment(q,e.a,e.b)<7.)blocked=true;
+                if(segments_cross(m.pose->p,q,e.a,e.b))wallcost+=100.;}
+            if(blocked)continue;
+            double val=-.1*dist(m.pose->p,q)-P.rock_penalty*wallcost-P.food_risk*danger(g,q);
+            // Discrete weighted facility location: minimize collection distance,
+            // penalizing observed walls between stand point and likely fruit.
+            for(auto& f:fruits) {
+                double d=dist(q,f->p);val-=fruit_energy(*f)*d/60.;
+                for(const auto& e:m.edges)if(segments_cross(q,f->p,e.a,e.b)){val-=P.rock_penalty*60.;break;}
+            }
+            if(fruits.empty())val-=dist(q,tree.p)*.4;
+            if(val>bv){bv=val;best=q;}
+        }return best;
     }
 
     // ------------------------------------------------------------ per-agent behaviour
@@ -1195,11 +1455,14 @@ public:
         if (m.has_post && g.trees.has(m.post) && site_ok(*g.trees.at(m.post))) {
             TreeP t = g.trees.at(m.post);
             m.last_site = time;
-            double d, ang; local_of(*m.pose, t->p, d, ang);
-            if (d > P.post_radius) {
+            P2 stand=t->p;
+            if(economic()&&P.post_opt>0.)stand=economic_post(m,g,*t,s);
+            double stop=economic()&&P.post_opt>0.?12.:P.post_radius;
+            double d, ang; local_of(*m.pose, stand, d, ang);
+            if (d > stop) {
                 if (progress(m, t->p, d)) { t->assigned.discard(m.aid); m.has_post = false; }
                 else {
-                    double dd, dir, turn; go_to(m, s, t->p, P.post_radius - 8., dd, dir, turn);
+                    double dd, dir, turn; go_to(m, s, stand, pmax(4.,stop - 8.), dd, dir, turn);
                     return {dd, dir, turn};
                 }
             }
@@ -1218,7 +1481,9 @@ public:
             return {0., 0., turn};
         }
         if (m.old) return {0., 0., P.sweep_rate};
-        if (s.energy < P.explore_energy || time - m.last_site < P.watch_patience) {
+        bool relocate=economic()&&P.relocate_after>0.&&time-m.last_site>P.relocate_after&&
+            s.energy>P.relocate_energy&&food_budget(g,pose.p,P.econ_radius)<60.;
+        if (!relocate&&(s.energy < P.explore_energy || time - m.last_site < P.watch_patience)) {
             m.has_explore = false;
             if (!m.has_watch || time - m.watch_t > P.watch_refresh) {
                 P2 tgt;
@@ -1295,6 +1560,12 @@ public:
         { PhaseTimer _t(&ph[PH_MERGE], profile_phases); merge_groups(); }
         { PhaseTimer _t(&ph[PH_OBSERVE], profile_phases);
           for (const AState& s : states) observe(M(s.aid), s); }
+        merge_shared_frames();
+        shared_reports();
+        if(P.share_obs)groups.each([&](const int64_t&,GroupP& g){
+            g->trees.each([&](const int64_t& id,TreeP& t){if(t->last==time)g->seen_trees.insert(id);});
+            g->fruits.each([&](const int64_t& id,FruitP& f){if(f->last==time)g->seen_fruits.insert(id);});
+        });
         {
             PhaseTimer _t(&ph[PH_MAINTAIN], profile_phases);
             std::vector<GroupP> gl;
@@ -1387,6 +1658,12 @@ public:
                     if (!P.extra_old || left <= 101.) continue;
                 } else {
                     double thr = (double)young.size() < P.cap_min ? pmin(reserve(), P.low_pop_reserve) : reserve();
+                    if(economic()&&P.budget_reserve>0.) {
+                        Group& gg=G(m.group);double budget=food_budget(gg,m.pose->p,P.econ_radius);
+                        int64_t count=0;gg.agents.each([&](int64_t a){if(dist_lt(M(a).pose->p,m.pose->p,P.econ_radius))count++;});
+                        double per=budget/pmax(1.,(double)count);
+                        thr+=P.budget_reserve*pmax(-60.,pmin(150.,P.econ_horizon*1.5+25.-per));
+                    }
                     if (left <= thr) continue;
                 }
                 Group& g = G(m.group);

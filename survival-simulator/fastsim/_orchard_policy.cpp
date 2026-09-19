@@ -42,7 +42,7 @@ void parse_params(const Cfg& c, orchard::Params& P) {
               {"cluster_radius", &P.cluster_radius}, {"spread_weight", &P.spread_weight}, {"low_pop_reserve", &P.low_pop_reserve},
               {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
               {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
-              {"nursery_bonus", &P.nursery_bonus}};
+              {"nursery_bonus", &P.nursery_bonus},{"share_obs",&P.share_obs},{"econ_start",&P.econ_start},{"econ_radius",&P.econ_radius},{"econ_horizon",&P.econ_horizon},{"cap_budget",&P.cap_budget},{"crowd_weight",&P.crowd_weight},{"fruit_auction",&P.fruit_auction},{"auction_cost",&P.auction_cost},{"fruit_net",&P.fruit_net},{"food_risk",&P.food_risk},{"post_opt",&P.post_opt},{"rock_penalty",&P.rock_penalty},{"relocate_after",&P.relocate_after},{"relocate_energy",&P.relocate_energy},{"renewal_weight",&P.renewal_weight},{"budget_reserve",&P.budget_reserve},{"aging_food",&P.aging_food}};
     for (F& f : fs) { bool got = false; double v = cfg_get(c, f.k, 0., &got); if (got) *f.v = v; }
     struct B { const char* k; bool* v; };
     B bs[] = {{"idle_sweep", &P.idle_sweep}, {"extra_old", &P.extra_old}, {"cull", &P.cull}, {"heir_select", &P.heir_select},
@@ -126,13 +126,10 @@ public:
 }  // namespace
 
 IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, const char** err) {
-    // Sharing predator sightings across a group is deliberately not implemented:
-    // upstream measured it worse than own-sightings-only, so pred_share accepts 0 and
-    // rejects anything else rather than silently ignoring the setting. Same rule and
-    // same message as models/orchard_evasion_policy.py, and it lives on the policy
-    // side because it is a statement about the policy, not about the engine.
+    // pred_share was an unsupported Python compatibility knob. The native
+    // shared-map extension is explicitly selected with share_obs instead.
     if (cfg_get(cfg, "pred_share", 0.) != 0.) {
-        if (err) *err = "pred_share>0 (group-shared predator sightings) is not implemented";
+        if (err) *err = "Use share_obs for native shared map and predator observations";
         return nullptr;
     }
     orchard::Params P;

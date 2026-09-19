@@ -72,7 +72,7 @@ def actor(conn,seeds):
             steps,*_=baseline.run_policy(3000.);end=baseline.env.time;score=baseline.env.score
             if len(baseline.env.agents):raise RuntimeError(f'Seed {seed} survived horizon; cannot label it a pre-extinction checkpoint')
             tick=max(0,steps-2500)
-            if tick==0:raise RuntimeError(f'Seed {seed} died before 250 seconds')
+            if tick==0 and not globals().get('ALLOW_SHORT',False):raise RuntimeError(f'Seed {seed} died before 250 seconds')
             del baseline
             sim=PolicySimulationCore(seed=seed,predators=True);sim.policy_init(0,BASE)
             sim.run_policy(3000.,tick*.1)

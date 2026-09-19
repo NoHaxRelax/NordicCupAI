@@ -115,7 +115,21 @@ public:
     }
     // Observation-only short-horizon model. Unknown predator energy/terrain are
     // conservatively bounded by a 15-unit direct pursuit step; this is not the engine.
-    Plan act(Mind& m, const AState& s) override {
+    Plan act(Mind& m, const AState& input) override {
+        AState s=input;std::vector<Obs> shared;
+        if(P.share_obs) {
+            shared=*input.obs;Group& g=G(m.group);
+            for(const auto& p:g.predators) {
+                bool seen=false;
+                for(const auto& o:shared)if(o.type==2&&dist_lt(polar(*m.pose,o),p.p,5.)){seen=true;break;}
+                if(seen)continue;
+                Obs o{};o.type=2;local_of(*m.pose,p.p,o.distance,o.angle);
+                o.has_rel_dir=p.has_heading;
+                o.rel_dir=wrap(pm::atan2(m.pose->p.y-p.p.y,m.pose->p.x-p.p.x)-p.heading);
+                shared.push_back(o);
+            }
+            s.obs=&shared;
+        }
         Plan base=legacy_act(m,s);
         bool active=time>=PRED.feature_start && (PRED.feature_population<=0 || states.size()<=PRED.feature_population);
         if (!active) return base;
