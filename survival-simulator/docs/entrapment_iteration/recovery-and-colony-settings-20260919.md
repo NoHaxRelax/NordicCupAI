@@ -116,6 +116,8 @@ The free-PC screen has returned one complete game (current settings, seed
 at its 1800-second wall limit. These do not provide a paired settings result.
 `colony-settings-partial-20260919.json` records the partial snapshot; full
 downloaded artifacts are under `logs/entrapment-iteration/colony-settings-pc-20260919`.
-The other ten jobs continue in the unchanged remote source. Future reruns of
-timeouts need a longer wall limit; do not classify them as extinctions or draw
-a mean from only the runs which happened to finish quickly.
+The other ten jobs were subsequently cancelled when the current-sighting
+escape bug was fixed. A new six-game free-PC comparison uses that correction
+and the default v2 guide with a longer wall limit; see
+`escape-current-sightings-20260919.md`. Do not classify infrastructure timeouts
+as extinctions or draw a mean from only runs which finished quickly.
