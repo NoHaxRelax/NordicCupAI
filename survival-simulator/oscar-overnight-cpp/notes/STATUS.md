@@ -1,4 +1,13 @@
-# READ FIRST (morning summary, written 04:30 on 19 Sept)
+# READ FIRST (morning summary, updated 06:25 on 19 Sept)
+
+STATE: IDLE. All pods stopped (disks are wiped on restart: bootstrap + deploy again). Spend ~$45 of $100.
+Final fresh-seed numbers with the fixed policy (768 seeds each): no predators 2432 s / score 2599;
+with predators 1533 s / 1543. A localisation bug was found and fixed (see 05:50 entries and docs).
+Trap line closed for the night: with exact positions the keeper bait chain is -45 to -100 s, guides -93 to -250,
+sites near the colony -43 to -79; predators hunt where the colony is and rarely reach a crevice by themselves,
+and a guide walking 10 cannot lead a predator sprinting 15 over hundreds of units. Next ideas need a design
+change (fast dedicated guides or traps placed where the colony forages) rather than parameter tests.
+
 
 **No predators:** r21s0c2 stays the best policy: 2393 s mean survival, score 2555 over 1465 seeds (previous
 best 2353 / 2492). ~180 variants tried overnight on 512 paired seeds each; nothing beats it. The remaining
@@ -263,3 +272,5 @@ Log (newest last)
   predators hunt where the colony is, not at the crevice. Guides with exact positions -93..-250. Last trap test
   (f31): choose the site nearest the colony (site_dist_w 0.3/1.0) with and without bait-on-sight. Also running the
   final fresh-seed measurement of both shipped configs with the fixed policy (768 seeds each, j/k).
+- 06:22 f31: site nearest the colony -43..-79; trap line closed. Final 768-seed numbers recorded in BEST.md.
+  Pods i/j/k stopped. Waiting for new direction from Oscar (tick continues at a low cadence).

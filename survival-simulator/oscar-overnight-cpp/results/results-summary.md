@@ -80,3 +80,13 @@ hazard per 100 s rises from 0.6% with 4 predators to 1.4% with 13, so the late g
 Pose finding: an early wrong family merge (about 80 units) can make the shared map drift to the wrong frame;
 in normal play 1-5% of agents are more than 30 units off, in trap games whole families were 75 off, which
 sends baits and guides to the wrong place. Fix this before any further trap work.
+
+## 05:30-06:25: localisation fix and the trap re-test with exact positions
+
+| Item | Result |
+| --- | --- |
+| anchor() wall-side bug (agent placed inside the wrong wall; 1140 units off in seed 7000) | fixed; agents >30 off 1-3% -> 0-2%; shipped configs +13 ± 18 (no predators, 512 seeds), +16 ± 16 (predators, 576) |
+| keeper bait chain with exact positions (192 games) | -100 ± 24 s; more baits worse (-129..-183) |
+| guides with exact positions | -93 to -250 |
+| trap site chosen near the colony | -43 to -79 |
+| final fresh-seed numbers, fixed policy, 768 seeds | no predators 2432 s / 2599; with predators 1533 s / 1543 |

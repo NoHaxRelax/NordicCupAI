@@ -31,3 +31,9 @@ policy, which lacks the evasion layer).
 06:00: policy code change kept: anchor() wall-side fix + boundary snap (nightsim/_npolicy.hpp). Paired regression on
 the shipped configs: +13 ± 18 s (no predators, 512 seeds), +16 ± 16 s (with predators, 576 seeds). The same bug exists
 in the Python policy (research/orchard/orchard.py, anchor candidate order); not ported there tonight.
+
+## Final numbers with the fixed policy (fresh seeds 20000-20767, 768 each, 06:20 19 Sept)
+| Config | Survival | Score | Fruit |
+| --- | ---: | ---: | ---: |
+| r21s0c2, no predators | 2432 | 2599 | 167 |
+| pred_best_0400, with predators | 1533 | 1543 | 136 |
