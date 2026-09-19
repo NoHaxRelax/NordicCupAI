@@ -23,12 +23,27 @@ from .exclusions import Exclusions
 from .registry import make_expert, families as class_families, CLASSES, load_gates
 
 
-def run_expert(expert, family, image, zoom, proposals):
+DELIVERED_SCALE = {0: .25, 1: .5, 2: 1.}  # delivered view pixels per native pixel: L0 views are 1/4 scale, L1 1/2, L2 native
+
+
+def rescale(rows, k):
+    """Bring boxes and centres found on a downscaled image back to native tile coordinates."""
+    for q in rows:
+        for f in ('bbox', 'mask_bbox'):
+            if q.get(f):
+                q[f] = [float(v) * k for v in q[f]]
+        for f in ('cx', 'cy'):
+            if isinstance(q.get(f), (int, float)):
+                q[f] = float(q[f]) * k
+    return rows
+
+
+def run_expert(expert, family, image, zoom, proposals, scale=1.):
     try:
         try:
-            out = expert.detect(image, 1., zoom, explain=True, proposals=proposals) if proposals is not None else expert.detect(image, 1., zoom, explain=True)
+            out = expert.detect(image, scale, zoom, explain=True, proposals=proposals) if proposals is not None else expert.detect(image, scale, zoom, explain=True)
         except TypeError:
-            out = expert.detect(image, 1., zoom, explain=True)
+            out = expert.detect(image, scale, zoom, explain=True)
     except Exception:  # one broken candidate must never take a whole shard down: record it, keep going
         import traceback
         print(f'EXPERT_ERROR {family} zoom={zoom}\n{traceback.format_exc()}', file=sys.stderr, flush=True)
@@ -51,6 +66,7 @@ def main():
     p.add_argument('--zooms', nargs='+', type=int, default=[0, 1, 2])
     p.add_argument('--max-empty', type=int, default=60)
     p.add_argument('--gates', type=Path)
+    p.add_argument('--delivered', action='store_true', help='run the experts on delivered-resolution pixels (L0 x1/4, L1 x1/2) with templates scaled to match; results are rescaled to native for matching')
     p.add_argument('--verifier', type=Path, help='trained verifier; candidates it calls background are recorded as rejected_by=verifier')
     p.add_argument('--verifier-threshold', type=float, default=.5)
     p.add_argument('--gpu', default='cuda:0')
@@ -118,15 +134,21 @@ def main():
     for kind, tiles in (('positive', positives), ('empty', empties)):
         for r in tiles:
             image = cv2.imread(str(a.grid / r['file']))
-            key = a.cache / f"{signature}-{r['id']}.json"
+            factor = DELIVERED_SCALE[r['zoom']] if a.delivered else 1.
+            run_image = image if factor == 1. else cv2.resize(image, None, fx=factor, fy=factor, interpolation=cv2.INTER_AREA)
+            key = a.cache / f"{signature}-{r['id']}{'' if factor == 1. else f'-d{factor}'}.json"
             if key.exists():
                 shared_props = json.loads(key.read_text()); cached += 1
             else:
-                t0 = time.time(); shared_props = shared.propose_all(image, 1., r['zoom']); proposer_seconds += time.time() - t0
+                t0 = time.time(); shared_props = shared.propose_all(run_image, factor, r['zoom']); proposer_seconds += time.time() - t0
                 key.write_text(json.dumps(shared_props))
-            futures = {c: pool.submit(run_expert, experts[c], class_families(c)[0], image, r['zoom'], shared_props.get(c)) for c in a.classes}
+            futures = {c: pool.submit(run_expert, experts[c], class_families(c)[0], run_image, r['zoom'], shared_props.get(c), factor) for c in a.classes}
             for c in a.classes:
                 by_family, candidates = futures[c].result()
+                if factor != 1.:
+                    for rows_ in by_family.values():
+                        rescale(rows_, 1. / factor)
+                    rescale(candidates, 1. / factor)
                 fams = class_families(c)
                 by_family = {f: by_family.get(f, []) for f in fams}
                 if verifier is not None and by_family.get(fams[0]):

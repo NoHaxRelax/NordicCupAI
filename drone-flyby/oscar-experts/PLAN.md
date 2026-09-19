@@ -87,6 +87,49 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 - Fair-share proposal capping (`GenericExpert._fair_share`: merge per template, interleave by rank, cap) is under
   test as V4; kept only if it changes recall.
 
+## 07:55 status
+- Pass 7 valid (tables in RESULTS.md); gates v7 at runs/pass7/gates.json (pods 1 and 2). Milestone 5 pushed (8acde64).
+- Pass 8 running on pod 1 (fair-share capping, large-launcher sprites, size refinement) -> gates v8.
+- Verifier v1 training on pod 2 from pass 7 candidates (55.7k real crops, 98% background, + 2.1k synthetic).
+- Stage 4 replays A-D running on pod 2 with gates v7 + verifier v0 (offline local evaluator, timeout lifted, so the
+  proxy mAP measures coverage/accuracy, not speed). Rerun with gates v8 + verifier v1 once both exist.
+- Box audit on pass 7 (box_stats.py): only medium_plane L0 would gain from a size calibration (.38 -> .88 with width
+  x.68); other misses near targets are pose/position errors. Re-audit on pass 8 (size refinement) before deciding.
+
+- 08:05 replays OOM'd (42 GB per live-view process: 48-kernel FFT chunks + kernel cache at 2160-px scene size).
+  `SharedProposer` now sizes the chunk by scene area and caches only tile-sized scenes; a replay process is ~2 GB.
+  Four replays + verifier trainer run together on pod 2. Speed session informed (twice).
+
+- 08:25 stage 4 blocked on speed: the organizer's local evaluator is clock-driven (frame i exists at start + i x 333 ms;
+  `--eval-timeout-s` only lifts the per-request timeout), so at 40-100 s per view almost every frame is skipped and the
+  tracker raised "out-of-order frame". Replays A-D stopped. Strategy replays resume when a view runs in a few seconds
+  (speed batch 1 applied 08:25: live 127 s -> 45 s per 4 views, identical outputs; batch 2 targets the fine pose).
+- Verifier v1 (pass 7 candidates): 99.8% held-out tiles, 96.4% / 99.3% rejection on the synthetic validation set.
+
+## 09:30 status: A/B passes running
+- Pass 9 (pod 1): final code (speed batch 1, fair-share, launcher sprites 6, size refinement margin .06), old bank.
+- Pass 10 (pod 2): same code + `add_track_sprites.py` auto sprites for the uncovered tracks (24 rows kept: launcher
+  c-047-078 f47, medium-plane d/e f66, tank-015-036 f15/f36, tank-d f30/f61, jet-plane-c f66; helicopter autos dropped
+  as junk, large-tower-038-067 mask failed) + template caps 6 for tank/medium_plane/large_tower/helicopter/jet_plane +
+  ta-ta without refinement. Bank backup on pod 2: /workspace/experts/bank-backup-prepass10. Review sheet for Oscar:
+  artifacts/drone-experts-overnight-20260919/auto-sprites-review-sheet.png.
+- Whichever wins becomes the deployed bank; then gates + verify with matching code, then verifier v2 on its candidates.
+
+## 10:45 validation plan (Oscar via the babysitter session: test regularly against the validation API; evaluation never)
+- Correction: the organizer's local evaluator is clock-driven only with `--realtime`; the default is lockstep, so an
+  offline replay records every frame. The earlier frame-order errors came from stale evaluators on the same ports.
+- Recordings V-A (l1 sweep + overview), V-B (l2 top), V-C (l1 + revisit 3), V-D (l2 + revisit 3) running on pod 2
+  with the final bank, gates v9, verifier v1, speed batches 1+2. Each recording is then served by `replay_server.py`
+  behind a quick tunnel (`stage4_submit.sh NAME logs/NAME PORT` on pod 2) and submitted from the laptop with
+  `validate_endpoint.sh NAME` (POD_PORT=12630 default; receipts under validation-attempts/). One active attempt per
+  team: check `portal.py status` first. Track scores per configuration in RESULTS.md.
+- Pass 11 (final bank + final code, native) on pod 1 after pass 11d (delivered-resolution recall check) finishes;
+  gates v11 -> verifier v2 on pass 11 candidates -> re-record with v11/v2 and resubmit.
+
+- 11:30 speed batch 3 applied: process pool for the live per-class stage (DRONE_EXPERT_PROCS=16; recordings restarted
+  on it) and the pose-cache reproducibility fix (warp at the rounded key; changes 2 of 2,675 rows; gates refit at the
+  next pass). Recordings V-A..D were crawling (6-13 frames in 20 min) while sharing pod 2 with pass 11d.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.

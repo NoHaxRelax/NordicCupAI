@@ -182,3 +182,134 @@ sweep's gain at ~10% of its cost; it goes into pass 8. Remaining medium-plane L0
 
 Weak spots: medium_plane (box size, L0/L1), large_launcher (validation-scene articulation), jet_plane L0, tank L0,
 small_launcher L0 (2-3 px objects). Pass 8 adds fair-share capping, all large-launcher sprites and the size refinement.
+
+## Verifier v1 (08:10, pod 2, `/workspace/experts/runs/verifier-0052/model/best.pt`, copied to pod 1)
+
+Trained on pass 7 candidates (55.7k real crops, 98% background) + 2.1k synthetic composites, 12 epochs, ResNet-18
+fine-tune on 96-px crops, 17 classes. Held-out tiles: 99.8% accuracy (background 7195/7211, every object class
+near-perfect). Synthetic validation set (795 crops, dev backgrounds, evaluate-only): v1 96.4% accuracy, 99.3% background
+rejection (v0: 95.1% / 98.4%). Per-class recall v1: jet_plane .73 (4 of 30 called background), medium_plane .81,
+ta-ta .85, medium_launcher .83, large_launcher .91, mine_roller .92, small_launcher .94, tank .97, rest 1.0.
+
+### Refinement acceptance margin (08:50, same 7 x 18 sample, speed batch 1 applied, launcher sprites 6)
+
+| variant | jet_plane | medium_plane | small_tower | large_launcher | total of 126 |
+|---|---|---|---|---|---|
+| no refinement | 5/5/5 | 3/6/6 | 6/6/6 | 3/4/3 | 94 |
+| margin 0 (pass 8) | 6/4/2 | 5/6/6 | 6/5/5 | 2/4/4 | 91 |
+| margin .03 | 6/5/3 | 5/6/6 | 6/5/5 | 2/4/4 | 93 |
+| margin .06 (default) | 6/5/5 | 5/6/6 | 6/5/5 | 2/4/4 | 95 |
+| margin .1 | 5/5/5 | 5/6/6 | 6/5/6 | 2/4/4 | 95 |
+
+(L0/L1/L2 found of 6; jammer, tank, mine_roller unchanged.) A scaled pose that wins by a hair gives a worse box for
+jet planes and towers; with a .06 margin only clear wins are taken. Speed batch 1 verified identical on this sample.
+
+## Gated + verified rotating sample (verify7, pod 2, 591 s): gates v7 + verifier v1, 8 tiles per class and zoom, 96 empty tiles
+
+| class | found | L0/L1/L2 | cand/tile | false alarms on 96 empty tiles |
+|---|---|---|---|---|
+| condor | 24/24 | 8/8 8/8 8/8 | 5.9 | 133 |
+| hangar | 9/9 | 3/3 each | 0.4 | 0 |
+| helicopter | 17/19 | 6/6 6/7 5/6 | 12.9 | 202 |
+| jammer | 23/24 | 8/8 8/8 7/8 | 1.0 | 1 |
+| jet_plane | 29/34 | 12/12 9/11 8/11 | 1.3 | 72 |
+| large_launcher | 14/24 | 5/8 5/8 4/8 | 5.8 | 297 |
+| large_tower | 19/24 | 7/8 6/8 6/8 | 0.9 | 0 |
+| medium_launcher | 18/18 | 6/6 each | 2.3 | 21 |
+| medium_plane | 21/30 | 5/10 8/10 8/10 | 1.0 | 5 |
+| mine_roller | 15/15 | 5/5 each | 1.0 | 0 |
+| small_launcher | 19/24 | 3/8 8/8 8/8 | 0.8 | 3 |
+| small_plane | 23/24 | 7/8 8/8 8/8 | 1.2 | 20 |
+| small_tower | 18/27 | 6/9 5/9 7/9 | 1.0 | 1 |
+| spacecraft | 23/24 | 8/8 8/8 7/8 | 1.1 | 6 |
+| ta-ta | 18/23 | 5/8 7/7 6/8 | 1.6 | 23 |
+| tank | 20/26 | 6/9 10/10 4/7 | 0.7 | 0 |
+
+After gate + verifier most classes keep about one candidate per tile with near-zero false alarms on empty tiles;
+helicopter, large_launcher and condor still pass 2-6 candidates per empty tile. Caveat: the deployed code had the
+size refinement at margin 0 while gates v7 were fitted without it (small_tower L1, tank L2 dips); verify9 repeats
+this with matching code and gates v9.
+
+## Pass 8 (09:05, 1207 s): fair-share capping + launcher sprites 6 + size refinement at margin 0 (vs pass 7)
+
+medium_plane 25 -> 33, jet_plane 61 -> 62 (L0 13 -> 25, L2 24 -> 15), large_launcher 57 -> 61, jammer 65 -> 69,
+small_tower 45 -> 37, ta-ta 67 -> 59 (L0 22 -> 14), tank 135 -> 132, spacecraft 57 -> 55, helicopter 43 -> 41,
+large_tower 48 -> 46; others unchanged. Net +10 but the losses are on L1/L2 where boxes were already right: the
+margin-0 refinement swaps a good box for a marginally better-correlating wrong one. Pass 9 = margin .06 (sample: keeps
+the gains, drops the losses); ta-ta (21 px) gets no refinement at all. Gates v8: large_launcher background kept .59
+(six heterogeneous templates), helicopter .22, condor .20 - those three rely on the verifier.
+
+Miss-by-track (pass 7): large-launcher-c-047-078 41/48 missed, medium-plane-d/e 8/12 each, large-tower-038-067 9/9,
+tank-015-036 18/66, tank-d-029-061 15/54, helicopter-043-073 5/12 - none of these tracks has a sprite in the bank.
+`add_track_sprites.py` cuts auto-masked sprites (GrabCut seeded by the organizer box, review_status claude-auto,
+contact sheet for Oscar) from their training tiles; pass 10 measures the enlarged bank against pass 9.
+
+## Pass 9 (09:45, 1166 s): final code, old bank - refinement margin .06 (vs pass 7 / pass 8)
+
+jet_plane 61/75 -> 73/75 (L0 13 -> 25, L2 back to 24), medium_plane 25 -> 33, jammer 65 -> 69, large_launcher 57 -> 61,
+tank 135 -> 134, ta-ta 67 -> 65 (refinement still on for ta-ta here; off from pass 10), small_tower 45 -> 38 (the one
+regression left, under investigation), everything else at pass 7 level. Total complete targets found 803 -> 821.
+Gates v9 background kept: large_launcher .58, helicopter .24, condor .20, jet_plane .14; the rest at or below .02.
+
+### verify9 (10:05, pod 1, 308 s with speed batch 1): gates v9 + verifier v1, rotating sample seed 3, 8 tiles per class and zoom
+
+jet_plane 32/33 (3.6 cand/tile, 278 alarms on 96 empty tiles), small_plane 24/24, spacecraft 24/24, condor 24/24,
+mine_roller 15/15, medium_launcher 18/18, jammer 23/24, helicopter 20/22, large_tower 21/24, ta-ta 20/22,
+medium_plane 22/30, small_launcher 19/24, small_tower 18/25, tank 18/26, large_launcher 13/24 (16 cand/tile, 1069
+alarms: gate v9 keeps 58% background and verifier v1 never saw the six-template candidates). Most classes stay
+at about one candidate per tile with single-digit false alarms over 96 empty tiles.
+
+## Pass 10 (10:20, pod 2, 1519 s): pass 9 code + auto track sprites + template caps 6 (vs pass 9)
+
+tank 134 -> 171/171, medium_plane 33 -> 45/48, ta-ta 65 -> 67 (no refinement), jet_plane 73 (same, but gate v10
+background kept .60 vs .14), large_launcher 61 -> 37 (the colour-method launcher sprite, 20% box fill, hurt), condor
+0/42 (every tile raised "need at least one array to stack": a competitor part model built from the junk jet-plane auto
+sprite; guarded now). Decision: keep the tank (6 rows, two frames per track) and medium-plane (6 rows) auto sprites,
+drop launcher and jet-plane autos. Final bank: 86 sprites, on both pods; pod-1 old bank at
+/workspace/experts/bank-backup-pod1-old, pod-2 pre-auto bank at /workspace/experts/bank-backup-prepass10.
+
+## Box scaling bug (11:00): `Template.posed_with_box` scaled the organizer box twice
+
+For any pose with scale != 1 the mask was resized first and its extent (w, h) then multiplied by the scale again, so
+a .8 pose produced a .64 box and a delivered-resolution (.5) pose a .25 box. Effects: the first delivered-resolution
+pass (pass 11d, old box) found nothing at L0/L1; the size refinement's losses at margin 0 (small towers, jet planes
+at L2) were partly this bug, not the refinement. Fixed: only the organizer margins are scaled. Pass 11 (pod 1,
+native, final bank), pass 11d (pod 2, delivered), the margin re-check and the four recordings all restarted with it.
+
+### Refinement margin re-check with the fixed box (11:15, same 7 x 18 sample, final bank)
+
+| variant | jet_plane | medium_plane | small_tower | tank | large_launcher | total of 126 |
+|---|---|---|---|---|---|---|
+| no refinement (old bank) | 5/5/5 | 3/6/6 | 6/6/6 | 4/6/6 | 3/4/3 | 94 |
+| old box, margin .06 | 6/5/5 | 5/6/6 | 6/5/5 | 4/6/6 | 2/4/4 | 95 |
+| fixed box, margin 0 | 6/4/3 | 5/6/6 | 6/6/6 | 6/6/6 | 2/4/4 | 96 |
+| fixed box, margin .06 (deployed) | 6/5/5 | 5/6/6 | 6/6/6 | 6/6/6 | 2/4/4 | 99 |
+
+Towers and ta-ta run without refinement (their organizer boxes are right at sprite size). Margin .06 stays.
+
+## Pass 11 (11:50, pod 1, 844 s): final code + final bank, native resolution - the deployed configuration
+
+| class | found | L0 / L1 / L2 | gate v11 oof recall / background kept |
+|---|---|---|---|
+| condor | 42/42 | 14/14 each | .98 / .196 |
+| hangar | 9/9 (+3/24 partial) | 3/3 each | 1.00 / .000 |
+| helicopter | 43/48 | 14/16 15/16 14/16 | .98 / .243 |
+| jammer | 69/72 | 24/24 24/24 21/24 | .99 / .000 |
+| jet_plane | 72/75 | 24/25 24/25 24/25 | .99 / .109 |
+| large_launcher | 61/102 | 21/34 20/34 20/34 | .98 / .582 |
+| large_tower | 48/57 | 16/19 each | 1.00 / .000 |
+| medium_launcher | 17/18 | 5/6 6/6 6/6 | 1.00 / .040 |
+| medium_plane | 45/48 | 13/16 16/16 16/16 | 1.00 / .001 |
+| mine_roller | 15/15 | 5/5 each | 1.00 / .000 |
+| small_launcher | 54/69 | 8/23 23/23 23/23 | 1.00 / .001 |
+| small_plane | 63/63 | 21/21 each | .98 / .020 |
+| small_tower | 46/51 | 12/17 17/17 17/17 | .98 / .001 |
+| spacecraft | 57/57 | 19/19 each | .98 / .005 |
+| ta-ta | 67/69 | 22/23 23/23 22/23 | .99 / .019 |
+| tank | 171/171 | 57/57 each | .98 / .006 |
+
+Total 879 of 1069 complete training targets (pass 7: 803, 75% -> 82%). Code: speed batches 1-3, fair-share capping,
+size refinement (margin .06, off for towers and ta-ta), fixed box scaling, launcher sprites 6, template caps 6,
+pose-cache fix; bank: 86 sprites (tank and medium-plane track sprites added). Remaining gaps: large_launcher (the
+c-047-078 track has no usable sprite; its gate keeps 58% background), small_launcher at L0 (2-3 px), helicopter and
+condor gates (.2 background kept; the verifier carries them).

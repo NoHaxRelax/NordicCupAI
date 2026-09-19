@@ -98,7 +98,7 @@ class GenericExpert:
     def posed(self, template, angle, scale):
         key = (template.id, round(angle, 1), round(scale, 4))
         if key not in self._posed:
-            bgr, mask, box = template.posed_with_box(key[1], key[2])  # compute at the key: history-independent cache
+            bgr, mask, box = template.posed_with_box(angle, scale)
             gray, high = features(bgr)
             self._posed[key] = (bgr, gray, high, mask, box)
             if len(self._posed) > 800:

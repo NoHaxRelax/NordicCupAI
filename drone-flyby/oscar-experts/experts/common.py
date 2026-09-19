@@ -75,7 +75,8 @@ class Template:
         ys, xs = np.where(mask)
         x1, y1, x2, y2 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
         ox1, oy1, ox2, oy2 = self.organizer_offset  # organiser box relative to the unposed mask extent (0, 0, w, h)
-        box = np.float32([[[ox1, oy1], [w + ox2, oy1], [w + ox2, h + oy2], [ox1, h + oy2]]]) * (scale if scale != 1. else 1.)
+        # w, h are the resized mask extent already; only the organiser margins still need the scale
+        box = np.float32([[[ox1 * scale, oy1 * scale], [w + ox2 * scale, oy1 * scale], [w + ox2 * scale, h + oy2 * scale], [ox1 * scale, h + oy2 * scale]]])
         corners = cv2.transform(box, matrix)[0]
         low, high = corners.min(0), corners.max(0)
         offset = (float(low[0] - x1), float(low[1] - y1), float(high[0] - x2), float(high[1] - y2))
@@ -130,7 +131,68 @@ def local_masked_match(scene_gray, scene_high, tgray, thigh, tmask, cx, cy, radi
     best = None
     if offsets is None:
         offsets = [(dx, dy) for dy in range(-radius, radius + 1, step) for dx in range(-radius, radius + 1, step)]
-    for dx, dy in offsets:
+    # Batched path: the masked NCC at every offset from FFT correlations of masked sums (float64). Each offset's
+    # visible pixels are exactly the original per-offset crop (template mask AND inside the image):
+    # n = V*T, Sx = XV*T, Sxx = X^2V*T, Sy = V*TY, Syy = V*TY^2, Sxy = XV*TY  (V = scene validity, * = correlation).
+    # The winner is the first strict maximum in the original offset order, as before.
+    corners = [(int(round(cx - tw / 2 + dx)), int(round(cy - th / 2 + dy))) for dx, dy in offsets]
+    scores, visibles = {}, {}
+    if len(offsets) > 1 and total >= 8:
+        allx = np.array([c[0] for c in corners]); ally = np.array([c[1] for c in corners])
+        X0, Y0 = int(allx.min()), int(ally.min())
+        wh, ww = int(ally.max()) - Y0 + th, int(allx.max()) - X0 + tw
+        sy1, sx1, sy2, sx2 = max(0, Y0), max(0, X0), min(H, Y0 + wh), min(W, X0 + ww)
+        V = np.zeros((wh, ww)); T = tmask.astype(np.float64)
+        if sy2 > sy1 and sx2 > sx1:
+            V[sy1 - Y0:sy2 - Y0, sx1 - X0:sx2 - X0] = 1.
+        # circular correlation IDFT(DFT(a) * conj(DFT(k))) on an optimal DFT size >= the window: positions
+        # 0..wh-th, 0..ww-tw never wrap, so they equal the linear 'valid' correlation
+        fh, fw = cv2.getOptimalDFTSize(wh), cv2.getOptimalDFTSize(ww)
+        spec = lambda a: cv2.dft(cv2.copyMakeBorder(np.ascontiguousarray(a, np.float64), 0, fh - a.shape[0], 0, fw - a.shape[1], cv2.BORDER_CONSTANT, value=0))
+        kspec = spec
+        valid_part = lambda f: cv2.idft(f, flags=cv2.DFT_REAL_OUTPUT | cv2.DFT_SCALE)[:wh - th + 1, :ww - tw + 1]
+        mul = lambda fa, fk: cv2.mulSpectrums(fa, fk, 0, conjB=True)
+        FV, FT = spec(V), kspec(T)
+        n = np.rint(valid_part(mul(FV, FT)))
+        count = n[ally - Y0, allx - X0].astype(np.int64)
+        parts = []
+        for scene, templ in ((scene_gray, tgray), (scene_high, thigh)):
+            Xs = np.zeros((wh, ww))
+            if sy2 > sy1 and sx2 > sx1:
+                Xs[sy1 - Y0:sy2 - Y0, sx1 - X0:sx2 - X0] = scene[sy1:sy2, sx1:sx2]
+            Y = templ.astype(np.float64) * T
+            FX, FY = spec(Xs), kspec(Y)
+            Sx, Sxx = valid_part(mul(FX, FT)), valid_part(mul(spec(Xs * Xs), FT))
+            Sy, Syy, Sxy = valid_part(mul(FV, FY)), valid_part(mul(FV, kspec(Y * Y))), valid_part(mul(FX, FY))
+            nn = np.maximum(n, 1.)
+            vx = np.maximum(Sxx - Sx * Sx / nn, 0.); vy = np.maximum(Syy - Sy * Sy / nn, 0.)
+            cov = Sxy - Sx * Sy / nn
+            # a flat window/template has zero variance exactly in the original float32 path -> score 0
+            flat = (vx <= 1e-9 * Sxx + 1e-10 * nn) | (vy <= 1e-9 * Syy + 1e-10 * nn)  # FFT round-off floor
+            den = np.sqrt(vx * vy)
+            ncc = np.where(flat | (den <= 1e-8), 0., cov / np.where(den > 0, den, 1.))
+            parts.append(ncc[ally - Y0, allx - X0])
+        for i in range(len(offsets)):
+            if count[i] == 0:
+                continue  # original: empty crop -> skipped
+            visibles[i] = float(count[i] / total)
+            g = float(parts[0][i]) if count[i] >= 8 else 0.
+            h = float(parts[1][i]) if count[i] >= 8 else 0.
+            scores[i] = weights[0] * g + weights[1] * h
+        for i, (x1, y1) in enumerate(corners):
+            if i not in scores or visibles[i] < min_visible:
+                continue
+            if best is None or scores[i] > best[0]:
+                best = (scores[i], x1, y1, visibles[i])
+        return best
+    for i, (dx, dy) in enumerate(offsets):
+        if i in scores:
+            x1, y1 = corners[i]
+            if 1. < min_visible:
+                continue
+            if best is None or scores[i] > best[0]:
+                best = (scores[i], x1, y1, 1.)
+            continue
         if True:
             x1, y1 = int(round(cx - tw / 2 + dx)), int(round(cy - th / 2 + dy))
             sx1, sy1, sx2, sy2 = max(0, x1), max(0, y1), min(W, x1 + tw), min(H, y1 + th)
@@ -146,6 +208,29 @@ def local_masked_match(scene_gray, scene_high, tgray, thigh, tmask, cx, cy, radi
             if best is None or score > best[0]:
                 best = (score, x1, y1, float(visible))
     return best
+
+
+_SIFT_CACHE, _SIFT_LOCK = {}, __import__('threading').Lock()
+
+
+def _scene_sift(bgr, upsample, sift):
+    """Scene SIFT keypoints/descriptors, computed once per image and shared by every class's matcher.
+    All matchers use identical SIFT settings; the key includes the image content hash, so reuse is exact."""
+    import hashlib
+    key = (hashlib.blake2b(np.ascontiguousarray(bgr).data, digest_size=16).hexdigest(), bgr.shape, upsample)
+    with _SIFT_LOCK:
+        entry = _SIFT_CACHE.get(key)
+        if entry is None:
+            entry = _SIFT_CACHE[key] = [__import__('threading').Lock(), None]
+            while len(_SIFT_CACHE) > 8:
+                _SIFT_CACHE.pop(next(iter(_SIFT_CACHE)))
+    with entry[0]:
+        if entry[1] is None:
+            gray = cv2.resize(cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY), None, fx=upsample, fy=upsample, interpolation=cv2.INTER_CUBIC)
+            keypoints, descriptors = sift.detectAndCompute(gray, None)
+            scene = (np.float32([k.pt for k in keypoints]) + .5) / upsample if keypoints else np.zeros((0, 2), np.float32)
+            entry[1] = (scene, descriptors)
+    return entry[1]
 
 
 class SiftMatcher:
@@ -168,11 +253,9 @@ class SiftMatcher:
     def match(self, bgr, scale=1.):
         if not self.bank:
             return []
-        gray = cv2.resize(cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY), None, fx=self.upsample, fy=self.upsample, interpolation=cv2.INTER_CUBIC)
-        keypoints, descriptors = self.sift.detectAndCompute(gray, None)
-        if descriptors is None or len(keypoints) < 2:
+        scene, descriptors = _scene_sift(bgr, self.upsample, self.sift)
+        if descriptors is None or len(scene) < 2:
             return []
-        scene = (np.float32([k.pt for k in keypoints]) + .5) / self.upsample
         rows = []
         for template, points, tdesc in self.bank:
             pairs = self.matcher.knnMatch(descriptors, tdesc, k=2)
@@ -304,11 +387,14 @@ class CorrelationProposer:
     def merge(rows, radius):
         """Keep the best proposal per location, remembering the other headings seen there."""
         kept = []
+        xs = np.empty(len(rows)); ys = np.empty(len(rows))
         for r in rows:
-            for k in kept:
-                if np.hypot(r['cx'] - k['cx'], r['cy'] - k['cy']) <= radius:
-                    k['alternative_headings'].append(r['heading'])
-                    break
-            else:
-                kept.append(dict(r, alternative_headings=[]))
+            n = len(kept)
+            if n:
+                near = np.flatnonzero(np.hypot(r['cx'] - xs[:n], r['cy'] - ys[:n]) <= radius)
+                if near.size:
+                    kept[near[0]]['alternative_headings'].append(r['heading'])
+                    continue
+            xs[n], ys[n] = r['cx'], r['cy']
+            kept.append(dict(r, alternative_headings=[]))
         return kept

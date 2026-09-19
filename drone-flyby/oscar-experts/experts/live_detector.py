@@ -12,6 +12,7 @@ extents, edge boxes kept. Configure through environment variables:
   DRONE_EXPERT_GATES     fitted per-class logistic gates (fit_gates.py); confidence = gate probability
   DRONE_EXPERT_NATIVE    1 (default): upsample the delivered view to native pixel scale before the experts
   DRONE_EXPERT_SIFT      0 (default): drop the SIFT comparison branch in live mode (slow, never fused)
+  DRONE_EXPERT_PROCS     worker processes for the per-class stage (default 0 = thread pool); identical rows, no GIL
   DRONE_EXPERT_GPU       cuda device for the shared FFT proposer (one scene transform per view for all classes); unset = CPU proposers
 """
 import json
@@ -58,6 +59,15 @@ class ExpertDetector:
             from drone.experts.gpu_proposer import SharedProposer
             self.shared = SharedProposer({n: e for n, (e, _) in self.experts.items()}, device=gpu)
         self.pool = ThreadPoolExecutor(max_workers=int(workers))
+        # DRONE_EXPERT_PROCS=N: run the per-class stage in N worker processes (the experts' Python holds the GIL, so the
+        # thread pool is effectively serial). Same code and inputs in each worker: identical rows.
+        self.procs = None
+        if int(os.environ.get('DRONE_EXPERT_PROCS', '0')) > 0:
+            from drone.experts.proc_pool import ExpertProcessPool
+            slow_first = ['large_launcher', 'hangar', 'medium_plane', 'ta-ta', 'small_plane', 'mine_roller', 'tank', 'jammer', 'small_tower',
+                          'spacecraft', 'helicopter', 'jet_plane', 'large_tower', 'condor', 'small_launcher', 'medium_launcher']
+            self.procs = ExpertProcessPool(int(os.environ['DRONE_EXPERT_PROCS']), project, bank, gates, list(self.experts),
+                                           sift=os.environ.get('DRONE_EXPERT_SIFT', '0') == '1', cost_order=slow_first)
         self.min_confidence = float(min_confidence)
         self.native = bool(native)
         self.log = Path(log) if log else None
@@ -82,8 +92,12 @@ class ExpertDetector:
         factor = 1. / scale if self.native else 1.
         work = image if factor == 1. else cv2.resize(image, None, fx=factor, fy=factor, interpolation=cv2.INTER_LINEAR)
         shared = self.shared.propose_all(work, 1. if self.native else scale, level) if self.shared is not None else {}
-        futures = [self.pool.submit(self._run, name, work, 1. if self.native else scale, level, shared.get(name)) for name in self.experts]
-        rows = [r for f in futures for r in f.result()]
+        if self.procs is not None:
+            by_class = self.procs.run(list(self.experts), work, 1. if self.native else scale, level, shared)
+            rows = [r for name in self.experts for r in by_class[name]]
+        else:
+            futures = [self.pool.submit(self._run, name, work, 1. if self.native else scale, level, shared.get(name)) for name in self.experts]
+            rows = [r for f in futures for r in f.result()]
         if factor != 1.:
             for r in rows:
                 r['bbox'] = [float(v) / factor for v in r['bbox']]

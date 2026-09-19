@@ -89,6 +89,8 @@ class CondorExpert:
     def _best_pose(self, model, L, chroma, cx, cy, s, headings, scales, stretches=(1.,), shears=(0.,), offsets=(0.,)):
         """Coordinate descent over the pose family, each stage sampled as one batch; same result as the per-pose version."""
         def stage(poses):
+            if not poses:  # a degenerate model (e.g. a competitor built from a poor sprite) must not take the tile down
+                return None
             pts = np.stack([model.pose_points(p['heading'], s * p['scale'], p['stretch'], 1., p['shear'], p['cx'], p['cy']) for p in poses])
             best = None
             for pose, part in zip(poses, model.score_many(L, chroma, pts, self.settings.min_visible)):

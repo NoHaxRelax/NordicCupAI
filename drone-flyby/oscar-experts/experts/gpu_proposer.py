@@ -14,7 +14,28 @@ from .common import features, fit_bars
 
 # Bump when the proposer's numerics change: evaluate_all keys its on-disk proposal cache on it, so
 # stale proposals from an older proposer are never reused.
-PROPOSER_VERSION = 2
+SMOOTH_FFT = __import__('os').environ.get('DRONE_PROPOSER_SMOOTH_FFT', '0') == '1'
+PROPOSER_VERSION = '2-smoothfft' if SMOOTH_FFT else 2  # the opt-in FFT size gets its own proposal-cache key
+
+
+CACHE_BYTES = float(__import__('os').environ.get('DRONE_PROPOSER_CACHE_GB', '4')) * 1e9
+
+
+def _nbytes(entry):
+    return sum(t.numel() * t.element_size() for t in entry)
+
+
+def _smooth(n):
+    """Smallest m >= n whose prime factors are all in (2, 3, 5, 7)."""
+    m = n
+    while True:
+        k = m
+        for p in (2, 3, 5, 7):
+            while k % p == 0:
+                k //= p
+        if k == 1:
+            return m
+        m += 1
 
 
 class SharedProposer:
@@ -25,6 +46,8 @@ class SharedProposer:
         self.experts = {n: e for n, e in experts.items() if hasattr(e, 'proposer') and hasattr(e, 'proposer_templates_for')}
         self.kernels = {}  # zoom -> list of dict(name, heading, angle, gray, high, mask, count, energy, h, w, threshold, peaks)
         self.fft_cache = {}  # (zoom, scale, H, W, chunk index) -> (kf, mf, count, energy) on the device
+        self.cache_bytes = 0
+        self.meta_cache = {}
 
     def _kernels(self, zoom, scale):
         key = (zoom, round(scale, 4))
@@ -49,6 +72,28 @@ class SharedProposer:
         self.kernels[key] = rows
         return rows
 
+    def _meta(self, group):
+        """Per-chunk constants as device tensors, built once: copying Python lists to the GPU on every chunk forced a
+        stream synchronisation each time (pageable host memory), which left the GPU idle between chunks."""
+        key = tuple(id(r) for r in group)
+        meta = self.meta_cache.get(key)
+        if meta is None:
+            dev = self.device
+            meta = dict(count=torch.as_tensor([r['count'] for r in group], device=dev)[:, None, None, None],
+                        energy=torch.as_tensor(np.array([r['energy'] for r in group]), device=dev)[:, :, None, None],
+                        weights=torch.as_tensor(np.array([r['weights'] for r in group], np.float32), device=dev)[:, :, None, None],
+                        h=torch.as_tensor([r['h'] for r in group], device=dev), w=torch.as_tensor([r['w'] for r in group], device=dev),
+                        threshold=torch.as_tensor([r['threshold'] for r in group], dtype=torch.float32, device=dev))
+            self.meta_cache[key] = meta
+        return meta
+
+    def _device_kernel(self, r):
+        """Small posed kernel and mask as device tensors, uploaded once and kept on the row."""
+        if 'kernel_t' not in r:
+            r['kernel_t'] = torch.as_tensor(r['kernel'], device=self.device)
+            r['mask_t'] = torch.as_tensor(r['mask'], device=self.device)
+        return r['kernel_t'], r['mask_t']
+
     @torch.inference_mode()
     def propose_all(self, image, scale, zoom):
         rows = self._kernels(zoom, scale)
@@ -68,44 +113,78 @@ class SharedProposer:
         gray = cv2.copyMakeBorder(gray, pad, pad, pad, pad, cv2.BORDER_REFLECT)
         high = cv2.copyMakeBorder(high, pad, pad, pad, pad, cv2.BORDER_REFLECT)
         H, W = gray.shape
-        scene = torch.as_tensor(np.stack([gray, high]), device=self.device)  # (2, H, W)
+        # FFT on a 2-3-5-7-smooth size (cuFFT's fast kernels; odd prime factors such as 101 are several times slower).
+        # The scene is extended CIRCULARLY, so every position the peak search reads (valid top-left corners plus the
+        # 2-px max-pool border) sees exactly the pixels of the original circular correlation of size (H, W).
+        FH, FW = H, W
+        if SMOOTH_FFT:  # opt-in: ~20% faster, scores move by <= ~1e-5 (float rounding of a different FFT size)
+            FH = H if _smooth(H) == H else _smooth(H + 2)  # >= 2 extra rows/cols: the pool border wraps as before
+            FW = W if _smooth(W) == W else _smooth(W + 2)
+        gray = np.pad(gray, ((0, FH - H), (0, FW - W)), mode='wrap')
+        high = np.pad(high, ((0, FH - H), (0, FW - W)), mode='wrap')
+        scene = torch.as_tensor(np.stack([gray, high]), device=self.device)  # (2, FH, FW)
         sf = torch.fft.rfft2(scene)
         sqf = torch.fft.rfft2(scene.square())
-        for first in range(0, len(rows), self.chunk):
-            group = [r for r in rows[first:first + self.chunk] if r['h'] <= H and r['w'] <= W]
+        # Memory scales with chunk x H x W: keep the working set near the 384-px-tile design point, so a full
+        # 2160-px view runs in a few GB instead of 40 (four replays plus a trainer must share one GPU). Kernel FFT
+        # caching only pays off for tile-sized scenes; a full view never fits the cache and would only thrash it.
+        chunk = max(2, min(self.chunk, int(self.chunk * (512 * 512) / float(H * W))))
+        cacheable = H * W <= 1024 * 1024
+        for first in range(0, len(rows), chunk):
+            group = [r for r in rows[first:first + chunk] if r['h'] <= H and r['w'] <= W]
             if not group:
                 continue
-            cache_key = (zoom, round(scale, 4), downscale, blur, H, W, first)
-            if cache_key not in self.fft_cache:
-                k = np.zeros((len(group), 2, H, W), np.float32)
-                m = np.zeros((len(group), 1, H, W), np.float32)
+            cache_key = (zoom, round(scale, 4), downscale, blur, FH, FW, first)
+            if not cacheable or cache_key not in self.fft_cache:
+                # Dense padded kernels are built on the device from the small posed kernels (uploaded once per zoom),
+                # so no H x W host arrays and no host-to-device copy per view. Same arrays, same FFTs as before.
+                k = torch.zeros((len(group), 2, FH, FW), device=self.device)
+                m = torch.zeros((len(group), 1, FH, FW), device=self.device)
                 for i, r in enumerate(group):
-                    k[i, :, :r['h'], :r['w']] = r['kernel']
-                    m[i, 0, :r['h'], :r['w']] = r['mask']
-                self.fft_cache[cache_key] = (torch.fft.rfft2(torch.as_tensor(k, device=self.device)), torch.fft.rfft2(torch.as_tensor(m, device=self.device)),
-                                             torch.as_tensor([r['count'] for r in group], device=self.device)[:, None, None, None],
-                                             torch.as_tensor(np.array([r['energy'] for r in group]), device=self.device)[:, :, None, None])
-                if len(self.fft_cache) > 12:
-                    self.fft_cache.pop(next(iter(self.fft_cache)))
-            kf, mf, count, energy = self.fft_cache[cache_key]
-            numerator = torch.fft.irfft2(sf * kf.conj(), s=(H, W))
-            total = torch.fft.irfft2(sf * mf.conj(), s=(H, W))
-            total2 = torch.fft.irfft2(sqf * mf.conj(), s=(H, W))
+                    kt, mt = self._device_kernel(r)
+                    k[i, :, :r['h'], :r['w']] = kt
+                    m[i, 0, :r['h'], :r['w']] = mt
+                meta = self._meta(group)
+                entry = (torch.fft.rfft2(k), torch.fft.rfft2(m), meta['count'], meta['energy'])
+                del k, m
+                if cacheable:
+                    # byte-budgeted cache (DRONE_PROPOSER_CACHE_GB, default 4): a 12-entry cache thrashed on every view,
+                    # since one view needs 24-60 chunks; oldest entries are evicted first
+                    self.fft_cache[cache_key] = entry
+                    self.cache_bytes += _nbytes(entry)
+                    while self.cache_bytes > CACHE_BYTES and len(self.fft_cache) > 1:
+                        self.cache_bytes -= _nbytes(self.fft_cache.pop(next(iter(self.fft_cache))))
+            else:
+                entry = self.fft_cache[cache_key]
+            kf, mf, count, energy = entry
+            numerator = torch.fft.irfft2(sf * kf.conj(), s=(FH, FW))
+            total = torch.fft.irfft2(sf * mf.conj(), s=(FH, FW))
+            total2 = torch.fft.irfft2(sqf * mf.conj(), s=(FH, FW))
             denominator = ((total2 - total.square() / count).clamp_min(0) * energy).sqrt()
             maps = torch.where(denominator > 1e-6, numerator / denominator.clamp_min(1e-6), torch.zeros_like(numerator)).clamp(-1, 1)
-            weights = torch.as_tensor(np.array([r['weights'] for r in group], np.float32), device=self.device)[:, :, None, None]
+            meta = self._meta(group)
+            weights = meta['weights']
             response = (weights * maps).sum(1)  # (n, H, W), valid positions are top-left corners
             local_max = torch.nn.functional.max_pool2d(response[:, None], 5, 1, 2)[:, 0]
-            for i, r in enumerate(group):
-                valid = response[i, :H - r['h'] + 1, :W - r['w'] + 1]
-                peaks = (valid >= r['threshold']) & (valid == local_max[i, :H - r['h'] + 1, :W - r['w'] + 1])
-                if not peaks.any():
-                    continue
-                ys, xs = torch.nonzero(peaks, as_tuple=True)
-                scores = valid[ys, xs]
-                order = torch.argsort(scores, descending=True)[:r['peaks'] * 4]
-                ys, xs, scores = ys[order].cpu().numpy(), xs[order].cpu().numpy(), scores[order].cpu().numpy()
-                for y, x, sc in zip(ys, xs, scores):
+            # All kernels of the chunk at once, one device->host transfer: a peak is a local maximum above the kernel's
+            # threshold inside its valid region (top-left y <= H-h, x <= W-w); per kernel the best peaks*4 by score.
+            hs, ws, thr = meta['h'], meta['w'], meta['threshold']
+            yy = torch.arange(FH, device=self.device)[None, :, None]; xx = torch.arange(FW, device=self.device)[None, None, :]
+            inside = (yy <= (H - hs)[:, None, None]) & (xx <= (W - ws)[:, None, None])
+            peaks = inside & (response >= thr[:, None, None]) & (response == local_max)
+            ks, ys, xs = torch.nonzero(peaks, as_tuple=True)
+            if ks.numel() == 0:
+                continue
+            scores = response[ks, ys, xs]
+            ks, ys, xs, scores = ks.cpu().numpy(), ys.cpu().numpy(), xs.cpu().numpy(), scores.cpu().numpy()
+            order = np.lexsort((-scores, ks))  # by kernel, then score descending
+            ks, ys, xs, scores = ks[order], ys[order], xs[order], scores[order]
+            starts = np.flatnonzero(np.r_[True, ks[1:] != ks[:-1]])
+            ends = np.r_[starts[1:], len(ks)]
+            for a, b in zip(starts, ends):
+                r = group[int(ks[a])]
+                b = min(b, a + r['peaks'] * 4)
+                for y, x, sc in zip(ys[a:b], xs[a:b], scores[a:b]):
                     cx = (x - pad + r['w'] / 2) / downscale
                     cy = (y - pad + r['h'] / 2) / downscale
                     out[r['name']].append(dict(cx=float(cx), cy=float(cy), heading=float(r['heading']), bar_angle=float(r['angle']), proposer_score=float(sc), template_id=r['template'],

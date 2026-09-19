@@ -70,7 +70,7 @@ class HangarExpert:
     def posed(self, template, angle, scale):
         key = (template.id, round(angle, 1), round(scale, 4))
         if key not in self._posed:
-            bgr, mask = template.posed(angle, scale)
+            bgr, mask = template.posed(key[1], key[2])  # compute at the key: history-independent cache
             gray, high = features(bgr)
             self._posed[key] = (gray, high, mask)
             if len(self._posed) > 512:
@@ -97,12 +97,15 @@ class HangarExpert:
         rows, candidates = [], []
         for label in range(1, count):
             x, y, w, h, area = stats[label]
-            component = labels == label
-            touches_edge = x == 0 or y == 0 or x + w >= W or y + h >= H
-            candidate = dict(component_area=int(area), bbox_component=[int(x), int(y), int(x + w), int(y + h)], partial=bool(touches_edge))
             if area < 16:
                 continue
-            pts = np.column_stack(np.where(component))[:, ::-1].astype(np.float32)
+            touches_edge = x == 0 or y == 0 or x + w >= W or y + h >= H
+            candidate = dict(component_area=int(area), bbox_component=[int(x), int(y), int(x + w), int(y + h)], partial=bool(touches_edge))
+            # Work in the component's bbox plus a margin that covers the 9x9 dilate / 5x5 erode below: identical
+            # pixels to the full-image masks, without a full-image compare per component.
+            X1, Y1, X2, Y2 = max(0, x - 6), max(0, y - 6), min(W, x + w + 6), min(H, y + h + 6)
+            component = labels[Y1:Y2, X1:X2] == label
+            pts = (np.column_stack(np.where(component))[:, ::-1] + (X1, Y1)).astype(np.float32)
             (rcx, rcy), (rw, rh), rangle = cv2.minAreaRect(pts)
             long_side, short_side = max(rw, rh), min(rw, rh)
             heading = (rangle if rw >= rh else rangle + 90.) % 180.
@@ -124,8 +127,9 @@ class HangarExpert:
             if interior.sum() < 8:
                 interior = component
             ring = cv2.dilate(component.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool) & ~component
-            rim_contrast = float(np.median(L[ring]) - np.median(L[interior])) if ring.any() else 0.
-            interior_chroma = float(np.median(chroma[interior]))
+            Lc, Cc = L[Y1:Y2, X1:X2], chroma[Y1:Y2, X1:X2]
+            rim_contrast = float(np.median(Lc[ring]) - np.median(Lc[interior])) if ring.any() else 0.
+            interior_chroma = float(np.median(Cc[interior]))
             candidate.update(rim_contrast=rim_contrast, interior_chroma=interior_chroma)
             if interior_chroma > cfg.max_interior_chroma:
                 candidate['rejected_by'] = 'chroma'; candidates.append(candidate); continue
