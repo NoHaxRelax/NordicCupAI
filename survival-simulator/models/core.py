@@ -20,6 +20,7 @@ from models.entrapment.observed_trap_sites import observed_rectangles, available
 from models.entrapment.my_guide import guide
 from models.entrapment.bystander_avoidance import avoid_predators
 from models.entrapment.bait_nursery import BaitNursery
+from models.entrapment.guide_lookahead import chase_step
 
 
 def action_for(aid, **kwargs):
@@ -63,10 +64,20 @@ class Track:
 
 class EntrapmentPolicy:
     def __init__(self, seed=0, *, bait_overlap_seconds=20., bait_reserve_seconds=0., survival_settings=None,
-                 release_trap_food=False, nursery_size=0):
+                 release_trap_food=False, nursery_size=0, bait_food_lead_seconds=6.,
+                 guide_lookahead_ticks=3, share_guide_paths=True):
         if not math.isfinite(bait_overlap_seconds) or bait_overlap_seconds < 0.:
             raise ValueError('bait_overlap_seconds must be finite and nonnegative')
         self.bait_overlap_seconds = float(bait_overlap_seconds)
+        if not math.isfinite(bait_food_lead_seconds) or bait_food_lead_seconds < 0.:
+            raise ValueError('bait_food_lead_seconds must be finite and nonnegative')
+        self.bait_food_lead_seconds = float(bait_food_lead_seconds)
+        self.bait_navigation = {}
+        self.guide_corridors = []
+        if guide_lookahead_ticks not in (0,3):
+            raise ValueError('guide_lookahead_ticks must be 0 or 3')
+        self.guide_lookahead_ticks = guide_lookahead_ticks
+        self.share_guide_paths = share_guide_paths
         if not math.isfinite(bait_reserve_seconds) or bait_reserve_seconds < 0.:
             raise ValueError('bait_reserve_seconds must be finite and nonnegative')
         self.bait_reserve_seconds = float(bait_reserve_seconds)
@@ -241,8 +252,10 @@ class EntrapmentPolicy:
             excluded = self.retired_baits | {self.bait} | {t.guide_id for t in self.tracks.values()}
             selected = self._select_bait(states, excluded)
             active_life = 0. if self.bait is None else remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
+            food_lead = (self.bait_food_lead_seconds if selected is not None and
+                         states[selected[0]]['energy'] < states[selected[0]]['max_energy']-30. else 0.)
             due = self.bait is None or (selected is not None and
-                    active_life <= selected[1]+self.bait_overlap_seconds)
+                    active_life <= selected[1]+self.bait_overlap_seconds+food_lead)
             # Reserve a donor while it still gathers food. It cannot reproduce
             # or become a guide until the handoff, but never waits at the entry.
             self.reserved_bait = (selected[0] if selected is not None and not due
@@ -255,7 +268,7 @@ class EntrapmentPolicy:
                 self.bait_progress = None
                 self.event('replacement_dispatched', agent=self.incoming, current=self.bait,
                            conservative_travel_seconds=selected[1], active_lifetime_seconds=active_life,
-                           target_overlap_seconds=self.bait_overlap_seconds)
+                           target_overlap_seconds=self.bait_overlap_seconds, food_lead_seconds=food_lead)
         if self.incoming is not None: self.reserved_bait = None
         if self.reserved_bait is not None: self.roles[self.reserved_bait] = 'bait_candidate'
         for aid in self.retired_baits: self.roles[aid] = 'retired_bait'
@@ -332,6 +345,9 @@ class EntrapmentPolicy:
         if math.dist(pose.position, rear) < 3.: self.entered_rear.add(aid)
         target = self.site['goal'] if aid in self.entered_rear else rear
         plan = self.navigator.steer(aid, pose.position, target, self.now)
+        info = dict(target=list(target), phase='inside_rear' if aid in self.entered_rear else 'rear_approach',
+                    route_status=plan.status, fruit_skips={}, fruit_selected=None)
+        self.bait_navigation[aid] = info
         if plan.blocked or plan.waypoint is None:
             # Retry when geometry changes or a transient collision clears.
             if int(self.now*10) % 30 == 0: self.navigator.release(aid)
@@ -342,25 +358,37 @@ class EntrapmentPolicy:
         if (aid not in self.entered_rear and self.bait in states
                 and s['energy'] < s['max_energy']):
             deadline = remaining_life(states[self.bait]['energy'], states[self.bait]['age'])
+            info['bait_deadline_seconds'] = deadline
             segment = waypoint-pose.position
             length2 = float(segment @ segment)
             options = []
             for o in s['observations']:
-                if o['type'] != 'Fruit' or o['distance'] > 40.: continue
+                if o['type'] != 'Fruit' or o['distance'] > 60.: continue
+                def skip(reason):
+                    info['fruit_skips'][reason] = info['fruit_skips'].get(reason,0)+1
                 fruit = pose.position+rotate(np.array([o['distance']*math.cos(o['angle']),
                                                        o['distance']*math.sin(o['angle'])]), pose.heading)
                 fraction = float(np.clip((fruit-pose.position) @ segment/max(length2, 1e-9), 0., 1.))
-                if np.linalg.norm(fruit-pose.position-fraction*segment) > 15.: continue
-                if not self.navigator._clear(pose.position, fruit) or not self.navigator._clear(fruit, waypoint): continue
+                if np.linalg.norm(fruit-pose.position-fraction*segment) > 20.:
+                    skip('off_route'); continue
+                if not self.navigator._clear(pose.position, fruit) or not self.navigator._clear(fruit, waypoint):
+                    skip('wall'); continue
                 extra = max(0., float(np.linalg.norm(fruit-pose.position)+np.linalg.norm(waypoint-fruit)-math.sqrt(length2)))
-                if extra > 20.: continue
+                if extra > 30.:
+                    skip('long_detour'); continue
                 total = plan.remaining+math.dist(rear, self.site['goal'])+extra
                 travel = total/(max(.1, s['speed'])*.3*10.)+.2
                 life = remaining_life(s['energy']-total/.3*.05-6., s['age'])
                 if travel+5. < deadline and life >= travel+15.:
                     options.append((extra, o['distance'], fruit))
+                else:
+                    skip('handoff_deadline' if travel+5. >= deadline else 'energy_without_fruit')
             if options:
                 waypoint = min(options, key=lambda x: x[:2])[2]
+                info['fruit_selected'] = waypoint.tolist()
+        else:
+            info['fruit_ineligible'] = ('already_inside_rear' if aid in self.entered_rear else
+                                        'no_current_bait' if self.bait not in states else 'full_energy')
         x, y = local(pose, waypoint)
         angle = math.atan2(y, x)
         distance = min(s['speed'], math.hypot(x, y)/MOVE_PENALTY[s['biome']])
@@ -371,6 +399,7 @@ class EntrapmentPolicy:
         aid = track.guide_id
         pose = self.estimator.poses[aid]
         agent = dict(s)
+        track.memory['_lookahead_ticks'] = self.guide_lookahead_ticks
         # Use association based exclusively on this agent's observation. All
         # observations remain available for collision/survival steering.
         target = track.observers.get(aid)
@@ -412,6 +441,55 @@ class EntrapmentPolicy:
             result.append(obs)
         return result
 
+    def _plan_guides(self, states):
+        """Plan guides first so every other agent sees the same intended move."""
+        actions = {}
+        self.guide_corridors = []
+        if self.site is None or self.bait is None:
+            return actions
+        for track in self.tracks.values():
+            aid = track.guide_id
+            if aid not in states or self.roles.get(aid) != 'guide':
+                continue
+            action = self._guide_action(track,states[aid])
+            actions[aid] = action
+            pose = self.estimator.poses[aid]
+            if self.now-track.seen > .15 or pose.uncertainty > 8.:
+                continue
+            debug = track.memory.get('debug',{})
+            forecast = debug.get('forecast',{}) if isinstance(debug,dict) else {}
+            path = forecast.get('predator_path')
+            if path:
+                points = [pose.position+rotate(p,pose.heading) for p in path]
+            else:
+                # An intentional delivery hold or recovery can bypass search.
+                # Extrapolate its actual first command conservatively instead.
+                delta = rotate((action.move_distance*MOVE_PENALTY[states[aid]['biome']]*math.cos(action.move_direction),
+                                action.move_distance*MOVE_PENALTY[states[aid]['biome']]*math.sin(action.move_direction)),pose.heading)
+                points = [track.position]
+                for step in range(1,4):
+                    points.append(np.asarray(chase_step(points[-1],pose.position+step*delta)))
+            self.guide_corridors.append(dict(guide=aid,group=pose.group_id,
+                                             points=[list(map(float,p)) for p in points]))
+        return actions
+
+    def _guided_paths(self, aid, *, rear_approach=False):
+        if not self.share_guide_paths:
+            return []
+        pose = self.estimator.poses.get(aid)
+        if pose is None or pose.uncertainty > 8.:
+            return []
+        result = []
+        for corridor in self.guide_corridors:
+            if corridor['guide'] == aid or corridor['group'] != pose.group_id:
+                continue
+            points = corridor['points']
+            if rear_approach and all(math.dist(p,self.site['goal']) <= 40. for p in points):
+                continue
+            if min(math.dist(p,pose.position) for p in points) <= 320.:
+                result.append([local(pose,p) for p in points])
+        return result
+
     def __call__(self, states_list, sim_time):
         self.now = sim_time
         states = {s['agent_id']: s for s in states_list}
@@ -429,6 +507,8 @@ class EntrapmentPolicy:
                             remaining_life(states[self.bait]['energy'], states[self.bait]['age']))
         self._bait_roles(states)
         self._track_predators(states)
+        guide_actions = self._plan_guides(states)
+        self.bait_navigation = {}
         actions = {}
         for aid, s in states.items():
             role = self.roles.get(aid)
@@ -454,12 +534,14 @@ class EntrapmentPolicy:
                         shared = [o for o in shared if not occupant(o)]
                     # The blanket keep-out zone is for gatherers. Bait must
                     # reach the rear waypoint; use actual shared sightings here.
-                    action, avoiding = avoid_predators(action, avoidance_state, None, shared)
+                    action, avoiding = avoid_predators(action, avoidance_state, None, shared,
+                        self._guided_paths(aid,rear_approach=aid in self.entered_rear or rear_approach))
+                    if aid in self.bait_navigation:
+                        self.bait_navigation[aid]['avoiding_predator'] = avoiding
                     if avoiding:
                         self.navigator.release(aid)
             elif role == 'guide' and self.site is not None and self.bait is not None:
-                track = next(t for t in self.tracks.values() if t.guide_id == aid)
-                action = self._guide_action(track, s)
+                action = guide_actions[aid]
             else:
                 role = ('nursery_farmer' if aid in self.nursery.members else 'nursery_child'
                         if aid in self.nursery.children else 'bait_candidate'
@@ -473,7 +555,7 @@ class EntrapmentPolicy:
                     pose = self.estimator.poses.get(aid)
                     if pose is not None and pose.group_id == self.site_group:
                         bait_local = local(pose, self.site['goal'])
-                action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid))
+                action, avoiding = avoid_predators(action, s, bait_local, self._shared_predators(aid), self._guided_paths(aid))
                 if avoiding and aid in self.nursery.members:
                     action = action.model_copy(update={'spawn_agent': False})
                 if avoiding and aid != self.reserved_bait and aid not in self.nursery.members | self.nursery.children:
@@ -514,6 +596,9 @@ class EntrapmentPolicy:
     def snapshot(self):
         return dict(phase='exploration' if self.site is None else 'orchard_and_entrapment',
                     bait_overlap_seconds=self.bait_overlap_seconds,
+                    bait_food_lead_seconds=self.bait_food_lead_seconds,
+                    guide_lookahead_ticks=self.guide_lookahead_ticks, share_guide_paths=self.share_guide_paths,
+                    bait_navigation=self.bait_navigation, guide_corridors=self.guide_corridors,
                     bait_reserve_seconds=self.bait_reserve_seconds, reserved_bait=self.reserved_bait,
                     release_trap_food=self.release_trap_food,
                     nursery=self.nursery.snapshot(),

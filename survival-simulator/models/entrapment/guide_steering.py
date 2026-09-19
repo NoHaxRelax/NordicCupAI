@@ -5,6 +5,7 @@ from shapely.geometry import LineString, Point
 from shapely.ops import unary_union
 
 from models.entrapment.guide_pathfinding import RoutePlanner, fixed_frame
+from models.entrapment.guide_lookahead import search
 
 HEARING_TARGET = 55.0  # Five units inside the native 60-unit hearing circle.
 VISION_TARGET = 235.0
@@ -33,13 +34,31 @@ def prioritize(action, bait, edges, agent, memory, target=None):
     # rel_dir is the bearing FROM the predator TO us minus its heading.
     heading = (math.atan2(-p[1], -p[0]) - target['rel_dir']
                if 'rel_dir' in target else None)
-    to_fixed, _ = fixed_frame(bait, edges)
+    to_fixed, to_local = fixed_frame(bait, edges)
     if '_steering_geometry' not in memory:
         fixed_edges = [(to_fixed(a), to_fixed(b)) for a, b in edges]
         memory['_steering_geometry'] = (
             RoutePlanner(fixed_edges, clearance=5.5, exclusion_radius=memory.get('_trap_exclusion_radius', 0.)),
             unary_union([LineString(e) for e in fixed_edges]))
     geometry, walls = memory['_steering_geometry']
+    if '_forecast_pred_geometry' not in memory:
+        memory['_forecast_pred_geometry'] = RoutePlanner(
+            [(to_fixed(a),to_fixed(b)) for a,b in edges], clearance=10.)
+    found = (search(action, bait, agent, memory, positions, predators.index(target),
+                    geometry, walls, memory['_forecast_pred_geometry'], to_fixed, to_local)
+             if memory.get('_lookahead_ticks',3) else None)
+    if found is not None:
+        chosen, forecast = found
+        debug = memory.get('debug')
+        if not isinstance(debug,dict):
+            debug = {'mode': debug}; memory['debug'] = debug
+        debug['forecast'] = forecast
+        debug['steering'] = dict(selected_move=round(chosen['move_distance'],3),
+            sprint_selected=chosen['move_distance'] > agent['speed'],
+            energy=round(agent['energy'],3),
+            low_energy_walk_cap=agent['energy'] < agent['max_energy']/5,
+            safe=forecast['predicted_safe'])
+        return chosen
     origin = to_fixed((0., 0.))
     modifier = TERRAIN[agent['biome']]
     energy = agent.get('energy', math.inf)

@@ -11,15 +11,23 @@ from shapely.geometry import LineString, Point
 TERRAIN = {'forest': 1., 'grassland': 1., 'desert': .8, 'swamp': .5, 'river': .3}
 
 
-def avoid_predators(action, state, bait=None, shared_predators=()):
+def avoid_predators(action, state, bait=None, shared_predators=(), guided_paths=()):
     predators = [o for o in state['observations'] if o['type'] == 'Predator'] + list(shared_predators)
-    if not predators and (bait is None or math.hypot(*bait) > 125.):
+    if not predators and not guided_paths and (bait is None or math.hypot(*bait) > 125.):
         return action, False
     walls = [LineString(o['coords']) for o in state['observations'] if o['type'] == 'Edge']
     positions = [(o['distance']*math.cos(o['angle']), o['distance']*math.sin(o['angle']))
                  for o in predators]
     headings = [math.atan2(-p[1], -p[0])-o['rel_dir'] if 'rel_dir' in o else None
                 for p, o in zip(positions, predators)]
+    corridors = [LineString(points) for points in guided_paths if len(points) >= 2]
+    # Reserve the incoming predator's swept hearing area and anticipated
+    # forward cones. These are forecasts shared by its guide, not sightings.
+    for points in guided_paths:
+        for previous, point in zip(points, points[1:]):
+            if math.dist(previous,point) > .1:
+                positions.append(point)
+                headings.append(math.atan2(point[1]-previous[1],point[0]-previous[0]))
     cap = state['sprint_speed'] if state['energy'] >= state['max_energy']/5 else state['speed']
     modifier = TERRAIN[state['biome']]
     desired_length = min(cap, action.move_distance)
@@ -49,6 +57,10 @@ def avoid_predators(action, state, bait=None, shared_predators=()):
                     bearing = abs(math.atan2(math.sin(bearing), math.cos(bearing)))
                     if bearing < math.radians(40):
                         vision = max(vision, min(265.-distance, distance*(math.radians(40)-bearing)))
+        for corridor in corridors:
+            distance = path.distance(corridor)
+            contact = max(contact, max(0., 31.-distance))
+            hearing = max(hearing, max(0., 76.-distance))
         # A retained predator may lie up to 40 units from bait: reserve its
         # 60-unit hearing radius plus margin without needing hidden positions.
         trap = max(0., 105.-math.dist(q, bait)) if bait is not None else 0.

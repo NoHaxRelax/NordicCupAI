@@ -6,6 +6,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Lock
 import io
 import json
+import math
 import os
 from pathlib import Path
 import sys
@@ -63,6 +64,16 @@ class Replay:
             x, y = round(a.x*scale), round(a.y*scale)
             if role in colors: pygame.draw.circle(self.screen, colors[role], (x, y), 9, 2)
             self.screen.blit(font.render(str(a.agent_id), True, (255, 255, 255)), (x+7, y+3))
+            guide = row['policy'].get('guides',{}).get(str(a.agent_id),{})
+            debug = guide.get('debug')
+            forecast = debug.get('forecast',{}) if isinstance(debug,dict) else {}
+            for key,color in (('guide_path',(100,240,255)),('predator_path',(255,145,120))):
+                for px,py in forecast.get(key,[]):
+                    # Forecast coordinates are guide-local; the spectator's
+                    # actual pose is used only to render them over the sprites.
+                    fx = a.x+px*math.cos(a.direction)-py*math.sin(a.direction)
+                    fy = a.y+px*math.sin(a.direction)+py*math.cos(a.direction)
+                    pygame.draw.circle(self.screen,color,(round(fx*scale),round(fy*scale)),3,1)
         output = io.BytesIO()
         pygame.image.save(self.screen, output, 'replay.png')
         return output.getvalue()

@@ -118,3 +118,12 @@ V3 size screen on the development seed:
 | 4 | 650.99 | 612.1 | 0 / 5 |
 
 This is a tuning screen on one map, not a cross-map estimate.
+
+Completed free-PC paired six-map screen of v1: mean score **942.81 without
+nursery, 921.01 with nursery**; mean post-first-arrival estimated bait gaps
+28.30 vs 116.35 seconds. Thus v1 is not an improvement on these maps.
+
+V4 food-allocation pilot: both observed nursery children (27 and 187) reached
+bait, score984.07, extinction939.9, estimated gaps124.3. This improves the
+child-delivery mechanism, but the full-game goal remains unmet; nursery stays
+optional. The separate Runpod v3 batch remains immutable.
