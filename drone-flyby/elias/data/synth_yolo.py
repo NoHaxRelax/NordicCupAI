@@ -71,6 +71,8 @@ def _excluded_boxes(store, scene, frame):
     hidden = _G.setdefault('hidden', json.loads((HERE/'validation_hidden.json').read_text())['zones'] if (HERE/'validation_hidden.json').exists() else {})
     if str(frame) in hidden:
         out.append(hidden[str(frame)])
+    hidden2 = _G.setdefault('hidden2', json.loads((HERE/'validation_hidden2.json').read_text())['zones'] if (HERE/'validation_hidden2.json').exists() else {})
+    out.extend(hidden2.get(str(frame), []))      # several boxes per frame: the objects found on 2026-09-19
     return np.array(out, float).reshape(-1, 4)
 
 
