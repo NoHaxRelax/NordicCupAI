@@ -219,6 +219,9 @@ Re-read this file at every loop wake-up. Update the status column as stages comp
 - Open for Oscar: reviewed outlines for the auto sprites (review sheet in this folder); a legal live sweep under the
   organizer's camera limits; whether to spend validation-scene data on sprites once he allows it.
 
+- 22:45 full_pass.sh now exports DRONE_EXPERT_WINDOW_GPU with a 2000/4000 MB per-shard budget (speed session's tip:
+  3.4 -> 2.7 s per tile, identical summaries). Milestone 11 pushed (7918dab). Y-A19 (sprite caps 12) recording on pod 1.
+
 ## Open items / decisions to revisit
 - Helicopter template is the unreviewed v4 mask (`review_status=claude-auto`).
 - Condor full-pixel branch regressed to 12/42 after the part model took heading; comparison branch only.

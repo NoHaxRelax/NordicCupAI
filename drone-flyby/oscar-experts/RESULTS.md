@@ -620,3 +620,12 @@ Validation API, attempt Y-A18-caps8 from pod 1 (22:30, full run first try): **0.
 delivered (0.00138 per delivered frame; Y-A13 0.00131, Y-A2 0.00123). Per delivered frame the proxy ordering holds
 (caps 8 > 95-sprite bank > 86-sprite bank); the raw API number is dominated by how many frames the organizer's
 pacing delivers (165-191 across attempts).
+
+## Recording Y-A19 (22:55): sprite caps 12 (every sprite of the multi-sprite classes takes part): proxy **0.315**
+
+Caps 6 / 8 / 12: 0.305 / 0.310 / 0.315 at 2.7 / 2.9 / 3.3 s per L1 frame. Every additional sprite view adds recall on
+the validation scene; caps 12 deployed (working tree and pod 1). Submitted from pod 1.
+
+Validation API, attempt Y-A19-caps12 from pod 1 (23:05, full run first try): **0.2302** with 172/249 frames
+(0.00134 per delivered frame; Y-A18 0.00138, Y-A13 0.00131, Y-A2 0.00123). The last three configurations are
+indistinguishable on the API within the delivery noise; the proxy separates them by 0.005 each.
