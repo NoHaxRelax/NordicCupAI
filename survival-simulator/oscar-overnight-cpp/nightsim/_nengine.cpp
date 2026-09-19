@@ -2130,7 +2130,9 @@ PyObject* Engine_dbg_trap(EngineObject* self, PyObject*) {
     self->pol->groups.each([&](const int64_t&, orchard::GroupP& g) { if (g->has_trap && g->agents.size() >= bn) { best = g; bn = g->agents.size(); } });
     if (!best) Py_RETURN_NONE;
     long long conf = 0; for (auto& w : best->walls) if (self->pol->confirmed(w)) conf++;
-    return Py_BuildValue("(ddddLLLL)", best->trap.mouth.x, best->trap.mouth.y, best->trap.goal.x, best->trap.goal.y, (long long)best->bait, (long long)best->retired.size(), (long long)best->guide_done, conf);
+    return Py_BuildValue("(ddddLLLL(LLLLLLLLLLLL))", best->trap.mouth.x, best->trap.mouth.y, best->trap.goal.x, best->trap.goal.y, (long long)best->bait, (long long)best->retired.size(), (long long)best->guide_done, conf,
+                         (long long)best->ep_start, (long long)best->ep_chase, (long long)best->ep_state3, (long long)best->ep_hand, (long long)best->ep_died, (long long)best->ep_lost,
+                         (long long)best->d_far, (long long)best->d_multi, (long long)best->d_slow, (long long)best->d_stuck, (long long)best->d_early, (long long)best->d_state1);
 }
 PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
     // counters from the policy's predator layer

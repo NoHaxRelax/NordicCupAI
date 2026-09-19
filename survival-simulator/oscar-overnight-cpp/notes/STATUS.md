@@ -120,3 +120,10 @@ Log (newest last)
   with 70-unit pose errors, stale sighting targets while a second predator is 33 away. Fixes: guides must be
   young with >= 120 energy (fast preferred), chase = predator displacement within 37 degrees of us AND closing.
   f3 running (evade / trap / trap with 200-energy guides / bait-only).
+- 02:53 f3 (192 seeds): evade 923 s; bait-only (no guides) 754 (-169); trap 702; trap with 200-energy guides
+  714; guides done still 0. A standing bait alone costs ~170 s (one forager permanently out of the economy while
+  predators keep the colony churning). f4 adds a guide funnel (started -> chase -> lane point -> handoff / died / lost).
+- 02:56 f4 guide funnel (192 games): 2206 guide episodes (11.5/game) -> chase established 2138 (97%) ->
+  reached the lane point 292 (13%) -> handoff spot 28 (1%); 1919 guides died en route (87%), 179 lost. The
+  problem is the LEAD walk, not acquisition. f5 attributes the deaths (far from lane / >=2 predators / slow /
+  stuck against walls / early).

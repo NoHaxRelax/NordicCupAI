@@ -252,6 +252,11 @@ struct Group {
     std::vector<int64_t> retired;   // former baits: stay frozen in the crevice until they die
     int64_t guide = -1; int guide_state = 0; double guide_since = 0., guide_seen = -1e9; P2 guide_pred{}; int64_t guide_done = 0;
     double guide_dprev = -1., guide_closing_t = -1e9; P2 guide_pred_prev{}; bool guide_has_prev = false;
+    // funnel counters (diagnostics): episodes started / reached LEAD with a real chase / reached the lane point (state 3) / ended by death / lost / handoff position reached
+    int64_t ep_start = 0, ep_chase = 0, ep_state3 = 0, ep_died = 0, ep_lost = 0, ep_hand = 0; bool ep_chased = false, ep_s3 = false, ep_h = false;
+    // last known guide status (for death attribution): distance to lane point, predators within 120, walk speed, stuck ticks, ticks alive
+    double gl_dT = 0., gl_speed = 0.; int64_t gl_npred = 0, gl_stuck = 0, gl_ticks = 0; P2 gl_pos{};
+    int64_t d_far = 0, d_multi = 0, d_slow = 0, d_stuck = 0, d_early = 0, d_state1 = 0;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
@@ -1446,7 +1451,16 @@ public:
     // states: 1 ACQUIRE (get within guide_acq so it locks on), 2 LEAD (face it, back toward the lane point, keep
     // guide_near..guide_far), 3 DELIVER (back through the mouth past the bait, out the rear or stop deeper), 4 DONE.
     void run_guide(Group& g, std::unordered_map<int64_t, Plan>& plans) {
-        if (g.guide >= 0 && (!minds.has(g.guide) || M(g.guide).group != g.id)) { g.guide = -1; g.guide_state = 0; }
+        if (g.guide >= 0 && (!minds.has(g.guide) || M(g.guide).group != g.id)) {
+            g.ep_died++;
+            if (g.gl_dT > 300.) g.d_far++;
+            if (g.gl_npred >= 2) g.d_multi++;
+            if (g.gl_speed < 12.) g.d_slow++;
+            if (g.gl_stuck >= 5) g.d_stuck++;
+            if (g.gl_ticks < 30) g.d_early++;
+            if (g.guide_state == 1) g.d_state1++;
+            g.guide = -1; g.guide_state = 0;
+        }
         // nearest shared predator sighting that is not already held at the mouth
         bool have = false; P2 pp{}; double best = OINF;
         for (auto& q : g.pseen) {
@@ -1472,7 +1486,7 @@ public:
                 if (sc > bs) { bs = sc; bg = a; }
             });
             if (bg < 0) return;
-            g.guide = bg; g.guide_state = 1; g.guide_since = time;
+            g.guide = bg; g.guide_state = 1; g.guide_since = time; g.ep_start++; g.ep_chased = g.ep_s3 = g.ep_h = false; g.gl_ticks = 0; g.gl_stuck = 0; g.gl_pos = M(bg).pose->p;
             Mind& m = M(bg);
             if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(bg);
             m.has_post = false;
@@ -1482,6 +1496,13 @@ public:
         Mind& m = M(g.guide); const AState& s = st(g.guide); const PoseObj& ps = *m.pose;
         double walk = pmin(s.speed, s.sprint);
         double dP, angP; local_of(ps, g.guide_pred, dP, angP);
+        {   // status for death attribution
+            g.gl_dT = dist(ps.p, g.trap.out); g.gl_speed = walk; g.gl_ticks++;
+            int64_t np_ = 0; for (auto& q : g.pseen) if (dist_lt(q.p, ps.p, 120.)) np_++;
+            g.gl_npred = np_;
+            if (dist_lt(ps.p, g.gl_pos, 3.)) g.gl_stuck++; else g.gl_stuck = 0;
+            g.gl_pos = ps.p;
+        }
         bool fresh = time - g.guide_seen < 0.15;
         double closing_rate = 0.;   // units per tick the gap shrank since the last sighting
         if (fresh) {
@@ -1495,7 +1516,7 @@ public:
         }
         bool chasing = time - g.guide_closing_t < 1.5;
         if (g.guide_state == 1) {
-            if (time - g.guide_seen > P.guide_lost) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; return; }
+            if (time - g.guide_seen > P.guide_lost) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
             if (fresh && (dP <= P.guide_acq || chasing)) { g.guide_state = 2; }
             else {   // get into its hearing range fast: sprint when it is not coming to us
                 double dd, dir, turn; go_to(m, s, g.guide_pred, P.guide_acq - 10., dd, dir, turn);
@@ -1507,7 +1528,8 @@ public:
             if (time - g.guide_seen > P.guide_lost) { g.guide_state = 1; return; }
             if (dP > P.guide_acq && !chasing && time - g.guide_closing_t > 2.) { g.guide_state = 1; return; }
             double dT, angT; local_of(ps, g.trap.out, dT, angT);
-            if (dT < 12. && chasing && dP < P.guide_far + 30.) { g.guide_state = 3; }
+            if (chasing && !g.ep_chased) { g.ep_chased = true; g.ep_chase++; }
+            if (dT < 12. && chasing && dP < P.guide_far + 30.) { g.guide_state = 3; if (!g.ep_s3) { g.ep_s3 = true; g.ep_state3++; } }
             else {
                 // stay in front of the predator: never pass it, keep it in its senses (< ~200), never let it reach 15
                 double step = walk, dir = angT;
@@ -1527,7 +1549,7 @@ public:
             // eaten here is allowed (the predator then hears the bait and holds at the mouth)
             if (time - g.guide_seen > P.guide_lost || dP > P.guide_far + 120. || (!chasing && time - g.guide_closing_t > 3.)) { g.guide_state = 1; return; }
             double dB = dist(ps.p, g.trap.goal);
-            if (dB <= P.guide_hand) { plans[g.guide] = Plan{0., 0., fresh ? angP : 0.}; return; }
+            if (dB <= P.guide_hand) { if (!g.ep_h) { g.ep_h = true; g.ep_hand++; } plans[g.guide] = Plan{0., 0., fresh ? angP : 0.}; return; }
             double dM, angM; local_of(ps, g.trap.mouth, dM, angM);
             plans[g.guide] = Plan{pmin(walk, dB - P.guide_hand), angM, fresh ? angP : 0.};
             return;
