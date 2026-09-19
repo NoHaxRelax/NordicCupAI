@@ -50,6 +50,12 @@ ownership; this probe changes initial assignment only. Normal following
 detection and capture avoidance still apply. The sighting itself is delayed,
 so this remains an estimate of who is being chased.
 
-The standalone dev-seed game is running with destination filtering off and
-all frames retained in `guide-chased-only-20260919`. The new option remains
-off until outcomes support adoption. No paid compute was used.
+The completed dev-seed game regressed to **722.54 score / 677.0 seconds**,
+compared with the default's 805.35 / 752.0. It had one delivery arrival from
+12 assignments (default: two from 25), 72.8 estimated bait-gap seconds, and
+one premature sprint-available capture. That guide's sprint trait was 11.39
+in river; it still counts as a failure. Mean energy / capacity was 0.265.
+The option remains **off**. Selecting someone apparently detectable at
+assignment does not establish sustained following or successful delivery.
+Summary and manifest are `guide-chased-only-*.json`; every frame is retained
+in `logs/entrapment-iteration/guide-chased-only-20260919`. No paid compute was used.
