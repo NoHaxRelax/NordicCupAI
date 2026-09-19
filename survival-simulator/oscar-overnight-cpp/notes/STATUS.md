@@ -655,3 +655,11 @@ Log (newest last)
 - 13:05 Keeper tuning on the checkpoints (keeper energy threshold 50/0, forage weight 6, keeper radius 200):
   -91..-213 at 900 s, -94..+9 at 1500 s (n 24 / 11, noisy); held after 120 s still <= 0.7 of 8. No variant
   sustains the hold. Pods n7/n8/n9 stopped (idle). Spend ~$60 of $140.
+- 13:25 OSCAR: scratch the predator (trap) policy; go back to the survival policy with predators and
+  iteratively improve for long-term survival. Baseline = pred_best_0400 (survival policy r21s0c2 + evasion, ~1530 s
+  with predators; evasion kept because it is a pure survival behaviour worth +600 s). All trap/guide params off.
+  First: f48 (energy floor, ripe fruit only) confirmed NEGATIVE on 432 fresh seeds (-79..-97), closed.
+  Loop: (1) broad random search around the baseline over 42 params (space_v14 survival params + 5 evasion
+  params, space_pred1.json), 100 candidates x 64 paired seeds (9000-9063) on 5 new pods n10-n14 (old pods cannot
+  restart, hosts full); (2) top candidates re-run on 384 fresh seeds; (3) winner on 768 more; late-game ideas also
+  on fork-paired checkpoints (lategame.py). Budget: ~$62 of $140 used, 5 pods = $4.80/h.
