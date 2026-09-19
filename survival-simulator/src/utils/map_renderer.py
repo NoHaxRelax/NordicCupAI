@@ -10,6 +10,7 @@ import math
 
 import numpy as np
 import pygame
+from scipy.ndimage import gaussian_filter
 
 
 BACKGROUND = (12, 19, 28)
@@ -17,7 +18,20 @@ PANEL = (18, 28, 39)
 UNKNOWN = (8, 14, 22)
 TEXT = (224, 233, 241)
 MUTED = (140, 160, 177)
-TRAP_COLORS = {"wall": (255, 190, 65), "slot": (55, 231, 163), "shelter": (188, 150, 247)}
+BELIEF = (240, 86, 98)
+BELIEF_STALE = (150, 96, 108)
+# One-hue sequential ramp for predator density. Red matches the predator marks
+# already in the world view, so it is a domain encoding rather than a palette
+# choice; lightness carries the magnitude, which is what keeps it readable
+# under colour-blind vision and in greyscale. Validated as an ordinal ramp
+# against this panel's surface (#080e16): one hue (4 degrees of spread),
+# monotone lightness, adjacent dL >= 0.06, dimmest painted step 2.79:1.
+# Density zero is never painted, so the ramp recedes to fully transparent.
+BELIEF_RAMP = ((171, 37, 39), (217, 60, 59), (238, 113, 105), (255, 170, 156))
+BELIEF_CELL = 6          # raster cell in screen pixels
+BELIEF_SIGMA_CELLS = 2.2  # smoothing only; extent stays the particle spread
+BELIEF_GAMMA = .45
+BELIEF_MAX_ALPHA = 225
 BIOME_COLORS = {
     "forest": (41, 118, 61), "grassland": (96, 174, 75),
     "swamp": (85, 112, 95), "desert": (210, 167, 95),
@@ -67,7 +81,7 @@ class MapRenderer:
         self.dragging = None
         self.last_mouse = (0, 0)
         self.show_biome_estimates = True
-        self.show_trap_estimates = True
+        self.show_predator_belief = True
         self.biome_surfaces = {}
 
     def _text(self, surface, text, position, color=TEXT, font=None, max_width=None):
@@ -107,8 +121,8 @@ class MapRenderer:
                 view.pan = pointer - (pointer - view.pan) * (view.zoom / previous)
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_b:
             self.show_biome_estimates = not self.show_biome_estimates
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_t:
-            self.show_trap_estimates = not self.show_trap_estimates
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+            self.show_predator_belief = not self.show_predator_belief
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_f:
             key = self._view_at(self.last_mouse)
             targets = [self.views[key]] if key in self.views else self.views.values()
@@ -131,7 +145,6 @@ class MapRenderer:
             points += [tree["position"] for tree in group.get("trees", [])]
             points += [sample["position"] for sample in group.get("biomes", [])]
             points += [edge[name] for edge in group.get("edges", []) for name in ("start", "end")]
-            points += [site["bait"] for site in (group.get("trap_estimate") or {}).get("sites", [])]
         if not points:
             points = [(0, 0)]
         low = pygame.Vector2(min(p[0] for p in points), min(p[1] for p in points))
@@ -174,9 +187,9 @@ class MapRenderer:
         self._text(surface, f"Cluster {group_id}  |  {status}", (rect.x + 10, rect.y + 7),
                    (120, 219, 179) if anchored else TEXT, max_width=rect.width - 20)
         counts = f'{len(agents)} agents   {len(group.get("edges", []))} edges   {len(group.get("biomes", []))} biome samples'
-        traps = group.get("trap_estimate")
-        if traps is not None:
-            counts += f'   {len(traps["sites"])} potential traps' + (' (stale)' if traps.get("stale") else '')
+        belief = group.get("predator_belief")
+        if belief and belief.get("enabled"):
+            counts += f'   {len(belief.get("tracks", []))} predator beliefs'
         self._text(surface, counts, (rect.x + 10, rect.y + 28), MUTED,
                    self.small_font, rect.width - 20)
         plot = pygame.Rect(rect.x + 7, rect.y + 49, max(1, rect.width - 14), max(1, rect.height - 73))
@@ -271,8 +284,9 @@ class MapRenderer:
             self._dashed(history_surface, color, view.pixel(observer["position"]), view.pixel(target["position"]))
         if subdued_history:
             surface.blit(history_surface, (0, 0))
-        if traps is not None and self.show_trap_estimates:
-            self._draw_trap_estimate(surface, view, traps)
+        belief = group.get("predator_belief")
+        if belief and self.show_predator_belief:
+            self._draw_predator_belief(surface, plot, view, belief)
         roles = snapshot.get("roles", {})
         labels = []
         markers = [pygame.Rect(view.pixel(agent["position"]), (0, 0)).inflate(14, 14)
@@ -333,26 +347,108 @@ class MapRenderer:
         self._text(surface, footer, (rect.x + 10, rect.bottom - 20), MUTED,
                    self.small_font, rect.width - 20)
 
-    def _draw_trap_estimate(self, surface, view, estimate):
-        for site in estimate.get("sites", []):
-            kind = site["kind"]
-            color = MUTED if estimate.get("stale") else TRAP_COLORS[kind]
-            x, y = view.pixel(site["bait"])
-            if kind != "shelter":
-                px, py = view.pixel(site["predator_side"])
-                self._dashed(surface, color, (x, y), (px, py))
-                pygame.draw.line(surface, color, (px - 5, py - 5), (px + 5, py + 5), 2)
-                pygame.draw.line(surface, color, (px - 5, py + 5), (px + 5, py - 5), 2)
-            if not surface.get_clip().inflate(28, 28).collidepoint(x, y):
+    def _belief_density(self, plot, view, tracks):
+        """Accumulate the tracks' particle weights into a screen-space raster.
+
+        Splatting in pixel space rather than world space means pan and zoom
+        need no separate handling. The Gaussian is a smoothing kernel only, a
+        couple of cells wide, so the extent of the blob stays the particle
+        spread the filter actually holds rather than an invented bandwidth.
+
+        Returns density normalised so 1.0 is the peak one fully localised
+        predator would produce. That keeps the colour meaning fixed from frame
+        to frame, which a per-frame max normalisation would not.
+        """
+        width = max(2, math.ceil(plot.width / BELIEF_CELL))
+        height = max(2, math.ceil(plot.height / BELIEF_CELL))
+        grid = np.zeros((height, width))
+        for track in tracks:
+            points = track.get("particles") or ()
+            weights = track.get("weights") or ()
+            if len(weights) != len(points):
+                weights = [1. / max(1, len(points))] * len(points)
+            for (px, py), weight in zip((view.pixel(point) for point in points), weights):
+                column = int((px - plot.x) // BELIEF_CELL)
+                row = int((py - plot.y) // BELIEF_CELL)
+                if 0 <= row < height and 0 <= column < width:
+                    grid[row, column] += weight
+        if not grid.any():
+            return None
+        grid = gaussian_filter(grid, BELIEF_SIGMA_CELLS, mode="constant")
+        peak = 1. / (2 * math.pi * BELIEF_SIGMA_CELLS ** 2)
+        return np.clip(grid / peak, 0., 1.)
+
+    def _draw_predator_belief(self, surface, plot, view, belief):
+        """Overlay the belief as a red density field, plus a per-track summary.
+
+        Nothing here is a predator position: it is where the propagated belief
+        says one could be. A one-hue sequential ramp carries that magnitude,
+        with lightness doing the work so it survives colour-blind vision and
+        greyscale, and red chosen to match the predator marks already used in
+        the world view rather than as a free palette choice. Zero density is
+        fully transparent so the map underneath stays readable, which is the
+        overlay's version of a sequential ramp's lightest step receding into
+        the surface.
+        """
+        tracks = belief.get("tracks", [])
+        if not tracks:
+            return
+        density = self._belief_density(plot, view, tracks)
+        if density is not None:
+            # Gamma below one lifts the faint tail into view; without it a
+            # diffuse belief is technically drawn and practically invisible.
+            shaped = density ** BELIEF_GAMMA
+            index = shaped * (len(BELIEF_RAMP) - 1)
+            low = np.clip(np.floor(index).astype(int), 0, len(BELIEF_RAMP) - 1)
+            high = np.clip(low + 1, 0, len(BELIEF_RAMP) - 1)
+            blend = (index - low)[..., None]
+            ramp = np.array(BELIEF_RAMP, dtype=float)
+            rgb = ramp[low] * (1 - blend) + ramp[high] * blend
+            alpha = np.clip(shaped * BELIEF_MAX_ALPHA, 0, BELIEF_MAX_ALPHA)
+            field = pygame.Surface((density.shape[1], density.shape[0]), pygame.SRCALPHA)
+            # surfarray is column-major in (x, y); the raster is (row, column).
+            pygame.surfarray.pixels3d(field)[:] = rgb.transpose(1, 0, 2).astype(np.uint8)
+            pygame.surfarray.pixels_alpha(field)[:] = alpha.T.astype(np.uint8)
+            surface.blit(pygame.transform.smoothscale(field, plot.size), plot.topleft)
+        for track in tracks:
+            unseen = max(0., float(track.get("seconds_unseen") or 0.))
+            color = BELIEF if unseen < 1. else BELIEF_STALE
+            centre = view.pixel(track["mean"])
+            if not plot.inflate(30, 30).collidepoint(centre):
                 continue
-            if kind == "shelter":
-                pygame.draw.circle(surface, UNKNOWN, (x, y), 10)
-                pygame.draw.circle(surface, color, (x, y), 10, 3)
-            else:
-                points = ([(x, y - 12), (x + 11, y + 9), (x - 11, y + 9)] if kind == "wall" else
-                          [(x, y - 12), (x + 12, y), (x, y + 12), (x - 12, y)])
-                pygame.draw.polygon(surface, UNKNOWN, points)
-                pygame.draw.polygon(surface, color, points, 3)
+            # A hollow diamond for the weighted mean, so it cannot be mistaken
+            # for the filled circles used for actually observed agents.
+            x, y = centre
+            pygame.draw.polygon(surface, color,
+                                [(x, y - 9), (x + 9, y), (x, y + 9), (x - 9, y)], 2)
+            heading = track.get("heading")
+            if heading is not None:
+                pygame.draw.line(surface, color, centre,
+                                 (x + 22 * math.cos(heading), y + 22 * math.sin(heading)), 2)
+            resting = float(track.get("resting_probability") or 0.)
+            label = f'P{track["track_id"]}'
+            if unseen > 0.05:
+                label += f' {unseen:.1f}s'
+            if resting > .25:
+                label += f' rest {resting:.0%}'
+            self._text(surface, label, (x + 11, y - 20), TEXT, self.small_font)
+
+    def _draw_belief_scale(self, surface, position, width=150):
+        """A ramp strip, because a density field without one is decoration."""
+        x, y = position
+        for step in range(width):
+            index = (step / max(1, width - 1)) * (len(BELIEF_RAMP) - 1)
+            low = min(int(index), len(BELIEF_RAMP) - 1)
+            high = min(low + 1, len(BELIEF_RAMP) - 1)
+            blend = index - low
+            color = [round(BELIEF_RAMP[low][channel] * (1 - blend)
+                           + BELIEF_RAMP[high][channel] * blend) for channel in range(3)]
+            pygame.draw.line(surface, color, (x + step, y), (x + step, y + 7))
+        self._text(surface, "unlikely", (x, y + 9), MUTED, self.small_font)
+        label = "likely here"
+        self._text(surface, label, (x + width - self.small_font.size(label)[0], y + 9),
+                   MUTED, self.small_font)
+
 
     def _draw_biome_estimate(self, surface, view, group_id, estimate):
         cached = self.biome_surfaces.get(group_id)
@@ -425,21 +521,22 @@ class MapRenderer:
         self._text(surface, "Agents' internal map", (rect.x + 12, rect.y + 10), font=self.title_font)
         self._text(surface, status,
                    (rect.x + 12, rect.y + 37), MUTED, self.small_font, rect.width - 24)
-        self._text(surface, "Drag: pan   Wheel: zoom   F: fit   B: biomes   T: trap sites",
+        self._text(surface, "Drag: pan   Wheel: zoom   F: fit   B: biomes   P: predator belief",
                    (rect.x + 12, rect.y + 56), MUTED, self.small_font, rect.width - 24)
         ordered = [groups[key] for key in sorted(groups)]
         self.views = {key: view for key, view in self.views.items() if key in groups}
         self.biome_surfaces = {key: value for key, value in self.biome_surfaces.items() if key in groups}
         harvest_legend_height = 36 if snapshot.get("harvest", {}).get("active") else 0
-        trap_legend_height = 36 if any(group.get("trap_estimate") is not None for group in ordered) else 0
+        belief_legend_height = 36 if any(
+            (group.get("predator_belief") or {}).get("tracks") for group in ordered) else 0
         content = pygame.Rect(rect.x + 10, rect.y + 83, rect.width - 20,
-                              max(1, rect.height - 163 - harvest_legend_height - trap_legend_height))
+                              max(1, rect.height - 163 - harvest_legend_height - belief_legend_height))
         if not ordered:
             self._text(surface, "Waiting for agent observations", content.move(12, 20).topleft, MUTED)
         for group, panel in zip(ordered, panel_layout(content, len(ordered))):
             agents = [agent for agent in snapshot.get("agents", []) if agent["group_id"] == group["group_id"]]
             self._draw_group(surface, panel, group, agents, snapshot)
-        legend_y = rect.bottom - 69 - harvest_legend_height - trap_legend_height
+        legend_y = rect.bottom - 69 - harvest_legend_height - belief_legend_height
         self._text(surface, "Solid: observed edges   Rings: trees   Dashes: sighting history",
                    (rect.x + 12, legend_y), MUTED, self.small_font, rect.width - 24)
         self._text(surface, "Dots: observed biome   Shading / tan borders: estimates   *: elite",
@@ -460,11 +557,13 @@ class MapRenderer:
             self._text(surface, ("Cyan crosses: assigned homes   Cyan lines: patrols   Labels: task" if simple else
                                 "Colored outlines: territories   Cyan: patrols / gaps   Labels: task"),
                        (rect.x + 12, legend_y + 72), MUTED, self.small_font, rect.width - 24)
-        if trap_legend_height:
-            self._text(surface, "Potential traps: amber triangles = walls   green diamonds = slots",
-                       (rect.x + 12, legend_y + 54 + harvest_legend_height), MUTED, self.small_font, rect.width - 24)
-            self._text(surface, "Purple rings = shelters   Grey = refresh pending   Cross = predator side",
-                       (rect.x + 12, legend_y + 72 + harvest_legend_height), MUTED, self.small_font, rect.width - 24)
+        if belief_legend_height:
+            offset = legend_y + harvest_legend_height
+            self._text(surface, "Predator belief: red shading = where one could be now",
+                       (rect.x + 12, offset + 54), MUTED, self.small_font, rect.width - 24)
+            self._text(surface, "Diamond = mean   Line = inferred facing   Label = track, time unseen",
+                       (rect.x + 12, offset + 72), MUTED, self.small_font, rect.width - 24)
+            self._draw_belief_scale(surface, (rect.right - 176, offset + 56))
 
 
 def draw_comparison(surface, actual_surface, snapshot, renderer, label=""):

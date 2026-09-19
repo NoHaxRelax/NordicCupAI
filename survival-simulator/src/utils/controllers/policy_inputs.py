@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 import math
 
+from src.utils.controllers.predator_belief import PredatorThreat
+
 
 @dataclass(frozen=True)
 class RelativeTarget:
@@ -11,6 +13,10 @@ class RelativeTarget:
     distance: float
     angle: float
     ripeness: float | None = None
+    # Predators report rel_dir: the bearing from them to us minus their own
+    # heading. Zero means the predator is looking straight at this agent, and
+    # it recovers the predator's heading once the observer's pose is known.
+    rel_dir: float | None = None
 
 
 @dataclass(frozen=True)
@@ -89,17 +95,23 @@ class PolicyInputs:
     observations_fresh: bool = True
     population_phase: bool = False
     harvest_hint: HarvestHint | None = None
+    # Propagated belief from PredatorTracker, in the current facing frame. It
+    # outlives a sighting, so it is the only predator input that can be set
+    # while nothing is visible.
+    predator_threat: PredatorThreat | None = None
 
 
 def _target(observation: dict) -> RelativeTarget:
     distance = float(observation["distance"])
     angle = float(observation["angle"])
     ripeness = observation.get("ripeness")
+    relative = observation.get("rel_dir")
     return RelativeTarget(
         vector=(distance * math.cos(angle), distance * math.sin(angle)),
         distance=distance,
         angle=angle,
         ripeness=None if ripeness is None else float(ripeness),
+        rel_dir=None if relative is None else float(relative),
     )
 
 

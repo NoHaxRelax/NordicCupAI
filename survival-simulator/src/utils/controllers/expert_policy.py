@@ -45,6 +45,14 @@ class MovementConfig(ConfigSection):
 
 class MemoryConfig(ConfigSection):
     predator_escape_seconds: float = Field(ge=0)
+    # Steer by the propagated belief rather than the bearing frozen at the
+    # last sighting. The predator has moved since; the stored bearing has not.
+    belief_escape_enabled: bool = Field(default=False, strict=True)
+    # How long a confident belief may hold the danger state open once nothing
+    # is visible. Zero keeps the sighting-only duration above, and the belief
+    # can then only improve the direction, never extend the flee.
+    belief_flee_seconds: float = Field(default=0., ge=0)
+    belief_flee_probability: float = Field(default=.35, ge=0, le=1)
 
 
 class ExplorationConfig(ConfigSection):
@@ -166,7 +174,8 @@ class ExpertPolicy:
                                        exploration_hint=self.planner.exploration_hints.get(state["agent_id"]),
                                        reproduction_hint=breeding_hints.get(state["agent_id"], self.population.reproduction_hint(
                                            state["agent_id"], sim_time, self.config.reproduction.energy_threshold)),
-                                       harvest_hint=harvest_hints.get(state["agent_id"]))
+                                       harvest_hint=harvest_hints.get(state["agent_id"]),
+                                       predator_threat=self.planner.predator_tracker.threats.get(state["agent_id"]))
                    for state in agent_states]
         self.planner.remember_actions(actions)
         self.population.remember_actions(actions, sim_time)
@@ -179,7 +188,7 @@ class ExpertPolicy:
                         section_hint: SectionHint | None = None,
                         exploration_hint: ExplorationHint | None = None,
                         reproduction_hint: ReproductionHint | None = None,
-                        harvest_hint=None) -> ActionRequest:
+                        harvest_hint=None, predator_threat=None) -> ActionRequest:
         """Add per-agent memory, then apply the rules to the prepared inputs.
 
         Single-agent callers may omit sim_time to use agent age as their clock.
@@ -192,7 +201,8 @@ class ExpertPolicy:
             self.config.perception.predator_danger_radius,
         )
         inputs = replace(inputs, section_hint=section_hint, exploration_hint=exploration_hint,
-                         reproduction_hint=reproduction_hint, harvest_hint=harvest_hint)
+                         reproduction_hint=reproduction_hint, harvest_hint=harvest_hint,
+                         predator_threat=predator_threat)
         now = float(agent_state["age"] if sim_time is None else sim_time)
         frame = self._observation_frames.get(inputs.agent_id)
         age = agent_state["age"]
@@ -213,25 +223,46 @@ class ExpertPolicy:
             # fixed in the world while expressing it relative to current facing.
             memory.direction = _wrap_angle(memory.direction - memory.last_turn)
 
-        duration = self.config.memory.predator_escape_seconds
+        settings = self.config.memory
+        duration = settings.predator_escape_seconds
+        threat = inputs.predator_threat
+        # The belief is the only predator input that survives losing sight, so
+        # it may hold the danger state open past the sighting-only timeout and
+        # may open it at all for a predator first seen beyond the reactive
+        # radius, which never produced a sighting memory.
+        believed = (threat is not None and inputs.predator is None
+                    and settings.belief_flee_seconds > 0
+                    and threat.probability >= settings.belief_flee_probability)
+        if believed:
+            duration = max(duration, settings.belief_flee_seconds)
         if inputs.predator is not None and duration > 0:
             memory = EscapeMemory(
                 direction=_wrap_angle(inputs.predator.angle + math.pi),
                 last_time=now, last_age=age,
             )
             self._escape_memories[inputs.agent_id] = memory
-        elif memory:
-            if memory.unseen_since is None:
-                memory.unseen_since = now
-            deadline = memory.unseen_since + duration
-            if now >= deadline or math.isclose(now, deadline, rel_tol=0, abs_tol=1e-9):
-                self._escape_memories.pop(inputs.agent_id)
-                memory = None
-            else:
-                inputs = replace(
-                    inputs, remembered_escape_direction=memory.direction,
-                    escape_seconds_remaining=deadline - now,
-                )
+        else:
+            if memory is None and believed:
+                memory = EscapeMemory(direction=threat.escape_direction, last_time=now,
+                                      last_age=age, unseen_since=now)
+                self._escape_memories[inputs.agent_id] = memory
+            if memory:
+                if memory.unseen_since is None:
+                    memory.unseen_since = now
+                deadline = memory.unseen_since + duration
+                if now >= deadline or math.isclose(now, deadline, rel_tol=0, abs_tol=1e-9):
+                    self._escape_memories.pop(inputs.agent_id)
+                    memory = None
+                else:
+                    direction = memory.direction
+                    if settings.belief_escape_enabled and threat is not None:
+                        # The belief has dead-reckoned the predator through its
+                        # own AI. The stored bearing is a tick-zero snapshot.
+                        direction = threat.escape_direction
+                    inputs = replace(
+                        inputs, remembered_escape_direction=direction,
+                        escape_seconds_remaining=deadline - now,
+                    )
 
         action = self.decide(inputs)
         self.crowd_tracker.remember_turn(inputs.agent_id, action.turn_angle)
