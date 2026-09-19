@@ -484,3 +484,9 @@ Log (newest last)
   guide deaths 15.2 -> 4.4 (kills per game 146 -> 132, below the reference 138), episodes released 40 of 56
   (lane blocked), handoffs 0.3, held 0.14-0.17, baits 20 per game. Guide deaths are solved; delivery is not.
   Trap line closed for the night with a full cost decomposition. Pod n7 stopped; all pods idle; ~$46 of $100.
+- 09:10 Peer relayed again: keep working, make the call. Remaining untested idea from Oscar's list that
+  targets the late game directly: the hazard is where the predators are, and predators roam, so foragers should
+  pick posts away from recent predator sightings. pred_avoid_w: the group keeps a 90 s memory of predator
+  sightings (pmem, deduplicated within 30 units / 5 s); a tree's post value loses pred_avoid_w x 60 per recent
+  sighting within pred_avoid_r (250), decaying with age. Shared alarms for FLEEING were negative earlier, but this
+  is post selection, not evasion. f41 on n7 (96 seeds): rf_ref, pa_1, pa_3, pa_1_r400_t180.

@@ -266,6 +266,8 @@ struct Group {
     P2 rep_pos{}; int64_t rep_stuck = 0; double rep_since = 0.;
     struct PredSeen { P2 p; double heading; };
     std::vector<PredSeen> pseen;   // nightsim: predators seen by any member this tick (group frame)
+    struct PredMark { P2 p; double t; };
+    std::vector<PredMark> pmem;   // nightsim: recent predator sightings (pred_avoid_*)
     std::unordered_set<int64_t> seen_trees, seen_fruits;
 
     template <class T>
@@ -342,7 +344,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -934,6 +936,11 @@ public:
         double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;
         if (P.nursery_bonus > 0. && !m.heir_done && s.age >= P.heir_age - 8.)
             value += P.nursery_bonus * (double)std::min<int64_t>(4, t.fruit_free);
+        if (P.pred_avoid_w > 0. && !g.pmem.empty()) {   // nightsim: avoid posts where predators were seen recently
+            double pen = 0.;
+            for (auto& q : g.pmem) if (dist_lt(q.p, t.p, P.pred_avoid_r)) pen += 1. - (time - q.t) / P.pred_avoid_t;
+            value -= P.pred_avoid_w * 60. * pmin(pen, 3.);
+        }
         if (P.trap_post_w > 0. && g.has_trap) {   // nightsim: prefer posts around the trap so hunting predators pass its mouth
             double dm = dist(t.p, g.trap.mouth);
             if (dm > P.trap_keepout) value += P.trap_post_w * 60. * pmax(0., 1. - dm / P.trap_post_r);
@@ -1734,6 +1741,11 @@ public:
     int64_t n_evading = 0;
     void share_predators() {
         groups.each([&](const int64_t&, GroupP& g) { g->pseen.clear(); });
+        if (P.pred_avoid_w > 0.) groups.each([&](const int64_t&, GroupP& g) {   // roll the sighting memory
+            auto& pm = g->pmem; size_t k = 0;
+            for (size_t i = 0; i < pm.size(); i++) if (time - pm[i].t < P.pred_avoid_t) pm[k++] = pm[i];
+            pm.resize(k);
+        });
         for (const AState& s : states) {
             Mind& m = M(s.aid); Group& g = G(m.group);
             for (const Obs& o : *s.obs) {
@@ -1743,6 +1755,10 @@ public:
                 bool dup = false;
                 for (auto& q : g.pseen) if (dist_lt(q.p, p, 20.)) { dup = true; break; }
                 if (!dup) g.pseen.push_back(Group::PredSeen{p, hd});
+                if (!dup && P.pred_avoid_w > 0.) {
+                    bool near = false; for (auto& q : g.pmem) if (time - q.t < 5. && dist_lt(q.p, p, 30.)) { near = true; break; }
+                    if (!near && g.pmem.size() < 400) g.pmem.push_back(Group::PredMark{p, time});
+                }
             }
         }
     }
