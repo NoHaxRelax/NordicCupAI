@@ -54,7 +54,7 @@ class Replay:
             setattr(self.env, key, [restore(cls, data) for data in row['world'][key]])
         self.env.draw(self.screen)
         # Role rings identify agents while preserving the native game rendering.
-        colors = dict(guide=(0, 220, 255), bait=(255, 235, 40), replacement_bait=(255, 150, 30),
+        colors = dict(steering_predator=(0,220,255), guide=(0, 220, 255), bait=(255, 235, 40), replacement_bait=(255, 150, 30),
                       retired_bait=(230, 220, 120), bait_candidate=(160, 100, 255),
                       nursery_farmer=(100, 255, 130), nursery_child=(255, 140, 235))
         scale = self.screen.get_width()/self.env.width
@@ -74,6 +74,15 @@ class Replay:
                     fx = a.x+px*math.cos(a.direction)-py*math.sin(a.direction)
                     fy = a.y+px*math.sin(a.direction)+py*math.cos(a.direction)
                     pygame.draw.circle(self.screen,color,(round(fx*scale),round(fy*scale)),3,1)
+            steering = row['policy'].get('steering',{}).get(str(a.agent_id))
+            if steering:
+                px,py=steering['target_position']
+                ox=a.x+px*math.cos(a.direction)-py*math.sin(a.direction)
+                oy=a.y+px*math.sin(a.direction)+py*math.cos(a.direction)
+                for heading,color in ((steering['target_heading'],(255,125,100)),(steering['desired_heading'],(100,255,140))):
+                    h=heading+a.direction
+                    pygame.draw.line(self.screen,color,(round(ox*scale),round(oy*scale)),
+                        (round((ox+90*math.cos(h))*scale),round((oy+90*math.sin(h))*scale)),3)
         output = io.BytesIO()
         pygame.image.save(self.screen, output, 'replay.png')
         return output.getvalue()
