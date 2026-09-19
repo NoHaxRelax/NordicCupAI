@@ -1,4 +1,6 @@
 import threading
+import time
+from collections import deque
 
 from fastapi import FastAPI, Request
 
@@ -11,6 +13,8 @@ app = FastAPI(title="Survival Simulator Agent Endpoint")
 lock = threading.Lock()
 last_time = -1.0
 policy = None
+latencies_ms = deque(maxlen=10000)
+request_count = 0
 
 TUNED = {
     "breed_reserve": 200.2397, "cap_hard_min": 1, "cap_max": 31,
@@ -36,7 +40,8 @@ def _new_policy():
 
 @app.post("/predict")
 async def predict(request: Request):
-    global policy, last_time
+    global policy, last_time, request_count
+    started = time.perf_counter()
     body = await request.json()
     states = body.get("agent_status") or []
     for state in states:
@@ -50,8 +55,32 @@ async def predict(request: Request):
         actions = active(states, float(sim_time or 0.0))
         if sim_time is not None:
             last_time = float(sim_time)
-    return {"actions": [action.model_dump() if hasattr(action, "model_dump") else action.dict()
-                        for _, action in actions]}
+    response = {"actions": [action.model_dump() if hasattr(action, "model_dump") else action.dict()
+                            for _, action in actions]}
+    elapsed_ms = (time.perf_counter()-started)*1000.0
+    latencies_ms.append(elapsed_ms)
+    request_count += 1
+    if elapsed_ms >= 100.0 or request_count % 100 == 0:
+        print(f"predict request={request_count} agents={len(states)} sim_time={sim_time} latency_ms={elapsed_ms:.2f}", flush=True)
+    return response
+
+
+@app.get("/metrics")
+def metrics():
+    values = sorted(latencies_ms)
+    def percentile(q):
+        if not values:
+            return 0.0
+        return values[round((len(values)-1)*q)]
+    return {
+        "requests": request_count,
+        "window": len(values),
+        "mean_ms": sum(values)/len(values) if values else 0.0,
+        "p50_ms": percentile(0.50),
+        "p95_ms": percentile(0.95),
+        "p99_ms": percentile(0.99),
+        "max_ms": values[-1] if values else 0.0,
+    }
 
 @app.get("/")
 def index():
