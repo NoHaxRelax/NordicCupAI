@@ -128,5 +128,9 @@ chosen).
 | ref4 clear straight path to the gap + sprint | 96 | attempts 20-36, route deaths 8-16; -28 +- 33 (r 100), -44 (r 60), -59 (slow-only); no sprint -125 |
 | ref5 safe hold depth for wide gaps / open rears | 96 | -14 +- 38 (r 60), -67 (slow), -85 (r 150), -120 (r 100); hold deaths unchanged 6-14/game |
 
+| ref6 kill-time diagnostic (belief vs truth, NIGHT_REFLOG) | 32 games, 394 deaths | holding deaths: pose error median 0, true distance to the hold point 1.7, predator at 11 => the map's gap is not real geometry; route deaths: pose error median 10 |
+| ref7 refuge_verify (hold only while both faces are observed) | 96 | hold deaths 6.7 -> 2.4, aborts 6.4/game; -23 +- 34 (r 60), -28 +- 36 (r 100) |
+
 Conclusion: the refuge is the first trap-family mechanism that is clearly positive in the narrow test, but in full
-games it never beats evasion alone: refugees die while holding (map placement, not gap geometry) and never leave.
+games it never beats evasion alone. Root causes are map consistency, not the refuge logic: about two thirds of the
+map's narrow gaps are not real at the hold point, and runners' poses drift ~10 units on wall collisions.

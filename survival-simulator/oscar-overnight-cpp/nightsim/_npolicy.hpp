@@ -230,7 +230,7 @@ struct Mind {
     double repost_at = 0., post_since = -OINF, last_site = 0.;
     bool has_watch = false; P2 watch_p{}; double watch_t = 0;
     int hide_idx = -1; double hide_t = -1e9;   // nightsim: crevice pass-through escape
-    bool refuge_in = false; double refuge_pred_t = -1e9;   // nightsim: refuge (hold inside a narrow gap)
+    bool refuge_in = false; double refuge_pred_t = -1e9; int refuge_bad = 0;   // nightsim: refuge (hold inside a narrow gap)
     double dodge_head = 0.; int64_t dodge_left = 0;   // nightsim: committed dodge heading (pred_dodge_hold)
 };
 using MindP = std::shared_ptr<Mind>;
@@ -342,7 +342,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1823,7 +1823,7 @@ public:
     // refuge (nightsim, refuge_mode): a chased agent that is already close to a narrow gap steps 9 deep into it and
     // holds there; the predator (radius 10) cannot enter a 10.1-19.9 gap and stays pressed at the mouth while it hears
     // the agent. No guide, no bait child: the chase itself delivers the predator. Returns true when it planned.
-    int64_t refuge_events = 0, refuge_holds = 0, refuge_died_route = 0, refuge_died_hold = 0, refuge_died_exit = 0, refuge_exits = 0;
+    int64_t refuge_events = 0, refuge_holds = 0, refuge_died_route = 0, refuge_died_hold = 0, refuge_died_exit = 0, refuge_exits = 0, refuge_aborts = 0;
     bool refuge(const AState& s, Plan& pl, double dP, double angP) {
         Mind& m = M(s.aid); Group& g = G(m.group);
         if (!g.anchored || g.sites.empty()) { m.hide_idx = -1; m.refuge_in = false; return false; }
@@ -1853,7 +1853,25 @@ public:
         }
         const Group::Site& st_ = g.sites[m.hide_idx];
         m.refuge_pred_t = time;
-        if (dist_lt(ps.p, st_.goal, 3.)) { m.refuge_in = true; refuge_holds++; double dm_, am_; local_of(ps, st_.mouth, dm_, am_); pl = Plan{0., 0., am_}; n_evading++; return true; }   // hold, facing the mouth
+        if (dist_lt(ps.p, st_.goal, 3.)) {   // hold, facing the mouth
+            if (P.refuge_verify > 0.) {   // the two faces must be observed right now at gap/2 +- 3 on both sides; otherwise the map is wrong here
+                P2 axis = sub(st_.goal, st_.mouth); axis = mul(axis, 1.0 / pmax(norm(axis), 1e-6));
+                int left = 0, right = 0;
+                for (auto& e : m.edges) {
+                    if (time - e.t > 0.05) continue;
+                    P2 ev = sub(e.b, e.a); double n = norm(ev); if (n < 3.) continue; ev = mul(ev, 1.0 / n);
+                    if (std::fabs(ev.x * axis.x + ev.y * axis.y) < 0.9) continue;
+                    double d = point_segment(ps.p, e.a, e.b);
+                    if (d < st_.gap / 2 - 3. || d > st_.gap / 2 + 3.) continue;
+                    P2 mid = mul(add(e.a, e.b), 0.5);
+                    double side = axis.x * (mid.y - ps.p.y) - axis.y * (mid.x - ps.p.x);
+                    if (side > 0) left++; else right++;
+                }
+                if (left > 0 && right > 0) m.refuge_bad = 0;
+                else if (++m.refuge_bad >= 2) { m.hide_idx = -1; m.refuge_in = false; m.refuge_bad = 0; refuge_aborts++; return false; }
+            }
+            m.refuge_in = true; refuge_holds++; double dm_, am_; local_of(ps, st_.mouth, dm_, am_); pl = Plan{0., 0., am_}; n_evading++; return true;
+        }
         P2 in = sub(st_.goal, st_.mouth); in = mul(in, 1.0 / pmax(norm(in), 1e-6));
         P2 pre = sub(st_.mouth, mul(in, 25.));
         P2 rel = sub(ps.p, pre); double along = rel.x * in.x + rel.y * in.y, across = std::fabs(rel.x * in.y - rel.y * in.x);

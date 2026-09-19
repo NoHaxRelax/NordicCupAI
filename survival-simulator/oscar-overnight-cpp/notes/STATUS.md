@@ -1,6 +1,6 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (j at 08:15 after the refuge line; k could not get a port; disks are wiped on restart: bootstrap + deploy again).
+STATE: IDLE. All pods stopped (n7 at 08:30; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again).
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
@@ -23,10 +23,14 @@ nothing simulated on the laptop except single-game traces.
 near a narrow gap steps into it and holds; the predator cannot enter and stays at the mouth. Scenario: kills 41% ->
 20%, predator held 146 of 200 ticks. Full games: -284 s at first (82% of refugees died en route: they ran at walls
 on the far side of the obstacle), then with a clear-path check + sprint -28 +- 33, then radius 60 -14 +- 38: never
-positive. Two defects remain: 7-14 refugees per game die while holding (0 in the scenario; not the gap-width
-geometry, which was fixed and changed nothing, so most likely the self-built map places the hold point a few units
-off), and refugees never leave (the predator never does), so each one is a lost forager. Closed at 08:15; code stays
-behind refuge_* parameters (default off) with the harness nightsim/refuge.py and death-attribution counters.
+positive. A kill-time diagnostic (belief vs truth, 394 refugee deaths) then showed WHY refugees die while holding: the
+agent really is at the hold point (pose error median 0, true distance to the hold point 1.7) and a predator still
+reaches it, so the map's gap is not real geometry (a face extended past its true end or a phantom face); runners die
+with their own pose ~10 units off (wall-collision deflection). Verifying both faces by direct observation before
+holding cuts hold deaths 6.7 -> 2.4 per game but survival stays at -23 +- 34: the aborted refugees die anyway.
+Closed at 08:30; code stays behind refuge_* parameters (default off) with nightsim/refuge.py, the death-attribution
+counters (dbg_eval) and the kill hook (NIGHT_REFLOG=1). Lesson for any trap/refuge work: the self-built wall map is
+wrong at the few-unit level often enough that geometry-critical behaviour must verify walls by direct observation.
 
 **What the full-game trap funnel says (per game, f35/f37):** 17-26 guide episodes, 7-11 guide deaths (classes: far
 from the trap and slow walk dominate; several predators near is rare), 0.26-0.29 handoffs, 0.04-0.09 predators
@@ -409,3 +413,7 @@ Log (newest last)
   i.e. the runner's own pose is off, consistent with wall-collision deflection during the run. Both are map/pose
   consistency failures, not the refuge logic. One last variant: refuge_verify (hold only while both faces are
   actually observed at gap/2 +- 3 on both sides; otherwise abort to normal evasion).
+- 08:30 ref7 (96 seeds): refuge_verify (hold only while both faces are observed at gap/2 +- 3 on both sides):
+  hold deaths 6.7 -> 2.4 per game, aborts 6.4 (i.e. about two thirds of the map's "gaps" are not real at the hold
+  point), survival -23+-34 (r 60) / -28+-36 (r 100) vs -14+-38 unverified: the aborted refugees die anyway and the
+  route deaths remain. Refuge line closed for good. Pod n7 stopped; all pods idle; ~$41 of $100 spent.
