@@ -97,8 +97,10 @@ between them: the run log shows 11 medium_plane, 12 small_plane and 10 small_lau
 `ambiguous_detection` rule in `tracking/revisit.py` (an unmatched detection that had a same-class track nearby).
 Our portal medium_plane AP is 0.50 and small_plane 0.66, both consistent with one of a pair. Your branch carries the
 same rule; `grep -c ambiguous_detection` on your run log tells you whether it bites. `DRONE_CLUSTER_BIRTHS=1`
-restricts the rule to detections that actually overlap a same-class forecast; the harness number and a concealed
-medium_plane portal run are queued, see `research/03-checklist.md` row C0d.
+restricts the rule to detections that actually overlap a same-class forecast. On the harness it moves medium_plane from
+0.485 to 0.941 and nothing else (0.600 to 0.641 overall). The flag is three lines in `RevisitTracker.update`
+(commit 284a066 on our branch, `cluster_births` in `RevisitConfig`); your branch has the rule without the flag. A
+concealed medium_plane portal run is queued, see `research/03-checklist.md` row C0d.
 
 ## 6. Things not to repeat
 
