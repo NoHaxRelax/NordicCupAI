@@ -3,7 +3,8 @@
 Your pipeline scores 0.705 to 0.727 on the portal this afternoon (full public runs from the Swedish pod). Ours peaks at
 0.678 same-day for the deployed checkpoint, so yours is the one to submit. Below is everything on
 `drone/elias-verifier` that measured better than our own baseline per class, or that plugs into your server as it
-is, plus three things we learned the hard way. All numbers are portal validation, organiser truth, one class per
+is, plus three things we learned the hard way. **Read 5b and 5c first: two switches confirmed on the organiser truth tonight,
+worth about +0.05 together, that plug into your tracker without touching the detector.** All numbers are portal validation, organiser truth, one class per
 concealed run (score x 13 = class AP), unless marked otherwise.
 
 ## 1. Per-class APs of our checkpoints, for comparison with yours
@@ -99,7 +100,12 @@ same rule; `grep -c ambiguous_detection` on your run log tells you whether it bi
 restricts the rule to detections that actually overlap a same-class forecast. On the harness it moves medium_plane from
 0.485 to 0.941 and nothing else (0.600 to 0.641 overall). The flag is three lines in `RevisitTracker.update`
 (commit 284a066 on our branch, `cluster_births` in `RevisitConfig`); your branch has the rule without the flag. A
-concealed medium_plane portal run is queued, see `research/03-checklist.md` row C0d.
+concealed medium_plane portal run confirmed it on the organiser truth (laptop-served, Saturday 23:05, same hour as the
+launcher pair): medium_plane 0.484 with the rule as it stands against **0.923** with `DRONE_CLUSTER_BIRTHS=1`, everything
+else equal. That is +0.034 on the total from three lines; with the launcher box (5b) the pair is worth about +0.05 on
+our pipeline. Both switches touch the tracker and the answer post-processing only, not the detector, so they carry
+over to your server as they are: `DRONE_CLUSTER_BIRTHS=1 DRONE_BOX_SCALE='{"medium_launcher": 0.85}'` (our
+`example.py` reads both; the flag needs the three-line change in `tracking/revisit.py` from commit 284a066).
 
 ## 6. Things not to repeat
 

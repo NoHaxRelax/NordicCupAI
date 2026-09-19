@@ -13,11 +13,18 @@ Written Saturday 2026-09-19 about 17:00. Deadline Sunday 16:00 CEST, one evaluat
   measured 0.614 but is the only checkpoint that sees the 13th class, ta-ta (0.50). The planned deployment routes F3
   for every class and F5 for ta-ta (expected about 0.716, not yet measured: the routed thirds were queued when Oscar's
   runs took the portal slot). `research/05-handover-to-oscar.md` lists what plugs into his server.
+- Two switches confirmed on the organiser truth Saturday night (laptop-served one-class runs, same hour, everything
+  else equal): `DRONE_BOX_SCALE='{"medium_launcher": 0.85}'` moves medium_launcher 0.127 to 0.360 and
+  `DRONE_CLUSTER_BIRTHS=1` moves medium_plane 0.484 to 0.923. Together about +0.05 on the total. Both are in the
+  runbook's serving line and are three lines each (`example.py` box scale, `tracking/revisit.py` ambiguity rule).
+  They apply to Oscar's tracker as well (his branch carries the same ambiguity rule without the flag).
 - No pods are running. All four of Saturday's pods were terminated at 16:55 (Elias's instruction). Weights are on the
   laptop (`elias/out/weights/`, `elias/release/` under LFS) and pushed.
-- The laptop harness campaign is running as you read this (`elias/out/logs/harness_campaign.log`): every checkpoint
-  through the full pipeline per class, then confidence floor, birth and update thresholds, 1024 and 1536 input, and
-  sibling hedging on F3. About 1.5 min per run, done by about 17:20.
+- The laptop harness (`bash elias/run_harness.sh WEIGHTS TAG --imgsz 1280 --conf 0.05 --birth-confidence 0.25
+  --update-confidence 0.15`, team labels, offline clock, deterministic) ran eleven campaigns Saturday
+  (`elias/out/logs/harness_campaign*.log`, per-class tables in `elias/out/harness/<TAG>/run.log`). F3 baseline 0.600;
+  cluster births 0.641, launcher 0.85 0.643, both plus hedge 0.3 0.688. Every threshold, input size, augmentation,
+  extent, revisit and cue variant is at or below the baseline; the numbers are in the checklist rows.
 
 ## Rules that are not written in the code
 
@@ -70,7 +77,10 @@ six ta-ta cues; rejected.
 
 ## What to do next, in order
 
-1. When the portal is free, measure the routed mix: `nohup bash elias/out/logs/measure_route.sh "ALL_DONE (F3_both_m1280)" &`
+0. Tell Oscar about the two confirmed switches (section 5b and 5c of his handover) if Elias has not; they are worth
+   more on his 0.727 pipeline than anything else on this branch.
+1. When the portal is free, measure the routed mix with the two switches on (`CLUSTER_BIRTHS=1 BOX_SCALE='{"medium_launcher": 0.85}'`
+   in front of `pod_portal.sh`; `measure_route.sh` predates them, so export the two DRONE_ variables in a new copy): `nohup bash elias/out/logs/measure_route.sh "ALL_DONE (F3_both_m1280)" &`
    after recreating a serving pod (runbook step 2 and `pod_serve_setup.sh`; the weights go to `/root/out/`).
    Three runs, about 12 minutes. If it beats Oscar's same-day number, the runbook is ready; if not, hand him the
    routing (his server takes our hook: `research/05-handover-to-oscar.md` section 3).

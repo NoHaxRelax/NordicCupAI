@@ -23,7 +23,9 @@ where a same-day one-class run beat F3 by more than 0.03 (ta-ta for certain; the
 0.262 + 0.302 + 0.114 = 0.678; the routed mix: **fill in from the ROUTE lines of measure_f5.log**. Everything else
 as measured: 1280 input, `DRONE_CONF=0.05`, birth 0.25, update 0.15, miss rule `seen`, L1 left-centre-right-centre
 band oriented from the calibrated flight direction (`DRONE_AUTO_BAND=1`), detector extents for ta-ta and
-medium_launcher, hedging and box scale off unless the EXTRA runs said otherwise, zoom on cue off (rejected).
+medium_launcher, **`DRONE_CLUSTER_BIRTHS=1` and `DRONE_BOX_SCALE='{"medium_launcher": 0.85}'`** (both confirmed on
+the organiser truth Saturday 23:00: medium_plane 0.484 to 0.923, medium_launcher 0.127 to 0.360, about +0.05
+together), hedging off (0.3 gave +0.004 on the harness, not measured on the portal), zoom on cue off (rejected).
 
 ## Bring-up (already done, verify only)
 
@@ -35,8 +37,9 @@ medium_launcher, hedging and box scale off unless the EXTRA runs said otherwise,
        POD_HOST=149.36.0.35 POD_PORT=18676 DETECTOR=elias.ensemble:build \
        ELIAS_WEIGHTS=/root/out/F3_both_m1280.last.pt,/root/out/F5_fixed_m1280.last.pt \
        ELIAS_ROUTE='<the JSON from route_from_log.py>' CLASS_EXTENT='{"medium_launcher":"detector","ta-ta":"detector"}' \
+       CLUSTER_BIRTHS=1 BOX_SCALE='{"medium_launcher": 0.85}' \
        DIRECT_URL=http://149.36.0.35:18677 ssh -p 18676 root@149.36.0.35 'cd /root/work/drone-flyby && \
-         IMGSZ=1280 DETECTOR=... ELIAS_WEIGHTS=... ELIAS_ROUTE=... CLASS_EXTENT=... DIRECT_URL=... bash elias/pod_serve.sh /root/out/F3_both_m1280.last.pt'
+         IMGSZ=1280 DETECTOR=... ELIAS_WEIGHTS=... ELIAS_ROUTE=... CLASS_EXTENT=... CLUSTER_BIRTHS=1 BOX_SCALE=... DIRECT_URL=... bash elias/pod_serve.sh /root/out/F3_both_m1280.last.pt'
 
    (`elias/pod_portal.sh` does exactly this for a measurement run; for the attempt start the server the same way and
    do not queue anything.) `cat /root/logs/serve.url` prints `URL http://149.36.0.35:18677`.
