@@ -26,6 +26,8 @@ if trials:phase='; '.join(f'{name} {count}/32 best gain={best:.1f}' for name,cou
 if (t/'complete.json').exists():phase='BO complete; awaiting final evaluation'
 games=0
 v=r/'validation'/('shard-'+str(i))
+vg=0
+if (v/'manifest.json').exists():phase='preparing/verifying fresh validation checkpoints'
 if (v/'games.jsonl').exists():
     with (v/'games.jsonl').open() as f:vg=sum(1 for line in f if line.endswith('\n'))
     phase=f'held-out checkpoint validation {vg}/480 games'
@@ -41,7 +43,7 @@ for log in ('run.log','validation.log','final.log'):
         tail=p.read_text()[-6000:]
         if 'Traceback (most recent call last)' in tail:errors.append(log+': '+tail.strip().splitlines()[-1])
 if errors:phase='ERROR '+ '; '.join(errors)
-print(json.dumps(dict(trials=n,games=games,phase=phase)))
+print(json.dumps(dict(trials=n,games=games,validation_games=vg,phase=phase)))
 '''
 
 def check(p, key):
@@ -70,6 +72,7 @@ def main():
             print('\n'+time.strftime('%Y-%m-%d %H:%M:%S'),flush=True)
             for p,s in zip(pods,statuses):print(f"Pod {p['index']:2} | {s['phase']}",flush=True)
             print(f"BO: {sum(s.get('trials',0) for s in statuses)}/640 trials | "
+                  f"Validation: {sum(s.get('validation_games',0) for s in statuses)}/4800 games | "
                   f"Final: {sum(s.get('games',0) for s in statuses)}/24000 games",flush=True)
             if args.once:break
             time.sleep(max(1,args.interval))
