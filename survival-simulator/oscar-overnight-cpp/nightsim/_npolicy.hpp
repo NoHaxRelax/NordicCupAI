@@ -345,7 +345,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1585,6 +1585,25 @@ public:
             if (hn < g.held_max) g.held_max = hn;   // follow drops so the next arrival counts again
         }
         if (g.bait < 0) return;
+        if (g.guide < 0 && P.guide_chased > 0.) {   // nightsim (Oscar 11:25): nobody walks toward a predator; the agent a predator is chasing becomes the guide
+            int64_t bg = -1; double bd = OINF; P2 bq{};
+            for (auto& q : g.pseen) {
+                if (dist_lt(q.p, g.trap.mouth, 40.)) continue;
+                if (P.guide_pred_lane_max > 0. && dist_gt(q.p, g.trap.out, P.guide_pred_lane_max)) continue;   // only predators already near the trap
+                int64_t na = -1; double nd = OINF;   // the predator's target = its closest agent (bait/retired included: they cannot guide)
+                g.agents.each([&](int64_t a) { double d = dist(M(a).pose->p, q.p); if (d < nd) { nd = d; na = a; } });
+                if (na < 0 || nd > P.guide_chase_r || is_trap_role(na) || frozen.count(na)) continue;
+                if (nd < bd) { bd = nd; bg = na; bq = q.p; }
+            }
+            if (bg < 0) return;
+            g.guide = bg; g.guide_state = 2; g.guide_since = time; g.ep_start++; gstat[11]++; g.guide_sprinting = false; g.ep_chased = g.ep_s3 = g.ep_h = false;
+            g.gl_ticks = 0; g.gl_stuck = 0; g.gl_pos = M(bg).pose->p; g.guide_pred = bq; g.guide_seen = time; g.guide_closing_t = time;
+            Mind& m = M(bg);
+            if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(bg);
+            m.has_post = false;
+            if (m.has_fruit && g.fruits.has(m.fruit)) g.fruits.at(m.fruit)->has_claim = false;
+            m.has_fruit = false;
+        }
         if (g.guide < 0) {
             if (!have) return;
             int64_t bg = -1; double bs = -OINF;
@@ -1669,6 +1688,9 @@ public:
                 plans[g.relay] = Plan{dd, dir, dP2 < 150. ? angP2 : turn};
             }
         }
+        if (g.guide_state == 1 && P.guide_chased > 0.) {   // chased mode: no acquiring; the chase is over -> release the guide to normal duty
+            gstat[4]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return;
+        }
         if (g.guide_state == 1) {
             if (time - g.guide_seen > P.guide_lost) { gstat[4]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
             double acq_r = P.guide_ctrl > 0. ? P.guide_ctrl_acq : P.guide_acq;   // nightsim guide_ctrl: never walk into a charging predator
@@ -1684,7 +1706,8 @@ public:
             P2 lead_target = g.trap.out;
             if (P.guide_route > 0.) { P2 nx; if (!route_next(g, ps.p, g.trap.out, 6., nx)) { gstat[5]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; } lead_target = nx; }
             else if (P.guide_clear > 0. && !path_clear(g, ps.p, g.trap.out, 6.)) { gstat[5]++; g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
-            if (dP > P.guide_acq && !chasing && time - g.guide_closing_t > 2.) { gstat[1]++; g.guide_state = 1; return; }
+            if (P.guide_chased > 0.) { if (dP > P.guide_release) { gstat[1]++; g.guide_state = 1; return; } }   // chased mode: keep leading while it is in sight and within guide_release
+            else if (dP > P.guide_acq && !chasing && time - g.guide_closing_t > 2.) { gstat[1]++; g.guide_state = 1; return; }
             double dT, angT; local_of(ps, g.trap.out, dT, angT);
             if (P.guide_route > 0. && !(lead_target.x == g.trap.out.x && lead_target.y == g.trap.out.y)) { double dV, angV; local_of(ps, lead_target, dV, angV); angT = angV; }   // steer toward the via point; dT stays the true remaining distance
             if (chasing && !g.ep_chased) { g.ep_chased = true; g.ep_chase++; }
@@ -1707,7 +1730,7 @@ public:
                 else if (blocked_) { step = walk; dir = wrap(angP + sgn * 1.9); }                              // predator in the way: circle it, drifting away
                 else if (dP > b_far && P.guide_slow > 0. && !(P.guide_fastclose > 0. && closing_rate > P.guide_fastclose && dP < b_far + 40.)) {
                     step = walk * pmax(0., (b_far + 20. - dP) / 20.);   // slow down beyond the band, unless it is charging in fast
-                    if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { gstat[2]++; g.wait_since = -1.; g.guide_state = 1; return; } }
+                    if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max && P.guide_chased <= 0.) { gstat[2]++; g.wait_since = -1.; g.guide_state = 1; return; } }
                     else g.wait_since = -1.;
                 } else g.wait_since = -1.;
                 int n_near_ = 0, n_ahead_ = 0;
@@ -1764,7 +1787,7 @@ public:
         if (g.guide_state == 3) {
             // Lucas's handoff: back toward the mouth and stop guide_hand from the bait, facing the predator; being
             // eaten here is allowed (the predator then hears the bait and holds at the mouth)
-            if (time - g.guide_seen > P.guide_lost || dP > P.guide_far + 120. || (!chasing && time - g.guide_closing_t > 3.)) { gstat[3]++; g.guide_state = 1; return; }
+            if (time - g.guide_seen > P.guide_lost || dP > P.guide_far + 120. || (P.guide_chased <= 0. && !chasing && time - g.guide_closing_t > 3.)) { gstat[3]++; g.guide_state = 1; return; }
             double dB = dist(ps.p, g.trap.goal);
             if (dB <= P.guide_hand) { if (!g.ep_h) { g.ep_h = true; g.ep_hand++; } plans[g.guide] = Plan{0., 0., fresh ? angP : 0.}; return; }
             double dM, angM; local_of(ps, g.trap.mouth, dM, angM);

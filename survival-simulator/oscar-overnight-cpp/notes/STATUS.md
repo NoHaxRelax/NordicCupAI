@@ -617,3 +617,12 @@ Log (newest last)
   colony agents 83% (84%); all-predators-held kept (413 vs 388 of 660). Best guide setting so far = current + guide_plan=3.
   By the second predator's start (current guide, clear): ahead 56-68% vs behind 76-88%; the ahead-only planner
   fixes ahead cases (-> 71-80%) without touching behind cases.
+- 11:26 f50 FULL GAMES (192 seeds) with the best guide: tg_best -162+-26, near-trap only (predator within
+  200 of the trap) -152, + guide within 200 of the predator -69+-26. Guides now bring 16-25 predators per game to
+  the mouth, but only ~0.1 is held at any sample: baits (born 21-23 per game) starve every 60-100 s and the
+  held predator walks off. In full games the bottleneck is HOLDING, not delivery.
+  OSCAR (11:25): no agent walks toward a predator unless it is actively guiding it; the agent a predator is
+  chasing becomes the guide (other guide choices, e.g. old agents, later). Implemented guide_chased (+ chase_r,
+  release only when unseen or beyond guide_release). Scenarios (128 seeds): chase_r 200 -> 1 predator 93% clear /
+  78% blocked, 2 predators 75% (acquiring guide 96/84/77); chase_r 150 83/70/75 (the agent flees normally before
+  the predator is within 150). f51 full games: chased guiding (r 200; r 150 + near-trap 200; r 200 + near-trap 300).
