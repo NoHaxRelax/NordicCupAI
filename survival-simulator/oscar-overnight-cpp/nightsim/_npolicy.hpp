@@ -247,7 +247,7 @@ struct Group {
     bool anchored = false;
     int64_t next_tree = 0, next_fruit = 0;
     struct Wall { bool horiz; double c, lo, hi; double solid; double t; int64_t n = 1;
-                  std::vector<double> cs, los, his; int64_t obs1 = -1, obs2 = -1; int64_t n_obs = 0; };   // axis-aligned face; solid = +1: solid on +axis side
+                  std::vector<double> cs, los, his; int64_t obs1 = -1, obs2 = -1; int64_t n_obs = 0; int64_t n_conf = 0; };   // axis-aligned face; solid = +1: solid on +axis side; n_conf = observations claiming the opposite solid side
     std::vector<Wall> walls;          // nightsim: permanent wall faces (anchored frame only)
     struct Site { P2 goal, mouth, out, rear; double overlap, gap, score; bool rear_ok; };
     std::vector<Site> sites; double sites_t = -1e9;
@@ -342,7 +342,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 0.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1316,8 +1316,12 @@ public:
         double oc = horiz ? obs.y : obs.x;
         double solid = oc < c ? 1. : -1.;
         for (auto& w : g.walls) {
-            if (w.horiz != horiz || w.solid != solid || std::fabs(w.c - c) > P.wall_tol) continue;
+            if (w.horiz != horiz || std::fabs(w.c - c) > P.wall_tol) continue;
             if (std::fabs(w.lo - lo) > 2. * P.wall_tol || std::fabs(w.hi - hi) > 2. * P.wall_tol) continue;
+            if (w.solid != solid) {   // same face seen with the opposite solid side: a mis-posed observer, not a second wall
+                if (P.wall_conflict > 0.) { w.n_conf++; if (w.n_conf > w.n) { w.solid = solid; std::swap(w.n, w.n_conf); } return; }
+                continue;
+            }
             size_t k = (size_t)(w.n % 31);
             if (w.cs.size() < 31) { w.cs.push_back(c); w.los.push_back(lo); w.his.push_back(hi); }
             else { w.cs[k] = c; w.los[k] = lo; w.his[k] = hi; }
@@ -1331,7 +1335,7 @@ public:
             g.walls.push_back(w);
         }
     }
-    bool confirmed(const Group::Wall& w) const { return w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs; }
+    bool confirmed(const Group::Wall& w) const { return w.n >= P.wall_min_n && w.n_obs >= P.wall_min_obs && (P.wall_conflict <= 0. || w.n_conf * 4 <= w.n); }
     bool clear_of(const Group& g, P2 p, double r, int skip1 = -1, int skip2 = -1) const {
         if (p.x < r || p.y < r || p.x > W - r || p.y > H - r) return false;
         for (size_t i = 0; i < g.walls.size(); i++) {

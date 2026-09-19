@@ -417,3 +417,23 @@ Log (newest last)
   hold deaths 6.7 -> 2.4 per game, aborts 6.4 (i.e. about two thirds of the map's "gaps" are not real at the hold
   point), survival -23+-34 (r 60) / -28+-36 (r 100) vs -14+-38 unverified: the aborted refugees die anyway and the
   route deaths remain. Refuge line closed for good. Pod n7 stopped; all pods idle; ~$41 of $100 spent.
+- 08:32 Tick, my call: the refuge diagnostic pointed at the one thing that blocks the whole trap family, the
+  self-built wall map. Measuring it directly (M1): new hook dbg_walls + nightsim/mapcheck.py grade every confirmed
+  map face against the true map (solid side actually free = phantom length; free side actually blocked = missed
+  length) and every crevice site (hold point free, predator cannot reach within 14.9, lane free), by observation
+  count. If phantoms concentrate in low-observation faces, the fix is a stricter confirmation rule (wall_min_obs),
+  which is a one-parameter A/B. Pod n7 restarting for it.
+- 08:33 M1 first look (seed 3, 300 s, 400 confirmed faces, blocked/free profile across each face's middle):
+  46% correct (free side free, solid side blocked at the face), 28% have the SOLID SIDE INVERTED (blocked on the
+  side the map calls free, free on the side it calls solid; e.g. the right face of a 48-wide wall recorded with the
+  left face's sign, 178 observations), 15% lie entirely inside solid, 4% float in free space. Site finder: 19
+  sites, 3 valid in truth, top-1 invalid. An inverted face pairs with a real one into a "gap" that is the inside of
+  a wall or an open corridor: that is the refuge/bait hold-death mechanism. Measuring over 32 games on n7 (mc1).
+- 08:35 Cause found in add_wall(): an observation of a known face with the OPPOSITE solid side (a mis-posed
+  observer) did not match the face and created a twin face with the inverted sign at the same place. A thin wall's
+  two inverted twins then pair into a "crevice" whose hold point is the wall's interior, and clear_of() skips the
+  pair itself. Fix behind wall_conflict=1: such observations count as conflicts on the existing face (no twin),
+  the face flips if conflicts outnumber agreements, and a face with > 25% conflicts is not confirmed.
+  Local check (4 seeds, 300 s): phantom face length 33.9% -> 13.6%, missed 44.6% -> 23.0%, sites 52 -> 9 of
+  which 7 valid (was 11 of 52), top-1 valid 3/3. Running on n7: mc1/mc2 (32 games each, map metrics with/without
+  the fix), then f38 = full-game refuge A/B on the corrected map (rg_60s, rg_100s, rg_100v with wall_conflict).
