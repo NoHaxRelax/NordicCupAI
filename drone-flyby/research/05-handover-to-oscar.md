@@ -90,6 +90,16 @@ in `example.py` (a single factor, or `[width, height]`), moves the harness from 
 same fix applies. A concealed one-class portal run of it is queued from the laptop; the number will be in
 `research/03-checklist.md` row C0b.
 
+## 5c. The second object of a same-class pair is dropped as ambiguous
+
+The team labels hold two medium_planes parked 70 px apart (files 57 to 90). Our tracker emits one box that alternates
+between them: the run log shows 11 medium_plane, 12 small_plane and 10 small_launcher detections discarded by the
+`ambiguous_detection` rule in `tracking/revisit.py` (an unmatched detection that had a same-class track nearby).
+Our portal medium_plane AP is 0.50 and small_plane 0.66, both consistent with one of a pair. Your branch carries the
+same rule; `grep -c ambiguous_detection` on your run log tells you whether it bites. `DRONE_CLUSTER_BIRTHS=1`
+restricts the rule to detections that actually overlap a same-class forecast; the harness number and a concealed
+medium_plane portal run are queued, see `research/03-checklist.md` row C0d.
+
 ## 6. Things not to repeat
 
 - Zoom on cue (an L2 look at unconfirmed, small or weak tracks) costs 0.02 to 0.14 on the local harness at every
