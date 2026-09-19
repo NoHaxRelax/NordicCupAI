@@ -56,6 +56,10 @@ class RevisitConfig:
     # (the original rule). 'seen': only when the view also gives the object at least
     # miss_size_fraction of the smallest delivered size at which this track was ever detected whole.
     # An L0 overview is not a fair opportunity to see an object that was only ever recognised at L1.
+    # An unmatched detection that merely had a same-class track NEARBY used to be discarded as ambiguous, so
+    # the middle object of a same-class cluster (three launchers in a row) was never born. With
+    # cluster_births it is only discarded when it actually overlaps a same-class forecast.
+    cluster_births: bool = False
     miss_rule: str = 'any'
     miss_size_fraction: float = .9
     max_history: int = 6
@@ -331,8 +335,10 @@ class RevisitTracker:
             if index in matched_detections:
                 continue
             if index in had_candidate:
-                self.events.append({'event': 'ambiguous_detection', 'label': d.label})
-                continue
+                near = [overlap(box, q) for k, q in predictions.items() if self.tracks[k].label == d.label]
+                if not self.config.cluster_births or (near and max(near) >= self.config.association_iou):
+                    self.events.append({'event': 'ambiguous_detection', 'label': d.label})
+                    continue
             # Conflicting classifications at an existing object's location are
             # not enough to create a second prediction for the same object.
             if any(overlap(box, p) > .5 for p in predictions.values()):

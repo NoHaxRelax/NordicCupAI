@@ -74,6 +74,7 @@ CONFIG = RevisitConfig(
     # see at L0. Raise this to study how many points that rule costs.
     visible_misses_before_retirement=int(os.environ.get('DRONE_MISS_RETIRE', '3')),
     miss_rule=os.environ.get('DRONE_MISS_RULE', 'any'),
+    cluster_births=_flag('DRONE_CLUSTER_BIRTHS', False),
 )
 # Concealed validation runs: the pipeline runs identically over the whole sequence (tracking, camera,
 # everything warm) but annotations are only EMITTED inside these frame_index windows, e.g. '0:125' for
