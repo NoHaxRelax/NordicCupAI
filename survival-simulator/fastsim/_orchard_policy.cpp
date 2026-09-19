@@ -128,6 +128,12 @@ IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, cons
     PR.dodge_r = cfg_get(cfg, "pred_dodge_r", PR.dodge_r);
     PR.dodge_ang = cfg_get(cfg, "pred_dodge_ang", PR.dodge_ang);
     PR.turn_max = cfg_get(cfg, "pred_turn_max", PR.turn_max);
+    PR.gaze = cfg_get(cfg, "pred_gaze", PR.gaze);
+    PR.cone_gate = cfg_get(cfg, "pred_cone_gate", PR.cone_gate);
+    PR.cone_margin = cfg_get(cfg, "pred_cone_margin", PR.cone_margin);
+    PR.wall_escape = cfg_get(cfg, "pred_wall_escape", PR.wall_escape);
+    PR.wall_look = cfg_get(cfg, "pred_wall_look", PR.wall_look);
+    PR.wall_reward = cfg_get(cfg, "pred_wall_reward", PR.wall_reward);
     std::vector<uint32_t> key(seed_key, seed_key + nkey);
     if (key.empty()) key.push_back(0);
     return new PolicyImpl(key, P, PR);

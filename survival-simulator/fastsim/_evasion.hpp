@@ -19,6 +19,8 @@ namespace orchard {
 struct PredParams {
     int64_t mode = 1;
     double r = 70., face_r = 80., sprint_r = 40., dodge_r = 80., dodge_ang = 1.4, turn_max = 1.0;
+    double gaze = 0., cone_gate = 0., cone_margin = 0.1;
+    double wall_escape = 0., wall_look = 30., wall_reward = 80.;
 };
 
 class EvasionPolicy : public Policy {
@@ -57,6 +59,10 @@ public:
             if (t) {
                 const double distance = t->distance, angle = t->angle;
                 const double tm = PRED.turn_max;
+                // Public relative heading only. Hearing remains omnidirectional.
+                if (PRED.cone_gate && distance > 60. && t->has_rel_dir &&
+                    std::abs(wrap(angle + OPI - t->rel_dir)) > OPI / 6 + PRED.cone_margin)
+                    return Policy::act(m, s);
                 if (distance <= PRED.r) {
                     double away = wrap(angle + OPI);
                     // A predator outruns an agent in a straight line, so break across
@@ -65,10 +71,34 @@ public:
                         away = wrap(away + (angle >= 0. ? PRED.dodge_ang : -PRED.dodge_ang));
                     bool sprinting = distance <= PRED.sprint_r;
                     double reach = sprinting ? s.sprint : pmin(s.speed, s.sprint);
+                    // Search short reachable headings around OBSERVED edges. Reward
+                    // breaking line of sight only beyond the predator's hearing
+                    // radius. This is a geometric heuristic, not privileged rollout.
+                    if (PRED.wall_escape && !m.edges.empty()) {
+                        P2 pos = m.pose->p, pred = polar(*m.pose, *t);
+                        double best = -OINF, selected = away;
+                        for (int k = 0; k < 24; ++k) {
+                            double h = m.pose->theta + away + k * OPI / 12.;
+                            P2 q = add(pos, mul(unit(h), PRED.wall_look));
+                            bool blocked = false, hidden = false;
+                            for (const auto& e : m.edges) {
+                                if (time - e.t > 25.) continue;
+                                if (segments_cross(pos, q, e.a, e.b) || point_segment(q, e.a, e.b) < 7.) blocked = true;
+                                if (segments_cross(pred, q, e.a, e.b)) hidden = true;
+                            }
+                            if (blocked) continue;
+                            double d = dist(q, pred);
+                            double value = d - 0.3 * std::abs(wrap(h - m.pose->theta - away));
+                            if (distance > 60. && d > 65. && hidden) value += PRED.wall_reward;
+                            if (value > best) { best = value; selected = wrap(h - m.pose->theta); }
+                        }
+                        away = selected;
+                    }
                     flee_ticks++;
                     sprint_ticks += sprinting ? 1 : 0;
                     release_fruit(m);
-                    return Plan{reach, away, pmax(-tm, pmin(tm, away))};
+                    double gaze = PRED.gaze ? angle : away;
+                    return Plan{reach, away, pmax(-tm, pmin(tm, gaze))};
                 }
                 if (distance <= PRED.face_r) {
                     face_ticks++;
