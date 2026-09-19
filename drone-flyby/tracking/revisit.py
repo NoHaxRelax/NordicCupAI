@@ -3,7 +3,7 @@
 Runtime only: no dataset paths or class-shape training. All boxes are stored in
 source coordinates; unseen objects keep their forecasts when the camera pans.
 """
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 
 import numpy as np
 
@@ -61,6 +61,10 @@ class RevisitConfig:
     # with alt_scale > 0 it is emitted for this frame under its own label at confidence x alt_scale: when the
     # track was born with the wrong class, the right class still gets its box (0 = off).
     alt_scale: float = 0.
+    # After relabel_votes consecutive whole detections of ONE other class over a track (none of its own class in
+    # between), the track takes that class and that box (0 = off). The detector's class flips at L1; a wrong birth
+    # class otherwise sticks for the object's whole life.
+    relabel_votes: int = 0
     # 'any': a silent detector counts as a miss whenever the predicted box lies whole inside the view
     # (the original rule). 'seen': only when the view also gives the object at least
     # miss_size_fraction of the smallest delivered size at which this track was ever detected whole.
@@ -112,6 +116,8 @@ class RevisitConfig:
             raise ValueError('retired_ticks must be nonnegative and retired_scale in [0,1]')
         if not 0 <= self.alt_scale <= 1:
             raise ValueError('alt_scale must lie in [0,1]')
+        if self.relabel_votes < 0:
+            raise ValueError('relabel_votes must be nonnegative')
 
     @property
     def needs_prior(self):
@@ -175,6 +181,7 @@ class RevisitedTrack:
     adaptation_checked: bool = False
     provisional: bool = False
     seen_pixels: float = 0.  # smallest delivered longer side of a whole detection of this track; 0 = never
+    alt_votes: dict = field(default_factory=dict)   # consecutive whole detections of another class over this track
 
 
 def edge_slopes(model, history):
@@ -262,7 +269,7 @@ class RevisitTracker:
                 pass
         track.history = (previous+[[tick, box.tolist()]])[-self.config.max_history:]
         track.confidence = confidence
-        track.provisional = False
+        track.provisional = False; track.alt_votes = {}
         track.last_seen_tick = tick; track.last_seen_frame = frame; track.visible_misses = 0
 
     def update(self, detections, view, tick, frame_index, *, detector_ran=True):
@@ -356,10 +363,23 @@ class RevisitTracker:
                     continue
             # Conflicting classifications at an existing object's location are
             # not enough to create a second prediction for the same object.
-            if any(overlap(box, p) > .5 for p in predictions.values()):
+            hits = [k for k, p in predictions.items() if overlap(box, p) > .5]
+            if hits:
                 self.events.append({'event': 'conflicting_detection', 'label': d.label})
                 if self.config.alt_scale > 0 and complete:
                     self.conflicts.append({'object_id': d.label, 'bbox_source_xyxy': box.tolist(), 'confidence': float(d.confidence)})
+                if self.config.relabel_votes and complete:
+                    for k in hits:
+                        track = self.tracks.get(k)
+                        if track is None or k in matched_tracks:
+                            continue
+                        track.alt_votes = {d.label: track.alt_votes.get(d.label, 0)+1}
+                        if track.alt_votes[d.label] >= self.config.relabel_votes:
+                            self.events.append({'event': 'relabel', 'track_id': k, 'from': track.label, 'to': d.label})
+                            track.label = d.label; track.alt_votes = {}
+                            self._accept(track, box, tick, frame_index, d.confidence)
+                            matched_tracks.add(k)
+                            break
                 continue
             if not complete or d.confidence < self.config.birth_confidence:
                 entering = None

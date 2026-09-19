@@ -28,6 +28,8 @@ Configuration is by environment variables (defaults in brackets):
                             confidence x scale (0 = off)                                    [0, 0.3]
   DRONE_ALT_SCALE           a whole detection of another class over a track is also emitted under its own
                             label at confidence x scale, since a track keeps its birth class (0 = off) [0]
+  DRONE_RELABEL_VOTES       after k consecutive whole detections of one other class over a track, the track
+                            takes that class and box (0 = off)                                          [0]
   DRONE_CUE_KIND, DRONE_CUE_CLASSES  'unconfirmed' cues only never-confirmed tracks; a comma list limits cues to
                             those classes (empty = any)                                     [all, empty]
   DRONE_OBSERVE_MOTION      image-based motion clock for frozen/double steps [1]
@@ -89,6 +91,8 @@ CONFIG = RevisitConfig(
     retired_scale=float(os.environ.get('DRONE_RETIRED_SCALE', '0.3')),
     # A whole detection of another class over a track is emitted under its own label at confidence x scale (0 = off).
     alt_scale=float(os.environ.get('DRONE_ALT_SCALE', '0')),
+    # After k consecutive whole detections of one other class over a track, the track takes that class (0 = off).
+    relabel_votes=int(os.environ.get('DRONE_RELABEL_VOTES', '0')),
     # A miss is counted whenever a predicted box lies inside the view and the detector stays silent,
     # whatever the zoom. An L0 overview therefore counts against a small object no detector can
     # see at L0. Raise this to study how many points that rule costs.
