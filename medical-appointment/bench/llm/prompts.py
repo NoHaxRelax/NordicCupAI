@@ -672,6 +672,80 @@ class JointDemoFewShot(JointDemo):
         return Prompt(p.system + _FEWSHOT_NOTE, user, p.schema, p.postprocess, p.demos)
 
 
+
+class JointDemoBoth(JointDemo):
+    """JointDemo(k) plus the two notes of the served prompt (_ASR_NOTE, _ACT_NOTE, entry 58) before the
+    return mark, and optionally the 19 VALIDATION conversations in the demo pool: questions from
+    request_dump/<stem>.questions.json, binaries from bench/mine/agent_answers.md, spans from the
+    'done' entries of bench/mine/span_state.json (the recovered spans that reproduce the portal to four
+    decimals, entry 65), transcripts from request_dump/transcripts. Built for the Fable many-shot probe
+    (Elias, 2026-09-19): a measurement of a hosted model that can never be served, so the validation
+    labels may sit in its demos. The conversation under test is always excluded from the demos, for the
+    validation conversations too (set_conversation with the same stem)."""
+
+    def __init__(self, k: int = 100, include_validation: bool = False):
+        super().__init__(k)
+        self.include_validation = include_validation
+
+    def pool(self) -> List[dict]:
+        if self._pool is not None and self._pool_asr == self.asr:
+            return self._pool
+        self._pool = None
+        pool = list(JointDemo.pool(self))            # the training conversations; caches itself
+        if self.include_validation:
+            pool += self._validation_pool()
+        self._pool, self._pool_asr = pool, self.asr
+        return pool
+
+    def _validation_pool(self) -> List[dict]:
+        import json
+        import sys
+        mine = CASE / 'bench' / 'mine'
+        if str(mine) not in sys.path:
+            sys.path.insert(0, str(mine))
+        import answers_md
+        hand = answers_md.parse()
+        state = json.loads((mine / 'span_state.json').read_text(encoding='utf-8'))
+        dump = CASE / 'request_dump'
+        pool: List[dict] = []
+        for stem, rows in hand.items():
+            tf, qf = dump / 'transcripts' / f'{stem}.{self.asr}.json', dump / f'{stem}.questions.json'
+            if not (tf.exists() and qf.exists()):
+                continue
+            qs = [q.strip() for q in json.loads(qf.read_text(encoding='utf-8'))]
+            words: List[Word] = []
+            for s in json.loads(tf.read_text(encoding='utf-8'))['segments']:
+                for w in s.get('words', []):
+                    words.append(Word(w['w'], float(w['start']), float(w['end'])))
+                if s.get('words'):
+                    words[-1].w += '\x00'
+            units_ = make_units(words)
+            answers = []
+            for r in rows:
+                st = state.get(f"{stem}:{r['q']}")
+                if r['answer'] and st and st.get('stage') == 'done':
+                    g0, g1 = float(st['g']), float(st['h'])
+                    ids = [k for k, u in enumerate(units_)
+                           if min(u.end, g1) - max(u.start, g0) > 0.3 * max(0.05, u.end - u.start)]
+                    if not ids:
+                        mid = (g0 + g1) / 2
+                        ids = [min(range(len(units_)), key=lambda k: abs((units_[k].start + units_[k].end) / 2 - mid))]
+                    answers.append({'q': r['q'], 'quote': units_[ids[0]].text.strip(), 'answer': 'yes', 'segments': ids})
+                else:
+                    answers.append({'q': r['q'], 'quote': '', 'answer': 'no', 'segments': []})
+            asks = '\n'.join(f'{i + 1}. {units_question(q)[len("QUESTION: "):]}' for i, q in enumerate(qs))
+            pool.append({'stem': stem, 'toks': [_qtokens(q) for q in qs],
+                         'user': f'TRANSCRIPT:\n{render_transcript(units_)}\n\nQUESTIONS:\n{asks}',
+                         'assistant': json.dumps({'answers': answers}, ensure_ascii=False)})
+        return pool
+
+    def build_all(self, questions: List[str], units_: List[Unit]) -> Prompt:
+        p = super().build_all(questions, units_)
+        notes = _ASR_NOTE.strip('\n') + '\n' + _ACT_NOTE.strip('\n') + '\n'
+        system = p.system.replace(_RETURN_MARK, notes + _RETURN_MARK, 1)
+        return Prompt(system, p.user, p.schema, p.postprocess, p.demos)
+
+
 VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units': units,
     'units-claim': units_claim,
@@ -695,6 +769,9 @@ VARIANTS: Dict[str, Callable[[str, List[Unit]], Prompt]] = {
     'units-joint-demo-fewshot': JointDemoFewShot(2, 12),
     'units-joint-demo-all': JointDemo(38),     # every other training conversation as a demonstration (~60k tokens)
     'units-joint-demo-x1': JointDemoX('x1'),   # joint-demo plus the 'confirmed or acted upon' line (entry 43)
+    # the Fable many-shot probe (2026-09-19): every other labelled conversation as a demo, plus the served notes
+    'units-joint-demo-all-both': JointDemoBoth(100, include_validation=False),        # 38 training demos
+    'units-joint-demo-all-both-val': JointDemoBoth(100, include_validation=True),     # 57 demos: training + validation
 }
 
 
