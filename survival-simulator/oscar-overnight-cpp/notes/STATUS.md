@@ -1,6 +1,6 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (j, k, n6 at 07:05; disks are wiped on restart: bootstrap + deploy again).
+STATE: IDLE. All pods stopped (j again at 07:20 after the last test f37; disks are wiped on restart: bootstrap + deploy again).
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
@@ -19,8 +19,11 @@ nothing simulated on the laptop except single-game traces.
 4. Turn-rate escape variants: -409..-488 s; the per-tick sidestep against the predator's current heading stays.
 5. Late-only trap with 8-13 predators: -18..-96 s, 0.03 predators held.
 
-**What the full-game trap funnel says (per game):** 21-26 guide episodes, 19-22 guide deaths before the handoff,
-0.04-0.24 predators held, 132 kills per game even without the trap. The isolated scenario (last 500-700 units,
+**What the full-game trap funnel says (per game, f35/f37):** 17-26 guide episodes, 7-11 guide deaths (classes: far
+from the trap and slow walk dominate; several predators near is rare), 0.26-0.29 handoffs, 0.04-0.09 predators
+held, 19-21 baits born, 132 kills per game even without the trap. Cost decomposition (f37, 192 seeds): baits alone
+-57 +- 27 s, baits + guides -140 +- 27, guides only for predators within 300 of the trap -158 +- 28; bait-on-sight
+(bait only within 20 s of a sighting) does not reduce baits born (19 vs 21) because predators are always in sight. The isolated scenario (last 500-700 units,
 one predator, no bystanders) delivers 90-95%, so the losses happen before that: reaching the predator, keeping
 its attention while closer colony members are around, and baits that never eat. A trap that pays off needs a
 different design (fast dedicated guides + a replenishable bait), not more parameter tests.
@@ -314,3 +317,14 @@ Log (newest last)
 - 07:03 f36 (576 fresh seeds 7400-7975): rf_wall -22+-15 s vs rf_ref; pooled with f35 (768 seeds) -6+-13, 381/768 wins
   => pred_wallclear is noise (the +42 on 192 seeds was a fluctuation). Not adopted. Pods j, k stopped; all pods idle.
   Night-pod spend ~$30 of $100. Branch pushed. Nothing through the API; no simulation on the laptop.
+- 07:05 Tick: items 1-5 done. Funnel columns decoded (dbg_trap): f35 rf_trap per game = 25.9 guide episodes,
+  21.6 chased, 2.1 reach the handoff state, 0.29 handoffs, 10.9 guide deaths (classes: far 6.1, slow 6.5, multi 1.6,
+  stuck 1.2, early 2.3; overlapping), 21.2 baits born; only 47/192 games ever complete a handoff, 2/192 hold a
+  predator. The dominant cost is 21 baits per game. One last narrow test, f37 on j (restarted, port 33242, seeds
+  7200-7391): trap on demand = bait only within 20 s of a sighting (bait_on_sight=20), with/without guiding only
+  predators within 300 of the trap (guide_pred_lane_max), and bait-only. Cost ~$0.3.
+- 07:18 f37 (192 seeds 7200-7391, paired vs pred_best_0400 1514 s): t_bait_only_sight20 -57+-27 (84/192 wins),
+  t_sight20 -140+-27, t_sight20_lane300 -158+-28. Held 0.06-0.09 per game; baits born 18-21 regardless of the
+  sighting gate (predators are seen almost continuously); lane300 halves guide episodes (17 vs 23) and deaths (7 vs 10)
+  but the survival cost is the same. Trap line closed with a full cost decomposition: baits ~-57, guides ~-85..-100.
+  Pod j stopped. All pods stopped. Night-pod spend ~$31 of $100.

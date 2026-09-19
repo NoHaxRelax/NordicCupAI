@@ -43,3 +43,7 @@ Best configs unchanged: r21s0c2 (no predators), pred_best_0400 (with predators).
 wall-clear for guides, turn-rate escape, late-only trap, near-colony trap: none beats the shipped configs (see
 results-summary.md). `pred_wallclear=1` on top of pred_best_0400 was +42 +- 27 s on 192 seeds but -22 +- 15 on 576 fresh seeds
 (pooled 768: -6 +- 13): noise, not adopted. Shipped configs unchanged.
+
+## 07:20 19 Sept: trap cost decomposition (f37, 192 seeds, vs pred_best_0400)
+Baits alone -57 +- 27 s; baits + guides -140 +- 27; guides restricted to predators within 300 of the trap -158 +- 28.
+No trap variant tested tonight is positive. Shipped configs unchanged.
