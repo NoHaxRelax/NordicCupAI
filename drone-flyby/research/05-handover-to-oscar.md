@@ -39,6 +39,7 @@ adds a laptop hop and a tunnel, so allow a tenth for latency, not more.
 |---|---:|---:|---:|
 | helicopter | **0.29** | 0.96 | about +0.05 on the total |
 | ta-ta | **0.00** | 0.50 (F5, Oslo) | about +0.04 on the total |
+| medium_launcher | **0.12** | 0.13 plain, 0.36 with the 0.85 box (laptop, same night) | about +0.02, from the box scale of section 5b on your own answers or from routing |
 
 Your helicopter run also carried `Frame 84: ignored camera request L1 (960, 540) from L2 (2291, 1175): center movement
 1474.72px exceeds the L2 limit`, and the ta-ta run `Frame 26: ignored camera request L1 (1920, 540) from L2 (1325, 270): center movement 653.39px` (section 4: a move that changes level is bound by the limit of the level it leaves, 551 px at L2).
