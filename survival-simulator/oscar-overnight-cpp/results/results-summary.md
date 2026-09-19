@@ -90,3 +90,27 @@ sends baits and guides to the wrong place. Fix this before any further trap work
 | guides with exact positions | -93 to -250 |
 | trap site chosen near the colony | -43 to -79 |
 | final fresh-seed numbers, fixed policy, 768 seeds | no predators 2432 s / 2599; with predators 1533 s / 1543 |
+
+## 06:00-07:10, follow-up items after the map fix (peer-relayed list 1-5)
+
+| Item | Test | Seeds | Result |
+| --- | --- | ---: | --- |
+| 1 anchor fix ported to orchard.py | lockstep parity Python vs native (parity.py), 6 seeds x 800 s | 6 | zero divergent decisions |
+| 2 trap next to the colony (sites <= 250 from the colony centre) | full games, trap_mode 1-3 | 192 | -43..-79 s |
+| 3 relay guiding (hand-over to a fresh member ahead on the lane) | scenario 500-700 units, relay actually engaging (rel3) | 64 valid | delivered 92% vs 95% plain guide |
+| 3 relay guiding | full games (f35, relay live) | 192 | -174 +- 28 s, same as the plain guide trap (-175) |
+| 3 sprint-lead (guide sprints inside the hold band) | scenario (spr1) | 62 valid | 92% vs 89% (noise) |
+| 3 wall-clear steering for guides | scenario (rel3) | 64 valid | 95% vs 95% |
+| 4 turn-rate escape (committed heading 5/10/20 ticks, with/without facing) | escape grid + full games | 1152 / 192 | -409..-488 s vs the per-tick sidestep |
+| 5 late-only trap (from 900/1200 s, 8-13 predators) | full games | 192 | -18..-96 s, 0.03 predators held |
+| wall-clear steering for fleeing agents (pred_wallclear) | escape grid (esc4) | 1152 | kills 28.7% vs 27.8% (noise) |
+| wall-clear steering for fleeing agents | full games (f35) | 192 | +42 +- 27 s (104/192 wins); confirmation f36 on 576 more seeds |
+
+Full-game trap funnel (f34/f35, per game): 21-26 guide episodes, 19-22 guide deaths before the handoff, 1.6-2.1
+reach the handoff state, 0.04-0.24 predators held; kills per game 132 (no trap) vs 140-147 (trap). The scenario
+(last 500-700 units, one predator, no bystanders) delivers 90-95%; the full game fails earlier: reaching the
+predator, keeping its attention with closer colony members around, and the bait economics.
+
+Relay scenario harness bug (rel1/rel2 were void): the intended guide was frozen during the warm-up ticks, so
+the policy picked the relay agent as guide. Fixed in guide.py/guide_dbg.py (relay frozen until the guide is
+chosen).

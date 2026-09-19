@@ -11,4 +11,4 @@ cp $O/configs-all.json $O/best-configs.json $O/cfg-*.json $T/configs/ 2>/dev/nul
 cp $O/results-summary.md $T/results/ 2>/dev/null
 cd $O/repo && git add -A survival-simulator/oscar-overnight-cpp && git commit -q -m "$1
 
-Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>" && git log --oneline -1
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline -1

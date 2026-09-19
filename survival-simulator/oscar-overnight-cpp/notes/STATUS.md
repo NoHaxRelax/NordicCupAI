@@ -1,41 +1,39 @@
-# READ FIRST (morning summary, updated 06:25 on 19 Sept)
+# READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (disks are wiped on restart: bootstrap + deploy again). Spend ~$45 of $100.
-Final fresh-seed numbers with the fixed policy (768 seeds each): no predators 2432 s / score 2599;
-with predators 1533 s / 1543. A localisation bug was found and fixed (see 05:50 entries and docs).
-Trap line closed for the night: with exact positions the keeper bait chain is -45 to -100 s, guides -93 to -250,
-sites near the colony -43 to -79; predators hunt where the colony is and rarely reach a crevice by themselves,
-and a guide walking 10 cannot lead a predator sprinting 15 over hundreds of units. Next ideas need a design
-change (fast dedicated guides or traps placed where the colony forages) rather than parameter tests.
+STATE: pods j and k running the last confirmation (f36: pred_wallclear on 576 seeds), n6 and all others stopped.
+Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
+Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
+nothing simulated on the laptop except single-game traces.
 
+**Best configs (unchanged since 06:20, both in best-configs.json):** no predators r21s0c2: 2432 s / score 2599
+(768 fresh seeds); with predators pred_best_0400: 1533 s / 1543 (768 fresh seeds). Candidate on top of
+pred_best_0400: pred_wallclear=1 (fleeing agents steer around recently seen walls): +42 +- 27 s on 192 seeds,
+confirmation on 576 more seeds running (f36); adopt only if the pooled result is > 2 SE.
 
-**No predators:** r21s0c2 stays the best policy: 2393 s mean survival, score 2555 over 1465 seeds (previous
-best 2353 / 2492). ~180 variants tried overnight on 512 paired seeds each; nothing beats it. The remaining
-headroom is detecting trees 200-400 units away (oracle +120 s), which no tested change captures.
+**06:00-07:10, the five follow-up items (details in results-summary.md, last table):**
+1. Anchor (localisation) fix ported to orchard.py; lockstep parity with the C++ policy confirmed.
+2. Trap next to the colony: -43..-79 s. 
+3. Guide speed gap: relay guiding (hand-over to a fresh member on the lane) and sprint-lead both change nothing
+   (scenario 92% vs 95%; full games -174 vs -175 s). Note: the first relay runs (rel1/rel2) were void because
+   the scenario harness let the policy pick the relay agent as guide; fixed and re-run.
+4. Turn-rate escape variants: -409..-488 s; the per-tick sidestep against the predator's current heading stays.
+5. Late-only trap with 8-13 predators: -18..-96 s, 0.03 predators held.
 
-**With predators (full games, r21s0c2 + evasion, no trap):** 887 s -> 1492 s (score 732 -> 1502, +605 ± 16) on 576 fresh
-seeds with `pred_best_0400` (artifacts/overnight/configs-all.json): flee only within 70, face within 80, sprint
-within 40, sidestep 1.4 rad off the predator's heading within 80, no shared alarms. Fleeing far, sharing
-alarms, running to crevices, speed selection and population re-tuning all hurt or do nothing.
+**What the full-game trap funnel says (per game):** 21-26 guide episodes, 19-22 guide deaths before the handoff,
+0.04-0.24 predators held, 132 kills per game even without the trap. The isolated scenario (last 500-700 units,
+one predator, no bystanders) delivers 90-95%, so the losses happen before that: reaching the predator, keeping
+its attention while closer colony members are around, and baits that never eat. A trap that pays off needs a
+different design (fast dedicated guides + a replenishable bait), not more parameter tests.
 
-**Trap (Lucas's crevice bait + guide), ported to C++:** in isolated scenarios one predator is delivered 78%
-of the time (96% when it starts behind the guide), and 1-10 held predators plus one more delivery work 94-98%.
-In full games the trap costs 200-450 s: guides walk ~10 vs the predator's 15 and die en route (87%), baits
-never eat and die in 60-100 s, so predators are held only briefly. Funnel and death-attribution counters, the
-scenario runners (guide.py, escape.py, trapsite.py) and the per-tick tracers (full_dbg.py, guide_dbg.py) are in
-the branch for the next attempt. My reading: guides need fast agents (evolved speed >= 13) and routing around
-obstacles, and baits need a rear-side replenishment path; without both the trap is a net loss.
+**No predators:** r21s0c2 remains the best; ~180 variants on 512 paired seeds each, nothing beats it. Headroom is
+detecting trees 200-400 units away (oracle +120 s).
 
-**After 04:30 (per 'run until the budget is spent'):** old-agent decoys, closest-agent-only fleeing, birth gating
-near predators and detection settings: all noise (evasion is converged at ~1500 s). Keeper design (a keeper near
-the crevice rear spawns children as baits): -414 to -506 s. Root cause found: the family's shared map can drift
-by ~75-80 units when an early merge is wrong (1-5% of agents are >30 units off in normal play, but trap games
-amplify it), so baits and guides walk to the wrong spot. Map consistency under merges is the prerequisite for
-any trap work.
+**With predators, evasion only:** 887 s -> 1533 s with pred_best_0400 (flee within 70, face within 80, sprint
+within 40, sidestep 1.4 rad within 80, no shared alarms). Fleeing far, shared alarms, crevice hiding, decoys,
+closest-only fleeing, birth gating, dodge-hold: all worse or noise.
 
-Everything ran on Runpod (pods cpu-i/j/k + 5 ephemeral pods, all stopped at 05:30), nothing on the laptop,
-nothing through the competition API. Spend ~$38 of the $100. Branch: survival-simulator/oscar-overnight-cpp.
-Files: BEST.md (best configs), GUIDE.md (trap step 1-2 numbers), results-summary.md (all tables), PLAN.md.
+Files: BEST.md (best configs), GUIDE.md (trap step 1-2 numbers), results-summary.md (all tables), PLAN.md,
+configs-all.json / best-configs.json, runs/*.jsonl (compact per-game rows), docs/survival-orchard.md.
 
 ---
 # Overnight status (19 Sept 2026) — read this first on every tick
@@ -308,3 +306,8 @@ Log (newest last)
 - 06:56 spr1 (sprint-lead: the guide sprints whenever the predator is inside guide_far, 62 valid scenarios):
   g_off 89%, g_sprint 92%, g_sprint_far100 87% => noise. Item 3 (sprint / relay guiding) closed: the scenario
   delivery is already ~90-95%; the guide speed gap is not what breaks the full-game trap. n6 stopped (idle).
+- 06:57 f35 (192 fresh seeds 7200-7391, full games with predators, paired vs pred_best_0400 = 1514 s):
+  rf_wall (pred_wallclear: fleeing agents steer around recently seen walls) +42+-27 s, 104/192 wins;
+  rf_trap (guide trap, no relay) -175+-27; rf_relay (relay live) -174+-28 => relay changes nothing in full games.
+  Trap funnel again: 26 guide episodes, 22 guide deaths, 0.04 predators held. Confirming rf_wall on 576 more
+  seeds (f36 on j/k, seeds 7400-7975).
