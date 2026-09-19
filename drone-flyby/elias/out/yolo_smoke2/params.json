@@ -1,0 +1,31 @@
+{
+ "out": "elias/out/yolo_smoke2",
+ "n": 120,
+ "sprite_scenes": [
+  "helsinki",
+  "validation"
+ ],
+ "background_scenes": [
+  "helsinki",
+  "validation"
+ ],
+ "real_val_scenes": null,
+ "n_val": 12,
+ "workers": 6,
+ "seed": 0,
+ "max_bg_frames": 60,
+ "free_rotation": false,
+ "extra_bg": null,
+ "extra_bg_prob": 0.4,
+ "sprite_blur_max": 0.0,
+ "sprite_gain": "0.4,1.9",
+ "bg_gain": "0.5,1.8",
+ "alpha_mode": "feather",
+ "lean_limits": {
+  "large_tower": 50.0,
+  "small_tower": 60.0,
+  "ta-ta": 60.0,
+  "medium_launcher": 60.0,
+  "large_launcher": 60.0
+ }
+}

@@ -26,7 +26,7 @@ done
 [ -z "$URL" ] && { echo "no tunnel URL"; tail -5 "$OUT/tunnel.log"; exit 1; }
 # Ready means reachable from OUTSIDE (a fresh quick tunnel answers 530 for a while) and warm (the first
 # inference and the SIFT calibration are slow). Probe from a pod, then send two throwaway frames locally.
-POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-11267} root@${POD_HOST:-103.196.86.77}"
+POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-42960} root@${POD_HOST:-149.36.0.173}"
 for _ in $(seq 1 40); do
   timeout 30 $POD "curl -sf -m 8 $URL/ > /dev/null" && { echo "reachable from outside"; break; }; sleep 5
 done
@@ -46,7 +46,7 @@ PYW
 echo "serving $W at $URL/predict (windows '${WIN:-all}')"
 if [ "$MODE" = rehearse ]; then
   # the organisers' evaluator, real-time clock, run FROM a pod: a true external round trip through the tunnel
-  POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-11267} root@${POD_HOST:-103.196.86.77}"
+  POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-42960} root@${POD_HOST:-149.36.0.173}"
   timeout 600 $POD "cd /root/work/drone-flyby && pip install -q --break-system-packages --root-user-action=ignore faster-coco-eval requests > /dev/null 2>&1; python local_evaluator.py --url $URL/predict --scene helsinki --realtime 2>&1 | tail -28" > "$OUT/rehearse.txt"
   grep -E "frames skipped|frames unanswered|responses accepted|timeouts|round trip|COCO mAP" "$OUT/rehearse.txt"
 else

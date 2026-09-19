@@ -106,6 +106,8 @@ def make_view(win, rng, real_only=False):
     for _ in range(20):
         scene, frame = store.keys[int(rng.integers(len(store.keys)))]
         level = int(rng.choice(3, p=[0.30, 0.45, 0.25])); f = FACTOR[level]
+        if scene != 'helsinki' and not real_only and _G.get('organiser_only') and level == 0:
+            level = int(rng.choice([1, 2], p=[0.65, 0.35])); f = FACTOR[level]   # an L0 view always holds real objects
         x0, x1, y0, y1 = BOUNDS[level]
         if level == 1 and rng.random() < 0.5:
             cx, cy = int(rng.choice([960, 1920, 2880])), 540
@@ -113,7 +115,11 @@ def make_view(win, rng, real_only=False):
             cx, cy = int(rng.integers(x0, x1+1)), int(rng.integers(y0, y1+1))
         rx, ry = cx-480*f, cy-270*f
         region = np.array([rx, ry, rx+960*f, ry+540*f], float)
-        if not _overlaps(region, _excluded_boxes(store, scene, frame), pad=0):
+        keepout = _excluded_boxes(store, scene, frame)
+        if scene != 'helsinki' and not real_only and _G.get('organiser_only'):
+            # pseudo-labelled frames give backgrounds and sprites, never training BOXES: stay clear of their objects
+            keepout = np.vstack([keepout, np.array([a['bbox'] for a in store.annotations(scene, frame)], float).reshape(-1, 4)])
+        if not _overlaps(region, keepout, pad=0):
             break
     extra = _G.get('extra') if (not real_only and level < 2 and rng.random() < _G.get('extra_prob', 0.)) else None
     patch = (_extra_canvas(rng, extra, 960*f, 540*f) if extra else
@@ -149,6 +155,7 @@ def make_view(win, rng, real_only=False):
 
 def _init(kw, extra_dir=None, extra_prob=0.):
     cv2.setNumThreads(1)
+    _G['organiser_only'] = os.environ.get('SYNTH_ORGANISER_BOXES', '0') == '1'
     win = SynthWindows(1, **kw); win._setup(); _G['win'] = win
     if extra_dir:
         files = sorted(str(f) for f in Path(extra_dir).rglob('*') if f.suffix.lower() in ('.tif', '.tiff', '.jpg', '.jpeg', '.png'))

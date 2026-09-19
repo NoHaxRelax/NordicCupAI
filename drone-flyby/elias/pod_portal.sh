@@ -6,7 +6,7 @@ W=$1; TAG=$2; WIN=${3:-}
 cd "$(dirname "$0")/.." || exit 1
 VP="$HOME/venvs/nordic-drone/Scripts/python.exe"; OUT=elias/out/portal/$TAG; mkdir -p "$OUT"
 POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-42960} root@${POD_HOST:-149.36.0.173}"
-PROBE="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p 16810 root@103.196.86.56"
+PROBE="$POD"   # the pod curling its own tunnel URL goes out through Cloudflare, which is an outside check
 timeout 60 $POD 'pkill -f "[a]pi.py"; pkill -f "[c]loudflared tunnel"; sleep 2; true'
 timeout 300 $POD "cd /root/work/drone-flyby && IMGSZ=${IMGSZ:-1280} ANSWER_CLASSES='${ANSWER_CLASSES:-}' bash elias/pod_serve.sh $W '$WIN' > /root/logs/serve_start.log 2>&1; cat /root/logs/serve.url"
 URL=$(timeout 30 $POD 'cat /root/logs/serve.url' | awk '{print $2}')

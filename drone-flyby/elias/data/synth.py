@@ -996,8 +996,13 @@ class SynthWindows:
         self.by_class = {}
         for sprite in self.sprites:
             self.by_class.setdefault(sprite.class_index, []).append(sprite)
-        self.class_margins = {c: np.median(np.stack([s.margins for s in group]), axis=0)
-                              for c, group in self.by_class.items()}
+        # Box margins (organiser box minus tight silhouette) come from ORGANISER-labelled sprites when the class
+        # has any (scene helsinki): the portal showed that the team's validation pseudo-label boxes do not follow
+        # the organisers' convention (small_tower 0.97 AP on pseudo-labels, 0.07 on organiser truth).
+        def _margins(group):
+            trusted = [s for s in group if s.scene == 'helsinki'] if os.environ.get('SYNTH_ORGANISER_MARGINS', '1') == '1' else []
+            return np.median(np.stack([s.margins for s in (trusted or group)]), axis=0)
+        self.class_margins = {c: _margins(group) for c, group in self.by_class.items()}
         self.store = FrameStore(p["background_scenes"], p["max_bg_frames"], p["frame_cache"])
         self.store.measure_ground()
         self._ready = True

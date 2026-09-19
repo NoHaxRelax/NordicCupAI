@@ -50,19 +50,26 @@ def show(d, n=8):
     return rows
 
 
-def validate(url, wait_s=900):
-    d = status(); rows = show(d, 3)
-    if any(not a.get('finished_at') for a in rows):
-        sys.exit('another validation is still running: not queueing')
-    r = requests.post(f'{BASE}/validate/queue', headers={'x-token': key()}, json={'url': url}, timeout=30)
-    print('queue ->', r.status_code, r.text[:300]); r.raise_for_status()
-    t0 = time.time(); n0 = len(rows)
-    while time.time()-t0 < wait_s:
-        time.sleep(15)
+def validate(url, wait_s=900, tries=6):
+    """Queue ONE validation for `url` and return ITS result. The portal answers a queue request made while a
+    teammate's run is in progress with THAT attempt, so a result only counts if its service_url is ours;
+    otherwise wait for the other run to finish and queue again."""
+    for attempt in range(tries):
         rows = sorted(status().get('validations', []), key=lambda a: a.get('submitted_at') or '')
-        if len(rows) > n0 and rows[-1].get('finished_at'):
-            a = rows[-1]; print(f"RESULT score {a.get('score')}  errors {a.get('errors')}  url {a.get('service_url')}"); return a
-    sys.exit('timed out waiting for the validation to finish')
+        if any(not a.get('finished_at') for a in rows):
+            print('a teammate validation is running: waiting'); time.sleep(45); continue
+        r = requests.post(f'{BASE}/validate/queue', headers={'x-token': key()}, json={'url': url}, timeout=30)
+        print('queue ->', r.status_code, r.text[:200]); r.raise_for_status()
+        t0 = time.time()
+        while time.time()-t0 < wait_s:
+            time.sleep(15)
+            rows = status().get('validations', [])
+            mine = [a for a in rows if (a.get('service_url') or '').rstrip('/') == url.rstrip('/')]
+            if mine and mine[-1].get('finished_at'):
+                a = mine[-1]; print(f"RESULT score {a.get('score')}  errors {str(a.get('errors'))[:120]}  url {a.get('service_url')}"); return a
+            if not mine and all(a.get('finished_at') for a in rows) and time.time()-t0 > 60:
+                print('our URL never appeared in the history: the queue request was absorbed by another run; retrying'); break
+    sys.exit('could not get a validation of our own URL')
 
 
 if __name__ == '__main__':
