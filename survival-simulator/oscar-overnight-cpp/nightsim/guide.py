@@ -64,10 +64,11 @@ def one(job):
             near = near + 0.5 if dm < 25 else 0.
             if near >= 3. and t_del is None and bait not in killed: t_del = round(eng.info()['time'] - t0, 1)
         r = eng.dbg_roles(); states.append(r[0][5] if r else -1)
-        if bait in killed or guide in killed: break
+        if bait in killed: break
+        if t_del is not None and eng.info()['time'] - t0 > t_del + 10: break
     ag = {a[0]: a for a in eng.agents()}
     return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, delivered=int(t_del is not None and bait not in killed), t_deliver=t_del,
-                guide_alive=int(guide in ag), bait_alive=int(bait in ag), used=round(e0 - ag[guide][5], 1) if guide in ag else None,
+                guide_alive=int(guide in ag), t_guide_died=killed.get(guide), bait_alive=int(bait in ag), used=round(e0 - ag[guide][5], 1) if guide in ag else None,
                 dmin_bait=round(dmin, 1), states=''.join(str(x) for x in states[::4]), site=[round(gx), round(gy), round(ov), rear], phi=phi)
 
 if __name__ == '__main__':

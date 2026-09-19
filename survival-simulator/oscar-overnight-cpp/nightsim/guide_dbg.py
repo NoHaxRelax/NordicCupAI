@@ -49,5 +49,9 @@ for k in range(120):
     r = eng.dbg_roles(); ps = eng.dbg_pseen()
     d = math.hypot(g[1]-p[0], g[2]-p[1]) if g and p else None
     dm = math.hypot(p[0]-mx, p[1]-my) if p else None
-    print(f"t{eng.info()['time']-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) hd {g[3]:.2f} e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) hd {p[2]:.2f} e {p[3]:.0f} rest {p[4]} | d {d and round(d)} d_mouth {dm and round(dm)} roles {r} pseen {ps} {ev}" if g and p else f"t{eng.info()['time']-t0:5.1f} guide {g is not None} pred {p is not None} {ev}")
-    if not g or ev: break
+    b_ = ag.get(bait); dbait = math.hypot(p[0]-b_[1], p[1]-b_[2]) if b_ and p else None
+    if g and p:
+        print(f"t{eng.info()['time']-t0:5.1f} guide ({g[1]:.0f},{g[2]:.0f}) e {g[5]:.0f} | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} | d {d:.0f} d_mouth {dm:.0f} d_bait {dbait:.0f} state {r[0][5] if r else None} {ev}")
+    else:
+        print(f"t{eng.info()['time']-t0:5.1f} guide dead | pred ({p[0]:.0f},{p[1]:.0f}) e {p[3]:.0f} rest {p[4]} d_mouth {dm:.0f} d_bait {dbait} bait alive {b_ is not None} {ev}" if p else 'no predator')
+    if not b_: break

@@ -70,3 +70,14 @@ Log (newest last)
 - 01:47 n1/n2 also stopped (disks kept); running pods: i, j, k. Pushed branch survival-simulator/oscar-overnight-cpp (871b639).
 - 01:51 vm1 (visibility margins 40/80, fruit 20; 512 seeds): +7..+11 ±17 => noise. P1 final: r21s0c2 (unchanged). P2 starts 02:00 with step 1 (one predator to the trap).
 - 02:00 st1 (stacked small gains, 512 seeds): +10±17 / +1 / -27 => nothing. P1 closed. P2 step 1 begins (guide one predator).
+- 02:45 P2 step 1: guide role in C++ (ACQUIRE/LEAD/handoff = Lucas's sacrifice at 55 from the bait), scenario test
+  nightsim/guide.py (true walls + poses via hooks, bait frozen 9 deep, guide/predator placed with clear straight
+  lines). First full delivery traced: guide eaten at t=4.2, predator then held 19-25 from the bait, bait alive.
+  Oscar (02:20): guide death is fine; scope = delivery rate only. Running: g1 smoke (12 seeds) on i; g2 full grid
+  (dg 150/300/500 x dp 100/180/250 x bearing 0/90/180 x speed 10/13/16) seeds 1-32 on j, 33-64 on k.
+- 03:10 step 1 iteration: the predator must actually be chasing before the handoff (state 3 needs 'closing');
+  guide keeps in front of the predator (sprint away when < 92 = direct-chase range, angled when the predator sits
+  between guide and lane; circle at walk in the pivot range). Test runner no longer stops at the guide's death
+  (the handoff needs it). Known hard case: predator between the guide and the trap (bearing 180): the predator
+  either eats the guide at close range or wanders off out of its senses. Measuring delivery by bearing: g1 (12
+  seeds) on i, g2 full grid on j/k.
