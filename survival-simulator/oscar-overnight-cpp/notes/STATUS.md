@@ -626,3 +626,12 @@ Log (newest last)
   release only when unseen or beyond guide_release). Scenarios (128 seeds): chase_r 200 -> 1 predator 93% clear /
   78% blocked, 2 predators 75% (acquiring guide 96/84/77); chase_r 150 83/70/75 (the agent flees normally before
   the predator is within 150). f51 full games: chased guiding (r 200; r 150 + near-trap 200; r 200 + near-trap 300).
+- 11:33 f51 full games (192 seeds): chased guiding with the near-trap filter -73+-27 (same as the best
+  acquiring variant -69); chased everywhere -137 (82 guide episodes, 27 guide deaths per game). Held predators
+  0.10-0.16 at any time; 22-23 baits born per game. OSCAR (11:40): make sure the bait can be replenished (groups
+  near it or similar). Added trap_rear_only (only crevices with an open rear, so replacements enter from behind
+  the held predator), bait_rotate (the replaced bait walks out the rear and forages instead of starving in place),
+  bait_rot_e (ask for a replacement when the bait's energy drops below it). Narrow holding scenario
+  nightsim/hold.py: 8 colony agents spread 60-250 around a true crevice, bait placed by the policy, one awake
+  predator put at the mouth, 600 s; h1 on n7/n8/n9: base / rear-only / + rotation / + rotation at 150 energy /
+  + colony posts near the trap.

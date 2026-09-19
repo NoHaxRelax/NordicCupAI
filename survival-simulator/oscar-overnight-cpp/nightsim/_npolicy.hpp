@@ -254,9 +254,11 @@ struct Group {
     std::vector<Site> sites; double sites_t = -1e9;
     bool has_trap = false; Site trap{}; int64_t bait = -1, rep = -1; double trap_since = 0.;
     std::vector<int64_t> retired;   // former baits: stay frozen in the crevice until they die
+    std::vector<int64_t> leaving;   // nightsim bait_rotate: former baits walking out through the rear to forage again
     int64_t guide = -1; int guide_state = 0; double guide_since = 0., guide_seen = -1e9; P2 guide_pred{}; int64_t guide_done = 0;
     double guide_dprev = -1., guide_closing_t = -1e9; P2 guide_pred_prev{}; bool guide_has_prev = false;
     // funnel counters (diagnostics): episodes started / reached LEAD with a real chase / reached the lane point (state 3) / ended by death / lost / handoff position reached
+    int64_t baits_rotated = 0;
     int64_t ep_start = 0, ep_chase = 0, ep_state3 = 0, ep_died = 0, ep_lost = 0, ep_hand = 0; bool ep_chased = false, ep_s3 = false, ep_h = false;
     // last known guide status (for death attribution): distance to lane point, predators within 120, walk speed, stuck ticks, ticks alive
     double gl_dT = 0., gl_speed = 0.; int64_t gl_npred = 0, gl_stuck = 0, gl_ticks = 0; P2 gl_pos{};
@@ -345,7 +347,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1395,6 +1397,7 @@ public:
                     if (!lane) continue;
                     bool rear_ok = clear_of(g, rear, 5.5) && clear_of(g, pt((end == 0 ? hi : lo) + 8. * inward, xc), 5.5);
                     if (P.site_safe > 0. && rear_ok && hi - lo < 2. * depth) continue;   // open rear too close to the hold point
+                    if (P.trap_rear_only > 0. && !rear_ok) continue;   // nightsim: only crevices a replacement can enter from behind
                     Group::Site st{goal, mouth, pt(m_along - 60. * inward, xc + lane_off), rear, hi - lo, gap, 0., rear_ok};
                     st.score = (hi - lo) + (rear_ok ? 30. : 0.) - (n ? P.site_dist_w * dist(goal, cen) : 0.);
                     g.sites.push_back(st);
@@ -1408,7 +1411,7 @@ public:
     bool is_trap_role(int64_t aid) {
         if (P.trap_mode < 2. || !minds.has(aid)) return false;
         Group& g = G(M(aid).group);
-        return g.has_trap && (g.bait == aid || g.rep == aid || g.guide == aid || g.relay == aid || std::find(g.retired.begin(), g.retired.end(), aid) != g.retired.end());
+        return g.has_trap && (g.bait == aid || g.rep == aid || g.guide == aid || g.relay == aid || std::find(g.retired.begin(), g.retired.end(), aid) != g.retired.end() || std::find(g.leaving.begin(), g.leaving.end(), aid) != g.leaving.end());
     }
     double life_left(const AState& s, const Mind& m) const {
         // idle life with no food, assuming senescence from age 60 (earliest possible)
@@ -1472,7 +1475,15 @@ public:
                 for (int64_t a : g.retired) if (minds.has(a) && M(a).group == g.id) keep.push_back(a);
                 g.retired.swap(keep);
             }
-            if (g.rep >= 0 && dist_lt(M(g.rep).pose->p, g.trap.goal, 4.)) { if (g.bait >= 0) g.retired.push_back(g.bait); g.bait = g.rep; g.rep = -1; }
+            {
+                std::vector<int64_t> keep;
+                for (int64_t a : g.leaving) if (minds.has(a) && M(a).group == g.id && !dist_lt(M(a).pose->p, g.trap.rear, 6.)) keep.push_back(a);
+                g.leaving.swap(keep);
+            }
+            if (g.rep >= 0 && dist_lt(M(g.rep).pose->p, g.trap.goal, 4.)) {
+                if (g.bait >= 0) { if (P.bait_rotate > 0. && g.trap.rear_ok) { g.leaving.push_back(g.bait); g.baits_rotated++; } else g.retired.push_back(g.bait); }
+                g.bait = g.rep; g.rep = -1;
+            }
             if (g.rep >= 0) {   // stuck or too slow: release the replacement to normal duty
                 Mind& rm = M(g.rep);
                 if (dist_lt(rm.pose->p, g.rep_pos, 2.)) g.rep_stuck++; else g.rep_stuck = 0;
@@ -1481,6 +1492,7 @@ public:
             }
             double need = OINF;
             if (g.bait >= 0) need = life_left(st(g.bait), M(g.bait));
+            if (g.bait >= 0 && P.bait_rot_e > 0. && g.trap.rear_ok && st(g.bait).energy < P.bait_rot_e) need = pmin(need, 0.);   // nightsim: ask for a replacement early so the bait can leave and eat
             bool want_bait = P.bait_on_sight <= 0. || time - g.guide_seen < P.bait_on_sight || g.bait >= 0;   // trap on demand: only after a recent sighting
             if (P.keeper_mode > 0.) {
                 // keeper: the member nearest the rear entrance holds a post there and spawns the next bait as a child
@@ -1539,6 +1551,7 @@ public:
             }
             for (int64_t a : {g.bait, g.rep}) if (a >= 0) bait_plan(M(a), st(a), g.trap, plans[a]);
             for (int64_t a : g.retired) plans[a] = Plan{0., 0., 0.};
+            for (int64_t a : g.leaving) { double dd, dir, turn; go_to(M(a), st(a), g.trap.rear, 0., dd, dir, turn); plans[a] = Plan{dd, dir, turn}; }
             if (P.trap_mode >= 3.) run_guide(g, plans);
             // everyone else keeps clear of the mouth so the held predators' closest agent stays the bait
             g.agents.each([&](int64_t a) {
