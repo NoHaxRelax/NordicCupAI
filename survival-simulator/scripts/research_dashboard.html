@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Survival · Research observatory</title><link rel="stylesheet" href="/research_dashboard.css"><script src="/research_dashboard.js" defer></script></head>
+<body>
+<header><div class="brand"><span class="mark">S</span> SURVIVAL <span class="slash">/</span> RESEARCH OBSERVATORY</div><div class="connection"><span id="lamp" class="lamp"></span><span id="connection">Connecting…</span></div></header>
+<main>
+<section class="intro"><div><p class="eyebrow">NORDIC CUP AI · LIVE EXPERIMENT REPORT</p><h1>A clearer view of<br>what’s improving.</h1><p class="lede">Follow the search, inspect the evidence, and see the reasoning behind each generation.</p></div><div class="intro-right"><span id="campaign" class="mono">Awaiting campaign</span><a class="button" href="/api/export">↓ Export current report</a><p id="updated">Updates every 15 seconds</p></div></section>
+<div id="notice" class="notice" role="status">Connecting to the research Pod. The first report may take a few seconds.</div>
+<section class="metrics" aria-label="Campaign overview">
+<article class="metric"><span class="eyebrow">CURRENT GENERATION</span><strong id="generation">—</strong><span id="stage">Waiting for a report</span></article>
+<article class="metric"><span class="eyebrow">COMPUTE + SETUP ESTIMATE</span><strong id="spend">—</strong><span id="budget-note">Against the authorized budget</span></article>
+<article class="metric" title="Mean survival of the currently accepted policy in its latest completed Python development comparison."><span class="eyebrow">ACCEPTED MEAN SURVIVAL</span><strong id="survival">—</strong><span id="best-note" class="muted">Python development evaluation</span><small id="best-updated" class="muted"></small><span id="best-status">Updates after a completed Python comparison.</span></article>
+<article class="metric"><span class="eyebrow">MAIN POD COMPLETED RUNS</span><strong id="completed">—</strong><span id="active-count">—</span></article>
+</section>
+<div class="columns">
+<section class="panel"><div class="section-title"><div><p class="eyebrow">THE RESEARCH CYCLE</p><h2>Generation map</h2></div><span id="review-count" class="tag">LLM reviews —</span></div><div id="timeline"></div><p class="muted">Four subgenerations: propose → focused tuning → compare → retain or promote. Major boundaries add Lucas-branch review, broader Bayesian optimization, and a direction review. Adaptive stopping can shorten the schedule.</p><div class="divider"></div><h3>Current activity</h3><div id="steps" class="stack"></div></section>
+<section class="panel"><div class="section-title"><div><p class="eyebrow">RESOURCES & GUARDRAILS</p><h2>Budget and runtime</h2></div><span id="status" class="tag">—</span></div><div class="budget-values"><strong id="budget-total">—</strong><span>total budget</span></div><div class="budget-track" aria-label="Budget allocation"><div id="spent-bar"></div><div id="agent-bar"></div><div id="reserve-bar"></div></div><div id="budget-detail" class="facts"></div><p class="muted">Cost figures are supervisor estimates, not a Runpod invoice. The LLM allowance is reserved, not confirmed spending.</p><div class="divider"></div><dl id="guardrails" class="facts"></dl></section>
+</div>
+<section class="panel" id="fleet-panel" hidden><div class="section-title"><div><p class="eyebrow">ADDITIONAL COMPUTE</p><h2>Parallel capture studies</h2></div><span id="fleet-budget" class="tag"></span></div><div id="fleet" class="run-grid"></div><p class="muted">Independent studies feed evidence into the main orchestrator. Each Pod has 16 simulation slots and a shutdown deadline. Study status does not certify current cloud billing status.</p></section>
+<section class="panel"><div class="section-title"><div><p class="eyebrow">ON THE MAIN POD</p><h2>Active simulations</h2></div><span class="tag">Development seeds only</span></div><div id="active" class="run-grid"></div></section>
+<div class="columns wide-left">
+<section class="panel"><div class="section-title"><div><p class="eyebrow">EVIDENCE BEFORE PROMOTION</p><h2>Candidate comparisons</h2></div><select id="comparison" aria-label="Select a comparison"></select></div><p id="comparison-note" class="muted"></p><div id="comparison-chart"></div><div id="comparison-table" class="table-wrap"></div><div id="rounds"></div></section>
+<section class="panel"><div class="section-title"><div><p class="eyebrow">CUMULATIVE RESEARCH JOURNAL</p><h2>What the LLM learned</h2></div></div><div id="reviews" class="journal"></div></section>
+</div>
+<section class="panel"><div class="section-title"><div><p class="eyebrow">UNDERSTAND THE OUTCOME</p><h2>Run diagnostics</h2></div><select id="case" aria-label="Select a completed development run"></select></div><p class="muted">Latest 64 completed development runs. Energy and death counts describe one run; compare matching seeds and engines when judging a policy.</p><div id="diagnostics"></div><div id="screenshots" class="screenshots"></div></section>
+<section class="panel"><div class="section-title"><div><p class="eyebrow">AUDIT TRAIL</p><h2>Research events</h2></div><span class="tag">Newest first</span></div><div id="events" class="events"></div></section>
+<footer><span>Read-only observatory · No experiments are launched from this page.</span><span>Holdout results are excluded. Last successful data is kept locally.</span></footer>
+</main></body></html>

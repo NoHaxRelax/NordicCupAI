@@ -29,13 +29,16 @@ Per game: result, role events, one-second metric history, static obstacle geomet
 
 Batch metadata includes exact source hashes, dependency versions, shard assignments, infrastructure cost and cleanup evidence. Completed case files are resumable; duplicate seeds are rejected when merging shards. Report any errors or incomplete cases explicitly.
 
-## Budget
+## Running locally
 
-User-authorized total cap: **$10**. CPU3 compute-optimized price verified at **$0.03/vCPU-hour** ($0.96/hour for 32 vCPUs). Fleet size is chosen from a timed full-game pilot. A watchdog terminates only this task's pods at their deadlines or before $9 of estimated compute, reserving $1 for storage and teardown margin. Delete all created resources after retrieving outputs.
+Use `run.py benchmark` to run a local batch. Start with one worker on a laptop;
+increase workers only when CPU and memory allow it. A completed case is reused
+when the same output directory and matching protocol are supplied again.
+An interrupted case starts over. This runner does not provision cloud hardware.
 
 Example local command:
 
 ```bash
-python survival-simulator/scripts/entrapment_benchmark.py \
-  --out /tmp/entrapment-9059-benchmark --count 1000 --workers 8
+python survival-simulator/run.py benchmark \
+  --out /tmp/entrapment-9059-benchmark --count 1000 --workers 1
 ```

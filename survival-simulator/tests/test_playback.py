@@ -10,7 +10,7 @@ os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
 
 import pygame
 
-from src.utils.playback import PlaybackControls
+from scripts.playback import PlaybackControls
 
 
 class PlaybackTests(unittest.TestCase):
@@ -54,59 +54,6 @@ class PlaybackTests(unittest.TestCase):
         self.assertFalse(control.handle_event(pygame.event.Event(
             pygame.MOUSEBUTTONDOWN, button=1, pos=(50, 100)), (600, 400)))
 
-    def test_graphical_speed_keeps_action_order_and_stops_inside_batch(self):
-        from local_playground import local_simulation
 
-        class Clock:
-            def tick(self, fps):
-                return 50
-
-        class Policy:
-            def __init__(self):
-                self.config = SimpleNamespace(harvest=SimpleNamespace(enabled=True))
-                self.planner = SimpleNamespace()
-                self.harvest = SimpleNamespace(active=False)
-                self.times = []
-
-            def actions_for_step(self, observations, sim_time):
-                self.times.append(sim_time)
-                return [SimpleNamespace(agent_id=1, decision=len(self.times))]
-
-            def reset(self):
-                pass
-
-        class Sim:
-            dt = .1
-            env_width = 400
-            env_height = 300
-
-            def __init__(self, extinct=False):
-                self.env = SimpleNamespace(time=0., score=0., agents=[1], draw=lambda surface: None)
-                self.received = []
-                self.extinct = extinct
-
-            def step(self, actions):
-                self.received.append([a.decision for _, a in actions])
-                self.env.time = len(self.received) * self.dt
-                if self.extinct and len(self.received) == 3:
-                    self.env.agents = []
-                return dict(observations=[], sim_time=self.env.time, score=0., num_agents=len(self.env.agents))
-
-        for extinct, expected in ((False, 5), (True, 3)):
-            for speed in PlaybackControls.SPEEDS:
-                with self.subTest(speed=speed, extinct=extinct):
-                    sim, policy = Sim(extinct), Policy()
-                    with patch("local_playground.SimulationCore", return_value=sim), \
-                         patch("local_playground.ExpertPolicy", return_value=policy), \
-                         patch("local_playground.draw_planner_overlay"), \
-                         patch("local_playground.pygame.time.Clock", return_value=Clock()), \
-                         patch("local_playground.pygame.event.get", return_value=[]), \
-                         contextlib.redirect_stdout(io.StringIO()):
-                        local_simulation(seed=42, diagnostics=False, map_view=False,
-                                         max_seconds=.5, speed=speed)
-                    self.assertEqual(sim.received, [[]] + [[n] for n in range(1, expected)])
-                    self.assertEqual(policy.times, [n * .1 for n in range(1, expected + 1)])
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

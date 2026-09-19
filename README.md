@@ -1,5 +1,8 @@
 # Nordic AI Cup 2026
 
+For the maintained predator-trapping and no-predator Orchard runners, see
+[the Survival Simulator quickstart](survival-simulator/README.md).
+
 Welcome to the **Nordic AI Cup**, hosted by [Ambolt AI](https://ambolt.io/). Previously held as the Danish national competition, the event now spans the whole of the Nordics, with a partner organization in each participating country.  
 
 Visit the [Nordic AI Cup Website](https://nordicaicup.com) 
