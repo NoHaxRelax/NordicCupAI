@@ -1178,3 +1178,36 @@ a question-first unit fires 12 times, wins 5, loses 6 (-0.011); dropping a lead-
 comma fires 25, wins 9, loses 16 (-0.021). A prompt line that encoded the annotators' distinction would
 be worth about +0.01 tIoU (+0.006 score) at best, below anything measurable on 39 conversations.
 **The verdict of entry 63 stands: no prompt change, the pipeline stays frozen.**
+
+
+## 65. One validation check of the citation edge edits: the leave-one-out signal was noise
+
+Elias asked for one check on the validation set. `bench/context_val.py`, results appended to
+`research/14-context-loco.md`. The served 27B answers of the four validation runs stored in
+`bench/results/served/pod3/answers.jsonl`, scored against the hand labels (190 questions, 95 gold-yes
+with a recovered span), reproduce the four portal scores to four decimals: 0.8074, 0.8074, 0.8044,
+0.8084. The last block is the served configuration. Each served span was mapped back to the run of
+clause units it was built from (82 of 95 map to exactly one run; the other 13 were left as served), and
+the policies of entry 64, fitted on all 39 training conversations, were applied once. Nothing was
+selected afterwards.
+
+| edit | policy | applicable | fires | wins | losses | change in mean tIoU | validation score |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| none | served | | | | | | 0.8084 |
+| add-front | logistic / ridge | 82 | 0 | 0 | 0 | +0.000 | 0.8084 |
+| add-front | hand rule: opens on a pronoun | 82 | 28 | 8 | 17 | -0.018 | 0.7973 |
+| drop-front | logistic | 30 | 7 | 1 | 4 | -0.018 | 0.7977 |
+| drop-front | ridge | 30 | 8 | 1 | 6 | -0.021 | 0.7960 |
+| drop-front | hand rule: first unit is a question | 30 | 5 | 0 | 4 | -0.020 | 0.7965 |
+| add-back | logistic / ridge | 82 | 1 / 2 | 0 / 1 | 1 / 1 | -0.001 / +0.000 | 0.8078 / 0.8086 |
+| drop-back | logistic / ridge | 30 | 2 / 3 | 0 | 2 / 3 | -0.008 / -0.006 | 0.8036 / 0.8046 |
+| any edit | ridge, largest predicted change | 95 | 11 | 1 | 9 | -0.025 | 0.7931 |
+
+Perfect triggers on validation (upper bounds, not policies): add-front +0.062 (17 of 82 help),
+add-back +0.042 (13 of 82), drop-front +0.008 (3 of 30), drop-back 0 (none help).
+
+**Reading.** The one edge that looked promising in the leave-one-out (drop-front, +0.009, AUC 0.77)
+loses 0.02 on validation with 1 win against 6 losses: it was fitting noise. Elias's own direction,
+add-front, is where the validation headroom sits (+0.062 if every helpful case were known), and the
+fitted policies fire on none of them; the pronoun rule loses 0.018. **Closed: no prompt or post-hoc
+change to the citation edges. The pipeline stays frozen at 0.8084.**

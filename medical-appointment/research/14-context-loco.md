@@ -20,3 +20,26 @@ served mean tIoU 0.7119, score 0.8261; 195 gold-yes questions, 39 conversations 
 | drop-back | 83 | 10 | perfect trigger (not a policy) | 10 | 10 | 0 | 0.7264 | +0.0146 | +0.0059 to +0.0253 | 0.500 |
 | any edit | 195 | | ridge, the edit with the largest predicted change | 26 | 8 | 14 | 0.7068 | -0.0051 | -0.0244 to +0.0147 | |
 | add-front | 194 | | hand rule: citation opens on a pronoun | 53 | 6 | 39 | 0.6675 | -0.0444 | | |
+
+## Validation check
+
+One pass over the 19 validation conversations (`bench/context_val.py`): the served 27B answers of the last validation run (portal 0.8084), scored against the hand labels (190 questions, accuracy 1.0000, 95 gold-yes questions with a recovered span; 13 served spans did not map to exactly one unit run and were left as served), with every policy fitted on all 39 training conversations. Nothing was selected after seeing these numbers.
+
+| edit | policy (fitted on all 39 training conversations) | applicable | fires | wins | losses | validation mean tIoU | change | validation score |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| none | served | | | | | 0.6806 | | 0.8084 |
+| add-front | logistic, expected value > 0 | 82 | 0 | 0 | 0 | 0.6806 | +0.0000 | 0.8084 |
+| add-front | ridge, predicted change > 0 | 82 | 0 | 0 | 0 | 0.6806 | +0.0000 | 0.8084 |
+| add-front | hand rule: citation opens on a pronoun | 82 | 28 | 8 | 17 | 0.6622 | -0.0184 | 0.7973 |
+| add-front | perfect trigger (not a policy) | 82 | 17 | 17 | 0 | 0.7422 | +0.0616 | 0.8453 |
+| drop-front | logistic, expected value > 0 | 30 | 7 | 1 | 4 | 0.6628 | -0.0178 | 0.7977 |
+| drop-front | ridge, predicted change > 0 | 30 | 8 | 1 | 6 | 0.6600 | -0.0206 | 0.7960 |
+| drop-front | hand rule: first unit ends with a question mark | 30 | 5 | 0 | 4 | 0.6609 | -0.0197 | 0.7965 |
+| drop-front | perfect trigger (not a policy) | 30 | 3 | 3 | 0 | 0.6887 | +0.0081 | 0.8132 |
+| add-back | logistic, expected value > 0 | 82 | 1 | 0 | 1 | 0.6796 | -0.0009 | 0.8078 |
+| add-back | ridge, predicted change > 0 | 82 | 2 | 1 | 1 | 0.6809 | +0.0003 | 0.8086 |
+| add-back | perfect trigger (not a policy) | 82 | 13 | 13 | 0 | 0.7225 | +0.0419 | 0.8335 |
+| drop-back | logistic, expected value > 0 | 30 | 2 | 0 | 2 | 0.6726 | -0.0080 | 0.8036 |
+| drop-back | ridge, predicted change > 0 | 30 | 3 | 0 | 3 | 0.6744 | -0.0062 | 0.8046 |
+| drop-back | perfect trigger (not a policy) | 30 | 0 | 0 | 0 | 0.6806 | +0.0000 | 0.8084 |
+| any edit | ridge, the edit with the largest predicted change | 95 | 11 | 1 | 9 | 0.6552 | -0.0254 | 0.7931 |
