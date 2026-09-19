@@ -124,6 +124,7 @@ _WALL_RESET = 1.
 class OrchardEvasionPolicy(OrchardPolicy):
     def __init__(self, seed=0, *, pred_mode=1, pred_r=70., pred_face_r=80., pred_sprint_r=40.,
                  pred_dodge_r=80., pred_dodge_ang=1.4, pred_share=0, pred_turn_max=1.0,
+                 pred_evade_closest=0, pred_face_threat=0,
                  wall_mode=0, wall_engage_r=190., wall_target_gap=35., wall_epsilon=0.25,
                  steer_max_ticks=120, **kw):
         if pred_share:
@@ -131,7 +132,33 @@ class OrchardEvasionPolicy(OrchardPolicy):
         super().__init__(seed=seed, **kw)
         self.PRED = dict(mode=int(pred_mode), r=float(pred_r), face_r=float(pred_face_r),
                          sprint_r=float(pred_sprint_r), dodge_r=float(pred_dodge_r),
-                         dodge_ang=float(pred_dodge_ang), turn_max=float(pred_turn_max))
+                         dodge_ang=float(pred_dodge_ang), turn_max=float(pred_turn_max),
+                         # Only react to a predator that is actually hunting THIS agent.
+                         # Predator.step targets min(agents, key=distance), so in a 20-30
+                         # agent colony most sightings belong to somebody else and every
+                         # flee tick spent on one costs ~0.52 energy against ~0.005 for the
+                         # post tick it replaces. The _is_target predicate that decides this
+                         # already existed but only gated the (dormant) deflection branch.
+                         # Off by default: it changes behaviour, so it is a mechanism to be
+                         # measured, not an assumed improvement.
+                         evade_closest=int(pred_evade_closest),
+                         # Turn to FACE the predator while retreating, instead of turning
+                         # the agent's back to it.
+                         #
+                         # src/elements/predator.py:37 gates the charge on
+                         # `abs(agent_looking_dir) > pi/2 or distance < 90`, and
+                         # agent_looking_dir is the predator's view of our bearing - the
+                         # same number as our own observed `angle` to it. Turning away
+                         # drives |angle| towards pi, which SATISFIES that gate and buys
+                         # the predator a 15/tick charge; holding |angle| near 0 leaves it
+                         # in the pivot branch, which closes only 10.6/tick. Facing also
+                         # keeps the sighting inside our own pi/6 vision half-angle, so the
+                         # evasion layer does not lose the predator mid-chase and revert to
+                         # foraging.
+                         #
+                         # The move direction is unchanged - the agent still retreats along
+                         # `away`; only the commanded turn differs.
+                         face_threat=int(pred_face_threat))
         # `epsilon` is clamped, not rejected: 0 would make np.sign(0) == 0 and send the
         # predator straight at the agent at full sprint, and anything at or above the
         # agent's own vision half-angle (pi/6) loses the sighting the branch needs. The
@@ -337,6 +364,11 @@ class OrchardEvasionPolicy(OrchardPolicy):
         P = self.PRED
         if P['mode']:
             threat = self._threat(s)
+            # Somebody else's predator: fall through to foraging untouched. Applied
+            # once here rather than inside each branch so flee, deflection and face
+            # all agree on whose predator this is.
+            if threat is not None and P['evade_closest'] and not self._is_target(s, threat):
+                threat = None
             if threat is not None:
                 distance, angle = threat['distance'], threat['angle']
                 clamp = lambda a: max(-P['turn_max'], min(P['turn_max'], a))
@@ -351,7 +383,8 @@ class OrchardEvasionPolicy(OrchardPolicy):
                     self.metrics['flee_ticks'] += 1
                     self.metrics['sprint_ticks'] += sprinting
                     self._release_fruit(m)
-                    return reach, away, clamp(away), 'flee'
+                    # Retreat along `away` either way; only the facing differs.
+                    return reach, away, clamp(angle if P['face_threat'] else away), 'flee'
                 # Deflection sits below flee and above face: its band floor is
                 # _WALL_MIN_R > the engine's 90-unit charge gate and >= pred_r, so a
                 # predator already close enough to charge is still handled by flee.

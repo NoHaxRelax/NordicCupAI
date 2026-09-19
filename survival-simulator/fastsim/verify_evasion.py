@@ -89,6 +89,17 @@ def run(seed, horizon, cfg, predators, verbose=False):
                 native_evasion=dict(flee=nm['flee_ticks'], face=nm['face_ticks'],
                                     sprint=nm['sprint_ticks']),
                 evasion_ticks=m['flee_ticks'] + m['face_ticks'],
+                # Deflection counters come from the Python side only. That is enough:
+                # the actions are compared bit-for-bit, so if Python steered on a tick
+                # and the two agreed, the native policy steered identically. What the
+                # count is for is proving the branch RAN - a wall_mode>0 run with
+                # steer_ticks==0 has verified nothing about deflection, which is
+                # exactly how five dead wall_* parameters survived every check.
+                steer_ticks=m['steer_ticks'],
+                py_steer=dict(ticks=m['steer_ticks'], locked=m['steer_locked'],
+                              flips=m['steer_flips'], aborts=m['steer_aborts'],
+                              no_target=m['steer_no_target'], not_target=m['steer_not_target']),
+                wall_mode=int(cfg.get('wall_mode', 0)),
                 py_policy_ms=round(tpy / max(n, 1) * 1e3, 3),
                 native_policy_ms=round(tnat / max(n, 1) * 1e3, 4))
 
@@ -99,20 +110,50 @@ def main():
     p.add_argument('--horizon', type=float, default=600)
     p.add_argument('--no-predators', dest='predators', action='store_false')
     p.add_argument('--config', default=None, help='JSON file of OrchardEvasionPolicy keywords')
+    # Checking the default config only is what let the deflection layer ship
+    # unported: at wall_mode=0 every wall_* value is dead, so Python and native
+    # agree no matter what the native side implements. Sweeping the modes is the
+    # gate, not an option.
+    p.add_argument('--wall-modes', type=int, nargs='+', default=None,
+                   help='verify at each of these wall_mode values (e.g. 0 1 2)')
+    # Any policy keyword, so a deploy gate can verify a mechanism at its ON value.
+    # Checking defaults alone is what let five wall_* keys ship unimplemented: at the
+    # default the feature is off, so the two policies agree no matter what native does.
+    p.add_argument('--set', dest='overrides', action='append', default=[], metavar='KEY=VALUE',
+                   help='override a policy keyword, e.g. --set pred_evade_closest=1')
     p.add_argument('--verbose', action='store_true')
     a = p.parse_args()
-    cfg = json.load(open(a.config)) if a.config else orchard_kwargs(defaults())
+    base = json.load(open(a.config)) if a.config else orchard_kwargs(defaults())
+    for item in a.overrides:
+        key, _, raw = item.partition('=')
+        key = key.strip()
+        if key not in base:
+            p.error(f'--set {key}: not a policy keyword')
+        base[key] = type(base[key])(float(raw)) if isinstance(base[key], (int, float)) else raw
+    modes = a.wall_modes if a.wall_modes is not None else [int(base.get('wall_mode', 0))]
     bad = 0
-    evasion_seen = 0
-    for s in a.seeds:
-        r = run(s, a.horizon, cfg, a.predators, a.verbose)
-        bad += not r['ok']
-        evasion_seen += r['evasion_ticks']
-        print(json.dumps(r), flush=True)
-    if a.predators and not evasion_seen:
-        print('WARNING: no flee or face tick occurred; the evasion branch was never exercised',
-              file=sys.stderr)
-    sys.exit(1 if bad else 0)
+    unexercised = []
+    for mode in modes:
+        cfg = dict(base, wall_mode=mode)
+        evasion_seen = steer_seen = 0
+        for s in a.seeds:
+            r = run(s, a.horizon, cfg, a.predators, a.verbose)
+            bad += not r['ok']
+            evasion_seen += r['evasion_ticks']
+            steer_seen += r['steer_ticks']
+            print(json.dumps(r), flush=True)
+        if a.predators and not evasion_seen:
+            print(f'WARNING: wall_mode={mode}: no flee or face tick occurred; '
+                  'the evasion branch was never exercised', file=sys.stderr)
+        if mode and not steer_seen:
+            unexercised.append(mode)
+            print(f'WARNING: wall_mode={mode}: no steer tick occurred; deflection was '
+                  'never exercised, so agreement here proves nothing about it', file=sys.stderr)
+    # A deflection mode that never steered is not a pass. Treat it as a failure so a
+    # deploy gate cannot be satisfied by a run that simply never reached the branch.
+    if unexercised:
+        print(f'FAIL: deflection never exercised for wall_mode={unexercised}', file=sys.stderr)
+    sys.exit(1 if (bad or unexercised) else 0)
 
 
 if __name__ == '__main__':

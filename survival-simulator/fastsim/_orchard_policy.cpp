@@ -54,8 +54,9 @@ void parse_params(const Cfg& c, orchard::Params& P) {
 class PolicyImpl : public IPolicy {
 public:
     orchard::EvasionPolicy pol;
-    PolicyImpl(const std::vector<uint32_t>& key, const orchard::Params& P, const orchard::PredParams& PR)
-        : pol(key, P, PR) {}
+    PolicyImpl(const std::vector<uint32_t>& key, const orchard::Params& P, const orchard::PredParams& PR,
+               const orchard::WallParams& W)
+        : pol(key, P, PR, W) {}
 
     const std::vector<Act>& call(const AState* states, size_t n, double sim_time) override {
         return pol.call(states, n, sim_time);
@@ -128,9 +129,21 @@ IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, cons
     PR.dodge_r = cfg_get(cfg, "pred_dodge_r", PR.dodge_r);
     PR.dodge_ang = cfg_get(cfg, "pred_dodge_ang", PR.dodge_ang);
     PR.turn_max = cfg_get(cfg, "pred_turn_max", PR.turn_max);
+    PR.evade_closest = (int64_t)cfg_get(cfg, "pred_evade_closest", (double)PR.evade_closest);
+    PR.face_threat = (int64_t)cfg_get(cfg, "pred_face_threat", (double)PR.face_threat);
+    orchard::WallParams W;
+    W.mode = (int64_t)cfg_get(cfg, "wall_mode", (double)W.mode);  // int(wall_mode)
+    W.engage_r = cfg_get(cfg, "wall_engage_r", W.engage_r);
+    W.target_gap = cfg_get(cfg, "wall_target_gap", W.target_gap);
+    // Clamped, not rejected, exactly as the Python constructor does: 0 makes the
+    // pivot sign vanish and sends the predator straight in at full sprint, and
+    // anything at or above the agent's vision half-angle (pi/6) loses the sighting
+    // the branch depends on.
+    W.epsilon = orchard::pmax(0.05, orchard::pmin(0.35, cfg_get(cfg, "wall_epsilon", W.epsilon)));
+    W.max_ticks = (int64_t)cfg_get(cfg, "steer_max_ticks", (double)W.max_ticks);
     std::vector<uint32_t> key(seed_key, seed_key + nkey);
     if (key.empty()) key.push_back(0);
-    return new PolicyImpl(key, P, PR);
+    return new PolicyImpl(key, P, PR, W);
 }
 
 void destroy_policy(IPolicy* p) { delete p; }

@@ -29,6 +29,23 @@ from models.experiment_config import leaves, get, put, _constraints
 
 FAMILIES = ('orchard_evasion', 'expert_harvest')
 
+# Parameters that cannot change behaviour under `--engine native`, and so must not
+# be searched: a probe of one returns its PARENT's score exactly, which the study
+# records as tying the best-known configuration. That is a 100% "win rate" for a
+# knob that does nothing, and it then feeds evolution's parentage as a real finding.
+# Five wall_* keys used to sit here because fastsim resolves config keys by name and
+# silently drops the rest; they were ported to _evasion.hpp and are live now.
+#
+# orchard.wait_tol stays, and for a different reason: it is not a native gap. Its
+# only use in the Python policy is incrementing the `fresh_fruits` METRIC
+# (models/survival/orchard_population.py:503), so it cannot affect a decision in
+# either implementation. Searching it would burn trials on a counter.
+#
+# Verified by measurement, not by reading: each key was run at an extreme value
+# against the default on three seeds and scored byte-identically, while the
+# controls (watch_refresh, pred_r) moved the score.
+NATIVE_INERT = ('orchard.wait_tol',)
+
 # Defaults are the `with_predators_best` evasion settings measured upstream on
 # survival-simulator/oscar-overnight-cpp's separate engine port, not here.
 #
@@ -38,6 +55,7 @@ FAMILIES = ('orchard_evasion', 'expert_harvest')
 # policy - a search that never lifts wall_mode reproduces the old campaign.
 EVASION_DEFAULTS = dict(pred_mode=1, pred_r=70., pred_face_r=80., pred_sprint_r=40.,
                         pred_dodge_r=80., pred_dodge_ang=1.4, pred_turn_max=1.0,
+                        pred_evade_closest=0, pred_face_threat=0,
                         wall_mode=0, wall_engage_r=190., wall_target_gap=35.,
                         wall_epsilon=0.25, steer_max_ticks=120)
 
@@ -49,14 +67,28 @@ EVASION_RANGES = {
     'evasion.pred_dodge_r': (0., 200.),
     'evasion.pred_dodge_ang': (0., math.pi),
     'evasion.pred_turn_max': (.1, math.pi),
+    # 0 react to any sighting / 1 only when this agent is the predator's nearest
+    # visible target. A mechanism switch, not a continuous knob.
+    'evasion.pred_evade_closest': (0, 1),
+    # 0 turn away while fleeing / 1 face the predator, denying it the charge gate
+    # at src/elements/predator.py:37. A mechanism switch.
+    'evasion.pred_face_threat': (0, 1),
     # 0 off / 1 steer at a wall / 2 hold the pivot only (ablation control).
-    # MEASURED NEGATIVE against wall_mode=0 (see the policy module docstring), so
-    # this is exposed for a rerun, not because it is expected to win. Two things to
-    # know before searching it: there is no native port, and fastsim/_orchard_policy
-    # .cpp resolves config keys by name and ignores the rest, so `--engine native`
-    # would silently evaluate wall_mode=0 instead of failing. fastsim/verify_evasion
-    # .py detects that (23143 divergences at wall_mode=1, 0 at wall_mode=0); pin
-    # this to (0, 0) if a native campaign must not be able to reach it at all.
+    #
+    # The native port exists (fastsim/_evasion.hpp), so this is reachable under
+    # `--engine native` and verify_evasion.py checks it at each mode, not just at
+    # the default. An earlier revision of this comment said the opposite and
+    # advised pinning the range to (0, 0); that is stale and following it would
+    # silently remove the parameter from the search.
+    #
+    # MEASURED NEGATIVE at 500 paired maps against wall_mode=0, which confirms the
+    # earlier 40-seed verdict rather than overturning it:
+    #   wall_mode=1 default  -53.8  (SE 19.7, t -2.73)
+    #   wall_mode=2 default -134.7  (SE 17.5, t -7.71)
+    # Calibration arms in the same sweep moved the score by -67 and -168 with large
+    # t, so the harness resolves real effects at this sample size and these are true
+    # negatives, not an insensitive measurement. Kept tunable because the search may
+    # still find an interaction, but do not expect it to win on its own.
     'evasion.wall_mode': (0, 2),
     # Band ceiling. The floor is fixed at 105 in the policy (charge gate + margin)
     # and an agent cannot see a predator past its own 200-unit vision radius.
@@ -121,6 +153,8 @@ def inventory():
             reason = 'Coordinated harvest is the point of this family; switching it off is a separate control'
         elif block == 'orchard' and leaf not in used:
             reason = 'Stored by the Orchard constructor but never read'
+        elif path in NATIVE_INERT:
+            reason = 'Ignored by the native C++ policy; see NATIVE_INERT'
         if isinstance(value, str):
             result.append(dict(path=path, default=value, kind='str', low=value, high=value,
                                tunable=False, reason=reason or 'Categorical setting; this search space is numeric',
@@ -145,6 +179,19 @@ def inventory():
             low, high = 900., 3000.
         elif path.endswith('.dump_after_t'):
             low, high = 300., 3000.
+        # Both of these default to 0.0, and the generic rule below turns a 0 default
+        # into the range (0., 1.). That is meaningless for each of them, so the
+        # feature was formally searched and physically unreachable - the same defect
+        # class as the inert wall_* keys, and just as invisible in the results.
+        elif path.endswith('.cluster_radius'):
+            # A world-unit radius passed to g.near_trees(); neighbouring trees sit
+            # tens of units apart and an agent sees 200, so [0,1] could never group
+            # two trees. 0 keeps the feature off as the control.
+            low, high = 0., 150.
+        elif path.endswith('.nursery_bonus'):
+            # Added to a site score that is compared against site_min (default 5.0),
+            # so a ceiling of 1.0 cannot change any decision it participates in.
+            low, high = 0., 20.
         if path in EVASION_RANGES:
             low, high = EVASION_RANGES[path]
         bounds = constraints.get(path, {})
