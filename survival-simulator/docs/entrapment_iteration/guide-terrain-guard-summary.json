@@ -1,0 +1,1669 @@
+{
+  "seed": 1883894846,
+  "status": "complete",
+  "frames": 5194,
+  "sim_time": 519.4000000000495,
+  "runtime_seconds": 209.95473449199926,
+  "score": 546.7549624199834,
+  "final_agents": 0,
+  "peak_agents": 38,
+  "total_agents_seen": 118,
+  "predators": 5,
+  "first_bait_time": 31.200000000000173,
+  "maximum_predators_within_40_of_bait": 3,
+  "maximum_predators_continuously_near_bait_30s": 3,
+  "estimated_bait_gap_seconds_after_first_arrival": 46.30000000000039,
+  "longest_estimated_bait_gap_seconds": 46.20000000000039,
+  "policy_metrics": {
+    "site_discoveries": 1,
+    "guide_assignments": 17,
+    "guide_deaths": 16,
+    "guide_releases": 0,
+    "guide_handovers": 0,
+    "delivery_arrivals": 2,
+    "bait_arrivals": 9,
+    "overlapping_replacements": 7,
+    "estimated_unbaited_seconds": 48.80000000001054,
+    "no_viable_bait_ticks": 2933
+  },
+  "events": [
+    {
+      "time": 28.6,
+      "kind": "our_trap_discovered",
+      "group": 1,
+      "site": {
+        "mouth": [
+          232.21331460813593,
+          471.98254216160115
+        ],
+        "inward": [
+          -1.0,
+          0.0
+        ],
+        "cross": [
+          -0.0,
+          -1.0
+        ],
+        "goal": [
+          227.21331460813593,
+          471.98254216160115
+        ],
+        "far": [
+          357.21331460813593,
+          471.98254216160115
+        ],
+        "hold": [
+          307.21331460813593,
+          471.98254216160115
+        ],
+        "gap": 14.399529501640018,
+        "overlap": 62.79824174979524,
+        "runup": [
+          482.21331460813593,
+          471.98254216160115
+        ],
+        "approach_lane_offset": 0.0,
+        "offset_approach": false,
+        "obstacle_indices": [
+          23,
+          22
+        ],
+        "axis": 1,
+        "other_mouth": [
+          169.4150728583407,
+          471.98254216160115
+        ],
+        "replacement_entry": [
+          149.4150728583407,
+          471.98254216160115
+        ],
+        "second_access_clear": true,
+        "second_access_radius": 5.01,
+        "bait_depth": 5.0,
+        "boundary_indices": [],
+        "geometric_replacement_access_only": true,
+        "handoff": [
+          262.21331460813593,
+          471.98254216160115
+        ]
+      }
+    },
+    {
+      "time": 28.6,
+      "kind": "replacement_dispatched",
+      "agent": 6,
+      "current": null,
+      "conservative_travel_seconds": 7.164319508167058,
+      "active_lifetime_seconds": 0.0,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 31.2,
+      "kind": "bait_arrived",
+      "agent": 6,
+      "previous": null,
+      "energy": 110.5064622473246,
+      "age": 5.899999999999995,
+      "conservative_lifetime_seconds": 61.37347446027248
+    },
+    {
+      "time": 43.9,
+      "kind": "guide_assigned",
+      "agent": 3,
+      "track": 0,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 52.2,
+      "kind": "guide_at_delivery",
+      "agent": 3,
+      "track": 0
+    },
+    {
+      "time": 53.1,
+      "kind": "guide_lost",
+      "agent": 3,
+      "track": 0
+    },
+    {
+      "time": 60.6,
+      "kind": "replacement_dispatched",
+      "agent": 8,
+      "current": 6,
+      "conservative_travel_seconds": 34.418735109521194,
+      "active_lifetime_seconds": 31.97347446027249,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 68.2,
+      "kind": "guide_assigned",
+      "agent": 5,
+      "track": 1,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 82.1,
+      "kind": "bait_arrived",
+      "agent": 8,
+      "previous": 6,
+      "energy": 375.52730160385676,
+      "age": 23.500000000000064,
+      "conservative_lifetime_seconds": 74.25626907260701
+    },
+    {
+      "time": 89.3,
+      "kind": "guide_lost",
+      "agent": 5,
+      "track": 1
+    },
+    {
+      "time": 91.0,
+      "kind": "guide_assigned",
+      "agent": 10,
+      "track": 1,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 108.4,
+      "kind": "guide_lost",
+      "agent": 10,
+      "track": 1
+    },
+    {
+      "time": 113.5,
+      "kind": "replacement_dispatched",
+      "agent": 21,
+      "current": 8,
+      "conservative_travel_seconds": 17.03995159135135,
+      "active_lifetime_seconds": 42.956269072605934,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 116.1,
+      "kind": "guide_assigned",
+      "agent": 17,
+      "track": 2,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 125.1,
+      "kind": "bait_arrived",
+      "agent": 21,
+      "previous": 8,
+      "energy": 149.72987185187188,
+      "age": 44.600000000000364,
+      "conservative_lifetime_seconds": 32.15175350179766
+    },
+    {
+      "time": 125.1,
+      "kind": "replacement_dispatched",
+      "agent": 26,
+      "current": 21,
+      "conservative_travel_seconds": 26.628768616129573,
+      "active_lifetime_seconds": 32.15175350179766,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 129.5,
+      "kind": "guide_at_delivery",
+      "agent": 17,
+      "track": 2
+    },
+    {
+      "time": 133.7,
+      "kind": "guide_lost",
+      "agent": 17,
+      "track": 2
+    },
+    {
+      "time": 141.9,
+      "kind": "bait_arrived",
+      "agent": 26,
+      "previous": 21,
+      "energy": 227.92024678694605,
+      "age": 26.600000000000108,
+      "conservative_lifetime_seconds": 56.81845403412141
+    },
+    {
+      "time": 146.6,
+      "kind": "replacement_dispatched",
+      "agent": 25,
+      "current": 26,
+      "conservative_travel_seconds": 39.37622280435244,
+      "active_lifetime_seconds": 52.11845403412138,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 0.0
+    },
+    {
+      "time": 170.3,
+      "kind": "bait_arrived",
+      "agent": 25,
+      "previous": 26,
+      "energy": 391.7905648678706,
+      "age": 58.60000000000056,
+      "conservative_lifetime_seconds": 43.81359286230635
+    },
+    {
+      "time": 186.1,
+      "kind": "replacement_dispatched",
+      "agent": 56,
+      "current": 25,
+      "conservative_travel_seconds": 19.653070622075322,
+      "active_lifetime_seconds": 36.39031955151595,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 198.6,
+      "kind": "bait_arrived",
+      "agent": 56,
+      "previous": 25,
+      "energy": 85.66605042363325,
+      "age": 21.600000000000037,
+      "conservative_lifetime_seconds": 44.48453977361769
+    },
+    {
+      "time": 252.3,
+      "kind": "guide_assigned",
+      "agent": 77,
+      "track": 4,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 264.6,
+      "kind": "guide_lost",
+      "agent": 77,
+      "track": 4
+    },
+    {
+      "time": 264.6,
+      "kind": "guide_assigned",
+      "agent": 65,
+      "track": 4,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 280.0,
+      "kind": "replacement_dispatched",
+      "agent": 85,
+      "current": 56,
+      "conservative_travel_seconds": 20.991759572634162,
+      "active_lifetime_seconds": 0.11821696116270311,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 288.3,
+      "kind": "guide_lost",
+      "agent": 65,
+      "track": 4
+    },
+    {
+      "time": 313.5,
+      "kind": "replacement_dispatched",
+      "agent": 90,
+      "current": null,
+      "conservative_travel_seconds": 29.77316075546818,
+      "active_lifetime_seconds": 0.0,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 330.8,
+      "kind": "bait_arrived",
+      "agent": 90,
+      "previous": null,
+      "energy": 437.5102444560088,
+      "age": 38.90000000000028,
+      "conservative_lifetime_seconds": 65.80089159410434
+    },
+    {
+      "time": 330.9,
+      "kind": "guide_assigned",
+      "agent": 96,
+      "track": 11,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 350.5,
+      "kind": "guide_assigned",
+      "agent": 100,
+      "track": 12,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 356.6,
+      "kind": "guide_lost",
+      "agent": 100,
+      "track": 12
+    },
+    {
+      "time": 357.6,
+      "kind": "guide_assigned",
+      "agent": 97,
+      "track": 12,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 407.4,
+      "kind": "guide_lost",
+      "agent": 97,
+      "track": 12
+    },
+    {
+      "time": 415.4,
+      "kind": "guide_assigned",
+      "agent": 110,
+      "track": 18,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 415.5,
+      "kind": "replacement_dispatched",
+      "agent": 103,
+      "current": 90,
+      "conservative_travel_seconds": 26.770121338363836,
+      "active_lifetime_seconds": 16.81785571526036,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 425.8,
+      "kind": "guide_lost",
+      "agent": 110,
+      "track": 18
+    },
+    {
+      "time": 431.1,
+      "kind": "guide_assigned",
+      "agent": 109,
+      "track": 21,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 431.6,
+      "kind": "guide_assigned",
+      "agent": 114,
+      "track": 22,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 432.1,
+      "kind": "bait_arrived",
+      "agent": 103,
+      "previous": 90,
+      "energy": 317.52097339880424,
+      "age": 39.700000000000294,
+      "conservative_lifetime_seconds": 54.11167947868176
+    },
+    {
+      "time": 433.7,
+      "kind": "guide_lost",
+      "agent": 109,
+      "track": 21
+    },
+    {
+      "time": 435.6,
+      "kind": "guide_assigned",
+      "agent": 102,
+      "track": 23,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 442.7,
+      "kind": "replacement_dispatched",
+      "agent": 105,
+      "current": 103,
+      "conservative_travel_seconds": 17.60710915317189,
+      "active_lifetime_seconds": 43.511679478681394,
+      "target_overlap_seconds": 20.0,
+      "food_lead_seconds": 6.0
+    },
+    {
+      "time": 442.7,
+      "kind": "guide_lost",
+      "agent": 102,
+      "track": 23
+    },
+    {
+      "time": 447.2,
+      "kind": "guide_lost",
+      "agent": 114,
+      "track": 22
+    },
+    {
+      "time": 451.7,
+      "kind": "guide_assigned",
+      "agent": 104,
+      "track": 25,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 456.7,
+      "kind": "bait_arrived",
+      "agent": 105,
+      "previous": 103,
+      "energy": 279.40036005279995,
+      "age": 56.50000000000053,
+      "conservative_lifetime_seconds": 35.24124386653275
+    },
+    {
+      "time": 463.5,
+      "kind": "guide_lost",
+      "agent": 104,
+      "track": 25
+    },
+    {
+      "time": 465.9,
+      "kind": "guide_assigned",
+      "agent": 113,
+      "track": 26,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 469.3,
+      "kind": "guide_lost",
+      "agent": 113,
+      "track": 26
+    },
+    {
+      "time": 483.6,
+      "kind": "guide_assigned",
+      "agent": 107,
+      "track": 28,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 493.8,
+      "kind": "guide_assigned",
+      "agent": 117,
+      "track": 29,
+      "selection": "older_observer",
+      "viability": null
+    },
+    {
+      "time": 494.0,
+      "kind": "guide_lost",
+      "agent": 107,
+      "track": 28
+    },
+    {
+      "time": 498.8,
+      "kind": "guide_lost",
+      "agent": 117,
+      "track": 29
+    }
+  ],
+  "metric_note": "Proximity is a capture proxy; bait occupancy uses policy localization. C++ world state is evaluator/recorder only.",
+  "native_evaluation": {
+    "deaths_by_cause_and_role": {
+      "starvation:gatherer": 75,
+      "predator:guide": 11,
+      "starvation:guide": 5,
+      "starvation:retired_bait": 7,
+      "starvation:avoiding_predator": 7,
+      "predator:avoiding_predator": 10,
+      "starvation:bait": 2,
+      "predator:replacement_bait": 1
+    },
+    "fruit_eaten": 772,
+    "energy_deaths_before_age_60": {
+      "gatherer": 36,
+      "avoiding_predator": 4,
+      "guide": 2
+    },
+    "ripe_fruit_eaten": 676,
+    "ripe_fraction": 0.8756476683937824,
+    "mean_agent_energy_fraction": 0.3151212124703903,
+    "predator_deaths_with_sprint_available": {
+      "guide": 2
+    },
+    "sprint_available_predator_death_cases": [
+      {
+        "time": 133.5999999999967,
+        "agent": 17,
+        "role": "guide",
+        "intentional_delivery": true,
+        "energy_before": 133.7557112763938,
+        "sprint_threshold": 100.0,
+        "speed": 10,
+        "sprint_speed": 20,
+        "faster_than_predator_on_same_terrain": true,
+        "biome": "river",
+        "recent_steps": [
+          {
+            "time": 130.69999999999686,
+            "biome": "river",
+            "energy": 136.69057225435614,
+            "nearest_observed_predator": 27.55882686707117,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.021836196623363335,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 130.79999999999686,
+            "biome": "river",
+            "energy": 136.5870969157252,
+            "nearest_observed_predator": 27.55882686707117,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.022318140556928157,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 130.89999999999685,
+            "biome": "river",
+            "energy": 136.48354487333495,
+            "nearest_observed_predator": 27.55882686707117,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.02282170919037263,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 130.99999999999685,
+            "biome": "river",
+            "energy": 136.3799126855075,
+            "nearest_observed_predator": 27.55882686707117,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.02334838515153237,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.09999999999684,
+            "biome": "river",
+            "energy": 136.27619667459743,
+            "nearest_observed_predator": 28.38546845863968,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.023899789314670628,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.19999999999683,
+            "biome": "river",
+            "energy": 136.17239290498915,
+            "nearest_observed_predator": 27.149692882673712,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.024477697252139663,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.29999999999683,
+            "biome": "river",
+            "energy": 136.06849715847596,
+            "nearest_observed_predator": 28.77021898507956,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.025084058086715544,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.39999999999682,
+            "biome": "river",
+            "energy": 135.96450490663867,
+            "nearest_observed_predator": 27.511485014739606,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.02572101616248723,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.49999999999682,
+            "biome": "river",
+            "energy": 135.86041127977506,
+            "nearest_observed_predator": 28.4069381747286,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -0.026390936037389068,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.5999999999968,
+            "biome": "river",
+            "energy": 135.7562110318519,
+            "nearest_observed_predator": 27.142140647579875,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.002038349293734143,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.6999999999968,
+            "biome": "river",
+            "energy": 135.65588661848605,
+            "nearest_observed_predator": 28.770429619696056,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0011017068583516476,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.7999999999968,
+            "biome": "river",
+            "energy": 135.5557112763937,
+            "nearest_observed_predator": 27.513563562732,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.8999999999968,
+            "biome": "river",
+            "energy": 135.4557112763937,
+            "nearest_observed_predator": 28.401133533347366,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 131.9999999999968,
+            "biome": "river",
+            "energy": 135.35571127639372,
+            "nearest_observed_predator": 27.1462985428306,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.09999999999678,
+            "biome": "river",
+            "energy": 135.25571127639373,
+            "nearest_observed_predator": 28.763281252041526,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.19999999999678,
+            "biome": "river",
+            "energy": 135.15571127639373,
+            "nearest_observed_predator": 27.51824554562045,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.29999999999677,
+            "biome": "river",
+            "energy": 135.05571127639374,
+            "nearest_observed_predator": 28.392883581175422,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.39999999999677,
+            "biome": "river",
+            "energy": 134.95571127639374,
+            "nearest_observed_predator": 27.1506114084419,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.49999999999676,
+            "biome": "river",
+            "energy": 134.85571127639375,
+            "nearest_observed_predator": 28.755000008903078,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.59999999999675,
+            "biome": "river",
+            "energy": 134.75571127639375,
+            "nearest_observed_predator": 27.52249948007309,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.69999999999675,
+            "biome": "river",
+            "energy": 134.65571127639376,
+            "nearest_observed_predator": 28.383839562495435,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.79999999999674,
+            "biome": "river",
+            "energy": 134.55571127639377,
+            "nearest_observed_predator": 27.154352503065752,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.89999999999674,
+            "biome": "river",
+            "energy": 134.45571127639377,
+            "nearest_observed_predator": 28.746022836131534,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 132.99999999999673,
+            "biome": "river",
+            "energy": 134.35571127639378,
+            "nearest_observed_predator": 27.526155563458516,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 133.09999999999673,
+            "biome": "river",
+            "energy": 134.25571127639378,
+            "nearest_observed_predator": 28.374138534280235,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 133.19999999999672,
+            "biome": "river",
+            "energy": 134.1557112763938,
+            "nearest_observed_predator": 27.15750233072783,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 133.29999999999671,
+            "biome": "river",
+            "energy": 134.0557112763938,
+            "nearest_observed_predator": 28.736406765873333,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 133.3999999999967,
+            "biome": "river",
+            "energy": 133.9557112763938,
+            "nearest_observed_predator": 25.734993248889374,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 133.4999999999967,
+            "biome": "river",
+            "energy": 133.8557112763938,
+            "nearest_observed_predator": 22.434993248889402,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": -1.7763568394002505e-15,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 133.5999999999967,
+            "biome": "river",
+            "energy": 133.7557112763938,
+            "nearest_observed_predator": 19.13499324888943,
+            "action": {
+              "agent_id": 17,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          }
+        ],
+        "action": {
+          "agent_id": 17,
+          "move_distance": 0.0,
+          "move_direction": 0.0,
+          "turn_angle": 0.0,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "mode": "hold_at_delivery",
+          "handoff_distance": 7.603343806452282,
+          "bait_distance": 42.50843668147016,
+          "delivery_bait_limit": 44.0,
+          "predator_distance": 19.13499324888943,
+          "following_check": {
+            "status": "direct_chase",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0,
+            "observed_predators": 2
+          }
+        },
+        "speed_and_terrain": {
+          "benchmark_failure": false,
+          "same_terrain_sprint_advantage": 5.0,
+          "current_terrain_sprint_distance": 6.0,
+          "predator_fast_terrain_sprint_distance": 15.0,
+          "current_terrain_advantage_against_fast_predator": -9.0,
+          "requested_move": 0.0,
+          "requested_full_sprint": false,
+          "expected_move_before_wall_deflection": 0.0,
+          "recent_biome_changes": [],
+          "seconds_since_last_observed_slowdown": null,
+          "note": "Distances per tick, before wall deflection. Predator terrain is unknown; 15 is a worst case. No recent transition does not exclude older slowdown."
+        }
+      },
+      {
+        "time": 407.3000000000241,
+        "agent": 97,
+        "role": "guide",
+        "intentional_delivery": false,
+        "energy_before": 155.39672907216953,
+        "sprint_threshold": 100.0,
+        "speed": 12.130090493574269,
+        "sprint_speed": 20,
+        "faster_than_predator_on_same_terrain": true,
+        "biome": "river",
+        "recent_steps": [
+          {
+            "time": 404.40000000002345,
+            "biome": "swamp",
+            "energy": 189.66807214095826,
+            "nearest_observed_predator": null,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 0.0,
+              "turn_angle": 0.0,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 404.5000000000235,
+            "biome": "swamp",
+            "energy": 189.56807214095826,
+            "nearest_observed_predator": 126.961252285463,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -3.12013861,
+              "turn_angle": 0.021454043892277515,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 404.6000000000235,
+            "biome": "grassland",
+            "energy": 188.8581530991448,
+            "nearest_observed_predator": 129.94975024464907,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": 2.61799388,
+              "turn_angle": -0.01111043346474366,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 404.7000000000235,
+            "biome": "grassland",
+            "energy": 188.1498802940603,
+            "nearest_observed_predator": 138.8190845293499,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -1.04719755,
+              "turn_angle": 0.1588809908849106,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 404.80000000002354,
+            "biome": "grassland",
+            "energy": 187.4180890743189,
+            "nearest_observed_predator": 130.08958797868553,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": 2.32890596,
+              "turn_angle": -0.041347307687880884,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 404.90000000002357,
+            "biome": "grassland",
+            "energy": 186.70500392123813,
+            "nearest_observed_predator": 134.52566820358666,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -2.61799388,
+              "turn_angle": -0.00982127820270088,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.0000000000236,
+            "biome": "grassland",
+            "energy": 185.996936291586,
+            "nearest_observed_predator": 139.37967174258512,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 20.0,
+              "move_direction": 1.57079633,
+              "turn_angle": -0.1375589786417584,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.1000000000236,
+            "biome": "grassland",
+            "energy": 181.3335838222769,
+            "nearest_observed_predator": 136.3410223705832,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -1.57079633,
+              "turn_angle": 0.14118370523978027,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.20000000002364,
+            "biome": "grassland",
+            "energy": 180.60460921302524,
+            "nearest_observed_predator": 133.709972093218,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -2.27978187,
+              "turn_angle": 0.10064472574464464,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.30000000002366,
+            "biome": "grassland",
+            "energy": 179.88208658274814,
+            "nearest_observed_predator": 138.36684953461963,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 20.0,
+              "move_direction": 1.57079633,
+              "turn_angle": -0.11909263106412289,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.4000000000237,
+            "biome": "grassland",
+            "energy": 175.22167312393688,
+            "nearest_observed_predator": 136.63831703035575,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -1.57079633,
+              "turn_angle": -0.0022699933920367586,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.5000000000237,
+            "biome": "grassland",
+            "energy": 174.51480731858905,
+            "nearest_observed_predator": 132.2841733279018,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -2.0943951,
+              "turn_angle": 0.08053718546694465,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.6000000000237,
+            "biome": "grassland",
+            "energy": 173.79548490274058,
+            "nearest_observed_predator": 135.27728915402193,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": 1.63409448,
+              "turn_angle": -0.02841331434431657,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.70000000002375,
+            "biome": "grassland",
+            "energy": 173.08445825863436,
+            "nearest_observed_predator": 132.03886139121065,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": 2.41042389,
+              "turn_angle": -0.03549905072015345,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.8000000000238,
+            "biome": "grassland",
+            "energy": 172.37230388455848,
+            "nearest_observed_predator": 137.72513595609865,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -1.65677908,
+              "turn_angle": 0.004124004587893737,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 405.9000000000238,
+            "biome": "grassland",
+            "energy": 171.66514300416426,
+            "nearest_observed_predator": 138.63686683546544,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -1.54195952,
+              "turn_angle": 0.11610997122787957,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.0000000000238,
+            "biome": "river",
+            "energy": 170.94015900362237,
+            "nearest_observed_predator": 139.16651874554287,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 20.0,
+              "move_direction": 1.04719755,
+              "turn_angle": -0.03814177261964381,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.10000000002384,
+            "biome": "grassland",
+            "energy": 166.29262927408007,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.0871484349488987,
+              "turn_angle": 1.0428789074500763e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.20000000002386,
+            "biome": "grassland",
+            "energy": 166.19262927408008,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.0871484349488987,
+              "turn_angle": -8.360344743276218e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.3000000000239,
+            "biome": "grassland",
+            "energy": 166.09262927408008,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.0871484349488996,
+              "turn_angle": 5.753147474651022e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.4000000000239,
+            "biome": "grassland",
+            "energy": 165.9926292740801,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.087148434948899,
+              "turn_angle": -1.0428789074500762e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.50000000002393,
+            "biome": "grassland",
+            "energy": 165.8926292740801,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.087148434948899,
+              "turn_angle": -5.214394537250381e-17,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.60000000002395,
+            "biome": "grassland",
+            "energy": 165.7926292740801,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.087148434948899,
+              "turn_angle": -5.214394537250381e-17,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.700000000024,
+            "biome": "grassland",
+            "energy": 165.6926292740801,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.087148434948899,
+              "turn_angle": -5.214394537250381e-17,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.800000000024,
+            "biome": "grassland",
+            "energy": 165.5926292740801,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.087148434948899,
+              "turn_angle": 8.360344743276212e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 406.900000000024,
+            "biome": "grassland",
+            "energy": 165.49262927408012,
+            "nearest_observed_predator": 136.2656259867092,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 0.0,
+              "move_direction": 3.0871484349488982,
+              "turn_angle": -4.710268567200948e-16,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 407.00000000002404,
+            "biome": "grassland",
+            "energy": 165.39262927408012,
+            "nearest_observed_predator": 44.69439968026859,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 12.130090493574269,
+              "move_direction": -3.14159265,
+              "turn_angle": 3.264311425516215e-10,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 407.10000000002407,
+            "biome": "river",
+            "energy": 164.68612474934946,
+            "nearest_observed_predator": 38.49030020618883,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 20.0,
+              "move_direction": -2.41497688,
+              "turn_angle": 0.028901551571672016,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 407.2000000000241,
+            "biome": "river",
+            "energy": 160.0400656466622,
+            "nearest_observed_predator": 33.60133707114731,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 20.0,
+              "move_direction": 3.14159265,
+              "turn_angle": -0.01179540242130265,
+              "spawn_agent": false
+            }
+          },
+          {
+            "time": 407.3000000000241,
+            "biome": "river",
+            "energy": 155.39672907216953,
+            "nearest_observed_predator": 27.245229524654338,
+            "action": {
+              "agent_id": 97,
+              "move_distance": 20.0,
+              "move_direction": 2.0943951,
+              "turn_angle": 0.044639487351013904,
+              "spawn_agent": false
+            }
+          }
+        ],
+        "action": {
+          "agent_id": 97,
+          "move_distance": 20.0,
+          "move_direction": 2.0943951,
+          "turn_angle": 0.044639487351013904,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 158.93,
+          "handoff_distance": 142.02,
+          "mode": "walk",
+          "route": {
+            "dist": 142.0190119518533,
+            "dist_to_point": 142.01901195185326,
+            "dir": 3.032124342385779,
+            "waypoints": [
+              [
+                -141.16893235281194,
+                15.515550075580501
+              ]
+            ],
+            "clearance": 11.0,
+            "replans": 69
+          },
+          "reacquisitions": 6,
+          "following_check": {
+            "status": "stationary_or_resting",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0,
+            "observed_predators": 3
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 63,
+            "sampled_scenarios": 81,
+            "contact_forecast": false,
+            "contact_loss_scenarios": 0,
+            "minimum_separation": 7.27,
+            "observation_lag_estimated": true,
+            "observation_lag_method": "public_chase_with_sampled_speed_and_rest",
+            "lag_guard_triggered": true,
+            "expanded": 333,
+            "terrain_samples": 24,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -2.999999987564591,
+                5.196152429886219
+              ],
+              [
+                -3.0000000067952115,
+                11.196152429886219
+              ],
+              [
+                -8.997070270197689,
+                11.38363111084414
+              ]
+            ],
+            "predator_path": [
+              [
+                148.2233308330659,
+                11.95117186207311
+              ],
+              [
+                133.2382734802199,
+                11.281801910613872
+              ],
+              [
+                118.23827644445292,
+                11.272371800233381
+              ],
+              [
+                103.23828217925175,
+                11.28548835207376
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 20,
+            "sprint_selected": true,
+            "energy": 155.397,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        },
+        "speed_and_terrain": {
+          "benchmark_failure": true,
+          "same_terrain_sprint_advantage": 5.0,
+          "current_terrain_sprint_distance": 6.0,
+          "predator_fast_terrain_sprint_distance": 15.0,
+          "current_terrain_advantage_against_fast_predator": -9.0,
+          "requested_move": 20.0,
+          "requested_full_sprint": true,
+          "expected_move_before_wall_deflection": 6.0,
+          "recent_biome_changes": [
+            {
+              "time": 404.6000000000235,
+              "from_biome": "swamp",
+              "to_biome": "grassland",
+              "slowdown": false,
+              "observed_gap_before": 126.961252285463,
+              "observed_gap_after": 129.94975024464907
+            },
+            {
+              "time": 406.0000000000238,
+              "from_biome": "grassland",
+              "to_biome": "river",
+              "slowdown": true,
+              "observed_gap_before": 138.63686683546544,
+              "observed_gap_after": 139.16651874554287
+            },
+            {
+              "time": 406.10000000002384,
+              "from_biome": "river",
+              "to_biome": "grassland",
+              "slowdown": false,
+              "observed_gap_before": 139.16651874554287,
+              "observed_gap_after": 136.2656259867092
+            },
+            {
+              "time": 407.10000000002407,
+              "from_biome": "grassland",
+              "to_biome": "river",
+              "slowdown": true,
+              "observed_gap_before": 44.69439968026859,
+              "observed_gap_after": 38.49030020618883
+            }
+          ],
+          "seconds_since_last_observed_slowdown": 0.20000000000004547,
+          "note": "Distances per tick, before wall deflection. Predator terrain is unknown; 15 is a worst case. No recent transition does not exclude older slowdown."
+        }
+      }
+    ],
+    "premature_predator_deaths_with_sprint_available": 1,
+    "sprint_failures_after_recent_observed_slowdown": 1,
+    "premature_guide_predator_deaths_with_sprint_available": 1,
+    "premature_guide_death_cases": [
+      {
+        "time": 407.3000000000241,
+        "agent": 97,
+        "energy_before": 155.39672907216953,
+        "energy_at_death": 150.74816519920896,
+        "sprint_threshold": 100.0,
+        "biome": "river",
+        "action": {
+          "agent_id": 97,
+          "move_distance": 20.0,
+          "move_direction": 2.0943951,
+          "turn_angle": 0.044639487351013904,
+          "spawn_agent": false
+        },
+        "guide_plan": {
+          "predator_distance": 158.93,
+          "handoff_distance": 142.02,
+          "mode": "walk",
+          "route": {
+            "dist": 142.0190119518533,
+            "dist_to_point": 142.01901195185326,
+            "dir": 3.032124342385779,
+            "waypoints": [
+              [
+                -141.16893235281194,
+                15.515550075580501
+              ]
+            ],
+            "clearance": 11.0,
+            "replans": 69
+          },
+          "reacquisitions": 6,
+          "following_check": {
+            "status": "stationary_or_resting",
+            "not_following": false,
+            "consecutive_mismatches": 0,
+            "candidate_count": 9,
+            "closest_position_error": 0.0,
+            "closest_heading_error": 0.0,
+            "observed_predators": 3
+          },
+          "forecast": {
+            "horizon_ticks": 3,
+            "horizon_seconds": 0.3,
+            "capture_radius": 15.0,
+            "extra_predator_clearance": 0.0,
+            "preferred_distance": [
+              100.0,
+              120.0
+            ],
+            "reacquiring_contact": false,
+            "following_distance": [
+              100.0,
+              120.0
+            ],
+            "predicted_safe": false,
+            "capture_scenarios": 63,
+            "sampled_scenarios": 81,
+            "contact_forecast": false,
+            "contact_loss_scenarios": 0,
+            "minimum_separation": 7.27,
+            "observation_lag_estimated": true,
+            "observation_lag_method": "public_chase_with_sampled_speed_and_rest",
+            "lag_guard_triggered": true,
+            "expanded": 333,
+            "terrain_samples": 24,
+            "terrain_scenarios": [
+              "observed_samples",
+              "river_next_tick",
+              "river_in_two_ticks"
+            ],
+            "guide_path": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                -2.999999987564591,
+                5.196152429886219
+              ],
+              [
+                -3.0000000067952115,
+                11.196152429886219
+              ],
+              [
+                -8.997070270197689,
+                11.38363111084414
+              ]
+            ],
+            "predator_path": [
+              [
+                148.2233308330659,
+                11.95117186207311
+              ],
+              [
+                133.2382734802199,
+                11.281801910613872
+              ],
+              [
+                118.23827644445292,
+                11.272371800233381
+              ],
+              [
+                103.23828217925175,
+                11.28548835207376
+              ]
+            ],
+            "note": "Public turning/capture rules; sampled unknown speed/pivot. Rest, wandering, lag remain uncertain."
+          },
+          "steering": {
+            "selected_move": 20,
+            "sprint_selected": true,
+            "energy": 155.397,
+            "low_energy_walk_cap": false,
+            "safe": false
+          }
+        }
+      }
+    ],
+    "intentional_delivery_sacrifices": 2,
+    "sprint_benchmark_note": "Availability at start of fatal tick. Premature counts exclude intentional hold_at_delivery. All roles are audited; recent observed biomes/actions cover up to 3 seconds before capture. Sprint trait, terrain, walls and energy reserve can prevent escape; availability alone is not proof that the death was avoidable."
+  }
+}

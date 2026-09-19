@@ -1,0 +1,35 @@
+--- a/models/entrapment/guide_lookahead.py
++++ b/models/entrapment/guide_lookahead.py
+@@ -274,17 +274,24 @@
+     _,winner,captures,scenarios,minimum,contact_losses = min(checked,key=lambda x:x[0])
+     if not _project_lag:
+         first = winner.first
+-        q = (first['move_distance']*current_modifier*math.cos(first['move_direction']),
+-             first['move_distance']*current_modifier*math.sin(first['move_direction']))
+         danger = False
+         for cap,terrain in PREDATOR_MOTION+((0.,1.),):
+             for bias in (-1.,0.,1.):
+-                preds,headings = initial_predators(cap,terrain,bias)
+-                for p,h in zip(preds,headings):
+-                    next_p,_ = predator_step(p,h,q,first['turn_angle'],bait,free,visible,cap,bias,terrain)
+-                    if math.dist(next_p,q)<CAPTURE_RADIUS:
+-                        danger = True
+-                        break
++                for slow_at in (HORIZON,1,2):
++                    preds,headings = initial_predators(cap,terrain,bias)
++                    q = (0.,0.)
++                    for depth,(length,angle) in enumerate(winner.commands):
++                        factor = .3 if depth>=slow_at else terrain_at(q)
++                        new_q=(q[0]+length*factor*math.cos(angle),q[1]+length*factor*math.sin(angle))
++                        if clear(q,new_q): q=new_q
++                        h = (first['turn_angle'] if depth==0 else
++                             math.atan2(preds[target_index][1]-q[1],preds[target_index][0]-q[0]))
++                        for i in range(len(preds)):
++                            preds[i],headings[i] = predator_step(preds[i],headings[i],q,h,bait,free,visible,cap,bias,terrain)
++                        if min(math.dist(p,q) for p in preds)<CAPTURE_RADIUS:
++                            danger=True
++                            break
++                    if danger: break
+                 if danger: break
+             if danger: break
+         if danger:

@@ -50,11 +50,10 @@ position crosses out past the trap's front plane. The hearing exception remains
 available when entering from behind. This fixes the stale exemption, not the
 underlying reason that the route took a detour around the crevice.
 
-Separate full dev-seed replays are running with the narrow lag guard alone
-and with the rear-route reset. Both keep every frame. Do not report their
-interim scores as completed benchmarks. The original PC forest/swamp failure
-is also being recorded on its original machine, to inspect the repeated
-border crossings with exact state reproduction. No paid compute was used.
+Separate full dev-seed replays completed with the narrow lag guard alone
+and with the rear-route reset; results follow below. Both keep every frame.
+The original PC forest/swamp failure was also reproduced on its original
+machine. No paid compute was used.
 
 ## Completed guard-only pilot
 
@@ -65,7 +64,7 @@ available captures**, two delivery arrivals from 25 assignments, and
 tracking scored 842.83 / 791.6 seconds with one arrival from 17 assignments
 and 52.5 estimated gap seconds. This is a specific safety repair with native
 counterfactual evidence, not an established full-game performance improvement.
-The separate rear-route reset comparison remains in progress.
+The rear-route reset comparison is recorded below.
 
 The rear-route reset replay completed with the **same 805.35 score, 752.0-second
 lifetime, 82.8-second estimated bait gap and zero premature sprint captures**
@@ -74,3 +73,30 @@ It is a repair of the stale exemption exposed in the broad pilot, not a
 measured gain on the new default trajectory. Oscar's branch was rechecked at
 `4542793`; recent additions concern his separate C++ guiding/holding experiments,
 not new best survival parameters.
+
+## Forest/swamp failure remains after the narrow guard
+
+PC seed 204871, guide 160 at 547.9 seconds, was reproduced with zero position
+error. Public DTO distance was 24.72; native evaluator distance was 19.22.
+Walking moved only 5 units in swamp. The guard instead selected STOP, and
+that exact counterfactual also died. It reported 63 of 81 sampled scenarios
+capturing the guide. Thus the guard recognizes risk but its all-unsafe
+fallback is inadequate; the bug is not fixed by recognizing danger alone.
+Artifact: `guide-border160-guard-counterfactual.json`.
+
+The recorded failure is visible at `http://localhost:9083/?time=545.5`, with
+every frame through 549 seconds retained in
+`logs/entrapment-iteration/sprint-border-204871-frames`. This is a partial
+replay of a longer game, not an extinction at 549 seconds.
+
+## Earlier terrain-risk guard probe (not adopted)
+
+Extending the narrow lag guard from its immediate step to all three planned
+steps, with river slowdown starting on either future step, regressed the
+dev seed to **546.75 score / 519.4 seconds** (current default: 805.35 / 752.0).
+There were two delivery arrivals from 17 assignments and 48.8 estimated
+bait-gap seconds. This isolated probe does not contain the separate unsafe-
+fallback repair. It is not adopted. Exact source is preserved in
+`guide-terrain-guard-experiment.patch`, applicable to `8764dce`; adjacent
+manifest and summary record the frozen source and result. All frames are in
+`logs/entrapment-iteration/guide-terrain-guard-20260919`.

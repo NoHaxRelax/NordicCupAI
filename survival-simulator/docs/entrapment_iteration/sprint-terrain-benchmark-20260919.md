@@ -43,14 +43,13 @@ this is **not** success across maps or for a full 3000-second game.
 
 Exact audit: `sprint-terrain-audit-20260919.json`. No additional paid compute.
 
-The ongoing frozen-source free-PC comparison has since completed two current-
-setting maps: **204871 had 8 failures** (score 726.20, life 679.8 s), and
-**730951 had 6** (score 1025.18, life 964.0 s). Of those 14, nine lacked a
-same-terrain sprint speed advantage. One had a slowdown recorded in the
-preceding three seconds. All 14 still count; no general survival guarantee
-has been achieved. These runs use the earlier 55-unit handoff and corrected
-escape, before the isolated-tracking change. Exact case diagnostics are in
-`sprint-terrain-pc-partial-20260919.json`; remaining comparison jobs continue.
+The completed frozen-source free-PC comparison used three seeds and two
+survival configurations. Current settings had **8, 6 and 1** failures on
+seeds 204871, 730951 and 605319; newer Oscar settings had **2, 4 and 3**.
+All count, including offspring without a same-terrain speed advantage. No
+general survival guarantee has been achieved. These runs use the earlier
+55-unit handoff and corrected escape, before isolated tracking and the lag
+guard. Exact diagnostics: `sprint-terrain-pc-complete-20260919.json`.
 
 The slowdown case was guide 160 on seed 204871: repeated forest/swamp
 transitions from 545.9 to 547.4 seconds accompanied an observed gap shrinking
@@ -62,6 +61,13 @@ caused capture.
 A local attempt to reproduce PC seed 730951 diverged despite identical saved
 policy and C++ source hashes; even bait energy at 15.1 seconds differed at
 floating-point precision. It did not reproduce the original guide-36 death
-and must not be presented as that replay. A same-machine replay is being
-recorded on PC. New manifests record numerical library versions, platform,
+and must not be presented as that replay. A same-machine replay on PC subsequently reproduced it exactly; see
+`guide-lag-guard-20260919.md` for the verified repair. New manifests record numerical library versions, platform,
 thread configuration and engine binary hash to help track reproducibility.
+
+The forest/swamp case was also reproduced on its original PC. The DTO gap
+was 24.72 but the native predator had already moved to 19.22. The narrow lag
+guard recognizes danger, but chooses STOP when all retained paths contain
+some sampled capture risk; the native agent still dies. An immediate-risk
+ranking/escape-candidate repair is under investigation. No fix is claimed
+from the guard alone for this case.
