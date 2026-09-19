@@ -162,3 +162,4 @@ Log (newest last)
   'pred_best_0342' in configs-all.json = r21s0c2 + flee within 80 (face 120), own sightings, sprint within 40,
   sidestep 1.4 rad within 80: 1444 s / score 1462 on 192 seeds (from 888 without predator logic). f15 re-tunes
   population parameters under predators (cap, reserves, speed selection).
+- 03:48 f15: population parameters under predators: all within noise or worse (cap 0.35 -58, heir reserve 200 -67, speed selection -47). f16: facing range 80-300, sprint radius 20-30, shared sightings with far facing.
