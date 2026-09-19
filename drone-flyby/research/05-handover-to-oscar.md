@@ -38,9 +38,10 @@ adds a laptop hop and a tunnel, so allow a tenth for latency, not more.
 | class | yours (checkpoint 02, via proxy) | ours (F3, night pod) | gain from routing the class to F3 |
 |---|---:|---:|---:|
 | helicopter | **0.29** | 0.96 | about +0.05 on the total |
+| ta-ta | **0.00** | 0.50 (F5, Oslo) | about +0.04 on the total |
 
 Your helicopter run also carried `Frame 84: ignored camera request L1 (960, 540) from L2 (2291, 1175): center movement
-1474.72px exceeds the L2 limit` (section 4: a move that changes level is bound by the limit of the level it leaves, 551 px at L2).
+1474.72px exceeds the L2 limit`, and the ta-ta run `Frame 26: ignored camera request L1 (1920, 540) from L2 (1325, 270): center movement 653.39px` (section 4: a move that changes level is bound by the limit of the level it leaves, 551 px at L2).
 
 ## 2. The 13th class is ta-ta, and the team labels miss objects
 
