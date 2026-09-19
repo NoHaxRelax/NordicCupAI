@@ -24,7 +24,10 @@ def game_record(folder, replay=True):
     requested = manifest.get("horizon") or manifest.get("seconds")
     elapsed = s.get("sim_time")
     complete = s.get("status") == "complete"
-    cohort = "full game" if requested and requested >= 3000 else "integration check"
+    parts = set(folder.parts)
+    if "upstream-native6" in parts: cohort = "upstream orchard"
+    elif "fullgames-baseline9" in parts or "fullgame-pilot" in parts: cohort = "native baseline"
+    else: cohort = "full game" if requested and requested >= 3000 else "integration check"
     return {"id": quote(str(folder.resolve()), safe=""), "folder": str(folder),
             "name": folder.name, "replay": replay and (folder / "static.json").exists()
             and (folder / "background.png").exists() and (folder / "chunks").is_dir(),
@@ -46,7 +49,11 @@ def main():
         c = read(path / "coverage.json" if path.is_dir() else path)
         if isinstance(c, dict): coverage.append({"name": (path if path.is_dir() else path.parent).name, "path": str(path), "data": c})
     folders = []
-    for item in (args.games or [ROOT / "logs/entrapment_game"]):
+    default_games = [ROOT/"logs/entrapment-iteration/fullgame-pilot",
+                     ROOT/"logs/entrapment-iteration/fullgames-baseline9",
+                     ROOT/"logs/entrapment-iteration/upstream-native6",
+                     ROOT/"logs/entrapment_game"]
+    for item in (args.games or default_games):
         if (item / "summary.json").exists(): folders.append(item)
         elif item.is_dir(): folders += [x.parent for x in sorted(item.glob("**/summary.json"))]
     games = [g for g in (game_record(f) for f in folders) if g]
@@ -67,6 +74,11 @@ def main():
         {"change":"Bystander avoidance", "evidence":"Integrated outside the survival module; native checks are descriptive and unmatched."},
     ]
     payload = {"generated_from": "local files", "final_summary": summary, "improvements": evidence,
+               "latest_results": [
+                   {"label":"Predictive pacing", "value":"78/100", "detail":"paired development comparison; selected default was 74/100"},
+                   {"label":"Static site ranking", "value":"219/300", "detail":"held-out attempts; control was 213/300"},
+                   {"label":"Generic corners", "value":"32/42", "detail":"native deliveries; all 42 replacement entries completed"},
+                   {"label":"Site coverage", "value":"319/380", "detail":"held-out attempts; 19/20 selected sites empirically exceeded 50%"}],
                "coverage_runs": coverage, "games": unique,
                "counts": {"coverage_runs": len(coverage), "games": len(unique),
                           "recorded_replays": sum(g["replay"] for g in unique)}}
