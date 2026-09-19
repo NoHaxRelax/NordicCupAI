@@ -1,0 +1,164 @@
+{
+  "seed": 21,
+  "status": "complete",
+  "frames": 15856,
+  "sim_time": 1585.5999999996534,
+  "runtime_seconds": 111.99969805200817,
+  "score": 1611.5171290316705,
+  "final_agents": 0,
+  "peak_agents": 75,
+  "total_agents_seen": 526,
+  "predators": 13,
+  "events": [
+    {
+      "time": 406.800000000024,
+      "kind": "steering_started",
+      "agent": 209
+    },
+    {
+      "time": 407.3000000000241,
+      "kind": "missed_exit"
+    },
+    {
+      "time": 548.9000000000563,
+      "kind": "steering_started",
+      "agent": 294
+    },
+    {
+      "time": 550.1000000000565,
+      "kind": "aligned_exit"
+    },
+    {
+      "time": 581.9000000000638,
+      "kind": "steering_started",
+      "agent": 304
+    },
+    {
+      "time": 583.9000000000642,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 612.3000000000707,
+      "kind": "steering_started",
+      "agent": 307
+    },
+    {
+      "time": 614.3000000000711,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 806.8000000001149,
+      "kind": "steering_started",
+      "agent": 385
+    },
+    {
+      "time": 808.8000000001153,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 847.3000000001241,
+      "kind": "steering_started",
+      "agent": 411
+    },
+    {
+      "time": 847.8000000001242,
+      "kind": "missed_exit"
+    },
+    {
+      "time": 855.800000000126,
+      "kind": "steering_started",
+      "agent": 379
+    },
+    {
+      "time": 857.8000000001265,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 872.0000000001297,
+      "kind": "steering_started",
+      "agent": 411
+    },
+    {
+      "time": 872.8000000001299,
+      "kind": "missed_exit"
+    },
+    {
+      "time": 902.1000000001366,
+      "kind": "steering_started",
+      "agent": 421
+    },
+    {
+      "time": 904.100000000137,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 953.2000000001482,
+      "kind": "steering_started",
+      "agent": 437
+    },
+    {
+      "time": 955.2000000001486,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 1047.8000000001425,
+      "kind": "steering_started",
+      "agent": 451
+    },
+    {
+      "time": 1049.9000000001406,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 1207.9999999999968,
+      "kind": "steering_started",
+      "agent": 476
+    },
+    {
+      "time": 1208.2999999999965,
+      "kind": "missed_exit"
+    },
+    {
+      "time": 1347.1999999998702,
+      "kind": "steering_started",
+      "agent": 507
+    },
+    {
+      "time": 1347.8999999998696,
+      "kind": "steering_aborted"
+    },
+    {
+      "time": 1390.9999999998304,
+      "kind": "steering_started",
+      "agent": 514
+    },
+    {
+      "time": 1391.5999999998298,
+      "kind": "steering_started",
+      "agent": 508
+    },
+    {
+      "time": 1391.7999999998297,
+      "kind": "missed_exit"
+    },
+    {
+      "time": 1392.0999999998294,
+      "kind": "missed_exit"
+    }
+  ],
+  "policy_metrics": {
+    "attempts": 15,
+    "aligned": 1,
+    "missed": 6,
+    "aborted": 8
+  },
+  "native_evaluation": {
+    "fruit": 3164,
+    "starvation": 376,
+    "predator": 150
+  },
+  "alignment_audit": {
+    "valid": true,
+    "note": "Native audit: original predator is 9.60 degrees from target, agent 94.23 units away and 54.22 degrees outside its heading."
+  }
+}

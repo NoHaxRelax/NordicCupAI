@@ -2,7 +2,7 @@
 Usage: python nightsim/run.py --configs CFG.json|'{"lab":{...}}' --seeds 1-64 [--predators] --workers 32 --out rows.jsonl
 Row: label, seed, surv, score, fruit, eaten, peak, created, pdeaths (predator kills), sdeaths, penalty,
 trees/fruits/alive at death (last 50 s sample), traj (alive,trees every 250 s)."""
-import argparse, json, os, sys, time, pathlib
+import argparse, json, os, sys, time, pathlib, hashlib, platform
 from multiprocessing import Pool
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
@@ -99,7 +99,20 @@ if __name__ == '__main__':
     a = ap.parse_args()
     try: cfgs = json.loads(a.configs)
     except json.JSONDecodeError: cfgs = json.load(open(a.configs))
+    if pathlib.Path(a.out).exists() and pathlib.Path(a.out).stat().st_size:
+        ap.error('output already contains results; choose a new output for this revision')
+    import nightsim, numpy
+    sources=[HERE/'_nengine.cpp',HERE/'_npolicy.hpp',HERE.parent/'models/avoidance/native_corner.hpp']
+    binary=pathlib.Path(nightsim._engine.__file__)
+    if binary.stat().st_mtime < max(p.stat().st_mtime for p in sources):
+        ap.error('native sources changed: rebuild with python nightsim/build.py')
     seeds = parse_seeds(a.seeds)
+    manifest=dict(configs=cfgs,seeds=seeds,horizon=a.horizon,predators=a.predators,workers=a.workers,
+        python=sys.version,platform=platform.platform(),numpy=numpy.__version__,
+        binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
+        sources={str(p.relative_to(HERE.parent)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources})
+    pathlib.Path(a.out).parent.mkdir(parents=True,exist_ok=True)
+    pathlib.Path(a.out).with_suffix('.manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     jobs = [(l, kw, s, a.horizon, a.predators, a.sample) for s in seeds for l, kw in cfgs.items()]
     t0 = time.time(); n = 0
     with Pool(a.workers) as pool, open(a.out, 'a') as f:

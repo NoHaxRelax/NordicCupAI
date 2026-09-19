@@ -64,3 +64,42 @@ The full-game native recorder is `scripts/record_native_avoidance.py`.
 It uses native `policy_act` and ordinary actions, retaining each tick for
 `scripts/entrapment_viewer.py`. Example current review URL:
 http://localhost:9092/?time=786.1 (historical target-switch failure).
+
+## Target-locked results and verified replay
+
+The fresh paired tests are complete:
+
+| Seeds | Plain avoidance | Sparse-corner, ±10° | Difference |
+| --- | ---: | ---: | ---: |
+| 17–32 | 1481.53 | 1511.00 | +29.47 |
+| 33–48, confirmation | 1637.33 | 1597.08 | −40.24 |
+
+Across these 32 maps the sparse-corner variant is about 5.4 points worse.
+This does not establish a score improvement. Keep the existing plain
+avoidance configuration as the default. Nearest-corner steering scored
+1420.99 on seeds 17–32, also below plain avoidance.
+
+The corrected implementation made five **observation-based alignment
+claims in 204 attempts** across those 32 sparse-corner games. One has been
+independently checked against the original native predator; do not treat
+all five as independently verified or claim reliable steering.
+
+Verified example: seed 21, agent 294, 548.9–550.1 s. At exit the original
+predator is 9.601° from the selected corner direction, the agent is 94.225
+units away, and its bearing is 54.224° off the predator's heading, outside
+the 30° half-cone. Native state is used only by the after-the-fact auditor.
+`locked21-alignment-audit.json` contains the measurements;
+`scripts/audit_replay_alignment.py` reproduces them from the full recording.
+
+**Current review replay:** http://localhost:9093/?time=548.8 . Every tick of
+the 1585.6-second game is saved (score 1611.5). The earlier port 9092 remains
+a historical failed-counter example; use 9093 for the corrected behavior.
+
+The four-map escape-angle/commitment sweep also failed to beat its plain
+avoidance control. Results and exact configs are retained. No additional
+Survival changes were adopted. All new compute in this worktree was local:
+**Runpod spend $0**.
+
+New native batch runs record source hashes, loaded binary hash, runtime,
+seeds and configs in a companion manifest. The runner refuses stale builds
+and refuses to append mixed revisions to an existing nonempty output.
