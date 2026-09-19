@@ -90,6 +90,22 @@ The deployed F3 measured small_launcher 0.34 from Oslo against 0.56 in the night
 The harness's small_tower and tank labels are off the organisers' convention (the portal says F5 beats F3 on both), so
 cross-checkpoint routing still comes from same-day portal runs; the harness ranks policies on one checkpoint.
 
+## Loss decomposition of the best harness run (`elias/miss_analysis.py`, 00:20 Sunday)
+
+`python elias/miss_analysis.py --log elias/out/harness/W_combo_ref/local.jsonl` puts every labelled box of every answered
+frame in one bin (hit, box = right class at IoU 0.1 to 0.5, confused, held back by the tracker, unseen by the detector,
+never born, lost). On the 0.688 config: nothing is held back (1 box) and almost nothing is lost or never born (0 to 5 %,
+large_launcher 17 %); the losses are `box` (tank 34 %, small_launcher 28 %, large_tower 26 %, small_tower 16 %,
+medium_launcher 16 %, mine_roller 13 %) and one `confused` block: the team's large_launcher labels of frames 0 to 110
+(80 x 56 and 60 x 45 px, the real large launcher of frames 140 on is 170 x 107) are answered mine_roller at 0.63 to 0.89
+with IoU 0.7 to 0.85. The portal scores our mine_roller 0.93, so those labels are wrong, not the answers: the harness
+large_launcher 0.43 is a label artefact. In-view answers reach IoU 0.5 on 78 % of labelled boxes, 70 % six to eleven
+frames after the object left the view and 62 % after twelve or more (the forecast runs 2 to 4 px ahead, dy +2.1 and
++4.0 median); an object crosses the frame in about 32 frames, half of them as a forecast. The in-view median IoU is
+only 0.59 because the team boxes differ from the detector's convention (hangar dx -36, jet 1.12 x 1.26), which the
+portal does not confirm (hangar 0.95, jet 0.97): the harness cannot rank box tweaks, only one-class portal runs can
+(`measure_pod4.sh`: medium_launcher box 0.85, 0.70 and per-axis [0.6, 0.85]; small_tower and tank F3 against F5).
+
 ## Laptop thirds of 23:31 to 23:45 are void
 
 `portal_session2.log`: deploy config (cluster births + launcher box 0.85) 0.235 + 0.293 + 0.082, then plain F3 0.150 + 0.206
