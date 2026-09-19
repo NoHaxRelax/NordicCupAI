@@ -55,3 +55,8 @@ not adopted. Shipped configs unchanged.
 ## 08:50 19 Sept: map fix
 `wall_conflict=1` is now the nightsim default (map-building modes only). Shipped configs unchanged (they build no
 map). Refuge on the corrected map: +13 +- 32 s at radius 60, not adopted.
+
+## 11:20 19 Sept: delivery (guide) best setting, scenarios only
+`guide_best_1119` in configs-all.json = r21s0c2 + guide_plan=3 (multi-predator planner only when 2+ predators within
+150 and one ahead). Delivery: 1 predator 95% clear / 84% blocked lanes; 2 predators 77% / 59%; 2 predators with 2
+colony agents nearby 83%. Not yet tested in full games.

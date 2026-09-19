@@ -611,3 +611,9 @@ Log (newest last)
   24 headings x walk/sprint scored against every sensed predator with the one-tick lag, known walls, progress,
   sprint cost; only when 2+ predators within 150): 76% clear (+5, ~2 SE) / 59% blocked (noise); 1-predator
   cases unchanged (84%). 3 predators: 43-47% with or without.
+- 11:08 2 predators + 2 nearby colony agents: current guide 84% clear / 70% blocked (vs 71/57 without
+  them), ~1 colony agent eaten per scenario. Planner switched on only when 2+ predators are within 150 AND one is
+  ahead (guide_plan=3, guide_safe 30), 128 seeds: 2 predators clear 77% (current 71%), blocked 59% (57%), with 2
+  colony agents 83% (84%); all-predators-held kept (413 vs 388 of 660). Best guide setting so far = current + guide_plan=3.
+  By the second predator's start (current guide, clear): ahead 56-68% vs behind 76-88%; the ahead-only planner
+  fixes ahead cases (-> 71-80%) without touching behind cases.

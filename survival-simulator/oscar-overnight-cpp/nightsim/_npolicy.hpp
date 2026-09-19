@@ -1710,8 +1710,17 @@ public:
                     if (step < 1.) { if (g.wait_since < 0.) g.wait_since = time; if (time - g.wait_since > P.guide_wait_max) { gstat[2]++; g.wait_since = -1.; g.guide_state = 1; return; } }
                     else g.wait_since = -1.;
                 } else g.wait_since = -1.;
-                int n_near_ = 0; for (auto& q : g.pseen) if (dist_lt(q.p, ps.p, 150.) && !dist_lt(q.p, g.trap.mouth, 40.)) n_near_++;
-                if (P.guide_plan > 0. && (P.guide_plan < 1.5 || n_near_ >= 2)) {   // nightsim: local planner against ALL sensed predators (+ known walls); mode 2 = only with 2+ predators within 150
+                int n_near_ = 0, n_ahead_ = 0;
+                {
+                    P2 ld = sub(g.trap.out, ps.p); double nl_ = norm(ld);
+                    for (auto& q : g.pseen) if (dist_lt(q.p, ps.p, 150.) && !dist_lt(q.p, g.trap.mouth, 40.)) {
+                        n_near_++;
+                        P2 v = sub(q.p, ps.p); double nv = norm(v);
+                        if (nl_ > 1. && nv > 1. && (ld.x * v.x + ld.y * v.y) / (nl_ * nv) > 0.) n_ahead_++;   // predator between us and the lane point
+                    }
+                }
+                bool plan_on = P.guide_plan > 0. && (P.guide_plan < 1.5 || (n_near_ >= 2 && (P.guide_plan < 2.5 || n_ahead_ >= 1)));   // mode 3: 2+ near and one ahead
+                if (plan_on) {   // nightsim: local planner against ALL sensed predators (+ known walls); mode 2 = only with 2+ predators within 150
                     std::vector<P2> preds;
                     for (auto& q : g.pseen) if (dist_lt(q.p, ps.p, 250.) && !dist_lt(q.p, g.trap.mouth, 40.)) preds.push_back(q.p);
                     if (preds.empty()) preds.push_back(g.guide_pred);
