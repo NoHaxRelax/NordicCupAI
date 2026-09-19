@@ -3,18 +3,16 @@
 Deadline **16:00 CEST Sunday 20 September**. One evaluation attempt, zero used. Only Elias queues it (PreToolUse
 hook in `.claude/settings.json`; the agent never writes `.claude/EVAL_UNLOCK`). Top five: code and models by 20:00.
 
-> **Status Saturday midnight.** Oscar's pipeline scored 0.705 to 0.727 on full public runs from his Swedish pod on
-> Saturday afternoon (leaderboard best 0.7269). This branch: plain F3 0.679 same-day from Oslo; two switches confirmed
-> on the organiser truth Saturday night (cluster births, launcher box 0.85, about +0.05 together); the full served
-> config is being measured as thirds from a fresh Oslo pod (`elias/out/logs/measure_pod2.log`, tags `P3_PLAIN`,
-> `P3_DEPLOY`, `P3_FINAL`; first third plain 0.265). **Fill in below when they land.** Whichever endpoint has the
-> higher same-day number is the attempt; the pieces Oscar can take from here are in `05-handover-to-oscar.md`.
+> **Status Sunday 00:50.** The routed config served from the Oslo pod scores **0.797** as concealed thirds (0.320 + 0.362 +
+> 0.116, nine clean runs interleaved with plain F3 on the same host and hour: plain 0.265 + 0.322 + 0.110 = 0.697).
+> Oscar's pipeline scored 0.705 to 0.727 on full public runs Saturday afternoon (leaderboard best 0.7269). **The attempt
+> is this endpoint; Oscar's is the fallback.** The pieces he can take from here are in `05-handover-to-oscar.md`.
 
-> **Pods.** Saturday's four pods were terminated in the afternoon. The measuring pod of Saturday night is
-> `jxpw8hwrqyjf5d` (elias-claude-serve-no2, RTX 4090, EUR-NO-1, 0.74 USD/h): ssh `root@149.36.0.150 -p 40957`,
-> endpoint 9053 on public TCP port **40958** (`elias/out/logs/pod2.env`). If it was terminated after the measurements,
-> create a new one (last section) and use its HOST, SSH_PORT and PUBLIC_PORT below. Round trip Oslo to the Helsinki
-> server 40 to 70 ms; a US pod had 250 ms and lost frames. Every other pod on the account is Oscar's or Lucas's.
+> **Pods.** The serving pod is `jxpw8hwrqyjf5d` (elias-claude-serve-no2, RTX 4090, EUR-NO-1, 0.74 USD/h, created
+> Saturday 23:46, kept running for the attempt): HOST `149.36.0.150`, SSH_PORT `40957`, PUBLIC_PORT **`40958`**
+> (`elias/out/logs/pod2.env`). If it is gone, create a new one (last section) and use its HOST, SSH_PORT and PUBLIC_PORT
+> below. Round trip Oslo to the Helsinki server 40 to 70 ms; a US pod had 250 ms and lost frames. Every other pod on the
+> account is Oscar's or Lucas's.
 
 ## What gets served
 
