@@ -237,7 +237,7 @@ def propose(index, trials, initial, specs, search_seed):
     raise RuntimeError(f'Could not construct a valid candidate for {label}')
 
 
-def summarize(results, seconds, enabled_count=0):
+def summarize(results, seconds, enabled_count=0, objective='survival'):
     errors = [r for r in results if r['status'] == 'error']
     if errors:
         return dict(rank=None, errors=len(errors), error=errors[0].get('error', 'case failed'))
@@ -245,15 +245,24 @@ def summarize(results, seconds, enabled_count=0):
         raise ValueError('Cannot rank interrupted or incomplete trials')
     survival = [min(seconds, r['sim_time']) for r in results]
     average, worst = statistics.mean(survival), min(survival)
-    score = statistics.mean(r['score'] for r in results)
+    scores = [r['score'] for r in results]
+    score, worst_score = statistics.mean(scores), min(scores)
     modes = {}
     for mode in sorted({r['mode'] for r in results}):
         subset = [r for r in results if r['mode'] == mode]
         modes[mode] = dict(mean_survival=statistics.mean(r['sim_time'] for r in subset),
                            mean_score=statistics.mean(r['score'] for r in subset),
                            survived=sum(r['sim_time'] >= seconds-1e-6 for r in subset), cases=len(subset))
-    return dict(rank=[average/seconds+.25*worst/seconds, score, -enabled_count],
-                mean_survival=average, worst_survival=worst, mean_score=score,
+    # Reaching the horizon is roughly a 1-in-60 lottery given the food economy,
+    # so with --objective score every pod reports 0 horizon games and survival
+    # cannot discriminate between candidates; score still separates them. Rank
+    # stays a comparable 3-tuple either way so callers never need to branch on it.
+    if objective == 'score':
+        rank = [score+.25*worst_score, average/seconds, -enabled_count]
+    else:
+        rank = [average/seconds+.25*worst/seconds, score, -enabled_count]
+    return dict(rank=rank,
+                mean_survival=average, worst_survival=worst, mean_score=score, worst_score=worst_score,
                 survived=sum(t >= seconds-1e-6 for t in survival), cases=len(results),
                 wall_seconds=sum(r['wall_seconds'] for r in results), modes=modes, errors=0)
 
@@ -500,7 +509,7 @@ def write_report(out, state, protocol):
                     key=lambda t: t['summary']['rank'], reverse=True)
     lines = ['# Policy search results', '',
              'Training results only. Run the separate validation phase before accepting an improvement.', '',
-             'Rank: mean survival/horizon + 0.25 * worst survival/horizon; then mean score; then fewer enabled additions.', '',
+             f"Rank: {protocol['objective']}.", '',
              '| Trial | Variant | Mean survival | Worst survival | Mean score |',
              '| --- | --- | ---: | ---: | ---: |']
     for t in ranked:
@@ -579,7 +588,8 @@ def search(args, protocol, state, baseline, specs, features, control, deadline):
 
     def save_trial(trial, results):
         trial['case_ids'] = [r['case_id'] for r in results]
-        trial['summary'] = summarize(results, args.seconds, sum(trial['config'].get('features', {}).values()))
+        trial['summary'] = summarize(results, args.seconds, sum(trial['config'].get('features', {}).values()),
+                                     args.objective)
         write_json(args.out/'study.json', state)
         write_report(args.out, state, protocol)
         if trial['summary'].get('errors') and trial['id'] < 2:
@@ -629,7 +639,8 @@ def refine(args, protocol, state, control, deadline):
     trials = [state['trials'][i] for i in plan['trial_ids']]
 
     def save_trial(trial, results):
-        trial['refinement'] = summarize(results, args.seconds, sum(trial['config']['features'].values()))
+        trial['refinement'] = summarize(results, args.seconds, sum(trial['config']['features'].values()),
+                                        args.objective)
         trial['refinement_case_ids'] = [r['case_id'] for r in results]
         write_json(args.out/'study.json', state)
         if trial['id'] < 2 and trial['refinement'].get('errors'):
@@ -685,7 +696,7 @@ def validation(args, protocol, state, control, deadline):
     trials = [dict(state['trials'][0], id='baseline'), dict(selection, id='candidate')]
     outcomes = {}
     def save_trial(trial, results):
-        outcomes[trial['id']] = dict(summary=summarize(results, args.seconds), results=results)
+        outcomes[trial['id']] = dict(summary=summarize(results, args.seconds, objective=args.objective), results=results)
         write_json(args.out/'validation-progress.json', dict(selection=selection, outcomes=outcomes))
     evaluate_batch(trials, args.validation_seeds, protocol, args, control, deadline, save_trial)
     if len(outcomes) != 2:
@@ -781,6 +792,13 @@ def main():
                         help="Simulation backend for every game in this study; 'native' runs the engine "
                              "and the orchard/evasion policy together in one in-process C++ call and only "
                              "supports --space notrap --family orchard_evasion")
+    parser.add_argument('--objective', choices=('survival', 'score'), default='survival',
+                        help="Ranking rule for summarize()/best.json. 'survival' (default) keeps every "
+                             "existing study's ranking unchanged. 'score' ranks by mean_score + "
+                             "0.25*worst_score instead: reaching the horizon is roughly a 1-in-60 lottery "
+                             "given the food economy, so survival barely discriminates between candidates "
+                             "while score still does. Recorded in protocol.json, so resuming a study with "
+                             "a different --objective is rejected by the existing protocol-equality check.")
     parser.add_argument('--phase', choices=('search', 'refine', 'validate', 'overnight'))
     parser.add_argument('--describe', action='store_true', help='Write defaults/inventory only; run no games')
     parser.add_argument('--hours', type=float, help='Session budget; resume with the same command')
@@ -844,13 +862,16 @@ def main():
         # Fail fast (before any game starts) if the requested engine is not built,
         # stale, or built against a different Python/NumPy on this host.
         engine_build = engine_identity(args.engine)
+        objective_text = ('mean_score + .25*worst_score; then mean_survival/horizon; then fewer features'
+                          if args.objective == 'score' else
+                          'mean_survival/horizon + .25*worst_survival/horizon; then mean_score; then fewer features')
         protocol = dict(version=4, baseline=SPACE_BASELINES[SPACE], space=SPACE,
             train_seeds=args.train_seeds, validation_seeds=args.validation_seeds,
             refine_seeds=args.refine_seeds, finalists=args.finalists,
             modes=modes, predators_enabled=True, seconds=args.seconds, policy_seed=args.policy_seed, search_seed=args.search_seed,
             engine=args.engine, engine_build=engine_build,
             source_hashes=source_manifest(), environment=versions(), parameter_inventory=specs,
-            objective='mean_survival/horizon + .25*worst_survival/horizon; then mean_score; then fewer features')
+            objective=objective_text)
         protocol_path = args.out/'protocol.json'
         if protocol_path.exists() and read_json(protocol_path) != protocol:
             raise RuntimeError('Source, environment, seeds, objective or search space changed. Use a new --out directory.')
