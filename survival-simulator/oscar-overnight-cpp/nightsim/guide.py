@@ -12,7 +12,8 @@ from nightsim.run import parse_seeds
 from nightsim.trapsite import grade
 
 HELD = int(__import__('os').environ.get('NIGHT_HELD', '0'))
-RELAY = int(__import__('os').environ.get('NIGHT_RELAY', '0'))   # place a third agent halfway along the lane (relay candidate)
+RELAY = int(__import__('os').environ.get('NIGHT_RELAY', '0'))
+NOLINE = int(__import__('os').environ.get('NIGHT_NOLINE', '0'))   # accept placements whose straight lane is blocked (routing test)   # place a third agent halfway along the lane (relay candidate)
 
 def one(job):
     label, kw, seed, dg, dp, bear, sp, T = job
@@ -44,7 +45,7 @@ def one(job):
         gsx, gsy = mx + dx * dg, my + dy * dg
         b = math.radians(bear); px, py = gsx + dp * (dx * math.cos(b) - dy * math.sin(b)), gsy + dp * (dx * math.sin(b) + dy * math.cos(b))
         if not eng.dbg_free(gsx - 5, gsy - 5, 10) or eng.dbg_pred_blocked(px, py): continue
-        if line_ok(gsx, gsy, ox, oy) and line_ok(px, py, gsx, gsy): found = (gsx, gsy, px, py, phi); break
+        if (NOLINE or line_ok(gsx, gsy, ox, oy)) and line_ok(px, py, gsx, gsy): found = (gsx, gsy, px, py, phi); break
     if not found: return dict(label=label, seed=seed, dg=dg, dp=dp, bear=bear, speed=sp, skip='no_line')
     gsx, gsy, px, py, phi = found
     eng.dbg_set_agent(bait, gx, gy, math.atan2(-ay, -ax) + math.pi, 400., 10., 20., 500., 100., 400., 1.57, 1000.)

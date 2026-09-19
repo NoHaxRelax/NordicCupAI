@@ -345,7 +345,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., guide_route = 0.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -1593,7 +1593,8 @@ public:
                 const AState& s = st(a); Mind& m = M(a);
                 if (s.energy < P.guide_min_e || m.old) return;   // old agents drain 10+/s: they cannot guide
                 if (P.guide_max_dist > 0. && dist(m.pose->p, pp) > P.guide_max_dist) return;   // do not send guides across the map
-                if (P.guide_clear > 0. && !path_clear(g, m.pose->p, g.trap.out, 6.)) return;   // nightsim: the straight walk to the lane point must not cross known walls
+                if (P.guide_route > 0.) { P2 nx; if (!route_next(g, m.pose->p, g.trap.out, 6., nx)) return; }
+                else if (P.guide_clear > 0. && !path_clear(g, m.pose->p, g.trap.out, 6.)) return;   // nightsim: the straight walk to the lane point must not cross known walls
                 double sc = s.energy * 0.1 - dist(m.pose->p, pp) * 0.05 - dist(m.pose->p, g.trap.out) * P.guide_lane_w + pmin(s.speed, s.sprint) * 10.;
                 {   // prefer candidates that are NOT on the far side of the predator from the lane (predator between them and the trap)
                     P2 a = sub(g.trap.out, m.pose->p), b = sub(pp, m.pose->p);
@@ -1678,9 +1679,12 @@ public:
         }
         if (g.guide_state == 2) {
             if (time - g.guide_seen > P.guide_lost) { g.guide_state = 1; return; }
-            if (P.guide_clear > 0. && !path_clear(g, ps.p, g.trap.out, 6.)) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
+            P2 lead_target = g.trap.out;
+            if (P.guide_route > 0.) { P2 nx; if (!route_next(g, ps.p, g.trap.out, 6., nx)) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; } lead_target = nx; }
+            else if (P.guide_clear > 0. && !path_clear(g, ps.p, g.trap.out, 6.)) { g.guide = -1; g.guide_state = 0; g.guide_dprev = -1.; g.guide_has_prev = false; g.ep_lost++; return; }
             if (dP > P.guide_acq && !chasing && time - g.guide_closing_t > 2.) { g.guide_state = 1; return; }
             double dT, angT; local_of(ps, g.trap.out, dT, angT);
+            if (P.guide_route > 0. && !(lead_target.x == g.trap.out.x && lead_target.y == g.trap.out.y)) { double dV, angV; local_of(ps, lead_target, dV, angV); angT = angV; }   // steer toward the via point; dT stays the true remaining distance
             if (chasing && !g.ep_chased) { g.ep_chased = true; g.ep_chase++; }
             if (dT < 12. && chasing && dP < P.guide_far + 30.) { g.guide_state = 3; if (!g.ep_s3) { g.ep_s3 = true; g.ep_state3++; } }
             else {
@@ -1843,6 +1847,21 @@ public:
     }
 
 
+    // nightsim: one-bend route from a to b through known walls: returns the next waypoint (b itself when the straight
+    // line is clear, else a via point at +-25/50/75 degrees at 0.5 or 0.35/0.7 of the distance), or false
+    bool route_next(Group& g, P2 a, P2 b, double r, P2& next) {
+        if (path_clear(g, a, b, r)) { next = b; return true; }
+        double L = dist(a, b); if (L < 1.) return false;
+        double base = std::atan2(b.y - a.y, b.x - a.x);
+        for (double frac : {0.5, 0.35, 0.7})
+            for (double deg : {25., -25., 50., -50., 75., -75.}) {
+                double ang = base + deg * OPI / 180.; double len = frac * L / std::cos(deg * OPI / 180.);
+                P2 via{a.x + len * std::cos(ang), a.y + len * std::sin(ang)};
+                if (via.x < 20. || via.y < 20. || via.x > W - 20. || via.y > H - 20.) continue;
+                if (path_clear(g, a, via, r) && path_clear(g, via, b, r)) { next = via; return true; }
+            }
+        return false;
+    }
     bool path_clear(Group& g, P2 a, P2 b, double r) {
         double L = dist(a, b); int n = (int)(L / 6.) + 1;
         for (int k = 0; k <= n; k++) { double t = (double)k / (double)n; if (!clear_of(g, P2{a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t}, r)) return false; }
