@@ -5,7 +5,8 @@ import nightsim
 from nightsim.trapsite import grade
 seed, dg, dp, bear, sp = int(sys.argv[1]), float(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5])
 PHI = [int(sys.argv[6])] if len(sys.argv) > 6 else [0, 10, -10, 20, -20, 30, -30, 45, -45, 60, -60]
-kw = json.load(open('/workspace/night/cfg-r21.json'))['r21s0c2']
+CFG = sys.argv[7] if len(sys.argv) > 7 else '/workspace/night/cfg-r21.json'; LAB = sys.argv[8] if len(sys.argv) > 8 else 'r21s0c2'
+kw = json.load(open(CFG))[LAB]
 sim = nightsim.SimulationCore(seed=seed, predators=False); eng = sim._engine
 sim.step([]); eng.pop_events()
 ags = eng.dbg_keep_agents(2); bait, guide = ags[0][0], ags[1][0]
@@ -43,7 +44,7 @@ for _ in range(3):
 eng.dbg_true_poses(); eng.dbg_freeze([bait])
 t0 = eng.info()['time']
 for k in range(60):
-    eng.run_policy(t0 + 60, eng.info()['time'] + 0.5)
+    eng.run_policy(t0 + 60, eng.info()['time'] + 0.2)
     ev = [e for e in eng.pop_events() if e[0] != 'fruit']
     ag = {a[0]: a for a in eng.agents()}; pr = eng.predators()
     g = ag.get(guide); p = pr[0] if pr else None

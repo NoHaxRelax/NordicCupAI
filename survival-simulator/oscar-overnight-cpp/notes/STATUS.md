@@ -92,3 +92,9 @@ Log (newest last)
   predator LOSING SIGHT of the guide at 120-140 (line of sight cut by the trap's own obstacle: mode 3 edge-avoid),
   then wandering away at walk speed; re-acquire is slow. Predator hearing (60, omnidirectional, through walls) is
   the only loss-proof sense => g6 tests hold bands 60-90 / 50-80 / 45-70 (predator kept within hearing).
+- 02:45 g6 (2337 scenarios each): hold band 92-130: 65%; 60-90: 71%; 50-80: 75%; 45-70: 78% (bearing 0/90/180 =
+  96/81/54%). Lost-predator failures 607 -> 180; guides killed early 208 -> 334. Keeping the predator inside its
+  hearing range is the lever. g7: bands 40-60, 35-55, plus blocked sprint angle 2.9 and acquire stop 75.
+- 02:50 g7: band 45-70 stays best (78%); 40-60 77%, 35-55 75% (more guides killed before the handoff); blocked
+  sprint angle 2.9 and acquire stop 75 slightly worse. Remaining failures at 45-70: guide killed early 14%,
+  predator lost 8%; bearing 180 (predator between guide and trap) 54%.
