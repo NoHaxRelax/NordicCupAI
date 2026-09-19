@@ -347,7 +347,7 @@ struct Params {
     // late-game schedule (nightsim): from time late_t on, each l_* that is not NaN replaces its parameter
     // predator layer (nightsim): pred_mode 0 off, 1 evade (face nearest threat, back away; sprint when close)
     double merge_anchored = 0., no_spawn = 0., fit_speed_cap = 1.5;
-    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0., trap_min_cd = 0., evade_ignore_held = 0., bait_rot_margin = 100.;
+    double hide_mode = 0., hide_r = 150., hide_trigger = 80., trap_post_w = 0., trap_post_r = 400., refuge_mode = 0., refuge_r = 60., refuge_trigger = 80., refuge_leave = 8., refuge_slow_only = 0., refuge_post_w = 0., refuge_post_r = 250., refuge_clear = 0., refuge_sprint = 0., site_safe = 0., refuge_verify = 0., wall_conflict = 1., guide_clear = 0., pred_avoid_w = 0., pred_avoid_r = 250., pred_avoid_t = 90., child_prio = 0., sprint_floor = 0., sprint_floor_breed = 1., sprint_floor_unripe = 1., guide_route = 0., guide_mapclear = 0., guide_ctrl = 0., guide_gap = 40., guide_ctrl_acq = 110., guide_lag = 0., guide_chase_cos = 0.8, guide_pv = 0., guide_pv_near = 110., guide_pv_far = 150., guide_pv_dT = 150., guide_plan = 0., guide_safe = 30., guide_keep = 70., guide_sprint_pen = 4., guide_chased = 0., guide_chase_r = 100., guide_release = 200., trap_rear_only = 0., bait_rotate = 0., bait_rot_e = 0., trap_min_cd = 0., evade_ignore_held = 0., bait_rot_margin = 100., pred_hide = 0., pred_hide_min = 60., pred_hide_w = 25., pred_hide_t = 0.;
     double decoy_old = 0., decoy_e = 0., decoy_r = 150., evade_closest = 0., spawn_pred_r = 0.;
     double keeper_mode = 0., keeper_r = 120., keeper_reserve = 60., rep_timeout = 45., keeper_post_w = 0., keeper_post_r = 250., site_dist_w = 0.02;
     double trap_bait_fixed = -1., guide_near = 45., guide_far = 70., guide_acq_sprint = 0., guide_block_ang = 2.5, guide_slow = 1., guide_fastclose = 8., guide_side_pen = 300., bait_on_sight = 0., guide_sprint_until = 45., guide_max_dist = 0., guide_lane_w = 0., guide_pred_lane_max = 0., guide_wait_max = 6., guide_relay = 0., guide_relay_min = 200., guide_relay_ahead = 180., guide_relay_r = 150., guide_wallclear = 0., pred_wallclear = 0., guide_lead_sprint = 0., guide_acq = 55., guide_min_e = 120., guide_lost = 10., guide_hand = 40.;
@@ -690,7 +690,7 @@ public:
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
             if (!found) m.edges.push_back(EdgeMem{a, b, time});
-            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0. || P.refuge_mode > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
+            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0. || P.refuge_mode > 0. || P.pred_hide > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
         }
         {
             std::vector<EdgeMem> keep;
@@ -1318,6 +1318,15 @@ public:
     }
 
     // ------------------------------------------------------------ trap sites (nightsim)
+    // nightsim: does the segment a-b cross a confirmed wall face of the group map (line of sight blocked)?
+    bool los_blocked(const Group& g, P2 a, P2 b) const {
+        for (const auto& w : g.walls) {
+            if (!confirmed(w)) continue;
+            P2 c = w.horiz ? P2{w.lo, w.c} : P2{w.c, w.lo}, d = w.horiz ? P2{w.hi, w.c} : P2{w.c, w.hi};
+            if (segments_cross(a, b, c, d)) return true;
+        }
+        return false;
+    }
     static double seg_dist(P2 p, const Group::Wall& w) {
         if (w.horiz) { double x = pmax(w.lo, pmin(w.hi, p.x)); return hypot2(p.x - x, p.y - w.c); }
         double y = pmax(w.lo, pmin(w.hi, p.y)); return hypot2(p.x - w.c, p.y - y);
@@ -1937,6 +1946,24 @@ public:
         double walk = pmin(s.speed, s.sprint);
         double step = nr->d < P.pred_sprint_r ? s.sprint : walk;
         double turn = P.pred_face > 0. ? nr->ang : 0.;
+        if (P.pred_hide > 0. && nr->d > P.pred_hide_min && nr->d < 250. && time >= P.pred_hide_t) {   // nightsim: beyond hearing the predator tracks us by sight: prefer an escape that puts a wall between us
+            Group& gh = G(mm.group);
+            if (gh.anchored && !gh.walls.empty()) {
+                const PoseObj& ps = *mm.pose;
+                P2 pp = add(ps.p, mul(unit(ps.theta + nr->ang), nr->d));
+                double best_sc = -OINF, best_h = ps.theta + away;
+                for (int k = 0; k < 16; k++) {
+                    double h = ps.theta + away + (double)(k - 8) * OPI / 8.;
+                    P2 q = add(ps.p, mul(unit(h), step));
+                    if (!clear_of(gh, q, 6.)) continue;
+                    double gain = dist(q, pp) - nr->d;
+                    double dev = std::fabs(wrap(h - (ps.theta + away)));
+                    double sc = gain - 4. * dev + (los_blocked(gh, pp, q) ? P.pred_hide_w : 0.);
+                    if (sc > best_sc) { best_sc = sc; best_h = h; }
+                }
+                away = wrap(best_h - ps.theta);
+            }
+        }
         if (P.pred_wallclear > 0.) away = steer_clear(mm, away, 25.);
         pl = Plan{step, away, turn};
         n_evading++;

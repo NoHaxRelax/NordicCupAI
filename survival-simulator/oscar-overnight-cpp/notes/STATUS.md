@@ -663,3 +663,10 @@ Log (newest last)
   params, space_pred1.json), 100 candidates x 64 paired seeds (9000-9063) on 5 new pods n10-n14 (old pods cannot
   restart, hosts full); (2) top candidates re-run on 384 fresh seeds; (3) winner on 768 more; late-game ideas also
   on fork-paired checkpoints (lategame.py). Budget: ~$62 of $140 used, 5 pods = $4.80/h.
+- 13:38 s1 search (100 candidates x 64 paired seeds): base 1461 s; best s1c0 +93+-50, s1c22 +68+-38,
+  s1c9 +59, s1c59 +54, s1c16 +50; spread of all diffs sd 37 < noise ~43 => flat landscape, top-8 to fresh-seed
+  confirmation. OSCAR: late game (1700+) = resources + not dying to predators; exploit turning radius, walk
+  backwards, hide behind walls. New: pred_hide (beyond 60 = sight-only tracking, prefer escape headings that put
+  a known wall between us; builds the wall map). L1 on n10-n14: late-only evasion variants applied at forked
+  checkpoints 1500/1700/2000 (seeds 9000-9479): face 160/250, flee 120 (+face 160), dodge 120, sprint 60, hide
+  (w 25/50), shared alarms.
