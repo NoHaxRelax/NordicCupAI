@@ -29,6 +29,12 @@ FAMILIES = [
 ]
 TRAIN = list(range(6001,6033))
 TEST = list(range(7001,7101))
+ITERATIONS = 30
+STARTUP = 6
+RNG_SEED = 91000
+DEADLINE = 1200
+EXTRA_SOURCES = []
+CONTROLS = {0: {'baseline': BASE}}
 
 def initial(i):
     extra={'pred_wall_look':30,'pred_wall_reward':80,'pred_cone_margin':.1}
@@ -42,7 +48,7 @@ def config(i,x):
     return c
 
 def propose(xs,ys,rng,dim):
-    if len(xs)<6:return rng.random(dim),'random_startup'
+    if len(xs)<STARTUP:return rng.random(dim),'random_startup'
     x=np.array(xs); y=np.array(ys); y=(y-y.mean())/max(y.std(),1.)
     def kernel(a,b):
         r=np.sqrt(((a[:,None,:]-b[None,:,:])**2).sum(axis=2))/.4
@@ -67,21 +73,21 @@ def one(job):
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--family',choices=[f[0]for f in FAMILIES],required=True)
     ap.add_argument('--out',required=True);ap.add_argument('--workers',type=int,default=32)
-    ap.add_argument('--deadline',type=int,default=1200);ap.add_argument('--pilot',action='store_true')
+    ap.add_argument('--deadline',type=int,default=DEADLINE);ap.add_argument('--pilot',action='store_true')
     a=ap.parse_args();i=[f[0]for f in FAMILIES].index(a.family);out=pathlib.Path(a.out)
     out.mkdir(parents=True,exist_ok=True)
     if (out/'manifest.json').exists():raise RuntimeError('Use a fresh output directory')
     def save(name,data):
         tmp=out/(name+'.tmp');tmp.write_text(json.dumps(data,indent=2)+'\n');tmp.replace(out/name)
-    sources=list((ROOT/'fastsim').glob('*.hpp'))+list((ROOT/'fastsim').glob('*.cpp'))+[pathlib.Path(__file__)]
+    sources=list((ROOT/'fastsim').glob('*.hpp'))+list((ROOT/'fastsim').glob('*.cpp'))+[pathlib.Path(__file__)]+EXTRA_SOURCES
     save('manifest.json',dict(family=FAMILIES[i],train_seeds=TRAIN,test_seeds=TEST,
-         iterations=30,policy_seed=0,horizon=3000,predators=True,objective='mean score',
+         iterations=ITERATIONS,policy_seed=0,horizon=3000,predators=True,objective='mean score',
          base=BASE,python=sys.version,numpy=np.__version__,platform=platform.platform(),
          source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in sources},
          build=json.loads((ROOT/'fastsim/build-info-policy.json').read_text()),
-         optimizer='Matern5/2 GP expected improvement; 1 center + 5 random + 24 EI',
+         optimizer=f'Matern5/2 GP expected improvement; 1 center + {STARTUP-1} random + {ITERATIONS-STARTUP} EI',
          start_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
-    xs=[];ys=[];trials=[];rng=np.random.default_rng(91000+i);start=time.monotonic()
+    xs=[];ys=[];trials=[];rng=np.random.default_rng(RNG_SEED+i);start=time.monotonic()
     with Pool(a.workers) as pool,open(out/'games.jsonl','w',buffering=1) as log:
         def evaluate(cfg,seeds,stage,it):
             results=pool.imap_unordered(one,[(s,cfg,stage,it)for s in seeds]);rows=[]
@@ -92,7 +98,7 @@ def main():
             return rows
         if a.pilot:
             rows=evaluate(BASE,TRAIN,'pilot',0);save('pilot.json',dict(rows=rows,elapsed=time.monotonic()-start));return
-        for it in range(30):
+        for it in range(ITERATIONS):
             x,method=(initial(i),'center')if it==0 else propose(xs,ys,rng,len(initial(i)))
             cfg=config(i,x);rows=evaluate(cfg,TRAIN,'train',it+1)
             score=float(np.mean([r['score']for r in rows]));xs.append(x.tolist());ys.append(score)
@@ -101,13 +107,14 @@ def main():
         winner=trials[int(np.argmax(ys))];save('winner.json',winner)
         rows=evaluate(winner['config'],TEST,'test',winner['iteration'])
         scores=np.array([r['score']for r in sorted(rows,key=lambda r:r['seed'])])
-        boot=np.random.default_rng(7100).choice(scores,(10000,100)).mean(axis=1)
+        boot=np.random.default_rng(7100).choice(scores,(10000,len(TEST))).mean(axis=1)
         save('summary.json',dict(family=a.family,n=len(rows),mean=float(scores.mean()),
              median=float(np.median(scores)),std=float(scores.std(ddof=1)),ci95=np.quantile(boot,[.025,.975]).tolist(),
              training_start=ys[0],training_best=max(ys),best_iteration=winner['iteration'],
              elapsed_seconds=time.monotonic()-start,finished_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())))
-        if i == 0:
-            evaluate(BASE,TEST,'baseline',0)
+        for stage,control in CONTROLS.get(i,{}).items():
+            save(stage+'-config.json',control)
+            evaluate(control,TEST,stage,0)
         save('complete.json',dict(elapsed_seconds=time.monotonic()-start))
         print('COMPLETE',flush=True)
 if __name__=='__main__':main()
