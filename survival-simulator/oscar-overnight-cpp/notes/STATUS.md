@@ -691,3 +691,12 @@ Log (newest last)
   s1c22 -40. B2 queued (base, s1c16, s1c0, s1c9 on 1030 fresh seeds). Throughput measured: full games 572 per pod
   in 310-389 s = 5,300-6,600/h per pod, ~55-65k/h on 10 pods. Checkpoint rounds were load-imbalanced (one job per
   seed): lategame.py now uses one job per (seed, checkpoint) for E2/E3 onward.
+- 14:22 L2 (resource knobs at every checkpoint 300..2400, 8 of 10 pods): nothing positive anywhere;
+  reach_up -121..-134 early, reach_down -17..-61, breed_lo -18..-42, lowpop_births -12..-22, caps/explore ~0.
+  Population parameters are at a local optimum per phase. Teammate survey: no branch near 2,000 with predators
+  (best 1,764 on 16 seeds = our own policy; fresh seeds 1,482/1,637). How games end (192 games): last death is a
+  starving newborn in 70%; colony size at 1000 s predicts survival (1302 s if <6 agents, 1650 if >=15).
+  NEW LEVER: trait evolution. Children inherit speed/sprint/max energy (10% mutation x0.5-1.5 each); predators max
+  15/tick, agent walk speed can evolve to 20 -> a lineage walking >15 cannot be caught in the open. Kill records
+  show mean walk speed 10.9: selection is weak (every elder gets an heir). 03b_SEL queued first: strong breeding
+  selection on speed (fit_speed 5, cap 2.0; heir_select on/off; low max energy), 512 seeds.
