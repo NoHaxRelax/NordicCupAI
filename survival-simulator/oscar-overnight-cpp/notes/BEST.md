@@ -22,3 +22,8 @@ tree knowledge within 400 units +146 s.
 Trap machinery (bait + guides) in full games: -200 s so far (see STATUS/GUIDE).
 | + dodge radius 80, angle 1.4 (`pred_best_0342`, 03:42) | 1444 | 1462 | 139 |
 | + flee within 70, face within 80 (`pred_best_0400`, confirmed on fresh seeds 7000-7191, 04:00) | 1507 | 1520 | 142 |
+| `pred_best_0400` vs no predator logic, 576 fresh seeds 8000-8575 (04:25) | 1492 vs 887 (+605 ± 16) | 1502 vs 732 | 146 vs 225 |
+
+Both best configurations (full parameter dicts) are in `best-configs.json`; pass either as the policy kwargs
+(`nightsim/run.py --configs`, or `--kw` in the Python harnesses; the predator keys are ignored by the old Python
+policy, which lacks the evasion layer).

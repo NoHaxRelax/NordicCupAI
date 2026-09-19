@@ -4,7 +4,7 @@
 best 2353 / 2492). ~180 variants tried overnight on 512 paired seeds each; nothing beats it. The remaining
 headroom is detecting trees 200-400 units away (oracle +120 s), which no tested change captures.
 
-**With predators (full games, r21s0c2 + evasion, no trap):** 864 s -> 1507 s (score 720 -> 1520) on 192 fresh
+**With predators (full games, r21s0c2 + evasion, no trap):** 887 s -> 1492 s (score 732 -> 1502, +605 ± 16) on 576 fresh
 seeds with `pred_best_0400` (artifacts/overnight/configs-all.json): flee only within 70, face within 80, sprint
 within 40, sidestep 1.4 rad off the predator's heading within 80, no shared alarms. Fleeing far, sharing
 alarms, running to crevices, speed selection and population re-tuning all hurt or do nothing.
@@ -203,3 +203,6 @@ Log (newest last)
 - 04:19 f20: bait on sight now costs -455 s against the stronger evasion; foraging around the trap does not get
   predators caught (held 0.05-0.17); with guides -603. Trap integration is negative in every form tested tonight.
   esc3: single-predator escape grid for the new evasion (per speed / distance / bearing).
+- 04:24 f21 final confirmation, 576 fresh seeds: pred_best_0400 1492 s / score 1502 vs 887 / 732 without
+  predator logic (+605±16 s). Experiment agenda exhausted for the night; stopping pods i/j/k (disks kept) to save
+  budget. Restart with night.sh (pods.txt) if needed.
