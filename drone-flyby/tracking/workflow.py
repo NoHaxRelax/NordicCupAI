@@ -30,6 +30,7 @@ class LevelOneSweep:
         self.overview_between_sides = overview_between_sides
         self.mode = mode
         self.waypoint = 0
+        self.side = None      # 'left' or 'right': a vertical band at that edge when the ground moves sideways
 
     def l2_waypoints(self, request):
         width, height = request['original_width'], request['original_height']
@@ -64,10 +65,18 @@ class LevelOneSweep:
             xs = [b['minimum_center_x'], (b['minimum_center_x']+b['maximum_center_x'])/2,
                   b['maximum_center_x'], (b['minimum_center_x']+b['maximum_center_x'])/2]
             y = b['minimum_center_y']+self.vertical_fraction*(b['maximum_center_y']-b['minimum_center_y'])
+            if self.side in ('left', 'right'):
+                # objects enter at a side edge: sweep a vertical band there (top, middle, bottom, middle)
+                x = b['minimum_center_x'] if self.side == 'left' else b['maximum_center_x']
+                ys = [b['minimum_center_y'], (b['minimum_center_y']+b['maximum_center_y'])/2,
+                      b['maximum_center_y'], (b['minimum_center_y']+b['maximum_center_y'])/2]
+                points = [(x, yy) for yy in ys]
+            else:
+                points = [(xx, y) for xx in xs]
             def destination(waypoint):
                 if self.overview_between_sides and waypoint % 2:
                     return 0, np.array([request['original_width']/2, request['original_height']/2])
-                return 1, np.array([xs[waypoint], y])
+                return 1, np.array(points[waypoint], float)
             level, target = destination(self.waypoint)
             if view['resolution_level'] == level and np.linalg.norm(current-target) < 1:
                 self.waypoint = (self.waypoint+1) % 4
@@ -177,6 +186,31 @@ class DroneTrackingWorkflow:
     detections refresh boxes automatically; crop absence never removes a track.
     No class-conditioned shape model is enabled.
     """
+    def orient_sweep(self, model):
+        """Put the L1 band at the edge where objects ENTER, read off the calibrated motion: the ground's displacement
+        of the frame centre over one tick. Down means the top band (the two known flights), up the bottom band,
+        sideways a vertical band at the entering edge. DRONE_AUTO_BAND=0 keeps the configured band."""
+        import os
+        if os.environ.get('DRONE_AUTO_BAND', '1') != '1' or self.camera.mode != 'l1':
+            return
+        try:
+            w, h = model.source_size
+            H = model.mapping(model.origin_tick, model.origin_tick+1.0)
+            p = H @ np.array([w/2, h/2, 1.0]); p = p[:2]/p[2]
+            dx, dy = float(p[0]-w/2), float(p[1]-h/2)
+        except Exception as exc:            # keep the configured band rather than fail the run
+            self.diagnostics = {**(self.diagnostics or {}), 'band': f'not oriented: {exc}'}
+            return
+        if abs(dy) >= abs(dx):
+            self.camera.side = None
+            self.camera.vertical_fraction = 0.0 if dy >= 0 else 1.0
+            band = 'top' if dy >= 0 else 'bottom'
+        else:
+            self.camera.side = 'left' if dx >= 0 else 'right'
+            band = self.camera.side
+        self.camera.waypoint = 0
+        self.band = {'band': band, 'dx_per_tick': round(dx, 2), 'dy_per_tick': round(dy, 2)}
+
     def __init__(self, config=None, *, observe_motion=True, vertical_fraction=0., overview_between_sides=False, camera_mode='l1',
                  revisit_every=0, revisit_min_age=6.):
         self.config = config or RevisitConfig()
@@ -239,6 +273,7 @@ class DroneTrackingWorkflow:
             try:
                 model = calibrate_images(old_image, image, old_view, view, first_tick=old_tick, second_tick=motion)
                 self.tracker = RevisitTracker(model, self.sequence_id, self.config)
+                self.orient_sweep(model)
                 self.tracker.update(old_detections, old_view, old_tick, old_frame, detector_ran=old_ran)
             except CalibrationError as exc:
                 calibration_error = str(exc)
@@ -264,7 +299,7 @@ class DroneTrackingWorkflow:
         self.motion_tick = motion; self.last_frame = frame; self.last_request_id = request['request_id']
         self.previous = (image.copy(), view) if image is not None else None
         self.last_response = copy.deepcopy(response)
-        self.diagnostics = {'status': 'tracking' if self.tracker else 'calibrating', 'motion_tick': motion,
+        self.diagnostics = {'status': 'tracking' if self.tracker else 'calibrating', 'motion_tick': motion, 'band': getattr(self, 'band', None),
                             'timing': timing, 'calibration_error': calibration_error, 'events': events,
                             'camera_feedback': request.get('camera_command_feedback'),
                             'tracks': self.tracker.predictions(motion) if self.tracker else []}
