@@ -1,0 +1,190 @@
+{
+  "batch_wall_seconds_this_invocation": 1231.2382008669665,
+  "deaths_by_cause": {
+    "predator": 15235,
+    "starvation": 29640
+  },
+  "games": 100,
+  "guide_attempts": 0,
+  "guide_deliveries": 0,
+  "metrics_unknown": {
+    "confirmed_predator_retention": "the native API has no confirmed-retention event; proximity is not treated as capture"
+  },
+  "native_evaluation": {
+    "definitions": "Spectator only. Capture means an agent eaten; premature excludes intentional stationary delivery holds. Sprint availability uses energy before the action, across all roles. Guide deliveries mean reaching a stationary handoff, not capture success. Bait gaps sum trap-seconds after first actual role-holder occupancy within 4 of an observed trap goal; nearby goals within 10 are the same site. A held-30s count is continuous actual proximity within 40 of an occupied bait site, not proof of permanent entrapment. Ripe fruit is age>=20. No evaluator values enter decisions.",
+    "distributions": {
+      "bait_gap_seconds_max": {
+        "count": 100,
+        "max": 0.0,
+        "mean": 0.0,
+        "mean_95pct_bootstrap_ci": [
+          0.0,
+          0.0
+        ],
+        "median": 0.0,
+        "min": 0.0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "std": 0.0
+      },
+      "bait_gap_seconds_total": {
+        "count": 100,
+        "max": 0.0,
+        "mean": 0.0,
+        "mean_95pct_bootstrap_ci": [
+          0.0,
+          0.0
+        ],
+        "median": 0.0,
+        "min": 0.0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "std": 0.0
+      },
+      "bait_occupancy_started": {
+        "count": 100,
+        "true_count": 0,
+        "true_rate": 0.0
+      },
+      "final_predators_near_bait_30s": {
+        "count": 100,
+        "max": 0,
+        "mean": 0.0,
+        "mean_95pct_bootstrap_ci": [
+          0.0,
+          0.0
+        ],
+        "median": 0.0,
+        "min": 0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "std": 0.0
+      },
+      "maximum_predators_near_bait_30s": {
+        "count": 100,
+        "max": 0,
+        "mean": 0.0,
+        "mean_95pct_bootstrap_ci": [
+          0.0,
+          0.0
+        ],
+        "median": 0.0,
+        "min": 0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "std": 0.0
+      },
+      "maximum_predators_within_40_of_bait": {
+        "count": 100,
+        "max": 0,
+        "mean": 0.0,
+        "mean_95pct_bootstrap_ci": [
+          0.0,
+          0.0
+        ],
+        "median": 0.0,
+        "min": 0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "std": 0.0
+      },
+      "mean_agent_energy_fraction": {
+        "count": 100,
+        "max": 0.32850487646276144,
+        "mean": 0.22527176302890897,
+        "mean_95pct_bootstrap_ci": [
+          0.22000186439430766,
+          0.23067938474203728
+        ],
+        "median": 0.225311559281147,
+        "min": 0.15945800527623263,
+        "p10": 0.1933116749703096,
+        "p90": 0.26521705336322776,
+        "std": 0.027684330764879805
+      },
+      "peak_agents": {
+        "count": 100,
+        "max": 85,
+        "mean": 57.61,
+        "mean_95pct_bootstrap_ci": [
+          55.33,
+          59.95
+        ],
+        "median": 59.0,
+        "min": 35,
+        "p10": 42.0,
+        "p90": 75.0,
+        "std": 11.767868425196097
+      },
+      "ripe_fraction": {
+        "count": 100,
+        "max": 0.864262114537445,
+        "mean": 0.8224607177635588,
+        "mean_95pct_bootstrap_ci": [
+          0.8191151443292886,
+          0.8257527738026881
+        ],
+        "median": 0.8237999614864222,
+        "min": 0.7736556898707795,
+        "missing_count": 0,
+        "p10": 0.8007492572341647,
+        "p90": 0.8428440668996228,
+        "std": 0.01709880511763343
+      }
+    },
+    "totals": {
+      "deaths_by_cause_and_role": {
+        "predator:avoiding_predator": 14581,
+        "predator:gatherer": 569,
+        "predator:newborn": 70,
+        "predator:retired": 15,
+        "starvation:avoiding_predator": 1767,
+        "starvation:gatherer": 8342,
+        "starvation:retired": 19531
+      },
+      "deaths_by_role": {
+        "avoiding_predator": 16348,
+        "gatherer": 8911,
+        "newborn": 70,
+        "retired": 19546
+      },
+      "fruit_eaten": 255047,
+      "guide_attempts": 0,
+      "guide_deliveries": 0,
+      "intentional_delivery_sacrifices": 0,
+      "premature_captures_with_sprint_available": 2530,
+      "ripe_fruit_eaten": 209710,
+      "total_premature_captures": 15235
+    }
+  },
+  "reached_horizon": 0,
+  "reached_horizon_rate": 0.0,
+  "score": {
+    "count": 100,
+    "max": 2512.1363665253525,
+    "mean": 1563.7829627828569,
+    "mean_95pct_bootstrap_ci": [
+      1503.7486975799409,
+      1624.992013677119
+    ],
+    "median": 1557.273428338629,
+    "min": 689.423433335502,
+    "p10": 1194.9282209219457,
+    "p90": 1968.8458862483585,
+    "std": 309.7980655300778
+  },
+  "simulated_seconds": {
+    "count": 100,
+    "max": 2533.699999998791,
+    "mean": 1554.5199999996755,
+    "mean_95pct_bootstrap_ci": [
+      1493.408799999731,
+      1614.7879999996226
+    ],
+    "median": 1549.799999999686,
+    "min": 682.7000000000867,
+    "p10": 1190.7300000000125,
+    "p90": 1962.119999999311,
+    "std": 310.8850438745563
+  }
+}

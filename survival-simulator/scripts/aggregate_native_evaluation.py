@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import pathlib
+import subprocess
 import sys
 from datetime import datetime
 
@@ -16,6 +17,20 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def verify_frozen_sources(manifest, commit):
+    # An incomplete sparse checkout or untracked build products can mark a run
+    # dirty. Verify the actual inputs against Git blobs, retaining that flag.
+    expected = dict(manifest['source_sha256'])
+    expected['configs/' + pathlib.Path(manifest['config']['path']).name] = manifest['config']['sha256']
+    for relative, recorded_hash in expected.items():
+        blob = subprocess.run(
+            ['git', 'show', f'{commit}:survival-simulator/native_policy/{relative}'],
+            cwd=ROOT, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        ).stdout
+        if hashlib.sha256(blob).hexdigest() != recorded_hash:
+            raise ValueError(f'Source differs from frozen commit: {relative}')
+
+
 def aggregate(folder, seed_start, count, commit):
     manifests = sorted((folder / 'shards').glob('*/manifest.json'))
     if not manifests:
@@ -25,8 +40,9 @@ def aggregate(folder, seed_start, count, commit):
     for path in manifests:
         manifest = json.loads(path.read_text())
         data_path = path.with_name('games.jsonl')
-        if manifest['git_commit'] != commit or manifest['git_dirty']:
+        if manifest['git_commit'] != commit:
             raise ValueError(f'Unfrozen source: {path}')
+        verify_frozen_sources(manifest, commit)
         if digest(data_path) != manifest['results_sha256']:
             raise ValueError(f'Result hash mismatch: {path}')
         identity = dict(commit=manifest['git_commit'], source=manifest['source_sha256'],
@@ -45,7 +61,8 @@ def aggregate(folder, seed_start, count, commit):
         ends.append(datetime.fromisoformat(manifest['completed_utc']))
         evidence.append(dict(path=str(path.relative_to(folder)), sha256=digest(path),
                              results_sha256=digest(data_path), seeds=manifest['run']['seeds'],
-                             workers=manifest['run']['workers']))
+                             workers=manifest['run']['workers'], git_dirty=manifest['git_dirty'],
+                             source_and_config_verified_against_git_blobs=True))
     if any(item != identities[0] for item in identities):
         raise ValueError('Mixed source/config/runtime/horizon across shards')
     if set(rows) != set(range(seed_start, seed_start + count)):
@@ -84,7 +101,7 @@ def aggregate(folder, seed_start, count, commit):
         seed_start=seed_start, games=count, seeds=sorted(rows), shards=evidence,
         created_utc=min(starts).isoformat(), completed_utc=max(ends).isoformat(),
         results_sha256=digest(results_path), aggregation_script_sha256=digest(pathlib.Path(__file__)),
-        note='All requested seeds included once. Native evaluation fields are authoritative; top-level guide fields in raw rows are legacy debug counters. No runtime mixing.',
+        note='All requested seeds included once. Every recorded source/config hash verified against frozen Git blobs; original dirty flags retained. Native evaluation fields are authoritative; top-level guide fields in raw rows are legacy debug counters. No runtime mixing.',
     ))
     print(json.dumps(summary, indent=2))
 
