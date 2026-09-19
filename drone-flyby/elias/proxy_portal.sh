@@ -6,7 +6,8 @@ set -uo pipefail
 TARGET=$1; CLASSES=$2; TAG=$3; PORT=${PORT:-9071}
 cd "$(dirname "$0")/.." || exit 1
 VP="$HOME/venvs/nordic-drone/Scripts/python.exe"; OUT=elias/out/portal/$TAG; mkdir -p "$OUT"
-curl -sf -m 10 "$TARGET/" > /dev/null || { echo "target $TARGET does not answer"; exit 1; }
+# Oscar's server answers 404 on / and {"checkpoint": ..., "ready": true} on /api: any HTTP answer on /api counts
+CODE=$(curl -s -m 10 -o /dev/null -w "%{http_code}" "$TARGET/api"); case "$CODE" in 2*) ;; *) echo "target $TARGET does not answer ($CODE)"; exit 1;; esac
 PROXY_TARGET=$TARGET PROXY_CLASSES=$CLASSES PROXY_PORT=$PORT "$VP" elias/class_proxy.py > "$OUT/proxy.log" 2>&1 &
 PROXY_PID=$!
 CF="/c/Users/edlun/AppData/Local/Temp/claude/c--Users-edlun-Desktop-lucky-shots-NordicCupAI/bf48d8ae-2b16-4039-be3b-c570527b37ee/scratchpad/cloudflared.exe"
@@ -20,6 +21,6 @@ for _ in $(seq 1 40); do
   sleep 3
 done
 [ -z "${URL:-}" ] && { echo "no tunnel"; kill $PROXY_PID $TUN_PID 2>/dev/null; exit 1; }
-for _ in $(seq 1 20); do curl -sf -m 8 "$URL/api" | grep -q "drone-flyby" && { echo "reachable from outside: $URL"; break; }; sleep 5; done
+for _ in $(seq 1 20); do curl -sf -m 8 "$URL/api" | grep -qE "drone-flyby|ready" && { echo "reachable from outside: $URL ($(curl -sf -m 8 "$URL/api" | head -c 120))"; break; }; sleep 5; done
 "$VP" elias/portal.py validate "$URL/predict" 2>&1 | tee "$OUT/portal.txt" | grep -E "RESULT|another|queue ->" | cut -c1-160
 kill $PROXY_PID $TUN_PID 2>/dev/null; sleep 1
