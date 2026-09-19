@@ -560,3 +560,17 @@ Log (newest last)
   colony. Step b: scenario with a blocked straight line (harness no longer skips 'no_line'); step c: full games.
   P3.3 take-over: when a guide is released or dies, the nearest eligible member with a route continues (existing
   selection + guide_relay hand-over); measure handoffs per game.
+- 09:48 OSCAR: boot more CPUs, budget +$40 (now $140 of new spend since 23:55 on 18 Sept; ~$48 used).
+  Creating pods n8 and n9 (cpu3c 32 vCPU, $0.96/h each) for parallel full-game tests: n9 = routing/take-over in
+  full games (f46: rf_ref, rf_trap_wc_clear, rf_trap_route, rf_trap_route_relay); n8 = fresh-seed confirmation of
+  whichever sprint_floor variant wins f45. n7 keeps the scenarios.
+- 09:50 OSCAR: continue; cancel the 10-minute loop (cron 84d1793f deleted). Budget $140.
+  f45 sprint_floor (96 seeds): KILLS HALVED (146 -> 77-90 per game; walk-capped kills 120 -> 54-64) but survival
+  -201 (floor 40), -245 (80), -244 (120), -270 (80 without the breeding rule): agents that accept unripe fruit
+  below the floor eat far less energy (fruit score 130 -> 87-98) and births drop (436 -> 242-284 created). Oscar's
+  hypothesis holds for kills; the cost is in how the energy is obtained. f47 on n8: floor without accepting unripe
+  fruit (20/40/80 ripe-only; 40 eat-first only, no breeding rule).
+  rt1 guide scenario WITH blocked straight lanes (NIGHT_NOLINE, 620 valid placements, the realistic case): current
+  guide 68% delivered (guide dies 98%), guide_clear 50% (70%), one-bend routing 61% (88%). Routing does not help:
+  the plain guide already slides predators along walls. f46 (full-game routing + relay) on n9; rel4 on n7 =
+  take-over (relay) in the blocked-lane scenario.
