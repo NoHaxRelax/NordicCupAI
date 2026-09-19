@@ -94,3 +94,16 @@ in one late gap. Earlier dispatch alone does not establish continuity.
 
 The route-retry experiment retains overlap 20 to isolate that change:
 `logs/entrapment-iteration/interactive-route-retry-20260919`, port 9071.
+
+The retry fix scored 1058.04 and lasted 1015.7 seconds on this seed, with 18
+bait arrivals / 14 overlaps. Estimated gaps still totalled 242.1 seconds,
+longest 194.2 seconds; continuity and the 2500 average-score goal remain unmet.
+
+A visibility-graph fallback now routes around corners of observed walls padded
+only by agent clearance, rather than adding half a grid-cell diagonal. Every
+returned segment is checked against the existing exact clearance rule. A
+constructed 14-unit dogleg passage returned no coarse-grid route but a valid
+three-waypoint fallback route. The same-seed real-game run was identical to
+retry-only (no improvement on this map); broader-map benefit is unverified.
+Its full replay is `logs/entrapment-iteration/interactive-visibility-routes-20260919`,
+port 9072. No Runpod compute was used for these experiments.

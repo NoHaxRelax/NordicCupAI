@@ -11,6 +11,7 @@ import math
 import numpy as np
 
 from models.exploration.exploration import _path_clear
+from models.exploration.visibility_routes import VisibilityRoutes
 
 
 @dataclass
@@ -52,6 +53,7 @@ class Navigator:
         self.next_geometry = 0.
         self.blocked = None
         self.origin = self.extent = self.pitch = None
+        self.visibility = None
 
     def update(self, group, now):
         size = group.world_size
@@ -71,6 +73,7 @@ class Navigator:
         self.edge_min, self.edge_max = self.edges.min(axis=1), self.edges.max(axis=1)
         self.revision += 1
         self.blocked = None
+        self.visibility = None
 
     def prune(self, living_ids):
         living = set(living_ids)
@@ -163,6 +166,13 @@ class Navigator:
         return None
 
     def _plan(self, start, end):
+        route = self._grid_plan(start, end)
+        if route or not self._inside(end): return route
+        if self.visibility is None:
+            self.visibility = VisibilityRoutes(self.edges, self.clearance, self._inside)
+        return self.visibility.plan(start, end, self._clear)
+
+    def _grid_plan(self, start, end):
         if self._clear(start, end):
             return [end.copy()]
         if not self._inside(end):
