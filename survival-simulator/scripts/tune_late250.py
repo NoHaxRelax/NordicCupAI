@@ -93,7 +93,7 @@ def main():
     ap.add_argument('--workers',type=int,default=32);ap.add_argument('--smoke',action='store_true');a=ap.parse_args();assert 0<=a.pod_index<10
     out=pathlib.Path(a.out);out.mkdir(parents=True,exist_ok=True)
     if (out/'manifest.json').exists():raise RuntimeError('Use a new run directory')
-    sources=[pathlib.Path(__file__),ROOT/'scripts/tune_families10.py']+list((ROOT/'fastsim').glob('*.cpp'))+list((ROOT/'fastsim').glob('*.hpp'))
+    sources=[pathlib.Path(__file__),pathlib.Path(sys.argv[0]).resolve(),ROOT/'scripts/tune_families10.py']+list((ROOT/'fastsim').glob('*.cpp'))+list((ROOT/'fastsim').glob('*.hpp'))
     manifest=dict(source_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in sources},baseline=BASE,
       train_seeds=TRAIN,iterations=32,objective='mean score gained after checkpoint',window_seconds=250,policy_seed=0,
       families=FAMILIES,checkpoint='Linux fork copy-on-write process state, including native engine and policy RNG/memory',

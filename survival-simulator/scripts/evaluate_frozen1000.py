@@ -22,7 +22,8 @@ def one(job):
     wall=time.perf_counter_ns();cpu=time.process_time_ns()
     steps,peak,interface,policy,engine=sim._engine.run_policy(3000.,3000.,True)
     cpu=time.process_time_ns()-cpu;wall=time.perf_counter_ns()-wall
-    return dict(model=name,seed=seed,score=sim.env.score,survival=sim.env.time,steps=steps,peak=peak,
+    events=sim.pop_events()
+    return dict(predation_deaths=sum(e[0]=='predator' for e in events),energy_deaths=sum(e[0]=='starvation' for e in events),model=name,seed=seed,score=sim.env.score,survival=sim.env.time,steps=steps,peak=peak,
                 ns_interface=interface,ns_policy=policy,ns_engine=engine,ns_loop_wall=wall,ns_loop_cpu=cpu)
 
 def main():

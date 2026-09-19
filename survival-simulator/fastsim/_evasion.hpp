@@ -20,6 +20,10 @@ struct PredParams {
     int64_t mode = 1;
     double r = 70., face_r = 80., sprint_r = 40., dodge_r = 80., dodge_ang = 1.4, turn_max = 1.0;
     double gaze = 0., cone_gate = 0., cone_margin = 0.1;
+    double pulse_degrees=0., pulse_ticks=8., pulse_idle=0.;
+    double feature_start=0., feature_population=0.;
+    double look_steps=0., look_radius=130., risk_margin=3., behind_weight=0., energy_weight=.3;
+    double phase_start=900., phase_population=0., late_cap=-1., late_retire=-1., late_reach=-1., late_reserve=-1.;
     double wall_escape = 0., wall_look = 30., wall_reward = 80.;
 };
 
@@ -53,7 +57,7 @@ public:
         m.has_fruit = false;
     }
 
-    Plan act(Mind& m, const AState& s) override {
+    Plan legacy_act(Mind& m, const AState& s) {
         if (PRED.mode) {
             const Obs* t = threat(s);
             if (t) {
@@ -109,6 +113,66 @@ public:
         }
         return Policy::act(m, s);
     }
+    // Observation-only short-horizon model. Unknown predator energy/terrain are
+    // conservatively bounded by a 15-unit direct pursuit step; this is not the engine.
+    Plan act(Mind& m, const AState& s) override {
+        Plan base=legacy_act(m,s);
+        bool active=time>=PRED.feature_start && (PRED.feature_population<=0 || states.size()<=PRED.feature_population);
+        if (!active) return base;
+        const Obs* t=threat(s);
+        if (!t && PRED.pulse_degrees!=0 && (!PRED.pulse_idle || base.dist==0)) {
+            int64_t period=std::max<int64_t>(1,(int64_t)PRED.pulse_ticks);
+            int64_t tick=(int64_t)std::llround(time*10.);
+            base.turn=(tick % period==0)?PRED.pulse_degrees*OPI/180.*m.sweep_sign:0.;
+        }
+        if (!t || t->distance>PRED.look_radius || (PRED.look_steps<=0 && PRED.behind_weight<=0)) return base;
+        int horizon=std::max(1,std::min(2,(int)PRED.look_steps));
+        double penalty=s.biome==RIVER?.3:s.biome==SWAMP?.5:s.biome==DESERT?.8:1.;
+        auto evaluate=[&](const Plan& plan) {
+            P2 q={0.,0.}; double clearance=OINF, behind=0.;
+            std::vector<P2> threats;
+            for(const Obs& o:*s.obs) if(o.type==2) threats.push_back(mul(unit(o.angle),o.distance));
+            double distance=pmin(plan.dist,s.sprint);
+            if(s.energy<s.max_energy/5.) distance=pmin(distance,s.speed);
+            P2 step=mul(unit(plan.direction),distance*penalty);
+            for(int k=0;k<horizon;k++) {
+                P2 prev=q;q=add(q,step);
+                P2 wp=add(m.pose->p,mul(unit(m.pose->theta+pm::atan2(prev.y,prev.x)),dist(prev,P2{0.,0.})));
+                P2 wq=add(m.pose->p,mul(unit(m.pose->theta+pm::atan2(q.y,q.x)),dist(q,P2{0.,0.})));
+                for(const auto& e:m.edges) if(time-e.t<25. &&
+                  (segments_cross(wp,wq,e.a,e.b)||point_segment(wq,e.a,e.b)<5.)) return std::pair<double,double>{-1e9,-1.};
+                size_t j=0;
+                for(const Obs& o:*s.obs) if(o.type==2) {
+                    P2& p=threats[j++];double d=dist(p,q);
+                    if(d>0) p=add(p,mul(sub(q,p),pmin(15.,d)/d));
+                    clearance=pmin(clearance,dist(p,q));
+                    if(o.has_rel_dir && dist(p,q)>60.) {
+                        P2 v=sub(q,p);double a=pm::atan2(v.y,v.x);
+                        behind-=pm::cos(wrap(a-o.rel_dir));
+                    }
+                }
+            }
+            double progress=distance*pm::cos(wrap(plan.direction-base.direction));
+            double value=pmin(clearance,90.)+progress*.3+PRED.behind_weight*behind
+                         -PRED.energy_weight*cost_now(plan.dist,plan.turn,s)*horizon;
+            if(clearance<15.+PRED.risk_margin) value-=10000.+(15.+PRED.risk_margin-clearance)*100.;
+            return std::pair<double,double>{value,clearance};
+        };
+        auto original=evaluate(base);
+        if(original.second>=15.+PRED.risk_margin && PRED.behind_weight<=0) return base;
+        Plan selected=base;double best=original.first;
+        for(int k=0;k<16;k++) for(int speed=0;speed<3;speed++) {
+            double heading=-OPI+k*TAU/16.;
+            double reach=speed==0?0.:speed==1?pmin(s.speed,s.sprint):s.sprint;
+            double turn=PRED.gaze?t->angle:heading;
+            Plan candidate={reach,heading,pmax(-PRED.turn_max,pmin(PRED.turn_max,turn))};
+            auto score=evaluate(candidate);
+            if(score.first>best){best=score.first;selected=candidate;}
+        }
+        if(selected.dist!=base.dist||selected.direction!=base.direction) release_fruit(m);
+        return selected;
+    }
+
 };
 
 }  // namespace orchard

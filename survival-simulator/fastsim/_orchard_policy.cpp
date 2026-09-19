@@ -54,17 +54,27 @@ void parse_params(const Cfg& c, orchard::Params& P) {
 class PolicyImpl : public IPolicy {
 public:
     orchard::EvasionPolicy pol;
+    orchard::Params base_params;
     PolicyImpl(const std::vector<uint32_t>& key, const orchard::Params& P, const orchard::PredParams& PR)
-        : pol(key, P, PR) {}
+        : pol(key, P, PR), base_params(P) {}
     void copy_parameters(const IPolicy& other) override {
         const auto& source = static_cast<const PolicyImpl&>(other);
-        pol.P = source.pol.P;
+        base_params = source.base_params;
+        pol.P = base_params;
         pol.PRED = source.pol.PRED;
         // Keep RNG, odometry, groups, fruit claims and every agent's memory.
         pol.cluster_cache.clear();
     }
 
     const std::vector<Act>& call(const AState* states, size_t n, double sim_time) override {
+        pol.P=base_params;
+        const auto& x=pol.PRED;
+        if(sim_time>=x.phase_start && (x.phase_population<=0 || n<=x.phase_population)) {
+            if(x.late_cap>=0) pol.P.cap_mult=x.late_cap;
+            if(x.late_retire>=0) pol.P.no_eat_age=x.late_retire;
+            if(x.late_reach>=0) pol.P.fruit_reach=x.late_reach;
+            if(x.late_reserve>=0) pol.P.breed_reserve_late=x.late_reserve;
+        }
         return pol.call(states, n, sim_time);
     }
     void metrics(int64_t& flee, int64_t& face, int64_t& sprint) const override {
@@ -141,6 +151,22 @@ IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, cons
     PR.wall_escape = cfg_get(cfg, "pred_wall_escape", PR.wall_escape);
     PR.wall_look = cfg_get(cfg, "pred_wall_look", PR.wall_look);
     PR.wall_reward = cfg_get(cfg, "pred_wall_reward", PR.wall_reward);
+        PR.pulse_degrees=cfg_get(cfg,"pulse_degrees",PR.pulse_degrees);
+    PR.pulse_ticks=cfg_get(cfg,"pulse_ticks",PR.pulse_ticks);
+    PR.pulse_idle=cfg_get(cfg,"pulse_idle",PR.pulse_idle);
+    PR.feature_start=cfg_get(cfg,"feature_start",PR.feature_start);
+    PR.feature_population=cfg_get(cfg,"feature_population",PR.feature_population);
+    PR.look_steps=cfg_get(cfg,"look_steps",PR.look_steps);
+    PR.look_radius=cfg_get(cfg,"look_radius",PR.look_radius);
+    PR.risk_margin=cfg_get(cfg,"risk_margin",PR.risk_margin);
+    PR.behind_weight=cfg_get(cfg,"behind_weight",PR.behind_weight);
+    PR.energy_weight=cfg_get(cfg,"energy_weight",PR.energy_weight);
+    PR.phase_start=cfg_get(cfg,"phase_start",PR.phase_start);
+    PR.phase_population=cfg_get(cfg,"phase_population",PR.phase_population);
+    PR.late_cap=cfg_get(cfg,"late_cap",PR.late_cap);
+    PR.late_retire=cfg_get(cfg,"late_retire",PR.late_retire);
+    PR.late_reach=cfg_get(cfg,"late_reach",PR.late_reach);
+    PR.late_reserve=cfg_get(cfg,"late_reserve",PR.late_reserve);
     std::vector<uint32_t> key(seed_key, seed_key + nkey);
     if (key.empty()) key.push_back(0);
     return new PolicyImpl(key, P, PR);
