@@ -69,3 +69,4 @@ Log (newest last)
   n3/n4/n5 stopped (disk kept) to save budget; 5 pods (i, j, k, n1, n2) for P2 step 1 scenario tests.
 - 01:47 n1/n2 also stopped (disks kept); running pods: i, j, k. Pushed branch survival-simulator/oscar-overnight-cpp (871b639).
 - 01:51 vm1 (visibility margins 40/80, fruit 20; 512 seeds): +7..+11 ±17 => noise. P1 final: r21s0c2 (unchanged). P2 starts 02:00 with step 1 (one predator to the trap).
+- 02:00 st1 (stacked small gains, 512 seeds): +10±17 / +1 / -27 => nothing. P1 closed. P2 step 1 begins (guide one predator).

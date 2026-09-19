@@ -1760,7 +1760,7 @@ bool parse_params(PyObject* d, orchard::Params& P) {
               {"cluster_radius", &P.cluster_radius}, {"spread_weight", &P.spread_weight}, {"low_pop_reserve", &P.low_pop_reserve},
               {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
               {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
-              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"oracle_trees", &P.oracle_trees}, {"oracle_r", &P.oracle_r}, {"age_infer", &P.age_infer}, {"age_fruit", &P.age_fruit}, {"dead_misses", &P.dead_misses}, {"fruit_misses", &P.fruit_misses}, {"occ_walls", &P.occ_walls}, {"vis_margin_tree", &P.vis_margin_tree}, {"vis_margin_fruit", &P.vis_margin_fruit}, {"trap_mode", &P.trap_mode}, {"wall_min_n", &P.wall_min_n}, {"trap_depth", &P.trap_depth}, {"wall_tol", &P.wall_tol}, {"wall_min_obs", &P.wall_min_obs}, {"trap_start", &P.trap_start}, {"bait_margin", &P.bait_margin}, {"bait_min_life", &P.bait_min_life}, {"bait_young_pen", &P.bait_young_pen}, {"trap_keepout", &P.trap_keepout}, {"test_freeze", &P.test_freeze}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"pred_share", &P.pred_share}, {"pred_dodge_r", &P.pred_dodge_r}, {"pred_dodge_ang", &P.pred_dodge_ang}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}, {"l_births_per_tick", &P.l_births_per_tick}, {"l_emergency_reserve", &P.l_emergency_reserve}, {"l_low_pop_reserve", &P.l_low_pop_reserve}};
+              {"nursery_bonus", &P.nursery_bonus}, {"late_t", &P.late_t}, {"pred_mode", &P.pred_mode}, {"merge_anchored", &P.merge_anchored}, {"no_spawn", &P.no_spawn}, {"fit_speed_cap", &P.fit_speed_cap}, {"oracle_trees", &P.oracle_trees}, {"oracle_r", &P.oracle_r}, {"age_infer", &P.age_infer}, {"age_fruit", &P.age_fruit}, {"dead_misses", &P.dead_misses}, {"fruit_misses", &P.fruit_misses}, {"occ_walls", &P.occ_walls}, {"vis_margin_tree", &P.vis_margin_tree}, {"vis_margin_fruit", &P.vis_margin_fruit}, {"trap_mode", &P.trap_mode}, {"wall_min_n", &P.wall_min_n}, {"trap_depth", &P.trap_depth}, {"wall_tol", &P.wall_tol}, {"wall_min_obs", &P.wall_min_obs}, {"trap_start", &P.trap_start}, {"bait_margin", &P.bait_margin}, {"bait_min_life", &P.bait_min_life}, {"bait_young_pen", &P.bait_young_pen}, {"trap_keepout", &P.trap_keepout}, {"trap_bait_fixed", &P.trap_bait_fixed}, {"guide_near", &P.guide_near}, {"guide_far", &P.guide_far}, {"guide_acq", &P.guide_acq}, {"guide_min_e", &P.guide_min_e}, {"guide_lost", &P.guide_lost}, {"guide_hand", &P.guide_hand}, {"test_freeze", &P.test_freeze}, {"pred_r", &P.pred_r}, {"pred_sprint_r", &P.pred_sprint_r}, {"pred_face", &P.pred_face}, {"pred_face_r", &P.pred_face_r}, {"pred_share", &P.pred_share}, {"pred_dodge_r", &P.pred_dodge_r}, {"pred_dodge_ang", &P.pred_dodge_ang}, {"l_fruit_reach", &P.l_fruit_reach}, {"l_tree_reach", &P.l_tree_reach}, {"l_watch_reach", &P.l_watch_reach}, {"l_explore_energy", &P.l_explore_energy}, {"l_cap_min", &P.l_cap_min}, {"l_cap_mult", &P.l_cap_mult}, {"l_cap_tree_slack", &P.l_cap_tree_slack}, {"l_cap_hard_min", &P.l_cap_hard_min}, {"l_sweep_rate", &P.l_sweep_rate}, {"l_watch_patience", &P.l_watch_patience}, {"l_explore_radius", &P.l_explore_radius}, {"l_old_reach", &P.l_old_reach}, {"l_dist_pen", &P.l_dist_pen}, {"l_births_per_tick", &P.l_births_per_tick}, {"l_emergency_reserve", &P.l_emergency_reserve}, {"l_low_pop_reserve", &P.l_low_pop_reserve}};
     for (F& f : fs) {
         PyObject* v = PyDict_GetItemString(d, f.k);
         if (!v) continue;
@@ -2034,6 +2034,84 @@ PyObject* Engine_dbg_pred_blocked(EngineObject* self, PyObject* args) {
     }
     Py_RETURN_FALSE;
 }
+PyObject* Engine_dbg_keep_agents(EngineObject* self, PyObject* args) {
+    // keep the first n agents; returns [(id, x, y)]
+    long long n; if (!PyArg_ParseTuple(args, "L", &n)) return nullptr;
+    Engine* e = self->eng;
+    if ((long long)e->agents.size() > n) e->agents.resize((size_t)n);
+    e->agents_dirty = true;
+    PyObject* L = PyList_New(0);
+    for (auto& a : e->agents) { PyObject* t = Py_BuildValue("(Ldd)", (long long)a.id, a.x, a.y); PyList_Append(L, t); Py_DECREF(t); }
+    return L;
+}
+PyObject* Engine_dbg_load_walls(EngineObject* self, PyObject*) {
+    // tests: give every anchored policy group the true obstacle faces as confirmed walls
+    if (!self->pol) Py_RETURN_NONE;
+    Engine* e = self->eng; long long n = 0;
+    self->pol->groups.each([&](const int64_t&, orchard::GroupP& g) {
+        if (!g->anchored) return;
+        g->walls.clear();
+        for (auto& o : e->obstacles) {
+            auto mk = [&](bool horiz, double c, double lo, double hi, double solid) {
+                orchard::Group::Wall w{horiz, c, lo, hi, solid, e->time, 100};
+                w.cs = {c}; w.los = {lo}; w.his = {hi}; w.obs1 = 0; w.obs2 = 1; w.n_obs = 2;
+                g->walls.push_back(w);
+            };
+            mk(true, o.y, o.x, o.x + o.w, +1.);          // top face: solid below (+y)
+            mk(true, o.y + o.h, o.x, o.x + o.w, -1.);    // bottom face: solid above (-y)
+            mk(false, o.x, o.y, o.y + o.h, +1.);         // left face: solid to +x
+            mk(false, o.x + o.w, o.y, o.y + o.h, -1.);   // right face: solid to -x
+        }
+        g->sites_t = -1e9; n++;
+    });
+    return PyLong_FromLongLong(n);
+}
+PyObject* Engine_dbg_freeze(EngineObject* self, PyObject* args) {
+    // tests: freeze these agent ids (policy plans zero for them)
+    PyObject* seq; if (!PyArg_ParseTuple(args, "O", &seq)) return nullptr;
+    if (!self->pol) Py_RETURN_NONE;
+    self->pol->frozen.clear();
+    PyObject* it = PySequence_Fast(seq, "ids"); if (!it) return nullptr;
+    for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(it); i++) self->pol->frozen.insert(PyLong_AsLongLong(PySequence_Fast_GET_ITEM(it, i)));
+    Py_DECREF(it); Py_RETURN_NONE;
+}
+PyObject* Engine_dbg_roles(EngineObject* self, PyObject*) {
+    // tests: per anchored group: (gid, has_trap, bait, rep, guide, guide_state, n_retired)
+    PyObject* L = PyList_New(0);
+    if (!self->pol) return L;
+    self->pol->groups.each([&](const int64_t& gid, orchard::GroupP& g) {
+        PyObject* t = Py_BuildValue("(LiLLLiL)", (long long)gid, g->has_trap ? 1 : 0, (long long)g->bait, (long long)g->rep, (long long)g->guide, g->guide_state, (long long)g->retired.size());
+        PyList_Append(L, t); Py_DECREF(t);
+    });
+    return L;
+}
+PyObject* Engine_dbg_true_poses(EngineObject* self, PyObject*) {
+    // tests: set every mind's pose to the true pose and anchor its group
+    if (!self->pol) Py_RETURN_NONE;
+    Engine* e = self->eng; long long n = 0;
+    for (auto& a : e->agents) {
+        if (!self->pol->minds.has(a.id)) continue;
+        orchard::Mind& m = *self->pol->minds.at(a.id);
+        m.pose = orchard::mkpose(orchard::P2{a.x, a.y}, a.direction);
+        self->pol->groups.at(m.group)->anchored = true; n++;
+    }
+    return PyLong_FromLongLong(n);
+}
+PyObject* Engine_dbg_pseen(EngineObject* self, PyObject*) {
+    // tests: [(gid, [(x, y)]...)] shared predator sightings, plus per-agent count of predator observations
+    PyObject* L = PyList_New(0);
+    if (!self->pol) return L;
+    self->pol->groups.each([&](const int64_t& gid, orchard::GroupP& g) {
+        PyObject* pts = PyList_New(0);
+        for (auto& q : g->pseen) { PyObject* t = Py_BuildValue("(dd)", q.p.x, q.p.y); PyList_Append(pts, t); Py_DECREF(t); }
+        PyObject* row = Py_BuildValue("(LN)", (long long)gid, pts); PyList_Append(L, row); Py_DECREF(row);
+    });
+    for (auto& st : self->pol->states) {
+        long long n2 = 0; for (auto& o : *st.obs) if (o.type == 2) n2++;
+        PyObject* row = Py_BuildValue("(LL)", (long long)st.aid, n2); PyList_Append(L, row); Py_DECREF(row);
+    }
+    return L;
+}
 PyObject* Engine_dbg_eval(EngineObject* self, PyObject*) {
     // counters from the policy's predator layer
     if (!self->pol) Py_RETURN_NONE;
@@ -2093,6 +2171,12 @@ PyMethodDef Engine_methods[] = {
     {"dbg_eval", (PyCFunction)Engine_dbg_eval, METH_NOARGS, "tests: policy predator counters"},
     {"dbg_pred_life", (PyCFunction)Engine_dbg_pred_life, METH_VARARGS, "tests: park predators older than T (perfect-trap model)"},
     {"dbg_sites", (PyCFunction)Engine_dbg_sites, METH_NOARGS, "tests: policy trap sites"},
+    {"dbg_keep_agents", (PyCFunction)Engine_dbg_keep_agents, METH_VARARGS, "tests: keep first n agents"},
+    {"dbg_load_walls", (PyCFunction)Engine_dbg_load_walls, METH_NOARGS, "tests: true walls into the policy map"},
+    {"dbg_freeze", (PyCFunction)Engine_dbg_freeze, METH_VARARGS, "tests: freeze agent ids"},
+    {"dbg_roles", (PyCFunction)Engine_dbg_roles, METH_NOARGS, "tests: trap roles per group"},
+    {"dbg_true_poses", (PyCFunction)Engine_dbg_true_poses, METH_NOARGS, "tests: true poses + anchor"},
+    {"dbg_pseen", (PyCFunction)Engine_dbg_pseen, METH_NOARGS, "tests: shared predator sightings"},
     {"dbg_pred_blocked", (PyCFunction)Engine_dbg_pred_blocked, METH_VARARGS, "tests: predator cannot stand here"},
     {"policy_init", (PyCFunction)Engine_policy_init, METH_VARARGS, "policy_init(seed_key, config_dict): native orchard policy"},
     {"policy_act", (PyCFunction)Engine_policy_act, METH_NOARGS, "native orchard decisions for the current state: [(aid, dist, dir, turn, spawn)]"},
