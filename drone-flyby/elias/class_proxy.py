@@ -8,7 +8,9 @@ GET /api are passed through so readiness checks see the target's use-case name. 
 """
 from __future__ import annotations
 
+import json
 import os
+import time
 
 import requests
 import uvicorn
@@ -30,12 +32,24 @@ async def passthrough(request: Request):
 @app.post('/predict')
 async def predict(request: Request):
     body = await request.body()
-    r = session.post(TARGET+'/predict', data=body, headers={'content-type': 'application/json'}, timeout=3.2)
+    t = time.time()
+    try:
+        r = session.post(TARGET+'/predict', data=body, headers={'content-type': 'application/json'}, timeout=3.2)
+    except requests.RequestException as e:
+        print(json.dumps({'error': type(e).__name__, 'ms': round(1000*(time.time()-t))}), flush=True)
+        raise
+    ms = round(1000*(time.time()-t))
     if r.status_code != 200:
         return Response(content=r.content, status_code=r.status_code, media_type='application/json')
     out = r.json()
+    total = len(out.get('annotations', []))
     if CLASSES:
         out['annotations'] = [a for a in out.get('annotations', []) if a.get('object_id') in CLASSES]
+    try:
+        frame = json.loads(body).get('frame_index')
+    except ValueError:
+        frame = None
+    print(json.dumps({'frame_index': frame, 'target_ms': ms, 'annotations': total, 'kept': len(out['annotations'])}), flush=True)
     return out
 
 

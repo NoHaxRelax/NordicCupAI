@@ -33,13 +33,24 @@ to our checkpoint (section 3). Helicopter is the one you said was weak for you.
 
 Saturday from 23:12 your server (`/api` says checkpoint 02) was validated through a class-filtering proxy on Elias's
 laptop (`elias/proxy_portal.sh`: only that class's boxes reach the portal, score x 13 = your AP on the class). The proxy
-adds a laptop hop and a tunnel, so allow a tenth for latency, not more.
+adds a laptop hop and a tunnel; how much that costs your pipeline is not known yet, see the caveat under the table.
 
 | class | yours (checkpoint 02, via proxy) | ours (F3, night pod) | gain from routing the class to F3 |
 |---|---:|---:|---:|
-| helicopter | **0.29** | 0.96 | about +0.05 on the total |
-| ta-ta | **0.00** | 0.50 (F5, Oslo) | about +0.04 on the total |
-| medium_launcher | **0.12** | 0.13 plain, 0.36 with the 0.85 box (laptop, same night) | about +0.02, from the box scale of section 5b on your own answers or from routing |
+| helicopter | **0.29** | 0.96 | up to +0.05 on the total, see the caveat |
+| ta-ta | **0.00** | 0.50 (F5, Oslo) | up to +0.04 on the total |
+| medium_launcher | **0.12** | 0.13 plain, 0.36 with the 0.85 box (laptop, same night) | up to +0.02, from the box scale of section 5b on your own answers or from routing |
+| small_launcher | **0.11** | 0.56 night pod, 0.34 same day from Oslo | see the caveat |
+
+**Caveat, read before acting on the table.** The four numbers add up to 0.52 of 13; with your 0.727 total the other nine
+classes would have to average 0.99, which no pipeline of ours reaches. So the proxy path (Helsinki to a Cloudflare tunnel
+to a home laptop to Sweden and back) costs your pipeline far more than the tenth it costs ours. The cause is not measured; every one of the four runs carried
+an ignored camera request, and your notes mention replay divergence when answers arrive late. Treat the table as a lower
+bound on your classes. ta-ta is exactly 0.0 where the other three classes keep a score through the same path, which is
+what our checkpoint without walker sprites does. A calibration run of your endpoint through
+the same proxy with no class filter is queued (`elias/out/logs/portal_session4.log`); your native score divided by that
+number is the factor to apply. Better still, measure the classes on your side: the class filter is five lines in
+`example.py` (`DRONE_ANSWER_CLASSES`, commit ccb13ac).
 
 Your helicopter run also carried `Frame 84: ignored camera request L1 (960, 540) from L2 (2291, 1175): center movement
 1474.72px exceeds the L2 limit`, and the ta-ta run `Frame 26: ignored camera request L1 (1920, 540) from L2 (1325, 270): center movement 653.39px` (section 4: a move that changes level is bound by the limit of the level it leaves, 551 px at L2).
