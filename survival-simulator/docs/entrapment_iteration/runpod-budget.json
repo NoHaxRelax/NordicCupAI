@@ -54,19 +54,20 @@
       "name": "lucas-nikolaj100-20260919",
       "created_at_utc": "2026-09-19T13:19:28.382Z",
       "hourly_usd": 1.09,
-      "status": "running",
+      "status": "terminated",
       "purpose": "Nikolaj rank-1 frozen 100 fresh maps",
       "vcpu_count": 16,
-      "keep_running_after_job": true,
-      "retention_reason": "User explicitly requested not to close pods after usage.",
+      "keep_running_after_job": false,
+      "retention_reason": "Latest user request explicitly asked to close our unused GPU pod; deletion returned HTTP 204 and pod disappeared from inventory.",
       "ssh_host": "64.247.206.209",
       "ssh_port": 13037,
       "completed_games": 100,
-      "estimated_spend_so_far_usd": 0.0932,
-      "estimate_time_utc": "2026-09-19T13:24:03.203783+00:00"
+      "estimated_spend_so_far_usd": 0.3829,
+      "estimate_time_utc": "2026-09-19T13:40:00+00:00",
+      "estimate_note": "Conservative elapsed compute through 13:40 UTC plus $0.01 disk allowance; pod was deleted before this cutoff."
     }
   ],
-  "estimated_spend_usd": 5.7669,
+  "estimated_spend_usd": 6.0566,
   "creation_attempts": [
     {
       "cpu": "cpu3c",
@@ -84,7 +85,7 @@
       "attempts": 1
     }
   ],
-  "result": "Nikolaj 100-map benchmark complete and backed up. Pod zmml46gemukrm5 remains RUNNING at explicit user request and continues billing.",
-  "estimate_updated_at_utc": "2026-09-19T13:24:03.203783+00:00",
+  "result": "Nikolaj 100-map benchmark backed up. GPU pod zmml46gemukrm5 deleted at latest user request. Ten-family CPU experiment not launched: Oscar pods reject our SSH key.",
+  "estimate_updated_at_utc": "2026-09-19T13:40:00+00:00",
   "confirmed_spend_usd_before_nursery": 4.891723719847505
 }
