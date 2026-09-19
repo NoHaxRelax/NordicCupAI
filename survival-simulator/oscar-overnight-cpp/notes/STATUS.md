@@ -156,3 +156,5 @@ Log (newest last)
   Best with predators now e_r80_ns_spr40: 1262 s / score 1283. f12 tunes the dodge (radius 40-100, angle) and facing.
 - 03:32 f12: dodge angle 1.2 rad (sidestep 69 degrees off the predator's heading): +102 s -> 1364 s / score
   1385; dodge radius 80 +36; angle 0.5 or radius 40 -90..-100. f13 continues (radius 80/100, angle 1.0/1.4, combos).
+- 03:37 f13: dodge radius 80 + angle 1.4: 1444 s / score 1462 (from 923 at 02:40). f14: angle 1.57/1.8,
+  radius 100, flee radius 90/100 with matching dodge radius, sprint radius 50.
