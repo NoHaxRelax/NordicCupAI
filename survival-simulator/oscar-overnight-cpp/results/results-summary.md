@@ -146,3 +146,11 @@ map's narrow gaps are not real at the hold point, and runners' poses drift ~10 u
 Refuge on the corrected map (f38, 96 seeds): rg_60s_wc +13 +- 32 (50/96 wins), rg_100s_wc -17, rg_100v_wc -65.
 | guide trap on the corrected map (f39) | 96 | old map -183 +- 39, corrected -180 +- 37, corrected + guides only within 300 of the trap -145 +- 36; held 0.07-0.18, 0.3 handoffs, 20 baits per game |
 | guide_clear (straight wall-free walk to the lane point, else released) on the corrected map (f40) | 96 | -105 +- 37 (-91 lane-restricted) vs -180; guide deaths 15 -> 4 per game, 40 of 56 episodes released, handoffs 0.3, held 0.14-0.17 |
+
+## 09:10-09:25, predator-avoiding post selection (pred_avoid_w: penalty on posts near predator sightings of the last 90 s)
+
+| Test | Seeds | Result |
+| --- | ---: | --- |
+| f41 (w 1 / 3 / w 1 with r 400, t 180) | 96 | +56 +- 33 (60/96 wins) / -2 +- 34 / +39 +- 39 |
+| f42 confirmation (w 1 / w 2) | 192 fresh | -21 +- 26 / -25 +- 26 |
+| pooled w 1 | 288 | +5 +- 20 (noise, not adopted) |

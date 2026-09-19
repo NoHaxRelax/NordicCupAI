@@ -1,6 +1,6 @@
 # READ FIRST (morning summary, updated 07:15 on 19 Sept)
 
-STATE: IDLE. All pods stopped (n7 at 09:05 after f40; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again). Spend ~$46 of $100.
+STATE: IDLE. All pods stopped (n7 at 09:25 after f42; j/k/n6 cannot restart, hosts full; n7 = dpm6cy0ejfmh5o can; disks are wiped on restart: bootstrap + deploy again). Spend ~$47 of $100.
 Spend on the night pods (Runpod billing API, pods i/j/k/n1-n6): ~$30 of the $100; burn $0.96/h per pod.
 Branch survival-simulator/oscar-overnight-cpp is pushed (fb584b2 + later commits). Nothing through the API,
 nothing simulated on the laptop except single-game traces.
@@ -57,6 +57,10 @@ held, 19-21 baits born, 132 kills per game even without the trap. Cost decomposi
 one predator, no bystanders) delivers 90-95%, so the losses happen before that: reaching the predator, keeping
 its attention while closer colony members are around, and baits that never eat. A trap that pays off needs a
 different design (fast dedicated guides + a replenishable bait), not more parameter tests.
+
+**09:10-09:25, predator-avoiding post selection (my call):** foragers penalise posts near predator sightings of the
+last 90 s. +56 +- 33 on 96 seeds, then -21 +- 26 on 192 fresh seeds; pooled +5 +- 20. Noise, not adopted (same
+pattern as wall-clear steering: a 1.5-2 SE first result that vanishes on fresh seeds).
 
 **No predators:** r21s0c2 remains the best; ~180 variants on 512 paired seeds each, nothing beats it. Headroom is
 detecting trees 200-400 units away (oracle +120 s).
@@ -490,3 +494,8 @@ Log (newest last)
   sightings (pmem, deduplicated within 30 units / 5 s); a tree's post value loses pred_avoid_w x 60 per recent
   sighting within pred_avoid_r (250), decaying with age. Shared alarms for FLEEING were negative earlier, but this
   is post selection, not evasion. f41 on n7 (96 seeds): rf_ref, pa_1, pa_3, pa_1_r400_t180.
+- 09:16 f41 (96 seeds 7200-7295, paired vs pred_best_0400 1504 s): pa_1 +56+-33 (60/96 wins), pa_1_r400_t180
+  +39+-39, pa_3 -2+-34. Promising but 1.7 SE; the wall-clear +42 on 192 seeds turned into -22 on 576, so confirming
+  on 192 FRESH seeds 7400-7591 (f42: rf_ref, pa_1, pa_2) before believing it.
+- 09:22 f42 (192 fresh seeds 7400-7591): pa_1 -21+-26, pa_2 -25+-26; pooled with f41 (288 seeds) pa_1 +5+-20,
+  151/288 wins. Noise, not adopted. Pod n7 stopped; all pods idle; ~$47 of $100 spent. Branch pushed.
