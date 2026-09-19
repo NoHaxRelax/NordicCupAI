@@ -25,10 +25,13 @@ for _ in $(seq 1 60); do
 done
 [ -z "$URL" ] && { echo "no tunnel URL"; tail -5 "$OUT/tunnel.log"; exit 1; }
 # Ready means reachable from OUTSIDE (a fresh quick tunnel answers 530 for a while) and warm (the first
-# inference and the SIFT calibration are slow). Probe from a pod, then send two throwaway frames locally.
-POD="ssh -o ConnectTimeout=25 -i $HOME/.ssh/id_ed25519 -p ${POD_PORT:-42960} root@${POD_HOST:-149.36.0.173}"
+# inference and the SIFT calibration are slow). The laptop's own resolver cannot see a fresh trycloudflare name
+# for minutes, so resolve it at a public resolver and connect by address.
+HOSTN=${URL#https://}
 for _ in $(seq 1 40); do
-  timeout 30 $POD "curl -sf -m 8 $URL/ > /dev/null" && { echo "reachable from outside"; break; }; sleep 5
+  IP=$(nslookup -type=A "$HOSTN" 1.1.1.1 2>/dev/null | grep -A3 "^Name" | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -1)
+  if [ -n "$IP" ] && curl -sf -m 8 --resolve "$HOSTN:443:$IP" "$URL/api" | grep -q drone-flyby-usecase; then echo "reachable from outside: $URL ($IP)"; break; fi
+  sleep 5
 done
 "$VP" - "$PORT" <<'PYW'
 import sys, json, base64, time, requests, numpy as np, cv2
