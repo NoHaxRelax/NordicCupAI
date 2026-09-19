@@ -21,7 +21,7 @@ sim=nightsim.SimulationCore(seed=a.seed,predators=True);e=sim._engine
 states=sim.step([])['observations'];e.policy_init(nightsim.seed_key(a.seed),cfg)
 bg=Background(seed=a.seed);surface=bg.env.static_surface.copy();surface.blit(bg.env.shadow_surface,(0,0));surface.blit(bg.env.obstacle_surface,(0,0));pygame.image.save(surface,f/'background.png');del bg
 atom(f/'static.json',dict(width=sim.env.width,height=sim.env.height,edges=edges_from([(o.x,o.y,o.width,o.height) for o in sim.env.obstacles])))
-source=[ROOT/'nightsim/_nengine.cpp',ROOT/'nightsim/_npolicy.hpp',ROOT/'models/avoidance/native_corner.hpp']
+source=[ROOT/'nightsim/_nengine.cpp',ROOT/'nightsim/_npolicy.hpp',ROOT/'models/avoidance/native_corner.hpp',ROOT/'models/avoidance/native_escape_search.hpp']
 atom(f/'manifest.json',dict(seed=a.seed,label=a.label,config=cfg,horizon=a.seconds,engine='C++ policy and engine',policy_inputs='Own public stats and cached observations; observed Orchard map',sources={str(x.relative_to(ROOT)):hashlib.sha256(x.read_bytes()).hexdigest() for x in source}))
 started=time.monotonic();chunk=[];events=[];history=[];tick=0;previous={};counts={};peak=0;seen=set();prior_counters={}
 while True:

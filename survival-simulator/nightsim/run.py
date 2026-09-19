@@ -102,7 +102,7 @@ if __name__ == '__main__':
     if pathlib.Path(a.out).exists() and pathlib.Path(a.out).stat().st_size:
         ap.error('output already contains results; choose a new output for this revision')
     import nightsim, numpy
-    sources=[HERE/'_nengine.cpp',HERE/'_npolicy.hpp',HERE.parent/'models/avoidance/native_corner.hpp']
+    sources=[HERE/'_nengine.cpp',HERE/'_npolicy.hpp',HERE.parent/'models/avoidance/native_corner.hpp',HERE.parent/'models/avoidance/native_escape_search.hpp']
     binary=pathlib.Path(nightsim._engine.__file__)
     if binary.stat().st_mtime < max(p.stat().st_mtime for p in sources):
         ap.error('native sources changed: rebuild with python nightsim/build.py')
