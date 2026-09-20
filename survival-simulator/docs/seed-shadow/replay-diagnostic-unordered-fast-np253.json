@@ -1,0 +1,29 @@
+{
+  "scope": "Diagnostic only; excluding Edge observations is NOT acceptance of a shadow or proof of hidden-state parity",
+  "seed_candidate": 1894581302,
+  "frames": 1800,
+  "full_mismatches": 1507,
+  "dynamic_mismatches": 53,
+  "first": {
+    "full": {
+      "frame": 1,
+      "difference": {
+        "path": ".agents[4].observations",
+        "actual_length": 12,
+        "recorded_length": 11
+      }
+    },
+    "dynamic": {
+      "frame": 1186,
+      "difference": {
+        "path": ".agents[34].observations",
+        "actual_length": 7,
+        "recorded_length": 8
+      }
+    }
+  },
+  "python": "3.14.4",
+  "numpy": "2.5.3",
+  "seconds": 31.2110311739998,
+  "journal_sha256": "33a2b0c6dfef3499566d18b97f4b51c982dc66daf5c688b62cafbe911a99543e"
+}

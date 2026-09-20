@@ -326,3 +326,37 @@ versus11 recorded. Numerical runtime/kernel differences are suspected, not prove
 The replay safety gate is unchanged. Both full-domain searches are complete;
 no scan needs restarting. Next debug/reproduce exact environment or separately
 validate dynamic public state without concealing full-DTO failures.
+
+
+## Replay diagnosis and comparison correction (08:53 UTC wake)
+
+Added scripts/diagnose_public_replay.py: streaming full-DTO, non-Edge-observation,
+and agent-attribute comparisons without granting access to an unverified shadow.
+Python3.14.4 NumPy2.3.5 and a separate private NumPy2.5.3 environment on Hetzner
+produce the same original mismatch totals. Changing NumPy alone does not fix it.
+Production environment was only read; private packages live in /root/seed-benchmark/np253.
+
+Found a comparison bug: sorting observation dictionaries by their floating-point
+JSON values can reorder them when an angle changes from0 to1.7e-15, which is within
+tolerance. close() now matches dictionary collections one-to-one, preserving
+multiplicity, IDs, all field checks and tolerance. Coordinate lists stay ordered.
+A fast positional path handles ordinary matches, followed by identity buckets and
+bipartite matching if necessary. Regression script check_public_comparison.py
+covers missing/extra/changed observations, identity changes, coordinate ordering
+and ambiguous tolerant matches. An initial eager matching implementation took95s;
+the optimized diagnostic takes31s, versus27s for the flawed old comparison.
+
+Final1,800-frame diagnostic:1,507 full observation mismatch frames,53 non-Edge
+observation mismatch frames, **zero agent-attribute/score/time mismatches**. Three
+non-Edge flags were only sort-order artifacts and are corrected. First remaining
+non-Edge difference is frame1,186: one recorded Fruit at angle0.4904007315633727,
+distance197.8556907962108 is absent from replay. Other listed observations match.
+This is NOT merely a wall-DTO issue; visibility differences remain. Agent state
+agreement does not establish all hidden state or future parity. Strict recovery
+still rejects the transcript. Evidence: replay-diagnostic-attributes-np253.json;
+previous results retained for both NumPy versions and comparator behavior.
+
+Next investigate visibility calculations and compiler/libm/CPU dispatch differences,
+using the recorded actions unchanged. Do not omit conflicting non-Edge observations
+or describe the shadow as fully synchronized. No further full-domain searches or
+unchanged-baseline1000-game runs are needed for this diagnosis.

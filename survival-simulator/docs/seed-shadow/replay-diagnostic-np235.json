@@ -1,0 +1,39 @@
+{
+  "scope": "Diagnostic only; excluding Edge observations is NOT acceptance of a shadow or proof of hidden-state parity",
+  "seed_candidate": 1894581302,
+  "frames": 1800,
+  "full_mismatches": 1507,
+  "dynamic_mismatches": 56,
+  "first": {
+    "full": {
+      "frame": 1,
+      "difference": {
+        "path": ".agents[4].observations",
+        "actual_length": 12,
+        "recorded_length": 11
+      }
+    },
+    "dynamic": {
+      "frame": 555,
+      "difference": {
+        "path": ".agents[38].observations[3]",
+        "actual": {
+          "angle": 1.7763568394002505e-15,
+          "distance": 85.2096487111361,
+          "type": "Fruit"
+        },
+        "recorded": {
+          "angle": 2.3592199757742227,
+          "distance": 36.96775562614768,
+          "id": 32,
+          "rel_dir": -1.264033759057634,
+          "type": "Agent"
+        }
+      }
+    }
+  },
+  "python": "3.14.4",
+  "numpy": "2.3.5",
+  "seconds": 27.057544039000277,
+  "journal_sha256": "33a2b0c6dfef3499566d18b97f4b51c982dc66daf5c688b62cafbe911a99543e"
+}

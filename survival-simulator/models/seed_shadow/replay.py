@@ -30,7 +30,37 @@ def close(a,b,tolerance=1e-8):
     if isinstance(a,dict):
         return isinstance(b,dict) and a.keys()==b.keys() and all(close(a[k],b[k],tolerance) for k in a)
     if isinstance(a,(tuple,list)):
-        return isinstance(b,(tuple,list)) and len(a)==len(b) and all(close(x,y,tolerance) for x,y in zip(a,b))
+        if not isinstance(b,(tuple,list)) or len(a)!=len(b):
+            return False
+        if a and all(isinstance(x,dict) for x in a) and all(isinstance(y,dict) for y in b):
+            # Public entity/observation collections are unordered. Sorting by
+            # floats is unstable under tolerated roundoff. Find a one-to-one
+            # matching instead; preserve multiplicity and every field check.
+            if all(close(x,y,tolerance) for x,y in zip(a,b)):
+                return True
+            def identity(row):
+                return (row.get('type'),row.get('id'),row.get('agent_id'))
+            buckets={}
+            for j,y in enumerate(b):
+                buckets.setdefault(identity(y),[]).append(j)
+            edges=[]
+            for x in a:
+                options=[j for j in buckets.get(identity(x),[]) if close(x,b[j],tolerance)]
+                if not options:
+                    return False
+                edges.append(options)
+            owners={}
+            def assign(i,seen):
+                for j in edges[i]:
+                    if j in seen:
+                        continue
+                    seen.add(j)
+                    if j not in owners or assign(owners[j],seen):
+                        owners[j]=i
+                        return True
+                return False
+            return all(assign(i,set()) for i in range(len(a)))
+        return all(close(x,y,tolerance) for x,y in zip(a,b))
     if isinstance(a,float) or isinstance(b,float):
         return isinstance(a,(int,float)) and isinstance(b,(int,float)) and math.isclose(a,b,rel_tol=0,abs_tol=tolerance)
     return a==b
