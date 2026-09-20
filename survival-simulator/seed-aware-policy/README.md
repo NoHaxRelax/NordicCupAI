@@ -21,3 +21,5 @@ Wave77 tested a cloned-engine future-fruit schedule on 8 fresh pairs; both horiz
 Wave78 tested denser and local dodge headings on 16 fresh pairs; both were strongly harmful and rejected.
 
 Wave79 tested half-speed safety escape candidates on 16 fresh pairs; both were harmful and rejected.
+
+Wave80 tested smaller Lucas predator-dodge radii and angles on 16 fresh pairs; all four were harmful and rejected.
