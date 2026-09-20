@@ -51,7 +51,7 @@ struct Game:std::enable_shared_from_this<Game>{
             std::string error;J expected=canonical(public_state(*e)),actual=canonical(packet["before"]);bool full_match=same(expected,actual);bool match=same(dynamic_state(expected),dynamic_state(actual),&error);
             J check={{"seq",seq},{"time",e->time},{"match",match},{"full_dto_match",full_match},{"comparison","All dynamic fields; edge-ray rendering compared separately"},{"checked_ns",now_ns()}};
             if(!match){check["difference"]=error;mismatches++;save_json(dir/"first-mismatch.json",{{"check",check},{"expected",expected},{"actual",actual}});}
-            checks<<check.dump()<<'\n';checks.flush();
+            if(!match||seq%100==0){checks<<check.dump()<<'\n';checks.flush();}
             if(!match){std::lock_guard<std::mutex> guard(mu);model_failed=true;latest={{"seq",seq},{"failed",true},{"difference",error}};changed.notify_all();break;}
             if(!packet.value("action_committed",false))oracle_activated=true;bool synchronized=oracle_activated;oracle.resource_time=e->time;oracle.resource_synchronized=synchronized;if(synchronized)oracle.P.child_prio=60.;
             oracle.resource_trees.clear();oracle.resource_fruits.clear();for(auto&t:e->trees)oracle.resource_trees.push_back({{t.x,t.y},t.age,0,e->biome_at(t.x,t.y)});for(auto&f:e->fruits)oracle.resource_fruits.push_back({{f.x,f.y},f.age,f.energy,e->biome_at(f.x,f.y)});
@@ -66,7 +66,7 @@ struct Game:std::enable_shared_from_this<Game>{
             for(auto& a:e->agents)poses[std::to_string(a.id)]={a.x,a.y,a.direction};
             int64_t produced=now_ns();J row={{"seq",seq},{"input_time",packet["before"]["sim_time"]},{"predicted_time",e->time},{"produced_ns",produced},
                 {"events",{{"time",e->time},{"tree_spawns",trees},{"fruit_spawns",fruits}}},{"expected",public_state(*e)},{"expected_agent_poses",poses}};
-            predictions<<row.dump()<<'\n';predictions.flush();
+            if(seq%100==0){predictions<<row.dump()<<'\n';predictions.flush();}
             {std::lock_guard<std::mutex> guard(mu);latest_seq=seq;latest={{"seq",seq},{"failed",false},{"time",e->time},{"produced_ns",produced},{"tree_spawns",trees.size()},{"fruit_spawns",fruits.size()}};changed.notify_all();}
             seq++;
         }}catch(const std::exception& error){save_json(dir/"model-exception.json",{{"error",error.what()}});std::lock_guard<std::mutex> guard(mu);model_failed=true;}
@@ -94,7 +94,7 @@ struct Game:std::enable_shared_from_this<Game>{
         // One caller holds the HTTP request mutex; background inference has its own lock.
         auto request_start=Clock::now();J actions=policy_actions(policy,body);size_t seq;bool begin=false;
         {std::lock_guard<std::mutex> guard(mu);received=Clock::now();last_time=body["sim_time"];add_samples(samples,freshness.update(body).pose_input);seq=packets.size();
-            J packet={{"seq",seq},{"received_ns",received_ns},{"before",body},{"actions",actions},{"action_committed",false}};packets.push_back(packet);packet_log<<packet.dump()<<'\n';packet_log.flush();
+            J packet={{"seq",seq},{"received_ns",received_ns},{"before",body},{"actions",actions},{"action_committed",false}};packets.push_back(packet);if(seq%100==0){packet_log<<packet.dump()<<'\n';packet_log.flush();}
             std::set<int> labels;for(auto [p,b]:samples)labels.insert(b);
             if(!searching&&((samples.size()>=128&&labels.size()>=3)||(samples.size()>=400&&last_time>=180&&labels.size()>=2))){searching=true;frozen_samples=samples_json(samples);begin=true;save_json(dir/"search-input.json",{{"game_id",id},{"sim_time",last_time},{"samples",frozen_samples},{"seed_range",{0,4294967295ULL}}});}
             changed.notify_all();}
