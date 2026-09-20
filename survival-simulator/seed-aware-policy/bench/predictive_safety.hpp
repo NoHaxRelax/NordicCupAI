@@ -66,8 +66,8 @@ struct PredictiveSafety {
     // preserve task progress and energy rather than maximizing distance forever.
     double displacement=np_hypot(next[ai].x-original_next.x,next[ai].y-original_next.y);
     double cost=agent.energy-next[ai].energy;
-    double disp_w=(mode==150?.10:mode==151?.50:mode==152?.10:.25);
-    double cost_w=(mode==150?1.50:mode==151?2.50:mode==152?4.00:mode==159?1.50:mode==160?2.50:.80);
+    double disp_w=(mode==150?.10:mode==151?.50:mode==152?.10:mode==189?2.:mode==190?5.:mode==191?10.:.25);
+    double cost_w=(mode==150?1.50:mode==151?2.50:mode==152?4.00:mode==159?1.50:mode==160?2.50:mode==192?10.:.80);
     double turn_delta=std::abs(wrap(trial.turn-original.turn));
     double turn_w=(mode==180?0.80:0.);
     double value=100.*std::min(gap,margin)-disp_w*displacement-cost_w*cost-turn_w*turn_delta;

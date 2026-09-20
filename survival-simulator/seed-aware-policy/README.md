@@ -13,3 +13,5 @@ Wave69 tested exact-resource fruit allocation variants on 16 fresh pairs; all th
 Wave70 tested fruit-claim conditional safety triggers on 16 fresh pairs; all three lost to mode144 by 73–159 points and were rejected.
 
 Wave72 tested current-heading approaching-predator safety conditions on 16 fresh pairs; both variants lost to mode144 by 236–258 points and were rejected.
+
+Wave73 tested stronger safety displacement and energy penalties on 16 fresh pairs; all four variants lost to mode144 by 49–203 points and were rejected.
