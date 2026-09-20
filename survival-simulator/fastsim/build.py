@@ -5,7 +5,7 @@ Needs only a C++17 compiler and the Python headers (no pybind11/setuptools).
 The sin/cos builtins are disabled so the compiler cannot merge them into a
 sincos call, which may round differently from numpy's separate libm calls.
 """
-import os, subprocess, sys, sysconfig, pathlib, hashlib, json, shlex
+import os, subprocess, sys, sysconfig, pathlib, hashlib, json
 import numpy
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -18,7 +18,6 @@ def build(verbose=True):
     flags = ['-O2', '-std=c++17', '-fPIC', '-ffp-contract=off', '-fno-fast-math',
              '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos',
              '-I', sysconfig.get_paths()['include'], '-I', numpy.get_include()]
-    flags += shlex.split(os.environ.get('FASTSIM_EXTRA_FLAGS', ''))
     env = dict(os.environ)
     if sys.platform == 'darwin':
         flags += ['-bundle', '-undefined', 'dynamic_lookup']

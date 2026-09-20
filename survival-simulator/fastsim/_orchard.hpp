@@ -261,6 +261,18 @@ struct Group {
     std::vector<EdgeMem> walls;
     // Direction lookup preserves original wall order. Only geometry changes
     // invalidate it; timestamp refreshes do not change the lookup keys.
+    bool wall_endpoints_valid=false;
+    std::unordered_map<CellK,std::vector<size_t>,CellHash> wall_endpoints;
+    void add_wall_endpoints(size_t i) {
+        wall_endpoints[cell_of_sized(walls[i].a,6.)].push_back(i);
+        wall_endpoints[cell_of_sized(walls[i].b,6.)].push_back(i);
+    }
+    void prepare_wall_endpoints() {
+        if(wall_endpoints_valid)return;
+        wall_endpoints.clear();
+        for(size_t i=0;i<walls.size();++i)add_wall_endpoints(i);
+        wall_endpoints_valid=true;
+    }
     bool wall_directions_valid=false;
     std::unordered_map<CellK,std::vector<size_t>,CellHash> wall_directions;
     void prepare_wall_directions() {
@@ -421,7 +433,7 @@ public:
         g.trees.each([&](const int64_t&, TreeP& t) { t->p = T(t->p); });
         g.fruits.each([&](const int64_t&, FruitP& f) { f->p = T(f->p); });
         for(auto& e:g.walls) {e.a=T(e.a);e.b=T(e.b);}
-        g.wall_directions_valid=false;
+        g.wall_directions_valid=false;g.wall_endpoints_valid=false;
         g.rebuild_grids();
         ODict<CellK, CellV, CellHash> cells;
         g.cells.each([&](const CellK& c, CellV& v) {
@@ -592,10 +604,23 @@ public:
         }
     }
     static void remember_wall(Group& g,const EdgeMem& edge) {
-        for(auto& e:g.walls) if((dist_lt(e.a,edge.a,6)&&dist_lt(e.b,edge.b,6))||
-            (dist_lt(e.a,edge.b,6)&&dist_lt(e.b,edge.a,6))) {e.t=pmax(e.t,edge.t);return;}
+        g.prepare_wall_endpoints();
+        CellK c=cell_of_sized(edge.a,6.);std::vector<size_t> candidates;
+        for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy) {
+            auto it=g.wall_endpoints.find({c.x+dx,c.y+dy});
+            if(it!=g.wall_endpoints.end())candidates.insert(candidates.end(),it->second.begin(),it->second.end());
+        }
+        std::sort(candidates.begin(),candidates.end());
+        candidates.erase(std::unique(candidates.begin(),candidates.end()),candidates.end());
+        for(size_t i:candidates) {auto& e=g.walls[i];
+            if((dist_lt(e.a,edge.a,6)&&dist_lt(e.b,edge.b,6))||
+               (dist_lt(e.a,edge.b,6)&&dist_lt(e.b,edge.a,6))) {e.t=pmax(e.t,edge.t);return;}
+        }
         g.walls.push_back(edge);g.wall_directions_valid=false;
-        if(g.walls.size()>1024){auto it=std::min_element(g.walls.begin(),g.walls.end(),[](const EdgeMem&a,const EdgeMem&b){return a.t<b.t;});g.walls.erase(it);}
+        if(g.walls.size()>1024) {
+            auto it=std::min_element(g.walls.begin(),g.walls.end(),[](const EdgeMem&a,const EdgeMem&b){return a.t<b.t;});
+            g.walls.erase(it);g.wall_endpoints_valid=false;
+        } else g.add_wall_endpoints(g.walls.size()-1);
     }
     void shared_reports() {
         if(!P.share_obs)return;
@@ -769,9 +794,14 @@ public:
             Candidates c{mul(v,1./len),{}};
             // A vector within 1e-5 must lie in this cell or one of its eight
             // neighbours. Sort indices so candidate order and tie breaks match.
-            wall_matches.clear();CellK cell=cell_of_sized(v,.25);
-            for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy) {
-                auto it=g.wall_directions.find({cell.x+dx,cell.y+dy});
+            wall_matches.clear();
+            // Query only buckets intersecting the matching tolerance. A tiny
+            // margin covers floating-point rounding of the expanded bounds.
+            constexpr double margin=1.000001e-5;
+            CellK lo=cell_of_sized({v.x-margin,v.y-margin},.25);
+            CellK hi=cell_of_sized({v.x+margin,v.y+margin},.25);
+            for(int64_t x=lo.x;x<=hi.x;++x)for(int64_t y=lo.y;y<=hi.y;++y) {
+                auto it=g.wall_directions.find({x,y});
                 if(it!=g.wall_directions.end())wall_matches.insert(wall_matches.end(),it->second.begin(),it->second.end());
             }
             std::sort(wall_matches.begin(),wall_matches.end());
@@ -780,7 +810,7 @@ public:
                 if(dist_lt(sub(sub(e.b,e.a),v),P2{0.,0.},1e-5))c.points.push_back(sub(e.a,a));
             }
             if(c.points.empty())continue;
-            for(const auto& old:cs)if(old.points.size()==c.points.size()&&dist(old.points[0],c.points[0])<1e-5)duplicate=true;
+            for(const auto& old:cs)if(old.points.size()==c.points.size()&&dist_lt(old.points[0],c.points[0],1e-5))duplicate=true;
             if(duplicate)continue;
             total+=c.points.size();if(total>128)return;cs.push_back(c);
         }
@@ -790,17 +820,33 @@ public:
         bool have=false;P2 best{};
         for(const auto& c:cs)for(P2 seed:c.points){
             P2 sum{};bool ok=true;
-            for(const auto& other:cs){double near=OINF;P2 q{};for(P2 candidate:other.points){double d=dist(seed,candidate);if(d<near){near=d;q=candidate;}}
-                if(near>2.){ok=false;break;}sum=add(sum,q);}
+            for(const auto& other:cs) {
+                P2 q=other.points[0];
+                if(other.points.size()==1) {
+                    // Only the threshold matters for an unambiguous match;
+                    // avoid calculating a precise norm just to discard it.
+                    if(!dist_le(seed,q,2.)){ok=false;break;}
+                } else {
+                    double near=OINF;bool found=false;
+                    // A nearest candidate outside the acceptance radius rejects
+                    // this seed anyway. Preserve order among accepted candidates.
+                    for(P2 candidate:other.points)if(dist_le(seed,candidate,2.)) {
+                        double d=dist(seed,candidate);
+                        if(d<near){near=d;q=candidate;found=true;}
+                    }
+                    if(!found){ok=false;break;}
+                }
+                sum=add(sum,q);
+            }
             if(!ok)continue;P2 candidate=mul(sum,1./cs.size());
             if(g.anchored&&(candidate.x<5.||candidate.y<5.||candidate.x>W-5.||candidate.y>H-5.))continue;
-            if(have&&dist(best,candidate)>2.)return;best=candidate;have=true;
+            if(have&&dist_gt(best,candidate,2.))return;best=candidate;have=true;
         }
-        if(have&&dist(m.pose->p,best)>.5)m.pose->p=best;
+        if(have&&dist_gt(m.pose->p,best,.5))m.pose->p=best;
     }
     void observe(Mind& m, const AState& s) {
         if(P.share_obs){
-            for(const auto& o:*s.obs)if(o.type==4&&hypot2(o.c[2]-o.c[0],o.c[3]-o.c[1])>1000)anchor(m,o);
+            for(const auto& o:*s.obs)if(o.type==4&&dist_gt(P2{o.c[2],o.c[3]},P2{o.c[0],o.c[1]},1000.))anchor(m,o);
             relocalize_stones(m,*s.obs);
         }
         Group& g = G(m.group);
@@ -897,7 +943,7 @@ public:
         { PhaseTimer _t(&ph[PH_OBS_EDGES], profile_phases);
         for (const Obs& o : obs) {
             if (o.type != 4) continue;
-            if (hypot2(o.c[2] - o.c[0], o.c[3] - o.c[1]) > 1000) anchor(m, o);
+            if (dist_gt(P2{o.c[2],o.c[3]},P2{o.c[0],o.c[1]},1000.)) anchor(m, o);
         }
         for (const Obs& o : obs) {
             if (o.type != 4) continue;
@@ -1016,6 +1062,7 @@ public:
     void maintain(Group& g) {
         double now = time;
         int64_t tick = (int64_t)std::llround(now * 10.);
+        { PhaseTimer _t(&ph[PH_MAINTAIN_VIS], profile_phases);
         g.agents.each([&](int64_t a) {
             Mind& m = M(a); const AState& s = st(a);
             double h = s.hear, c = s.cone, v = s.vr;
@@ -1051,6 +1098,8 @@ public:
                     }
                 }
         });
+        }
+        { PhaseTimer _t(&ph[PH_MAINTAIN_PRUNE], profile_phases);
         object_keys_scratch.clear();
         g.trees.each([&](const int64_t& id, TreeP&) { object_keys_scratch.push_back(id); });
         for (int64_t tid : object_keys_scratch) {
@@ -1086,6 +1135,8 @@ public:
             if (f->has_claim && (!minds.has(f->claimed) || !M(f->claimed).has_fruit || M(f->claimed).fruit != fid))
                 f->has_claim = false;
         }
+        }
+        { PhaseTimer _t(&ph[PH_MAINTAIN_COUNTS], profile_phases);
         // Count each tree/fruit pair once from the fruit side. The old loop
         // queried the fruit grid once per tree; these integer totals are the
         // only observable result, so reversing the traversal is exact.
@@ -1106,6 +1157,7 @@ public:
                     }
                 }
         });
+        }
     }
 
     // ------------------------------------------------------------ economy

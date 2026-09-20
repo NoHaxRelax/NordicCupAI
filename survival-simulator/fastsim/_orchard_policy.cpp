@@ -11,6 +11,7 @@ using namespace polabi;  // Obs, AState, Act and the CPython-semantics helpers
 
 #include "_orchard.hpp"
 #include "_evasion.hpp"
+#include "../models/late_activation.hpp"
 
 namespace polabi {
 namespace {
@@ -22,7 +23,7 @@ double cfg_get(const Cfg& c, const char* k, double dflt, bool* found = nullptr) 
     return dflt;
 }
 
-void parse_params(const Cfg& c, orchard::Params& P) {
+void parse_params(const Cfg& c, orchard::Params& P, const char* prefix = "") {
     struct F { const char* k; double* v; };
     F fs[] = {{"cap_mult", &P.cap_mult}, {"cap_min", &P.cap_min}, {"cap_max", &P.cap_max}, {"n0", &P.n0},
               {"tree_half", &P.tree_half}, {"tree_slots", &P.tree_slots}, {"breed_reserve", &P.breed_reserve},
@@ -43,23 +44,35 @@ void parse_params(const Cfg& c, orchard::Params& P) {
               {"lone_reach_mult", &P.lone_reach_mult}, {"old_reach", &P.old_reach}, {"rot_margin", &P.rot_margin},
               {"dump_after_t", &P.dump_after_t}, {"cap_tree_slack", &P.cap_tree_slack}, {"cap_hard_min", &P.cap_hard_min},
               {"nursery_bonus", &P.nursery_bonus},{"share_obs",&P.share_obs},{"econ_start",&P.econ_start},{"econ_radius",&P.econ_radius},{"econ_horizon",&P.econ_horizon},{"cap_budget",&P.cap_budget},{"crowd_weight",&P.crowd_weight},{"fruit_auction",&P.fruit_auction},{"auction_cost",&P.auction_cost},{"fruit_net",&P.fruit_net},{"food_risk",&P.food_risk},{"post_opt",&P.post_opt},{"rock_penalty",&P.rock_penalty},{"relocate_after",&P.relocate_after},{"relocate_energy",&P.relocate_energy},{"renewal_weight",&P.renewal_weight},{"budget_reserve",&P.budget_reserve},{"aging_food",&P.aging_food}};
-    for (F& f : fs) { bool got = false; double v = cfg_get(c, f.k, 0., &got); if (got) *f.v = v; }
+    for (F& f : fs) { bool got = false; double v = cfg_get(c, (std::string(prefix) + f.k).c_str(), 0., &got); if (got) *f.v = v; }
     struct B { const char* k; bool* v; };
     B bs[] = {{"idle_sweep", &P.idle_sweep}, {"extra_old", &P.extra_old}, {"cull", &P.cull}, {"heir_select", &P.heir_select},
               {"heir_at_food", &P.heir_at_food}, {"old_eat_last", &P.old_eat_last}, {"heir_needs_site", &P.heir_needs_site}};
-    for (B& b : bs) { bool got = false; double v = cfg_get(c, b.k, 0., &got); if (got) *b.v = (v != 0.); }
+    for (B& b : bs) { bool got = false; double v = cfg_get(c, (std::string(prefix) + b.k).c_str(), 0., &got); if (got) *b.v = (v != 0.); }
     P.feed_breed = c.feed_mode && std::strcmp(c.feed_mode, "breed") == 0;
 }
 
 class PolicyImpl : public IPolicy {
 public:
     orchard::EvasionPolicy pol;
-    orchard::Params base_params;
-    PolicyImpl(const std::vector<uint32_t>& key, const orchard::Params& P, const orchard::PredParams& PR)
-        : pol(key, P, PR), base_params(P) {}
+    orchard::Params base_params, late_params;
+    LateActivation gate;
+    PolicyImpl(const std::vector<uint32_t>& key, const orchard::Params& P, const orchard::PredParams& PR, const Cfg& cfg)
+        : pol(key, P, PR), base_params(P), late_params(P) {
+        parse_params(cfg, late_params, "late_");
+        gate.enabled = cfg_get(cfg, "gate_enabled", 0.) != 0.;
+        gate.after_ticks = cfg_get(cfg, "gate_ticks", 12000.);
+        gate.below_population = cfg_get(cfg, "gate_population", 10.);
+        gate.logic = (int)cfg_get(cfg, "gate_logic", 2.);
+        gate.persistence = (int)cfg_get(cfg, "gate_persistence", 0.);
+    }
     void copy_parameters(const IPolicy& other) override {
         const auto& source = static_cast<const PolicyImpl&>(other);
         base_params = source.base_params;
+        late_params = source.late_params;
+        gate.enabled = source.gate.enabled; gate.after_ticks = source.gate.after_ticks;
+        gate.below_population = source.gate.below_population; gate.logic = source.gate.logic;
+        gate.persistence = source.gate.persistence;
         pol.P = base_params;
         pol.PRED = source.pol.PRED;
         // Keep RNG, odometry, groups, fruit claims and every agent's memory.
@@ -67,7 +80,7 @@ public:
     }
 
     const std::vector<Act>& call(const AState* states, size_t n, double sim_time) override {
-        pol.P=base_params;
+        pol.P=gate.step(n) ? late_params : base_params;
         const auto& x=pol.PRED;
         if(sim_time>=x.phase_start && (x.phase_population<=0 || n<=x.phase_population)) {
             if(x.late_cap>=0) pol.P.cap_mult=x.late_cap;
@@ -173,7 +186,7 @@ IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, cons
     PR.late_reserve=cfg_get(cfg,"late_reserve",PR.late_reserve);
     std::vector<uint32_t> key(seed_key, seed_key + nkey);
     if (key.empty()) key.push_back(0);
-    return new PolicyImpl(key, P, PR);
+    return new PolicyImpl(key, P, PR, cfg);
 }
 
 void destroy_policy(IPolicy* p) { delete p; }
