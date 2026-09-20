@@ -35,3 +35,5 @@ Wave86: tree-value distance and cluster shaping variants all rejected; mode144 r
 Wave87: exact birth-threshold variants all rejected; mode144 retained.
 
 Wave88: reproduction-reserve variants all rejected; mode144 retained.
+
+Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retained.

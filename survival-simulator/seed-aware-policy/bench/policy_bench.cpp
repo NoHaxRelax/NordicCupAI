@@ -8,10 +8,12 @@ void apply_activation_overrides(orchard::Params& p,const J& config,int mode){
  auto key=std::to_string(mode);if(!variants.contains(key))return;
  std::map<std::string,double*> fields={{"breed_reserve",&p.breed_reserve},{"breed_reserve_late",&p.breed_reserve_late},
  {"child_prio",&p.child_prio},{"low_pop_reserve",&p.low_pop_reserve},{"cap_mult",&p.cap_mult},{"cap_min",&p.cap_min},{"cap_max",&p.cap_max},
- {"refuge_mode",&p.refuge_mode},{"refuge_r",&p.refuge_r},{"refuge_trigger",&p.refuge_trigger},{"refuge_leave",&p.refuge_leave},{"refuge_slow_only",&p.refuge_slow_only},{"refuge_post_w",&p.refuge_post_w},{"refuge_clear",&p.refuge_clear},{"refuge_sprint",&p.refuge_sprint},{"site_dist_w",&p.site_dist_w},{"fit_speed",&p.fit_speed},{"fit_vision",&p.fit_vision},{"fit_hear",&p.fit_hear},{"fit_energy",&p.fit_energy},{"fit_speed_cap",&p.fit_speed_cap},{"heir_age",&p.heir_age},{"heir_reserve",&p.heir_reserve},{"tree_half",&p.tree_half},{"pred_mode",&p.pred_mode},{"pred_share",&p.pred_share},{"pred_dodge_r",&p.pred_dodge_r},{"pred_dodge_ang",&p.pred_dodge_ang},{"pred_dodge_hold",&p.pred_dodge_hold},{"pred_dodge_hold_face",&p.pred_dodge_hold_face},{"pred_r",&p.pred_r},{"pred_face",&p.pred_face},{"pred_face_r",&p.pred_face_r},{"pred_sprint_r",&p.pred_sprint_r},{"hungry_margin",&p.hungry_margin},{"fruit_min_wait",&p.fruit_min_wait},{"fruit_reach",&p.fruit_reach},{"tree_reach",&p.tree_reach},{"dist_pen",&p.dist_pen},{"cluster_radius",&p.cluster_radius}};
+ {"refuge_mode",&p.refuge_mode},{"refuge_r",&p.refuge_r},{"refuge_trigger",&p.refuge_trigger},{"refuge_leave",&p.refuge_leave},{"refuge_slow_only",&p.refuge_slow_only},{"refuge_post_w",&p.refuge_post_w},{"refuge_clear",&p.refuge_clear},{"refuge_sprint",&p.refuge_sprint},{"site_dist_w",&p.site_dist_w},{"fit_speed",&p.fit_speed},{"fit_vision",&p.fit_vision},{"fit_hear",&p.fit_hear},{"fit_energy",&p.fit_energy},{"fit_speed_cap",&p.fit_speed_cap},{"heir_age",&p.heir_age},{"heir_reserve",&p.heir_reserve},{"tree_half",&p.tree_half},{"pred_mode",&p.pred_mode},{"pred_share",&p.pred_share},{"pred_dodge_r",&p.pred_dodge_r},{"pred_dodge_ang",&p.pred_dodge_ang},{"pred_dodge_hold",&p.pred_dodge_hold},{"pred_dodge_hold_face",&p.pred_dodge_hold_face},{"pred_r",&p.pred_r},{"pred_face",&p.pred_face},{"pred_face_r",&p.pred_face_r},{"pred_sprint_r",&p.pred_sprint_r},{"hungry_margin",&p.hungry_margin},{"fruit_min_wait",&p.fruit_min_wait},{"fruit_reach",&p.fruit_reach},{"tree_reach",&p.tree_reach},{"dist_pen",&p.dist_pen},{"cluster_radius",&p.cluster_radius},{"nursery_bonus",&p.nursery_bonus}};
+ std::map<std::string,bool*> bool_fields={{"heir_select",&p.heir_select}};
  for(auto& item:variants.at(key).items()){
-  if(!fields.count(item.key()))throw std::runtime_error("Unsupported activation override: "+item.key());
-  *fields.at(item.key())=item.value().get<double>();
+  if(fields.count(item.key()))*fields.at(item.key())=item.value().get<double>();
+  else if(bool_fields.count(item.key()))*bool_fields.at(item.key())=item.value().get<bool>();
+  else throw std::runtime_error("Unsupported activation override: "+item.key());
  }
 }
 int main(int argc,char**argv){
@@ -38,7 +40,7 @@ int main(int argc,char**argv){
    p.forecast_future_fruits(*e,mode==197?60.:180.);
   std::map<int64_t,bool> old_heirs;if(BirthForecast::enabled(mode)&&p.resource_synchronized)p.minds.each([&](const int64_t&id,orchard::MindP&m){old_heirs[id]=m->heir_done;});
   auto acts=p.call(policy_states(e.get()),e->time);
-  if(((mode>=35&&mode<=38)||(mode>=140&&mode<=232))&&p.resource_synchronized)safety.apply(*e,p,acts,mode);
+  if(((mode>=35&&mode<=38)||(mode>=140&&mode<=237))&&p.resource_synchronized)safety.apply(*e,p,acts,mode);
   if(BirthForecast::enabled(mode)&&p.resource_synchronized)births.apply(*e,p,acts,mode,old_heirs);
   if(e->time<available_at){for(auto&a:acts){hash_word(a.aid);hash_double(a.dist);hash_double(a.direction);hash_double(a.turn);hash_word(a.spawn);}}
   for(auto&a:acts){size_t before=e->agents.size();e->agent_step({a.aid,a.dist,true,a.direction,a.turn,a.spawn});if(BirthForecast::enabled(mode)&&p.resource_synchronized&&e->agents.size()>before)births.verify(a.aid,e->agents.back());}
