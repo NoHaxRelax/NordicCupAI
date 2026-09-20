@@ -249,3 +249,22 @@ RAM/tmpfs and needs real disk I/O, followed by candidate filtering and replay.
 The current best measured raw scanner is still 1.28474M seeds/sec on one Hetzner
 vCPU; full-domain recovery there remains unmeasured. Passive landmark acquisition
 and deliberate navigation to exact pixels have not yet been implemented.
+
+
+## Active full Hetzner timing run (user: “so test it”)
+
+A full uint32 scan is running in /tmp/codex-seed-benchmark/full-domain-hetzner/
+with two low-priority workers, scan-avx2, and the real full-domain-case public
+samples. The 7200-second timeout is intentionally higher than the target so the
+benchmark can measure failure rather than stop at 600 seconds. Initial measured
+throughput suggests 35–40 minutes. No completed recovery result yet.
+
+finish-hetzner-seed.sh waits for the complete candidate list, builds the research
+copy of fastsim, then runs verify_seed_search.py --deadline-seconds 7200 against
+the exact recorded public journal. Read progress.json, replay.log and recovery.json;
+build output is ../replay-build.log. Runtime: host Python3.14.4 / NumPy2.3.5, while
+the original journal used Python3.13 / NumPy2.5.3. Preserve and diagnose any replay
+mismatch instead of bypassing it. The production venv is only read for its runtime;
+all source/build/output modifications are in our separate /tmp research directory.
+The verifier now accepts an explicit benchmark deadline (default remains600) and
+reports within_600_seconds separately. The existing heartbeat will collect results.

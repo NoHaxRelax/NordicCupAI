@@ -10,6 +10,7 @@ p=argparse.ArgumentParser()
 p.add_argument('--journal',type=pathlib.Path,required=True)
 p.add_argument('--search',type=pathlib.Path,required=True)
 p.add_argument('--samples',type=pathlib.Path,required=True)
+p.add_argument('--deadline-seconds',type=float,default=600,help='Compute budget; raise only for explicitly labeled timing benchmarks.')
 args=p.parse_args()
 process_start=time.monotonic()
 manifest=json.loads((args.search/'manifest.json').read_text())
@@ -18,7 +19,7 @@ if not progress['complete'] or progress['checked'] != 2**32 or manifest['start']
     raise SystemExit('This verifier requires a complete uint32 search')
 if hashlib.sha256(args.samples.read_bytes()).hexdigest()!=manifest['samples_sha256']:
     raise SystemExit('Public terrain sample provenance mismatch')
-journal=ShadowJournal(deadline_seconds=max(0.,600-progress['seconds']))
+journal=ShadowJournal(deadline_seconds=max(0.,args.deadline_seconds-progress['seconds']))
 journal.begin_search()
 with gzip.open(args.journal,'rt') as f:
     for line in f:
@@ -32,7 +33,7 @@ start=time.monotonic();seed=journal.recover(candidates,SimulationCore,complete_s
 result=dict(status=journal.status,recovered_seed=seed,terrain_candidates=len(candidates),
     replay_frames=len(journal.frames),replay_seconds=time.monotonic()-start,
     search_seconds=progress['seconds'],total_compute_seconds=progress['seconds']+time.monotonic()-process_start,
-    full_uint32_search=True,provenance='public observations and own actions only',
+    full_uint32_search=True,deadline_seconds=args.deadline_seconds,within_600_seconds=progress['seconds']+time.monotonic()-process_start<600,provenance='public observations and own actions only',
     caveat='Public consistency is not proof that all unobserved dynamic state is exact.')
 (args.search/'recovery.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result),flush=True)
