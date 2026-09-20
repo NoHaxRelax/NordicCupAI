@@ -75,8 +75,8 @@ void fill_states(Engine* e, std::vector<polabi::AState>& out) {
     static const std::vector<Obs> empty;
     out.clear();
     for (const Creature& a : e->agents) {
-        auto it = e->agent_observations.find(a.id);
-        const std::vector<Obs>* obs = it == e->agent_observations.end() ? &empty : &it->second;
+        const std::vector<Obs>* obs = (a.id >= 0 && (size_t)a.id < e->agent_observations.size())
+                                          ? &e->agent_observations[(size_t)a.id] : &empty;
         polabi::AState s;
         s.aid = a.id;
         s.obs = reinterpret_cast<const std::vector<polabi::Obs>*>(obs);  // layout asserted above

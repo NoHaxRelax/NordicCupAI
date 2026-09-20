@@ -554,9 +554,10 @@ public:
     std::vector<int32_t> edge_set_order;
 
     int64_t next_agent_id = 0, next_fruit_id = 0, next_serial = 1;
+    std::vector<int32_t> agent_id_to_index;
     double score = 0.0, time = 0.0;
 
-    std::unordered_map<int64_t, std::vector<Obs>> agent_observations;
+    std::vector<std::vector<Obs>> agent_observations;
     std::vector<Event> events;
     bool diagnostics_enabled = false;
     std::vector<DiagnosticEvent> diagnostics;
@@ -580,8 +581,9 @@ public:
     // into the local set order, so results equal the full scan.
     static const int GCELL = 100;
     int GNX = 0, GNY = 0;
-    struct CornerRef { double x, y; int32_t edge; };
-    std::vector<std::vector<CornerRef>> corner_cells;
+    struct CornerRef { double x, y; std::vector<int32_t> edges; };
+    std::vector<CornerRef> corners;
+    std::vector<std::vector<int32_t>> corner_cells;
     std::vector<std::vector<int32_t>> edge_cells;
     // Per (cell, centre chunk, vision radius): local edges that can lie within
     // reach of any point of the cell, sorted by local set order. Each call then
@@ -619,9 +621,13 @@ public:
 
     // scratch
     std::vector<double> rays, ring_x, ring_y, poly_key, e_vx, e_vy, e_a1, e_b1, e_nt;
+    std::vector<double> e_minx, e_maxx, e_miny, e_maxy;
     std::vector<double> cdx, cdy, cbase, rcos, rsin, pdx, pdy, pang;
     std::vector<double> odx, ody, ohyp, oang;
     std::vector<size_t> oidx;
+    std::vector<size_t> emit_idx;
+    std::vector<int32_t> emit_rel_slot;
+    std::vector<double> rel_x, rel_y, rel_ang;
     std::vector<double> vpx, vpy, pdist, pang2;
     std::vector<char> pnear, pvis;
     std::vector<int32_t> tmp_keys;
@@ -811,15 +817,27 @@ public:
         GNX = W / GCELL + 1; GNY = H / GCELL + 1;
         corner_cells.assign((size_t)GNX * GNY, {});
         edge_cells.assign((size_t)GNX * GNY, {});
+        corners.clear();
+        auto add_corner = [&](double x, double y, int32_t edge) {
+            for (size_t i = 0; i < corners.size(); i++) {
+                if (corners[i].x == x && corners[i].y == y) {
+                    corners[i].edges.push_back(edge);
+                    return;
+                }
+            }
+            corners.push_back({x, y, {edge}});
+        };
         for (size_t k = 0; k < edges.size(); k++) {
             const Edge& e = edges[k];
-            corner_cells[cell_of(e.x1, e.y1)].push_back({e.x1, e.y1, (int32_t)k});
-            corner_cells[cell_of(e.x2, e.y2)].push_back({e.x2, e.y2, (int32_t)k});
+            add_corner(e.x1, e.y1, (int32_t)k);
+            add_corner(e.x2, e.y2, (int32_t)k);
             int x0 = cell_x(std::min(e.x1, e.x2)), x1 = cell_x(std::max(e.x1, e.x2));
             int y0 = cell_y(std::min(e.y1, e.y2)), y1 = cell_y(std::max(e.y1, e.y2));
             for (int cx = x0; cx <= x1; cx++)
                 for (int cy = y0; cy <= y1; cy++) edge_cells[(size_t)cx * GNY + cy].push_back((int32_t)k);
         }
+        for (size_t i = 0; i < corners.size(); i++)
+            corner_cells[cell_of(corners[i].x, corners[i].y)].push_back((int32_t)i);
         // grid_obstacles (order is irrelevant: only used by np.any)
         for (size_t i = 0; i < obstacles.size(); i++) {
             const Obstacle& o = obstacles[i];
@@ -925,6 +943,9 @@ public:
     void add_agent(Creature a) {
         a.id = next_agent_id++;
         agents.push_back(a);
+        if (agent_observations.size() <= (size_t)a.id) agent_observations.resize((size_t)a.id + 1);
+        if (agent_id_to_index.size() <= (size_t)a.id) agent_id_to_index.resize((size_t)a.id + 1, -1);
+        agent_id_to_index[(size_t)a.id] = (int32_t)agents.size() - 1;
         agents_dirty = true;
     }
     void spawn_agent_random() {
@@ -977,10 +998,13 @@ public:
     }
     void kill_agent_at(size_t idx, int cause, int64_t predator_key=-1) {
         const Creature& a = agents[idx];
+        int64_t dead_id = a.id;
         events.push_back({cause, time, a.id, a.age, a.energy});
         diagnostic(cause == 0 ? 8 : 9, a.id, predator_key, a.energy, a.age);
-        agent_observations.erase(a.id);
+        agent_observations[(size_t)a.id].clear();
         agents.erase(agents.begin() + idx);
+        agent_id_to_index[(size_t)dead_id] = -1;
+        for (size_t i = idx; i < agents.size(); i++) agent_id_to_index[(size_t)agents[i].id] = (int32_t)i;
         agents_dirty = true;
     }
     bool try_add_fruit(double x, double y, double radius) {
@@ -1101,6 +1125,7 @@ public:
     // compute_visibility(): fills ring (agent position + sorted polygon, closed) and hit edges.
     void compute_visibility(double x, double y, double dir, double cone, double vr,
                             const std::vector<int32_t>& rank, int ci, std::vector<int32_t>& hit_edges,
+                            double dir_cos, double dir_sin, bool use_cone_filter, double cos_lim,
                             double& minx, double& maxx, double& miny, double& maxy) {
         const double eps = 1e-3;
         rays.clear();
@@ -1108,21 +1133,21 @@ public:
         double half = cone / 2;
         // Corners whose direction is > half + 0.01 rad off the view axis cannot yield a
         // ray (offsets are only 0.001), so the exact test below is skipped for them.
-        const double cd = np_cos(dir), sd = np_sin(dir);
-        const bool use_cone_filter = half + 0.01 < PI / 2;
-        const double cos_lim = use_cone_filter ? np_cos(half + 0.01) : -2.0;
         cdx.clear(); cdy.clear();
         const int gx0 = cell_x(x - vr - 1), gx1 = cell_x(x + vr + 1);
         const int gy0 = cell_y(y - vr - 1), gy1 = cell_y(y + vr + 1);
         for (int gx = gx0; gx <= gx1; gx++) {
             for (int gy = gy0; gy <= gy1; gy++) {
-                for (const CornerRef& cr : corner_cells[(size_t)gx * GNY + gy]) {
-                    if (rank[cr.edge] < 0) continue;  // corner of an edge outside the 3x3 chunks
+                for (int32_t corner_id : corner_cells[(size_t)gx * GNY + gy]) {
+                    const CornerRef& cr = corners[(size_t)corner_id];
+                    bool local = false;
+                    for (int32_t edge : cr.edges) if (rank[edge] >= 0) { local = true; break; }
+                    if (!local) continue;
                     double dx = cr.x - x, dy = cr.y - y;
                     double d2 = dx * dx + dy * dy;
                     if (!(d2 <= vr2)) continue;
                     if (use_cone_filter) {
-                        double dot = dx * cd + dy * sd;
+                        double dot = dx * dir_cos + dy * dir_sin;
                         if (dot < cos_lim * std::sqrt(d2) - 1e-9 * (std::fabs(dx) + std::fabs(dy))) continue;
                     }
                     cdx.push_back(dx); cdy.push_back(dy);
@@ -1150,6 +1175,7 @@ public:
         // Edges that cannot be hit within the vision radius never change the result.
         tmp_keys.clear();
         e_vx.clear(); e_vy.clear(); e_a1.clear(); e_b1.clear(); e_nt.clear();
+        e_minx.clear(); e_maxx.clear(); e_miny.clear(); e_maxy.clear();
         const double reach = vr + 1.0;
         for (int32_t k : cell_candidates(cell_x(x), cell_y(y), ci, rank, vr)) {
             const Edge& e = edges[k];
@@ -1162,6 +1188,9 @@ public:
             double vx = e.x2 - e.x1, vy = e.y2 - e.y1, a1 = e.x1 - x, b1 = e.y1 - y;
             e_vx.push_back(vx); e_vy.push_back(vy); e_a1.push_back(a1); e_b1.push_back(b1);
             e_nt.push_back(-vy * a1 + vx * b1);  // numerator of t, same for every ray
+            double a2 = a1 + vx, b2 = b1 + vy;
+            e_minx.push_back(std::min(a1, a2)); e_maxx.push_back(std::max(a1, a2));
+            e_miny.push_back(std::min(b1, b2)); e_maxy.push_back(std::max(b1, b2));
         }
 
         size_t nr = rays.size();
@@ -1184,7 +1213,12 @@ public:
             // |nt| > best*|det|*(1+2^-45) implies fl(nt/det) >= best, and
             // |nu| > |det|*(1+2^-45) implies fl(nu/det) > 1 (rounding error is ~2^-52).
             const double SLACK = 1.0 + 0x1p-45;
+            double ray_x = rdx * vr, ray_y = rdy * vr;
+            double ray_minx = std::min(0.0, ray_x), ray_maxx = std::max(0.0, ray_x);
+            double ray_miny = std::min(0.0, ray_y), ray_maxy = std::max(0.0, ray_y);
             for (size_t q = 0; q < ne; q++) {
+                if (e_maxx[q] < ray_minx || e_minx[q] > ray_maxx ||
+                    e_maxy[q] < ray_miny || e_miny[q] > ray_maxy) continue;
                 double det = -rdx * e_vy[q] + rdy * e_vx[q];
                 if (!(std::fabs(det) >= 1e-8)) continue;
                 const bool dneg = det < 0;
@@ -1197,8 +1231,16 @@ public:
                 if (std::fabs(nu) > adet * SLACK) continue;   // u > 1
                 double t = nt / det;
                 if (!(t < best)) continue;  // an equal or larger t never replaces the first minimum
-                double u = nu / det;
-                if (!((t >= 0) && (u >= 0) && (u <= 1))) continue;
+                // The sign tests above already establish u >= 0. Away from the
+                // u == 1 rounding boundary they also establish u < 1 without
+                // performing the second division. Preserve the original divide
+                // and comparisons for the narrow uncertain band.
+                bool u_inside = std::fabs(nu) < adet / SLACK;
+                if (!u_inside) {
+                    double u = nu / det;
+                    u_inside = (u >= 0) && (u <= 1);
+                }
+                if (!((t >= 0) && u_inside)) continue;
                 best = t; best_k = tmp_keys[q];
             }
             double min_t = best < vr ? best : vr;  // np.minimum
@@ -1233,25 +1275,23 @@ public:
     }
 
     struct Target { double x, y, direction; int64_t id; };
+    struct TargetGroup { size_t begin, end; int tag; bool include_direction, include_id; };
 
-    void process_objects(const Creature& c, const std::vector<Target>& objs, int tag, bool include_direction,
-                         bool include_id, double minx, double maxx, double miny, double maxy,
-                         std::vector<Obs>& out) {
-        if (objs.empty()) return;
-        size_t n = objs.size();
+    void process_all_objects(const Creature& c, const std::vector<Target>& objs,
+                             const std::vector<TargetGroup>& groups,
+                             double minx, double maxx, double miny, double maxy,
+                             double dir_cos, double dir_sin, bool use_cone_filter, double cos_lim,
+                             std::vector<Obs>& out) {
+        const size_t n = objs.size();
+        if (!n) return;
         pdist.resize(n); pang2.resize(n); pnear.resize(n); pvis.resize(n);
         double* dist = pdist.data();
         double* ang = pang2.data();
         char* nearby = pnear.data();
         char* visible = pvis.data();
-        double half = c.cone_angle / 2.0;
-        // Objects clearly beyond both radii can be neither heard nor seen; the
-        // margin keeps this exact despite rounding in hypot.
-        double reach = std::max(c.hearing_radius, c.vision_radius) + 1.0;
-        double reach2 = reach * reach;
-        const double cd = np_cos(c.direction), sd = np_sin(c.direction);
-        const bool use_cone_filter = half + 0.01 < PI / 2;
-        const double cos_lim = use_cone_filter ? np_cos(half + 0.01) : -2.0;
+        const double half = c.cone_angle / 2.0;
+        const double reach = std::max(c.hearing_radius, c.vision_radius) + 1.0;
+        const double reach2 = reach * reach;
         oidx.clear(); odx.clear(); ody.clear();
         for (size_t i = 0; i < n; i++) {
             nearby[i] = 0; visible[i] = 0;
@@ -1259,17 +1299,17 @@ public:
             if (dx * dx + dy * dy > reach2) continue;
             oidx.push_back(i); odx.push_back(dx); ody.push_back(dy);
         }
-        size_t m = oidx.size();
+        const size_t m = oidx.size();
         ohyp.resize(m);
         vhypot(odx.data(), ody.data(), ohyp.data(), m);
-        size_t k = 0;  // compact to the objects whose angle is needed
+        size_t k = 0;
         for (size_t j = 0; j < m; j++) {
             size_t i = oidx[j];
             double dx = odx[j], dy = ody[j];
             dist[i] = ohyp[j];
             if (!(dist[i] <= c.hearing_radius) && use_cone_filter &&
-                dx * cd + dy * sd < cos_lim * std::sqrt(dx * dx + dy * dy) - 1e-9 * (std::fabs(dx) + std::fabs(dy)))
-                continue;  // outside the cone and not heard
+                dx * dir_cos + dy * dir_sin < cos_lim * std::sqrt(dx * dx + dy * dy) - 1e-9 * (std::fabs(dx) + std::fabs(dy)))
+                continue;
             oidx[k] = i; odx[k] = dx; ody[k] = dy; k++;
         }
         oang.resize(k);
@@ -1281,27 +1321,47 @@ public:
             nearby[i] = dist[i] <= c.hearing_radius;
             visible[i] = !nearby[i] && (dist[i] <= c.vision_radius) && (std::fabs(ang[i]) <= half);
         }
-        auto emit = [&](size_t i) {
+
+        emit_idx.clear();
+        for (const TargetGroup& g : groups) {
+            for (size_t i = g.begin; i < g.end; i++) if (nearby[i]) emit_idx.push_back(i);
+            for (size_t i = g.begin; i < g.end; i++)
+                if (visible[i] && polygon_contains(ring_x, ring_y, minx, maxx, miny, maxy, objs[i].x, objs[i].y))
+                    emit_idx.push_back(i);
+        }
+        emit_rel_slot.assign(emit_idx.size(), -1);
+        rel_x.clear(); rel_y.clear();
+        for (size_t j = 0; j < emit_idx.size(); j++) {
+            size_t i = emit_idx[j];
+            bool include_direction = false;
+            for (const TargetGroup& g : groups)
+                if (i >= g.begin && i < g.end) { include_direction = g.include_direction; break; }
+            if (!include_direction) continue;
+            emit_rel_slot[j] = (int32_t)rel_x.size();
+            rel_y.push_back(c.y - objs[i].y); rel_x.push_back(c.x - objs[i].x);
+        }
+        rel_ang.resize(rel_x.size());
+        vatan2(rel_y.data(), rel_x.data(), rel_ang.data(), rel_x.size());
+        for (size_t j = 0; j < emit_idx.size(); j++) {
+            size_t i = emit_idx[j];
+            const TargetGroup* group = nullptr;
+            for (const TargetGroup& g : groups) if (i >= g.begin && i < g.end) { group = &g; break; }
             Obs o;
-            o.type = tag; o.distance = dist[i]; o.angle = ang[i];
-            o.has_rel_dir = include_direction; o.has_id = include_id;
+            o.type = group->tag; o.distance = dist[i]; o.angle = ang[i];
+            o.has_rel_dir = group->include_direction; o.has_id = group->include_id;
             o.rel_dir = 0; o.id = 0;
-            if (include_direction) {
-                double a = np_atan2(c.y - objs[i].y, c.x - objs[i].x) - objs[i].direction;
+            if (group->include_direction) {
+                double a = rel_ang[(size_t)emit_rel_slot[j]] - objs[i].direction;
                 o.rel_dir = py_mod(a + PI, TWO_PI) - PI;
             }
-            if (include_id) o.id = objs[i].id;
+            if (group->include_id) o.id = objs[i].id;
             out.push_back(o);
-        };
-        for (size_t i = 0; i < n; i++)
-            if (nearby[i]) emit(i);
-        for (size_t i = 0; i < n; i++)
-            if (visible[i] && polygon_contains(ring_x, ring_y, minx, maxx, miny, maxy, objs[i].x, objs[i].y)) emit(i);
+        }
     }
 
-    std::vector<Target> t_fruits, t_agents, t_preds, t_trees;
+    std::vector<Target> t_objects;
+    std::vector<TargetGroup> target_groups;
     std::vector<int32_t> hit_edges, keys_buf;
-    PySetEmu s_agents, s_fruits, s_trees, s_preds;
     std::vector<int32_t> key_to_index_agent, key_to_index_fruit, key_to_index_tree, key_to_index_pred;
 
     template <class T>
@@ -1315,40 +1375,45 @@ public:
                  const PySetEmu* trees_set, const PySetEmu* preds_set, std::vector<Obs>& out) {
         out.clear();
         double cos_dir = np_cos(-c.direction), sin_dir = np_sin(-c.direction);
+        double dir_cos = np_cos(c.direction), dir_sin = np_sin(c.direction);
+        double half = c.cone_angle / 2.0;
+        bool use_cone_filter = half + 0.01 < PI / 2;
+        double cos_lim = use_cone_filter ? np_cos(half + 0.01) : -2.0;
         double minx, maxx, miny, maxy;
         long ccx = to_chunk(c.x), ccy = to_chunk(c.y);
         ensure_local_static(ccx, ccy);
         const std::vector<int32_t>& rank = local_edge_rank[chunk_index(ccx, ccy)];
-        compute_visibility(c.x, c.y, c.direction, c.cone_angle, c.vision_radius, rank, chunk_index(ccx, ccy), hit_edges, minx, maxx, miny, maxy);
+        compute_visibility(c.x, c.y, c.direction, c.cone_angle, c.vision_radius, rank, chunk_index(ccx, ccy), hit_edges,
+                           dir_cos, dir_sin, use_cone_filter, cos_lim, minx, maxx, miny, maxy);
 
-        if (fruits_set && fruits_set->used) {
-            t_fruits.clear();
-            fruits_set->for_each([&](int32_t k) { const Fruit& f = fruits[key_to_index_fruit[k]]; t_fruits.push_back({f.x, f.y, 0, 0}); });
-            process_objects(c, t_fruits, 0, false, false, minx, maxx, miny, maxy, out);
-        }
-        if (agents_set && agents_set->used) {
-            t_agents.clear();
-            agents_set->for_each([&](int32_t k) {
-                if (k == c.key) return;
-                const Creature& a = agents[key_to_index_agent[k]];
-                t_agents.push_back({a.x, a.y, a.direction, a.id});
-            });
-            process_objects(c, t_agents, 1, true, true, minx, maxx, miny, maxy, out);
-        }
-        if (preds_set && preds_set->used) {
-            t_preds.clear();
-            preds_set->for_each([&](int32_t k) {
-                if (k == c.key) return;
-                const Creature& p = predators[key_to_index_pred[k]];
-                t_preds.push_back({p.x, p.y, p.direction, 0});
-            });
-            process_objects(c, t_preds, 2, true, false, minx, maxx, miny, maxy, out);
-        }
-        if (trees_set && trees_set->used) {
-            t_trees.clear();
-            trees_set->for_each([&](int32_t k) { const Tree& t = trees[key_to_index_tree[k]]; t_trees.push_back({t.x, t.y, 0, 0}); });
-            process_objects(c, t_trees, 3, false, false, minx, maxx, miny, maxy, out);
-        }
+        t_objects.clear(); target_groups.clear();
+        auto begin_group = [&](int tag, bool include_direction, bool include_id) {
+            target_groups.push_back({t_objects.size(), t_objects.size(), tag, include_direction, include_id});
+        };
+        begin_group(0, false, false);
+        if (fruits_set && fruits_set->used)
+            fruits_set->for_each([&](int32_t k) { const Fruit& f = fruits[key_to_index_fruit[k]]; t_objects.push_back({f.x, f.y, 0, 0}); });
+        target_groups.back().end = t_objects.size();
+        begin_group(1, true, true);
+        if (agents_set && agents_set->used) agents_set->for_each([&](int32_t k) {
+            if (k == c.key) return;
+            const Creature& a = agents[key_to_index_agent[k]];
+            t_objects.push_back({a.x, a.y, a.direction, a.id});
+        });
+        target_groups.back().end = t_objects.size();
+        begin_group(2, true, false);
+        if (preds_set && preds_set->used) preds_set->for_each([&](int32_t k) {
+            if (k == c.key) return;
+            const Creature& p = predators[key_to_index_pred[k]];
+            t_objects.push_back({p.x, p.y, p.direction, 0});
+        });
+        target_groups.back().end = t_objects.size();
+        begin_group(3, false, false);
+        if (trees_set && trees_set->used)
+            trees_set->for_each([&](int32_t k) { const Tree& t = trees[key_to_index_tree[k]]; t_objects.push_back({t.x, t.y, 0, 0}); });
+        target_groups.back().end = t_objects.size();
+        process_all_objects(c, t_objects, target_groups, minx, maxx, miny, maxy,
+                            dir_cos, dir_sin, use_cone_filter, cos_lim, out);
         for (int32_t k : hit_edges) {
             const Edge& e = edges[k];
             double dxs = e.x1 - c.x, dys = e.y1 - c.y, dxe = e.x2 - c.x, dye = e.y2 - c.y;
@@ -1366,9 +1431,8 @@ public:
     struct Action { int64_t agent_id; double move_distance; bool has_dir; double move_direction; double turn_angle; bool spawn; };
 
     long find_agent(int64_t id) const {
-        for (size_t i = 0; i < agents.size(); i++)
-            if (agents[i].id == id) return (long)i;
-        return -1;
+        if (id < 0 || (size_t)id >= agent_id_to_index.size()) return -1;
+        return agent_id_to_index[(size_t)id];
     }
 
     void agent_step(const Action& act) {
@@ -1413,15 +1477,13 @@ public:
             diagnostic(3, a.id, -1, energy_before-a.energy);
 
             refresh_grids();
-            s_agents = cached_union(grid_agents, uc_agents, a.x, a.y);
+            const PySetEmu& ag_set = cached_union(grid_agents, uc_agents, a.x, a.y);
             const PySetEmu& fr_set = cached_union(grid_fruits, uc_fruits, a.x, a.y);
             const PySetEmu& tr_set = cached_union(grid_trees, uc_trees, a.x, a.y);
             // an agent is never in the predator set, so that set is used as cached
             const PySetEmu& pr_set = cached_union(grid_predators, uc_preds, a.x, a.y);
-            if (s_agents.lookup(a.key, a.hash) >= 0) s_agents.discard(a.key, a.hash);
-
             std::vector<Obs>& obs = agent_observations[a.id];
-            observe(a, &s_agents, &fr_set, &tr_set, &pr_set, obs);
+            observe(a, &ag_set, &fr_set, &tr_set, &pr_set, obs);
 
             if (fr_set.used) {
                 // Touching does not depend on earlier meals, so collect in the engine's
@@ -1464,15 +1526,15 @@ public:
                 }
             }
             refresh_grids();
-            s_agents = cached_union(grid_agents, uc_agents, predators[p].x, predators[p].y);
+            const PySetEmu& pred_ag_set = cached_union(grid_agents, uc_agents, predators[p].x, predators[p].y);
             const std::vector<int32_t>& lobs = local_obstacles(predators[p].x, predators[p].y);
-            observe(predators[p], &s_agents, nullptr, nullptr, nullptr, pred_obs);
+            observe(predators[p], &pred_ag_set, nullptr, nullptr, nullptr, pred_obs);
             predator_act(predators[p], pred_obs, lobs);
 
             refresh_grids();
             Creature& pr = predators[p];
-            s_agents = cached_union(grid_agents, uc_agents, pr.x, pr.y);
-            s_agents.to_vector(keys_buf);
+            const PySetEmu& touching_agents = cached_union(grid_agents, uc_agents, pr.x, pr.y);
+            touching_agents.to_vector(keys_buf);
             if (!keys_buf.empty()) {
                 std::vector<int32_t> touching;
                 for (size_t q = 0; q < keys_buf.size(); q++) {
@@ -1659,8 +1721,9 @@ PyObject* build_state(Engine* e) {
     static const std::vector<Obs> empty;
     for (size_t i = 0; i < e->agents.size(); i++) {
         const Creature& a = e->agents[i];
-        auto it = e->agent_observations.find(a.id);
-        PyObject* ol = build_obs_list(it == e->agent_observations.end() ? empty : it->second);
+        const std::vector<Obs>& observations = (a.id >= 0 && (size_t)a.id < e->agent_observations.size())
+                                                    ? e->agent_observations[(size_t)a.id] : empty;
+        PyObject* ol = build_obs_list(observations);
         PyObject* d = PyDict_New();
         PyObject* v;
         v = PyLong_FromLongLong(a.id); PyDict_SetItem(d, s_agent_id, v); Py_DECREF(v);
