@@ -357,7 +357,7 @@ struct Params {
            watch_patience = 30., watch_reach = 500., watch_refresh = 60., select_min_young = 0,
            dump_food_site = 2, dump_mult = 1.0, cluster_radius = 0., spread_weight = 0., low_pop_reserve = 200.,
            lone_reach_mult = 1.0, old_reach = 60., rot_margin = 47., dump_after_t = OINF, cap_tree_slack = 1,
-           cap_hard_min = 2, nursery_bonus = 0.;
+           cap_hard_min = 2, nursery_bonus = 0., bio_w = 0., bio_t = 0.;
     bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
          old_eat_last = true, heir_needs_site = true;
     double share_obs=0., econ_start=0., econ_radius=180., econ_horizon=40.,
@@ -1291,6 +1291,18 @@ public:
         if (future + here <= 0.) return -OINF;
         if (s.energy - travel_e - wait - 12. < 0.) return -OINF;
         double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;
+        // Slow terrain is disproportionately dangerous around predators: movement
+        // shrinks but the predator's 15-unit step and capture radius do not.  This
+        // is a destination-post penalty based solely on the shared observed biome
+        // map.  Oscar measured kills / 1000 agent-s of 3.6 forest, 5.1 desert,
+        // 7.8 swamp and 20.1 river.  `bio_w` prices the excess exposure while the
+        // existing fruit-rate term still prices food production independently.
+        if (P.bio_w > 0. && time >= P.bio_t) {
+            CellV* cell = g.cells.get(cell_of(t.p));
+            int biome = cell ? cell->biome : -1;
+            double penalty = biome >= 0 ? MOVE_PENALTY[biome] : 1.;
+            value -= P.bio_w * 60. * (1. / pmax(.01, penalty) - 1.);
+        }
         if (P.nursery_bonus > 0. && !m.heir_done && s.age >= P.heir_age - 8.)
             value += P.nursery_bonus * (double)std::min<int64_t>(4, t.fruit_free);
         if (P.spread_weight > 0.) {
