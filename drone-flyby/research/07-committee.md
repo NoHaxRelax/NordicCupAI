@@ -1,0 +1,82 @@
+# Committee on Oscar's synthetic flyover data: merged findings and the work list
+
+Sunday 2026-09-20, 02:30 to 04:00. Seven agents (fine-tune and instrument on Fable; boxes, tiny, sequences, backgrounds,
+red team on Opus), analysis and light GPU inference only, no portal, no pods. Full reports with every number and its
+source: `elias/out/committee/_reports/<angle>.md`; scripts and tables under `elias/out/committee/<angle>/`. The data is a
+synthetic training set (see `03-checklist.md`, "Oscar's synthetic flyover data"), copied to
+`C:/Users/edlun/Desktop/lucky shots/drone-data/oscar-pod` (everything except `flyover-both-v1` and `flyover-val-v1`: his
+pod refused SSH from 02:34).
+
+## What the committee established
+
+1. **The flypaste-v3 labels are not organiser boxes and the class ids are alphabetical.** `paste_sets.py` line 67 and
+   `paste_v3.py` line 62 hand `apply_perturbation` the sprite canvas rectangle where the organiser box in sprite
+   coordinates (`box_in_sprite` in `views-*-v2/views.json`) belongs, so the exported label is the tight silhouette.
+   Organiser box over label: jet_plane 1.48 x 1.45, condor 1.46 x 1.55, medium_launcher 1.62 x 1.45, small_launcher
+   1.24 x 1.58, large_launcher 1.18 x 1.28, tank 1.16 x 1.21, ta-ta 0.97 x 0.78 (three agents found this independently;
+   F3, F5 and helsinki_only all answer exactly these factors on the tiles and 0.99 to 1.04 on the real Helsinki frames).
+   The label files index classes alphabetically (condor 0 ... tank 15); our checkpoints use hangar 0 ... spacecraft 15.
+   Anyone who trains on the set as delivered learns tight boxes under swapped names. Corrected copies:
+   `elias/out/committee/instrument/rescale_labels.py`, `elias/out/committee/boxes/rebox.py`.
+2. **Fine-tuning F3 on flypaste sprites costs 0.056 on the harness** (0.685 to 0.629 at a 49 % dose and 0.628 at 15 %,
+   boxes already corrected to our convention), through false positives on real frames (helicopter 2 to 64 answers
+   without a label, mine_roller 35 to 126); the same checkpoints gain +0.07 to +0.16 on flypaste data. The paste recipe
+   (soft alpha edge, relighting, self-shading) is a domain of its own. Replay-only fine-tunes (our generator, frozen
+   backbone and frozen BatchNorm, 3 minutes on the laptop GPU at 2.9 GB) keep the harness at 0.687 to 0.688 and move
+   large_tower from 0.64 to 0.82 and 0.85 on the team labels, which only the portal can confirm.
+3. **The tiles cannot rank our checkpoints.** Against the portal's clear F3 versus F5 verdicts the tile benchmark agrees
+   on 0 of 4 classes at L1 (1 of 6 in a second, independent build) and ranks the portal's worst checkpoint first. It is a
+   gate against broken checkpoints (`elias/out/committee/instrument/benchmark.py`, two minutes), never a ranking.
+4. **Our detector's box convention is right; the Helsinki size prior is what costs boxes.** Against reconstructed organiser
+   boxes F3 needs no scale on any class (ten of sixteen optima at exactly 1.00, none gains more than 0.022). The blend
+   with `tracking/size-prior.json` (one Helsinki instance per class) inflates large_launcher: emitted-box recall at IoU
+   0.5 is 0.577 with the blend against 0.747 with detector extents on validation-type launchers, and +0.025 on
+   organiser-truth ones. The deployed medium_launcher 0.85 is reproduced independently and is safe on both known
+   vehicles (they differ 1.57 x in width; 0.85 keeps IoU 0.80 on the Helsinki one, 0.75 would not).
+5. **The tiny classes lose on recall, and nothing at inference time moves it.** small_launcher at its L1 size (10 to 13
+   delivered px) is found 41 % of the time; a real zoom doubles it (F5 at L2: AP 0.67 against F3 0.26 at L1). Test-time
+   magnification destroys every class (small_launcher AP 0.258 at 1280, 0.130 at 1600, 0.045 at 1920; tank 0.94 to 0.53),
+   per-class birth thresholds measure 0.681 to 0.684 against 0.685, a small_launcher box scale or detector extent costs
+   0.003 to 0.007. medium_launcher is the one box-limited tiny class.
+6. **A second harness scene with exact labels exists** (`elias/out/committee/sequences/`, scene `scene_malmi25`): one of
+   Oscar's flights with the missing odd poses synthesised by homography (0.57 px median error), all 16 classes, the real
+   64 px per frame motion, oracle 1.000. On it the `box` loss bin is empty for 15 of 16 classes (it was 16 to 34 % on the
+   team labels), the forecast bias flips sign (3.5 to 6.6 px behind, against 2 to 4 px ahead on team labels, both under a
+   tenth of a frame's motion), condor, jammer and spacecraft score 1.00, 0.88 and 0.85 on unseen terrain (row A11
+   closed), and large_launcher is answered mine_roller on 5 of 10 exact labels (the confusion is real, not only a
+   team-label artefact). The 36 empty flights run as scenes as they are: every answer on them is a false positive.
+7. **F3 hallucinates small_launcher on unseen terrain; F5 does it 4.5 to 5.9 times less.** On 1404 object-free L1 views
+   over 14 new sites F3 makes 1.29 birth-grade false positives per view (88 % small_launcher, at 0.72 to 0.84 confidence
+   on ploughed fields; nl_flevoland alone 9 per view), F5 0.29. On real pixels the absolute rate is 5 to 11 times lower
+   (0.08 per view on the Helsinki frames), so the ratio and the class transfer, the rate does not. The terrain prior
+   reaches 22 % of these boxes. Same-day portal small_launcher: F3 0.34, F5 0.31.
+8. **What the 0.797 is made of, for an unseen flight** (red team): the only matched seen-versus-unseen pair we own is
+   F3 0.694 against helsinki_only 0.601 on the validation flight, so 0.09 of F3's score is a scene premium the evaluation
+   flight will not grant. Cluster births (+0.034) can only fire where same-class pairs exist: 0 of 259 objects in the
+   organisers' 25 reference frames and 0 of 4873 in Oscar's pasted flights have one, against 49 % of validation
+   medium_planes. The launcher box (+0.018) needs the small launcher; ta-ta on F5 (+0.038) needs walkers (an absent
+   class costs nothing: the macro is over classes present). **Planning range for the attempt: 0.60 to 0.72.** Band
+   calibration never failed on 36 unseen flights (thinnest margin 5.5 x); the side-band branch has never run in a
+   served run.
+9. **A lower-confidence duplicate box is free under the scorer.** Replaying a run's answers through the organisers' scorer
+   with every medium_launcher box emitted twice (second copy at the alternative scale and 0.3 x confidence) changes
+   nothing when the primary box is right (+0.000 on every class) and recovers 0.119 of medium_launcher AP when it is
+   wrong; hedging every class is +0.004 to +0.008 with a worst class of -0.014.
+
+## Work list, one item at a time (laptop first, portal only to confirm)
+
+| # | item | evidence | expected | needs | status |
+|---|---|---|---|---|---|
+| 0 | Tell Oscar: labels are silhouettes, ids alphabetical, one-argument fix; sprite fine-tune cost us 0.056 | findings 1, 2 | protects his retrains | Elias | sent to Elias 04:00 |
+| 1 | `DRONE_BOX_HEDGE`: emit the alternative-scale box at 0.3 x confidence (medium_launcher, ta-ta, large_launcher) | finding 9 | 0.000 if we guessed right, +0.02 to +0.06 if not | 15 min code, harness | TODO |
+| 2 | large_launcher box: scale 0.88 (or detector extent), hedged with the present box | finding 4 | +0.005 to +0.015 | harness sanity, one portal one-class run | TODO |
+| 3 | small_launcher to F5 (route) or merged: harness, `scene_malmi25` and the 36 empty flights for F3, route, merge | finding 7 | 0 on validation, +0.01 to +0.03 unseen | 20 min GPU | TODO |
+| 4 | Force the side-band branch once on the harness (no exception, no refused camera moves) | finding 8 | removes a tail risk | 3 min GPU | TODO |
+| 5 | Replay fine-tune with Oscar's empty renders as backgrounds, four sites held out: false births on the held-out sites against F3, harness unchanged? | findings 2, 7 | robustness on unseen terrain | 15 min GPU, then a portal third | TODO |
+| 6 | Runbook: planning range 0.60 to 0.72; checklist: A11 closed, committee verdicts | finding 8 | no panic at a 0.65 rehearsal | writing | TODO |
+| 7 | Portal, morning (ask Oscar for 09:00 to 11:30): one-class large_launcher, large_tower F3 against the replay fine-tune, small_tower and tank F3 against F5, then the pre-flight third | findings 2, 4 | +0.01 to +0.03 together | pod 0.74 USD/h, portal | TODO |
+
+Closed by the committee (do not reopen without a new reason): fine-tuning on flypaste sprites, the tile benchmark as a
+ranking, test-time magnification and crop passes, per-class birth thresholds, per-axis box scales and a centre shift, the
+terrain prior as protection, a forecast lead-time correction fitted on team labels, experiments on the un-interpolated
+13-frame flights (120 px per frame, twice the real motion).

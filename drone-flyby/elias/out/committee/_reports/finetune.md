@@ -1,0 +1,120 @@
+# finetune
+
+## measured facts
+- TILE GEOMETRY (measure_tiles.py -> measure_tiles.txt): the L0, L1 and L2 tile of a flypaste triplet all cover the SAME 256x256 native rect with identical labels; the L1 tile equals INTER_LINEAR(INTER_AREA(L2 tile,128)) and the L0 tile the same through 64 px (mean abs difference 0.00 grey levels over 40 random triplets). So the L2 tiles carry all the information and an object has its native 4K pixel size in every tile. 4998 triplets (4530 positive, 468 background), 1.05 labels per tile, 90.6 % of boxes fully visible, 5.1 % under 35 % visible, box centres spread over the tile (p5..p95 = 31..225 px).
+- SCALE MATCH: serving enlarges a 960x540 view 1.333x (imgsz 1280), so an object of S native px is S/f*1.333 px at the network input. flypaste medians, longer side at the input for L0/L1/L2: small_launcher 7.4/14.8/29.6 px, ta-ta 10.8/21.5/43.0, medium_launcher 11.5/22.9/45.9, small_plane 14.0/28.1/56.1. A raw tile matches serving only when shown at 85 px (L0), 171 px (L1), 341 px (L2); one Ultralytics run has one imgsz, so training on raw tiles at any single imgsz shows two of three levels at 2x to 4x the served size. Decision: build_tileviews.py reduces the L2 tile by f with INTER_AREA (the evaluator's operation) and packs cells (256/128/64 px) into 960x540 canvases trained at imgsz 1280 like our synthetic views; 3000 views build in 143 s with 6 workers (build_data.log); label check sheet_tileviews.jpg.
+- MOSAIC does not change object scale in the F3 recipe: Ultralytics 8.4.155 places four views at imgsz on a 2x canvas and crops back with zoom 1 +- scale, and the recipe has scale=0.05 (read from the checkpoint train_args and the installed sources). On the laptop rect=True (1280x736, the serving shape) is used, which switches mosaic off; the tile views are already mosaics.
+- CLASS ORDER (read from the checkpoints on CPU): manifest classes are alphabetical (condor 0 .. tank 15); F3, F5 and helsinki_only share hangar 0, helicopter 1, jet_plane 2, large_launcher 3, large_tower 4, medium_launcher 5, medium_plane 6, mine_roller 7, small_launcher 8, small_plane 9, small_tower 10, ta-ta 11, tank 12, condor 13, jammer 14, spacecraft 15. All 16 indices differ, so the shipped labels/*.txt cannot be used with our checkpoints as they are; build_tileviews.py re-indexes from the manifest class names.
+- F3/F5 TRAIN ARGS (checkpoint train_args): yolo26m, imgsz 1280, batch 8 (helsinki_only 10), 5 epochs (8), mosaic 0.5, scale 0.05, close_mosaic 3, optimizer auto. Ultralytics computes 940 iterations for 12000 views (< 10000), so 'auto' was AdamW lr 0.0005 (trainer.py lines 313, 1145-1147). With an explicit AdamW the default warmup_bias_lr 0.1 is NOT reset, so train_finetune.py sets warmup_bias_lr=0.
+- BOX CONVENTION MISMATCH (measure_boxes.txt, measure_margin.txt, eval_smoke.log): median sqrt(area) of flypaste boxes over the organisers' Helsinki boxes: condor 0.67, medium_launcher 0.69, jet_plane 0.72, large_launcher 0.76, small_launcher 0.84, mine_roller 0.85, tank 0.86, small_tower 0.86, helicopter 0.89, ta-ta 1.31, spacecraft 1.22, hangar 1.17. F3's predicted box over the flypaste label on held-out sites: jet_plane 1.35x1.40, condor 1.40x1.41, medium_launcher 1.73x1.46, large_launcher 1.15x1.20, helicopter 1.12x1.10, tank 1.13x1.11; on 400 REAL views the same ratio is 1.00 +- 0.02 (and the portal scores F3's jet box 0.97). For jet_plane label/tight-extent is 1.22 in flypaste against 1.69 for the organisers' Helsinki jets.
+- RAW FLYPASTE LABELS DAMAGE THE BOX HEAD: 3 minutes of fine-tuning F3 on raw-label tile views (run SMOKE) moved condor on real organiser labels from AP50 0.921 to 0.789 with the predicted/label ratio going 0.99 to 0.86; small_tower -0.11, large_tower -0.07, helicopter -0.06 on the 400 real views (eval_smoke.log). Remedy implemented: box_scale.json (make_box_scale.py) rescales every flypaste label by F3's measured ratio (F5's for ta-ta).
+- F3/F5 ON FLYPASTE (eval_baseline_holdout_all.json, 300 held-out-site views, raw labels, AP50/AP30): F3 0.621 (L0 0.46, L1 0.66, L2 0.74), F5 0.662. Not box problems (AP30 equally low): small_launcher 0.09/0.11 (F5 0.22), ta-ta 0.37/0.38 (F5 0.48), large_tower 0.57, mine_roller 0.59, helicopter 0.64. Box problems: jet_plane 0.39/0.78, condor 0.21/0.93, medium_launcher 0.04/0.46. On validation sprites over flypaste ground (evaluation-only set) F3 0.702, F5 0.641, F3 small_launcher 0.18 although F3 was trained on those sprites; on real views F3 has helicopter 0.98 and small_launcher 0.93. So flypaste renders the same sprites in a way F3 does not recognise: a domain gap between flypaste and the organisers' frames.
+- TRAINING COST (smoke_train.log, runs/*/results.csv): frozen backbone (layers 0-9) + ALL BatchNorm in eval mode (custom trainer overriding _model_train), batch 4, rect 1280x736, AMP: 2.93 GB GPU memory, 2400 views in 100 s including a 60-view check (24 views/s; 11.6 views/s in the very first run). Frozen BN makes batch size irrelevant to normalisation, removing the F4 (batch 2) failure mode by construction. Identical list and seed gave bit-identical harness numbers twice, so variant differences are not GPU noise. One CUDA 'illegal memory access' at start-up in 9 trainings; the rerun passed.
+- MAIN RESULT, harness with deploy switches (DRONE_CLUSTER_BIRTHS=1, medium_launcher box 0.85), one pass over 2400 views per fine-tune, logs elias/out/harness/CM_finetune_*, table harness_table.md: F3 0.685; F3 + helsinki-only replay only 0.687; F3 + replay on Oscar's empty renders 0.688; F3 + 49 % flypaste tile views (F3-convention boxes) 0.629; F3 + 15 % tile views 0.628. Three runs without flypaste sprites agree within 0.003; both runs with flypaste lose 0.056-0.057 and a sixfold smaller dose loses the same.
+- MECHANISM of the loss (elias/miss_analysis.py on the three F3 logs): hit rates barely move (tank 62->59 %, helicopter 90->86 %, small_launcher 71->63 %) but answers without a label grow: helicopter 2->64, mine_roller 35->126, medium_plane 29->105, tank 24->71, large_tower 3->20. On 400 real views FP per view at conf 0.25 goes 0.17 -> 0.23 (replay only: 0.15). The flypaste fine-tune makes false positives on real frames.
+- FLYPASTE-DOMAIN SCORES DO NOT PREDICT REAL-FLIGHT SCORES (eval_three.log; F3 / replay only / tile views): real views mAP50 0.905 / 0.895 / 0.896; held-out flypaste sites 0.718 / 0.724 / 0.876; validation sprites on flypaste ground 0.750 / 0.713 / 0.821. The tile-view fine-tune gains +0.16 and +0.07 on flypaste data while losing 0.056 on the real flight.
+- REPLAY-ONLY FINE-TUNE MOVES SINGLE CLASSES: on the harness large_tower goes 0.64 -> 0.82 (F3RO_smoke) and 0.85 (F3ROE_smoke, a different replay set and seed), with box-size losses 26 % -> 0 % and hits 69 % -> 95 % (miss_analysis); tank +0.05/+0.06, jet +0.06/+0.01; but medium_launcher 0.77 -> 0.69/0.57 and small_tower 0.74 -> 0.60/0.68. On real views large_tower is 0.932 -> 0.914, so only the portal can say whether the large_tower box moved towards the organisers' convention.
+- UNSEEN-FLIGHT BENCH IS NOISY: helsinki_only (never saw the validation flight) 0.500; + replay only 0.562; + 50 % tile views 0.555; + replay on empty renders 0.436. Helicopter flips 0.31 / 0.82 / 0.82 / 0.34 and medium_launcher 0.05 / 0.29 / 0.26 / 0.00 (one or two objects per class), so single runs on this bench support no claim about flypaste or about the empty renders as backgrounds in either direction.
+- Oscar's 468 empty renders work as extra backgrounds of OUR generator (synth_yolo_emptybg.py, a wrapper that patches _extra_canvas in the pool workers; 3000 views at 53 views/s, sample sheet sheet_emptybg.jpg); the helsinki-only replay generator runs at 28 to 74 views/s with 6 workers on the laptop (build_data.log).
+- Side effect to know: at the first training start Ultralytics' AMP self-check downloaded yolo26n.pt (5.5 MB) into elias/out/committee/finetune/weights/ by itself. My data directory (11 GB of PNG views) is NOT covered by the repo's .gitignore (only runs/ is); I added a local .gitignore in my directory for data/, runs/, weights/, __pycache__/.
+
+## proposals
+### 1. P1. Portal check of the replay-only fine-tune as the large_tower route (checkpoints already exist)
+- mechanism: One frozen-backbone, frozen-BatchNorm pass over 2400 fresh synthetic views with organiser-convention boxes (helsinki sprites and backgrounds, no validation pixels, no flypaste sprites) re-anchors the box head. large_tower is a class the checklist lists with a portal box problem (portal AP 0.70). Used as a per-class ROUTE through elias.ensemble, never as a replacement of F3, because the same checkpoints lose medium_launcher and small_tower on the harness.
+- evidence: Harness, deploy switches: large_tower 0.64 (F3) -> 0.82 (runs/F3RO_smoke) and 0.85 (runs/F3ROE_smoke), two independent replay sets; miss_analysis: box-size losses 26 % -> 0 %, hits 69 % -> 95 %; total 0.685 -> 0.687 / 0.688. Against: harness labels are team labels and cannot rank box changes; real-view check large_tower 0.932 -> 0.914.
+- expected gain: +0.010 to +0.019 on the portal total if the portal agrees (large_tower 0.70 -> 0.83..0.95, one class of 13); 0 if it does not, since nothing is deployed then. My guess: 40 % that it agrees.
+- cost: 0 min GPU training; about 15 min of pod and portal time for two concealed one-class runs in the same hour; +10 ms per frame for a third model if routed. | gpu False portal True pod True
+- risk: A routing change on the final day for one class; harness gains on box-limited classes have been label artefacts before (jet, mine_roller). Deploy only on a portal win above 0.03, the checklist rule.
+- how to run: scp -P SSH_PORT elias/out/committee/finetune/runs/F3ROE_smoke/weights/last.pt root@HOST:/root/out/F3ROE.pt ; then from the laptop: POD_HOST=HOST POD_PORT=SSH_PORT DIRECT_URL=http://HOST:PUBLIC_PORT IMGSZ=1280 ANSWER_CLASSES=large_tower CLUSTER_BIRTHS=1 BOX_SCALE='{"medium_launcher": 0.85}' bash elias/pod_portal.sh /root/out/F3_both_m1280.last.pt LT_F3 ; same line with /root/out/F3ROE.pt LT_F3ROE ; score x 13 = large_tower AP. If it wins: ELIAS_WEIGHTS=F3,F5,F3ROE with "large_tower": 2 in ELIAS_ROUTE (every other class 0, ta-ta 1).
+
+### 2. P2. Keep flypaste-train-v3 out of the detector for this deadline
+- mechanism: flypaste renders the reference sprites in a way that differs from the organisers' frames (soft alpha edge, relighting, self-shading, objects at 0.7 to 0.9 of the organisers' size, boxes 0.67 to 1.31 of the organisers' convention). A detector fine-tuned on it learns the flypaste domain and starts answering on real background.
+- evidence: F3 + 49 % tile views 0.629 and + 15 % tile views 0.628 against F3 0.685 and replay-only 0.687 / 0.688 (same schedule, same harness config); false answers without a label grow 2->64 helicopter, 35->126 mine_roller, 29->105 medium_plane; FP per real view 0.17 -> 0.23; while flypaste-domain scores rise +0.16 / +0.07. F3 itself scores only 0.62 on flypaste held-out sites although it reaches 0.905 on real views.
+- expected gain: Avoids a loss of about 0.05 on the real flight; no positive gain claimed.
+- cost: 0 | gpu False portal False pod False
+- risk: The measurement is smoke-sized (one pass over 2400 views, frozen backbone, tile-view form). Untested variants remain: raw labels (build_tileviews.py without --box-scale), L2-only canvases (--level-p 0 0 1), unfrozen backbone (--freeze 0), views cut from regenerated 4K frames. Results are specific to this form and size.
+- how to run: Nothing to run. To test a remaining variant in 3.5 min of GPU: cd elias/out/committee/finetune; build a set with build_tileviews.py; bash gpu_run.sh x.log "$HOME/venvs/nordic-drone/Scripts/python.exe" train_finetune.py --tiles data/<set> --replay data/replay_hel --replay-share 0.85 --name X --epochs 1 --n-train 2400 --batch 4 ; bash gpu_run.sh hx.log bash harness_pair.sh X "$PWD/runs/X/weights/last.pt" ; accept only at harness 0.685 or better.
+
+### 3. P3. Acceptance rule for every detector candidate of the committee: harness, real views and miss_analysis, never flypaste scores
+- mechanism: eval_protocol.sh runs three detector checks exactly like the server calls the model (predict at imgsz 1280, half, conf 0.05): held-out flypaste sites, validation sprites on flypaste ground (evaluation only), 400 real views of elias/out/yolo_final2 split val; then the harness pair with the deploy switches and miss_analysis. It prints AP50, AP30 (a gap between them is a box problem), predicted/label box ratios and FP per view per class.
+- evidence: The two flypaste checks rose by 0.07 to 0.16 for a checkpoint that lost 0.056 on the real flight, so they only show that the flypaste domain was learned; the real-view check and miss_analysis did flag the false-positive growth. The helsinki_only bench swings 0.436 to 0.562 between two replay-only fine-tunes (helicopter 0.31 <-> 0.82), so it needs at least three seeds per variant.
+- expected gain: 0 directly; it prevents deploying a candidate that looks good on synthetic data (a measured -0.056 case).
+- cost: about 7 min GPU per candidate (3 min checks, 4 min harness pair); STEPS=checks or STEPS=harness splits it under a 10-minute lock. | gpu True portal False pod False
+- risk: Harness per-class numbers rest on one to three objects per class and on team labels; per-class gains are routing candidates for a portal check, not proof.
+- how to run: cd elias/out/committee/finetune; bash gpu_run.sh eval_TAG.log bash eval_protocol.sh /path/to/candidate.pt TAG ; grep -av WARNING eval_TAG.log | tail -n 120 . The F3 harness reference is cached in elias/out/harness/CM_finetune_F3ref (0.685).
+
+### 4. P4. Full-length replay-only fine-tune of F3 with frozen BatchNorm on the laptop (only if P1 wins on the portal)
+- mechanism: Same recipe as the smoke checkpoints but 3 epochs with cosine decay to 1e-5 over 3000 replay views (helsinki sprites, 36 % of backgrounds from Oscar's empty renders, UC Merced, no validation pixels, no flypaste sprites). Frozen BN and frozen backbone make the 8 GB laptop sufficient (2.9 GB at batch 4).
+- evidence: Smoke-sized versions are neutral in total (0.687, 0.688) and lift large_tower by 0.18 to 0.21 on the harness; whether a longer run keeps the large_tower gain and recovers medium_launcher / small_tower is unknown.
+- expected gain: The same +0.01 to +0.02 through the large_tower route, possibly a little more from tank (+0.05 on the harness); a guess until the portal confirms P1.
+- cost: 7 to 13 min laptop GPU for training (9000 view passes at 11.6 to 24 views/s) + 7 min evaluation; on an RTX 4090 under 5 min plus 15 to 20 min of pod start and upload, so the pod is not worth it. | gpu True portal True pod False
+- risk: Spends 30 to 40 min of the morning on one class; one CUDA illegal-memory-access crash in 9 laptop trainings (rerun fixed it).
+- how to run: cd elias/out/committee/finetune (data is already on disk; bash build_data.sh rebuilds it) ; bash gpu_run.sh train_F3RO_full.log "$HOME/venvs/nordic-drone/Scripts/python.exe" train_finetune.py --tiles data/tv_full --replay data/replay_hel_empty --replay-only --name F3RO_full --epochs 3 --batch 4 ; bash gpu_run.sh eval_F3RO_full.log bash eval_protocol.sh runs/F3RO_full/weights/last.pt F3RO_full
+
+### 5. P5 (team owner's decision, not run, not the default). Replay with F5's own training set, or training on flypaste-val / flypaste-both
+- mechanism: elias/out/yolo_final2 is the exact distribution F3 and F5 were trained on (it holds validation sprites and backgrounds); using it as replay would keep the fine-tune closest to F3. flypaste-val/both would add validation-object pixels on new ground.
+- evidence: None in favour: replay-only fine-tunes without any validation pixel already keep F3 at 0.687 / 0.688, and tile views lose 0.056 even with reference sprites only. I expect no gain from either (guess).
+- expected gain: about 0 (guess); not recommended.
+- cost: 15 to 30 min laptop GPU | gpu True portal False pod False
+- risk: Breaks the rule that validation frames are never training data unless the owner decides otherwise; adds validation-specific fit that cannot help the unseen flight.
+- how to run: Only after the owner's decision: cd elias/out/committee/finetune; REPLAY="$PWD/../../yolo_final2" bash run_full.sh FT_replayF5
+
+## files written
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/build_tileviews.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/train_finetune.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_tileviews.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_protocol.sh
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/make_box_scale.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/box_scale.json
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/build_data.sh
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/run_full.sh
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/pod_finetune.sh
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/gpu_run.sh
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/harness_pair.sh
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/synth_yolo_emptybg.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/measure_tiles.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/measure_tiles.txt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/measure_boxes.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/measure_boxes.txt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/measure_margin.py
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/measure_margin.txt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/harness_table.md
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/sheet_scale.jpg
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/sheet_tileviews.jpg
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/sheet_emptybg.jpg
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_baseline_holdout_all.json
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_baseline_valsprites.json
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval/three_real.json
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval/three_valsprites.json
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval/three_holdout.json
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_baseline.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_smoke.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/eval_three.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_train.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_hel.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_f3.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_ablate.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_dose_b.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_emptybg.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/smoke_emptybg2.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/harness_hel.log
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/.gitignore
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/data/tv_full/data.yaml
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/data/tv_valsprites_scaled_EVALONLY/data.yaml
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/data/replay_hel/data.yaml
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/data/replay_hel_empty/data.yaml
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/F3RO_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/F3ROE_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/F3FT_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/F3FT15b_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/HELRO_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/HELFT_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/committee/finetune/runs/HELROE_smoke/weights/last.pt
+- C:/Users/edlun/Desktop/lucky shots/NordicCupAI-drone/drone-flyby/elias/out/harness/CM_finetune_F3ref/run.log (and CM_finetune_F3RO_smoke, F3ROE_smoke, F3FT_smoke, F3FT15_smoke, F3FT15b_smoke, HELref, HELRO_smoke, HELFT_smoke, HELROE_smoke)
+
+## blockers
+- findings.md was NOT written: the session's Write tool refuses report files for subagents ('return findings as text'), and I did not work around that instruction. The full content is in this structured output; harness_table.md, the measure_*.txt files and the logs in the directory carry the numbers.
+- The central negative result (flypaste tile views cost 0.056 on the harness) is smoke-sized: one pass over 2400 views, frozen backbone, tile-view form, F3-convention boxes, two doses. Raw labels, L2-only canvases, an unfrozen backbone and views cut from regenerated 4K frames were not tested (3.5 min of GPU each with the scripts here).
+- The unseen-flight bench (helsinki_only base on the validation harness) is too noisy for single runs (0.436 to 0.562 between two replay-only fine-tunes; helicopter flips 0.31 <-> 0.82), so I could not establish whether flypaste or Oscar's empty renders help on a flight the detector has never seen. Three seeds per variant (about 10 min of GPU per variant) would be needed.
+- P1 cannot be settled without the portal: the large_tower harness gain (0.64 -> 0.82 / 0.85) is against team labels, which cannot rank box changes.
+- Housekeeping for the lead: elias/out/committee/finetune/data holds 11 GB of PNG views that the repo's .gitignore does not cover (a local .gitignore in the directory now does); Ultralytics downloaded yolo26n.pt (5.5 MB) by itself for its AMP check into finetune/weights/; run F3FT15_smoke is an accidental duplicate of F3FT_smoke (a share bug in train_finetune.py, fixed before F3FT15b_smoke).
