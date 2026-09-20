@@ -29,3 +29,5 @@ Wave81: complete 16-pair predator-dodge ablation; all variants rejected versus m
 Wave83: corrected fruit-readiness timing screen; all variants rejected versus mode144. Wave82 is recorded as an invalid unsupported-override attempt.
 
 Wave85: fresh32 replication rejected wave84 tree-reach300 signal; mode144 retained.
+
+Wave86: tree-value distance and cluster shaping variants all rejected; mode144 retained.
