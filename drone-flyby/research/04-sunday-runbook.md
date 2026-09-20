@@ -46,11 +46,32 @@ mixed per class), zoom on cue off (rejected).
 | deploy (F3 + cluster births + launcher box) | 0.292 | rerun queued | 0.116 | | P3_DEPLOY |
 | **routed (deploy + ta-ta on F5)** | **0.320** | **0.362** | **0.116** | **0.797** | P3_FINAL |
 
+## The robust candidate (Sunday 05:00, laptop instruments only, portal confirmation pending)
+
+`robust` = `routed` plus three changes aimed at the unseen flight (`07-committee.md`): large_tower answered by
+`F3HN_m1280.pt` (a 2.5 minute replay fine-tune of F3 with unseen-terrain backgrounds and pure negatives), small_launcher
+merged over the three models, and the box hedge (a second box at the alternative size at 0.3 x confidence for
+medium_launcher, large_launcher, ta-ta and large_tower). `robust_hn` answers small_launcher from F3HN alone.
+
+| config | validation harness (team labels) | exact-label unseen scene | false answers per frame on 8 empty flights (worst flight) |
+|---|---:|---:|---:|
+| routed (served Saturday, portal 0.797) | 0.686 | 0.584 | 14.4 (73) |
+| robust | 0.696 | 0.615 | 4.6 (20) |
+| robust_hn | 0.696 | 0.605 | 1.6 (4.4) |
+
+**Morning decision, one command:** `bash elias/morning_portal.sh HOST SSH_PORT PUBLIC_PORT` runs the one-class pairs
+(large_tower, small_launcher, large_launcher box 0.88) and then interleaved thirds of `routed` against `robust`, all
+concealed, about 14 runs (40 to 70 minutes with a free portal; ask Oscar to pause his probe loop). Serve `robust` if
+its thirds sum is not more than 0.005 below `routed` on the same host and hour (its purpose is the unseen flight, not
+the validation number); otherwise serve `routed`. If the portal is not free by 10:30, serve `routed` with the hedge
+off: it is the only config with a portal number.
+
 ## Pre-flight, BEFORE the final start
 
 1. Code on the pod equals the checkout: `bash elias/pod_serve_setup.sh HOST SSH_PORT` re-sends it (30 s). Weights:
    `ssh -p SSH_PORT root@HOST 'md5sum /root/out/*.pt'` shows `8a7c74ad...` for `F3_both_m1280.last.pt` (= `elias/release/both_m1280.pt`)
-   and `34deb003...` for `F5_fixed_m1280.last.pt` (= `elias/release/F5_fixed_m1280.pt`).
+   `34deb003...` for `F5_fixed_m1280.last.pt` (= `elias/release/F5_fixed_m1280.pt`) and `62bb19c0...` for `F3HN_m1280.pt`
+   (= `elias/release/F3HN_m1280.pt`, needed by the robust modes).
 2. **One concealed third through the public port** (proves the port from the Helsinki server, not from the laptop):
 
        POD_HOST=HOST POD_PORT=SSH_PORT DIRECT_URL=http://HOST:PUBLIC_PORT IMGSZ=1280 \
@@ -64,7 +85,7 @@ mixed per class), zoom on cue off (rejected).
 
 ## Final start
 
-3. `bash elias/pod_start_final.sh HOST SSH_PORT PUBLIC_PORT routed` (or `deploy`). It stops everything on the pod,
+3. `bash elias/pod_start_final.sh HOST SSH_PORT PUBLIC_PORT routed` (or `robust`, `robust_hn`, `deploy`: the mode the morning decision picked). It stops everything on the pod,
    starts the server with no answer window and no class filter on the pod's own port, warms it up, prints the
    environment, refuses to continue if a window or class filter is set, starts the watchdog and prints the URL to
    queue. The watchdog (`elias/watchdog.py`) probes `/` every 5 s and `/predict` every 60 s and restarts `api.py`
@@ -95,5 +116,6 @@ mixed per class), zoom on cue off (rejected).
   port for private 9053. Fallback: a Cloudflare tunnel (`pod_serve.sh` without `DIRECT_URL` prints the URL).
 - The pod is gone: create a Secure Cloud RTX 4090 in EUR-NO-1, image `runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404`,
   ports `22/tcp 9053/tcp`, SSH on; `bash elias/pod_serve_setup.sh HOST SSH_PORT`; `scp -P SSH_PORT elias/release/both_m1280.pt root@HOST:/root/out/F3_both_m1280.last.pt`
-  and `scp -P SSH_PORT elias/release/F5_fixed_m1280.pt root@HOST:/root/out/F5_fixed_m1280.last.pt`; then from step 1.
+  `scp -P SSH_PORT elias/release/F5_fixed_m1280.pt root@HOST:/root/out/F5_fixed_m1280.last.pt` and
+  `scp -P SSH_PORT elias/release/F3HN_m1280.pt root@HOST:/root/out/F3HN_m1280.pt`; then from step 1.
   Saturday night this took two minutes from create to first run.
