@@ -73,6 +73,13 @@ class RevisitConfig:
     # the middle object of a same-class cluster (three launchers in a row) was never born. With
     # cluster_births it is only discarded when it actually overlaps a same-class forecast.
     cluster_births: bool = False
+    # Two-look births (0 = off): a whole detection under the birth confidence is remembered for two_look_ticks; a second
+    # whole detection of the same class on the motion-projected spot births a track when the two confidences add up
+    # to two_look_sum. Small objects beside a big one are seen with good boxes at 0.15 to 0.20 on every look and were
+    # never tracked (two small_launchers beside a tower: 65 of 162 labels of the class on the mined validation truth).
+    two_look_sum: float = 0.
+    two_look_ticks: float = 6.
+    two_look_iou: float = .3
     miss_rule: str = 'any'
     miss_size_fraction: float = .9
     max_history: int = 6
@@ -238,6 +245,7 @@ class RevisitTracker:
         self.last_tick = None
         self.events = []
         self.transients = []
+        self.tentative = []    # whole detections under the birth confidence, see two_look_sum
 
     def _box(self, track, tick):
         if track.edge_slopes is not None:
@@ -353,6 +361,7 @@ class RevisitTracker:
                 self.events.append({'event': 'partial_seen', 'track_id': identity})
             matched_detections.add(index); matched_tracks.add(identity)
         self.transients = []; self.conflicts = []
+        self.tentative = [row for row in self.tentative if tick-row['tick'] <= self.config.two_look_ticks]
         for index, (d, box, complete) in enumerate(kept):
             if index in matched_detections:
                 continue
@@ -381,6 +390,27 @@ class RevisitTracker:
                             matched_tracks.add(k)
                             break
                 continue
+            if complete and self.config.two_look_sum > 0 and d.confidence < self.config.birth_confidence:
+                partner = None
+                for row in self.tentative:
+                    if row['label'] != d.label or not 0 < tick-row['tick'] <= self.config.two_look_ticks:
+                        continue
+                    try:
+                        moved = self.model.box(row['box'], row['tick'], tick)
+                    except ProjectionError:
+                        continue
+                    if overlap(moved, box) >= self.config.two_look_iou and row['confidence']+d.confidence >= self.config.two_look_sum:
+                        partner = row; break
+                if partner is not None:
+                    self.tentative.remove(partner)
+                    identity = f'track-{self.next_id:05d}'; self.next_id += 1
+                    self.tracks[identity] = RevisitedTrack(identity, d.label, [[partner['tick'], partner['box']], [tick, box.tolist()]],
+                                                         min(.99, partner['confidence']+d.confidence), tick, frame_index)
+                    self.tracks[identity].seen_pixels = float(np.max((box[2:]-box[:2])/np.asarray(view.scale, float)))
+                    matched_tracks.add(identity)
+                    self.events.append({'event': 'two_look_birth', 'track_id': identity, 'label': d.label})
+                    continue
+                self.tentative.append({'label': d.label, 'box': box.tolist(), 'tick': tick, 'confidence': float(d.confidence)})
             if not complete or d.confidence < self.config.birth_confidence:
                 entering = None
                 if self.config.entry_tracks and not complete and d.confidence >= self.config.birth_confidence:

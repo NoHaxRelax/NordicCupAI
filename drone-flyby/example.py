@@ -99,6 +99,7 @@ CONFIG = RevisitConfig(
     # whatever the zoom. An L0 overview therefore counts against a small object no detector can
     # see at L0. Raise this to study how many points that rule costs.
     visible_misses_before_retirement=int(os.environ.get('DRONE_MISS_RETIRE', '3')),
+    two_look_sum=float(os.environ.get('DRONE_TWO_LOOK', '0')),
     miss_rule=os.environ.get('DRONE_MISS_RULE', 'any'),
     cluster_births=_flag('DRONE_CLUSTER_BIRTHS', False),
 )
