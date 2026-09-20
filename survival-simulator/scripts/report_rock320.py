@@ -27,7 +27,7 @@ def main():
   rows.sort(key=lambda r:r['seed']);assert [r['seed']for r in rows]==TEST
  rng=np.random.default_rng(27000);ix=rng.integers(0,2000,(10000,2000));summary={}
  b=np.array([r['score']for r in final['expanded_food_baseline']])
- lines=['# Self-stuck: 50 BO iterations × 320 full maps, then 2,000 fresh maps','',
+ lines=['# Self-stuck: 50 BO iterations × 320 full maps, then the same 2,000 maps','',
  'New rock-face winner, previous rock-face winner and unchanged expanded-local-food baseline. All three policies for each final seed ran on the same worker. The final seeds were reused from the prior campaign: this is a repeat benchmark, not a fresh holdout. Intervals are pointwise paired percentile bootstrap intervals (10,000 resamples), not multiplicity-adjusted. No tuning on final maps.','',
  '| Model | Training best | Test mean | 95% CI | Paired gain | Paired 95% CI | Policy µs/tick | Loop CPU µs/tick | Seconds/game |',
  '|---|---:|---:|---|---:|---|---:|---:|---:|']
