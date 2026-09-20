@@ -1,0 +1,81 @@
+{
+  "hello": true,
+  "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+  "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.39",
+  "sources": {
+    "fastsim/policy_iface.hpp": "baa19b0c753338f8cb0584f5dd9378b99e2759f98819a21dbfbaf6a245541554",
+    "fastsim/_orchard.hpp": "7020282bbcd46863a42f1148df51d06b6a9cb757c032be1ff1e9484c70f9aa82",
+    "fastsim/_evasion.hpp": "07412c81c00f6dde61ba4d360fa8667487a8a1f7a8e0c562204daf4fa322bbdc",
+    "fastsim/policy_abi.hpp": "24906e169a8744d98e5d04421c10d1c5ab273eb6df8402a7b66f125e0f80058c",
+    "fastsim/_engine.cpp": "292a3719bd2d027cfc740d12b3581907b3c7303ccb3108057538cb503c21b492",
+    "fastsim/_orchard_policy.cpp": "e332361c271e40a0a3972dd41fdcf06087a71906e31178addaeed0024f288b1e",
+    "fastsim/_policy.cpp": "70cde2d1f1995702be605a6fbd968b81cd1570e78f8f851bdfc74cb9f8b00f67",
+    "models/self_stuck.hpp": "897dd92149d233e077c2301097916795a1b054c3bb79cba0e4d5e31975041690",
+    "models/late_activation.hpp": "a2ff7e04210cd937d88652cc2b4ea65c1ffeb79888b486d709c5435787aa88c0",
+    "scripts/late5_config.py": "75e970bd3e44e7c21381f2cf975614afaf51f94f42ad8cce112cfdeae4bddf8b",
+    "scripts/late5_worker.py": "0a99ba1f1b308b628ae2a5b276ce6781116a6f2aa8eda6cccab2fa36c42e381d",
+    "scripts/evaluate_frozen1000.py": "c0e9ec3aaf405629c92cddc3df27abce2905dc8a72e230c4f9925166ecbacb63"
+  },
+  "build": {
+    "sources": {
+      "_policy.cpp": "70cde2d1f1995702be605a6fbd968b81cd1570e78f8f851bdfc74cb9f8b00f67",
+      "_orchard_policy.cpp": "e332361c271e40a0a3972dd41fdcf06087a71906e31178addaeed0024f288b1e",
+      "_engine.cpp": "292a3719bd2d027cfc740d12b3581907b3c7303ccb3108057538cb503c21b492",
+      "_orchard.hpp": "7020282bbcd46863a42f1148df51d06b6a9cb757c032be1ff1e9484c70f9aa82",
+      "_evasion.hpp": "07412c81c00f6dde61ba4d360fa8667487a8a1f7a8e0c562204daf4fa322bbdc",
+      "policy_abi.hpp": "24906e169a8744d98e5d04421c10d1c5ab273eb6df8402a7b66f125e0f80058c",
+      "policy_iface.hpp": "baa19b0c753338f8cb0584f5dd9378b99e2759f98819a21dbfbaf6a245541554",
+      "_shared_pysem.inc": "bb95cd0128d50f6d65d446d247c2bac9f20761bb23d0a53b4154e67ecab96433",
+      "../models/self_stuck.hpp": "897dd92149d233e077c2301097916795a1b054c3bb79cba0e4d5e31975041690",
+      "../models/late_activation.hpp": "a2ff7e04210cd937d88652cc2b4ea65c1ffeb79888b486d709c5435787aa88c0"
+    },
+    "binary_sha256": "05d3e698f80b555087f8f14920a8a20aab38a1af509a8d3fd693fa500b480d6b",
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "numpy": "2.3.5",
+    "commands": [
+      [
+        "c++",
+        "-O2",
+        "-std=c++17",
+        "-fPIC",
+        "-ffp-contract=off",
+        "-fno-fast-math",
+        "-fno-builtin-sin",
+        "-fno-builtin-cos",
+        "-fno-builtin-sincos",
+        "-I",
+        "/usr/include/python3.12",
+        "-I",
+        "/workspace/lucas-families10/.venv/lib/python3.12/site-packages/numpy/_core/include",
+        "-c",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_policy.cpp",
+        "-o",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_policy.o"
+      ],
+      [
+        "c++",
+        "-O2",
+        "-std=c++17",
+        "-fPIC",
+        "-ffp-contract=off",
+        "-fno-fast-math",
+        "-fno-builtin-sin",
+        "-fno-builtin-cos",
+        "-fno-builtin-sincos",
+        "-c",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_orchard_policy.cpp",
+        "-o",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_orchard_policy.o"
+      ],
+      [
+        "c++",
+        "-shared",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_policy.o",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_orchard_policy.o",
+        "-o",
+        "/workspace/lucas-late-gated5/survival-simulator/fastsim/_policy.cpython-312-x86_64-linux-gnu.tmp"
+      ]
+    ],
+    "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  }
+}
