@@ -312,3 +312,17 @@ Strict public replay returned no_match at the first tick (agent4 observation
 count12 versus11), so baseline total553.781s is NOT successful full recovery.
 Receipts retained locally as hetzner-baseline-* and hetzner-replay-first-difference.
 Different runtime/NumPy/CPU kernels remain a possible cause, not yet proven.
+
+
+## Completed optimized Hetzner measurement
+
+Full uint32 search completed in **233.901791 seconds (3m54s)** with eight workers,
+versus baseline548.271377 seconds: **2.344x faster**. Candidate lists are identical,
+with one seed1894581302. New receipts: hetzner-fast64-{progress,manifest,recovery}.json.
+The239.350258-second compute result includes transcript loading and a failed
+strict replay; it must NOT be called successful end-to-end shadow recovery.
+First mismatch is exclusively wall-edge counts at first frame, agent4:12 actual
+versus11 recorded. Numerical runtime/kernel differences are suspected, not proved.
+The replay safety gate is unchanged. Both full-domain searches are complete;
+no scan needs restarting. Next debug/reproduce exact environment or separately
+validate dynamic public state without concealing full-DTO failures.
