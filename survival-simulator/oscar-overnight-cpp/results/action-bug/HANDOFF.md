@@ -45,12 +45,15 @@ Before any scored validation, run a fresh Hetzner-local seed set with a target b
 
 ## Validation API evidence
 
-No clean 400k validation completion has been established, and 1M was not submitted to the validation API.
+One clean 400k validation completion has been established. A 1M payload was not submitted to the validation API.
 
 1. Attempt `e821c86f29cf46b1ba03a94f36bf32d2` emitted 400,000 actions, then an unexpected package-service restart interrupted the endpoint. It finished with score 76.8792 and `Connection refused`. It is invalid as a capacity result.
 2. Attempt `5443c40f9a3d431699cb72514e777962` ran from 06:12:49 to 07:17:09 UTC and finished with score 1339.9967 plus `Connection refused`. The endpoint logged 400k no-op bursts at 06:12:51, 06:22:29, and 06:47:26. A service restart at 06:47 caused the third emission. This run is also invalid as a clean one-shot capacity result.
+3. Attempt `68c44bb352da413abde5e52298a912b4` started at 07:44:51 UTC after deployment of the one-service-lifetime guard. It emitted exactly one zero-cost 400k burst at simulated time 0.1. The next callback, at simulated time 0.2, arrived 15,119.303 ms after the 37 MB JSON response was fully serialized. The validation completed cleanly at 07:55:38 with score 2145.6172 and no errors.
 
-The second run took 64 minutes. The published reference uses a 10-second timeout while waiting for the agent HTTP response, but parses and applies received actions afterward in a sequential loop without a per-tick timeout. A 1,200-second game horizon is simulated time; a huge action list still advances only one 0.1-second tick.
+The 15.1-second measurement includes response transfer plus the organizer's receive, JSON decode, action validation, action loop, next simulator step, and next request transfer. It excludes this endpoint's response construction because its timestamp is taken after `JSONResponse` has serialized the body. It is therefore a close upper bound on the organizer-side post-response work, not a pure parser benchmark.
+
+The public reference uses a 10-second timeout while waiting for the agent HTTP response, but parses and applies received actions afterward in a sequential loop. The current validation service reports a 1,200-second accumulated wall-clock response-wait limit. This is not the simulated-time horizon: the game can simulate 3,000 seconds over 30,000 ticks, and a huge action list still advances only one 0.1-second tick.
 
 Hetzner-local JSON and Pydantic boundary measurements were:
 
@@ -59,13 +62,13 @@ Hetzner-local JSON and Pydantic boundary measurements were:
 | 400,000 | 37.2 MB | 1.276 s | 600.6 MB |
 | 1,000,000 | 93.0 MB | 3.210 s | 1,419.6 MB |
 
-Those measurements exclude the organizer's simulation action loop. They do not justify another 400k or a 1M validation probe.
+Those measurements exclude the organizer's simulation action loop. The clean 400k result characterizes that exact payload once; it does not justify another 400k or a 1M validation probe.
 
 ## Live Hetzner state at handoff
 
 The endpoint is active at `http://46.62.244.29:9052/predict`, using `/opt/nightserve/nightsim/serve/pred_best.json` and the native C++ runtime.
 
-The live service still has the old capacity configuration:
+The live service has this capacity configuration:
 
 ```text
 NIGHT_HARVEST={"budget":20000,"max_harvests":12}
@@ -77,9 +80,9 @@ NIGHT_SCORE_RESERVE=130
 NIGHT_TRANSFER_DELTA=50
 ```
 
-The live source predates the service-lifetime one-shot fix and the predictive score ceiling. A service restart resets the no-op counter, so another validation can emit another 400k burst. Do not submit another validation in this state.
+The live source includes the service-lifetime one-shot guard, score-ceiling support, and the callback-delay measurement from commit `6b6fc53`. The completed probe has consumed its one allowed burst. A service restart clears in-memory state and arms another burst, so do not restart or submit another validation in this state.
 
-The branch contains the corrected source, but it has not been deployed by this handoff. Before deployment, compare the live files because another agent caused the 06:47 restart. Disable the no-op drop-in, deploy the predictor and ceiling together, syntax-check, restart only while no validation is active, then verify the root endpoint reports the intended configuration.
+The deployed endpoint reports `service_once: true`, `sent: 1`, and `next_callback_gap_ms: 15119.303309`. The score guard remained below its trigger and the terminal validation score was 2145.6172. Before any policy validation, disable the no-op drop-in, retain the score safeguards, syntax-check, restart only while no validation is active, then verify the root endpoint reports `actions: 0`.
 
 ## Code and evidence map
 
@@ -124,7 +127,7 @@ For a score-capped local trial, add `--score-ceiling 2350 --score-margin 150`. R
 
 1. Run the regression tests and a fresh, score-capped C++-engine seed set on Hetzner.
 2. Compare normal population control with the requested reduced-population variants. Prior no-predator evidence says aggressive culling and minimal populations were worse, so do not assume fewer agents survives longer.
-3. Disable the live 400k no-op configuration and deploy the one-shot, predictor, and score-cap code while the validation queue is empty.
+3. Disable the live 400k no-op configuration while the validation queue is empty. Retain the deployed one-shot, predictor, and score-cap code.
 4. Verify the exact endpoint configuration and response size locally.
 5. If the local capped distribution stays safely below 2,500, submit only one validation and wait for its terminal result before any further run.
-6. Do not repeat the 400k capacity probe or attempt 1M against the validation API without a clean lower-volume result and explicit organizer approval.
+6. Do not repeat the clean 400k capacity probe or attempt 1M against the validation API without a materially new, organizer-approved question.
