@@ -7,6 +7,7 @@
 #include "../../../../seed-aware-policy/bench/birth_forecast.hpp"
 #include <fcntl.h>
 #include <spawn.h>
+#include <signal.h>
 extern char** environ;
 std::string filter_binary;
 orchard::Params policy_config;
@@ -19,7 +20,8 @@ pid_t launch_stream(const fs::path& dir,const J& samples,uint64_t start,uint64_t
     posix_spawn_file_actions_t fa;posix_spawn_file_actions_init(&fa);
     posix_spawn_file_actions_addopen(&fa,1,(dir/"search-progress.jsonl").c_str(),O_WRONLY|O_CREAT|O_TRUNC,0600);
     posix_spawn_file_actions_adddup2(&fa,1,2);pid_t pid;
-    int result=posix_spawn(&pid,binary.c_str(),&fa,nullptr,av.data(),environ);posix_spawn_file_actions_destroy(&fa);
+    posix_spawnattr_t attr;posix_spawnattr_init(&attr);posix_spawnattr_setflags(&attr,POSIX_SPAWN_SETPGROUP);posix_spawnattr_setpgroup(&attr,0);
+    int result=posix_spawn(&pid,binary.c_str(),&fa,&attr,av.data(),environ);posix_spawnattr_destroy(&attr);posix_spawn_file_actions_destroy(&fa);
     if(result)throw std::runtime_error("Could not launch native streaming seed search");return pid;
 }
 struct Game:std::enable_shared_from_this<Game>{
@@ -31,6 +33,7 @@ struct Game:std::enable_shared_from_this<Game>{
     bool searching=false,stopped=false,model_failed=false;int64_t recovered=-1,recovery_seq=-1,latest_seq=-1,model_action_seq=-1;J latest,model_actions;
     double last_time=-1;size_t forecast_responses=0;RecoveryPacer pacer;public_freshness::Guard freshness;
     Game(const fs::path& root,const J& body):id(std::to_string(now_ns())),policy({0},policy_config){
+        pacer.per_response_limit=9.;pacer.extra_wait_budget=540.;
         dir=root/id;fs::create_directories(dir);packet_log.open(dir/"packets.jsonl");response_log.open(dir/"responses.jsonl");
         for(auto& a:body["agent_status"])for(auto& o:a["observations"])if(o["type"]=="Edge"){
             double dx=o["coords"][1][0].get<double>()-o["coords"][0][0].get<double>(),dy=o["coords"][1][1].get<double>()-o["coords"][0][1].get<double>();
@@ -48,7 +51,7 @@ struct Game:std::enable_shared_from_this<Game>{
         try{while(true){
             J packet;{std::unique_lock<std::mutex> guard(mu);changed.wait_for(guard,std::chrono::milliseconds(200),[&]{return stopped||packets.size()>seq;});
                 if(packets.size()<=seq){if(stopped||seconds(received)>90)break;continue;}packet=packets[seq];}
-            bool audit=seq%100==0||int64_t(seq)==recovery_seq;std::string error;J expected,actual;bool full_match=true,match=true;if(audit){expected=canonical(public_state(*e));actual=canonical(packet["before"]);full_match=same(expected,actual);match=same(dynamic_state(expected),dynamic_state(actual),&error);}
+            bool audit=!packet.value("action_committed",false)||seq%100==0||int64_t(seq)==recovery_seq;std::string error;J expected,actual;bool full_match=true,match=true;if(audit){expected=canonical(public_state(*e));actual=canonical(packet["before"]);full_match=same(expected,actual);match=same(dynamic_state(expected),dynamic_state(actual),&error);}
             J check={{"seq",seq},{"time",e->time},{"match",match},{"full_dto_match",full_match},{"comparison","All dynamic fields; edge-ray rendering compared separately"},{"checked_ns",now_ns()}};
             if(!match){check["difference"]=error;mismatches++;save_json(dir/"first-mismatch.json",{{"check",check},{"expected",expected},{"actual",actual}});}
             if(!match||seq%100==0){checks<<check.dump()<<'\n';checks.flush();}
@@ -74,7 +77,7 @@ struct Game:std::enable_shared_from_this<Game>{
         save_json(dir/"model-summary.json",{{"seed",seed},{"processed",seq},{"mismatches",mismatches},{"wall_seconds",seconds(begin)},{"final_time",e->time}});
     }
     void search_loop(){
-        auto begin=Clock::now();pid_t wp=launch_stream(dir,frozen_samples,0,(1ULL<<32)/6,config_path);
+        auto begin=Clock::now();pid_t wp=launch_stream(dir,frozen_samples,0,std::getenv("SEED_LOCAL_FULL_DOMAIN")?(1ULL<<32):(1ULL<<32)/6,config_path);
         auto checked=dir/"stream/verified.txt";int status=0;
         std::set<uint32_t> seen;
         while(seconds(begin)<1800){
@@ -88,7 +91,7 @@ struct Game:std::enable_shared_from_this<Game>{
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
-        waitpid(wp,&status,0);save_json(dir/"search-summary.json",{{"seconds",seconds(begin)},{"recovered",recovered}});
+        kill(-wp,SIGTERM);waitpid(wp,&status,0);save_json(dir/"search-summary.json",{{"seconds",seconds(begin)},{"recovered",recovered}});
     }
     J predict(const J& body,int64_t received_ns){
         // One caller holds the HTTP request mutex; background inference has its own lock.
@@ -107,7 +110,7 @@ struct Game:std::enable_shared_from_this<Game>{
         }
         auto wait_start=Clock::now();
         {std::unique_lock<std::mutex> guard(mu);
-            if(recovered>=0&&!model_failed)changed.wait_for(guard,std::chrono::seconds(9),[&]{return model_action_seq>=int64_t(seq)||model_failed;});
+            if(recovered>=0&&!model_failed)changed.wait_for(guard,std::chrono::duration<double>(std::max(0.,9.-seconds(request_start))),[&]{return model_action_seq>=int64_t(seq)||model_failed;});
             bool committed=!model_failed&&model_action_seq==int64_t(seq);if(committed)actions=model_actions;packets[seq]["actions"]=actions;packets[seq]["action_committed"]=true;changed.notify_all();forecast_responses+=committed;
             response_log<<J{{"seq",seq},{"input_time",last_time},{"response_ready_ns",now_ns()},{"forecast_committed",committed},{"model_seq",latest_seq},{"wait_ms",seconds(wait_start)*1000}}.dump()<<'\n';response_log.flush();
             if(seq%100==0)save_json(dir/"server-status.json",status_locked());}
@@ -126,7 +129,7 @@ void serve(const fs::path& out,const std::string& token,int port){
     server.Post(prefix+"/candidate",[&](auto& req,auto& res){J b=J::parse(req.body);auto target=std::atomic_load(&game);if(!target||b.value("game_id","")!=target->id){reply(res,{{"accepted",false}});return;}
         uint64_t seed=b.at("seed");if(seed>=(1ULL<<32)){res.status=400;return;}std::lock_guard<std::mutex>state(target->mu);target->candidates.push({uint32_t(seed),b.value("worker","remote")});reply(res,{{"accepted",true}});});
     server.Post(prefix+"/finish",[&](auto&,auto& res){auto target=std::atomic_load(&game);if(target)target->finish();reply(res,{{"stopped",true}});});
-    server.Post(prefix+"/predict",[&](auto& req,auto& res){int64_t received_ns=now_ns();J b=J::parse(req.body);if(!b.contains("sim_time")){reply(res,{{"actions",J::array()}});return;}
+    server.Post(prefix+"/predict",[&](auto& req,auto& res){int64_t received_ns=now_ns();J b=J::parse(req.body);if(!b.contains("sim_time")||b.value("agent_status",J::array()).empty()){reply(res,{{"actions",J::array()}});return;}
         std::lock_guard<std::mutex> guard(request_mu);
         if(game&&b["sim_time"].get<double>()==game->last_time&&!game->packets.empty()&&game->packets.back()["before"]==b){reply(res,{{"actions",game->packets.back()["actions"]}});return;}
         if(!game||b["sim_time"].get<double>()<game->last_time){if(game)game->finish();std::atomic_store(&game,std::make_shared<Game>(out,b));}

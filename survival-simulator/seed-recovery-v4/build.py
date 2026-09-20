@@ -11,7 +11,9 @@ src = root/'survival/research/seed_inference'
 flags = ['g++', '-O3', '-std=c++17', '-march=native', '-ffp-contract=off', '-pthread']
 http = shlex.split(subprocess.check_output(['pkg-config', '--cflags', '--libs', 'cpp-httplib'], text=True))
 includes = ['-I'+sysconfig.get_path('include'), '-I'+numpy.get_include()]
-links = ['-L'+sysconfig.get_config_var('LIBDIR'), '-lpython3.12', '-ldl', '-lm'] + http
+links = ['-L'+sysconfig.get_config_var('LIBDIR'), '-lpython3.12', '-ldl', '-lm'] + http + ['-lssl', '-lcrypto']
+subprocess.run(flags + ['-mavx2', '-DSEED_FAST', '-DSEED_BATCH_LANES=64',
+    str(src/'fast64/scan.cpp'), '-o', str(src/'scan-fast-64')], check=True)
 for name in ['terrain_filter', 'stream_integration_filter']:
     subprocess.run(flags + [str(src/(name+'.cpp')), '-o', str(src/name)], check=True)
 for name in ['paced_native_v4', 'paced_native_mode144', 'streaming_verification/coordinator', 'stream_integration_test', 'live_game_client']:

@@ -1,0 +1,18 @@
+[Unit]
+Description=Seed recovery and Oscar mode 144 validation service
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/seed-live/seed-recovery-v4
+Environment=PYTHONPATH=/opt/seed-live/venv/lib/python3.12/site-packages
+Environment=LD_LIBRARY_PATH=/root/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib
+Environment=SEED_LOCAL_FULL_DOMAIN=1
+Environment=SEED_FILTER_THREADS=7
+Environment=SEED_VERIFY_THREADS=1
+ExecStart=/opt/seed-live/seed-recovery-v4/survival/research/seed_inference/paced_native_mode144 serve /opt/seed-live/runs /opt/seed-live/seed-aware-policy/live_mode144_config.json /opt/seed-live/seed-recovery-v4/survival/research/seed_inference/terrain_filter_fast64.py /opt/seed-live/route-token.txt 9064
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

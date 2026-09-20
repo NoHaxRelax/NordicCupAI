@@ -21,7 +21,7 @@ int main(int argc,char**argv){try{
   if(30.000001<len&&len<99.999999&&std::none_of(walls.begin(),walls.end(),[&](double x){return std::abs(x-len)<1e-7;}))walls.push_back(len);
  }
  if(walls.empty())throw std::runtime_error("No public obstacle dimensions");
- const int filter_threads=mode=="stream"?20:24,verify_threads=mode=="stream"?4:24;
+ const int filter_threads=std::getenv("SEED_FILTER_THREADS")?std::stoi(std::getenv("SEED_FILTER_THREADS")):(mode=="stream"?20:24),verify_threads=std::getenv("SEED_VERIFY_THREADS")?std::stoi(std::getenv("SEED_VERIFY_THREADS")):(mode=="stream"?4:24);
  std::ofstream(dir/"candidates.txt").close();
  std::vector<std::string> args={argv[2],argv[3],argv[6],argv[7],std::to_string(filter_threads),(dir/"candidates.txt").string()};
  std::vector<char*> cargs;for(auto&s:args)cargs.push_back(s.data());cargs.push_back(nullptr);
