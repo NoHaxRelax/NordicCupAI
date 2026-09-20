@@ -55,3 +55,5 @@ Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retai
 - Wave97 predator face-lock screen: both face settings were below mode144 and rejected.
 
 - Wave98 dump-after-time screen: earlier and later dumps were below mode144 and rejected.
+
+- Wave99 old-agent reach screen: reach40/100 were below mode144 and rejected.
