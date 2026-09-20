@@ -268,3 +268,15 @@ mismatch instead of bypassing it. The production venv is only read for its runti
 all source/build/output modifications are in our separate /tmp research directory.
 The verifier now accepts an explicit benchmark deadline (default remains600) and
 reports within_600_seconds separately. The existing heartbeat will collect results.
+
+
+## Superseding runtime update: eight-vCPU Hetzner
+
+User upgraded the same host to eight vCPUs. Reboot cleared /tmp and interrupted
+our two-worker scan; no final result can be reported for that run. Restarted full
+uint32 search with eight workers on persistent /root/seed-benchmark/, output
+full-domain-hetzner8/. Scanner pid2062, finish runner2137 at launch. The runner
+compiles/replays after scan completion as above; paths now point to persistent disk.
+First checkpoint: 201,326,592 seeds in25.75524 seconds, projecting549.45 seconds
+(~9.2 minutes) for search alone. This is still an estimate, not measured completion.
+Heartbeat updated to collect the new run and ignore obsolete /tmp paths.
