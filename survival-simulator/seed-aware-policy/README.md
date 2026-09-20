@@ -45,3 +45,5 @@ Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retai
 - Wave92 predator-sharing screen: Lucas pred_share1 was strongly below mode144; pred_share0 retained.
 
 - Wave93 fresh128 confirmation: mode144 mean2009.38, +182.86 paired over mode46, bootstrap95 [123.23,242.50]; gain confirmed but 2200 target remains unmet.
+
+- Wave94 committed predator-dodge hold screen: 15/30 tick holds were strongly below mode144 and rejected.
