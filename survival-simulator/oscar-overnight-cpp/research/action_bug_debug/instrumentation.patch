@@ -1,0 +1,118 @@
+--- a/nightsim/_nengine.cpp
++++ b/nightsim/_nengine.cpp
+@@ -19,6 +19,7 @@
+ #define PY_SSIZE_T_CLEAN
+ #include <Python.h>
+ #include <cstdio>
++#include <cstdarg>
+ #include <cstdlib>
+
+ #include <algorithm>
+@@ -544,6 +545,17 @@
+ // ----------------------------------------------------------------------------
+ class Engine {
+ public:
++    // Read-only diagnostics in an isolated build, never fed to the policy.
++    int64_t trace_farm = -1;
++    int trace_pred = -1;
++    std::vector<std::string> burst_trace;
++    void trace(const char* format, ...) {
++        if (trace_farm < 0) return;
++        char body[4096], row[4224];
++        va_list args; va_start(args, format); vsnprintf(body, sizeof(body), format, args); va_end(args);
++        snprintf(row, sizeof(row), "{\"t\":%.17g,%s}", time, body);
++        burst_trace.emplace_back(row);
++    }
+     int W, H, CS;
+     double dt;
+     bool predators_enabled;
+@@ -980,6 +992,7 @@
+     std::vector<DeathRec> death_log;
+     void kill_agent_at(size_t idx, int cause) {
+         const Creature& a = agents[idx];
++        trace("\"kind\":\"death\",\"agent\":%lld,\"cause\":%d,\"energy\":%.17g", (long long)a.id, cause, a.energy);
+         if (on_kill) on_kill(a, cause);
+         events.push_back({cause, time, a.id, a.age, a.energy});
+         agent_observations.erase(a.id);
+@@ -1079,6 +1092,7 @@
+         double prev_x = c.x, prev_y = c.y;
+         double new_x = prev_x + distance * np_cos(direction);
+         double new_y = prev_y + distance * np_sin(direction);
++        if (trace_pred >= 0) trace("\"kind\":\"move\",\"pred\":%d,\"distance\":%.17g,\"desired_x\":%.17g,\"desired_y\":%.17g,\"blocked\":%s,\"terrain\":%d", trace_pred, distance, new_x, new_y, in_obstacle(new_x,new_y,c.size,local_obs) ? "true" : "false", biome_at(prev_x,prev_y));
+         if (in_obstacle(new_x, new_y, c.size, local_obs)) {
+             const double angle_step = PI / 18;
+             const int max_attempts = (int)(2 * PI / angle_step);
+@@ -1396,13 +1410,18 @@
+     std::vector<Obs> obs_buf;
+
+     void non_agent_step() {
++        if (trace_farm >= 0) for (const auto& a: agents) trace("\"kind\":\"after_actions\",\"agent\":%lld,\"x\":%.17g,\"y\":%.17g,\"energy\":%.17g", (long long)a.id, a.x,a.y,a.energy);
+         // ---- agents
+         size_t i = 0;
+         while (i < agents.size()) {
+             Creature& a = agents[i];
++            trace("\"kind\":\"agent_check\",\"agent\":%lld,\"energy\":%.17g", (long long)a.id, a.energy);
+             a.age += dt;
+             a.energy -= dt * BIOMES[biome_at(a.x, a.y)].energy_drain_rate;
+-            if (a.energy <= 0) { kill_agent_at(i, 0); i++; continue; }
++            if (a.energy <= 0) {
++                if(i+1 < agents.size()) trace("\"kind\":\"skip\",\"removed\":%lld,\"skipped\":%lld", (long long)a.id, (long long)agents[i+1].id);
++                kill_agent_at(i, 0); i++; continue;
++            }
+             if (a.age > a.max_age) a.energy -= 0.01 * a.age;
+
+             refresh_grids();
+@@ -1449,16 +1468,20 @@
+         for (size_t p = 0; p < predators.size(); p++) {
+             {
+                 Creature& pr = predators[p];
++                trace("\"kind\":\"pred_before\",\"pred\":%zu,\"x\":%.17g,\"y\":%.17g,\"direction\":%.17g,\"energy\":%.17g,\"resting\":%s",p,pr.x,pr.y,pr.direction,pr.energy,pr.resting?"true":"false");
+                 if (pr.resting) {
+                     if (pr.energy > pr.max_energy * 0.5) pr.resting = false;
+-                    else { pr.energy += dt * 30; continue; }
++                    else { trace("\"kind\":\"rest_skip\",\"pred\":%zu",p); pr.energy += dt * 30; continue; }
+                 }
+             }
+             refresh_grids();
+             s_agents = cached_union(grid_agents, uc_agents, predators[p].x, predators[p].y);
+             const std::vector<int32_t>& lobs = local_obstacles(predators[p].x, predators[p].y);
+             observe(predators[p], &s_agents, nullptr, nullptr, nullptr, pred_obs);
++            trace_pred = trace_farm >= 0 ? (int)p : -1;
+             predator_act(predators[p], pred_obs, lobs);
++            trace_pred = -1;
++            trace("\"kind\":\"pred_after\",\"pred\":%zu,\"x\":%.17g,\"y\":%.17g,\"energy\":%.17g", p,predators[p].x,predators[p].y,predators[p].energy);
+
+             refresh_grids();
+             Creature& pr = predators[p];
+@@ -1477,6 +1500,7 @@
+                         if (agents[z].key == touching[q]) { ai = (long)z; break; }
+                     if (ai < 0) continue;
+                     double ae = agents[ai].energy;
++                    trace("\"kind\":\"meal\",\"pred\":%zu,\"agent\":%lld,\"energy\":%.17g",p,(long long)agents[ai].id,ae);
+                     double e = pr.energy + ae;
+                     pr.energy = (e < pr.max_energy) ? e : pr.max_energy;
+                     score -= ae / 100;
+@@ -1540,6 +1564,7 @@
+         const Obs* closest = nullptr;
+         for (const Obs& o : obs)
+             if (o.type == 1 && (!closest || o.distance < closest->distance)) closest = &o;
++        trace("\"kind\":\"target\",\"pred\":%d,\"agent\":%lld,\"distance\":%.17g,\"angle\":%.17g", trace_pred, (long long)(closest?closest->id:-1),closest?closest->distance:-1.,closest?closest->angle:0.);
+         bool edges_seen = false;
+         for (const Obs& o : obs)
+             if (o.type == 4) { edges_seen = true; break; }
+@@ -2433,6 +2458,15 @@
+     {nullptr, nullptr, 0, nullptr}};
+
+ PyMethodDef Engine_methods[] = {
++    {"dbg_trace_burst", [](PyObject* self, PyObject* args) -> PyObject* {
++        long long farm; if (!PyArg_ParseTuple(args,"L",&farm)) return nullptr;
++        ((EngineObject*)self)->eng->trace_farm=farm; Py_RETURN_NONE;
++    }, METH_VARARGS, "enable diagnostics for a farm id; -1 disables"},
++    {"dbg_pop_trace", [](PyObject* self, PyObject*) -> PyObject* {
++        auto* e=((EngineObject*)self)->eng; PyObject* out=PyList_New(e->burst_trace.size());
++        for(size_t i=0;i<e->burst_trace.size();i++) PyList_SET_ITEM(out,i,PyUnicode_FromString(e->burst_trace[i].c_str()));
++        e->burst_trace.clear(); return out;
++    }, METH_NOARGS, "read and clear diagnostics"},
+     {"step", (PyCFunction)Engine_step, METH_VARARGS, "step(actions) -> state dict (same as step_environment)"},
+     {"state", (PyCFunction)Engine_state, METH_NOARGS, "current state dict without stepping"},
+     {"agents", (PyCFunction)Engine_agents, METH_NOARGS, "list of (id,x,y,direction,age,energy,max_energy,speed,sprint,hearing,vision,vision_is_int,cone,max_age)"},

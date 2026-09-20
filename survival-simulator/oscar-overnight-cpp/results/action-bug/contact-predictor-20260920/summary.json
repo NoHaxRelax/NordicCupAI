@@ -1,0 +1,151 @@
+{
+  "scope": "local mypc C++ games; no API transport",
+  "cohorts": {
+    "contact-final-holdout": {
+      "contact_nearest": {
+        "games": 4,
+        "seeds": [
+          401,
+          402,
+          403,
+          404
+        ],
+        "bursts": 45,
+        "transfers": 25,
+        "failed": 20,
+        "transfer_rate": 0.5555555555555556,
+        "mean_score": 7576.1577829284,
+        "mean_survival": 1248.2249999999603,
+        "public_confirmed": 0,
+        "max_game_p99_admission_ms": 0.30768200008424174,
+        "max_admission_ms": 4.1950180000185355
+      },
+      "predict_contact": {
+        "games": 4,
+        "seeds": [
+          401,
+          402,
+          403,
+          404
+        ],
+        "bursts": 34,
+        "transfers": 34,
+        "failed": 0,
+        "transfer_rate": 1.0,
+        "mean_score": 9871.656649132115,
+        "mean_survival": 1269.4249999999192,
+        "public_confirmed": 34,
+        "max_game_p99_admission_ms": 4.055198000060045,
+        "max_admission_ms": 287.1511630000896
+      }
+    },
+    "contact-holdout": {
+      "contact_nearest": {
+        "games": 4,
+        "seeds": [
+          301,
+          302,
+          303,
+          304
+        ],
+        "bursts": 42,
+        "transfers": 31,
+        "failed": 11,
+        "transfer_rate": 0.7380952380952381,
+        "mean_score": 9200.696429870137,
+        "mean_survival": 1393.4249999998235,
+        "public_confirmed": 0,
+        "max_game_p99_admission_ms": 0.39558499997838226,
+        "max_admission_ms": 1.8356209999410567
+      },
+      "predict_contact": {
+        "games": 4,
+        "seeds": [
+          301,
+          302,
+          303,
+          304
+        ],
+        "bursts": 38,
+        "transfers": 36,
+        "failed": 2,
+        "transfer_rate": 0.9473684210526315,
+        "mean_score": 10463.168038596865,
+        "mean_survival": 1373.3249999998466,
+        "public_confirmed": 36,
+        "max_game_p99_admission_ms": 2.410506000046553,
+        "max_admission_ms": 535.1386419999926
+      }
+    },
+    "contact-v2": {
+      "predict_contact": {
+        "games": 8,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "bursts": 72,
+        "transfers": 71,
+        "failed": 1,
+        "transfer_rate": 0.9861111111111112,
+        "mean_score": 10388.730773167594,
+        "mean_survival": 1426.649999999798,
+        "public_confirmed": 71,
+        "max_game_p99_admission_ms": 3.155535000018972,
+        "max_admission_ms": 48.55019999990873
+      }
+    },
+    "contact-v4": {
+      "predict_contact": {
+        "games": 6,
+        "seeds": [
+          101,
+          104,
+          106,
+          108,
+          303,
+          304
+        ],
+        "bursts": 52,
+        "transfers": 51,
+        "failed": 1,
+        "transfer_rate": 0.9807692307692307,
+        "mean_score": 9917.973354960011,
+        "mean_survival": 1343.433333333207,
+        "public_confirmed": 51,
+        "max_game_p99_admission_ms": 2.5574010001037095,
+        "max_admission_ms": 414.8824210000157
+      }
+    },
+    "prior-diagnostic-baseline": {
+      "contact_nearest": {
+        "games": 8,
+        "seeds": [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108
+        ],
+        "bursts": 81,
+        "transfers": 49,
+        "failed": 32,
+        "transfer_rate": 0.6049382716049383,
+        "mean_score": 7397.3657720944675,
+        "mean_survival": 1205.4374999999955,
+        "public_confirmed": 0,
+        "max_game_p99_admission_ms": 0,
+        "max_admission_ms": 0
+      }
+    }
+  }
+}
