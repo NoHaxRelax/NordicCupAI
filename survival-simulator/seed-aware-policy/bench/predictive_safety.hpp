@@ -51,7 +51,8 @@ struct PredictiveSafety {
    };
    orchard::Act original=act;Creature original_next=next[ai];
    double baseline_gap=evaluate(original);
-   double trigger=(mode==177?-5.:mode==178?-10.:mode==179?-15.:margin);
+   auto& mind=policy.M(act.aid);
+   double trigger=(mode==177?-5.:mode==178?-10.:mode==179?-15.:mode==184?(mind.has_fruit?-5.:margin):mode==185?(mind.has_fruit?-10.:margin):mode==186?(mind.has_fruit?-1e30:margin):margin);
    if(baseline_gap>=trigger)continue;
    ++searched;double best=-1e30;orchard::Act chosen=original;
    auto consider=[&](const orchard::Act& trial){

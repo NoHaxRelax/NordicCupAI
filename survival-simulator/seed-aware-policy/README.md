@@ -9,3 +9,5 @@ Wave68 tested a turn-preserving safety scoring variant on 16 fresh pairs and los
 Build with Python 3.12 and the pinned native environment, then run `bench/policy_bench` with the manifest's delay parameter. No evaluation or validation API client is included.
 
 Wave69 tested exact-resource fruit allocation variants on 16 fresh pairs; all three lost to mode144 by 122–180 points and were rejected.
+
+Wave70 tested fruit-claim conditional safety triggers on 16 fresh pairs; all three lost to mode144 by 73–159 points and were rejected.
