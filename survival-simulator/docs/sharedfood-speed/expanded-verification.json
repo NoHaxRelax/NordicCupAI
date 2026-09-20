@@ -1,0 +1,52 @@
+{
+  "pc_exact_games": 100,
+  "pc_games": 100,
+  "pc_before": {
+    "games": 100,
+    "mean_score": 1656.299960616258,
+    "mean_survival": 1669.927999999566,
+    "mean_seconds_per_game": 20.64339617966,
+    "policy_us_per_tick": 693.8256715499111,
+    "engine_us_per_tick": 537.9425660531472,
+    "loop_cpu_us_per_tick": 1218.0363533637378,
+    "elapsed_seconds": 352.44374245998915
+  },
+  "pc_after": {
+    "games": 100,
+    "mean_score": 1656.299960616258,
+    "mean_survival": 1669.927999999566,
+    "mean_seconds_per_game": 18.50022268365,
+    "policy_us_per_tick": 574.4409474288711,
+    "engine_us_per_tick": 528.9767148871089,
+    "loop_cpu_us_per_tick": 1100.9128285770405,
+    "elapsed_seconds": 164.59124842495658
+  },
+  "policy_speedup_percent": 17.20673203895021,
+  "loop_cpu_speedup_percent": 9.615765938614896,
+  "wall_speedup_percent": 10.381884246942253,
+  "original_runpod_score": {
+    "mean": 1676.3745945149064,
+    "ci95": [
+      1651.8395227653757,
+      1700.5807822282661
+    ]
+  },
+  "optimized_laptop_score": {
+    "mean": 1676.3745945149064,
+    "ci95": [
+      1652.5176098559346,
+      1700.609495085353
+    ]
+  },
+  "optimized_laptop_timing": {
+    "games": 1000,
+    "mean_score": 1676.3745945149064,
+    "mean_survival": 1693.543099999547,
+    "mean_seconds_per_game": 16.914216686269,
+    "policy_us_per_tick": 480.80045947038485,
+    "engine_us_per_tick": 513.8140857791573,
+    "loop_cpu_us_per_tick": 988.1654937311604,
+    "elapsed_seconds": 1417.7252702609985
+  },
+  "cross_cpu_exact_scores": 1000
+}

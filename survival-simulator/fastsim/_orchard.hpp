@@ -204,8 +204,12 @@ inline void local_of(const PoseObj& ps, P2 p, double& d, double& ang) {
 struct TreeM {
     int64_t id; P2 p; double first, last; bool fresh;
     double fruit_seen = -OINF; bool dead = false; IntSet assigned; int64_t fruit_here = 0, fruit_free = 0;
+    int64_t visible_tick = -1;
 };
-struct FruitM { int64_t id; P2 p; double born_lo, born_hi, last; bool has_claim = false; int64_t claimed = 0; };
+struct FruitM {
+    int64_t id; P2 p; double born_lo, born_hi, last; bool has_claim = false; int64_t claimed = 0;
+    int64_t visible_tick = -1;
+};
 using TreeP = std::shared_ptr<TreeM>;
 using FruitP = std::shared_ptr<FruitM>;
 
@@ -269,7 +273,6 @@ struct Group {
     std::vector<SharedPred> predators; // current public sightings, rebuilt each tick
     bool anchored = false;
     int64_t next_tree = 0, next_fruit = 0;
-    std::unordered_set<int64_t> seen_trees, seen_fruits;
 
     template <class T>
     static void list_remove(std::unordered_map<CellK, std::vector<T>, CellHash>& grid, const CellK& c, const T& obj) {
@@ -357,6 +360,7 @@ struct Params {
 
 class Policy {
 public:
+    struct FPair { int64_t bucket; double nf, d; int64_t a, fid; };
     Params P;
     PyRandom rng;
     double time = 0.;
@@ -374,6 +378,16 @@ public:
     // nothing once warm - same reuse pattern as cluster_cache / actions_buf below.
     std::unordered_map<CellK, std::vector<int32_t>, CellHash> marks_grid_scratch;
     std::vector<int32_t> marks_cand_scratch;
+    std::vector<Mark> marks_current_scratch;
+    std::vector<P2> marks_pairs_scratch;
+    std::vector<double> marks_x_scratch, marks_y_scratch;
+    std::vector<TreeP> tree_match_scratch, tree_near_scratch;
+    std::vector<FruitP> fruit_match_scratch;
+    std::vector<int64_t> object_keys_scratch;
+    std::vector<TreeP> sites_scratch;
+    std::vector<int64_t> agents_scratch;
+    std::vector<FPair> fruit_pairs_scratch;
+    std::unordered_set<int64_t> taken_scratch;
     const AState& st(int64_t aid) const { return states[sidx.at(aid)]; }
     bool in_states(int64_t aid) const { return sidx.count(aid) > 0; }
     Mind& M(int64_t aid) { return *minds.at(aid); }
@@ -796,11 +810,12 @@ public:
         const std::vector<Obs>& obs = *s.obs;
         bool moved = m.has_last && m.last_action.dist > 0;
         double wf = P.vo_win_fruit, wt = P.vo_win_far;
-        std::vector<Mark> marks;
+        auto& marks = marks_current_scratch;
         { PhaseTimer _t(&ph[PH_OBS_MARKS], profile_phases);
         marks_of(pose, obs, wf, wt, marks);
         if (moved && !marks.empty() && !m.prev_marks.empty()) {
-            std::vector<P2> pairs;
+            auto& pairs = marks_pairs_scratch;
+            pairs.clear();
             // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): this was a plain
             // |marks| x |prev_marks| double loop (with the dist_cmp prune above it, still
             // used below) - measured at 59% of native policy time with avg |marks| ~45 and
@@ -859,10 +874,15 @@ public:
                 if (hb) pairs.push_back(P2{br.x - mk.q.x, br.y - mk.q.y});
             }
             if (pairs.size() >= 2) {
-                std::vector<double> xs, ys;
+                auto& xs = marks_x_scratch; auto& ys = marks_y_scratch;
+                xs.clear(); ys.clear();
+                xs.reserve(pairs.size()); ys.reserve(pairs.size());
                 for (auto& pr : pairs) { xs.push_back(pr.x); ys.push_back(pr.y); }
-                std::sort(xs.begin(), xs.end()); std::sort(ys.begin(), ys.end());
-                double ex = xs[xs.size() / 2], ey = ys[ys.size() / 2];
+                auto xm = xs.begin() + xs.size() / 2;
+                auto ym = ys.begin() + ys.size() / 2;
+                std::nth_element(xs.begin(), xm, xs.end());
+                std::nth_element(ys.begin(), ym, ys.end());
+                double ex = *xm, ey = *ym;
                 int64_t agree = 0;
                 for (auto& pr : pairs) if (std::fabs(pr.x - ex) < 0.8 && std::fabs(pr.y - ey) < 0.8) agree++;
                 double hh = hypot2(ex, ey);
@@ -873,7 +893,6 @@ public:
                 }
             }
         }
-        m.prev_marks = marks;
         }
         { PhaseTimer _t(&ph[PH_OBS_EDGES], profile_phases);
         for (const Obs& o : obs) {
@@ -886,14 +905,14 @@ public:
             bool found = false;
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
-            if (!found) m.edges.push_back(EdgeMem{a, b, time});
+            if (!found) m.edges.push_back(EdgeMem{a, b,time});
             if(P.share_obs)remember_wall(g,{a,b,time});
         }
         {
-            std::vector<EdgeMem> keep;
-            for (auto& e : m.edges) if (time - e.t < 40.) keep.push_back(e);
-            if (keep.size() > 150) keep.erase(keep.begin(), keep.end() - 150);
-            m.edges.swap(keep);
+            m.edges.erase(std::remove_if(m.edges.begin(), m.edges.end(), [&](const EdgeMem& e) {
+                return time - e.t >= 40.;
+            }), m.edges.end());
+            if (m.edges.size() > 150) m.edges.erase(m.edges.begin(), m.edges.end() - 150);
         }
         }
         { PhaseTimer _t(&ph[PH_OBS_TREES], profile_phases);
@@ -902,7 +921,8 @@ public:
             P2 p = polar(pose, o);
             TreeP t;
             double td = 0;
-            for (auto& c : g.near_trees(p, 12)) {
+            g.near(g.tgrid, p, 12., tree_match_scratch);
+            for (auto& c : tree_match_scratch) {
                 if (c->dead) continue;
                 double dd = dist(c->p, p);
                 if (!t || dd < td) { t = c; td = dd; }
@@ -916,9 +936,9 @@ public:
                 P2 err = sub(t->p, p);
                 double ne = norm(err);
                 if (moved && 0.3 < ne && ne < 8 && time - t->last < 2.) { pose.p = add(pose.p, err); moved = false; }
-                else if (norm(err) >= 1.0 && time - t->last >= 2.) g.move_tree(t, p);
+                else if (ne >= 1.0 && time - t->last >= 2.) g.move_tree(t, p);
             }
-            t->last = time; g.seen_trees.insert(t->id);
+            t->last = time;
         }
         }
         { PhaseTimer _t(&ph[PH_OBS_FRUITS], profile_phases);
@@ -926,7 +946,8 @@ public:
             if (o.type != 0) continue;
             P2 p = polar(pose, o);
             FruitP f; double fd = 0;
-            for (auto& c : g.near_fruits(p, 5)) {
+            g.near(g.fgrid, p, 5., fruit_match_scratch);
+            for (auto& c : fruit_match_scratch) {
                 double dd = dist(c->p, p);
                 if (!f || dd < fd) { f = c; fd = dd; }
             }
@@ -944,9 +965,10 @@ public:
                 f = std::make_shared<FruitM>();
                 f->id = g.next_fruit; f->p = p; f->born_lo = lo; f->born_hi = time; f->last = time;
                 g.add_fruit(f); g.next_fruit++;
-                for (auto& t : g.near_trees(p, 70)) if (!t->dead) t->fruit_seen = time;
+                g.near(g.tgrid, p, 70., tree_near_scratch);
+                for (auto& t : tree_near_scratch) if (!t->dead) t->fruit_seen = time;
             }
-            f->last = time; g.seen_fruits.insert(f->id);
+            f->last = time;
         }
         }
         CellK c0 = cell_of(pose.p);
@@ -978,45 +1000,83 @@ public:
         m.has_eprev = true; m.energy_prev = s.energy;
         m.hear_hist.push_back(Hear{time, pose.p, hear});
         if (m.hear_hist.size() > 400) m.hear_hist.erase(m.hear_hist.begin(), m.hear_hist.begin() + 100);
-        if (!m.prev_marks.empty()) marks_of(pose, obs, wf, wt, m.prev_marks);
+        if (!marks.empty()) {
+            // Recompute even when the correction is algebraically equivalent:
+            // transform(pose + correction, observation) has slightly different
+            // floating-point rounding from mark + correction, and future
+            // odometry intentionally depends on those exact coordinates.
+            marks_of(pose, obs, wf, wt, marks);
+            m.prev_marks.swap(marks);
+        } else {
+            m.prev_marks.clear();
+        }
         m.prev_pose = mkpose(pose.p, pose.theta); m.prev_hear = hear; m.prev_cone = cone; m.prev_vis = vr;
     }
 
     void maintain(Group& g) {
         double now = time;
-        std::unordered_set<int64_t> vis_t, vis_f;
+        int64_t tick = (int64_t)std::llround(now * 10.);
         g.agents.each([&](int64_t a) {
             Mind& m = M(a); const AState& s = st(a);
             double h = s.hear, c = s.cone, v = s.vr;
-            std::vector<std::pair<P2, P2>> edges;
-            for (auto& e : m.edges) if (now - e.t < 40.) edges.push_back({e.a, e.b});
             P2 mp = m.pose->p;
             auto occluded = [&](P2 p) {
                 if (dist_le(p, mp, h - 3.)) return false;
-                for (auto& e : edges) if (segments_cross(mp, p, e.first, e.second)) return true;
+                // Avoid rebuilding a temporary edge vector for every agent on
+                // every tick. Iterating the source vector in the same order is
+                // decision-identical; stale edges are simply skipped in place.
+                for (const auto& e : m.edges)
+                    if (now - e.t < 40. && segments_cross(mp, p, e.a, e.b)) return true;
                 return false;
             };
-            for (auto& t : g.near_trees(mp, v))
-                if (!vis_t.count(t->id) && in_view(*m.pose, h, c, v, t->p, 20.) && !occluded(t->p)) vis_t.insert(t->id);
-            for (auto& f : g.near_fruits(mp, v))
-                if (!vis_f.count(f->id) && in_view(*m.pose, h, c, v, f->p, 8.) && !occluded(f->p)) vis_f.insert(f->id);
+            CellK cell = cell_of(mp);
+            int64_t n = int_floordiv(v, CELL) + 1;
+            for (int64_t dx = -n; dx <= n; ++dx)
+                for (int64_t dy = -n; dy <= n; ++dy) {
+                    CellK key{cell.x + dx, cell.y + dy};
+                    auto ti = g.tgrid.find(key);
+                    if (ti != g.tgrid.end()) for (const auto& t : ti->second) {
+                        // Objects observed this tick cannot be invalidated by
+                        // the visibility test below. Check that before even
+                        // calculating their distance from this agent.
+                        if (t->last == now || t->visible_tick == tick) continue;
+                        if (dist_le(t->p, mp, v) && in_view(*m.pose, h, c, v, t->p, 20.) &&
+                            !occluded(t->p)) t->visible_tick = tick;
+                    }
+                    auto fi = g.fgrid.find(key);
+                    if (fi != g.fgrid.end()) for (const auto& f : fi->second) {
+                        if (f->last == now || f->visible_tick == tick) continue;
+                        if (dist_le(f->p, mp, v) && in_view(*m.pose, h, c, v, f->p, 8.) &&
+                            !occluded(f->p)) f->visible_tick = tick;
+                    }
+                }
         });
-        for (int64_t tid : g.trees.key_list()) {
+        object_keys_scratch.clear();
+        g.trees.each([&](const int64_t& id, TreeP&) { object_keys_scratch.push_back(id); });
+        for (int64_t tid : object_keys_scratch) {
             TreeP t = g.trees.at(tid);
             if (t->dead) {
                 if (now - t->last > 55.) g.del_tree(tid);
                 continue;
             }
-            if (now > t->first + 62.5 || (!g.seen_trees.count(tid) && vis_t.count(tid))) { t->dead = true; continue; }
-            IntSet na;
+            if (now > t->first + 62.5 || (t->last != now && t->visible_tick == tick)) { t->dead = true; continue; }
+            bool invalid = false;
             t->assigned.each([&](int64_t a) {
-                if (minds.has(a) && M(a).has_post && M(a).post == tid) na.add(a);
+                if (!minds.has(a) || !M(a).has_post || M(a).post != tid) invalid = true;
             });
-            t->assigned = na;
+            if (invalid) {
+                IntSet na;
+                t->assigned.each([&](int64_t a) {
+                    if (minds.has(a) && M(a).has_post && M(a).post == tid) na.add(a);
+                });
+                t->assigned = std::move(na);
+            }
         }
-        for (int64_t fid : g.fruits.key_list()) {
+        object_keys_scratch.clear();
+        g.fruits.each([&](const int64_t& id, FruitP&) { object_keys_scratch.push_back(id); });
+        for (int64_t fid : object_keys_scratch) {
             FruitP f = g.fruits.at(fid);
-            bool gone = now > f->born_hi + 50.05 || (!g.seen_fruits.count(fid) && vis_f.count(fid));
+            bool gone = now > f->born_hi + 50.05 || (f->last != now && f->visible_tick == tick);
             if (gone) {
                 if (f->has_claim && minds.has(f->claimed) && M(f->claimed).has_fruit && M(f->claimed).fruit == fid)
                     M(f->claimed).has_fruit = false;
@@ -1026,14 +1086,26 @@ public:
             if (f->has_claim && (!minds.has(f->claimed) || !M(f->claimed).has_fruit || M(f->claimed).fruit != fid))
                 f->has_claim = false;
         }
+        // Count each tree/fruit pair once from the fruit side. The old loop
+        // queried the fruit grid once per tree; these integer totals are the
+        // only observable result, so reversing the traversal is exact.
         g.trees.each([&](const int64_t&, TreeP& t) {
-            auto near = g.near_fruits(t->p, 70.);
-            t->fruit_here = (int64_t)near.size();
-            int64_t fr = 0;
-            for (auto& f : near) if (!f->has_claim) fr++;
-            t->fruit_free = fr;
+            t->fruit_here = 0;
+            t->fruit_free = 0;
         });
-        g.seen_trees.clear(); g.seen_fruits.clear();
+        g.fruits.each([&](const int64_t&, FruitP& f) {
+            CellK cell = cell_of(f->p);
+            int64_t n = int_floordiv(70., CELL) + 1;
+            for (int64_t dx = -n; dx <= n; ++dx)
+                for (int64_t dy = -n; dy <= n; ++dy) {
+                    auto it = g.tgrid.find(CellK{cell.x + dx, cell.y + dy});
+                    if (it == g.tgrid.end()) continue;
+                    for (const auto& t : it->second) if (dist_le(t->p, f->p, 70.)) {
+                        t->fruit_here++;
+                        if (!f->has_claim) t->fruit_free++;
+                    }
+                }
+        });
     }
 
     // ------------------------------------------------------------ economy
@@ -1197,9 +1269,10 @@ public:
     std::unordered_map<int64_t,double> crowd_cache;
     void assign_posts(Group& g) {
         cluster_cache.clear();crowd_cache.clear();
-        std::vector<TreeP> sites;
+        auto& sites = sites_scratch; sites.clear();
         g.trees.each([&](const int64_t&, TreeP& t) { sites.push_back(t); });
-        std::vector<int64_t> agents = g.agents.list();
+        auto& agents = agents_scratch; agents.clear();
+        g.agents.each([&](int64_t a) { agents.push_back(a); });
         std::stable_sort(agents.begin(), agents.end(), [&](int64_t a, int64_t b) { return st(a).energy < st(b).energy; });
         for (int64_t a : agents) {
             Mind& m = M(a);
@@ -1230,14 +1303,13 @@ public:
         cluster_cache.clear();crowd_cache.clear();
     }
 
-    struct FPair { int64_t bucket; double nf, d; int64_t a, fid; };
     void assign_fruits(Group& g) {
         g.agents.each([&](int64_t a) {
             Mind& m = M(a);
             if (m.has_fruit && (!g.fruits.has(m.fruit) || !g.fruits.at(m.fruit)->has_claim || g.fruits.at(m.fruit)->claimed != a))
                 m.has_fruit = false;
         });
-        std::vector<FPair> pairs;
+        auto& pairs = fruit_pairs_scratch; pairs.clear();
         g.agents.each([&](int64_t a) {
             Mind& m = M(a);
             if (m.has_fruit) return;
@@ -1245,7 +1317,8 @@ public:
             if (s.age > P.no_eat_age) return;
             bool full = s.energy > s.max_energy - 30.;
             double reach = m.old ? P.old_reach : P.fruit_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
-            for (auto& f : g.near_fruits(m.pose->p, reach)) {
+            g.near(g.fgrid, m.pose->p, reach, fruit_match_scratch);
+            for (auto& f : fruit_match_scratch) {
                 if (f->has_claim) continue;
                 double d = dist(f->p, m.pose->p);
                 if (!ready(*f, s.energy, m.old)) continue;
@@ -1282,7 +1355,7 @@ public:
             if (x.a != y.a) return x.a < y.a;
             return x.fid < y.fid;
         });
-        std::unordered_set<int64_t> taken;
+        auto& taken = taken_scratch; taken.clear();
         for (auto& pr : pairs) {
             FruitM& f = *g.fruits.at(pr.fid);
             if (taken.count(pr.a) || f.has_claim) continue;
@@ -1597,10 +1670,6 @@ public:
           for (const AState& s : states) observe(M(s.aid), s); }
         merge_shared_frames();
         shared_reports();
-        if(P.share_obs)groups.each([&](const int64_t&,GroupP& g){
-            g->trees.each([&](const int64_t& id,TreeP& t){if(t->last==time)g->seen_trees.insert(id);});
-            g->fruits.each([&](const int64_t& id,FruitP& f){if(f->last==time)g->seen_fruits.insert(id);});
-        });
         {
             PhaseTimer _t(&ph[PH_MAINTAIN], profile_phases);
             std::vector<GroupP> gl;
