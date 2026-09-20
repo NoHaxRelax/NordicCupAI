@@ -1,0 +1,33 @@
+{
+  "mirror_source_sha256": "50b922acbe9235a8e83dba2f3d738e0e44b95d31ca50c72232bfdcd382e841c4",
+  "engine_source_sha256": "45a5928464b5231feb8b1378fc0c4b593f22c7ba38040274ae7f4295d2581f5f",
+  "binary_sha256": "74369c83bca0cfb2e871ccc305c7c655b9a3ee84f9acfd24618044c7cf530274",
+  "python": "3.12.12 (main, Jan 13 2026, 17:36:25) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.3.5",
+  "command": [
+    "g++",
+    "-O2",
+    "-std=c++17",
+    "-fPIC",
+    "-ffp-contract=off",
+    "-fno-fast-math",
+    "-fno-builtin-sin",
+    "-fno-builtin-cos",
+    "-fno-builtin-sincos",
+    "-I",
+    "C:\\Users\\nikol\\OneDrive\\Dokumenter\\GitHub\\NordicCupAI-sim-optimization\\survival-simulator\\fastsim",
+    "-I",
+    "C:\\Users\\nikol\\AppData\\Roaming\\uv\\python\\cpython-3.12.12-windows-x86_64-none\\Include",
+    "-I",
+    "C:\\Users\\nikol\\OneDrive\\Dokumenter\\GitHub\\NordicCupAI\\survival-simulator\\.venv\\Lib\\site-packages\\numpy\\_core\\include",
+    "-shared",
+    "C:\\Users\\nikol\\OneDrive\\Dokumenter\\GitHub\\NordicCupAI-sim-optimization\\survival-simulator\\mirror\\_mirror.cpp",
+    "-L",
+    "C:\\Users\\nikol\\AppData\\Roaming\\uv\\python\\cpython-3.12.12-windows-x86_64-none\\libs",
+    "-lpython312",
+    "-static",
+    "-o",
+    "C:\\Users\\nikol\\OneDrive\\Dokumenter\\GitHub\\NordicCupAI-sim-optimization\\survival-simulator\\fastsim\\_mirror.cp312-win_amd64.tmp"
+  ],
+  "compiler": "g++ (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r8) 13.2.0"
+}

@@ -1,0 +1,310 @@
+# Seed recovery and seed-aware policy — status report
+
+20 September 2026. Written for the team working on the Nordic Cup survival-simulator entry.
+
+Every number is labelled **[M] measured**, **[E] estimated from measured inputs**, or
+**[S] speculative**. Results that contradict something we previously believed are called
+out explicitly, because several of them do.
+
+---
+
+## 1. Headline
+
+**Seed recovery works, it is reliable, and it is fast.** Given only public terrain
+observations from a map we did not generate, we recover the exact 32-bit seed by searching
+the entire 2^32 domain. On 24 targets drawn uniformly from the full domain: **23/24
+uniquely recovered, and the true seed retained in 24/24 — zero losses.** The full-domain
+scan takes **9.86 s on one RTX 4090**, which is faster than the six-machine cluster that
+did it in 19.2 s.
+
+**Seed-aware policy is a much weaker story, and honesty requires saying so.** The largest
+credible legitimate-play result is a search policy measuring **+163%** — but against a
+deliberately weak baseline, and the blocker to measuring it against the real one is
+unresolved. Several seed exploits that sound compelling have been measured at
+approximately zero.
+
+**Where the remaining time goes: acquisition, not search.** That is now the whole game.
+
+---
+
+## 2. Seed recovery — where the time goes
+
+`T_seed = T_acquire + T_scan + T_refine`. V4's live recovery was 132 s, of which the search
+was 19.2 s. **86% of it was acquisition**, and nobody had optimised it.
+
+### 2.1 Scan [M]
+
+Full `[0, 2^32)`, all verified to reproduce the same candidate list:
+
+| platform | time | rate |
+|---|---:|---:|
+| laptop, 20 threads | 324 s | 13.2 M/s |
+| RunPod 128 vCPU | 361 s | 11.9 M/s (shared vCPUs; worse per-thread than the laptop) |
+| V4 production, 6 machines x 24 threads | 19.2 s | 224 M/s |
+| **RTX 4090, `PFX_WINDOW=128`** | **9.86 s** | **436 M/s** |
+| RTX 4090, `PFX_WINDOW=96` | 7.21 s | 596 M/s (83 seeds unresolved, re-checked on CPU) |
+
+The 96-word window is 2.6 s faster but leaves 83 seeds in 4.29 billion unresolved. **An
+overflow is not a rejection** — those seeds are emitted to a `.overflow` file and must be
+re-checked, or the true seed could be silently missed. Default is 128, which cannot
+overflow. 2.6 s is not worth a caveat on a reliability claim.
+
+### 2.2 Acquisition [M, floor]
+
+Five agents fanning outward, median over 8 seeds, projecting full-domain candidates:
+
+| sim seconds | samples | biomes | projected candidates over 2^32 |
+|---:|---:|---:|---:|
+| 2 | 11 | 3 | 558,700 |
+| 5 | 20 | 3 | 33,200 |
+| 10 | 34 | 3 | 400 |
+| **15** | **46** | **3** | **unique** |
+
+V4 waits for 128 samples across 3 biomes, or 400 across 2 after 180 s. That is **~8x more
+than a scan needs.** The curve saturates by t=30: walking longer adds samples but no
+information, because the agents have already crossed the boundaries that matter.
+
+This is a **floor** — it uses the engine's true positions. Accounting for real localisation
+(§2.5), the realistic budget is **20-25 simulated seconds, 24-32 samples, ≥3 distinct
+labels, ≥1,000 px span** — still ~3.5x cheaper than V4.
+
+### 2.3 Where that leaves time-to-seed
+
+| | V4 [M] | now [E] |
+|---|---:|---:|
+| acquire | ~113 s | 15-25 s |
+| scan | 19.2 s | 9.9 s |
+| refine | ~0 | ~0 |
+| **total** | **132 s** | **~25-35 s** |
+
+### 2.4 Start early, narrow continuously [M]
+
+The scan costs ~10 s regardless of how good the evidence is, so there is no reason to wait
+for conclusive evidence before dispatching it. `stream_filter.cpp` implements this: it
+derives each candidate's terrain prefix **once**, then each new observation costs ten
+integer distance computations per surviving candidate.
+
+Measured end to end on seed `3141592653`, dispatching at **t = 2 simulated seconds** with
+only **14 samples spanning 2 biomes**:
+
+```
+full 2^32 scan on that evidence  -> 26,165,409 candidates retained (0.6% of the domain)
+cache their prefixes             -> 22.1 s, 1.46 GB
+sample  1 : 26,165,409 -> 25,226,090   3.2 s
+sample  9 : 17,393,477 ->    449,543   1.7 s      <- one high-information observation
+sample 13 :    350,568 ->        947   0.2 s
+sample 14 :        947 ->        513   56 microseconds
+sample 21 :         45 ->         37   2 microseconds
+final                  ->          1   = 3141592653
+```
+
+Two things to take from this. **Samples are wildly unequal** — #9 removed 97% of the list
+and #13 removed 99.7%, while others removed 3%. That is what makes sample *selection* worth
+optimising. And **once the list is small, narrowing is free**: below ~1,000 candidates an
+observation costs microseconds, so the seed converges the moment the evidence arrives.
+
+**The new bottleneck is the 22 s cache step**, which is pure MT seeding that the GPU scan
+*already did* and threw away. Emitting each candidate's prefix alongside its seed would
+remove it entirely. **[E]** That is the single clearest next optimisation.
+
+### 2.5 Reliability [M]
+
+24 targets drawn uniformly from the full uint32 domain, observations from the **real
+engine**, seed never passed to the recovery pipeline, complete 2^32 scan:
+
+```
+dispatched              : 24/24
+uniquely recovered      : 23/24
+true seed retained      : 24/24
+false positives         : 3
+complete domain scan    : True
+```
+
+**The true seed survived every time.** One target kept 4 survivors with the correct seed
+among them. **The failure mode is ambiguity, never loss** — which is the property you want,
+because ambiguity resolves with more samples and loss does not.
+
+### 2.6 Two correctness bugs found and fixed [M]
+
+Both were mine, both were silent, and both are the kind that make a reliability claim false
+without making it *look* false.
+
+**The filter had no uncertainty radius.** It did an exact nearest-site test; the Rust filter
+it replaces implements the localisation-tolerant `+2r` test. A live agent's position
+estimate carries r ≈ 1.5 px (geometric registration) to 12 px (shared estimator), so the
+exact test rejects the **true** seed on any sample whose integer pixel lookup flipped.
+Demonstrated with 40 boundary-sited samples under a 10 px bias:
+
+| test | candidates | true seed retained |
+|---|---:|---|
+| exact (no radius) | **0** | **no** |
+| relaxed (radius declared) | 1 | **yes** |
+
+The exact run reports `"complete":true, "hits":0` — **indistinguishable from "the seed is
+not in this range"**. Boundary samples are exactly what a good acquisition policy collects.
+Fixed: the sample file is now `x y label [radius]`, and the receipt says which test ran.
+
+The relaxed test is **provably sound and tight** — a correctly declared radius can never
+reject the true seed. An *understated* one silently can, and the candidate yield barely
+moves when it does, so yield cannot detect it. Therefore: **scan at a generous radius and
+refine downward**, since survivor sets are nested and refinement costs milliseconds.
+
+**A threading crash that was hiding in plain sight.** A refactor made GCC spill `ymm`
+registers to the stack, and MinGW's thread entry only guarantees 16-byte stack alignment,
+so `vmovdqa %ymm0,0x70(%rsp)` faulted in worker threads non-deterministically. Found under
+gdb; no `-mstackrealign`-class flag fixed it reliably. The fix was to restore the original
+register-resident hot path. Worth knowing: **the original code was only accidentally
+correct** — the same latent fault was always there and earlier full-domain runs got lucky
+on frame layout.
+
+### 2.7 Silent-failure guards now in the filter [M]
+
+Three failure modes that previously returned "complete, 0 candidates" — indistinguishable
+from "seed not in range" — now fail loudly: a river label (which can never match any seed),
+a malformed sample line (which used to silently truncate the sample set), and a
+single-biome sample set (which now warns, since it is consistent with roughly a third of
+the domain). The scanner also handles multi-word CPython keys, so a seed at or above 2^32
+becomes a bounded window to scan rather than an invalidated claim.
+
+### 2.8 Algorithmic efficiency: there is none left in the scan [M]
+
+Verified three independent ways:
+
+- seed → first output is **not GF(2)-affine** (200/200 violations of linearity)
+- **no 2-adic low-bit closure**, so no Minecraft-style structure-seed/world-seed split
+- truncating the seeding by a **single step** gives 0/400 matches — all 1,247 steps are
+  load-bearing, so there is no cheap pre-filter
+
+Algebraic inversion needs six *complete* 32-bit outputs at stream positions
+{0,1,2,227,228,229}; we observe 11-bit-truncated words at rejection-shifted offsets, and
+227-230 land inside the river walk. Adapted cost: **2^167**. SAT/SMT's best published
+`init_by_array` case is ≈ our runtime and assumes full outputs.
+
+For calibration, a published paper reports ~140 minutes for this sweep on Xeon Golds. We
+are at 9.86 s — **~850x ahead of the literature.** Brute force is the right algorithm here,
+not a stopgap.
+
+---
+
+## 3. Seed-aware policy — what it is actually worth
+
+### 3.1 The reframe that matters [M]
+
+Score is almost entirely survival time: `+dt` every tick, `+fruit.energy/1000` on eating,
+`−agent.energy/100` when eaten. Over 128 baseline games: time 1720, food +163, predation
+−157, total 1726, and **0 of 128 runs reached the 3000 s horizon.**
+
+Three consequences no heuristic author would encode:
+
+1. **Population is worth exactly zero.** One agent alive scores the same per tick as thirty.
+2. **Fruit is worth almost nothing as score** (163 points a game) but is the entire
+   instrumental currency.
+3. **Agents are cheap to lose** — an agent eaten at 20 energy costs 0.2 points, two ticks of
+   colony survival. A low-energy agent is a near-free decoy.
+
+Headroom is ~+1400, against the +84 that heuristic peeking delivered.
+
+### 3.2 Results, ranked by confidence
+
+| what | result | confidence |
+|---|---|---|
+| **Rollout search** (40 s tail, high frequency) | **830 → 2185, +163%** | **[M]**, n=3 seeds, weak baseline |
+| **A\* routing** vs engine reflex | **2.15x survival** | **[M]**, n=16, but see below |
+| **Harvest scheduling** on predicted spawns | +40% at current survival; +96% if surviving the full game | **[E]** from measured inputs |
+| **Birth-phase predator dodging** | predators 1.7→0.8, score +51% | **[M]** but **confounded** |
+| Arrival-time-aware foraging | **+131 ± 164 ticks (t=0.80) — nothing** | **[M]** |
+
+### 3.3 The findings that cost the most to learn
+
+**Truncated-horizon search is unreliable in sign, and that explains the prior +4.9%.** At a
+40-second lookahead you see **0.8%** of the available value discrimination and pick the true
+best action 30% of the time. At one tick — which is what the earlier effort did — you see
+0.0%. Per-seed deltas for low-frequency truncated search: **+799, −575, +235, +302**.
+
+**Beam search loses at equal compute.** 1704 vs 1158 on an identical 399-rollout budget. Its
+deeper plies refine the *second* macro, which receding-horizon commitment then discards.
+
+**Most of the A\* win is not about the map.** A map-free Bug2 (wall-following with one
+memory bit) captures **64-68%** of the reflex→A* gap. The map plus planner is worth a
+further **~24%** — significant without predators (t=2.83), **not significant with them**
+(t=1.72). And the deployed policy already has a trap-escape detector, so it sits between
+reflex and Bug2, not at reflex.
+
+**The exploits that sound best are worth nothing.** Exact predator position: agents outrun
+predators and the predator refuses to approach an agent facing it. Exact agent `max_age`:
+crossing it causes a 10x drain spike the policy sees in the next observation. Early fruit
+arrival: optimised the wrong end of the window — a fruit is worth 20 energy on arrival and
+60 twenty seconds later.
+
+**The pattern:** foreknowledge only pays when the information is genuinely hidden, acted on
+*before* it would become visible anyway, and changes a decision that matters.
+
+### 3.4 Machinery that now exists [M]
+
+`survival-simulator/mirror/` adds `clone()`, `snapshot()` and `restore()` to the fastsim
+engine **without touching `_engine.cpp`** (it is provenance-pinned; the `#include`
+arrangement `_policy.cpp` documents is used instead). Measured: **snapshot 2 µs, restore
+1 µs**, against an engine step of 60-200 µs — 476x cheaper than `clone()`. Branch-and-replay
+is verified bit-identical to full game horizon (13k-20k ticks).
+
+Also verified: **exact branch-and-replay cannot desync**, because it is the same function of
+the same inputs. The "shared RNG stream" concern that shaped earlier designs is not a
+blocker. Only two things in the whole engine are action-coupled: births (which we control
+exactly) and predator wander (2 draws, ~7% of awake-predator-ticks). **The entire food
+supply curve of a seed is computable at t=0 and nothing we do can change it.**
+
+---
+
+## 4. Open risks
+
+1. **Is the seed even in [0, 2^32)?** `src/core.py:22` defaults to `randint(0, 2**32-1)`,
+   but the README says evaluation uses *preset* seeds, and `random.Random` accepts arbitrary
+   ints, floats, strings and bytes. A string seed produces a 17-word key and is
+   unrecoverable by enumeration. **Partly mitigated** — the scanner now takes multi-word
+   keys, so a clock-derived seed is a bounded window. **This is the only risk that
+   invalidates the approach rather than degrading it; worth asking the organisers.**
+2. **The shipped policy is not snapshot-safe.** It keeps a `shared_ptr` graph of
+   `Mind`/`Group` objects, so a rewind leaks branch state into the trunk. **Every policy
+   number above is therefore measured against a weaker substrate than we would ship.** Two
+   independent investigations named fixing this as the top follow-up.
+3. **Replay parity against the live server is not guaranteed.** The terrain prefix is pure
+   integer arithmetic and ports exactly; full replay involves NumPy float loops and
+   identity-hashed observation sets and is not even process-stable. Any shadow model needs a
+   resync tripwire. Useful calibration **[M]**: floating-point-level drift perturbs a branch
+   value by sd ≈ 8 against a between-branch signal of ≈ 90 and is survivable; an
+   event-level desync is not.
+4. **Acquisition soundness fails silently, discrimination fails safe.** A weak sample set
+   returns a huge candidate list and you keep collecting — safe. An understated radius
+   returns zero or a confident wrong answer — silent. All reliability effort should go to
+   the soundness side.
+
+---
+
+## 5. What to do next, in order
+
+1. **Emit candidate prefixes from the GPU scan.** Removes the 22 s cache step from the
+   streaming path — the clearest remaining win on time-to-seed. **[E]**
+2. **Attack acquisition, not scan speed.** Going 9.9 s → 5 s on a ~30 s pipeline is noise.
+   Sample *selection* is the lever: some observations removed 97% of the candidate list and
+   others removed 3%.
+3. **Make the shipped policy snapshot-safe.** It is the prerequisite for any deployable
+   policy number.
+4. **Settle the seed-range question** with the organisers.
+5. **Resolve the birth-phase confound** (equal births in both arms) before trusting +51%.
+
+---
+
+## 6. Where the code is
+
+| path | what |
+|---|---|
+| `seed-search-fast/terrain_filter_fast.cpp` | CPU scanner, drop-in for V4's `terrain_filter` |
+| `seed-search-fast/terrain_filter_cuda.cu` | GPU scanner, 9.86 s full domain |
+| `seed-search-fast/stream_filter.cpp` | cache-once streaming narrower |
+| `seed-search-fast/refine_candidates.cpp` | one-shot refinement of a retained list |
+| `seed-search-fast/reliability.py` | the blind recovery harness |
+| `seed-search-fast/acquisition_curve.py` | evidence-vs-time measurement |
+| `mirror/` | `clone`/`snapshot`/`restore` for shadow models |
+| `docs/seed_advantage_preliminary_2026-09-20.md` | the earlier policy-exploit analysis |
+
+All of it is untracked. Nothing has been committed.
