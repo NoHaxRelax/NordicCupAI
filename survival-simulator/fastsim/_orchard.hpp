@@ -255,6 +255,17 @@ struct Group {
     ODict<CellK, CellV, CellHash> cells;
     bool shared_seeded=false;
     std::vector<EdgeMem> walls;
+    // Direction lookup preserves original wall order. Only geometry changes
+    // invalidate it; timestamp refreshes do not change the lookup keys.
+    bool wall_directions_valid=false;
+    std::unordered_map<CellK,std::vector<size_t>,CellHash> wall_directions;
+    void prepare_wall_directions() {
+        if(wall_directions_valid)return;
+        wall_directions.clear();
+        for(size_t i=0;i<walls.size();++i)
+            wall_directions[cell_of_sized(sub(walls[i].b,walls[i].a),.25)].push_back(i);
+        wall_directions_valid=true;
+    }
     std::vector<SharedPred> predators; // current public sightings, rebuilt each tick
     bool anchored = false;
     int64_t next_tree = 0, next_fruit = 0;
@@ -396,6 +407,7 @@ public:
         g.trees.each([&](const int64_t&, TreeP& t) { t->p = T(t->p); });
         g.fruits.each([&](const int64_t&, FruitP& f) { f->p = T(f->p); });
         for(auto& e:g.walls) {e.a=T(e.a);e.b=T(e.b);}
+        g.wall_directions_valid=false;
         g.rebuild_grids();
         ODict<CellK, CellV, CellHash> cells;
         g.cells.each([&](const CellK& c, CellV& v) {
@@ -568,7 +580,7 @@ public:
     static void remember_wall(Group& g,const EdgeMem& edge) {
         for(auto& e:g.walls) if((dist_lt(e.a,edge.a,6)&&dist_lt(e.b,edge.b,6))||
             (dist_lt(e.a,edge.b,6)&&dist_lt(e.b,edge.a,6))) {e.t=pmax(e.t,edge.t);return;}
-        g.walls.push_back(edge);
+        g.walls.push_back(edge);g.wall_directions_valid=false;
         if(g.walls.size()>1024){auto it=std::min_element(g.walls.begin(),g.walls.end(),[](const EdgeMem&a,const EdgeMem&b){return a.t<b.t;});g.walls.erase(it);}
     }
     void shared_reports() {
@@ -589,11 +601,14 @@ public:
         for(const auto& ss:states) {
             Mind& m=M(ss.aid);Group& g=G(m.group);
             if((int64_t)std::llround(time*10.)%10!=0&&!m.edges.empty())continue;
+            std::vector<std::pair<double,size_t>> nearby;
+            for(size_t i=0;i<g.walls.size();++i) {
+                const auto& e=g.walls[i];double d=point_segment(m.pose->p,e.a,e.b);
+                if(d<350.)nearby.push_back({d,i});
+            }
+            std::stable_sort(nearby.begin(),nearby.end(),[](const auto& a,const auto& b){return a.first<b.first;});
             m.edges.clear();
-            for(const auto& e:g.walls)if(point_segment(m.pose->p,e.a,e.b)<350.)
-                m.edges.push_back(e);
-            std::stable_sort(m.edges.begin(),m.edges.end(),[&](const EdgeMem&a,const EdgeMem&b){return point_segment(m.pose->p,a.a,a.b)<point_segment(m.pose->p,b.a,b.b);});
-            if(m.edges.size()>150)m.edges.resize(150);
+            for(size_t i=0;i<std::min<size_t>(150,nearby.size());++i)m.edges.push_back(g.walls[nearby[i].second]);
         }
     }
 
@@ -731,13 +746,25 @@ public:
     void relocalize_stones(Mind& m,const std::vector<Obs>& obs) {
         Group& g=G(m.group);
         struct Candidates {P2 direction;std::vector<P2> points;};std::vector<Candidates> cs;
-        size_t total=0;
+        size_t total=0;g.prepare_wall_directions();
+        std::vector<size_t> wall_matches;
         for(const auto& o:obs)if(o.type==4){
             P2 a=rot({o.c[0],o.c[1]},m.pose->theta),b=rot({o.c[2],o.c[3]},m.pose->theta),v=sub(b,a);
             double len=norm(v);if(len<1e-5||len>=200.||std::abs(len-30.)<1e-5)continue;
             bool duplicate=false;
             Candidates c{mul(v,1./len),{}};
-            for(const auto& e:g.walls)if(norm(sub(sub(e.b,e.a),v))<1e-5)c.points.push_back(sub(e.a,a));
+            // A vector within 1e-5 must lie in this cell or one of its eight
+            // neighbours. Sort indices so candidate order and tie breaks match.
+            wall_matches.clear();CellK cell=cell_of_sized(v,.25);
+            for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy) {
+                auto it=g.wall_directions.find({cell.x+dx,cell.y+dy});
+                if(it!=g.wall_directions.end())wall_matches.insert(wall_matches.end(),it->second.begin(),it->second.end());
+            }
+            std::sort(wall_matches.begin(),wall_matches.end());
+            for(size_t wi:wall_matches) {
+                const auto& e=g.walls[wi];
+                if(dist_lt(sub(sub(e.b,e.a),v),P2{0.,0.},1e-5))c.points.push_back(sub(e.a,a));
+            }
             if(c.points.empty())continue;
             for(const auto& old:cs)if(old.points.size()==c.points.size()&&dist(old.points[0],c.points[0])<1e-5)duplicate=true;
             if(duplicate)continue;
@@ -749,7 +776,7 @@ public:
         bool have=false;P2 best{};
         for(const auto& c:cs)for(P2 seed:c.points){
             P2 sum{};bool ok=true;
-            for(const auto& other:cs){double near=OINF;P2 q{};for(P2 candidate:other.points)if(dist(seed,candidate)<near){near=dist(seed,candidate);q=candidate;}
+            for(const auto& other:cs){double near=OINF;P2 q{};for(P2 candidate:other.points){double d=dist(seed,candidate);if(d<near){near=d;q=candidate;}}
                 if(near>2.){ok=false;break;}sum=add(sum,q);}
             if(!ok)continue;P2 candidate=mul(sum,1./cs.size());
             if(g.anchored&&(candidate.x<5.||candidate.y<5.||candidate.x>W-5.||candidate.y>H-5.))continue;
@@ -1152,7 +1179,13 @@ public:
             if (any) value += P.spread_weight * 60. * pmin(1., gap / pmax(1., s.vr));
         }
         if(economic()&&(P.crowd_weight>0.||P.food_risk>0.||P.rock_penalty>0.)) {
-            double competitors=0.;g.agents.each([&](int64_t a){if(a!=m.aid&&M(a).has_post&&g.trees.has(M(a).post)&&dist_lt(t.p,g.trees.at(M(a).post)->p,P.econ_radius))competitors++;});
+            auto ci=crowd_cache.find(t.id);
+            if(ci==crowd_cache.end()) {
+                double count=0.;g.agents.each([&](int64_t a){if(M(a).has_post&&g.trees.has(M(a).post)&&dist_lt(t.p,g.trees.at(M(a).post)->p,P.econ_radius))count++;});
+                ci=crowd_cache.emplace(t.id,count).first;
+            }
+            double competitors=ci->second;
+            if(m.has_post&&g.trees.has(m.post)&&dist_lt(t.p,g.trees.at(m.post)->p,P.econ_radius))competitors--;
             value-=P.crowd_weight*(future+here)*competitors/(1.+competitors);
             value-=P.food_risk*danger(g,t.p);
             if(P.rock_penalty>0.)value-=P.rock_penalty*(route_estimate(m,t.p)-d);
@@ -1161,8 +1194,9 @@ public:
     }
 
     std::unordered_map<int64_t, std::vector<TreeP>> cluster_cache;
+    std::unordered_map<int64_t,double> crowd_cache;
     void assign_posts(Group& g) {
-        cluster_cache.clear();
+        cluster_cache.clear();crowd_cache.clear();
         std::vector<TreeP> sites;
         g.trees.each([&](const int64_t&, TreeP& t) { sites.push_back(t); });
         std::vector<int64_t> agents = g.agents.list();
@@ -1185,6 +1219,7 @@ public:
                 if (v > P.site_min && (!hb || v > bv)) { hb = true; bv = v; bt = t; }
             }
             if (keep && (!hb || bv < cur_v + P.switch_gain)) continue;
+            crowd_cache.clear(); // next agent must see this changed allocation
             if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(a);
             m.has_post = false;
             if (hb) {
@@ -1192,7 +1227,7 @@ public:
                 m.has_explore = false; m.has_tkey = false; m.post_since = time;
             }
         }
-        cluster_cache.clear();
+        cluster_cache.clear();crowd_cache.clear();
     }
 
     struct FPair { int64_t bucket; double nf, d; int64_t a, fid; };
