@@ -27,3 +27,5 @@ Wave80 tested smaller Lucas predator-dodge radii and angles on 16 fresh pairs; a
 Wave81: complete 16-pair predator-dodge ablation; all variants rejected versus mode144; 80 replays retained locally, not included in GitHub checkpoint.
 
 Wave83: corrected fruit-readiness timing screen; all variants rejected versus mode144. Wave82 is recorded as an invalid unsupported-override attempt.
+
+Wave85: fresh32 replication rejected wave84 tree-reach300 signal; mode144 retained.
