@@ -280,3 +280,35 @@ compiles/replays after scan completion as above; paths now point to persistent d
 First checkpoint: 201,326,592 seeds in25.75524 seconds, projecting549.45 seconds
 (~9.2 minutes) for search alone. This is still an estimate, not measured completion.
 Heartbeat updated to collect the new run and ignore obsolete /tmp paths.
+
+
+## Faster scanner implementation
+
+seed_batch_fast.hpp processes64 seeds as eight independent AVX2 chains, hiding
+seed-mixing multiply latency. It generates and tempers only the first96 MT words,
+which normally cover the terrain draws. Longer rejection sequences throw and
+retry that seed with the unchanged scalar generator. Seed mixing remains complete:
+an attempted truncation failed the RNG-prefix test because its wraparound updates
+word1 last, affecting the first output. That attempt was discarded before timing
+or correctness results were saved in this repository.
+
+Build: `python scripts/build_seed_scan.py --avx2 --fast-lanes 64`. Old --avx2 build remains available for comparison.
+Check: scripts/seed_batch_prefix_check.cpp (compile with -mavx2 and appropriate
+-I model/build paths, -DSEED_BATCH_LANES=8/16/32/64), plus
+scripts/check_fast_seed_scanner.py. Across four widths,47,185,920 prefix words
+matched the full scalar RNG. Independent CPython filtering matched16,387 seeds;
+a known positive fixture survived. A4,194,304-seed weak filter returned exactly
+the same1,047,233 candidate seeds as the baseline (SHA256 recorded).
+
+Same-input Hetzner one-vCPU medians over three4,194,304-seed runs: baseline3.29425s,
+fast8 2.35562s, fast16 2.64393s, fast32 1.87249s, fast64 1.52009s. Fast64 is2.17x
+faster on this measurement. Eight-worker full-domain test running in persistent
+/root/seed-benchmark/full-domain-fast64/, runner run-fast64.sh pid4504 at launch,
+log fast64.log. At53.376s it had checked973,078,528 seeds, projecting about236s.
+Do not report a final runtime until its completion receipt exists.
+
+Baseline eight-worker full search finished548.271s, one candidate1894581302.
+Strict public replay returned no_match at the first tick (agent4 observation
+count12 versus11), so baseline total553.781s is NOT successful full recovery.
+Receipts retained locally as hetzner-baseline-* and hetzner-replay-first-difference.
+Different runtime/NumPy/CPU kernels remain a possible cause, not yet proven.

@@ -9,7 +9,15 @@
 #include <vector>
 #include "seed_random.inc"
 #ifdef __AVX2__
+#ifdef SEED_FAST
+#include "seed_batch_fast.hpp"
+using ScannerBatch=SeedBatchFast;
+constexpr int batch_lanes=SeedBatchFast::lanes;
+#else
 #include "seed_batch.hpp"
+using ScannerBatch=SeedBatch8;
+constexpr int batch_lanes=8;
+#endif
 #endif
 struct Point { int x,y,label; };
 template<class Random> bool matches_rng(Random& r,const std::vector<Point>& points) {
@@ -43,11 +51,11 @@ int main(int argc,char** argv) {
     uint64_t count=0;
     uint64_t seed=begin;
 #ifdef __AVX2__
-    SeedBatch8 batch;
-    for(;seed+8<=end;seed+=8){
+    ScannerBatch batch;
+    for(;seed+batch_lanes<=end;seed+=batch_lanes){
         batch.init((uint32_t)seed);
-        for(int lane=0;lane<8;lane++){
-            SeedBatch8::Lane r{batch,lane};bool match;
+        for(int lane=0;lane<batch_lanes;lane++){
+            ScannerBatch::Lane r{batch,lane};bool match;
             try{match=matches_rng(r,points);}
             catch(const std::overflow_error&){match=matches((uint32_t)(seed+lane),points);}
             if(match){std::cout<<seed+lane<<'\n';count++;}
