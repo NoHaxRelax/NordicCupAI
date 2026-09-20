@@ -29,3 +29,30 @@ Hetzner service: `fast1m-9064`; separate logs `/var/log/fast1m-9064.jsonl`.
 Runpod source: `/workspace/fast1m-endpoint`; logs
 `/workspace/fast1m-19123.jsonl` and `/workspace/fast1m-19123.log`.
 Seed services/search workers are stopped; pods remain allocated.
+
+## Bounded telemetry
+
+A separate low-priority process writes metrics and incoming public request data.
+The request path only counts bytes, reads clocks, retains existing incoming byte
+chunks and attempts a nonblocking queue insertion. It does not serialize request
+logs, open files, flush disk, or copy outgoing action payloads. Logging has some
+overhead; this is not a zero-overhead guarantee.
+
+Metrics retain request IDs, timestamps, HTTP status/errors/disconnects, input/output
+byte counts, receive time, response start/sent time, time awaiting ASGI sends,
+policy/harvest/serialization/CPU times, callback gaps, game score/time/population,
+and burst/confirmed-transfer summaries. Send completion measures the ASGI boundary,
+not confirmed remote receipt or competition-server round-trip latency.
+
+Full incoming JSON is retained up to 512 KiB per request in the corresponding
+`.jsonl.requests` file. Headers and huge outgoing action lists are not retained.
+The queue holds at most 64 records; overload drops logs and continues serving.
+Health reports writer liveness, queue drops and oversized input counts. Metrics
+rotate at 32 MiB with three backups; incoming logs rotate at 128 MiB with seven
+backups. Older logs are therefore eventually evicted.
+
+Verified on an isolated HTTP server: 20 requests produced input and timing records;
+100 requests completed in 0.183 seconds with the writer deliberately suspended
+and 236 records dropped; a 600,000-character input was excluded from request
+logging while its response succeeded. These are logging-path checks with empty
+agent lists, not game-runtime benchmarks.
