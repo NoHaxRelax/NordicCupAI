@@ -224,3 +224,28 @@ full-index I/O latency. Exact observed pixels and anchored poses are required;
 nearby terrain cannot silently substitute. River or obstructed/unvisited landmarks
 remain wildcards. Full observation filtering, wall verification and replay still
 must confirm any candidate. No full index has been built or deployed yet.
+
+
+## Update: bounded index prototype (07:51 UTC wake)
+
+New terrain_index.cpp implements an atomic shard build with an explicit
+little-endian header, seed bounds, landmark coordinates and 32-bit fingerprint
+per seed. Queries accept any subset of exact landmark labels; output is candidate
+seeds only. Build with scripts/build_seed_scan.py --index --avx2. This first layout
+scans the full fingerprint file sequentially, not bit planes. Full uint32 storage
+would be 16 GiB. Corruption checking currently validates header/length, not a file
+checksum; add provenance checks before production use.
+
+check_terrain_index.py independently confirms all fingerprints for 4,367 seeds
+across low/middle/high uint32 ranges, scalar tails, twelve subset query cases and
+contradictory-label rejection. index-check.json retains the bounded result.
+
+On Hetzner one logical CPU, a 67,108,864-seed shard took 56.7905 seconds to build.
+Its 256 MiB warm tmpfs query took 0.110817 seconds and retained 310,114 candidates
+for four synthetic landmarks of seed 3. These labels were generated for the
+microbenchmark, not acquired by agents. File: /tmp/codex-seed-benchmark/landmark-64m.idx.
+Do NOT scale this into a full-index latency claim: full index exceeds available
+RAM/tmpfs and needs real disk I/O, followed by candidate filtering and replay.
+The current best measured raw scanner is still 1.28474M seeds/sec on one Hetzner
+vCPU; full-domain recovery there remains unmeasured. Passive landmark acquisition
+and deliberate navigation to exact pixels have not yet been implemented.
