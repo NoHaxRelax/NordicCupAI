@@ -17,3 +17,5 @@ Wave72 tested current-heading approaching-predator safety conditions on 16 fresh
 Wave73 tested stronger safety displacement and energy penalties on 16 fresh pairs; all four variants lost to mode144 by 49–203 points and were rejected.
 
 Wave77 tested a cloned-engine future-fruit schedule on 8 fresh pairs; both horizons were harmful and rejected.
+
+Wave78 tested denser and local dodge headings on 16 fresh pairs; both were strongly harmful and rejected.

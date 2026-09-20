@@ -76,8 +76,14 @@ struct PredictiveSafety {
    consider(original);
    double nearest=1e9,face=agent.direction;
    for(auto&f:frames){double d=np_hypot(agent.x-f.pred.x,agent.y-f.pred.y);if(d<nearest){nearest=d;face=np_atan2(f.pred.y-agent.y,f.pred.x-agent.x);}}
-   for(int i=0;i<16;++i)for(double speed:{agent.speed,agent.sprint_speed})for(int facing=0;facing<2;++facing){
-    double heading=TWO_PI*i/16.;
+   int heading_n=(mode==199?32:16);
+   for(int i=0;i<heading_n;++i)for(double speed:{agent.speed,agent.sprint_speed})for(int facing=0;facing<2;++facing){
+    double heading=TWO_PI*i/heading_n;
+    orchard::Act trial{agent.id,speed,wrap(heading-agent.direction),wrap((facing?face:heading)-agent.direction),original.spawn};
+    consider(trial);
+   }
+   if(mode==200)for(int k=-8;k<=8;++k)for(double speed:{agent.speed,agent.sprint_speed})for(int facing=0;facing<2;++facing){
+    double heading=agent.direction+k*PI/16.;
     orchard::Act trial{agent.id,speed,wrap(heading-agent.direction),wrap((facing?face:heading)-agent.direction),original.spawn};
     consider(trial);
    }
