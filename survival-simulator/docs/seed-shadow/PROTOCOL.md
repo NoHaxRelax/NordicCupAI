@@ -360,3 +360,15 @@ Next investigate visibility calculations and compiler/libm/CPU dispatch differen
 using the recorded actions unchanged. Do not omit conflicting non-Edge observations
 or describe the shadow as fully synchronized. No further full-domain searches or
 unchanged-baseline1000-game runs are needed for this diagnosis.
+
+
+## Strategy restored / Nikolaj review
+
+User cancelled this task's1M strategy switch. It was reverted in git; no other
+task's live endpoint was changed. Resume seed-recovery work and ignore the now
+cancelled local-versus-hosted1M question. Latest source review is NIKOLAJ_REVIEW.md,
+covering Nikolaj's e84abd4e on claude/seed-recovery-fast. Priorities: fused CPU
+seeding without full state storage, early dispatch/cached-prefix refinement,
+uncertainty-aware samples, then optional GPU and snapshot-safe planning. Reported
+GPU/policy benchmarks are not independently reproduced here. The synthetic
+acquisition harness and action-independent food-schedule claim need care.
