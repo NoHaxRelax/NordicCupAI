@@ -31,3 +31,5 @@ Wave83: corrected fruit-readiness timing screen; all variants rejected versus mo
 Wave85: fresh32 replication rejected wave84 tree-reach300 signal; mode144 retained.
 
 Wave86: tree-value distance and cluster shaping variants all rejected; mode144 retained.
+
+Wave87: exact birth-threshold variants all rejected; mode144 retained.
