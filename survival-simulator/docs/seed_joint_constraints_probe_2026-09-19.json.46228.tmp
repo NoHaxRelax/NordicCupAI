@@ -1,0 +1,911 @@
+{
+  "complete": false,
+  "target_seed": 3,
+  "scan_start": 0,
+  "scan_count": 100000,
+  "sources": {
+    "scripts/seed_recovery_probe.py": "958283c9a2b89284ac9ac6266526b7547e1993ad455645872f453cc3f40d31b4",
+    "src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+    "src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+    "src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+    "src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+    "src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+    "src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+    "src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+    "src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+    "src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+    "src/utils/controllers/biome_estimator.py": "b7b87d1a7f94d1a400e953cfe6c26f91ad6b1b87eadc944c089243edfd72d47a",
+    "src/utils/controllers/boundary_anchor.py": "e7667fe4877b26577cad735b10eafe4101cadb7569f63e830d7d0c229ea31b2d",
+    "src/utils/controllers/conservation.py": "26ae3fc196754945490cf52b67210219f944c8d75fe89b38e67fdcf3f4274388",
+    "src/utils/controllers/coverage.py": "65ef727894aa1622432e2acae2cb42865561d393cc8707091b6f1a65030ba40e",
+    "src/utils/controllers/crowd_memory.py": "859308cfab8ea367f0f2c6ae22cd29947a0a06457db0b6ff490988ef0ec8ff11",
+    "src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+    "src/utils/controllers/expert_policy.py": "72b38d63d2d8154a97f8b264af61e0b4c9c84f76cde937fc3a2a9cdc193867be",
+    "src/utils/controllers/exploration.py": "2d0d005fbbd40f28749cc789e359741c1b6ba45a626348d8c0a5ce9a6a0a93b8",
+    "src/utils/controllers/global_planner.py": "762aeae760b4e81757cebf86a21171cb757af8d7462cc13cbe7f6a80d49efaed",
+    "src/utils/controllers/harvest.py": "a4286ac7c00d1d9e4aafc01c3dff5b750aade313a21797719e33c27859418d64",
+    "src/utils/controllers/metabolism.py": "04a7c1230d637aefe5c11656311de34cdbd630f5f0f3c90710353a201ad6c025",
+    "src/utils/controllers/navigation.py": "399c0777f6c7fb16f496e56a85cf1bda2322c466add3e92ccb47d5a5e3ae0827",
+    "src/utils/controllers/policy_inputs.py": "1a343c6df9cb0f1254f9cebc1bf1b4b0432c91c8138dc2017e212b171e1f85cf",
+    "src/utils/controllers/population.py": "361879d5475b409ba4826a426596e6f078f218d20dccec7080b43736163d378c",
+    "src/utils/controllers/predator_belief.py": "fbd01523367e9c560c530fa38c7f395b86b891fbf3b93d008f703b73b49e1774",
+    "src/utils/controllers/simple_policy.py": "a9ce26008dd76efd85e3fb9efeae75491222ccf01d437966ef8726c0c69632f3",
+    "src/utils/controllers/survey_gaps.py": "70fcc1dcc2f92a7150565cff7354ca96e6d1fb9d613715f0ea120c7f0affdde1",
+    "src/utils/controllers/territories.py": "dc9b9dd22644fe5a95f4b31a3faad4d8fffc1fc79aee702ff893d878d59b99a9",
+    "src/utils/controllers/trap_map.py": "fce86153fb8428be8b0c290031f1844e4b58da9ef0c3b9c963945622aa9c1719",
+    "src/utils/controllers/travel_cost.py": "deb162c150dcac36587fda838b69658088f60b4a6eaa4bd8dfbb1509c2d58201",
+    "src/utils/controllers/world_estimator.py": "bcf192ef96707204d72a3767aee90b94e0bfb0b7e6c6ab7ca02b560582bd671e",
+    "src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+    "src/utils/map_renderer.py": "d36bab4d203a5aba3b5f8c9503a0f934a0b5cb1c91e2a23bc41917c8ede8ca24",
+    "src/utils/planner_overlay.py": "3d2385a338bdfffc89658e459739b8650aebbe39c7b526d619311f1144a5d388",
+    "src/utils/playback.py": "5c8c407349124eded408f342f5cc4058c1f97b966acf517e21a25ba941d2ccf3",
+    "src/utils/run_diagnostics.py": "e7b4b5051c44774f740315e581f5594baa8e2c495d5b8110a80bf880965c5881",
+    "src/utils/run_report.py": "bc5e279430b217128e09d200d8def8e9fa9f22204e18c6e0751c5d68605665ab",
+    "src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+    "src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1",
+    "src/utils/trap_sites.py": "5b046e96c53a432fe0b67db62351d66af52517a91dbacb00eb4f9109ee60074a",
+    "scripts/seed_biome_prefix_probe.py": "a51bb941fee7fa6e518b71cb9264ceadf984be16a099d92e2c7e539562b06432",
+    "scripts/seed_joint_constraints_probe.py": "a38364ca3baddf4ca08445ae54e5a2c4b44677e79a35c485d738b30170630d23"
+  },
+  "public_signature": {
+    "founder_headings": [
+      {
+        "agent_id": 0,
+        "hypotheses": [
+          0.5896025039967833
+        ]
+      },
+      {
+        "agent_id": 1,
+        "hypotheses": [
+          4.92219738894021
+        ]
+      },
+      {
+        "agent_id": 2,
+        "hypotheses": [
+          1.0808974450695583
+        ]
+      },
+      {
+        "agent_id": 3,
+        "hypotheses": [
+          5.811828747882027
+        ]
+      },
+      {
+        "agent_id": 4,
+        "hypotheses": [
+          3.7582586794122137
+        ]
+      }
+    ],
+    "founder_positions": [
+      {
+        "agent_id": 1,
+        "xy": [
+          302.7586974331056,
+          76.73638193475657
+        ]
+      },
+      {
+        "agent_id": 2,
+        "xy": [
+          848.8941761784853,
+          1040.602416410663
+        ]
+      },
+      {
+        "agent_id": 3,
+        "xy": [
+          733.9253301355715,
+          983.343788114989
+        ]
+      },
+      {
+        "agent_id": 4,
+        "xy": [
+          1451.855137469621,
+          647.3411512380341
+        ]
+      }
+    ],
+    "biome_samples": [
+      {
+        "agent_id": 1,
+        "biome": "forest",
+        "x": 302.7586974331056,
+        "y": 76.73638193475657,
+        "possible_pixels": [
+          [
+            302,
+            76
+          ]
+        ]
+      },
+      {
+        "agent_id": 2,
+        "biome": "forest",
+        "x": 848.8941761784853,
+        "y": 1040.602416410663,
+        "possible_pixels": [
+          [
+            848,
+            1040
+          ]
+        ]
+      },
+      {
+        "agent_id": 3,
+        "biome": "swamp",
+        "x": 733.9253301355715,
+        "y": 983.343788114989,
+        "possible_pixels": [
+          [
+            733,
+            983
+          ]
+        ]
+      },
+      {
+        "agent_id": 4,
+        "biome": "swamp",
+        "x": 1451.855137469621,
+        "y": 647.3411512380341,
+        "possible_pixels": [
+          [
+            1451,
+            647
+          ]
+        ]
+      }
+    ],
+    "rock_lengths": [
+      30.85578637654583,
+      35.854223415919826,
+      42.2821286182085,
+      42.61174291717702,
+      46.719371714149936,
+      48.124796078321765,
+      48.27057730147385,
+      50.40067698296924,
+      55.61609095611993,
+      59.77526844049281,
+      60.513288651161474,
+      60.680758831661585,
+      66.09988789475209,
+      67.82699166984933,
+      67.86688475703842,
+      71.70734926735513,
+      72.10194462722772,
+      73.46580333389761,
+      73.9370574923778,
+      74.47979026496934,
+      75.6235685429794,
+      76.82874030029195,
+      79.26495497377334,
+      82.66305533542152,
+      83.24220946454841,
+      85.58338504738367,
+      87.18094007170406,
+      99.14837875789748
+    ],
+    "world_rock_edges": [
+      [
+        [
+          833.89765837322,
+          785.8571728633209
+        ],
+        [
+          833.89765837322,
+          851.9570607580729
+        ]
+      ],
+      [
+        [
+          833.89765837322,
+          851.9570607580729
+        ],
+        [
+          901.7645431302585,
+          851.9570607580729
+        ]
+      ],
+      [
+        [
+          879.7100708214354,
+          925.9776607932425
+        ],
+        [
+          966.8910108931395,
+          925.9776607932424
+        ]
+      ],
+      [
+        [
+          879.7100708214354,
+          925.9776607932425
+        ],
+        [
+          879.7100708214355,
+          985.7529292337354
+        ]
+      ],
+      [
+        [
+          879.7100708214355,
+          985.7529292337354
+        ],
+        [
+          966.8910108931395,
+          985.7529292337352
+        ]
+      ],
+      [
+        [
+          1316.4188253220382,
+          555.4409809060762
+        ],
+        [
+          1316.4188253220382,
+          603.565776984398
+        ]
+      ],
+      [
+        [
+          1316.4188253220382,
+          603.565776984398
+        ],
+        [
+          1389.8846286559356,
+          603.565776984398
+        ]
+      ],
+      [
+        [
+          1389.8846286559358,
+          555.4409809060762
+        ],
+        [
+          1389.8846286559356,
+          603.565776984398
+        ]
+      ],
+      [
+        [
+          756.3009650613369,
+          989.9163735683908
+        ],
+        [
+          855.4493438192344,
+          989.9163735683909
+        ]
+      ],
+      [
+        [
+          756.3009650613369,
+          989.9163735683908
+        ],
+        [
+          756.3009650613369,
+          1032.1985021865994
+        ]
+      ],
+      [
+        [
+          403.0727636998748,
+          112.78400276592637
+        ],
+        [
+          438.92698711579465,
+          112.78400276592637
+        ]
+      ],
+      [
+        [
+          403.0727636998748,
+          112.78400276592637
+        ],
+        [
+          403.0727636998749,
+          173.46476159758794
+        ]
+      ],
+      [
+        [
+          349.97394051400374,
+          136.66876471669315
+        ],
+        [
+          380.8297268905496,
+          136.66876471669312
+        ]
+      ],
+      [
+        [
+          349.97394051400374,
+          136.66876471669315
+        ],
+        [
+          349.9739405140037,
+          179.28050763387017
+        ]
+      ],
+      [
+        [
+          322.1409435104058,
+          181.26907165621947
+        ],
+        [
+          393.848292777761,
+          181.26907165621947
+        ]
+      ],
+      [
+        [
+          756.3009650613367,
+          1032.1985021865994
+        ],
+        [
+          855.4493438192342,
+          1032.1985021865994
+        ]
+      ],
+      [
+        [
+          322.14094351040586,
+          181.26907165621947
+        ],
+        [
+          322.14094351040586,
+          260.5340266299928
+        ]
+      ],
+      [
+        [
+          601.7096939060359,
+          925.7027981517285
+        ],
+        [
+          601.7096939060359,
+          1008.9450076162769
+        ]
+      ],
+      [
+        [
+          1404.8372890872422,
+          668.0138218982829
+        ],
+        [
+          1465.3505777384037,
+          668.013821898283
+        ]
+      ],
+      [
+        [
+          855.4493438192342,
+          989.9163735683909
+        ],
+        [
+          855.4493438192342,
+          1032.1985021865994
+        ]
+      ],
+      [
+        [
+          588.2877809430388,
+          854.015793535088
+        ],
+        [
+          588.2877809430388,
+          921.8427852049374
+        ]
+      ],
+      [
+        [
+          1028.468294935988,
+          1081.2671264406579
+        ],
+        [
+          1114.0516799833717,
+          1081.2671264406579
+        ]
+      ],
+      [
+        [
+          1028.468294935988,
+          1081.2671264406579
+        ],
+        [
+          1028.468294935988,
+          1136.8832173967778
+        ]
+      ],
+      [
+        [
+          701.9667258345147,
+          890.6427641867955
+        ],
+        [
+          784.6297811699362,
+          890.6427641867953
+        ]
+      ]
+    ]
+  },
+  "extraction_validation": {
+    "heading_checks": 31,
+    "max_heading_error": 8.881784197001252e-16,
+    "public_frame_sha256": [
+      "07c5f87be250c4c2c96448a71407b4b8dc4ad632e6d9a8a862d681be8962d9ee",
+      "3b152c71293ab4aa84c3d1598e566cf35ae9846144b3679fd0ec334e4a776aa9",
+      "c670cf22add06be7a5f8c8198b736d7c3624663208a1df563b86ea3d31cd6a9b",
+      "fa31c8aca9cd8fd24c5d768caf92660bb49c73efc3f1c8d1de63b8d63cae70cc",
+      "afbd91514b5c395054f65fac01b97bdfd8e5a0b522e89a2fba21ccae58d565c2",
+      "3b908a258c0c699d0722b51f47fbd33b4ae41c0c795058456db110a7a7de128e",
+      "33c2f8e8b5824e98763ee3a55cf872ba3efd55dd911122bd8f84a0cb90b48177"
+    ]
+  },
+  "candidates": [
+    {
+      "seed": 3,
+      "generation_seconds": 1.459574900000007,
+      "heading_match": true,
+      "position_match": true,
+      "rock_length_match": true,
+      "world_edge_match": true,
+      "joint_match": true,
+      "public_replay_match": true
+    },
+    {
+      "seed": 2928,
+      "generation_seconds": 1.4628942999988794,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 3957,
+      "generation_seconds": 1.4748670999979367,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 5467,
+      "generation_seconds": 1.6249425999994855,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 5799,
+      "generation_seconds": 1.6326096000120742,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 7786,
+      "generation_seconds": 1.5640527000068687,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 8432,
+      "generation_seconds": 1.5302416000049561,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 9097,
+      "generation_seconds": 1.4626065000047674,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 13571,
+      "generation_seconds": 1.477731799997855,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 14273,
+      "generation_seconds": 1.4609544999984792,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 16364,
+      "generation_seconds": 1.4628092000057222,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 16687,
+      "generation_seconds": 1.4577881000004709,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 16860,
+      "generation_seconds": 1.576663899992127,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 17179,
+      "generation_seconds": 1.6757479000079911,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 18782,
+      "generation_seconds": 1.6185081000003265,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 19264,
+      "generation_seconds": 1.7009913999936543,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 19353,
+      "generation_seconds": 1.7252783000003546,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 19593,
+      "generation_seconds": 1.6903590000001714,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 20272,
+      "generation_seconds": 1.6133985000051325,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 21237,
+      "generation_seconds": 1.590787499997532,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 21962,
+      "generation_seconds": 1.6360492999956477,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 22029,
+      "generation_seconds": 1.6725079999887384,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 22097,
+      "generation_seconds": 1.6310357000038493,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 24534,
+      "generation_seconds": 1.6211565999983577,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 25596,
+      "generation_seconds": 1.5865078999922844,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 25642,
+      "generation_seconds": 1.6751330000115559,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 27727,
+      "generation_seconds": 1.5778952999971807,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 30674,
+      "generation_seconds": 1.615485100002843,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 31705,
+      "generation_seconds": 1.737389499990968,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 33537,
+      "generation_seconds": 1.6018303999881027,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 35865,
+      "generation_seconds": 1.6094057000009343,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 36059,
+      "generation_seconds": 2.885149400011869,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 38710,
+      "generation_seconds": 3.943236999999499,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 39385,
+      "generation_seconds": 3.6087815999926534,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 39696,
+      "generation_seconds": 1.883252600004198,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    }
+  ],
+  "limitations": [
+    "Bounded enumeration, not algebraic seed inversion.",
+    "One target; no claim of population-wide recovery rate.",
+    "Seven native frames with only known stationary turns.",
+    "Matching receives public features and known candidate worlds only.",
+    "Headings and edges are checked after native initialization.",
+    "Native-world cap prevents unexpectedly long runs on weak biome evidence."
+  ],
+  "prefix_seconds": 1.9702700000052573,
+  "prefix_survivors": [
+    3,
+    2928,
+    3957,
+    5467,
+    5799,
+    7786,
+    8432,
+    9097,
+    13571,
+    14273,
+    16364,
+    16687,
+    16860,
+    17179,
+    18782,
+    19264,
+    19353,
+    19593,
+    20272,
+    21237,
+    21962,
+    22029,
+    22097,
+    24534,
+    25596,
+    25642,
+    27727,
+    30674,
+    31705,
+    33537,
+    35865,
+    36059,
+    38710,
+    39385,
+    39696,
+    39896,
+    40492,
+    41572,
+    41711,
+    43981,
+    44395,
+    45133,
+    47801,
+    48159,
+    48495,
+    48793,
+    49606,
+    50256,
+    52687,
+    53519,
+    55186,
+    55742,
+    57431,
+    57589,
+    57967,
+    58946,
+    59900,
+    60980,
+    63563,
+    64661,
+    65264,
+    68202,
+    69680,
+    70910,
+    72015,
+    73010,
+    73189,
+    74960,
+    75701,
+    75718,
+    76238,
+    77661,
+    79266,
+    80724,
+    80827,
+    80901,
+    81167,
+    82706,
+    83597,
+    84678,
+    85100,
+    85268,
+    86961,
+    87775,
+    88313,
+    88392,
+    89806,
+    90215,
+    91232,
+    91965,
+    92309,
+    92353,
+    96207,
+    96588,
+    96659,
+    97158,
+    97799,
+    97856,
+    99812
+  ]
+}

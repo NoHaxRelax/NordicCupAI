@@ -1,0 +1,321 @@
+{
+  "complete": true,
+  "sources": {
+    "scripts/seed_recovery_probe.py": "958283c9a2b89284ac9ac6266526b7547e1993ad455645872f453cc3f40d31b4",
+    "src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+    "src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+    "src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+    "src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+    "src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+    "src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+    "src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+    "src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+    "src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+    "src/utils/controllers/biome_estimator.py": "b7b87d1a7f94d1a400e953cfe6c26f91ad6b1b87eadc944c089243edfd72d47a",
+    "src/utils/controllers/boundary_anchor.py": "e7667fe4877b26577cad735b10eafe4101cadb7569f63e830d7d0c229ea31b2d",
+    "src/utils/controllers/conservation.py": "26ae3fc196754945490cf52b67210219f944c8d75fe89b38e67fdcf3f4274388",
+    "src/utils/controllers/coverage.py": "65ef727894aa1622432e2acae2cb42865561d393cc8707091b6f1a65030ba40e",
+    "src/utils/controllers/crowd_memory.py": "859308cfab8ea367f0f2c6ae22cd29947a0a06457db0b6ff490988ef0ec8ff11",
+    "src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+    "src/utils/controllers/expert_policy.py": "6fa49475242e21a33d2a9fbf80bab215c88b6a828e5c321cc38b941885df699b",
+    "src/utils/controllers/exploration.py": "2d0d005fbbd40f28749cc789e359741c1b6ba45a626348d8c0a5ce9a6a0a93b8",
+    "src/utils/controllers/global_planner.py": "f55497813270af27b99fa5908e61043131111b3a5ebced32d0439936cad23823",
+    "src/utils/controllers/harvest.py": "a4286ac7c00d1d9e4aafc01c3dff5b750aade313a21797719e33c27859418d64",
+    "src/utils/controllers/metabolism.py": "04a7c1230d637aefe5c11656311de34cdbd630f5f0f3c90710353a201ad6c025",
+    "src/utils/controllers/navigation.py": "399c0777f6c7fb16f496e56a85cf1bda2322c466add3e92ccb47d5a5e3ae0827",
+    "src/utils/controllers/policy_inputs.py": "0ea284ed68b20789ee715637793e691ecc696c4ee72006ca26158bebc174cb37",
+    "src/utils/controllers/population.py": "361879d5475b409ba4826a426596e6f078f218d20dccec7080b43736163d378c",
+    "src/utils/controllers/simple_policy.py": "a9ce26008dd76efd85e3fb9efeae75491222ccf01d437966ef8726c0c69632f3",
+    "src/utils/controllers/survey_gaps.py": "70fcc1dcc2f92a7150565cff7354ca96e6d1fb9d613715f0ea120c7f0affdde1",
+    "src/utils/controllers/territories.py": "dc9b9dd22644fe5a95f4b31a3faad4d8fffc1fc79aee702ff893d878d59b99a9",
+    "src/utils/controllers/trap_map.py": "fce86153fb8428be8b0c290031f1844e4b58da9ef0c3b9c963945622aa9c1719",
+    "src/utils/controllers/travel_cost.py": "deb162c150dcac36587fda838b69658088f60b4a6eaa4bd8dfbb1509c2d58201",
+    "src/utils/controllers/world_estimator.py": "bcf192ef96707204d72a3767aee90b94e0bfb0b7e6c6ab7ca02b560582bd671e",
+    "src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+    "src/utils/map_renderer.py": "d36bab4d203a5aba3b5f8c9503a0f934a0b5cb1c91e2a23bc41917c8ede8ca24",
+    "src/utils/planner_overlay.py": "3d2385a338bdfffc89658e459739b8650aebbe39c7b526d619311f1144a5d388",
+    "src/utils/playback.py": "5c8c407349124eded408f342f5cc4058c1f97b966acf517e21a25ba941d2ccf3",
+    "src/utils/run_diagnostics.py": "e7b4b5051c44774f740315e581f5594baa8e2c495d5b8110a80bf880965c5881",
+    "src/utils/run_report.py": "bc5e279430b217128e09d200d8def8e9fa9f22204e18c6e0751c5d68605665ab",
+    "src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+    "src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1",
+    "src/utils/trap_sites.py": "5b046e96c53a432fe0b67db62351d66af52517a91dbacb00eb4f9109ee60074a",
+    "scripts/seed_biome_prefix_probe.py": "a51bb941fee7fa6e518b71cb9264ceadf984be16a099d92e2c7e539562b06432"
+  },
+  "scan_count": 100000,
+  "targets": [
+    {
+      "target_seed": 3,
+      "native_generation_seconds": 1.4747142999985954,
+      "frames": [
+        {
+          "sim_time": 0.1,
+          "distinct_rock_lengths": 7,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.2,
+          "distinct_rock_lengths": 13,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.30000000000000004,
+          "distinct_rock_lengths": 18,
+          "localized_agents": 4
+        },
+        {
+          "sim_time": 0.4,
+          "distinct_rock_lengths": 21,
+          "localized_agents": 4
+        },
+        {
+          "sim_time": 0.5,
+          "distinct_rock_lengths": 22,
+          "localized_agents": 4
+        },
+        {
+          "sim_time": 0.6,
+          "distinct_rock_lengths": 28,
+          "localized_agents": 4
+        },
+        {
+          "sim_time": 0.7,
+          "distinct_rock_lengths": 28,
+          "localized_agents": 4
+        }
+      ],
+      "public_samples": [
+        {
+          "agent_id": 1,
+          "biome": "forest",
+          "x": 302.7586974331056,
+          "y": 76.73638193475657,
+          "possible_pixels": [
+            [
+              302,
+              76
+            ]
+          ]
+        },
+        {
+          "agent_id": 2,
+          "biome": "forest",
+          "x": 848.8941761784853,
+          "y": 1040.602416410663,
+          "possible_pixels": [
+            [
+              848,
+              1040
+            ]
+          ]
+        },
+        {
+          "agent_id": 3,
+          "biome": "swamp",
+          "x": 733.9253301355715,
+          "y": 983.343788114989,
+          "possible_pixels": [
+            [
+              733,
+              983
+            ]
+          ]
+        },
+        {
+          "agent_id": 4,
+          "biome": "swamp",
+          "x": 1451.855137469621,
+          "y": 647.3411512380341,
+          "possible_pixels": [
+            [
+              1451,
+              647
+            ]
+          ]
+        }
+      ],
+      "localization_checks": 10,
+      "max_position_error": 2.5421149729252077e-13,
+      "true_seed_passes_necessary_condition": true,
+      "prefix_survivors": 99,
+      "prefix_survival_fraction": 0.00099
+    },
+    {
+      "target_seed": 11,
+      "native_generation_seconds": 1.4774411999969743,
+      "frames": [
+        {
+          "sim_time": 0.1,
+          "distinct_rock_lengths": 10,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.2,
+          "distinct_rock_lengths": 19,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.30000000000000004,
+          "distinct_rock_lengths": 28,
+          "localized_agents": 3
+        },
+        {
+          "sim_time": 0.4,
+          "distinct_rock_lengths": 34,
+          "localized_agents": 3
+        },
+        {
+          "sim_time": 0.5,
+          "distinct_rock_lengths": 49,
+          "localized_agents": 3
+        },
+        {
+          "sim_time": 0.6,
+          "distinct_rock_lengths": 54,
+          "localized_agents": 4
+        },
+        {
+          "sim_time": 0.7,
+          "distinct_rock_lengths": 54,
+          "localized_agents": 4
+        }
+      ],
+      "public_samples": [
+        {
+          "agent_id": 1,
+          "biome": "forest",
+          "x": 1271.6681748608992,
+          "y": 203.5439611511593,
+          "possible_pixels": [
+            [
+              1271,
+              203
+            ]
+          ]
+        },
+        {
+          "agent_id": 2,
+          "biome": "river",
+          "x": 1505.3133369023064,
+          "y": 932.0597784492218,
+          "possible_pixels": [
+            [
+              1505,
+              932
+            ]
+          ]
+        },
+        {
+          "agent_id": 3,
+          "biome": "swamp",
+          "x": 592.5433925568611,
+          "y": 188.42304036106393,
+          "possible_pixels": [
+            [
+              592,
+              188
+            ]
+          ]
+        },
+        {
+          "agent_id": 4,
+          "biome": "forest",
+          "x": 227.5484367152715,
+          "y": 755.9211545009503,
+          "possible_pixels": [
+            [
+              227,
+              755
+            ]
+          ]
+        }
+      ],
+      "localization_checks": 10,
+      "max_position_error": 1.9895196601282805e-13,
+      "true_seed_passes_necessary_condition": true,
+      "prefix_survivors": 1526,
+      "prefix_survival_fraction": 0.01526
+    },
+    {
+      "target_seed": 20260919,
+      "native_generation_seconds": 1.4967858999880264,
+      "frames": [
+        {
+          "sim_time": 0.1,
+          "distinct_rock_lengths": 7,
+          "localized_agents": 0
+        },
+        {
+          "sim_time": 0.2,
+          "distinct_rock_lengths": 15,
+          "localized_agents": 1
+        },
+        {
+          "sim_time": 0.30000000000000004,
+          "distinct_rock_lengths": 21,
+          "localized_agents": 1
+        },
+        {
+          "sim_time": 0.4,
+          "distinct_rock_lengths": 23,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.5,
+          "distinct_rock_lengths": 31,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.6,
+          "distinct_rock_lengths": 38,
+          "localized_agents": 2
+        },
+        {
+          "sim_time": 0.7,
+          "distinct_rock_lengths": 38,
+          "localized_agents": 2
+        }
+      ],
+      "public_samples": [
+        {
+          "agent_id": 0,
+          "biome": "swamp",
+          "x": 1468.0714524169716,
+          "y": 986.2220254990867,
+          "possible_pixels": [
+            [
+              1468,
+              986
+            ]
+          ]
+        },
+        {
+          "agent_id": 3,
+          "biome": "river",
+          "x": 335.0226683828331,
+          "y": 76.18636974942038,
+          "possible_pixels": [
+            [
+              335,
+              76
+            ]
+          ]
+        }
+      ],
+      "localization_checks": 7,
+      "max_position_error": 2.5421149729252077e-13,
+      "true_seed_passes_necessary_condition": true,
+      "prefix_survivors": 24889,
+      "prefix_survival_fraction": 0.24889
+    }
+  ],
+  "limitations": [
+    "Native default 1600x1200 map and 30-unit fixed walls assumed.",
+    "Seven frames: one empty tick plus six 60-degree stationary turns.",
+    "The filter receives only public boundary-localized biome samples.",
+    "Survivors still need river, geometry and full observation verification.",
+    "No broad-range seed inversion or recovery is demonstrated."
+  ],
+  "prefix_scan_seconds_all_targets": 2.3858823999908054,
+  "candidate_prefixes_per_second": 41913.21416360897
+}

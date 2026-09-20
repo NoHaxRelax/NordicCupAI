@@ -1,0 +1,438 @@
+{
+  "complete": true,
+  "target_seed": 20260919,
+  "scan_start": 0,
+  "scan_count": 16,
+  "sources": {
+    "scripts/seed_recovery_probe.py": "958283c9a2b89284ac9ac6266526b7547e1993ad455645872f453cc3f40d31b4",
+    "src/core.py": "9f5b690f7cf6717e432bacf8021cf0c55e730a71c42249c6e8ffe35decba83f0",
+    "src/elements/agent.py": "220f12cf3f4bb0bb402faff9475a1a0f4f54a95ef19a0c5c7a15d3902b217dab",
+    "src/elements/biome.py": "c30df2dd55fe5f3d8a4c2d4630f630c7c983fd5b0732af216b386f0d9fbb7943",
+    "src/elements/creature.py": "05eff7ffb551ed0d157f9f363a5bc6fc190c4e0a9a8fbf53e773583de4971b82",
+    "src/elements/environment.py": "9f192dc3ec2789617d9573c6405f39639ec5a69a4b2ebf6d4c32ba73af30d38c",
+    "src/elements/fruit.py": "c4dbdeeb43dfc8c1b08b08ef21d21ac2019e491c2f11410618ceb8c1c4c7c5c1",
+    "src/elements/obstacle.py": "7876567facdaa7b133e3d227bdf3570f4c1b7b1d83d69562defa2393c244c6c2",
+    "src/elements/predator.py": "b52494afcc95fe86587cb68791e5c8f1dbcd6f687b4073d51f58e157e340247d",
+    "src/elements/tree.py": "bcfb03551d0d34a1846f9e256973572c78cc8e20974bac4c75396151cf7d0b70",
+    "src/utils/controllers/biome_estimator.py": "b7b87d1a7f94d1a400e953cfe6c26f91ad6b1b87eadc944c089243edfd72d47a",
+    "src/utils/controllers/boundary_anchor.py": "e7667fe4877b26577cad735b10eafe4101cadb7569f63e830d7d0c229ea31b2d",
+    "src/utils/controllers/conservation.py": "26ae3fc196754945490cf52b67210219f944c8d75fe89b38e67fdcf3f4274388",
+    "src/utils/controllers/coverage.py": "65ef727894aa1622432e2acae2cb42865561d393cc8707091b6f1a65030ba40e",
+    "src/utils/controllers/crowd_memory.py": "859308cfab8ea367f0f2c6ae22cd29947a0a06457db0b6ff490988ef0ec8ff11",
+    "src/utils/controllers/dummy_agent_policy.py": "4dac25ef0868daca84f20f91a47f069da7f276d6cc4bf175b1f762277982b23d",
+    "src/utils/controllers/expert_policy.py": "72b38d63d2d8154a97f8b264af61e0b4c9c84f76cde937fc3a2a9cdc193867be",
+    "src/utils/controllers/exploration.py": "2d0d005fbbd40f28749cc789e359741c1b6ba45a626348d8c0a5ce9a6a0a93b8",
+    "src/utils/controllers/global_planner.py": "762aeae760b4e81757cebf86a21171cb757af8d7462cc13cbe7f6a80d49efaed",
+    "src/utils/controllers/harvest.py": "a4286ac7c00d1d9e4aafc01c3dff5b750aade313a21797719e33c27859418d64",
+    "src/utils/controllers/metabolism.py": "04a7c1230d637aefe5c11656311de34cdbd630f5f0f3c90710353a201ad6c025",
+    "src/utils/controllers/navigation.py": "399c0777f6c7fb16f496e56a85cf1bda2322c466add3e92ccb47d5a5e3ae0827",
+    "src/utils/controllers/policy_inputs.py": "1a343c6df9cb0f1254f9cebc1bf1b4b0432c91c8138dc2017e212b171e1f85cf",
+    "src/utils/controllers/population.py": "361879d5475b409ba4826a426596e6f078f218d20dccec7080b43736163d378c",
+    "src/utils/controllers/predator_belief.py": "fbd01523367e9c560c530fa38c7f395b86b891fbf3b93d008f703b73b49e1774",
+    "src/utils/controllers/simple_policy.py": "a9ce26008dd76efd85e3fb9efeae75491222ccf01d437966ef8726c0c69632f3",
+    "src/utils/controllers/survey_gaps.py": "70fcc1dcc2f92a7150565cff7354ca96e6d1fb9d613715f0ea120c7f0affdde1",
+    "src/utils/controllers/territories.py": "dc9b9dd22644fe5a95f4b31a3faad4d8fffc1fc79aee702ff893d878d59b99a9",
+    "src/utils/controllers/trap_map.py": "fce86153fb8428be8b0c290031f1844e4b58da9ef0c3b9c963945622aa9c1719",
+    "src/utils/controllers/travel_cost.py": "deb162c150dcac36587fda838b69658088f60b4a6eaa4bd8dfbb1509c2d58201",
+    "src/utils/controllers/world_estimator.py": "bcf192ef96707204d72a3767aee90b94e0bfb0b7e6c6ab7ca02b560582bd671e",
+    "src/utils/DTOs.py": "48e7a5948fcfa5533b02e5a89dd01dce57df761e7ad6e1bef3015541ef38c52f",
+    "src/utils/map_renderer.py": "d36bab4d203a5aba3b5f8c9503a0f934a0b5cb1c91e2a23bc41917c8ede8ca24",
+    "src/utils/planner_overlay.py": "3d2385a338bdfffc89658e459739b8650aebbe39c7b526d619311f1144a5d388",
+    "src/utils/playback.py": "5c8c407349124eded408f342f5cc4058c1f97b966acf517e21a25ba941d2ccf3",
+    "src/utils/run_diagnostics.py": "e7b4b5051c44774f740315e581f5594baa8e2c495d5b8110a80bf880965c5881",
+    "src/utils/run_report.py": "bc5e279430b217128e09d200d8def8e9fa9f22204e18c6e0751c5d68605665ab",
+    "src/utils/sensing.py": "bf4e9a1eb0e892742b0dc31b1f99cd95c5c2992d696d4a44a98093c94635b714",
+    "src/utils/simulation.py": "70d3c94879218de1c01b69b1932e0a9a4b3077c6d6db746d69b6ed7a1c68d1e1",
+    "src/utils/trap_sites.py": "5b046e96c53a432fe0b67db62351d66af52517a91dbacb00eb4f9109ee60074a",
+    "scripts/seed_biome_prefix_probe.py": "a51bb941fee7fa6e518b71cb9264ceadf984be16a099d92e2c7e539562b06432",
+    "scripts/seed_joint_constraints_probe.py": "a38364ca3baddf4ca08445ae54e5a2c4b44677e79a35c485d738b30170630d23"
+  },
+  "public_signature": {
+    "founder_headings": [
+      {
+        "agent_id": 0,
+        "hypotheses": [
+          4.178746789409975
+        ]
+      },
+      {
+        "agent_id": 1,
+        "hypotheses": [
+          1.6599201270055113
+        ]
+      },
+      {
+        "agent_id": 2,
+        "hypotheses": [
+          3.0794961316987592
+        ]
+      },
+      {
+        "agent_id": 3,
+        "hypotheses": [
+          1.030355859869096
+        ]
+      },
+      {
+        "agent_id": 4,
+        "hypotheses": [
+          3.7809324020704724
+        ]
+      }
+    ],
+    "founder_positions": [
+      {
+        "agent_id": 0,
+        "xy": [
+          1468.0714524169716,
+          986.2220254990867
+        ]
+      },
+      {
+        "agent_id": 3,
+        "xy": [
+          335.0226683828331,
+          76.18636974942038
+        ]
+      }
+    ],
+    "biome_samples": [
+      {
+        "agent_id": 0,
+        "biome": "swamp",
+        "x": 1468.0714524169716,
+        "y": 986.2220254990867,
+        "possible_pixels": [
+          [
+            1468,
+            986
+          ]
+        ]
+      },
+      {
+        "agent_id": 3,
+        "biome": "river",
+        "x": 335.0226683828331,
+        "y": 76.18636974942038,
+        "possible_pixels": [
+          [
+            335,
+            76
+          ]
+        ]
+      }
+    ],
+    "rock_lengths": [
+      31.24229003213652,
+      33.41478688495852,
+      33.77933891373107,
+      33.841124063609975,
+      36.57376295235086,
+      39.58737305144052,
+      45.7018743899755,
+      46.97982375908155,
+      47.389301508734356,
+      48.22760249325355,
+      51.901254794570086,
+      52.23352596298039,
+      52.60958479793204,
+      52.613866749792805,
+      52.873858414797716,
+      53.135256900950544,
+      53.61985990448249,
+      53.88387272427853,
+      58.63472083820538,
+      60.005097644483726,
+      61.76261262495404,
+      61.98307926191376,
+      63.828176108816486,
+      66.0146316517338,
+      68.44222607556557,
+      72.00595476038232,
+      79.3614287294304,
+      80.70673717107792,
+      83.58622335731513,
+      84.10839378270701,
+      84.33017914578342,
+      86.17334142033586,
+      88.1908189646554,
+      88.78091370239984,
+      90.96774684032947,
+      94.97091032321623,
+      96.12012944612852,
+      97.69714708442342
+    ],
+    "world_rock_edges": [
+      [
+        [
+          1416.4530698316835,
+          920.1880236937238
+        ],
+        [
+          1511.4239801548997,
+          920.1880236937238
+        ]
+      ],
+      [
+        [
+          431.5315586807474,
+          87.51466090223278
+        ],
+        [
+          431.5315586807474,
+          146.14938174043814
+        ]
+      ],
+      [
+        [
+          352.8461913326047,
+          142.08997904117615
+        ],
+        [
+          436.43241468991977,
+          142.08997904117612
+        ]
+      ],
+      [
+        [
+          352.8461913326047,
+          142.08997904117615
+        ],
+        [
+          352.84619133260463,
+          190.3175815344297
+        ]
+      ],
+      [
+        [
+          1475.740310030995,
+          918.9889028577068
+        ],
+        [
+          1528.349894828927,
+          918.9889028577068
+        ]
+      ],
+      [
+        [
+          209.9600909252827,
+          197.6878865109358
+        ],
+        [
+          209.96009092528277,
+          251.57175923521436
+        ]
+      ],
+      [
+        [
+          178.7178008931462,
+          197.6878865109358
+        ],
+        [
+          209.9600909252827,
+          197.6878865109358
+        ]
+      ],
+      [
+        [
+          147.15220926245487,
+          178.82343223112798
+        ],
+        [
+          194.54151077118922,
+          178.82343223112795
+        ]
+      ],
+      [
+        [
+          194.5415107711892,
+          125.68817533017739
+        ],
+        [
+          194.54151077118922,
+          178.82343223112795
+        ]
+      ],
+      [
+        [
+          1533.4791178354678,
+          1012.7335105710603
+        ],
+        [
+          1597.3072939442843,
+          1012.7335105710603
+        ]
+      ],
+      [
+        [
+          1533.4791178354678,
+          1012.7335105710603
+        ],
+        [
+          1533.4791178354676,
+          1074.4961231960142
+        ]
+      ],
+      [
+        [
+          306.82908937367426,
+          23.295054195013016
+        ],
+        [
+          306.82908937367426,
+          91.73728027057858
+        ]
+      ],
+      [
+        [
+          1533.4791178354678,
+          1074.4961231960144
+        ],
+        [
+          1597.3072939442843,
+          1074.4961231960144
+        ]
+      ],
+      [
+        [
+          1273.9925269467403,
+          1008.4811688881134
+        ],
+        [
+          1273.9925269467403,
+          1061.3550273029111
+        ]
+      ],
+      [
+        [
+          1187.8191855264047,
+          1008.4811688881134
+        ],
+        [
+          1273.9925269467403,
+          1008.4811688881134
+        ]
+      ],
+      [
+        [
+          465.01149714834014,
+          62.66797714429137
+        ],
+        [
+          526.994576410254,
+          62.667977144291434
+        ]
+      ],
+      [
+        [
+          465.01149714834014,
+          62.66797714429137
+        ],
+        [
+          465.0114971483401,
+          150.8587961089468
+        ]
+      ],
+      [
+        [
+          431.5315586807474,
+          87.51466090223286
+        ],
+        [
+          483.7650846437278,
+          87.51466090223292
+        ]
+      ]
+    ]
+  },
+  "extraction_validation": {
+    "heading_checks": 31,
+    "max_heading_error": 2.220446049250313e-16,
+    "public_frame_sha256": [
+      "7ff0fc8cbe24dc68473220dac2736ed742d1eacf2e5f728cc8d0d401960262ef",
+      "d3e7258b339d605acd8723b1d1fae5b42bfa5ca378a16f615f33dc148e51c337",
+      "862b03456422541fca259530a6b54a89add76071f73afd1efdb5ecbd937fe7b0",
+      "93c5df1310301cf276d6d3931a5f3a415f2b93eaa2dab9eed2dc5c25290200bc",
+      "2bf744b02baf4cc764f6231ad03983190ee58ab8f1f65b2aa3970ceccdf567d5",
+      "9517bdce82c40b3ac0f12e777239e7fc37602c275634fe939c6ffebc555be443",
+      "f9f0fc8113a1a402e27f796a523d41ab8ebc83d500786b1cc5a099dbc55d0424"
+    ]
+  },
+  "candidates": [
+    {
+      "seed": 1,
+      "generation_seconds": 1.7129799999966053,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 3,
+      "generation_seconds": 1.6858584000001429,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 5,
+      "generation_seconds": 1.5963959999935469,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 7,
+      "generation_seconds": 1.558491599993431,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    },
+    {
+      "seed": 10,
+      "generation_seconds": 1.4322645999927772,
+      "heading_match": false,
+      "position_match": false,
+      "rock_length_match": false,
+      "world_edge_match": false,
+      "joint_match": false,
+      "public_replay_match": null
+    }
+  ],
+  "limitations": [
+    "Bounded enumeration, not algebraic seed inversion.",
+    "One target; no claim of population-wide recovery rate.",
+    "Seven native frames with only known stationary turns.",
+    "Matching receives public features and known candidate worlds only.",
+    "Headings and edges are checked after native initialization.",
+    "Native-world cap prevents unexpectedly long runs on weak biome evidence."
+  ],
+  "prefix_seconds": 0.00042529999336693436,
+  "prefix_survivors": [
+    1,
+    3,
+    5,
+    7,
+    10
+  ],
+  "matches": {
+    "heading_match": [],
+    "position_match": [],
+    "rock_length_match": [],
+    "world_edge_match": [],
+    "joint_match": [],
+    "public_replay_match": []
+  },
+  "total_seconds": 11.094525099993916
+}

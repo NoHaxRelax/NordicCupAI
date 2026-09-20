@@ -1,0 +1,23 @@
+{
+  "scan_count": 1000000,
+  "scan_start": 0,
+  "target_seed": 78431,
+  "survey_seconds": 30,
+  "samples": 64,
+  "elapsed_seconds": 22.487574599988875,
+  "seeds_per_second": 44469.0020061343,
+  "ten_million_extrapolated_seconds": 224.87574599988875,
+  "prefix_survivors": [
+    78431
+  ],
+  "input_sha256": "74f41b1718fcc6cc035670aa987447e2372a203532626fffaaf4e3b885bcab1e",
+  "source_sha256": {
+    "scripts/seed_biome_prefix_probe.py": "a51bb941fee7fa6e518b71cb9264ceadf984be16a099d92e2c7e539562b06432",
+    "scripts/seed_survey_probe.py": "6cd3f92804c57b3ef6d35db1709dd806f8d1ed1db237889387571ddf7e5369a4"
+  },
+  "limitations": [
+    "One target and one local run.",
+    "Measures final-map biome prefix filtering only, not native survivor verification.",
+    "Ten-million timing is an extrapolation, not a completed ten-million scan."
+  ]
+}
