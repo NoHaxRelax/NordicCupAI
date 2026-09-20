@@ -145,6 +145,13 @@ IPolicy* make_policy(const uint32_t* seed_key, size_t nkey, const Cfg& cfg, cons
     PR.gaze = cfg_get(cfg, "pred_gaze", PR.gaze);
     PR.cone_gate = cfg_get(cfg, "pred_cone_gate", PR.cone_gate);
     PR.cone_margin = cfg_get(cfg, "pred_cone_margin", PR.cone_margin);
+    PR.stuck_mode = cfg_get(cfg, "stuck_mode", PR.stuck_mode);
+    PR.stuck_radius = cfg_get(cfg, "stuck_radius", PR.stuck_radius);
+    PR.stuck_gap = cfg_get(cfg, "stuck_gap", PR.stuck_gap);
+    PR.stuck_reward = cfg_get(cfg, "stuck_reward", PR.stuck_reward);
+    PR.stuck_release = cfg_get(cfg, "stuck_release", PR.stuck_release);
+    PR.stuck_patience = cfg_get(cfg, "stuck_patience", PR.stuck_patience);
+    PR.stuck_energy = cfg_get(cfg, "stuck_energy", PR.stuck_energy);
     PR.wall_escape = cfg_get(cfg, "pred_wall_escape", PR.wall_escape);
     PR.wall_look = cfg_get(cfg, "pred_wall_look", PR.wall_look);
     PR.wall_reward = cfg_get(cfg, "pred_wall_reward", PR.wall_reward);

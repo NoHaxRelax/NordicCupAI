@@ -21,7 +21,7 @@ import numpy
 HERE = pathlib.Path(__file__).resolve().parent
 UNITS = ('_policy.cpp', '_orchard_policy.cpp')
 HEADERS = ('_engine.cpp', '_orchard.hpp', '_evasion.hpp', 'policy_abi.hpp', 'policy_iface.hpp',
-           '_shared_pysem.inc')
+           '_shared_pysem.inc', '../models/self_stuck.hpp')
 FLAGS = ['-O2', '-std=c++17', '-fPIC', '-ffp-contract=off', '-fno-fast-math',
          '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos']
 

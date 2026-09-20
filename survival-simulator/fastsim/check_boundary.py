@@ -33,8 +33,8 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 POLICY_UNIT = '_orchard_policy.cpp'
-POLICY_FILES = (POLICY_UNIT, '_orchard.hpp', '_evasion.hpp', 'policy_abi.hpp', 'policy_iface.hpp')
-ALLOWED_LOCAL_INCLUDES = {'policy_abi.hpp', 'policy_iface.hpp', '_orchard.hpp', '_evasion.hpp',
+POLICY_FILES = ('../models/self_stuck.hpp', POLICY_UNIT, '_orchard.hpp', '_evasion.hpp', 'policy_abi.hpp', 'policy_iface.hpp')
+ALLOWED_LOCAL_INCLUDES = {'../models/self_stuck.hpp', 'policy_abi.hpp', 'policy_iface.hpp', '_orchard.hpp', '_evasion.hpp',
                           '_shared_pysem.inc'}
 # Names that only exist on the engine side of the boundary. If one of these turns up
 # in the policy sources, something has reached across.

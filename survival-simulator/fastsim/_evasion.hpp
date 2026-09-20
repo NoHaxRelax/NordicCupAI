@@ -18,6 +18,7 @@ namespace orchard {
 
 struct PredParams {
     int64_t mode = 1;
+    double stuck_mode=0., stuck_radius=180., stuck_gap=105., stuck_reward=70., stuck_release=20., stuck_patience=20., stuck_energy=.4;
     double r = 70., face_r = 80., sprint_r = 40., dodge_r = 80., dodge_ang = 1.4, turn_max = 1.0;
     double gaze = 0., cone_gate = 0., cone_margin = 0.1;
     double pulse_degrees=0., pulse_ticks=8., pulse_idle=0.;
@@ -56,6 +57,8 @@ public:
         if (g.fruits.has(m.fruit)) g.fruits.at(m.fruit)->has_claim = false;
         m.has_fruit = false;
     }
+
+#include "../models/self_stuck.hpp"
 
     Plan legacy_act(Mind& m, const AState& s) {
         if (PRED.mode) {
@@ -131,6 +134,7 @@ public:
             s.obs=&shared;
         }
         Plan base=legacy_act(m,s);
+        if(PRED.stuck_mode>0.) base=self_stuck(m,s,base);
         bool active=time>=PRED.feature_start && (PRED.feature_population<=0 || states.size()<=PRED.feature_population);
         if (!active) return base;
         const Obs* t=threat(s);
