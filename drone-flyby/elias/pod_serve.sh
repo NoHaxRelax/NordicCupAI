@@ -17,7 +17,7 @@ export DRONE_DETECTOR="${DETECTOR:-ultralytics}" DRONE_WEIGHTS="$W" DRONE_AUTO_B
        DRONE_ANSWER_WINDOWS="$WIN" DRONE_ANSWER_CLASSES="${ANSWER_CLASSES:-}" \
        DRONE_CLASS_EXTENT="${CLASS_EXTENT:-{\}}" DRONE_HEDGE_FACTOR="${HEDGE:-0}" DRONE_BOX_SCALE="${BOX_SCALE:-{\}}" \
        DRONE_CLUSTER_BIRTHS="${CLUSTER_BIRTHS:-0}" DRONE_L1_WAYPOINTS="${L1_WAYPOINTS:-4}" \
-       DRONE_BOX_HEDGE="${BOX_HEDGE:-{\}}" DRONE_BOX_HEDGE_CONF="${BOX_HEDGE_CONF:-0.3}"
+       DRONE_BOX_HEDGE="${BOX_HEDGE:-{\}}" DRONE_BOX_HEDGE_CONF="${BOX_HEDGE_CONF:-0.3}" DRONE_HEDGE_GROUPS="${HEDGE_GROUPS:-}"
 export -p | grep -E '^declare -x (DRONE_|ELIAS_)' > /root/logs/serve.env   # the watchdog restarts api.py with this
 nohup python api.py > /root/logs/api.log 2>&1 &
 if [ -n "${DIRECT_URL:-}" ]; then

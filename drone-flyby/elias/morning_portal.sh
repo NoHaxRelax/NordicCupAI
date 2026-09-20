@@ -20,13 +20,15 @@ run() { TAG=$1; WIN=$2; shift 2
   env "$@" bash elias/pod_portal.sh $F3 $TAG "$WIN" > elias/out/logs/portal_$TAG.log 2>&1
   grep -E "RESULT|no URL|could not|server saw" elias/out/logs/portal_$TAG.log | cut -c1-220 >> "$A"; sleep 5; }
 routed() { run "$1" "$2" ANSWER_CLASSES="$3" BOX_SCALE="$ML" DETECTOR=elias.ensemble:build ELIAS_WEIGHTS=$W2 ELIAS_ROUTE="$R_ROUTED"; }
-robust() { run "$1" "$2" ANSWER_CLASSES="$3" BOX_SCALE="$ML" BOX_HEDGE="$HEDGE" DETECTOR=elias.ensemble:build ELIAS_WEIGHTS=$W3 ELIAS_ROUTE="$R_ROBUST"; }
+PAIRS='[["large_launcher","mine_roller"],["large_tower","medium_launcher"]]'
+robust() { run "$1" "$2" ANSWER_CLASSES="$3" BOX_SCALE="$ML" BOX_HEDGE="$HEDGE" HEDGE=0.3 HEDGE_GROUPS="$PAIRS" DETECTOR=elias.ensemble:build ELIAS_WEIGHTS=$W3 ELIAS_ROUTE="$R_ROBUST"; }
 # 1. the two classes the robust mode answers differently, one class per run (score x 13 = class AP)
 routed M_lt_routed "" large_tower;      robust M_lt_robust "" large_tower
 routed M_sl_routed "" small_launcher;   robust M_sl_robust "" small_launcher
 run M_sl_robusthn "" ANSWER_CLASSES=small_launcher BOX_SCALE="$ML" BOX_HEDGE="$HEDGE" DETECTOR=elias.ensemble:build ELIAS_WEIGHTS=$W3 ELIAS_ROUTE="$R_ROBUST_HN"
 # 2. the large_launcher box as the primary answer
-routed M_ll_routed "" large_launcher
+routed M_ll_routed "" large_launcher;   robust M_ll_robust "" large_launcher
+routed M_mr_routed "" mine_roller;      robust M_mr_robust "" mine_roller
 run M_ll_088 "" ANSWER_CLASSES=large_launcher BOX_SCALE="$ML_LL" DETECTOR=elias.ensemble:build ELIAS_WEIGHTS=$W2 ELIAS_ROUTE="$R_ROUTED"
 echo "=== $(date -Is) CLASSES_DONE" >> "$A"
 # 3. thirds of the whole robust config against routed (0.797 on Sunday 00:50), interleaved

@@ -132,7 +132,12 @@ def _emit(frame_index):
 HEDGE_FACTOR = float(os.environ.get('DRONE_HEDGE_FACTOR', '0') or 0)
 HEDGE_GROUPS = [['small_launcher', 'medium_launcher', 'large_launcher'], ['small_plane', 'medium_plane', 'jet_plane'],
                 ['small_tower', 'large_tower'], ['tank', 'mine_roller']]
-HEDGE_OF = {c: [o for o in g if o != c] for g in HEDGE_GROUPS for c in g}
+if os.environ.get('DRONE_HEDGE_GROUPS'):     # JSON list of lists: replaces the default sibling groups
+    HEDGE_GROUPS = json.loads(os.environ['DRONE_HEDGE_GROUPS'])
+HEDGE_OF = {}
+for _g in HEDGE_GROUPS:                       # a class may sit in several groups
+    for _c in _g:
+        HEDGE_OF[_c] = sorted(set(HEDGE_OF.get(_c, [])) | {o for o in _g if o != _c})
 
 
 # Per-class box scale (DRONE_BOX_SCALE, JSON like {"ta-ta": 0.7}): shrink or grow emitted boxes about their centre. A
