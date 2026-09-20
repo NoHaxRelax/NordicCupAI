@@ -1,4 +1,4 @@
-# Self-stuck predators: five full-game BO families
+# Self-stuck predators: six full-game BO families
 
 Branch `codex/selfstuck-bo5`, parent `fba2549`. Native engine unchanged. Baseline is the frozen expanded-local-food configuration from localfood20 pod 7. Orchard and reproduction settings remain fixed, including existing map/fruit sharing; the new expensive shared-food layer is disabled.
 
@@ -12,21 +12,27 @@ Branch `codex/selfstuck-bo5`, parent `fba2549`. Native engine unchanged. Baselin
 
 These are heuristic hypotheses, not proven trap geometry. No bait agents, infinite energy, census locations or hidden predator state are supplied. No changes to fruit production, movement, predation or engine rules. Public relative sightings, heading reports, biome, energy, odometry and observed edges are the only decision inputs. Tracking has no true predator IDs; it can confuse nearby predators. Safety uses a conservative 15-unit one-step pursuit bound and known-wall collision screening, not a privileged engine rollout. It cannot guarantee escape. Lost sightings and coordinate jumps reset the stationary inference.
 
-Six BO parameters: encounter radius 100–240; desired distance 75–140; geometric reward 10–150; release angle 5–40 degrees; stationary evidence duration 5–60 seconds; minimum energy fraction for steering 0.2–0.75. Only active parameters are tuned: five for the three steering families, three for preservation, six for the combined family. Baseline is exact when stuck_mode=0. Controller is in models/self_stuck.hpp and compiles inside the observation-only policy unit. The boundary checker includes that file in its full checks.
+Six BO parameters for the original five families: encounter radius 100–240; desired distance 75–140; geometric reward 10–150; release angle 5–40 degrees; stationary evidence duration 5–60 seconds; minimum energy fraction for steering 0.2–0.75. Only active parameters are tuned: five for the three steering families, three for preservation, six for the combined family. Baseline is exact when stuck_mode=0. Controller is in models/self_stuck.hpp and compiles inside the observation-only policy unit. The boundary checker includes that file in its full checks.
+
+6. **gentle_migration**: the unchanged implementation from `63b67c030d7971f41fa7bd86a9eafff7400e365f`, loaded as a separate native module from `vendor/gentle-migration`. Starts at its published gentle configuration. Tunes `trap_bias` 1–40, `trap_protect` 0–6, `trap_reach` 80–260, and `trap_active_r` 45–160. This preserves the two-surface candidate filter, spatial occupancy memory and original movement scoring. Its original 16-map pilot overlaps the first 16 training seeds; final seeds remain disjoint.
+
+## Sixth-family amendment
+
+The user requested the original gentle policy as an additional sixth family after launch. The five existing families' completed results and configurations are preserved; their native binaries are unchanged. The scheduler was briefly restarted, and unfinished jobs requeued. `run/manifest-five-families.json` and `run/sixth-added.json` retain the prior protocol and transition record. Per-pod previous build hellos are retained alongside new source manifests. Neither test scores nor partial training scores were used to change existing search spaces. Source versions are distinguished by these records.
 
 ## Prespecified evaluation
 
 - Pilot: 16 maps, seeds 25001–25016, each family default and baseline. Used for runtime/functionality only, not parameter selection.
-- Training: **50 trials per family × 150 full games**, seeds **21001–21150** reused across all trials/families, 37,500 games. Policy seed 0; normal predators/energy/aging; horizon 3000 seconds or extinction. Objective: mean score from game start.
+- Training: **50 trials per family × 150 full games**, seeds **21001–21150** reused across all trials/families, 45,000 games. Policy seed 0; normal predators/energy/aging; horizon 3000 seconds or extinction. Objective: mean score from game start.
 - BO: initial default, five random startup trials, 44 Matérn 5/2 GP expected-improvement proposals. Inputs normalized to [0,1]; scalar targets centered/scaled per fit. GP uses fixed length scale 0.4 and noise 0.15 in normalized target units, not marginal-likelihood hyperparameter fitting. Score is the sole optimization metric; compute is reported separately.
 - Freeze the argmax training configuration separately for each family before final jobs are queued. No test feedback used to tune/select parameters.
-- Final: **all five frozen family winners plus baseline × the same 2,000 fresh seeds 22001–24000**, 12,000 games. Report all means and 95% bootstrap CIs, paired differences versus baseline, train versus test gap and mean compute time per population tick. Pointwise CIs are not multiplicity-adjusted.
-- Total: **49,500 campaign games**, plus 96 pilot games.
+- Final: **all six frozen family winners plus baseline × the same 2,000 fresh seeds 22001–24000**, 14,000 games. Report all means and 95% bootstrap CIs, paired differences versus baseline, train versus test gap and mean compute time per population tick. Pointwise CIs are not multiplicity-adjusted.
+- Total: **59,000 campaign games**, plus 96 pilot games.
 
 ## Scheduling and reproducibility
 
 A durable local coordinator maintains one queue shared by ten existing Runpod CPU pods, up to 32 native game processes each. It dispatches another game immediately when a worker completes. Each family's next BO trial depends only on its own 150 results. Idle capacity can help any family. Completed game records and every trial configuration are persisted; same-output-directory restart recovers completed jobs. Source hashes are checked against each worker's hello. Disconnects requeue unfinished jobs; completion IDs deduplicate results. Game exceptions halt the campaign.
 
-Final evaluation bundles all six policies for a seed onto one worker to make each paired comparison use the same CPU and software. Model execution order rotates by seed. Training games use the shared pool; CPU floating-point differences may add training noise. Per-pod source/build provenance is retained. A local coordinator shutdown stops dispatch; restart with the same command recovers progress.
+Final evaluation bundles all seven policies for a seed onto one worker to make each paired comparison use the same CPU and software. Model execution order rotates by seed. Training games use the shared pool; CPU floating-point differences may add training noise. Per-pod source/build provenance is retained. A local coordinator shutdown stops dispatch; restart with the same command recovers progress.
 
 CPU pods must remain running after completion. This is offline research, not an official validation submission.

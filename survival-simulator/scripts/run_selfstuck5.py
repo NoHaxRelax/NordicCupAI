@@ -18,7 +18,11 @@ async def main(a):
  pods=json.loads((ROOT/'docs/selfstuck5/dispatch.json').read_text())
  if a.pods:pods=pods[:a.pods]
  manifest=dict(train=TRAIN,test=TEST,iterations=ITERATIONS,families=NAMES,space=SPACES,base=BASE,pilot=a.pilot,objective='mean full-game score',seed_policy=0,horizon=3000,normalization='inputs [0,1], GP targets centered and scaled each iteration',optimizer='Matern 5/2 GP, expected improvement, 6 startup trials including center',pods=pods)
- if (out/'manifest.json').exists():assert json.loads((out/'manifest.json').read_text())==manifest
+ if (out/'manifest.json').exists():
+  old=json.loads((out/'manifest.json').read_text())
+  if old!=manifest:
+   assert old['families']==NAMES[:5] and len(NAMES)==6 and all(old[k]==manifest[k]for k in ('train','test','iterations','base','pilot','pods'))
+   save(out/'manifest-five-families.json',old);save(out/'manifest.json',manifest)
  else:save(out/'manifest.json',manifest)
  queue=asyncio.Queue();done=asyncio.Event();completed={};issued={};trials=[[]for _ in NAMES];start=time.monotonic();stage='pilot' if a.pilot else 'training'
  if (out/'jobs.jsonl').exists():
@@ -68,7 +72,7 @@ async def main(a):
    cfg=BASE if i==0 else config(i-1,initial(i-1))
    for seed in PILOT:submit(job('pilot',name,seed,{name:cfg}))
  else:
-  for i in range(5):trial(i,1)
+  for i in range(len(NAMES)):trial(i,1)
  update()
  async def connection(p):
   while not done.is_set():
@@ -80,7 +84,9 @@ async def main(a):
     if not hello.get('hello'):raise RuntimeError(hello)
     for rel,digest in hello['sources'].items():
      if hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()!=digest:raise RuntimeError(f'Source mismatch {rel}')
-    save(out/f'pod-{p["index"]}-build.json',hello)
+    build=out/f'pod-{p["index"]}-build.json'
+    if build.exists() and not build.with_suffix('.before-sixth.json').exists():save(build.with_suffix('.before-sixth.json'),json.loads(build.read_text()))
+    save(build,hello)
     sem=asyncio.Semaphore(32)
     async def send():
      while True:

@@ -5,11 +5,11 @@ from selfstuck_config import *
 def main():
  out=pathlib.Path(sys.argv[1]);assert(out/'complete.json').exists()
  jobs=[json.loads(l)for l in(out/'jobs.jsonl').read_text().splitlines()]
- assert len(jobs)==len({j['id']for j in jobs})==39500 # 37500 single games + 2000 six-model bundles
+ assert len(jobs)==len({j['id']for j in jobs})==47000 # 45000 single games + 2000 seven-model bundles
  train={n:[]for n in NAMES};final={n:[]for n in NAMES+['expanded_food_baseline']}
  for j in jobs:
   if j['id'].startswith('final/'):
-   assert len(j['rows'])==6
+   assert len(j['rows'])==7
    for r in j['rows']:final[r['model']].append(r)
   else:
    assert len(j['rows'])==1
@@ -26,7 +26,7 @@ def main():
  rng=np.random.default_rng(27000);ix=rng.integers(0,2000,(10000,2000));summary={}
  b=np.array([r['score']for r in final['expanded_food_baseline']])
  lines=['# Self-stuck: 50 BO iterations × 150 full maps, then 2,000 fresh maps','',
- 'Five independently frozen family winners and the unchanged expanded-local-food baseline. All six policies for each final seed ran on the same worker. Intervals are pointwise paired percentile bootstrap intervals (10,000 resamples), not multiplicity-adjusted. No tuning on final maps.','',
+ 'Six independently frozen family winners and the unchanged expanded-local-food baseline. All seven policies for each final seed ran on the same worker. Intervals are pointwise paired percentile bootstrap intervals (10,000 resamples), not multiplicity-adjusted. No tuning on final maps.','',
  '| Model | Training best | Test mean | 95% CI | Paired gain | Paired 95% CI | Policy µs/tick | Loop CPU µs/tick | Seconds/game |',
  '|---|---:|---:|---|---:|---|---:|---:|---:|']
  for n,rows in sorted(final.items(),key=lambda z:-np.mean([r['score']for r in z[1]])):
@@ -38,7 +38,7 @@ def main():
  (out/'summary.json').write_text(json.dumps(summary,indent=2));(out/'RESULTS.md').write_text('\n'.join(lines)+'\n')
  import matplotlib;matplotlib.use('Agg')
  import matplotlib.pyplot as plt
- fig,axs=plt.subplots(5,1,figsize=(10,14),sharex=True)
+ fig,axs=plt.subplots(6,1,figsize=(10,16),sharex=True)
  for ax,n in zip(axs,NAMES):
   t=json.loads((out/f'{n}-trials.json').read_text());y=[r['score']for r in t];ax.scatter(range(1,51),y,s=10,alpha=.5);ax.plot(range(1,51),np.maximum.accumulate(y),label='Best training');ax.axhline(summary[n]['mean'],color='orange',label='Frozen 2000-map mean');ax.axhline(b.mean(),color='green',linestyle='--',label='Baseline 2000-map mean');ax.set_title(n);ax.set_ylabel('Mean score');ax.legend(fontsize=8)
  axs[-1].set_xlabel('BO iteration');fig.tight_layout();fig.savefig(out/'training-evolution.png',dpi=160)

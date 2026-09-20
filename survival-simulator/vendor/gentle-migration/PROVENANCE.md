@@ -1,0 +1,1 @@
+Unchanged native source copied from commit 63b67c030d7971f41fa7bd86a9eafff7400e365f, branch codex/predator-stuck1000. Original gentle-migration configuration retained. Kept as a separately loaded engine+policy module so the five already-running implementations remain unchanged.
