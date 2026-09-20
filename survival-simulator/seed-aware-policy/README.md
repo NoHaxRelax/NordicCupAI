@@ -39,3 +39,5 @@ Wave88: reproduction-reserve variants all rejected; mode144 retained.
 Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retained.
 
 - Wave90 predictive-safety gap-weight screen: all weights below mode144 on 16 fresh paired seeds; retained as rejected evidence.
+
+- Wave91 child-priority screen: 30 and 90 were below proven mode144; child priority60 retained.
