@@ -23,7 +23,7 @@ EXCL=(--exclude=.git --exclude='bench/.venv*' --exclude=bench/results --exclude=
 ssh-keygen -R "[$HOST]:$PORT" >/dev/null 2>&1 || true   # disposable pod: a reused IP:port carries a new host key
 echo "uploading $CASE -> root@$HOST:$PORT:$REMOTE"
 "${SSH[@]}" "mkdir -p $REMOTE /workspace/logs"
-tar -C "$CASE" "${EXCL[@]}" -czf - . | "${SSH[@]}" "tar -C $REMOTE -xzf -"
+tar -C "$CASE" "${EXCL[@]}" -czf - . | "${SSH[@]}" "tar -C $REMOTE --no-same-owner -xzf -"
 "${SSH[@]}" "cd $REMOTE && find . \( -name '*.sh' -o -name '*.py' -o -name '*.json' \) -print0 | xargs -0 sed -i 's/\r\$//' && chmod +x bench/hpc/*.sh"
 
 # Verify: md5 on the pod must equal md5 of the committed blob (LF-normalised) for every serving file.
