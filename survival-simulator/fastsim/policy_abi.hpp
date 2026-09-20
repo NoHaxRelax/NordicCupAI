@@ -125,10 +125,12 @@ struct Act { int64_t aid; double dist, direction, turn; bool spawn; };
 // native policy's time actually go". Off unless the host asks, and never read by a
 // decision.
 enum Phase { PH_MERGE = 0, PH_OBSERVE, PH_MAINTAIN, PH_ASSIGN, PH_ACT, PH_REST,
-             PH_OBS_MARKS, PH_OBS_EDGES, PH_OBS_TREES, PH_OBS_FRUITS, PH_N };
+             PH_OBS_MARKS, PH_OBS_EDGES, PH_OBS_TREES, PH_OBS_FRUITS,
+             PH_MAINTAIN_VIS, PH_MAINTAIN_PRUNE, PH_MAINTAIN_COUNTS, PH_N };
 inline const char* const PHASE_NAMES[PH_N] = {"merge", "observe", "maintain", "assign", "act", "rest",
                                              "observe.marks", "observe.edges", "observe.trees",
-                                             "observe.fruits"};
+                                             "observe.fruits", "maintain.visibility",
+                                             "maintain.prune", "maintain.counts"};
 
 struct PhaseTimer {
     double* acc;
