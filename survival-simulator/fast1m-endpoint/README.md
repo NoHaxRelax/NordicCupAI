@@ -1,58 +1,34 @@
-# Full fast1m endpoint checkpoint
+# Survival Simulator — final submission
 
-Imported from the running `Val checking` deployment at
-`/opt/nordiccup-fast1m`, frozen strategy source `8721a3d`.
-Strategy changes are confined to HTTP route aliases, per-service log paths,
-and exposing settings on the health response. Native policy and harvester
-are copied unchanged.
+This is the source and configuration used by the evaluated endpoint. All included source files match the Hetzner deployment by SHA-256.
 
-Configuration: enabled, budget 1,000,000, maximum 100 harvests, sacrifice mode
-`predict_contact`, cooldown 0, contact margin 1.0, minimum free agents 6,
-random tail disabled, no score cap. This uses the duplicate-action game bug.
-It does not recover seeds or deliberately stall responses.
+Official evaluation score: **43,061.38441631117**, with no reported errors.
+The policy source is unchanged from deployment commit `12fa6ff0fa4e73dd8a98d550529ecc778ba264de`.
 
-Both former seed endpoints run this strategy independently:
+## How it works
 
-- Hetzner: `http://46.62.244.29:9064/seed-live-mode144/predict`
-- Runpod: `https://ft7k34t881e55j-19123.proxy.runpod.net/seed-live-eval-20260920/predict`
+`nightsim/serve/fast1m_server.py` receives game observations and returns agent actions. It runs the native survival policy, then applies the harvesting layer. When simulation time goes backwards, it resets state for a new game. Run with one worker; games must arrive sequentially.
 
-`/health` and either former `/status` alias report the strategy and parameters.
-The original `/predict` route is also supported. No new queue submission is
-needed: whichever address the queued attempt retained receives fast1m.
+`night_policy.py` converts observations into the native policy format. `pred_best.json` contains the exact policy parameters. `_npolicy.hpp`, `_npdp.hpp` and `_nstuck.hpp` contain the policy and helper behaviors; `_nengine.cpp` exposes the native engine and policy to Python. `__init__.py` provides the Python interface and `build.py` compiles the extension.
 
-Hetzner uses its existing Python 3.14 / NumPy 2.3.5 native binary. Runpod builds
-the same C++ source for Python 3.12 / NumPy 2.3.5. Both use FastAPI 0.121.2 and
-Uvicorn 0.38.0. The ten contact-predictor regression checks passed on both hosts.
-That does not establish full-game numerical parity between Python versions.
+`harvest.py` and `contact_predictor.py` exploit the duplicate-action/negative-energy game defect. Repeated stationary turns drain an agent below zero. Removing the preceding agent during the engine's list iteration can skip the drained agent's energy-death check. When a predator eats that negative-energy agent, the score calculation subtracts negative energy, increasing the score. Contact prediction uses received observations and prior actions. The deployed configuration allows 1,000,000 drain actions per burst, up to 100 bursts per game, with cooldown 0, contact margin 1.0 and minimum free agents 6.
 
-Hetzner service: `fast1m-9064`; separate logs `/var/log/fast1m-9064.jsonl`.
-Runpod source: `/workspace/fast1m-endpoint`; logs
-`/workspace/fast1m-19123.jsonl` and `/workspace/fast1m-19123.log`.
-Seed services/search workers are stopped; pods remain allocated.
+The serving code does not recover the game seed or deliberately delay responses. The legacy URL names do not describe the deployed strategy. The fixed seed 0 in NightPolicy initializes its native policy container; incoming observations are passed to policy_act_ext.
 
-## Bounded telemetry
+`telemetry.py` logs bounded request data and timing information through a background process. It does not log the large outgoing action payloads. `research/action_bug_debug/test_contact_predictor.py` contains the existing contact-prediction regression checks.
 
-A separate low-priority process writes metrics and incoming public request data.
-The request path only counts bytes, reads clocks, retains existing incoming byte
-chunks and attempts a nonblocking queue insertion. It does not serialize request
-logs, open files, flush disk, or copy outgoing action payloads. Logging has some
-overhead; this is not a zero-overhead guarantee.
+## Build and run
 
-Metrics retain request IDs, timestamps, HTTP status/errors/disconnects, input/output
-byte counts, receive time, response start/sent time, time awaiting ASGI sends,
-policy/harvest/serialization/CPU times, callback gaps, game score/time/population,
-and burst/confirmed-transfer summaries. Send completion measures the ASGI boundary,
-not confirmed remote receipt or competition-server round-trip latency.
+The deployment used Python 3.14.4, NumPy 2.3.5, FastAPI 0.121.2, Uvicorn 0.38.0 and GCC 15.2.0 on Linux. Install a C++17 compiler and Python development headers, then run from this directory:
 
-Full incoming JSON is retained up to 512 KiB per request in the corresponding
-`.jsonl.requests` file. Headers and huge outgoing action lists are not retained.
-The queue holds at most 64 records; overload drops logs and continues serving.
-Health reports writer liveness, queue drops and oversized input counts. Metrics
-rotate at 32 MiB with three backups; incoming logs rotate at 128 MiB with seven
-backups. Older logs are therefore eventually evicted.
+```bash
+python3.14 -m venv .venv
+.venv/bin/python -m pip install numpy==2.3.5 fastapi==0.121.2 uvicorn==0.38.0
+.venv/bin/python nightsim/build.py
+export PYTHONPATH="$PWD"
+export FAST1M_LOG="$PWD/fast1m.jsonl"
+cd nightsim/serve
+../../.venv/bin/python -m uvicorn fast1m_server:app --host 0.0.0.0 --port 9064 --workers 1 --no-access-log
+```
 
-Verified on an isolated HTTP server: 20 requests produced input and timing records;
-100 requests completed in 0.183 seconds with the writer deliberately suspended
-and 236 records dropped; a 600,000-character input was excluded from request
-logging while its response succeeded. These are logging-path checks with empty
-agent lists, not game-runtime benchmarks.
+Send the challenge observation JSON to `POST /predict` or `/seed-live-mode144/predict`. The response is an object containing an `actions` list. `GET /health` reports current state.

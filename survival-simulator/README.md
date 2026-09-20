@@ -1,5 +1,7 @@
 # Survival simulator
 
+**Final evaluated Survival Simulator submission:** [code explanation and build instructions](fast1m-endpoint/README.md). The submitted code is self-contained in `survival-simulator/fast1m-endpoint/`; the material below describes earlier work.
+
 For a new coding agent, start with the [current handover](docs/agent_handover.md):
 working branch, policy integration, untested search tooling, execution constraints,
 and the proposed Codex improvement loop.

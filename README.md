@@ -1,5 +1,7 @@
 # Nordic AI Cup 2026
 
+**Final evaluated Survival Simulator submission:** [code explanation and build instructions](survival-simulator/fast1m-endpoint/README.md). The submitted code is self-contained in `survival-simulator/fast1m-endpoint/`; the material below describes earlier work.
+
 For the maintained predator-trapping and no-predator Orchard runners, see
 [the Survival Simulator quickstart](survival-simulator/README.md).
 
