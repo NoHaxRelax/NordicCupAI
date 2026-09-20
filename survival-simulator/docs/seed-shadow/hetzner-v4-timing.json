@@ -1,0 +1,25 @@
+{
+  "source_commit": "ad55ea0",
+  "host": "nordiccup-validation-hel1",
+  "host_vcpus": 2,
+  "cpu": "AMD EPYC Milan",
+  "affinity": [
+    1
+  ],
+  "threads": 1,
+  "compiler_flags": [
+    "-O3",
+    "-march=native",
+    "-ffp-contract=off",
+    "-pthread"
+  ],
+  "fixture": "seed-recovery-v4/fixtures/terrain.txt",
+  "positive_seed": 1854492595,
+  "positive_retained": true,
+  "range_start": 0,
+  "range_count": 1048576,
+  "seconds": 1.21689,
+  "seeds_per_second": 861683,
+  "hits": 0,
+  "scope": "Single short throughput measurement, not blind full-domain recovery; production services unchanged."
+}

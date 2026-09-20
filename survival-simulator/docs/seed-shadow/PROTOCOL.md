@@ -135,3 +135,53 @@ Commit/push with `PATH=/tmp/lucas-lfs/git-lfs-3.8.0:$PATH`.
 
 The GF(2) implementation here was written independently against the native RNG
 transition/tempering constants, not vendored from these repositories.
+
+
+## Update: Oscar V4 and Hetzner reference CPU (20 September)
+
+This section supersedes earlier infrastructure status above. The user's runtime
+reference is the existing Hetzner server, **2 vCPUs AMD EPYC Milan**. Target under
+10 minutes of compute, preferably under one minute. The 32-vCPU Runpod result
+above does not establish either target on Hetzner.
+
+Oscar pushed `codex/seed-recovery-v4-handover-20260920` at `ad55ea0`. The pristine
+`survival-simulator/seed-recovery-v4/` package was imported using git archive,
+without merging unrelated branch changes. Read HANDOVER.md and retain its hashes.
+Its historical 19.18-second full-domain live recovery used six processes with
+24 threads each. It includes 5,598 matching mid-run observations but lacks final
+whole-game parity evidence. This is Oscar's historical evidence, not our fresh test.
+
+Fresh tests: package preflight passes all hashes, 762 public terrain samples and
+historical coverage receipts. Standalone terrain scanner compiled on Hetzner with
+strict floating point and retains positive seed 1854492595. Its first 1,048,576-seed
+scan took 1.21689 seconds on one vCPU (861,683 seeds/sec). Our eight-lane scanner
+measured 1,284,740 seeds/sec on the same host previously. Different public sample
+sets were used; these are preliminary throughput figures, not a controlled
+head-to-head comparison. Neither rate supports the desired full-domain latency.
+The fixed-thread V4 coordinator has NOT been launched on the two-vCPU server.
+No production service was changed or competition validation submitted.
+
+New public-observation audit: 1,000 random maps, first 180 simulated seconds each,
+retained the true seed in 1,000/1,000 cases. Maximum public pose error was
+1.154e-11; no false candidates appeared in the tested 65,536-seed prefix.
+This is **not 1,000 full-game recoveries**, nor proof of global uniqueness.
+The audit exposed and fixed zero-distance parent/child heading propagation;
+atan2(0,0) cannot infer the relative heading. Reports: audit-1000/.
+
+New public geometry and birth extractors retain uncertainty rather than inventing
+stream ordering. Python birth test: 82 blocks, 85 births, 1,075 inferred draw
+constraints, zero mismatches. RNG tracing is harness-only, never extractor input.
+Wall generation order and inter-block RNG offsets remain unknown. Synthetic
+linear inversion does not yet solve live seed recovery.
+
+The Runpod now has engine/policy dependencies and the completed public audit in
+/workspace/lucas-seed-shadow/observation-audit-1000-v2. Another task also uses this
+pod under /workspace/seed-validation-live; do not interrupt or alter its process.
+Hetzner test files are only in /tmp/codex-seed-benchmark; leave live services alone.
+
+Next: benchmark V4 wall verification and replay with its pinned Python 3.12 /
+NumPy 2.3.5 environment. Investigate reducing candidate work (inversion or explicit
+one-time indexed preprocessing), measuring preprocessing separately from online
+recovery. Do not imply SIMD alone satisfies the small-CPU target. Oscar's updated
+seed-aware-policy branch c717732 reports mode46 improved oracle-model scores;
+that still requires verified shadow state before honest controller integration.

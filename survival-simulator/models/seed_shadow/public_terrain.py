@@ -48,6 +48,11 @@ def frame_poses(body, fresh_ids=None):
             other = obs.get('id')
             if obs['type'] != 'Agent' or other not in agents or other in poses:
                 continue
+            # atan2(0,0) is zero in both directions, not bearings separated by pi.
+            # A newborn can share its parent's exact position after a blocked birth.
+            # Its heading cannot be inferred using the ordinary reverse-bearing rule.
+            if obs['distance']<1e-7:
+                continue
             angle = h + obs['angle']
             poses[other] = (x+obs['distance']*math.cos(angle),
                             y+obs['distance']*math.sin(angle),
@@ -61,6 +66,7 @@ class TerrainSamples:
         self.points = {}
         self.ages = {}
         self.last_poses = {}
+        self.last_fresh = set()
 
     def observe(self, body):
         # non_agent_step mutates the agents list while iterating it. A skipped
@@ -68,6 +74,7 @@ class TerrainSamples:
         # Its age does not advance either, exposing that stale observation cache.
         fresh = {a['agent_id'] for a in agent_states(body)
                  if a['age'] > self.ages.get(a['agent_id'],0.)}
+        self.last_fresh = fresh
         poses = frame_poses(body, fresh)
         self.ages = {a['agent_id']: a['age'] for a in agent_states(body)}
         self.last_poses = poses
@@ -77,6 +84,8 @@ class TerrainSamples:
             if pose is None or label is None:  # River overrides the underlying label.
                 continue
             x,y,_ = pose
+            if not (30<x<1570 and 30<y<1170):
+                continue
             # Float error must not change which integer pixel is sampled.
             if min(abs(x-round(x)),abs(y-round(y))) < 1e-7:
                 continue
