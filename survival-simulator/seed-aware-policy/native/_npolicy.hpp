@@ -1039,7 +1039,7 @@ public:
         if (s.energy - travel_e - wait - 12. < 0.) return -OINF;
         double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;
         value += forecast_post_adjustment(t,m,s,travel_t);
-        if (P.nursery_bonus > 0. && !m.heir_done && s.age >= P.heir_age - 8.)
+        if (P.nursery_bonus > 0. && !m.heir_done && s.age >= heir_age_for(s.aid) - 8.)
             value += P.nursery_bonus * (double)std::min<int64_t>(4, t.fruit_free);
         if (P.pred_avoid_w > 0. && !g.pmem.empty()) {   // nightsim: avoid posts where predators were seen recently
             double pen = 0.;
@@ -1128,9 +1128,9 @@ public:
                 double d = dist(f->p, m.pose->p);
                 bool bf = !m.old && below_floor(s);
                 if (!harvest_arrival_ready(*f,m,s,ready(*f, (bf && P.sprint_floor_unripe > 0.) ? -OINF : s.energy, m.old))) continue;
-                bool owe_heir = (!m.heir_done) && s.age >= P.heir_age - 5. && s.energy < P.heir_reserve + 20.;
+                bool owe_heir = (!m.heir_done) && s.age >= heir_age_for(s.aid) - 5. && s.energy < P.heir_reserve + 20.;
                 int64_t bucket;
-                if (m.old) bucket = P.old_eat_last ? 10 : 5;
+                if (m.old) bucket = (P.old_eat_last || (exact_lifecycle()&&(resource_mode==41||resource_mode==42))) ? 10 : 5;
                 else if (culled.count(a)) bucket = 10;
                 else if (P.child_prio > 0. && s.age < 60. && s.energy < 0.2 * s.max_energy + P.child_prio) bucket = -1;
                 else if (bf) bucket = -1;   // below the sprint floor: eat first   // nightsim: walk-capped newborns eat first (the engine forbids sprinting below 20% of max energy)
@@ -2184,13 +2184,13 @@ public:
         Mind& m = M(s.aid);
         struct Th { double d, ang, rel; };
         std::vector<Th> th;
-        if(model_full()&&(resource_mode==26||resource_mode==27||resource_mode==28)){
+        if(model_full()&&(resource_mode==26||resource_mode==27||resource_mode==28||(resource_mode>=39&&resource_mode<=42))){
             const auto& ps=*m.pose;auto& g=G(m.group);
             for(auto& q:model_predators){
                 double d,ang;local_of(ps,q.p,d,ang);
                 if(d>pmax(P.pred_r,P.pred_face_r)+20.)continue;
                 if(resource_mode==28&&q.resting)continue;
-                if(resource_mode!=27&&!path_clear(g,q.p,ps.p,10.01))continue;
+                if((resource_mode==26||resource_mode==28)&&!path_clear(g,q.p,ps.p,10.01))continue;
                 double rel=wrap(std::atan2(ps.p.y-q.p.y,ps.p.x-q.p.x)-q.heading);
                 th.push_back(Th{d,ang,rel});
             }
@@ -2522,7 +2522,7 @@ public:
                 m.terrain_samples.push_back({m.pose->p,MOVE_PENALTY[s.biome]});
             }
         }
-        model_localize();model_map();
+        model_localize();model_map();model_lifecycle();
         groups.each([&](const int64_t&, GroupP& g){wi_prepare(*g);});
         if (P.oracle_trees > 0.) apply_oracle();
         ingest_resource_forecast();
@@ -2590,7 +2590,7 @@ public:
         std::unordered_map<int64_t, double> fit;
         for (const AState& s : states) fit[s.aid] = fitness(s);
         std::vector<int64_t> elders;
-        minds.each([&](const int64_t& a, MindP& m) { if (m->old || st(a).age >= P.heir_age) elders.push_back(a); });
+        minds.each([&](const int64_t& a, MindP& m) { if (m->old || st(a).age >= heir_age_for(a)) elders.push_back(a); });
         std::stable_sort(elders.begin(), elders.end(), [&](int64_t a, int64_t b) { return -st(a).energy < -st(b).energy; });
         std::vector<double> yfit;
         for (int64_t a : young) yfit.push_back(fit[a]);

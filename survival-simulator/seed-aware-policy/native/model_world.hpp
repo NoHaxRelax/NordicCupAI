@@ -1,5 +1,5 @@
 // Synchronized seed-model snapshot. Policy never reads Engine directly.
-struct ModelPose { int64_t id; P2 p; double heading; bool resting=false; };
+struct ModelPose { int64_t id; P2 p; double heading; bool resting=false; double max_age=120.; };
 struct ModelObstacle { double x,y,w,h; };
 std::vector<ModelPose> model_agents,model_predators;
 std::vector<ModelObstacle> model_obstacles;
@@ -26,4 +26,19 @@ void model_map(){
 void model_predator_map(){
  if(!model_full()||(resource_mode!=9&&resource_mode!=11))return;
  groups.each([&](const int64_t&,GroupP& g){if(!g->anchored)return;g->pseen.clear();g->pmem.clear();for(auto&p:model_predators){g->pseen.push_back({p.p,p.heading});g->pmem.push_back({p.p,time});}});
+}
+
+// With a synchronized model the onset of accelerated ageing is known exactly.
+bool exact_lifecycle()const{return model_full()&&resource_mode>=39&&resource_mode<=42;}
+double heir_age_for(int64_t aid)const{
+ if(exact_lifecycle()&&(resource_mode==40||resource_mode==42))
+  for(auto&a:model_agents)if(a.id==aid)return pmax(10.,a.max_age-8.);
+ return P.heir_age;
+}
+void model_lifecycle(){
+ if(!exact_lifecycle())return;
+ for(auto&a:model_agents)if(minds.has(a.id)){
+  auto&m=M(a.id);bool old=st(a.id).age>a.max_age;
+  if(old&&!m.old)m.old_since=time;m.old=old;
+ }
 }
