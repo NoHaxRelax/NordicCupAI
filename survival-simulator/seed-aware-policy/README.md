@@ -19,3 +19,5 @@ Wave73 tested stronger safety displacement and energy penalties on 16 fresh pair
 Wave77 tested a cloned-engine future-fruit schedule on 8 fresh pairs; both horizons were harmful and rejected.
 
 Wave78 tested denser and local dodge headings on 16 fresh pairs; both were strongly harmful and rejected.
+
+Wave79 tested half-speed safety escape candidates on 16 fresh pairs; both were harmful and rejected.
