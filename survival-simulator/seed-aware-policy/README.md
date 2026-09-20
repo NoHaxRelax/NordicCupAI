@@ -1,23 +1,11 @@
-# Seed-aware survival policy research
+# Experimental seed-aware survival policy
 
-Active target: average score at least 2200 on at least128 fresh paired confirmation seeds. Not achieved. This is an experimental checkpoint, not a production controller.
+Target: average score at least 2200 on 128 fresh paired seeds. **Not achieved.** This is policy research only; no seed recovery or competition API client.
 
-Based on Lucas branch `survival-simulator/lucas-experimental`, commit `6bef2ccd3f129feaa9c2913d077987b072711784`. All simulation and policy ticks execute in C++. Python only compiles or orchestrates. No evaluation API calls.
+Use Python 3.12 and NumPy 2.3.5 on Linux. NumPy compiled math kernels are bound once; simulation and policy run in C++. Pin PYTHONPATH to that environment for the embedded interpreter. Compile with `python build.py`, then run `bench/policy_bench configs/orchard.json SEED MODE 3000 OUTPUT 180`. Model availability is delayed 180 simulated seconds in reported comparisons. Current-state engine truth is an upper bound, not an immutable future schedule or live validation claim.
 
-The benchmark supplies exact current engine/model state after a configurable delay (180 simulated seconds in the recorded experiments). This is a conditional information upper bound, not proof of unknown live-seed recovery or an immutable future spawn schedule.
+Baseline mode8 remains selected. On wave19, 128 fresh paired seeds, it averaged1764.30 versus1749.75 for exact-predator evasion27. The earlier32-seed gain of193.95 did not replicate; mode27 is not promoted. Pre-activation hashes matched every pair.
 
-## Build and run
+Experimental modes35/36/37 try one-tick predator responses to escape candidates, preserving Lucas actions unless predicted clearance falls below2/12/25px. All failed the complete16-seed wave17 batch: deltas-79.73/-107.35/-131.93. They omit births, meals and cross-predator kills within lookahead and are not promoted. Dryrun38 exercised386487candidate predictions and preserved the full baseline score, duration, food, deaths and prefix hash exactly.
 
-Ubuntu24.04: install g++, python3-dev, NumPy, pkg-config, nlohmann-json3-dev and libcpp-httplib-dev. Then `python3 build.py`. Run `bench/policy_bench configs/orchard.json SEED MODE 3000 OUTPUT_DIR 180`. Every completed run saves metrics and a state-only native replay.
-
-## Current evidence
-
-- Mode8: exact localization, static obstacles and current tree/fruit state. Development baseline.
-- Full map orchard mode8 beat observation-only orchard on17/20 seeds: mean1617.71 versus1377.07.
-- Fresh128-seed run: mode8 mean1747.90; modified allocation20 mean1776.77, paired gain28.87 with95% bootstrap interval[-38.16,96.43]. No promotion.
-- Mypc24-seed batch: mode8 mean1823.47; routing23, routing+reach24, widerreach25 were worse.
-- Modes26–28 test exact nearby predator poses outside public field of view, with wall/resting ablations. Preliminary16-seed evidence only.
-
-Numerical portability is under investigation: a same-seed full baseline and its pre-activation action hash differ between the previous Runpod runtime and mypc NumPy1.26.4. Do not pool cross-host runs as deterministic replications. Within each frozen batch, paired modes use the same engine/runtime and pre-activation hashes are checked.
-
-Recorded evidence includes all assigned seed results; large replays remain in the local experiment archive, not Git. Frozen historical experiments were retained separately. The default baseline remains mode8 until a fresh confirmation supports a replacement.
+Numerical portability resolved: a full seed1283794550 baseline run on mypc matches Runpod under NumPy2.3.5 exactly. Earlier mypc NumPy1.26.4 evidence is retained as historical exploratory data and must not be pooled with canonical results. Full completed replays are retained locally; GitHub includes compact frozen sources and paired result evidence.
