@@ -31,3 +31,10 @@ No additional Runpod pod was rented or terminated for this migration.
 Check service: `ssh root@46.62.244.29 systemctl status hetzner-seed-live`
 
 Check progress: `curl -s http://46.62.244.29:9064/seed-live-mode144/status`
+
+## User-directed routing update
+
+The user requested that an attempt retaining the Runpod URL execute directly on
+Runpod. The bridge has therefore been stopped, and the native Runpod controller
+and its five remote search workers restored. Hetzner remains independently ready.
+No new attempt was submitted for this update.
