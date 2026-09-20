@@ -51,3 +51,5 @@ Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retai
 - Wave95 feed-breed screen: breed-priority feeding was below mode144; hungry feeding retained.
 
 - Wave96 old-agent food ordering screen: both settings were below mode144 and rejected.
+
+- Wave97 predator face-lock screen: both face settings were below mode144 and rejected.
