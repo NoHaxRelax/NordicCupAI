@@ -11,3 +11,5 @@ User requests closing these pods after results are retrieved.
 No automation or scheduled follow-up was created. User will notify this thread on completion.
 Progress: bash survival-simulator/scripts/burst_score_progress.sh
 Collect raw games and manifests, then delete these four pods; do not touch other pods.
+
+COMPLETED: all 544 games retrieved and verified. All four Runpod pods deleted with successful 204 responses. Results: RESULTS.md. No jobs remain active in this pilot.
