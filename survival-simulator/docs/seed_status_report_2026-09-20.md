@@ -251,7 +251,16 @@ Also verified: **exact branch-and-replay cannot desync**, because it is the same
 the same inputs. The "shared RNG stream" concern that shaped earlier designs is not a
 blocker. Only two things in the whole engine are action-coupled: births (which we control
 exactly) and predator wander (2 draws, ~7% of awake-predator-ticks). **The entire food
-supply curve of a seed is computable at t=0 and nothing we do can change it.**
+supply curve of a seed is exactly forecastable given a committed action plan.**
+
+**CORRECTION.** An earlier version of this claimed the food supply is action-INDEPENDENT.
+That is wrong, and Lucas caught it (`codex/seed-shadow:docs/seed-shadow/NIKOLAJ_REVIEW.md`).
+The tree and fruit *mechanisms* depend only on tree count, age, biome and time, and no agent
+action touches those quantities. But they draw from the same `e.rng` as `spawn_agent`, so a
+birth re-phases the stream and changes which draws the tree and fruit checks consume. The
+schedule is exactly forecastable *conditional on a committed action plan*; it is not
+invariant to the plan. The original wording also contradicted our own birth-phase result,
+which works precisely by re-phasing that stream.
 
 ---
 
@@ -308,3 +317,205 @@ supply curve of a seed is computable at t=0 and nothing we do can change it.**
 | `docs/seed_advantage_preliminary_2026-09-20.md` | the earlier policy-exploit analysis |
 
 All of it is untracked. Nothing has been committed.
+
+---
+
+## 7. The lookup-table question, and why the first API call is the wrong target
+
+Asked: can we build the landmark lookup table once, store it on a Hetzner box, and query it
+the moment the first API call arrives?
+
+**Build and storage: yes, easily. Query at the first API call: no, and nothing can.**
+
+### 7.1 The build is cheap; moving it is not [M/E]
+
+The index is "for each of 4.29 B seeds, the land label at K landmark pixels". Computing that
+is the same work as one scan — the 10 Voronoi sites and types — plus ~10 integer ops per
+landmark.
+
+| | K=12 | K=16 |
+|---|---:|---:|
+| bits/seed | 24 | 32 |
+| size | **12.9 GB** | **17.2 GB** |
+| compute | ~10 s on a 4090 **[M]**, ~4 min on 8 CPU threads **[E]** | same |
+
+Lucas measured the same order independently: 56.8 s per 67 M-seed shard on one Hetzner vCPU,
+16 GiB for the full index, and a warm query of 0.111 s
+(`origin/codex/seed-shadow`, `docs/seed-shadow/fingerprint-pilot.json`).
+
+Uploading 17 GB at 100 Mbit/s is ~23 minutes; **rebuilding it in place on the Hetzner box
+costs ~4-5 minutes of its own CPU.** So this artefact should be built where it is used and
+never shipped.
+
+A design constraint that is easy to miss: a `seed -> labels` table does not help, because
+answering "which seeds match this pattern" would mean scanning all 17 GB — no faster than
+rescanning the domain. It must be **inverted**, with seeds bucketed by landmark signature,
+so an observation maps straight to a bucket.
+
+### 7.2 Why it cannot answer the first API call [M]
+
+The index keys on labels at **exact** pixels. A live agent does not know where it is. It has
+to anchor itself first, by registering rock-edge constellations and pinning them against map
+boundary walls.
+
+Measured, from the held-out seed-78431 survey
+(`docs/seed_survey_heldout_2026-09-19.json`, four checkpoints at 0.7 / 10 / 20 / 30 s):
+
+| sim time | anchored agents | eligible samples | selected samples |
+|---:|---:|---:|---:|
+| **0.7 s** | **0** | **0** | **0** |
+| 10 s | 1 | 14 | 14 |
+| 20 s | 5 | 70 | 64 |
+| 30 s | 5 | 106 | 64 |
+
+`docs/seed_recovery_survey_2026-09-19.md:56` states it directly: *"at 0.7 seconds the shared
+model had no anchored agent, so the filter correctly rejected nothing."*
+
+**Beware a contradiction in our own docs.** `docs/seed_evidence_2026-09-20.md:54` says the
+survey "recovered three spawn positions by 0.7 seconds". That is **retrospective** —
+`seed_survey_evidence.py` reconstructs where an agent *was* at 0.7 s using rock geometry
+observed much later. It is not a live capability, and reading it as one would put a
+position-keyed index in the plan on false grounds.
+
+So at the first API call there is no position, therefore no landmark label, therefore no
+index key. This is not an implementation gap; it is the physical situation. **The binding
+constraint is that agents must walk far enough to anchor and to cross biome boundaries**, and
+no amount of precomputation moves it.
+
+### 7.3 What the Hetzner box is genuinely good for [E]
+
+Reframed, the hardware question has a clear answer that runs the *other* way from the GPU
+result:
+
+- **A warm always-on box beats an on-demand GPU for live play.** Provisioning a RunPod
+  instance took ~2-3 minutes in this session. That dwarfs a 9.86 s scan. For a live game you
+  want compute that is already running.
+- **17 GB fits in a GEX44's 64 GB RAM.** Pre-warm it into page cache (`vmtouch`, or simply
+  `cat index > /dev/null` at boot) and the lookup is memory-speed whenever it does become
+  queryable.
+- Rent GPUs for offline and batch work — building the index, sweeping parameters, regression
+  runs. Use the persistent box for anything on the live clock.
+
+### 7.4 What the index actually saves, honestly [E]
+
+Using the anchoring timeline above:
+
+| stage | without index | with warm index |
+|---|---:|---:|
+| acquire to a usable frame | ~20 s | ~20 s |
+| scan | 9.9 s (GPU) / 234 s (8-thread CPU) | ~0.1 s |
+| **total** | **~30 s** (GPU) | **~20 s** |
+
+**It saves roughly 10 s of a ~30 s pipeline, and zero of the acquisition that dominates it.**
+That is worth having if the index is free to keep around, and it is not worth reorganising
+the plan around. On a CPU-only box the saving is much larger (234 s to 0.1 s), which is the
+strongest argument for it.
+
+### 7.5 The tension worth understanding
+
+There are two classes of evidence and they trade off exactly against each other:
+
+- **Cheap to index, needs a position.** The Voronoi prefix is the first ~50 MT words, so any
+  seed's biome map is computable in microseconds — but querying it needs absolute
+  coordinates we do not have early.
+- **Position-free, expensive to index.** Rock rectangle dimensions are invariant to
+  translation and rotation, so they are queryable from the very first frame with no
+  localisation at all. But rocks are drawn *after* the 1.92 M-draw biome render, so
+  generating them per candidate costs milliseconds rather than microseconds. A full-domain
+  rock index is ~1.4 TB raw and days of CPU **[E]** — not buildable.
+
+That trade-off is why V4 is built the way it is, and it is the thing to attack if anyone
+wants recovery meaningfully earlier than ~20 simulated seconds.
+
+### 7.6 Recommendation
+
+1. **Do not plan around answering at the first API call.** Plan around ~20 s.
+2. Build the index **on** the Hetzner box, never upload it. ~5 minutes, in place.
+3. Pre-warm it into page cache at boot so it is hot before the game starts.
+4. Keep the streaming filter as the primary mechanism regardless — it already delivers the
+   "start immediately, narrow continuously" behaviour, and unlike the index it needs no
+   absolute position to begin.
+5. If someone wants recovery before ~20 s, the only lever is §7.5: find a pose-invariant
+   observable that is cheap to index. That is a research question, not an engineering one.
+
+---
+
+## 8. Can we beat 400 seconds? Measured: yes, by roughly 10x
+
+The 400 s benchmark is beaten by every configuration we have, including CPU-only. This
+section replaces the estimate in §2.3 with a measurement of the piece that estimate was
+resting on: **does realistic-quality acquisition actually resolve the seed?**
+
+### 8.1 The experiment [M]
+
+Four targets drawn uniformly from the full uint32 domain. Five agents fanning outward.
+Samples taken at the agents' positions, then **perturbed by 8 px and declaring a 9.41 px
+radius** (8 px is the shared world estimator's measured accuracy of 6 + uncertainty, observed
+7.0-8.3 px; the extra sqrt(2) is the integer-pixel lookup margin). Complete `[0, 2^32)`
+scan using the relaxed `+2r` test.
+
+**At t = 20 simulated seconds** (46-64 samples, 4 distinct biomes each):
+
+| target | candidates | truth retained |
+|---|---:|---|
+| 3048614886 | 24 | yes |
+| 548576473 | 10 | yes |
+| 1760855471 | **1 — recovered** | yes |
+| 1881884024 | 7 | yes |
+
+**4.29 billion seeds down to between 1 and 24, and the true seed retained in 4/4.**
+
+**Then extend the same walk to t = 30 s** and refine the retained lists:
+
+```
+target 0:  24 ->  2 candidates in   5.0 ms
+target 1:  10 ->  1 candidate  in  12.6 ms
+target 2:   1 ->  1 candidate  in  32.6 ms
+target 3:   7 ->  1 candidate  in  16.8 ms
+```
+
+**3 of 4 uniquely recovered at t=30 s, 4 of 4 retained, worst case 2 candidates.** Refinement
+costs **milliseconds**. Two candidates can be separated by full wall generation at 42.1 ms
+each — about 0.1 s.
+
+### 8.2 The resulting budget [M components, E total]
+
+Acquisition runs on the game clock; the scan can overlap it because the scan is dispatched
+on partial evidence (§2.4). V4's live run gives the wall-per-sim ratio: 132.03 s end-to-end
+for 84.9 sim s, minus 19.18 s of search and 18.59 s of deliberate pacing, so ~1.1-1.3x.
+
+| | 8-thread CPU | warm RTX 4090 |
+|---|---:|---:|
+| acquire to t=20 s sim | ~22-26 s | ~22-26 s |
+| full-domain scan (overlaps further acquisition) | 234 s | **9.9 s** |
+| refine with the samples that arrived meanwhile | ~0.03 s | ~0.03 s |
+| separate any residual pair by wall generation | ~0.1 s | ~0.1 s |
+| **seed known at** | **~260 s** | **~35 s** |
+
+**Both beat 400 s.** The GPU path beats it by ~11x and beats V4's own 132 s live run by ~3.5x.
+
+### 8.3 Where the remaining time actually is
+
+Of that ~35 s, **~25 s is acquisition and ~10 s is the scan**. Two consequences:
+
+- Further scan optimisation is nearly worthless. Halving 9.9 s buys 5 s of 35.
+- **Provisioning latency would dominate everything.** Spinning up a RunPod instance took 2-3
+  minutes in this session. Whatever runs the scan must already be running when the game
+  starts — which is the real argument for a persistent box, independent of any lookup table
+  (§7.3).
+
+### 8.4 What this does and does not establish
+
+**Does:** the filter resolves the full 2^32 domain to 1-2 candidates from the sample quality
+a real 20-30 second survey produces, at the real estimator's positional accuracy, with the
+true seed never lost. The relaxed radius test behaves exactly as its proof says.
+
+**Does not:** this perturbs true positions by a realistic amount rather than running the
+localisation chain. It models *how accurate* positions are, not *whether they can be
+obtained*. The end-to-end observation-only harness is still unbuilt — it was the workflow
+that died on the API spend limit.
+
+The 20 s acquisition figure therefore still rests on V4's held-out survey (5 anchored agents,
+64 selected samples at t=20 s, `docs/seed_survey_heldout_2026-09-19.json`), which is genuine
+observation-only measurement but a single seed. **That is the one soft term in the 35 s
+budget, and closing it is the highest-value remaining work.**

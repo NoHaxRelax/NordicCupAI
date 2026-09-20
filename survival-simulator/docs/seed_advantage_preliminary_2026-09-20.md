@@ -10,7 +10,7 @@ less than they look, and those are called out first so nobody spends a week on t
 ## 0. The one-paragraph version
 
 Recovering the seed converts the game from partially observed to **fully observed and
-exactly simulable**. The whole map is known at t=0, and the entire future food supply is
+exactly simulable**. The whole map is known at t=0, and the entire future food supply is forecastable (see the correction below) and is
 known and **cannot be changed by anything we do**. Against that, the obvious exploits —
 knowing where predators are, what an agent's hidden max age is, when fruit appears — are
 worth almost nothing, because each is either already visible one tick later or optimised
@@ -67,7 +67,16 @@ time); **the value comes entirely from being able to evaluate both branches and 
 
 ### 2.2 Tier 2 — structurally valuable, not yet measured here
 
-**The whole food supply is known and is immune to us. [M]** Tree births and deaths, fruit
+**CORRECTION.** An earlier version of this claimed the food supply is action-INDEPENDENT.
+That is wrong, and Lucas caught it (`codex/seed-shadow:docs/seed-shadow/NIKOLAJ_REVIEW.md`).
+The tree and fruit *mechanisms* depend only on tree count, age, biome and time, and no agent
+action touches those quantities. But they draw from the same `e.rng` as `spawn_agent`, so a
+birth re-phases the stream and changes which draws the tree and fruit checks consume. The
+schedule is exactly forecastable *conditional on a committed action plan*; it is not
+invariant to the plan. The original wording also contradicted our own birth-phase result,
+which works precisely by re-phasing that stream.
+
+**The whole food supply is exactly forecastable, but NOT immune to us. [M, corrected]** Tree births and deaths, fruit
 spawns, and their positions depend only on tree count, tree age, biome and time. Agents
 never touch them: eating a fruit consumes no RNG. So at t=0 we know every fruit that will
 ever exist, where, and when. Combined with deterministic ripening (spawns at energy 20,
