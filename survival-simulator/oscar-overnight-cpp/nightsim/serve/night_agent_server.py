@@ -58,6 +58,10 @@ confirmed_transfers = 0
 noop_bursts = 0
 noop_last_actions = 0
 noop_last_target = None
+noop_burst_ready_ns = None
+noop_burst_sim_time = None
+noop_next_callback_gap_ms = None
+noop_next_callback_sim_time = None
 last_time = None
 lock = Lock()
 run_started_ns = None
@@ -136,6 +140,8 @@ def predict(step: dict = Body(...)):
     global policy, last_time, run_started_ns, score_guard_tripped
     global pending_burst_score, confirmed_transfers
     global noop_bursts, noop_last_actions, noop_last_target
+    global noop_burst_ready_ns, noop_burst_sim_time
+    global noop_next_callback_gap_ms, noop_next_callback_sim_time
     request_started = time.perf_counter_ns()
     if run_started_ns is None:
         run_started_ns = request_started
@@ -151,6 +157,20 @@ def predict(step: dict = Body(...)):
             score_guard_tripped = False; pending_burst_score = None; confirmed_transfers = 0
             if not NOOP_SERVICE_ONCE:
                 noop_bursts = 0; noop_last_actions = 0; noop_last_target = None
+            noop_burst_ready_ns = None; noop_burst_sim_time = None
+            noop_next_callback_gap_ms = None; noop_next_callback_sim_time = None
+        if noop_burst_ready_ns is not None:
+            if sim_time > (noop_burst_sim_time or -float("inf")):
+                noop_next_callback_gap_ms = (request_started - noop_burst_ready_ns) / 1e6
+                noop_next_callback_sim_time = sim_time
+                log.warning(
+                    "NOOP_BURST_NEXT_CALLBACK actions=%d sent_sim_time=%.1f "
+                    "next_sim_time=%.1f gap_ms=%.3f",
+                    noop_last_actions, noop_burst_sim_time, sim_time,
+                    noop_next_callback_gap_ms,
+                )
+                noop_burst_ready_ns = None
+                noop_burst_sim_time = None
         if pending_burst_score is not None and score is not None:
             if score - pending_burst_score >= TRANSFER_DELTA:
                 confirmed_transfers += 1
@@ -165,6 +185,7 @@ def predict(step: dict = Body(...)):
         # fields from the competition API cannot turn a reachable request into 422.
         states = list(step.get("agent_status", []))
         native_started = time.perf_counter_ns()
+        emitted_noop_burst = False
         actions = policy(states, sim_time) if states else []
         base_action_count = len(actions)
         if states and score_guard_tripped:
@@ -183,6 +204,7 @@ def predict(step: dict = Body(...)):
                 noop_bursts += 1
                 noop_last_actions = NOOP_BURST
                 noop_last_target = target
+                emitted_noop_burst = True
                 log.warning("NOOP_BURST sent=%d target=%d sim_time=%.1f",
                             NOOP_BURST, target, sim_time)
         elif states and harvester.enabled and not NOOP_BURST:
@@ -219,7 +241,14 @@ def predict(step: dict = Body(...)):
     headers["X-NordicCup-Confirmed-Transfers"] = str(confirmed_transfers)
     headers["X-NordicCup-Noop-Bursts"] = str(noop_bursts)
     headers["X-NordicCup-Noop-Actions"] = str(noop_last_actions)
-    return JSONResponse({"actions": actions}, headers=headers)
+    response = JSONResponse({"actions": actions}, headers=headers)
+    if emitted_noop_burst:
+        # JSONResponse serializes the body before this timestamp. The next request
+        # therefore measures the remote receive/decode/validate/apply/next-tick
+        # path plus transfer, without charging our own response construction.
+        noop_burst_ready_ns = time.perf_counter_ns()
+        noop_burst_sim_time = sim_time
+    return response
 
 
 @app.get("/")
@@ -232,5 +261,7 @@ def index():
             "noop_burst": {"actions": NOOP_BURST, "sent": noop_bursts,
                            "last_actions": noop_last_actions, "last_target": noop_last_target,
                            "latest_time": NOOP_LATEST_TIME,
-                           "service_once": NOOP_SERVICE_ONCE},
+                           "service_once": NOOP_SERVICE_ONCE,
+                           "next_callback_gap_ms": noop_next_callback_gap_ms,
+                           "next_callback_sim_time": noop_next_callback_sim_time},
             "runtime": "native-cpp"}
