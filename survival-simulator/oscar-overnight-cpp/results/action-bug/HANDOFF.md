@@ -88,6 +88,8 @@ The deployed endpoint reports `service_once: true`, `sent: 1`, and `next_callbac
 
 - `nightsim/serve/contact_predictor.py`: observation-only transfer admission.
 - `nightsim/serve/contact_predictor.md`: integration and limitations.
+- `nightsim/_nstuck.hpp`: native stuck-spot guide layer, included by `_npolicy.hpp` and disabled unless its `sg_*` settings are enabled.
+- `nightsim/_npdp.hpp`: native predator-perception DP layer, included by `_npolicy.hpp` and disabled unless `pdp_r` is positive.
 - `nightsim/serve/harvest.py`: selector routing and payout cap.
 - `nightsim/serve/night_agent_server.py`: validation endpoint, one-shot no-op mode, score guard, and latency logging.
 - `nightsim/serve/sim_harvest.py`: paired local C++-engine driver with selector and score-cap options.
