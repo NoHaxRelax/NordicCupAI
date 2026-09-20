@@ -33,6 +33,11 @@ struct PredictiveSafety {
    if((mode==171&&agent.energy>0.5*agent.max_energy)||(mode==172&&agent.energy>0.7*agent.max_energy)||(mode==173&&agent.age>60.))continue;
    bool near=false;for(auto& f:frames)if(np_hypot(agent.x-f.pred.x,agent.y-f.pred.y)<100.){near=true;break;}
    if(!near)continue;++checked;
+   if(mode==187||mode==188){
+    double threshold=mode==187?0.:.5;bool approaching=false;
+    for(auto& f:frames){double dx=agent.x-f.pred.x,dy=agent.y-f.pred.y,d=np_hypot(dx,dy);if(d>=100.)continue;double toward=(dx*std::cos(f.pred.direction)+dy*std::sin(f.pred.direction))/std::max(1.,d);if(toward>threshold){approaching=true;break;}}
+    if(!approaching)continue;
+   }
    auto evaluate=[&](const orchard::Act& candidate){
     ++candidates;next[ai]=move(e,agent,candidate);
     std::vector<Engine::Target> targets;for(auto&a:next)targets.push_back({a.x,a.y,a.direction,a.id});

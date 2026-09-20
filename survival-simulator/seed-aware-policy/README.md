@@ -11,3 +11,5 @@ Build with Python 3.12 and the pinned native environment, then run `bench/policy
 Wave69 tested exact-resource fruit allocation variants on 16 fresh pairs; all three lost to mode144 by 122–180 points and were rejected.
 
 Wave70 tested fruit-claim conditional safety triggers on 16 fresh pairs; all three lost to mode144 by 73–159 points and were rejected.
+
+Wave72 tested current-heading approaching-predator safety conditions on 16 fresh pairs; both variants lost to mode144 by 236–258 points and were rejected.
