@@ -37,3 +37,5 @@ Wave87: exact birth-threshold variants all rejected; mode144 retained.
 Wave88: reproduction-reserve variants all rejected; mode144 retained.
 
 Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retained.
+
+- Wave90 predictive-safety gap-weight screen: all weights below mode144 on 16 fresh paired seeds; retained as rejected evidence.

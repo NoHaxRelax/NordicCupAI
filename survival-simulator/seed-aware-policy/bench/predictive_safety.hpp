@@ -70,7 +70,8 @@ struct PredictiveSafety {
     double cost_w=(mode==150?1.50:mode==151?2.50:mode==152?4.00:mode==159?1.50:mode==160?2.50:mode==192?10.:.80);
     double turn_delta=std::abs(wrap(trial.turn-original.turn));
     double turn_w=(mode==180?0.80:0.);
-    double value=100.*std::min(gap,margin)-disp_w*displacement-cost_w*cost-turn_w*turn_delta;
+    double gap_w=(mode==238?50.:mode==239?200.:mode==240?500.:100.);
+    double value=gap_w*std::min(gap,margin)-disp_w*displacement-cost_w*cost-turn_w*turn_delta;
     if(value>best){best=value;chosen=trial;}
    };
    consider(original);
