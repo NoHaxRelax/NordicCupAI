@@ -41,3 +41,5 @@ Wave89: Lucas-style heir and nursery variants all lost to mode144; mode144 retai
 - Wave90 predictive-safety gap-weight screen: all weights below mode144 on 16 fresh paired seeds; retained as rejected evidence.
 
 - Wave91 child-priority screen: 30 and 90 were below proven mode144; child priority60 retained.
+
+- Wave92 predator-sharing screen: Lucas pred_share1 was strongly below mode144; pred_share0 retained.
