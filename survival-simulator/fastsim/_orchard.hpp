@@ -1,0 +1,1858 @@
+// LOCAL CHANGES vs survival-simulator/oscar-fastsim 51ca0680, all marked "LOCAL CHANGE"
+// except this one, which is a mechanical sweep: std::sin/cos/atan2/pow -> pm::sin/cos/
+// atan2/pow, so those calls go through the libm CPython uses instead of whichever one
+// the C++ compiler links. See the pm namespace in policy_abi.hpp for why this was
+// necessary and how it was diagnosed. Nothing else about the arithmetic changed.
+//
+// Native port of the orchard policy (fastsim/policy/orchard_ref.py + best-config.json).
+// Included by _engine.cpp after the Engine class. Decision-identical to the Python
+// policy: CPython's math.hypot/math.dist algorithm, round(), float % and //, dict
+// insertion order, int-set iteration order (PySetEmu) and random.Random are all
+// reproduced, and every expression keeps Python's evaluation order.
+//
+// Python semantics notes used throughout:
+//   min(a, b) returns a unless b < a; max(a, b) returns a unless b > a.
+//   Pose objects are shared (Python references): _transform_group replaces m.pose
+//   with a new object while callers may still hold the old one (see _observe).
+
+namespace orchard {
+
+const double TAU = 2 * 3.141592653589793;
+const double OPI = 3.141592653589793;
+const double OINF = std::numeric_limits<double>::infinity();
+const double W = 1600., H = 1200., CELL = 100.;
+
+inline double pmin(double a, double b) { return b < a ? b : a; }
+inline double pmax(double a, double b) { return b > a ? b : a; }
+
+// ---- CPython 3.12 math.hypot / math.dist (vector_norm with fma-based dl_mul)
+inline double vector_norm2(double a, double b) {
+    // a, b are already fabs'd; max computed as CPython does
+    double max = 0.0;
+    if (a > max) max = a;
+    if (b > max) max = b;
+    if (std::isinf(max)) return max;
+    if (std::isnan(a) || std::isnan(b)) return std::numeric_limits<double>::quiet_NaN();
+    if (max == 0.0) return max;
+    int max_e;
+    uint64_t mb; std::memcpy(&mb, &max, 8);
+    int bexp = (int)((mb >> 52) & 0x7ff);
+    if (bexp != 0) max_e = bexp - 1022;  // frexp exponent of a normal number
+    else std::frexp(max, &max_e);
+    if (max_e < -1023) {
+        // subnormal path (never hit by this policy's magnitudes); mirror CPython
+        const double DMIN = std::numeric_limits<double>::min();
+        return DMIN * vector_norm2(a / DMIN, b / DMIN);
+    }
+    double scale;
+    if (-max_e >= -1022 && -max_e <= 1023) { uint64_t sb = (uint64_t)(-max_e + 1023) << 52; std::memcpy(&scale, &sb, 8); }
+    else scale = std::ldexp(1.0, -max_e);
+    double csum = 1.0, frac1 = 0.0, frac2 = 0.0;
+    double vec[2] = {a, b};
+    for (int i = 0; i < 2; i++) {
+        double x = vec[i] * scale;
+        double pr_hi = x * x;
+        double pr_lo = std::fma(x, x, -pr_hi);
+        double sm_hi = csum + pr_hi;
+        double sm_lo = (csum - sm_hi) + pr_hi;
+        csum = sm_hi;
+        frac1 += pr_lo;
+        frac2 += sm_lo;
+    }
+    double h = std::sqrt(csum - 1.0 + (frac1 + frac2));
+    double pr_hi = -h * h;
+    double pr_lo = std::fma(-h, h, -pr_hi);
+    double sm_hi = csum + pr_hi;
+    double sm_lo = (csum - sm_hi) + pr_hi;
+    csum = sm_hi;
+    frac1 += pr_lo;
+    frac2 += sm_lo;
+    double x = csum - 1.0 + (frac1 + frac2);
+    h += x / (2.0 * h);
+    return h / scale;
+}
+inline double hypot2(double x, double y) { return vector_norm2(std::fabs(x), std::fabs(y)); }
+
+struct P2 { double x, y; };
+inline bool operator==(const P2& a, const P2& b) { return a.x == b.x && a.y == b.y; }
+inline double dist(const P2& p, const P2& q) { return vector_norm2(std::fabs(p.x - q.x), std::fabs(p.y - q.y)); }
+// Comparisons of dist(p, q) with a threshold. The squared distance decides clear
+// cases (relative margin 1e-12 >> rounding error); borderline cases use the exact
+// CPython value, so results equal `math.dist(p, q) < thr` etc.
+inline int dist_cmp(const P2& p, const P2& q, double thr) {  // -1: surely < thr, 1: surely > thr, 0: unsure
+    if (!(thr > 0) || std::isinf(thr)) return 0;
+    double dx = p.x - q.x, dy = p.y - q.y;
+    double s = dx * dx + dy * dy, t2 = thr * thr;
+    if (s < t2 * (1 - 1e-12)) return -1;
+    if (s > t2 * (1 + 1e-12)) return 1;
+    return 0;
+}
+inline bool dist_lt(const P2& p, const P2& q, double thr) { int c = dist_cmp(p, q, thr); return c ? c < 0 : dist(p, q) < thr; }
+inline bool dist_le(const P2& p, const P2& q, double thr) { int c = dist_cmp(p, q, thr); return c ? c < 0 : dist(p, q) <= thr; }
+inline bool dist_gt(const P2& p, const P2& q, double thr) { int c = dist_cmp(p, q, thr); return c ? c > 0 : dist(p, q) > thr; }
+inline P2 add(P2 a, P2 b) { return {a.x + b.x, a.y + b.y}; }
+inline P2 sub(P2 a, P2 b) { return {a.x - b.x, a.y - b.y}; }
+inline P2 mul(P2 a, double s) { return {a.x * s, a.y * s}; }
+inline double norm(P2 a) { return hypot2(a.x, a.y); }
+inline P2 rot(P2 a, double t) {
+    double c = pm::cos(t), s = pm::sin(t);
+    return {a.x * c - a.y * s, a.x * s + a.y * c};
+}
+inline P2 unit(double t) { return {pm::cos(t), pm::sin(t)}; }
+inline double wrap(double a) { return py_mod(a + OPI, TAU) - OPI; }
+inline bool segments_cross(P2 a, P2 b, P2 c, P2 d) {
+    auto orient = [](P2 p, P2 q, P2 r) { return (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x); };
+    double o1 = orient(a, b, c), o2 = orient(a, b, d), o3 = orient(c, d, a), o4 = orient(c, d, b);
+    return ((o1 > 0) != (o2 > 0)) && ((o3 > 0) != (o4 > 0));
+}
+inline double point_segment(P2 p, P2 a, P2 b) {
+    P2 v = sub(b, a), w = sub(p, a);
+    double t = pmax(0., pmin(1., (v.x * w.x + v.y * w.y) / pmax(v.x * v.x + v.y * v.y, 1e-9)));
+    return dist(p, add(a, mul(v, t)));
+}
+struct CellK { int64_t x, y; };
+inline bool operator==(const CellK& a, const CellK& b) { return a.x == b.x && a.y == b.y; }
+struct CellHash { size_t operator()(const CellK& c) const { return std::hash<int64_t>()(c.x * 1000003LL ^ c.y); } };
+inline CellK cell_of(P2 p) { return {(int64_t)std::floor(p.x / CELL), (int64_t)std::floor(p.y / CELL)}; }
+// Same idea as cell_of, but for an arbitrary bucket size (used by the mark-matching
+// grid below, whose natural scale - a few units - has nothing to do with the world's
+// CELL=100 tree/fruit grid).
+inline CellK cell_of_sized(P2 p, double cellsize) { return {(int64_t)std::floor(p.x / cellsize), (int64_t)std::floor(p.y / cellsize)}; }
+inline int64_t py_round(double x) {  // round(float) -> int, half to even
+    double r = std::round(x);
+    if (std::fabs(x - r) == 0.5) r = 2.0 * std::round(x / 2.0);
+    return (int64_t)r;
+}
+inline int64_t int_floordiv(double a, double b) { return (int64_t)py_floordiv(a, b); }
+
+// ---- Python containers
+struct IntSet {
+    PySetEmu s;
+    void add(int64_t v) { s.add((int32_t)v, py_hash_int(v)); }
+    void discard(int64_t v) { s.discard((int32_t)v, py_hash_int(v)); }
+    bool has(int64_t v) const { return s.lookup((int32_t)v, py_hash_int(v)) >= 0; }
+    size_t size() const { return (size_t)s.used; }
+    bool empty() const { return s.used == 0; }
+    void clear() { s.clear(); }
+    template <class F> void each(F f) const { s.for_each([&](int32_t k) { f((int64_t)k); }); }
+    std::vector<int64_t> list() const { std::vector<int64_t> v; each([&](int64_t k) { v.push_back(k); }); return v; }
+};
+
+template <class K, class V, class Hs = std::hash<K>>
+struct ODict {  // Python dict: insertion order, delete + reinsert moves to the end
+    std::vector<K> keys;
+    std::vector<V> vals;
+    std::vector<char> alive;
+    std::unordered_map<K, size_t, Hs> idx;
+    size_t n = 0;
+    V* get(const K& k) {
+        auto it = idx.find(k);
+        return it == idx.end() ? nullptr : &vals[it->second];
+    }
+    const V* get(const K& k) const {
+        auto it = idx.find(k);
+        return it == idx.end() ? nullptr : &vals[it->second];
+    }
+    bool has(const K& k) const { return idx.count(k) > 0; }
+    V& at(const K& k) { return vals[idx.at(k)]; }
+    void set(const K& k, V v) {
+        auto it = idx.find(k);
+        if (it != idx.end()) { vals[it->second] = std::move(v); return; }
+        idx[k] = keys.size();
+        keys.push_back(k); vals.push_back(std::move(v)); alive.push_back(1); n++;
+    }
+    void erase(const K& k) {
+        auto it = idx.find(k);
+        if (it == idx.end()) return;
+        alive[it->second] = 0; vals[it->second] = V(); idx.erase(it); n--;
+        if (keys.size() > 64 && n * 2 < keys.size()) compact();
+    }
+    void compact() {
+        std::vector<K> k2; std::vector<V> v2; std::vector<char> a2;
+        idx.clear();
+        for (size_t i = 0; i < keys.size(); i++)
+            if (alive[i]) { idx[keys[i]] = k2.size(); k2.push_back(keys[i]); v2.push_back(std::move(vals[i])); a2.push_back(1); }
+        keys.swap(k2); vals.swap(v2); alive.swap(a2);
+    }
+    size_t size() const { return n; }
+    bool empty() const { return n == 0; }
+    std::vector<K> key_list() const {
+        std::vector<K> out;
+        for (size_t i = 0; i < keys.size(); i++) if (alive[i]) out.push_back(keys[i]);
+        return out;
+    }
+    template <class F> void each(F f) {
+        for (size_t i = 0; i < keys.size(); i++) if (alive[i]) f(keys[i], vals[i]);
+    }
+    void clear() { keys.clear(); vals.clear(); alive.clear(); idx.clear(); n = 0; }
+};
+
+// ---- policy data
+struct PoseObj { P2 p; double theta; };
+using Pose = std::shared_ptr<PoseObj>;
+inline Pose mkpose(P2 p, double th) { return std::make_shared<PoseObj>(PoseObj{p, th}); }
+inline P2 transform(const PoseObj& ps, P2 local) { return add(ps.p, rot(local, ps.theta)); }
+inline P2 polar(const PoseObj& ps, const Obs& o) {
+    return transform(ps, P2{pm::cos(o.angle) * o.distance, pm::sin(o.angle) * o.distance});
+}
+inline void local_of(const PoseObj& ps, P2 p, double& d, double& ang) {
+    P2 dd = sub(p, ps.p);
+    d = norm(dd);
+    ang = wrap(pm::atan2(dd.y, dd.x) - ps.theta);
+}
+
+struct TreeM {
+    int64_t id; P2 p; double first, last; bool fresh;
+    double fruit_seen = -OINF; bool dead = false; IntSet assigned; int64_t fruit_here = 0, fruit_free = 0;
+    int64_t visible_tick = -1;
+};
+struct FruitM {
+    int64_t id; P2 p; double born_lo, born_hi, last; bool has_claim = false; int64_t claimed = 0;
+    int64_t visible_tick = -1;
+};
+using TreeP = std::shared_ptr<TreeM>;
+using FruitP = std::shared_ptr<FruitM>;
+
+struct EdgeMem { P2 a, b; double t; };
+struct Mark { P2 q; double win; };
+struct Hear { double t; P2 p; double r; };
+struct Blocked { P2 p; double until; };
+struct LastAction { double dist, direction, turn; int biome; double energy, speed, sprint, max_e; };
+struct CellV { double last; int biome; };  // biome -1 = None
+
+struct Mind {
+    int64_t aid; int64_t group; Pose pose; double born;
+    bool has_last = false; LastAction last_action{};
+    bool spawned_ok = false;
+    Pose prev_pose;  // null = None
+    double prev_hear = 50., prev_cone = OPI / 3, prev_vis = 200.;
+    std::vector<EdgeMem> edges;
+    bool old = false; double old_since = OINF;
+    bool has_eprev = false; double energy_prev = 0;
+    bool has_post = false; int64_t post = 0;
+    bool has_fruit = false; int64_t fruit = 0;
+    bool has_explore = false; P2 explore_p{}; double explore_until = 0;
+    int64_t sweep_left = 0;
+    bool has_tkey = false; int64_t tkey_x = 0, tkey_y = 0;
+    double best_d = OINF; int64_t no_progress = 0;
+    bool has_detour = false; double detour_dir = 0, detour_until = -1.;
+    std::vector<Blocked> blocked;
+    double sweep_sign = 1.;
+    std::vector<Mark> prev_marks;
+    std::vector<Hear> hear_hist;
+    bool heir_done = false;
+    double repost_at = 0., post_since = -OINF, last_site = 0.;
+    bool has_watch = false; P2 watch_p{}; double watch_t = 0;
+};
+using MindP = std::shared_ptr<Mind>;
+
+struct SharedPred { P2 p; double heading; bool has_heading; };
+
+struct Group {
+    int64_t id;
+    IntSet agents;
+    ODict<int64_t, TreeP> trees;
+    ODict<int64_t, FruitP> fruits;
+    // current orchard.py: cell -> list of objects in insertion order (append / remove first match)
+    std::unordered_map<CellK, std::vector<TreeP>, CellHash> tgrid;
+    std::unordered_map<CellK, std::vector<FruitP>, CellHash> fgrid;
+    ODict<CellK, CellV, CellHash> cells;
+    bool shared_seeded=false;
+    std::vector<EdgeMem> walls;
+    // Direction lookup preserves original wall order. Only geometry changes
+    // invalidate it; timestamp refreshes do not change the lookup keys.
+    bool wall_endpoints_valid=false;
+    std::unordered_map<CellK,std::vector<size_t>,CellHash> wall_endpoints;
+    void add_wall_endpoints(size_t i) {
+        wall_endpoints[cell_of_sized(walls[i].a,6.)].push_back(i);
+        wall_endpoints[cell_of_sized(walls[i].b,6.)].push_back(i);
+    }
+    void prepare_wall_endpoints() {
+        if(wall_endpoints_valid)return;
+        wall_endpoints.clear();
+        for(size_t i=0;i<walls.size();++i)add_wall_endpoints(i);
+        wall_endpoints_valid=true;
+    }
+    bool wall_directions_valid=false;
+    std::unordered_map<CellK,std::vector<size_t>,CellHash> wall_directions;
+    void prepare_wall_directions() {
+        if(wall_directions_valid)return;
+        wall_directions.clear();
+        for(size_t i=0;i<walls.size();++i)
+            wall_directions[cell_of_sized(sub(walls[i].b,walls[i].a),.25)].push_back(i);
+        wall_directions_valid=true;
+    }
+    std::vector<SharedPred> predators; // current public sightings, rebuilt each tick
+    bool anchored = false;
+    int64_t next_tree = 0, next_fruit = 0;
+
+    template <class T>
+    static void list_remove(std::unordered_map<CellK, std::vector<T>, CellHash>& grid, const CellK& c, const T& obj) {
+        auto it = grid.find(c);
+        if (it == grid.end()) return;
+        auto& v = it->second;
+        for (size_t i = 0; i < v.size(); i++)
+            if (v[i] == obj) { v.erase(v.begin() + i); return; }
+    }
+    void add_tree(const TreeP& t) { trees.set(t->id, t); tgrid[cell_of(t->p)].push_back(t); }
+    void del_tree(int64_t tid) {
+        TreeP t = trees.at(tid); trees.erase(tid);
+        list_remove(tgrid, cell_of(t->p), t);
+    }
+    void move_tree(const TreeP& t, P2 p) {
+        list_remove(tgrid, cell_of(t->p), t);
+        t->p = p;
+        tgrid[cell_of(p)].push_back(t);
+    }
+    void add_fruit(const FruitP& f) { fruits.set(f->id, f); fgrid[cell_of(f->p)].push_back(f); }
+    void del_fruit(int64_t fid) {
+        FruitP f = fruits.at(fid); fruits.erase(fid);
+        list_remove(fgrid, cell_of(f->p), f);
+    }
+    void rebuild_grids() {
+        tgrid.clear(); fgrid.clear();
+        trees.each([&](const int64_t&, TreeP& t) { tgrid[cell_of(t->p)].push_back(t); });
+        fruits.each([&](const int64_t&, FruitP& f) { fgrid[cell_of(f->p)].push_back(f); });
+    }
+    template <class T>
+    void near(std::unordered_map<CellK, std::vector<T>, CellHash>& grid, P2 p, double r, std::vector<T>& out) {
+        out.clear();
+        CellK c = cell_of(p);
+        int64_t n = int_floordiv(r, CELL) + 1;
+        for (int64_t dx = -n; dx <= n; dx++)
+            for (int64_t dy = -n; dy <= n; dy++) {
+                auto it = grid.find(CellK{c.x + dx, c.y + dy});
+                if (it == grid.end() || it->second.empty()) continue;
+                for (const T& obj : it->second)
+                    if (dist_le(obj->p, p, r)) out.push_back(obj);
+            }
+    }
+    std::vector<TreeP> near_trees(P2 p, double r) { std::vector<TreeP> o; near(tgrid, p, r, o); return o; }
+    std::vector<FruitP> near_fruits(P2 p, double r) { std::vector<FruitP> o; near(fgrid, p, r, o); return o; }
+};
+using GroupP = std::shared_ptr<Group>;
+
+// biome indices follow the engine: 0 forest 1 swamp 2 desert 3 grassland 4 river
+const double MOVE_PENALTY[5] = {1.0, 0.5, 0.8, 1.0, 0.3};
+const double TREE_RATE[5] = {1.0, 0.9, 0.1, 0.5, 0.0};
+const double FRUIT_RATE[5] = {0.1, 0.08, 0.05, 0.1, 0.0};
+inline double tree_rate_or(int b, double dflt) { return b >= 0 ? TREE_RATE[b] : dflt; }
+inline double fruit_rate_or(int b, double dflt) { return b >= 0 ? FRUIT_RATE[b] : dflt; }
+
+// LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): AState and Act moved
+// verbatim, field for field, into policy_abi.hpp and pulled in through the
+// `using namespace polabi;` in _orchard_policy.cpp. They are the boundary types, so
+// they belong with the boundary; this file no longer defines any type the engine
+// side also has to know about.
+
+struct Params {
+    double cap_mult = 0.3, cap_min = 4, cap_max = 20, n0 = 80., tree_half = 600., tree_slots = 1,
+           breed_reserve = 200., emergency_reserve = 105., ripen_wait = 20., sweep_rate = 0.03,
+           explore_radius = 450., fit_vision = 1.0, fit_hear = 0.3, fit_energy = 0.2, births_per_tick = 3,
+           fruit_reach = 200., tree_reach = 420., site_min = 5., breed_reserve_late = 200., reserve_t0 = 600.,
+           reserve_t1 = 1800., dist_pen = 0.1, vo_win_fruit = 4.5, vo_win_far = 4.5, vo_cap = 12.,
+           heir_age = 55., heir_reserve = 250., explore_min = 60., travel_turn = 0.25, heir_slack = 0.05,
+           repost_every = 10., switch_gain = 100., fruit_min_wait = 0., no_eat_age = OINF, late_still_t = OINF,
+           post_radius = 30., min_stay = 15., hungry_margin = 5., fit_speed = 0.3, explore_energy = 200.,
+           watch_patience = 30., watch_reach = 500., watch_refresh = 60., select_min_young = 0,
+           dump_food_site = 2, dump_mult = 1.0, cluster_radius = 0., spread_weight = 0., low_pop_reserve = 200.,
+           lone_reach_mult = 1.0, old_reach = 60., rot_margin = 47., dump_after_t = OINF, cap_tree_slack = 1,
+           cap_hard_min = 2, nursery_bonus = 0.;
+    bool idle_sweep = true, extra_old = true, cull = false, heir_select = true, heir_at_food = false,
+         old_eat_last = true, heir_needs_site = true;
+    double share_obs=0., econ_start=0., econ_radius=180., econ_horizon=40.,
+           cap_budget=0., crowd_weight=0., fruit_auction=0., auction_cost=1.,
+           fruit_net=-1e9, food_risk=0., post_opt=0., rock_penalty=0.,
+           relocate_after=0., relocate_energy=70., renewal_weight=0.,
+           budget_reserve=0., aging_food=0.;
+    bool feed_breed = false;  // feed_mode == 'breed' (else 'hungry')
+};
+
+// (Act moved to policy_abi.hpp - see the note above Params.)
+
+class Policy {
+public:
+    struct FPair { int64_t bucket; double nf, d; int64_t a, fid; };
+    Params P;
+    PyRandom rng;
+    double time = 0.;
+    ODict<int64_t, MindP> minds;
+    ODict<int64_t, GroupP> groups;
+    int64_t next_group = 0;
+    std::vector<int64_t> last_spawners;
+    std::unordered_set<int64_t> culled;
+    bool debug_merge = false;
+
+    // per-call state
+    std::vector<AState> states;
+    std::unordered_map<int64_t, size_t> sidx;
+    // Reused across observe() calls so the mark-matching grid (see observe()) allocates
+    // nothing once warm - same reuse pattern as cluster_cache / actions_buf below.
+    std::unordered_map<CellK, std::vector<int32_t>, CellHash> marks_grid_scratch;
+    std::vector<int32_t> marks_cand_scratch;
+    std::vector<Mark> marks_current_scratch;
+    std::vector<P2> marks_pairs_scratch;
+    std::vector<double> marks_x_scratch, marks_y_scratch;
+    std::vector<TreeP> tree_match_scratch, tree_near_scratch;
+    std::vector<FruitP> fruit_match_scratch;
+    std::vector<int64_t> object_keys_scratch;
+    std::vector<TreeP> sites_scratch;
+    std::vector<int64_t> agents_scratch;
+    std::vector<FPair> fruit_pairs_scratch;
+    std::unordered_set<int64_t> taken_scratch;
+    const AState& st(int64_t aid) const { return states[sidx.at(aid)]; }
+    bool in_states(int64_t aid) const { return sidx.count(aid) > 0; }
+    Mind& M(int64_t aid) { return *minds.at(aid); }
+    Group& G(int64_t gid) { return *groups.at(gid); }
+
+    Policy(const std::vector<uint32_t>& seed_key, const Params& p) : P(p) { rng.init_by_array(seed_key); }
+    // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): virtual destructor so
+    // _evasion.hpp's OrchardEvasionPolicy can be owned through an orchard::Policy*.
+    virtual ~Policy() {}
+
+    // ------------------------------------------------------------ groups
+    GroupP new_group() {
+        auto g = std::make_shared<Group>(); g->id = next_group;
+        groups.set(g->id, g); next_group++;
+        return g;
+    }
+    void transform_group(Group& g, double dth, P2 shift) {
+        auto T = [&](P2 q) { return add(rot(q, dth), shift); };
+        g.agents.each([&](int64_t aid) {
+            Mind& m = M(aid);
+            m.pose = mkpose(T(m.pose->p), wrap(m.pose->theta + dth));
+            if (m.prev_pose) m.prev_pose = mkpose(T(m.prev_pose->p), wrap(m.prev_pose->theta + dth));
+            for (auto& e : m.edges) { e.a = T(e.a); e.b = T(e.b); }
+            for (auto& b : m.blocked) b.p = T(b.p);
+            for (auto& h : m.hear_hist) h.p = T(h.p);
+            if (m.has_explore) m.explore_p = T(m.explore_p);
+            if (m.has_watch) m.watch_p = T(m.watch_p);
+            if (m.has_detour) m.detour_dir = wrap(m.detour_dir + dth);
+            m.has_tkey = false;
+        });
+        g.trees.each([&](const int64_t&, TreeP& t) { t->p = T(t->p); });
+        g.fruits.each([&](const int64_t&, FruitP& f) { f->p = T(f->p); });
+        for(auto& e:g.walls) {e.a=T(e.a);e.b=T(e.b);}
+        g.wall_directions_valid=false;g.wall_endpoints_valid=false;
+        g.rebuild_grids();
+        ODict<CellK, CellV, CellHash> cells;
+        g.cells.each([&](const CellK& c, CellV& v) {
+            P2 q = T(P2{((double)c.x + .5) * CELL, ((double)c.y + .5) * CELL});
+            CellK nc = cell_of(q);
+            CellV* e = cells.get(nc);
+            if (e) { e->last = pmax(e->last, v.last); if (e->biome < 0) e->biome = v.biome; }
+            else cells.set(nc, v);
+        });
+        g.cells = std::move(cells);
+    }
+    void merge(Group& ga, Group& gb, double dth, P2 shift) {
+        transform_group(gb, dth, shift);
+        gb.agents.each([&](int64_t aid) { M(aid).group = ga.id; ga.agents.add(aid); });
+        for (const int64_t& tk : gb.trees.key_list()) {
+            TreeP t = gb.trees.at(tk);
+            auto nt = ga.near_trees(t->p, 12);
+            if (nt.empty()) {
+                t->id = ga.next_tree; ga.next_tree++; ga.add_tree(t);
+                t->assigned.each([&](int64_t aid) { M(aid).has_post = true; M(aid).post = t->id; });
+            } else {
+                TreeP same = nt[0];
+                same->first = pmin(same->first, t->first); same->last = pmax(same->last, t->last);
+                same->fruit_seen = pmax(same->fruit_seen, t->fruit_seen); same->fresh = same->fresh || t->fresh;
+                t->assigned.each([&](int64_t aid) { M(aid).has_post = true; M(aid).post = same->id; same->assigned.add(aid); });
+            }
+        }
+        for (const int64_t& fk : gb.fruits.key_list()) {
+            FruitP f = gb.fruits.at(fk);
+            auto nf = ga.near_fruits(f->p, 4);
+            if (nf.empty()) {
+                f->id = ga.next_fruit; ga.next_fruit++; ga.add_fruit(f);
+                if (f->has_claim) { M(f->claimed).has_fruit = true; M(f->claimed).fruit = f->id; }
+            } else {
+                FruitP same = nf[0];
+                same->born_lo = pmax(same->born_lo, f->born_lo); same->born_hi = pmin(same->born_hi, f->born_hi);
+                if (!same->has_claim && f->has_claim) { same->has_claim = true; same->claimed = f->claimed; }
+                if (f->has_claim) {
+                    Mind& cm = M(f->claimed);
+                    if (same->has_claim && same->claimed == f->claimed) { cm.has_fruit = true; cm.fruit = same->id; }
+                    else cm.has_fruit = false;
+                }
+            }
+        }
+        gb.cells.each([&](const CellK& c, CellV& v) {
+            CellV* e = ga.cells.get(c);
+            if (e) { e->last = pmax(e->last, v.last); if (e->biome < 0) e->biome = v.biome; }
+            else ga.cells.set(c, v);
+        });
+        for(const auto& e:gb.walls) remember_wall(ga,e);
+        ga.anchored = ga.anchored || gb.anchored;
+        groups.erase(gb.id);
+    }
+    void merge_groups() {
+        while (true) {
+            bool changed = false;
+            for (const AState& s : states) {
+                MindP mp = minds.at(s.aid);
+                Mind& m = *mp;
+                for (const Obs& o : *s.obs) {
+                    if (o.type != 1 || !minds.has(o.id)) continue;
+                    Mind& mb = M(o.id);
+                    if (mb.group == m.group) continue;
+                    GroupP ga = groups.at(m.group), gb = groups.at(mb.group);
+                    Pose pb = pose_from_observer(*m.pose, o);
+                    P2 pB = pb->p; double thB = pb->theta;
+                    if (gb->anchored && !ga->anchored) {
+                        double dth = wrap(thB - mb.pose->theta);
+                        P2 shift = sub(pB, rot(mb.pose->p, dth));
+                        double inv_dth = -dth;
+                        P2 inv_shift = mul(rot(shift, inv_dth), -1.);
+                        merge(*gb, *ga, inv_dth, inv_shift);
+                    } else if (ga->anchored && gb->anchored) {
+                        merge(*ga, *gb, 0., P2{0., 0.});
+                    } else {
+                        double dth = wrap(thB - mb.pose->theta);
+                        P2 shift = sub(pB, rot(mb.pose->p, dth));
+                        merge(*ga, *gb, dth, shift);
+                    }
+                    changed = true;
+                    break;
+                }
+                if (changed) break;
+            }
+            if (!changed) return;
+        }
+    }
+
+    // Relative reports become globally usable only once their frames are aligned.
+    // No engine positions are available here. Two simultaneous fruit IDs provide
+    // a rigid transform; anchored groups already use the same boundary frame.
+    // Native adaptation of Nikolaj's _shared_landmark_transform at 77eb2a2:
+    // exact directed rock lengths; >=2 nonparallel endpoint matches; reject
+    // ambiguous placements and excessive candidates. Boundary faces/caps excluded.
+    bool stone_transform(const Group& moving,const Group& reference,double& out_th,P2& out_shift) {
+        struct Match {size_t a,b;double th;P2 shift;};std::vector<Match> matches;
+        auto rock=[](const EdgeMem& e){double d=dist(e.a,e.b);return d>1e-5&&d<200.&&std::abs(d-30.)>1e-5;};
+        for(size_t i=0;i<moving.walls.size();i++)if(rock(moving.walls[i]))
+            for(size_t j=0;j<reference.walls.size();j++)if(rock(reference.walls[j])) {
+                const auto& a=moving.walls[i];const auto& b=reference.walls[j];
+                if(std::abs(dist(a.a,a.b)-dist(b.a,b.b))>1e-5)continue;
+                P2 av=sub(a.b,a.a),bv=sub(b.b,b.a);
+                double th=wrap(pm::atan2(bv.y,bv.x)-pm::atan2(av.y,av.x));
+                matches.push_back({i,j,th,sub(b.a,rot(a.a,th))});
+                if(matches.size()>128)return false;
+            }
+        bool have=false;size_t best_n=0;double best_err=OINF;
+        for(const auto& h:matches) {
+            std::vector<const Match*> support;double error=0.;
+            for(const auto& mm:matches) {
+                if(std::abs(wrap(mm.th-h.th))>1e-7)continue;
+                const auto& a=moving.walls[mm.a];const auto& b=reference.walls[mm.b];
+                double err=pmax(dist(add(rot(a.a,h.th),h.shift),b.a),dist(add(rot(a.b,h.th),h.shift),b.b));
+                if(err<=2.){support.push_back(&mm);error+=err*err;}
+            }
+            bool independent=false;
+            for(size_t a=0;a<support.size();a++)for(size_t b=a+1;b<support.size();b++) {
+                if(support[a]->a==support[b]->a||support[a]->b==support[b]->b)continue;
+                const auto& ea=reference.walls[support[a]->b];const auto& eb=reference.walls[support[b]->b];
+                P2 av=sub(ea.b,ea.a),bv=sub(eb.b,eb.a);
+                if(std::abs(av.x*bv.y-av.y*bv.x)>.25*norm(av)*norm(bv))independent=true;
+            }
+            if(!independent)continue;
+            bool outside=false;
+            if(reference.anchored)for(const auto& e:moving.walls)for(P2 q:{e.a,e.b}) {
+                q=add(rot(q,h.th),h.shift);
+                if(q.x < -2.||q.y < -2.||q.x > W+2.||q.y > H+2.)outside=true;
+            }
+            if(outside)continue;
+            if(have&&(std::abs(wrap(out_th-h.th))>1e-7||dist(out_shift,h.shift)>2.))return false;
+            if(!have||support.size()>best_n||(support.size()==best_n&&error<best_err)){
+                out_th=h.th;out_shift=h.shift;best_n=support.size();best_err=error;
+            }have=true;
+        }return have;
+    }
+    void merge_shared_frames() {
+        if(!P.share_obs) return;
+        bool changed=true;
+        while(changed) {
+            changed=false;auto ids=groups.key_list();
+            for(size_t i=0;i<ids.size()&&!changed;i++) for(size_t j=i+1;j<ids.size()&&!changed;j++) {
+                GroupP ga=groups.at(ids[i]),gb=groups.at(ids[j]);
+                if(ga->anchored&&gb->anchored) {merge(*ga,*gb,0.,{0.,0.});changed=true;break;}
+                if((int64_t)std::llround(time*10.)%10==0) {
+                    GroupP ref=gb->anchored?gb:ga,mov=gb->anchored?ga:gb;
+                    double th=0.;P2 shift{};
+                    if(stone_transform(*mov,*ref,th,shift)) {merge(*ref,*mov,th,shift);changed=true;break;}
+                }
+                std::unordered_map<int64_t,P2> fa,fb;
+                for(const auto& stt:states) {
+                    Mind& m=M(stt.aid);if(m.group!=ga->id&&m.group!=gb->id)continue;
+                    auto& f=m.group==ga->id?fa:fb;
+                    for(const auto& o:*stt.obs)if(o.type==0&&o.has_id)f.emplace(o.id,polar(*m.pose,o));
+                }
+                std::vector<int64_t> common;
+                for(const auto& kv:fa)if(fb.count(kv.first))common.push_back(kv.first);
+                std::sort(common.begin(),common.end());
+                for(size_t a=0;a<common.size()&&!changed;a++)for(size_t b=a+1;b<common.size()&&!changed;b++) {
+                    P2 va=sub(fa.at(common[b]),fa.at(common[a])),vb=sub(fb.at(common[b]),fb.at(common[a]));
+                    if(norm(va)<30.||std::abs(norm(va)-norm(vb))>3.)continue;
+                    double th=wrap(pm::atan2(va.y,va.x)-pm::atan2(vb.y,vb.x));
+                    P2 shift=sub(fa.at(common[a]),rot(fb.at(common[a]),th));
+                    if(gb->anchored&&!ga->anchored)merge(*gb,*ga,-th,mul(rot(shift,-th),-1.));
+                    else merge(*ga,*gb,th,shift);
+                    changed=true;
+                }
+            }
+        }
+    }
+    static void remember_wall(Group& g,const EdgeMem& edge) {
+        g.prepare_wall_endpoints();
+        CellK c=cell_of_sized(edge.a,6.);std::vector<size_t> candidates;
+        for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy) {
+            auto it=g.wall_endpoints.find({c.x+dx,c.y+dy});
+            if(it!=g.wall_endpoints.end())candidates.insert(candidates.end(),it->second.begin(),it->second.end());
+        }
+        std::sort(candidates.begin(),candidates.end());
+        candidates.erase(std::unique(candidates.begin(),candidates.end()),candidates.end());
+        for(size_t i:candidates) {auto& e=g.walls[i];
+            if((dist_lt(e.a,edge.a,6)&&dist_lt(e.b,edge.b,6))||
+               (dist_lt(e.a,edge.b,6)&&dist_lt(e.b,edge.a,6))) {e.t=pmax(e.t,edge.t);return;}
+        }
+        g.walls.push_back(edge);g.wall_directions_valid=false;
+        if(g.walls.size()>1024) {
+            auto it=std::min_element(g.walls.begin(),g.walls.end(),[](const EdgeMem&a,const EdgeMem&b){return a.t<b.t;});
+            g.walls.erase(it);g.wall_endpoints_valid=false;
+        } else g.add_wall_endpoints(g.walls.size()-1);
+    }
+    void shared_reports() {
+        if(!P.share_obs)return;
+        groups.each([&](const int64_t&,GroupP& g){g->predators.clear();});
+        groups.each([&](const int64_t&,GroupP& g){if(!g->shared_seeded){
+            g->agents.each([&](int64_t a){for(const auto& e:M(a).edges)remember_wall(*g,e);});
+            g->shared_seeded=true;
+        }});
+        for(const auto& ss:states) {
+            Mind& m=M(ss.aid);Group& g=G(m.group);
+            for(const auto& o:*ss.obs)if(o.type==2) {
+                P2 q=polar(*m.pose,o);bool found=false;
+                for(const auto& p:g.predators)if(dist_lt(p.p,q,5.)){found=true;break;}
+                if(!found)g.predators.push_back({q,wrap(m.pose->theta+o.angle+OPI-o.rel_dir),o.has_rel_dir});
+            }
+        }
+        for(const auto& ss:states) {
+            Mind& m=M(ss.aid);Group& g=G(m.group);
+            if((int64_t)std::llround(time*10.)%10!=0&&!m.edges.empty())continue;
+            std::vector<std::pair<double,size_t>> nearby;
+            for(size_t i=0;i<g.walls.size();++i) {
+                const auto& e=g.walls[i];double d=point_segment(m.pose->p,e.a,e.b);
+                if(d<350.)nearby.push_back({d,i});
+            }
+            std::stable_sort(nearby.begin(),nearby.end(),[](const auto& a,const auto& b){return a.first<b.first;});
+            m.edges.clear();
+            for(size_t i=0;i<std::min<size_t>(150,nearby.size());++i)m.edges.push_back(g.walls[nearby[i].second]);
+        }
+    }
+
+    // ------------------------------------------------------------ registration
+    static Pose pose_from_observer(const PoseObj& op, const Obs& o) {
+        if (o.distance < 1e-6) return mkpose(op.p, wrap(-o.rel_dir));
+        return mkpose(polar(op, o), wrap(op.theta + o.angle + OPI - o.rel_dir));
+    }
+    static const Obs* find_agent_obs(const std::vector<Obs>& obs, int64_t id) {
+        for (const Obs& o : obs) if (o.type == 1 && o.id == id) return &o;
+        return nullptr;
+    }
+    void register_new(const std::vector<int64_t>& new_ids) {
+        std::vector<int64_t> spawners;
+        for (int64_t a : last_spawners) if (minds.has(a)) spawners.push_back(a);
+        for (size_t k = 0; k < new_ids.size(); k++) {
+            int64_t cid = new_ids[k];
+            bool has_parent = k < spawners.size();
+            int64_t parent = has_parent ? spawners[k] : 0;
+            Pose pose;
+            if (has_parent) {
+                Mind& pm = M(parent);
+                const Obs* o = find_agent_obs(*st(parent).obs, cid);
+                if (o) pose = pose_from_observer(*pm.pose, *o);
+                else {
+                    o = find_agent_obs(*st(cid).obs, parent);
+                    if (o) {
+                        if (o->distance < 1e-6) pose = mkpose(pm.pose->p, wrap(-o->angle));
+                        else {
+                            double th = wrap(pm.pose->theta - o->angle - OPI + o->rel_dir);
+                            pose = mkpose(sub(pm.pose->p, mul(unit(th + o->angle), o->distance)), th);
+                        }
+                    }
+                }
+            }
+            if (!pose) {
+                for (const AState& s : states) {
+                    if (s.aid == cid || !minds.has(s.aid)) continue;
+                    const Obs* o = find_agent_obs(*s.obs, cid);
+                    if (o) { Mind& pm = M(s.aid); parent = s.aid; has_parent = true; pose = pose_from_observer(*pm.pose, *o); break; }
+                }
+            }
+            GroupP g;
+            if (!pose) { g = new_group(); pose = mkpose(P2{0., 0.}, 0.); }
+            else g = groups.at(M(parent).group);
+            auto m = std::make_shared<Mind>();
+            m->aid = cid; m->group = g->id; m->pose = pose; m->born = time;
+            m->has_eprev = true; m->energy_prev = st(cid).energy;
+            minds.set(cid, m); g->agents.add(cid);
+        }
+    }
+
+    // ------------------------------------------------------------ odometry
+    void odometry(Mind& m) {
+        if (!m.has_last) return;
+        const LastAction& a = m.last_action;
+        double d = pmax(0., pmin(a.dist, a.sprint));
+        if (a.energy < a.max_e / 5 && d > a.speed) d = a.speed;
+        d *= MOVE_PENALTY[a.biome];
+        PoseObj& pose = *m.pose;
+        double ang = pose.theta + a.direction;
+        if (d > 0) {
+            std::vector<std::pair<P2, P2>> near;
+            for (const EdgeMem& e : m.edges)
+                if (time - e.t < 4. && point_segment(pose.p, e.a, e.b) < d + 8) near.push_back({e.a, e.b});
+            auto blocked = [&](P2 q) {
+                for (auto& ab : near)
+                    if (point_segment(q, ab.first, ab.second) < 5.5 || segments_cross(pose.p, q, ab.first, ab.second)) return true;
+                return false;
+            };
+            P2 q = add(pose.p, mul(unit(ang), d));
+            if (!near.empty() && blocked(q)) {
+                double step = OPI / 18; bool moved = false;
+                for (int i = 0; i < 36; i++) {
+                    double aa = ang + step * (double)((i + 1) / 2) * ((i % 2) ? -1.0 : 1.0);
+                    P2 q2 = add(pose.p, mul(unit(aa), d));
+                    if (!blocked(q2)) { q = q2; moved = true; break; }
+                }
+                if (!moved) q = pose.p;
+            }
+            pose.p = q;
+        }
+        pose.theta = wrap(pose.theta + a.turn);
+        if (G(m.group).anchored) pose.p = P2{pmin(pmax(pose.p.x, 5.), W - 5.), pmin(pmax(pose.p.y, 5.), H - 5.)};
+    }
+
+    // ------------------------------------------------------------ perception
+    static bool in_view(const PoseObj& pose, double hear, double cone, double vr, P2 p, double margin) {
+        double d, ang; local_of(pose, p, d, ang);
+        if (d <= hear - margin - 1) return true;
+        return d <= vr - margin - 5 && std::fabs(ang) <= cone / 2 - 0.06;
+    }
+    void anchor(Mind& m, const Obs& o) {
+        double x1 = o.c[0], y1 = o.c[1], x2 = o.c[2], y2 = o.c[3];
+        double L = hypot2(x2 - x1, y2 - y1);
+        double phi = pm::atan2(y2 - y1, x2 - x1);
+        double theta; P2 cands[4];
+        if (L > 1500) {
+            theta = wrap(-phi);
+            cands[0] = {0., 30.}; cands[1] = {0., H - 30.}; cands[2] = {0., 0.}; cands[3] = {0., H};
+        } else {
+            theta = wrap(OPI / 2 - phi);
+            cands[0] = {30., 0.}; cands[1] = {W - 30., 0.}; cands[2] = {0., 0.}; cands[3] = {W, 0.};
+        }
+        bool found = false; P2 best{};
+        for (P2 sxy : cands) {
+            P2 pp = sub(sxy, rot(P2{x1, y1}, theta));
+            if (4 <= pp.x && pp.x <= W - 4 && 4 <= pp.y && pp.y <= H - 4) { best = pp; found = true; break; }
+        }
+        if (!found) return;
+        Group& g = G(m.group);
+        if (!g.anchored) {
+            double dth = wrap(theta - m.pose->theta);
+            P2 shift = sub(best, rot(m.pose->p, dth));
+            transform_group(g, dth, shift); g.anchored = true;
+        } else {
+            P2 err = sub(best, m.pose->p);
+            double ne = norm(err);
+            if (0.5 < ne && ne < 40) m.pose->p = best;
+        }
+    }
+    void marks_of(const PoseObj& pose, const std::vector<Obs>& obs, double wf, double wt, std::vector<Mark>& out) {
+        out.clear();
+        for (const Obs& o : obs) {
+            if (o.type == 0) out.push_back({polar(pose, o), wf});
+            else if (o.type == 3) out.push_back({polar(pose, o), wt});
+            else if (o.type == 4) {
+                out.push_back({transform(pose, P2{o.c[0], o.c[1]}), wt});
+                out.push_back({transform(pose, P2{o.c[2], o.c[3]}), wt});
+            }
+        }
+    }
+    // Native adaptation of Nikolaj's nonparallel-stone relocalization. Known
+    // directed lengths/offsets vote for a pose; every matched shape must agree.
+    void relocalize_stones(Mind& m,const std::vector<Obs>& obs) {
+        Group& g=G(m.group);
+        struct Candidates {P2 direction;std::vector<P2> points;};std::vector<Candidates> cs;
+        size_t total=0;g.prepare_wall_directions();
+        std::vector<size_t> wall_matches;
+        for(const auto& o:obs)if(o.type==4){
+            P2 a=rot({o.c[0],o.c[1]},m.pose->theta),b=rot({o.c[2],o.c[3]},m.pose->theta),v=sub(b,a);
+            double len=norm(v);if(len<1e-5||len>=200.||std::abs(len-30.)<1e-5)continue;
+            bool duplicate=false;
+            Candidates c{mul(v,1./len),{}};
+            // A vector within 1e-5 must lie in this cell or one of its eight
+            // neighbours. Sort indices so candidate order and tie breaks match.
+            wall_matches.clear();
+            // Query only buckets intersecting the matching tolerance. A tiny
+            // margin covers floating-point rounding of the expanded bounds.
+            constexpr double margin=1.000001e-5;
+            CellK lo=cell_of_sized({v.x-margin,v.y-margin},.25);
+            CellK hi=cell_of_sized({v.x+margin,v.y+margin},.25);
+            for(int64_t x=lo.x;x<=hi.x;++x)for(int64_t y=lo.y;y<=hi.y;++y) {
+                auto it=g.wall_directions.find({x,y});
+                if(it!=g.wall_directions.end())wall_matches.insert(wall_matches.end(),it->second.begin(),it->second.end());
+            }
+            std::sort(wall_matches.begin(),wall_matches.end());
+            for(size_t wi:wall_matches) {
+                const auto& e=g.walls[wi];
+                if(dist_lt(sub(sub(e.b,e.a),v),P2{0.,0.},1e-5))c.points.push_back(sub(e.a,a));
+            }
+            if(c.points.empty())continue;
+            for(const auto& old:cs)if(old.points.size()==c.points.size()&&dist_lt(old.points[0],c.points[0],1e-5))duplicate=true;
+            if(duplicate)continue;
+            total+=c.points.size();if(total>128)return;cs.push_back(c);
+        }
+        bool independent=false;
+        for(size_t i=0;i<cs.size();i++)for(size_t j=i+1;j<cs.size();j++)if(std::abs(cs[i].direction.x*cs[j].direction.y-cs[i].direction.y*cs[j].direction.x)>.25)independent=true;
+        if(!independent)return;
+        bool have=false;P2 best{};
+        for(const auto& c:cs)for(P2 seed:c.points){
+            P2 sum{};bool ok=true;
+            for(const auto& other:cs) {
+                P2 q=other.points[0];
+                if(other.points.size()==1) {
+                    // Only the threshold matters for an unambiguous match;
+                    // avoid calculating a precise norm just to discard it.
+                    if(!dist_le(seed,q,2.)){ok=false;break;}
+                } else {
+                    double near=OINF;bool found=false;
+                    // A nearest candidate outside the acceptance radius rejects
+                    // this seed anyway. Preserve order among accepted candidates.
+                    for(P2 candidate:other.points)if(dist_le(seed,candidate,2.)) {
+                        double d=dist(seed,candidate);
+                        if(d<near){near=d;q=candidate;found=true;}
+                    }
+                    if(!found){ok=false;break;}
+                }
+                sum=add(sum,q);
+            }
+            if(!ok)continue;P2 candidate=mul(sum,1./cs.size());
+            if(g.anchored&&(candidate.x<5.||candidate.y<5.||candidate.x>W-5.||candidate.y>H-5.))continue;
+            if(have&&dist_gt(best,candidate,2.))return;best=candidate;have=true;
+        }
+        if(have&&dist_gt(m.pose->p,best,.5))m.pose->p=best;
+    }
+    void observe(Mind& m, const AState& s) {
+        if(P.share_obs){
+            for(const auto& o:*s.obs)if(o.type==4&&dist_gt(P2{o.c[2],o.c[3]},P2{o.c[0],o.c[1]},1000.))anchor(m,o);
+            relocalize_stones(m,*s.obs);
+        }
+        Group& g = G(m.group);
+        Pose posep = m.pose;  // may go stale if anchoring transforms the group (as in Python)
+        PoseObj& pose = *posep;
+        double hear = s.hear, cone = s.cone, vr = s.vr;
+        const std::vector<Obs>& obs = *s.obs;
+        bool moved = m.has_last && m.last_action.dist > 0;
+        double wf = P.vo_win_fruit, wt = P.vo_win_far;
+        auto& marks = marks_current_scratch;
+        { PhaseTimer _t(&ph[PH_OBS_MARKS], profile_phases);
+        marks_of(pose, obs, wf, wt, marks);
+        if (moved && !marks.empty() && !m.prev_marks.empty()) {
+            auto& pairs = marks_pairs_scratch;
+            pairs.clear();
+            // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): this was a plain
+            // |marks| x |prev_marks| double loop (with the dist_cmp prune above it, still
+            // used below) - measured at 59% of native policy time with avg |marks| ~45 and
+            // spikes to 234 in busy scenes, i.e. genuinely quadratic, not just constant-factor
+            // bound. Replaced with a uniform grid over prev_marks so each mk only ever tests
+            // candidates in its own 3x3 neighbourhood, same offset-formula guarantee
+            // `Group::near` already relies on elsewhere in this file: with cell size >= any
+            // query radius used here, those 9 cells are PROVABLY a superset of every r within
+            // `mk.win` of `mk.q` - no r that could ever satisfy `dd < mk.win` is excluded.
+            // Any r outside the 3x3 block therefore never affects hb/bd/br, so dropping it
+            // from consideration cannot change which r ends up chosen.
+            // What DOES have to be preserved is order: the original loop keeps the first r
+            // (in m.prev_marks order) to reach the minimum dd, since ties use strict `<`. The
+            // grid buckets are built by scanning prev_marks in order (append-only), but
+            // gathering candidates from several buckets does not itself preserve that global
+            // order, so candidates are explicitly re-sorted by original index before the
+            // inner comparison runs - making the sequence of dist_cmp/dist calls and hb/bd
+            // updates on the reduced candidate set identical, term for term, to what the
+            // original full scan would have produced.
+            double cellsz = 2. * pmax(wf, wt);
+            if (!(cellsz > 0.)) cellsz = 1.;  // degenerate config (win <= 0): grid shape is
+                                               // irrelevant there since dd < mk.win can never
+                                               // hold anyway (dd >= 0) - see dist_cmp's own
+                                               // thr > 0 guard.
+            auto& grid = marks_grid_scratch;
+            grid.clear();
+            for (size_t i = 0; i < m.prev_marks.size(); i++)
+                grid[cell_of_sized(m.prev_marks[i].q, cellsz)].push_back((int32_t)i);
+            auto& cand = marks_cand_scratch;
+            for (const Mark& mk : marks) {
+                bool hb = false; double bd = 0; P2 br{};
+                CellK c0 = cell_of_sized(mk.q, cellsz);
+                int64_t n = int_floordiv(mk.win, cellsz) + 1;
+                cand.clear();
+                for (int64_t dx = -n; dx <= n; dx++)
+                    for (int64_t dy = -n; dy <= n; dy++) {
+                        auto it = grid.find(CellK{c0.x + dx, c0.y + dy});
+                        if (it == grid.end()) continue;
+                        for (int32_t idx : it->second) cand.push_back(idx);
+                    }
+                std::sort(cand.begin(), cand.end());  // restore m.prev_marks order
+                for (int32_t idx : cand) {
+                    const Mark& r = m.prev_marks[idx];
+                    // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): prune with
+                    // dist_cmp before paying for the exact CPython math.dist.
+                    // `dd < mk.win && (!hb || dd < bd)` is exactly `dd < lim` for the lim
+                    // below, and dist_cmp only answers when the squared distance settles it
+                    // with a 1e-12 relative margin - the same primitive dist_lt/dist_gt use
+                    // everywhere else in this file. Borderline pairs still take the exact
+                    // path, so every branch taken here is the one the Python policy takes.
+                    double lim = hb ? pmin(mk.win, bd) : mk.win;
+                    if (dist_cmp(mk.q, r.q, lim) > 0) continue;  // surely >= lim: cannot win
+                    double dd = dist(mk.q, r.q);
+                    if (dd < mk.win && (!hb || dd < bd)) { hb = true; bd = dd; br = r.q; }
+                }
+                if (hb) pairs.push_back(P2{br.x - mk.q.x, br.y - mk.q.y});
+            }
+            if (pairs.size() >= 2) {
+                auto& xs = marks_x_scratch; auto& ys = marks_y_scratch;
+                xs.clear(); ys.clear();
+                xs.reserve(pairs.size()); ys.reserve(pairs.size());
+                for (auto& pr : pairs) { xs.push_back(pr.x); ys.push_back(pr.y); }
+                auto xm = xs.begin() + xs.size() / 2;
+                auto ym = ys.begin() + ys.size() / 2;
+                std::nth_element(xs.begin(), xm, xs.end());
+                std::nth_element(ys.begin(), ym, ys.end());
+                double ex = *xm, ey = *ym;
+                int64_t agree = 0;
+                for (auto& pr : pairs) if (std::fabs(pr.x - ex) < 0.8 && std::fabs(pr.y - ey) < 0.8) agree++;
+                double hh = hypot2(ex, ey);
+                int64_t need = std::max<int64_t>(2, ((int64_t)pairs.size() + 1) / 2);
+                if (0.05 < hh && hh < P.vo_cap && agree >= need) {
+                    pose.p = add(pose.p, P2{ex, ey});
+                    for (auto& mk : marks) mk.q = add(mk.q, P2{ex, ey});
+                }
+            }
+        }
+        }
+        { PhaseTimer _t(&ph[PH_OBS_EDGES], profile_phases);
+        for (const Obs& o : obs) {
+            if (o.type != 4) continue;
+            if (dist_gt(P2{o.c[2],o.c[3]},P2{o.c[0],o.c[1]},1000.)) anchor(m, o);
+        }
+        for (const Obs& o : obs) {
+            if (o.type != 4) continue;
+            P2 a = transform(pose, P2{o.c[0], o.c[1]}), b = transform(pose, P2{o.c[2], o.c[3]});
+            bool found = false;
+            for (auto& e : m.edges)
+                if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
+            if (!found) m.edges.push_back(EdgeMem{a, b,time});
+            if(P.share_obs)remember_wall(g,{a,b,time});
+        }
+        {
+            m.edges.erase(std::remove_if(m.edges.begin(), m.edges.end(), [&](const EdgeMem& e) {
+                return time - e.t >= 40.;
+            }), m.edges.end());
+            if (m.edges.size() > 150) m.edges.erase(m.edges.begin(), m.edges.end() - 150);
+        }
+        }
+        { PhaseTimer _t(&ph[PH_OBS_TREES], profile_phases);
+        for (const Obs& o : obs) {
+            if (o.type != 3) continue;
+            P2 p = polar(pose, o);
+            TreeP t;
+            double td = 0;
+            g.near(g.tgrid, p, 12., tree_match_scratch);
+            for (auto& c : tree_match_scratch) {
+                if (c->dead) continue;
+                double dd = dist(c->p, p);
+                if (!t || dd < td) { t = c; td = dd; }
+            }
+            if (!t) {
+                bool fresh = m.prev_pose && in_view(*m.prev_pose, m.prev_hear, m.prev_cone, m.prev_vis, p, 3.);
+                t = std::make_shared<TreeM>();
+                t->id = g.next_tree; t->p = p; t->first = time; t->last = time; t->fresh = fresh;
+                g.add_tree(t); g.next_tree++;
+            } else {
+                P2 err = sub(t->p, p);
+                double ne = norm(err);
+                if (moved && 0.3 < ne && ne < 8 && time - t->last < 2.) { pose.p = add(pose.p, err); moved = false; }
+                else if (ne >= 1.0 && time - t->last >= 2.) g.move_tree(t, p);
+            }
+            t->last = time;
+        }
+        }
+        { PhaseTimer _t(&ph[PH_OBS_FRUITS], profile_phases);
+        for (const Obs& o : obs) {
+            if (o.type != 0) continue;
+            P2 p = polar(pose, o);
+            FruitP f; double fd = 0;
+            g.near(g.fgrid, p, 5., fruit_match_scratch);
+            for (auto& c : fruit_match_scratch) {
+                double dd = dist(c->p, p);
+                if (!f || dd < fd) { f = c; fd = dd; }
+            }
+            if (!f) {
+                double lo = -OINF;
+                if (m.prev_pose && in_view(*m.prev_pose, m.prev_hear, m.prev_cone, m.prev_vis, p, 3.)) lo = time - 0.1;
+                else {
+                    g.agents.each([&](int64_t a) {
+                        auto& hh = M(a).hear_hist;
+                        for (size_t i = hh.size(); i-- > 0;)
+                            if (dist_lt(hh[i].p, p, hh[i].r - 2.)) { lo = pmax(lo, hh[i].t); break; }
+                    });
+                }
+                lo = pmax(lo, 0.);
+                f = std::make_shared<FruitM>();
+                f->id = g.next_fruit; f->p = p; f->born_lo = lo; f->born_hi = time; f->last = time;
+                g.add_fruit(f); g.next_fruit++;
+                g.near(g.tgrid, p, 70., tree_near_scratch);
+                for (auto& t : tree_near_scratch) if (!t->dead) t->fruit_seen = time;
+            }
+            f->last = time;
+        }
+        }
+        CellK c0 = cell_of(pose.p);
+        CellV* v = g.cells.get(c0);
+        if (!v) g.cells.set(c0, CellV{time, s.biome});
+        else { v->last = time; v->biome = s.biome; }
+        const double rs[3] = {60., 120., 175.};
+        for (double r : rs) {
+            if (r > vr) break;
+            const double as[3] = {-cone / 3, 0., cone / 3};
+            for (double a : as) {
+                CellK c = cell_of(add(pose.p, mul(unit(pose.theta + a), r)));
+                CellV* cv = g.cells.get(c);
+                if (!cv) g.cells.set(c, CellV{time, -1});
+                else cv->last = time;
+            }
+        }
+        if (m.has_eprev && m.has_last && !m.old) {
+            const LastAction& la = m.last_action;
+            double d = pmax(0., pmin(la.dist, la.sprint));
+            if (la.energy < la.max_e / 5 && d > la.speed) d = la.speed;
+            double cost = d <= la.speed ? d * 0.05 : la.speed * 0.05 + (d - la.speed) * 0.5;
+            cost += pmin(OPI, std::fabs(la.turn)) / TAU + 0.1 + (m.spawned_ok ? 100. : 0.);
+            double dev = (m.energy_prev - s.energy) - cost;
+            if ((0.45 < dev && dev < 2.5 && s.energy < s.max_energy - 0.5) || s.age > 120.5) {
+                m.old = true; m.old_since = time;
+            }
+        }
+        m.has_eprev = true; m.energy_prev = s.energy;
+        m.hear_hist.push_back(Hear{time, pose.p, hear});
+        if (m.hear_hist.size() > 400) m.hear_hist.erase(m.hear_hist.begin(), m.hear_hist.begin() + 100);
+        if (!marks.empty()) {
+            // Recompute even when the correction is algebraically equivalent:
+            // transform(pose + correction, observation) has slightly different
+            // floating-point rounding from mark + correction, and future
+            // odometry intentionally depends on those exact coordinates.
+            marks_of(pose, obs, wf, wt, marks);
+            m.prev_marks.swap(marks);
+        } else {
+            m.prev_marks.clear();
+        }
+        m.prev_pose = mkpose(pose.p, pose.theta); m.prev_hear = hear; m.prev_cone = cone; m.prev_vis = vr;
+    }
+
+    void maintain(Group& g) {
+        double now = time;
+        int64_t tick = (int64_t)std::llround(now * 10.);
+        { PhaseTimer _t(&ph[PH_MAINTAIN_VIS], profile_phases);
+        g.agents.each([&](int64_t a) {
+            Mind& m = M(a); const AState& s = st(a);
+            double h = s.hear, c = s.cone, v = s.vr;
+            P2 mp = m.pose->p;
+            auto occluded = [&](P2 p) {
+                if (dist_le(p, mp, h - 3.)) return false;
+                // Avoid rebuilding a temporary edge vector for every agent on
+                // every tick. Iterating the source vector in the same order is
+                // decision-identical; stale edges are simply skipped in place.
+                for (const auto& e : m.edges)
+                    if (now - e.t < 40. && segments_cross(mp, p, e.a, e.b)) return true;
+                return false;
+            };
+            CellK cell = cell_of(mp);
+            int64_t n = int_floordiv(v, CELL) + 1;
+            for (int64_t dx = -n; dx <= n; ++dx)
+                for (int64_t dy = -n; dy <= n; ++dy) {
+                    CellK key{cell.x + dx, cell.y + dy};
+                    auto ti = g.tgrid.find(key);
+                    if (ti != g.tgrid.end()) for (const auto& t : ti->second) {
+                        // Objects observed this tick cannot be invalidated by
+                        // the visibility test below. Check that before even
+                        // calculating their distance from this agent.
+                        if (t->last == now || t->visible_tick == tick) continue;
+                        if (dist_le(t->p, mp, v) && in_view(*m.pose, h, c, v, t->p, 20.) &&
+                            !occluded(t->p)) t->visible_tick = tick;
+                    }
+                    auto fi = g.fgrid.find(key);
+                    if (fi != g.fgrid.end()) for (const auto& f : fi->second) {
+                        if (f->last == now || f->visible_tick == tick) continue;
+                        if (dist_le(f->p, mp, v) && in_view(*m.pose, h, c, v, f->p, 8.) &&
+                            !occluded(f->p)) f->visible_tick = tick;
+                    }
+                }
+        });
+        }
+        { PhaseTimer _t(&ph[PH_MAINTAIN_PRUNE], profile_phases);
+        object_keys_scratch.clear();
+        g.trees.each([&](const int64_t& id, TreeP&) { object_keys_scratch.push_back(id); });
+        for (int64_t tid : object_keys_scratch) {
+            TreeP t = g.trees.at(tid);
+            if (t->dead) {
+                if (now - t->last > 55.) g.del_tree(tid);
+                continue;
+            }
+            if (now > t->first + 62.5 || (t->last != now && t->visible_tick == tick)) { t->dead = true; continue; }
+            bool invalid = false;
+            t->assigned.each([&](int64_t a) {
+                if (!minds.has(a) || !M(a).has_post || M(a).post != tid) invalid = true;
+            });
+            if (invalid) {
+                IntSet na;
+                t->assigned.each([&](int64_t a) {
+                    if (minds.has(a) && M(a).has_post && M(a).post == tid) na.add(a);
+                });
+                t->assigned = std::move(na);
+            }
+        }
+        object_keys_scratch.clear();
+        g.fruits.each([&](const int64_t& id, FruitP&) { object_keys_scratch.push_back(id); });
+        for (int64_t fid : object_keys_scratch) {
+            FruitP f = g.fruits.at(fid);
+            bool gone = now > f->born_hi + 50.05 || (f->last != now && f->visible_tick == tick);
+            if (gone) {
+                if (f->has_claim && minds.has(f->claimed) && M(f->claimed).has_fruit && M(f->claimed).fruit == fid)
+                    M(f->claimed).has_fruit = false;
+                g.del_fruit(fid);
+                continue;
+            }
+            if (f->has_claim && (!minds.has(f->claimed) || !M(f->claimed).has_fruit || M(f->claimed).fruit != fid))
+                f->has_claim = false;
+        }
+        }
+        { PhaseTimer _t(&ph[PH_MAINTAIN_COUNTS], profile_phases);
+        // Count each tree/fruit pair once from the fruit side. The old loop
+        // queried the fruit grid once per tree; these integer totals are the
+        // only observable result, so reversing the traversal is exact.
+        g.trees.each([&](const int64_t&, TreeP& t) {
+            t->fruit_here = 0;
+            t->fruit_free = 0;
+        });
+        g.fruits.each([&](const int64_t&, FruitP& f) {
+            CellK cell = cell_of(f->p);
+            int64_t n = int_floordiv(70., CELL) + 1;
+            for (int64_t dx = -n; dx <= n; ++dx)
+                for (int64_t dy = -n; dy <= n; ++dy) {
+                    auto it = g.tgrid.find(CellK{cell.x + dx, cell.y + dy});
+                    if (it == g.tgrid.end()) continue;
+                    for (const auto& t : it->second) if (dist_le(t->p, f->p, 70.)) {
+                        t->fruit_here++;
+                        if (!f->has_claim) t->fruit_free++;
+                    }
+                }
+        });
+        }
+    }
+
+    // ------------------------------------------------------------ economy
+    bool economic() const {return time>=P.econ_start;}
+    double fruit_energy(const FruitM& f) const {
+        double age=f.born_lo==-OINF?20.:pmax(0.,time-(f.born_lo+f.born_hi)*.5);
+        return pmin(60.,20.+2.*age);
+    }
+    double drain(const AState& s) const {
+        // max_age is private: use its public distribution until aging is observed.
+        double chance=pmax(0.,pmin(1.,(s.age-60.)/60.));
+        auto mm=minds.get(s.aid);if(mm&&(*mm)->old)chance=1.;
+        return 1.+.1*s.age*chance;
+    }
+    double food_budget(Group& g,P2 q,double radius) {
+        double value=0.;
+        for(auto& f:g.near_fruits(q,radius))value+=fruit_energy(*f);
+        for(auto& t:g.near_trees(q,radius))if(!t->dead) {
+            auto cell=g.cells.get(cell_of(t->p));int b=cell?cell->biome:-1;
+            double life=pmax(0.,pmin(P.econ_horizon,t->first+(t->fresh?58.:55.)-time));
+            double immature=t->fresh?pmax(0.,t->first+20.-time):0.;
+            value+=pmax(0.,life-immature)*fruit_rate_or(b,.08)*60.;
+        }
+        return value;
+    }
+    double danger(Group& g,P2 q) const {
+        double v=0.;for(const auto& p:g.predators) {
+            double d=dist(q,p.p);if(d>280.)continue;
+            bool sees=d<=65.||!p.has_heading||std::abs(wrap(pm::atan2(q.y-p.p.y,q.x-p.p.x)-p.heading))<OPI/6+.15;
+            if(sees)v+=pmax(0.,1.-d/280.);
+        }return v;
+    }
+    double route_estimate(Mind& m,P2 target) const {
+        double direct=dist(m.pose->p,target),best=direct;
+        for(const auto& e:m.edges)if(segments_cross(m.pose->p,target,e.a,e.b))
+            best=pmax(best,pmin(dist(m.pose->p,e.a)+dist(e.a,target),dist(m.pose->p,e.b)+dist(e.b,target))+12.);
+        return best; // lower-complexity detour estimate, not exact shortest path
+    }
+    double n_est() const { return P.n0 * pm::pow(0.5, time / P.tree_half); }
+    int64_t cap() {
+        double r = (double)py_round(P.cap_mult * n_est());
+        double c = pmax(P.cap_min, pmin(P.cap_max, r));
+        int64_t ci = (int64_t)c;
+        if (P.cap_tree_slack >= 0 && !groups.empty()) {
+            int64_t known = 0; bool first = true;
+            groups.each([&](const int64_t&, GroupP& g) {
+                int64_t cnt = 0;
+                g->trees.each([&](const int64_t&, TreeP& t) { if (!t->dead) cnt++; });
+                if (first || cnt > known) { known = cnt; first = false; }
+            });
+            double lim = pmax(P.cap_hard_min, (double)known * P.tree_slots + P.cap_tree_slack);
+            ci = (int64_t)pmin((double)ci, lim);
+        }
+        if(economic()&&P.cap_budget>0.) {
+            double food=0.;groups.each([&](const int64_t&,GroupP& g){
+                g->fruits.each([&](const int64_t&,FruitP& f){food+=fruit_energy(*f);});
+                g->trees.each([&](const int64_t&,TreeP& t){if(t->dead)return;
+                    auto c=g->cells.get(cell_of(t->p));double rate=fruit_rate_or(c?c->biome:-1,.08);
+                    double life=pmax(0.,pmin(P.econ_horizon,t->first+(t->fresh?58.:55.)-time));
+                    food+=pmax(0.,life-(t->fresh?pmax(0.,t->first+20.-time):0.))*rate*60.;
+                });
+            });
+            double supported=food/pmax(1.,P.econ_horizon*1.5+25.);
+            ci=(int64_t)pmax(2.,pmin(P.cap_max,(1.-P.cap_budget)*ci+P.cap_budget*supported));
+        }
+        return ci;
+    }
+    double fitness(const AState& s) const {
+        return (P.fit_vision * pm::pow(s.vr / 200., 2.0) * pmin(1.5, s.cone / 1.0472)
+                + P.fit_hear * pm::pow(s.hear / 50., 2.0)
+                + P.fit_energy * pmin(2., s.max_energy / 500.) + P.fit_speed * pmin(1.5, pmin(s.speed, s.sprint) / 10.));
+    }
+    bool ready(const FruitM& f, double energy = OINF, bool old = false) const {
+        if (time < f.born_hi + P.fruit_min_wait) return false;
+        if (f.born_lo == -OINF) return true;
+        double t_eat = pmin(f.born_hi + P.ripen_wait, f.born_lo + P.rot_margin);
+        double left = t_eat - time;
+        if (left <= 0.) return true;
+        if (old) return false;
+        return energy < left + P.hungry_margin;
+    }
+    double reserve() const {
+        double t = time;
+        if (t <= P.reserve_t0) return P.breed_reserve;
+        if (t >= P.reserve_t1) return P.breed_reserve_late;
+        return P.breed_reserve + (P.breed_reserve_late - P.breed_reserve) * (t - P.reserve_t0) / (P.reserve_t1 - P.reserve_t0);
+    }
+    static bool site_ok(const TreeM& t) { return (!t.dead) || t.fruit_here > 0; }
+    static int64_t others_n(const IntSet& s, int64_t aid) { return (int64_t)s.size() - (s.has(aid) ? 1 : 0); }
+
+    double tree_value(Group& g, TreeM& t, Mind& m, const AState& s) {
+        int64_t n = others_n(t.assigned, m.aid);
+        double reach = P.tree_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
+        if (dist_gt(t.p, m.pose->p, reach)) return -OINF;
+        double d = dist(t.p, m.pose->p);
+        double walk = pmax(1., pmin(s.speed, s.sprint) * MOVE_PENALTY[s.biome]);
+        double travel_t = d / walk / 10.;
+        double travel_e = d * 0.05 + travel_t;
+        double wait = 0., future = 0.;
+        if (!t.dead) {
+            if ((double)n >= P.tree_slots) return -OINF;
+            double remaining = t.fresh ? (t.first + 58. - time) : (t.first + 55. - time);
+            remaining -= travel_t;
+            if (remaining < 6.) return -OINF;
+            wait = t.fresh ? pmax(0., t.first + 20. - time - travel_t) : 0.;
+            CellV* cell = g.cells.get(cell_of(t.p));
+            int biome = cell ? cell->biome : -1;
+            double rate = fruit_rate_or(biome, 0.08) * 60.;
+            double known = time - t.first;
+            if (!t.fresh && known > 15. && time - t.fruit_seen > known) rate *= 0.5;
+            future = pmax(0., remaining - wait) * rate;
+        }
+        double here = 55. * (double)t.fruit_free;
+        if (P.cluster_radius > 0.) {
+            // neighbours of t are fixed during one assign_posts pass: cache them per tree
+            const std::vector<TreeP>* nl;
+            auto ci = cluster_cache.find(t.id);
+            if (ci != cluster_cache.end()) nl = &ci->second;
+            else nl = &(cluster_cache[t.id] = g.near_trees(t.p, P.cluster_radius));
+            for (auto& u : *nl) {
+                if (u->id == t.id || u->dead || (double)others_n(u->assigned, m.aid) >= P.tree_slots) continue;
+                double ur = u->fresh ? (u->first + 58. - time) : (u->first + 55. - time);
+                if (ur > 6.) {
+                    CellV* ucell = g.cells.get(cell_of(u->p));
+                    int ub = ucell ? ucell->biome : -1;
+                    future += 0.7 * pmax(0., ur) * fruit_rate_or(ub, 0.08) * 60.;
+                }
+                here += 55. * (double)u->fruit_free;
+            }
+        }
+        if (future + here <= 0.) return -OINF;
+        if (s.energy - travel_e - wait - 12. < 0.) return -OINF;
+        double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;
+        if (P.nursery_bonus > 0. && !m.heir_done && s.age >= P.heir_age - 8.)
+            value += P.nursery_bonus * (double)std::min<int64_t>(4, t.fruit_free);
+        if (P.spread_weight > 0.) {
+            bool any = false; double gap = 0;
+            g.agents.each([&](int64_t a) {
+                if (a == m.aid) return;
+                double dd = dist(t.p, M(a).pose->p);
+                if (!any || dd < gap) { gap = dd; any = true; }
+            });
+            if (any) value += P.spread_weight * 60. * pmin(1., gap / pmax(1., s.vr));
+        }
+        if(economic()&&(P.crowd_weight>0.||P.food_risk>0.||P.rock_penalty>0.)) {
+            auto ci=crowd_cache.find(t.id);
+            if(ci==crowd_cache.end()) {
+                double count=0.;g.agents.each([&](int64_t a){if(M(a).has_post&&g.trees.has(M(a).post)&&dist_lt(t.p,g.trees.at(M(a).post)->p,P.econ_radius))count++;});
+                ci=crowd_cache.emplace(t.id,count).first;
+            }
+            double competitors=ci->second;
+            if(m.has_post&&g.trees.has(m.post)&&dist_lt(t.p,g.trees.at(m.post)->p,P.econ_radius))competitors--;
+            value-=P.crowd_weight*(future+here)*competitors/(1.+competitors);
+            value-=P.food_risk*danger(g,t.p);
+            if(P.rock_penalty>0.)value-=P.rock_penalty*(route_estimate(m,t.p)-d);
+        }
+        return value;
+    }
+
+    std::unordered_map<int64_t, std::vector<TreeP>> cluster_cache;
+    std::unordered_map<int64_t,double> crowd_cache;
+    void assign_posts(Group& g) {
+        cluster_cache.clear();crowd_cache.clear();
+        auto& sites = sites_scratch; sites.clear();
+        g.trees.each([&](const int64_t&, TreeP& t) { sites.push_back(t); });
+        auto& agents = agents_scratch; agents.clear();
+        g.agents.each([&](int64_t a) { agents.push_back(a); });
+        std::stable_sort(agents.begin(), agents.end(), [&](int64_t a, int64_t b) { return st(a).energy < st(b).energy; });
+        for (int64_t a : agents) {
+            Mind& m = M(a);
+            if (m.old) continue;
+            bool keep = m.has_post && g.trees.has(m.post) && site_ok(*g.trees.at(m.post));
+            if (keep && (time < m.repost_at || time - m.post_since < P.min_stay)) continue;
+            double cur_v = -OINF;
+            if (keep) {
+                cur_v = tree_value(g, *g.trees.at(m.post), m, st(a));
+                m.repost_at = time + P.repost_every;
+            }
+            bool hb = false; double bv = 0; TreeP bt;
+            for (auto& t : sites) {
+                if (keep && t->id == m.post) continue;
+                if (!site_ok(*t)) continue;
+                double v = tree_value(g, *t, m, st(a));
+                if (v > P.site_min && (!hb || v > bv)) { hb = true; bv = v; bt = t; }
+            }
+            if (keep && (!hb || bv < cur_v + P.switch_gain)) continue;
+            crowd_cache.clear(); // next agent must see this changed allocation
+            if (m.has_post && g.trees.has(m.post)) g.trees.at(m.post)->assigned.discard(a);
+            m.has_post = false;
+            if (hb) {
+                m.has_post = true; m.post = bt->id; bt->assigned.add(a);
+                m.has_explore = false; m.has_tkey = false; m.post_since = time;
+            }
+        }
+        cluster_cache.clear();crowd_cache.clear();
+    }
+
+    void assign_fruits(Group& g) {
+        g.agents.each([&](int64_t a) {
+            Mind& m = M(a);
+            if (m.has_fruit && (!g.fruits.has(m.fruit) || !g.fruits.at(m.fruit)->has_claim || g.fruits.at(m.fruit)->claimed != a))
+                m.has_fruit = false;
+        });
+        auto& pairs = fruit_pairs_scratch; pairs.clear();
+        g.agents.each([&](int64_t a) {
+            Mind& m = M(a);
+            if (m.has_fruit) return;
+            const AState& s = st(a);
+            if (s.age > P.no_eat_age) return;
+            bool full = s.energy > s.max_energy - 30.;
+            double reach = m.old ? P.old_reach : P.fruit_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
+            g.near(g.fgrid, m.pose->p, reach, fruit_match_scratch);
+            for (auto& f : fruit_match_scratch) {
+                if (f->has_claim) continue;
+                double d = dist(f->p, m.pose->p);
+                if (!ready(*f, s.energy, m.old)) continue;
+                bool owe_heir = (!m.heir_done) && s.age >= P.heir_age - 5. && s.energy < P.heir_reserve + 20.;
+                int64_t bucket;
+                if (m.old) bucket = P.old_eat_last ? 10 : 5;
+                else if (culled.count(a)) bucket = 10;
+                else if (owe_heir) bucket = 0;
+                else if (full) bucket = 9;
+                else if (P.feed_breed) bucket = s.energy < reserve() + 20. ? 1 : 2 + int_floordiv(s.energy, 120);
+                else bucket = int_floordiv(s.energy, 60);
+                double utility=fitness(s);
+                if(economic()&&(P.fruit_auction>0.||P.fruit_net>-1e8)) {
+                    double route=(P.rock_penalty>0.?route_estimate(m,f->p):d);
+                    double arrival=route/pmax(1.,pmin(s.speed,s.sprint)*MOVE_PENALTY[s.biome])/10.;
+                    double energy=pmin(fruit_energy(*f)+2.*arrival,pmax(0.,s.max_energy-s.energy));
+                    double cost=.05*route+arrival*drain(s);
+                    if(energy-cost<P.fruit_net||time+arrival>f->born_hi+49.)continue;
+                    if(P.fruit_auction>0.) {
+                        bucket=0;
+                        utility=(energy-P.auction_cost*cost)/(1.+arrival);
+                        utility+=30./pmax(1.,s.energy/drain(s));
+                        utility+=2.*fitness(s)-P.aging_food*(drain(s)-1.);
+                        utility-=P.food_risk*danger(g,f->p);
+                    }
+                }
+                pairs.push_back(FPair{bucket, -utility, d, a, f->id});
+            }
+        });
+        std::sort(pairs.begin(), pairs.end(), [](const FPair& x, const FPair& y) {
+            if (x.bucket != y.bucket) return x.bucket < y.bucket;
+            if (x.nf != y.nf) return x.nf < y.nf;
+            if (x.d != y.d) return x.d < y.d;
+            if (x.a != y.a) return x.a < y.a;
+            return x.fid < y.fid;
+        });
+        auto& taken = taken_scratch; taken.clear();
+        for (auto& pr : pairs) {
+            FruitM& f = *g.fruits.at(pr.fid);
+            if (taken.count(pr.a) || f.has_claim) continue;
+            f.has_claim = true; f.claimed = pr.a;
+            M(pr.a).has_fruit = true; M(pr.a).fruit = pr.fid; taken.insert(pr.a);
+        }
+    }
+
+    // ------------------------------------------------------------ navigation
+    void go_to(Mind& m, const AState& s, P2 target, double stop, double& o_step, double& o_dir, double& o_turn) {
+        const PoseObj& pose = *m.pose;
+        double d, ang; local_of(pose, target, d, ang);
+        if (d <= stop) { o_step = 0.; o_dir = 0.; o_turn = 0.; return; }
+        double walk = pmin(s.speed, s.sprint);
+        double step = pmin(walk, pmax(0., d - stop * 0.5));
+        double heading = pose.theta + ang;
+        double look = pmin(45., d);
+        std::vector<std::pair<P2, P2>> recent;
+        for (auto& e : m.edges)
+            if (time - e.t < 25. && point_segment(pose.p, e.a, e.b) < look + 10.) recent.push_back({e.a, e.b});
+        Group& g = G(m.group);
+        std::vector<P2> unripe;
+        for (auto& f : g.near_fruits(pose.p, look + 20.))
+            if (!ready(*f) && !(m.has_fruit && f->id == m.fruit)) unripe.push_back(f->p);
+        auto clear = [&](double h, double lk) {
+            P2 q = add(pose.p, mul(unit(h), lk));
+            for (auto& ab : recent)
+                if (segments_cross(pose.p, q, ab.first, ab.second) || point_segment(q, ab.first, ab.second) < 7.) return false;
+            for (auto& fp : unripe)
+                if (point_segment(fp, pose.p, q) < 15.) return false;
+            return true;
+        };
+        if ((!recent.empty() || !unripe.empty()) && !clear(heading, look)) {
+            bool done = false;
+            for (int k = 1; k < 12 && !done; k++) {
+                for (int sgn : {1, -1}) {
+                    double h = heading + (double)(sgn * k) * OPI / 12;
+                    if (clear(h, look)) { heading = h; done = true; break; }
+                }
+            }
+        }
+        double direction = wrap(heading - pose.theta);
+        double tt = P.travel_turn;
+        o_step = step; o_dir = direction; o_turn = pmax(-tt, pmin(tt, direction));
+    }
+    bool progress(Mind& m, P2 target, double d) {
+        int64_t kx = py_round(target.x / 10), ky = py_round(target.y / 10);
+        if (!m.has_tkey || m.tkey_x != kx || m.tkey_y != ky) {
+            m.has_tkey = true; m.tkey_x = kx; m.tkey_y = ky; m.best_d = d; m.no_progress = 0;
+            return false;
+        }
+        if (d < m.best_d - 1.5) { m.best_d = d; m.no_progress = 0; }
+        else m.no_progress++;
+        if (m.no_progress >= 15) {
+            m.blocked.push_back(Blocked{target, time + 40.});
+            int64_t c = rng.randbelow(2) == 0 ? -1 : 1;  // choice([-1, 1])
+            double u = rng.uniform(-.4, .4);
+            m.has_detour = true;
+            m.detour_dir = m.pose->theta + (double)c * OPI / 2 + u;
+            m.detour_until = time + 2.;
+            m.has_tkey = false; m.no_progress = 0;
+            return true;
+        }
+        return false;
+    }
+    bool explore_target(Mind& m, Group& g, const AState& s, P2& out_p, double& out_until) {
+        const PoseObj& pose = *m.pose; double R = P.explore_radius;
+        std::vector<P2> others;
+        g.agents.each([&](int64_t a) {
+            if (a == m.aid) return;
+            Mind& om = M(a);
+            if (om.has_post && g.trees.has(om.post)) others.push_back(g.trees.at(om.post)->p);
+            else if (om.has_explore) others.push_back(om.explore_p);
+            else others.push_back(om.pose->p);
+        });
+        CellK c0 = cell_of(pose.p); int64_t n = int_floordiv(R, CELL) + 1;
+        bool hb = false; double bs = 0; P2 bc{};
+        for (int64_t dx = -n; dx <= n; dx++)
+            for (int64_t dy = -n; dy <= n; dy++) {
+                CellK c{c0.x + dx, c0.y + dy};
+                P2 center{((double)c.x + .5) * CELL, ((double)c.y + .5) * CELL};
+                if (g.anchored && !(40 < center.x && center.x < W - 40 && 40 < center.y && center.y < H - 40)) continue;
+                double d = dist(center, pose.p);
+                if (d > R || d < 60) continue;
+                CellV* v = g.cells.get(c);
+                double stale = !v ? 1.2 : pmin(1., (time - v->last) / 200.);
+                int biome = v ? v->biome : -1;
+                double w = biome >= 0 ? tree_rate_or(biome, 0.6) : 0.6;
+                double score = stale * w - 0.6 * d / R;
+                if(economic()) {
+                    score+=P.renewal_weight*w*pm::pow(.5,time/300.);
+                    score-=P.food_risk*.01*danger(g,center);
+                }
+                for (auto& q : others) if (dist_lt(center, q, 130)) { score -= 0.5; break; }
+                for (auto& b : m.blocked) if (dist_lt(center, b.p, 40) && b.until > time) { score -= 1.; break; }
+                for (auto& e : m.edges)
+                    if (time - e.t < 30. && segments_cross(pose.p, center, e.a, e.b)) { score -= 0.4; break; }
+                score += rng.uniform(0, .08);
+                if (!hb || score > bs) { hb = true; bs = score; bc = center; }
+            }
+        if (!hb) return false;
+        double jx = rng.uniform(-20, 20);
+        double jy = rng.uniform(-20, 20);
+        P2 target = add(bc, P2{jx, jy});
+        double walk = pmax(1., pmin(s.speed, s.sprint) * MOVE_PENALTY[s.biome]);
+        out_p = target; out_until = time + dist(target, pose.p) / walk / 10. + 10.;
+        return true;
+    }
+    bool watch_post(Mind& m, Group& g, const AState& s, P2& out) {
+        const PoseObj& pose = *m.pose; double vr = pmin(s.vr, 400.); double R = P.watch_reach;
+        std::vector<P2> others;
+        g.agents.each([&](int64_t a) {
+            if (a == m.aid) return;
+            Mind& om = M(a);
+            if (om.has_post && g.trees.has(om.post)) others.push_back(g.trees.at(om.post)->p);
+            else if (om.has_watch) others.push_back(om.watch_p);
+            else others.push_back(om.pose->p);
+        });
+        CellK c0 = cell_of(pose.p); int64_t n = int_floordiv(R, CELL) + 1, k = int_floordiv(vr, CELL) + 1;
+        bool hb = false; double bs = 0; P2 bc{};
+        double vr08 = vr * 0.8;
+        for (int64_t dx = -n; dx <= n; dx++)
+            for (int64_t dy = -n; dy <= n; dy++) {
+                CellK c{c0.x + dx, c0.y + dy};
+                P2 center{((double)c.x + .5) * CELL, ((double)c.y + .5) * CELL};
+                if (g.anchored && !(60 < center.x && center.x < W - 60 && 60 < center.y && center.y < H - 60)) continue;
+                double d = dist(center, pose.p);
+                if (d > R) continue;
+                double cover = 0.;
+                for (int64_t ex = -k; ex <= k; ex++)
+                    for (int64_t ey = -k; ey <= k; ey++) {
+                        CellK cc{c.x + ex, c.y + ey};
+                        P2 q{((double)cc.x + .5) * CELL, ((double)cc.y + .5) * CELL};
+                        if (g.anchored && !(30 < q.x && q.x < W - 30 && 30 < q.y && q.y < H - 30)) continue;
+                        if (dist_gt(q, center, vr)) continue;
+                        CellV* v = g.cells.get(cc);
+                        double w = (v && v->biome >= 0) ? tree_rate_or(v->biome, 0.5) : 0.5;
+                        for (auto& o : others) if (dist_lt(q, o, vr08)) { w *= 0.3; break; }
+                        cover += w;
+                    }
+                double score = cover - d * 0.02 + rng.uniform(0, .2);
+                if(economic()) {
+                    score+=P.renewal_weight*food_budget(g,center,130.)/60.;
+                    score-=P.food_risk*.1*danger(g,center);
+                    for(const auto& e:m.edges)if(segments_cross(pose.p,center,e.a,e.b)){score-=P.rock_penalty*10.;break;}
+                }
+                if (!hb || score > bs) { hb = true; bs = score; bc = center; }
+            }
+        if (!hb) return false;
+        out = bc;
+        return true;
+    }
+
+    P2 economic_post(Mind& m,Group& g,TreeM& tree,const AState& s) {
+        P2 best=m.pose->p;double bv=-OINF;
+        auto fruits=g.near_fruits(tree.p,100.);
+        for(int k=-1;k<9;k++) {
+            P2 q=k<0?m.pose->p:k==0?tree.p:add(tree.p,mul(unit(k*TAU/8.),45.));
+            if(g.anchored&&(q.x<7||q.x>W-7||q.y<7||q.y>H-7))continue;
+            bool blocked=false;double wallcost=0.;
+            for(const auto& e:m.edges){if(point_segment(q,e.a,e.b)<7.)blocked=true;
+                if(segments_cross(m.pose->p,q,e.a,e.b))wallcost+=100.;}
+            if(blocked)continue;
+            double val=-.1*dist(m.pose->p,q)-P.rock_penalty*wallcost-P.food_risk*danger(g,q);
+            // Discrete weighted facility location: minimize collection distance,
+            // penalizing observed walls between stand point and likely fruit.
+            for(auto& f:fruits) {
+                double d=dist(q,f->p);val-=fruit_energy(*f)*d/60.;
+                for(const auto& e:m.edges)if(segments_cross(q,f->p,e.a,e.b)){val-=P.rock_penalty*60.;break;}
+            }
+            if(fruits.empty())val-=dist(q,tree.p)*.4;
+            if(val>bv){bv=val;best=q;}
+        }return best;
+    }
+
+    // ------------------------------------------------------------ per-agent behaviour
+    struct Plan { double dist, direction, turn; };
+    // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): virtual, so the evasion
+    // layer can replace it wholesale the way models/orchard_evasion_policy.py overrides
+    // _act (the flee/face branches return instead of calling super(), which matters: none
+    // of the base act()'s side effects - blocked pruning, progress(), last_site - happen).
+    virtual Plan act(Mind& m, const AState& s) {
+        Group& g = G(m.group);
+        const PoseObj& pose = *m.pose;
+        double walk = pmin(s.speed, s.sprint);
+        {
+            std::vector<Blocked> keep;
+            for (auto& b : m.blocked) if (b.until > time) keep.push_back(b);
+            m.blocked.swap(keep);
+        }
+        if (m.has_detour && time <= m.detour_until) {
+            double direction = wrap(m.detour_dir - pose.theta);
+            return {walk, direction, pmax(-.3, pmin(.3, direction))};
+        }
+        if (m.has_fruit && g.fruits.has(m.fruit)) {
+            FruitP f = g.fruits.at(m.fruit);
+            double d, ang; local_of(pose, f->p, d, ang);
+            if (progress(m, f->p, d)) { f->has_claim = false; m.has_fruit = false; }
+            else {
+                double dd, dir, turn; go_to(m, s, f->p, 0., dd, dir, turn);
+                return {pmin(walk, d + 1.), dir, turn};
+            }
+        }
+        if (time >= P.late_still_t) return {0., 0., P.sweep_rate};
+        if (m.has_post && g.trees.has(m.post) && site_ok(*g.trees.at(m.post))) {
+            TreeP t = g.trees.at(m.post);
+            m.last_site = time;
+            P2 stand=t->p;
+            if(economic()&&P.post_opt>0.)stand=economic_post(m,g,*t,s);
+            double stop=economic()&&P.post_opt>0.?12.:P.post_radius;
+            double d, ang; local_of(*m.pose, stand, d, ang);
+            if (d > stop) {
+                if (progress(m, t->p, d)) { t->assigned.discard(m.aid); m.has_post = false; }
+                else {
+                    double dd, dir, turn; go_to(m, s, stand, pmax(4.,stop - 8.), dd, dir, turn);
+                    return {dd, dir, turn};
+                }
+            }
+            m.has_tkey = false;
+            const PoseObj& ps = *m.pose;
+            std::vector<FruitP> close;
+            for (auto& f : g.near_fruits(ps.p, 16.)) if (!ready(*f)) close.push_back(f);
+            if (!close.empty()) {
+                FruitP f; double fd = 0;
+                for (auto& c : close) { double dd = dist(c->p, ps.p); if (!f || dd < fd) { f = c; fd = dd; } }
+                double away = pm::atan2(ps.p.y - f->p.y, ps.p.x - f->p.x);
+                double direction = wrap(away - ps.theta);
+                return {pmin(walk, 18. - dist(f->p, ps.p) + 1.), direction, 0.};
+            }
+            double turn = P.idle_sweep ? P.sweep_rate * m.sweep_sign : 0.;
+            return {0., 0., turn};
+        }
+        if (m.old) return {0., 0., P.sweep_rate};
+        bool relocate=economic()&&P.relocate_after>0.&&time-m.last_site>P.relocate_after&&
+            s.energy>P.relocate_energy&&food_budget(g,pose.p,P.econ_radius)<60.;
+        if (!relocate&&(s.energy < P.explore_energy || time - m.last_site < P.watch_patience)) {
+            m.has_explore = false;
+            if (!m.has_watch || time - m.watch_t > P.watch_refresh) {
+                P2 tgt;
+                if (watch_post(m, g, s, tgt)) { m.has_watch = true; m.watch_p = tgt; m.watch_t = time; }
+                else m.has_watch = false;
+                m.has_tkey = false;
+            }
+            if (m.has_watch && s.energy >= P.explore_min) {
+                double d, ang; local_of(*m.pose, m.watch_p, d, ang);
+                if (d > 25.) {
+                    if (progress(m, m.watch_p, d)) m.has_watch = false;
+                    else {
+                        double dd, dir, turn; go_to(m, s, m.watch_p, 20., dd, dir, turn);
+                        return {dd, dir, turn};
+                    }
+                }
+            }
+            return {0., 0., P.sweep_rate * 3.};
+        }
+        if (m.sweep_left > 0) { m.sweep_left--; return {0., 0., 0.32}; }
+        if (!m.has_explore || time > m.explore_until || dist(m.explore_p, m.pose->p) < 25.) {
+            bool arrived = m.has_explore && dist(m.explore_p, m.pose->p) < 25.;
+            P2 tp; double tu;
+            if (explore_target(m, g, s, tp, tu)) { m.has_explore = true; m.explore_p = tp; m.explore_until = tu; }
+            else m.has_explore = false;
+            m.has_tkey = false;
+            if (arrived) { m.sweep_left = 20; return {0., 0., 0.32}; }
+        }
+        if (!m.has_explore) return {0., 0., 0.32};
+        P2 target = m.explore_p;
+        double d, ang; local_of(*m.pose, target, d, ang);
+        if (progress(m, target, d)) { m.has_explore = false; return {0., 0., 0.}; }
+        double dd, dir, turn; go_to(m, s, target, 20., dd, dir, turn);
+        return {dd, dir, turn};
+    }
+
+    // ------------------------------------------------------------ main
+    double cost_now(double dist_, double turn, const AState& s) const {
+        double d = pmax(0., pmin(dist_, s.sprint));
+        if (s.energy < s.max_energy / 5 && d > s.speed) d = s.speed;
+        double c = d <= s.speed ? d * 0.05 : s.speed * 0.05 + (d - s.speed) * 0.5;
+        return c + pmin(OPI, std::fabs(turn)) / TAU;
+    }
+
+    // LOCAL CHANGE (vs survival-simulator/oscar-fastsim 51ca0680): takes a caller-owned
+    // array instead of consuming a vector, and returns a reference to a reused output
+    // buffer instead of a fresh vector. Both are so the per-tick path allocates nothing
+    // after warm-up (`states` and `actions_buf` keep their capacity between ticks).
+    // Purely mechanical - no expression, order or value below is affected.
+    std::vector<Act> actions_buf;
+    // LOCAL ADDITION: optional phase accounting, see policy_abi.hpp. Never read by a decision.
+    double ph[PH_N] = {};
+    bool profile_phases = false;
+    const std::vector<Act>& call(const AState* sts, size_t nsts, double sim_time) {
+        PhaseTimer _whole(&ph[PH_REST], profile_phases);
+        time = sim_time;
+        states.assign(sts, sts + nsts);
+        sidx.clear();
+        for (size_t i = 0; i < states.size(); i++) sidx[states[i].aid] = i;
+        for (int64_t aid : minds.key_list()) {
+            if (in_states(aid)) continue;
+            MindP m = minds.at(aid); minds.erase(aid);
+            GroupP g = groups.at(m->group);
+            g->agents.discard(aid);
+            g->trees.each([&](const int64_t&, TreeP& t) { t->assigned.discard(aid); });
+            g->fruits.each([&](const int64_t&, FruitP& f) { if (f->has_claim && f->claimed == aid) f->has_claim = false; });
+            if (g->agents.empty()) groups.erase(g->id);
+        }
+        for (const AState& s : states) if (minds.has(s.aid)) odometry(M(s.aid));
+        std::vector<int64_t> nw;
+        for (const AState& s : states) if (!minds.has(s.aid)) nw.push_back(s.aid);
+        std::sort(nw.begin(), nw.end());
+        if (!nw.empty()) register_new(nw);
+        { PhaseTimer _t(&ph[PH_MERGE], profile_phases); merge_groups(); }
+        { PhaseTimer _t(&ph[PH_OBSERVE], profile_phases);
+          for (const AState& s : states) observe(M(s.aid), s); }
+        merge_shared_frames();
+        shared_reports();
+        {
+            PhaseTimer _t(&ph[PH_MAINTAIN], profile_phases);
+            std::vector<GroupP> gl;
+            groups.each([&](const int64_t&, GroupP& g) { gl.push_back(g); });
+            for (auto& g : gl) maintain(*g);
+        }
+        culled.clear();
+        if (P.cull) {
+            std::vector<int64_t> young_ids;
+            minds.each([&](const int64_t& a, MindP& m) { if (!m->old) young_ids.push_back(a); });
+            int64_t surplus = (int64_t)young_ids.size() - cap();
+            if (surplus > 0) {
+                std::stable_sort(young_ids.begin(), young_ids.end(), [&](int64_t a, int64_t b) {
+                    double fa = fitness(st(a)), fb = fitness(st(b));
+                    if (fa != fb) return fa < fb;
+                    return st(a).energy < st(b).energy;
+                });
+                for (int64_t i = 0; i < surplus; i++) culled.insert(young_ids[i]);
+            }
+        }
+        {
+            PhaseTimer _t(&ph[PH_ASSIGN], profile_phases);
+            std::vector<GroupP> gl;
+            groups.each([&](const int64_t&, GroupP& g) { gl.push_back(g); });
+            for (auto& g : gl) { assign_posts(*g); assign_fruits(*g); }
+        }
+        std::vector<int64_t> young;
+        minds.each([&](const int64_t& a, MindP& m) { if (!m->old) young.push_back(a); });
+        int64_t capv = cap(); int64_t pop = (int64_t)states.size();
+        std::unordered_set<int64_t> spawn_set;
+        std::unordered_map<int64_t, Plan> plans;
+        { PhaseTimer _t(&ph[PH_ACT], profile_phases);
+          for (const AState& s : states) plans[s.aid] = act(M(s.aid), s); }
+        int64_t young_now = (int64_t)young.size();
+        std::unordered_map<int64_t, double> fit;
+        for (const AState& s : states) fit[s.aid] = fitness(s);
+        std::vector<int64_t> elders;
+        minds.each([&](const int64_t& a, MindP& m) { if (m->old || st(a).age >= P.heir_age) elders.push_back(a); });
+        std::stable_sort(elders.begin(), elders.end(), [&](int64_t a, int64_t b) { return -st(a).energy < -st(b).energy; });
+        std::vector<double> yfit;
+        for (int64_t a : young) yfit.push_back(fit[a]);
+        std::sort(yfit.begin(), yfit.end());
+        if (yfit.empty()) yfit.push_back(0.);
+        double median_fit = yfit[yfit.size() / 2];
+        for (int64_t aid : elders) {
+            Mind& m = M(aid); const AState& s = st(aid);
+            if (m.heir_done || s.biome == RIVER || (culled.count(aid) && !m.old)) continue;
+            if (P.heir_select && (double)young.size() >= P.select_min_young && fit[aid] < median_fit - P.heir_slack) continue;
+            const Plan& pl = plans[aid];
+            Group& g = G(m.group);
+            bool at_food = m.has_post && g.trees.has(m.post) && (g.trees.at(m.post)->fruit_here > 0 || !g.trees.at(m.post)->dead);
+            double left = s.energy - cost_now(pl.dist, pl.turn, s);
+            bool ok;
+            if (m.old) ok = left > 101.;
+            else ok = left > P.heir_reserve || (P.heir_at_food && at_food && left > 130.);
+            if (ok && P.heir_needs_site && !at_food && young_now >= capv && pop > 2) ok = false;
+            if (ok) { spawn_set.insert(aid); m.heir_done = true; young_now++; }
+        }
+        for (int64_t aid : elders) {
+            Mind& m = M(aid); const AState& s = st(aid);
+            if (!m.old || spawn_set.count(aid)) continue;
+            Group& g = G(m.group);
+            TreeP site;
+            if (m.has_post && g.trees.has(m.post)) site = g.trees.at(m.post);
+            bool late = time >= P.dump_after_t;
+            if (!late && (!site || (double)site->fruit_here < P.dump_food_site)) continue;
+            const Plan& pl = plans[aid];
+            if (s.energy - cost_now(pl.dist, pl.turn, s) > 101. && (double)young_now < (double)capv * P.dump_mult) {
+                spawn_set.insert(aid); young_now++;
+            }
+        }
+        if (pop <= 2) {
+            for (const AState& s : states) {
+                const Plan& pl = plans[s.aid];
+                if (!spawn_set.count(s.aid) && s.energy - cost_now(pl.dist, pl.turn, s) > P.emergency_reserve) {
+                    spawn_set.insert(s.aid); young_now++;
+                }
+            }
+        }
+        int64_t slots = std::min<int64_t>(capv - young_now, (int64_t)P.births_per_tick);
+        if (slots > 0) {
+            struct Cand { double fit, left; int64_t aid; };
+            std::vector<Cand> cands;
+            for (const AState& s : states) {
+                Mind& m = M(s.aid);
+                if (spawn_set.count(s.aid) || s.biome == RIVER) continue;
+                const Plan& pl = plans[s.aid];
+                double left = s.energy - cost_now(pl.dist, pl.turn, s);
+                if (m.old) {
+                    if (!P.extra_old || left <= 101.) continue;
+                } else {
+                    double thr = (double)young.size() < P.cap_min ? pmin(reserve(), P.low_pop_reserve) : reserve();
+                    if(economic()&&P.budget_reserve>0.) {
+                        Group& gg=G(m.group);double budget=food_budget(gg,m.pose->p,P.econ_radius);
+                        int64_t count=0;gg.agents.each([&](int64_t a){if(dist_lt(M(a).pose->p,m.pose->p,P.econ_radius))count++;});
+                        double per=budget/pmax(1.,(double)count);
+                        thr+=P.budget_reserve*pmax(-60.,pmin(150.,P.econ_horizon*1.5+25.-per));
+                    }
+                    if (left <= thr) continue;
+                }
+                Group& g = G(m.group);
+                bool food = (m.has_post && g.trees.has(m.post) && !g.trees.at(m.post)->dead) || !g.near_fruits(m.pose->p, 90.).empty();
+                if (!food) continue;
+                cands.push_back(Cand{fit[s.aid], left, s.aid});
+            }
+            std::sort(cands.begin(), cands.end(), [](const Cand& x, const Cand& y) {
+                if (x.fit != y.fit) return x.fit > y.fit;
+                if (x.left != y.left) return x.left > y.left;
+                return x.aid > y.aid;
+            });
+            for (int64_t i = 0; i < slots && i < (int64_t)cands.size(); i++) spawn_set.insert(cands[i].aid);
+        }
+        std::vector<Act>& actions = actions_buf;  // LOCAL CHANGE: reused buffer, see call()
+        actions.clear();
+        last_spawners.clear();
+        std::vector<int64_t> order;
+        for (const AState& s : states) order.push_back(s.aid);
+        std::sort(order.begin(), order.end());
+        for (int64_t aid : order) {
+            const AState& s = st(aid); Mind& m = M(aid);
+            const Plan& pl = plans[aid];
+            bool spawn = spawn_set.count(aid) > 0;
+            bool ok = spawn && s.energy - cost_now(pl.dist, pl.turn, s) > 100.;
+            m.spawned_ok = ok;
+            if (ok) last_spawners.push_back(aid);
+            m.has_last = true;
+            m.last_action = LastAction{pl.dist, pl.direction, pl.turn, s.biome, s.energy, s.speed, s.sprint, s.max_energy};
+            actions.push_back(Act{aid, pl.dist, pl.direction, pl.turn, spawn});
+        }
+        return actions;
+    }
+};
+
+}  // namespace orchard
