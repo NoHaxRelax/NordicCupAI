@@ -47,7 +47,7 @@ const results = await parallel(stems.map(stem => () =>
     `- Answer from the SYSTEM instructions, the examples and the INPUT alone. Follow the SYSTEM section literally: ` +
     `near-misses are "no", quote an utterance verbatim, cite the unit ids the way the examples do.\n` +
     `- Give exactly ten answers, q = 1 to 10, in order, through the StructuredOutput tool. Nothing else.`,
-    { label: stem, phase: 'Answer', schema: SCHEMA },
+    args.model ? { label: stem, phase: 'Answer', schema: SCHEMA, model: args.model } : { label: stem, phase: 'Answer', schema: SCHEMA },
   ).then(out => ({ stem, out })),
 ))
 const done = results.filter(Boolean)

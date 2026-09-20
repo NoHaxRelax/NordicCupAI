@@ -1283,3 +1283,33 @@ us from first place, inside the +-0.030 resolution of a 38-conversation set.
 **After.** `/workspace/request_dump` and `/workspace/logs` copied down (`request_dump/pod4_eval_dump.tgz`,
 193 MB, 96 conversations with audio and questions; served answers and logs under
 `bench/results/served/pod4/`), pod terminated at 13:01 after 51 minutes, about 1.40 USD.
+
+
+## 68. Counterfactual on the evaluation set: Sonnet with all 58 labelled conversations would not have done better
+
+Elias's question after the 0.7814. The pod's request dump holds the 38 evaluation conversations (audio
+and questions; no labels exist). `bench/llm/probe_eval.py`: transcribed them on the laptop with the
+served ASR settings (same faster-whisper and ctranslate2 versions as the pod; 176 of our 185 served
+yes-spans land exactly on the local transcripts' unit boundaries, so the transcripts are equivalent),
+built the many-shot prompt with ALL 58 labelled conversations as worked examples (39 training + 19
+validation, `units-joint-demo-all-both-val`, served notes, clause-and units, about 51k tokens), and
+let Claude Sonnet 5 answer through the `fable-probe` workflow, one agent per conversation, 5.5 million
+tokens, all 38 transcripts audited (Read on the own prompt file and the structured answer only).
+
+| | served 27B | Sonnet 5, 58 demos |
+| --- | ---: | ---: |
+| questions answered yes (the set is balanced: 190 are truly yes) | 185 | 185 |
+| same yes/no answer | 380 of 380 | |
+| both yes: identical span | 128 of 185 | |
+| both yes: mean tIoU between the two spans | 0.834, disjoint on 9 | |
+
+**Reading.** The binary half would have been identical: not one of the 380 answers differs, and Sonnet
+also finds only 185 of the 190 positives. Five positives are "no" to a frontier model with every label
+we own in its prompt, reading the same transcript, so that loss sits upstream of the language model: in
+what the ASR heard, or in how those five were annotated. It is not reasoning capacity and not example
+count. On the span half the two differ on 57 of 185 questions; on the 290 labelled positives that kind
+of disagreement was worth +0.0002 tIoU (Fable, entry 66) and -0.003 score (Sonnet with 38 demos, entry
+41), so the expected difference is zero with a spread of about 0.015. Counterfactual score: 0.78, the
+same as served. Also settled the same afternoon: the served run had no timeout, fallback or error
+(38 of 38 HTTP 200, slowest 11.7 s), and the 137 spans sent alongside a "no" cannot lower the score
+(README scoring rules; portal check of entry 38).
