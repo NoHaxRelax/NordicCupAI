@@ -3,16 +3,20 @@
 Deadline **16:00 CEST Sunday 20 September**. One evaluation attempt, zero used. Only Elias queues it (PreToolUse
 hook in `.claude/settings.json`; the agent never writes `.claude/EVAL_UNLOCK`). Top five: code and models by 20:00.
 
-> **Status Sunday 00:50.** The routed config served from the Oslo pod scores **0.797** as concealed thirds (0.320 + 0.362 +
-> 0.116, nine clean runs interleaved with plain F3 on the same host and hour: plain 0.265 + 0.322 + 0.110 = 0.697).
-> Oscar's pipeline scored 0.705 to 0.727 on full public runs Saturday afternoon (leaderboard best 0.7269). **The attempt
-> is this endpoint; Oscar's is the fallback.** The pieces he can take from here are in `05-handover-to-oscar.md`.
+> **FROZEN Sunday 11:15. The endpoint for the attempt is up: `http://149.36.0.173:36863/predict`, mode `robust`.**
+> Same host and hour from the Oslo pod, six clean concealed thirds (0 or 1 frame lost each): **robust 0.814** (0.329 +
+> 0.368 + 0.117) against **routed 0.804** (0.322 + 0.367 + 0.115). One class per run: large_launcher 0.734 routed, 0.774
+> robust; small_launcher 0.546 routed, 0.545 merged, 0.498 from F3HN alone (`robust_hn` dropped). Final start done with
+> `pod_start_final.sh ... robust`: no answer window, no class filter; the watchdog was tested by killing `api.py` (back in
+> 12 s with the same environment). **Do not run `pod_portal.sh`, `morning_portal.sh` or anything else against this pod
+> until the attempt is over.** Oscar's endpoint (0.727 Saturday) is the fallback.
 
-> **Pods.** None running (Sunday 01:00: the measuring pod `jxpw8hwrqyjf5d` was terminated on Elias's instruction; Oscar
-> mines the validation set overnight). **Sunday morning: create the serving pod first** (last section, about two minutes
-> from create to first run; a Secure Cloud RTX 4090 in EUR-NO-1, 0.74 USD/h) and use its HOST, SSH_PORT and PUBLIC_PORT
-> below. Round trip Oslo to the Helsinki server 40 to 70 ms; a US pod had 250 ms and lost frames. Every other pod on the
-> account is Oscar's or Lucas's.
+> **Pods.** One pod of ours is running: `vwi15pxhoz4mf3` (elias-claude-serve-no4, RTX 5090, EUR-NO-1 Oslo, 0.99 USD/h):
+> ssh `root@149.36.0.173 -p 36862`, public port 36863, 65 ms to the competition server. Oslo had no RTX 4090 on Sunday
+> morning; an Iceland 4090 (125 ms) and a Stockholm A40 (122 ms compute, 10 and 17 frames lost, one 3.3 s timeout) were
+> tried and terminated. **Evaluation day: the portal is slow and the path drops frames intermittently** (3 of 10 Oslo runs
+> before 11:00 lost 77 to 165 frames with normal server compute; the six runs after 10:57 lost 0 or 1). Terminate the pod
+> after the attempt. Every other pod on the account is Oscar's or Lucas's.
 
 ## What to expect from the attempt (red team, Sunday 04:00)
 

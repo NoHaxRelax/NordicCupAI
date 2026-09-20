@@ -31,9 +31,17 @@ def key():
     sys.exit('no team key file found')
 
 
-def status():
-    r = requests.get(f'{BASE}/status', headers={'x-token': key()}, timeout=30); r.raise_for_status()
-    return r.json()
+def status(tries=40):
+    """The portal answers slowly or not at all under load (evaluation day: a 30 s read timeout killed a chain in the
+    middle of a run). Retry instead of raising: a caller that dies here restarts the server under a live validation."""
+    last = None
+    for _ in range(tries):
+        try:
+            r = requests.get(f'{BASE}/status', headers={'x-token': key()}, timeout=30); r.raise_for_status()
+            return r.json()
+        except (requests.RequestException, ValueError) as exc:
+            last = exc; print('portal status failed:', type(exc).__name__, flush=True); time.sleep(5)
+    raise last
 
 
 def fmt(v):
