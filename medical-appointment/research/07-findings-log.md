@@ -1248,3 +1248,38 @@ the same as the served 27B to the third decimal on validation. Entry 41's platea
 did, and no further. The remaining loss is not model capacity or example count; it is which of two
 valid utterances the annotators marked, and the clause-level golds inside longer utterances.
 **Closed: the medical pipeline stays frozen at the served 27B, 0.8084 on validation, for Sunday.**
+
+
+## 67. Sunday 2026-09-20: the evaluation attempt. 0.7814, clean run, 5th of 20 so far
+
+**Build.** Pod `73blsqshzga9fm`, A100 SXM 80 GB, EUR-IS-1 (Sweden had only 48 GB cards on CUDA 13 hosts),
+1.59 USD/h, created by the agent at 12:07 CEST. `pod_upload.sh` needed `--no-same-owner` (the network
+volume there rejects the laptop uid). Bring-up 12:09:50 to 12:21:42: weights 81 s, venvs 4.5 min, vLLM
+ready after 362 s, `CONFIG_OK units-fewshot-both / clause-and, weights 1d4bf0f2, vllm 0.29.0`. Served
+files byte-identical to tag `serve-2026-09-20` apart from 77 added lines (the probe class of entry 66).
+
+**Pre-flight.** Training soak through the public URL: 0.824 (accuracy 0.997, tIoU 0.709), 0 failed,
+0 timeouts, 0 fallbacks, worst round trip 15.4 s. Five validation runs back to back (`bench/val_loop.py`,
+portal runs 398 to 402): 0.8117, 0.8057, 0.8081, 0.8116, 0.8117, mean 0.8098. Binaries identical in all
+five (190 of 190); 7 of 190 spans flip between runs by one neighbouring unit, so the served pipeline is
+not bit-deterministic (vLLM batch-order numerics with ten questions in flight); Friday's two identical
+runs were luck. Spread about +-0.003.
+
+**The attempt.** Elias created `.claude/EVAL_UNLOCK` himself and ordered the agent to queue it.
+Request shape taken from the portal's OpenAPI document (`POST .../medical-appointment/evaluate/queue`,
+header `x-token`, body `{"url"}`; the portal returns an already queued attempt instead of adding one and
+refuses a new one after a finished one). `bench/eval_queue_once.py queue` checked zero attempts used,
+nothing in flight and the endpoint's validated configuration, then sent ONE request at 12:51:53:
+HTTP 200, type evaluation, position 3. Started 12:51:53, finished 12:57:07 (5 min 14 s, 38
+conversations). **Score 0.7814, errors []**. Endpoint counters after: 0 failed, 0 fallbacks, 0 guessed,
+0 timed out, worst conversation 14.1 s. Final attempts used 1 of 1.
+
+**Where that lands** (evaluation board at 13:00, 20 of 31 teams scored, `research/leaderboard/
+evaluation.2026-09-20T13-00.json`): CarlN 0.8030, Håkon Kjelseth 0.7998, Elemental hero 0.7983,
+Ålle 0.7897, **Powered by Smørrebrød 0.7814 (5th overall, 4th in Denmark)**, momo-rpl 0.7770. The whole
+field sits below its validation level: the evaluation set is harder for everyone, and 0.022 separates
+us from first place, inside the +-0.030 resolution of a 38-conversation set.
+
+**After.** `/workspace/request_dump` and `/workspace/logs` copied down (`request_dump/pod4_eval_dump.tgz`,
+193 MB, 96 conversations with audio and questions; served answers and logs under
+`bench/results/served/pod4/`), pod terminated at 13:01 after 51 minutes, about 1.40 USD.

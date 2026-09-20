@@ -1,0 +1,712 @@
+INFO:model:ASR large-v3-turbo loaded in 5.6s
+INFO:faster_whisper:Processing audio with duration 00:20.000
+INFO:model:ASR warm: 1 segments in 0.6s
+INFO:model:few-shot pool: 390 examples, 195 positives
+INFO:model:LLM backend vllm at http://localhost:8000/v1, model Qwen/Qwen3.8-27B, variant units-fewshot-both, fallback qwen3:4b
+INFO:model:LLM warm in 1.8s: {"quote": "Hello.", "answer": "yes", "segments": [0]}
+INFO:model:fallback qwen3:4b warm in 61.4s
+INFO:     Started server process [3764]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:9054 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52582 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52590 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52606 - "GET /api HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52616 - "GET /api HTTP/1.1" 200 OK
+INFO:     100.64.1.3:46804 - "GET /api HTTP/1.1" 200 OK
+INFO:     100.64.1.1:49646 - "GET /api HTTP/1.1" 200 OK
+INFO:     100.64.1.1:39412 - "GET / HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.480
+INFO:model:conversation_sample_4.mp3: 255 words, 49 units, ASR 2.4s
+INFO:model:conversation_sample_4.mp3: total 6.1s (ASR 2.4s, LLM 3.7s), yes=7/10
+INFO:     100.64.1.2:49356 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:48.720
+INFO:model:conversation_sample_5.mp3: 469 words, 85 units, ASR 5.5s
+INFO:model:conversation_sample_5.mp3: total 8.9s (ASR 5.5s, LLM 3.5s), yes=6/10
+INFO:     100.64.1.2:49356 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:28.800
+INFO:model:conversation_sample_6.mp3: 225 words, 48 units, ASR 1.6s
+INFO:model:conversation_sample_6.mp3: total 5.5s (ASR 1.6s, LLM 3.9s), yes=6/10
+INFO:     100.64.1.2:49356 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:42.160
+INFO:model:conversation_sample_10.mp3: 290 words, 60 units, ASR 1.8s
+INFO:model:conversation_sample_10.mp3: total 5.9s (ASR 1.8s, LLM 4.1s), yes=3/10
+INFO:     100.64.1.3:38294 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:13.920
+INFO:model:conversation_sample_17.mp3: 182 words, 46 units, ASR 6.9s
+INFO:model:conversation_sample_17.mp3: total 10.0s (ASR 6.9s, LLM 3.2s), yes=3/10
+INFO:     100.64.1.3:38294 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:33.920
+INFO:model:conversation_sample_18.mp3: 217 words, 45 units, ASR 1.5s
+INFO:model:conversation_sample_18.mp3: total 5.2s (ASR 1.5s, LLM 3.7s), yes=7/10
+INFO:     100.64.1.2:33048 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:34.960
+INFO:model:conversation_sample_19.mp3: 223 words, 58 units, ASR 7.2s
+INFO:model:conversation_sample_19.mp3: total 11.3s (ASR 7.2s, LLM 4.1s), yes=4/10
+INFO:     100.64.1.5:35234 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:51.840
+INFO:model:conversation_sample_20.mp3: 607 words, 104 units, ASR 3.6s
+INFO:model:conversation_sample_20.mp3: total 7.7s (ASR 3.6s, LLM 4.1s), yes=5/10
+INFO:     100.64.1.4:45998 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:40.160
+INFO:model:conversation_sample_23.mp3: 281 words, 49 units, ASR 1.7s
+INFO:model:conversation_sample_23.mp3: total 5.7s (ASR 1.7s, LLM 4.1s), yes=6/10
+INFO:     100.64.1.2:54278 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:41.520
+INFO:model:conversation_sample_33.mp3: 258 words, 55 units, ASR 6.1s
+INFO:model:conversation_sample_33.mp3: total 9.8s (ASR 6.1s, LLM 3.6s), yes=6/10
+INFO:     100.64.1.1:37736 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:41.360
+INFO:model:conversation_sample_37.mp3: 218 words, 57 units, ASR 5.9s
+INFO:model:conversation_sample_37.mp3: total 10.0s (ASR 5.9s, LLM 4.2s), yes=6/10
+INFO:     100.64.1.1:37736 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:22.880
+INFO:model:conversation_sample_39.mp3: 189 words, 45 units, ASR 1.4s
+INFO:model:conversation_sample_39.mp3: total 5.3s (ASR 1.4s, LLM 3.9s), yes=4/10
+INFO:     100.64.1.4:49644 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:44.160
+INFO:model:conversation_sample_42.mp3: 434 words, 80 units, ASR 2.6s
+INFO:model:conversation_sample_42.mp3: total 7.4s (ASR 2.6s, LLM 4.8s), yes=7/10
+INFO:     100.64.1.2:46630 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:38.320
+INFO:model:conversation_sample_43.mp3: 266 words, 52 units, ASR 5.3s
+INFO:model:conversation_sample_43.mp3: total 9.3s (ASR 5.3s, LLM 4.0s), yes=5/10
+INFO:     100.64.1.1:58718 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:18.640
+INFO:model:conversation_sample_47.mp3: 340 words, 70 units, ASR 2.4s
+INFO:model:conversation_sample_47.mp3: total 6.3s (ASR 2.4s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.4:34872 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:00.720
+INFO:model:conversation_sample_48.mp3: 318 words, 73 units, ASR 1.8s
+INFO:model:conversation_sample_48.mp3: total 6.0s (ASR 1.8s, LLM 4.2s), yes=7/10
+INFO:     100.64.1.2:46652 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:27.600
+INFO:model:conversation_sample_50.mp3: 228 words, 53 units, ASR 7.3s
+INFO:model:conversation_sample_50.mp3: total 12.1s (ASR 7.3s, LLM 4.7s), yes=5/10
+INFO:     100.64.1.3:42300 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:15.920
+INFO:model:conversation_sample_52.mp3: 301 words, 60 units, ASR 2.1s
+INFO:model:conversation_sample_52.mp3: total 6.2s (ASR 2.1s, LLM 4.1s), yes=3/10
+INFO:     100.64.1.2:50710 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:56.000
+INFO:model:conversation_sample_54.mp3: 335 words, 75 units, ASR 4.3s
+INFO:model:conversation_sample_54.mp3: total 8.3s (ASR 4.3s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.1:51668 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:44.400
+INFO:model:conversation_sample_55.mp3: 251 words, 62 units, ASR 1.8s
+INFO:model:conversation_sample_55.mp3: total 5.7s (ASR 1.8s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.1:51668 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.080
+INFO:model:conversation_sample_56.mp3: 279 words, 61 units, ASR 2.0s
+INFO:model:conversation_sample_56.mp3: total 6.1s (ASR 2.0s, LLM 4.1s), yes=4/10
+INFO:     100.64.1.4:34468 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:51.520
+INFO:model:conversation_sample_57.mp3: 401 words, 83 units, ASR 2.7s
+INFO:model:conversation_sample_57.mp3: total 7.2s (ASR 2.7s, LLM 4.5s), yes=7/10
+INFO:     100.64.1.3:38368 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:28.960
+INFO:model:conversation_sample_63.mp3: 212 words, 44 units, ASR 6.9s
+INFO:model:conversation_sample_63.mp3: total 10.5s (ASR 6.9s, LLM 3.6s), yes=5/10
+INFO:     100.64.1.1:56834 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:14.080
+INFO:model:conversation_sample_64.mp3: 356 words, 66 units, ASR 2.1s
+INFO:model:conversation_sample_64.mp3: total 6.7s (ASR 2.1s, LLM 4.6s), yes=4/10
+INFO:     100.64.1.2:49434 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:33.040
+INFO:model:conversation_sample_66.mp3: 386 words, 76 units, ASR 2.5s
+INFO:model:conversation_sample_66.mp3: total 6.8s (ASR 2.5s, LLM 4.3s), yes=4/10
+INFO:     100.64.1.4:50210 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:52.080
+INFO:model:conversation_sample_67.mp3: 308 words, 61 units, ASR 9.9s
+INFO:model:conversation_sample_67.mp3: total 14.1s (ASR 9.9s, LLM 4.1s), yes=7/10
+INFO:     100.64.1.3:52716 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:24.480
+INFO:model:conversation_sample_69.mp3: 252 words, 56 units, ASR 5.3s
+INFO:model:conversation_sample_69.mp3: total 9.4s (ASR 5.3s, LLM 4.1s), yes=6/10
+INFO:     100.64.1.3:52716 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:10.480
+INFO:model:conversation_sample_70.mp3: 305 words, 67 units, ASR 2.1s
+INFO:model:conversation_sample_70.mp3: total 6.4s (ASR 2.1s, LLM 4.3s), yes=6/10
+INFO:     100.64.1.2:37270 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:10.480
+INFO:model:conversation_sample_71.mp3: 346 words, 65 units, ASR 2.4s
+INFO:model:conversation_sample_71.mp3: total 6.5s (ASR 2.4s, LLM 4.1s), yes=5/10
+INFO:     100.64.1.3:42942 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:36.000
+INFO:model:conversation_sample_75.mp3: 273 words, 52 units, ASR 1.9s
+INFO:model:conversation_sample_75.mp3: total 6.2s (ASR 1.9s, LLM 4.3s), yes=4/10
+INFO:     100.64.1.2:47176 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:42.880
+INFO:model:conversation_sample_77.mp3: 307 words, 56 units, ASR 1.7s
+INFO:model:conversation_sample_77.mp3: total 6.0s (ASR 1.7s, LLM 4.3s), yes=7/10
+INFO:     100.64.1.5:44028 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:42.400
+INFO:model:conversation_sample_79.mp3: 626 words, 114 units, ASR 7.6s
+INFO:model:conversation_sample_79.mp3: total 12.1s (ASR 7.6s, LLM 4.5s), yes=5/10
+INFO:     100.64.1.1:32838 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:16.800
+INFO:model:conversation_sample_81.mp3: 374 words, 72 units, ASR 5.2s
+INFO:model:conversation_sample_81.mp3: total 9.6s (ASR 5.2s, LLM 4.4s), yes=4/10
+INFO:     100.64.1.5:54284 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:37.680
+INFO:model:conversation_sample_82.mp3: 244 words, 51 units, ASR 1.8s
+INFO:model:conversation_sample_82.mp3: total 5.9s (ASR 1.8s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.3:44826 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:48.480
+INFO:model:conversation_sample_84.mp3: 594 words, 100 units, ASR 3.1s
+INFO:model:conversation_sample_84.mp3: total 7.8s (ASR 3.1s, LLM 4.7s), yes=7/10
+INFO:     100.64.1.1:33420 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:35.680
+INFO:model:conversation_sample_86.mp3: 416 words, 86 units, ASR 2.1s
+INFO:model:conversation_sample_86.mp3: total 7.2s (ASR 2.1s, LLM 5.1s), yes=3/10
+INFO:     100.64.1.4:54588 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:20.160
+INFO:model:conversation_sample_90.mp3: 218 words, 50 units, ASR 1.4s
+INFO:model:conversation_sample_90.mp3: total 5.2s (ASR 1.4s, LLM 3.8s), yes=5/10
+INFO:     100.64.1.2:39990 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:06.560
+INFO:model:conversation_sample_92.mp3: 316 words, 71 units, ASR 2.5s
+INFO:model:conversation_sample_92.mp3: total 7.2s (ASR 2.5s, LLM 4.8s), yes=4/10
+INFO:     100.64.1.1:41626 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:36.400
+INFO:model:conversation_sample_95.mp3: 267 words, 55 units, ASR 1.7s
+INFO:model:conversation_sample_95.mp3: total 5.8s (ASR 1.7s, LLM 4.0s), yes=3/10
+INFO:     100.64.1.5:39588 - "POST /predict HTTP/1.1" 200 OK
+INFO:     100.64.1.4:38356 - "GET /api HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.160
+INFO:model:conversation_sample_3.mp3: 269 words, 57 units, ASR 1.8s
+INFO:model:conversation_sample_3.mp3: total 6.4s (ASR 1.8s, LLM 4.6s), yes=6/10
+INFO:     100.64.1.4:36076 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:01.760
+INFO:model:conversation_sample_7.mp3: 473 words, 95 units, ASR 3.1s
+INFO:model:conversation_sample_7.mp3: total 6.1s (ASR 3.1s, LLM 2.9s), yes=3/10
+INFO:     100.64.1.3:45520 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:25.760
+INFO:model:conversation_sample_8.mp3: 356 words, 74 units, ASR 2.2s
+INFO:model:conversation_sample_8.mp3: total 6.6s (ASR 2.2s, LLM 4.4s), yes=6/10
+INFO:     100.64.1.2:36976 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:48.720
+INFO:model:conversation_sample_11.mp3: 284 words, 51 units, ASR 1.8s
+INFO:model:conversation_sample_11.mp3: total 5.6s (ASR 1.8s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.4:44892 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:43.760
+INFO:model:conversation_sample_14.mp3: 358 words, 80 units, ASR 2.8s
+INFO:model:conversation_sample_14.mp3: total 7.5s (ASR 2.8s, LLM 4.7s), yes=6/10
+INFO:     100.64.1.4:44892 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:21.840
+INFO:model:conversation_sample_16.mp3: 346 words, 67 units, ASR 2.3s
+INFO:model:conversation_sample_16.mp3: total 6.3s (ASR 2.3s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.3:52562 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:23.440
+INFO:model:conversation_sample_24.mp3: 386 words, 71 units, ASR 2.3s
+INFO:model:conversation_sample_24.mp3: total 7.6s (ASR 2.3s, LLM 5.3s), yes=4/10
+INFO:     100.64.1.5:33990 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:18.240
+INFO:model:conversation_sample_26.mp3: 486 words, 80 units, ASR 2.7s
+INFO:model:conversation_sample_26.mp3: total 7.8s (ASR 2.7s, LLM 5.0s), yes=6/10
+INFO:     100.64.1.5:33990 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:50.880
+INFO:model:conversation_sample_30.mp3: 321 words, 54 units, ASR 1.8s
+INFO:model:conversation_sample_30.mp3: total 6.0s (ASR 1.8s, LLM 4.2s), yes=4/10
+INFO:     100.64.1.2:53780 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:05.760
+INFO:model:conversation_sample_31.mp3: 478 words, 84 units, ASR 4.4s
+INFO:model:conversation_sample_31.mp3: total 9.1s (ASR 4.4s, LLM 4.7s), yes=3/10
+INFO:     100.64.1.1:58664 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:37.120
+INFO:model:conversation_sample_40.mp3: 342 words, 70 units, ASR 2.5s
+INFO:model:conversation_sample_40.mp3: total 6.3s (ASR 2.5s, LLM 3.8s), yes=3/10
+INFO:     100.64.1.4:58398 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:20.080
+INFO:model:conversation_sample_44.mp3: 203 words, 39 units, ASR 1.4s
+INFO:model:conversation_sample_44.mp3: total 4.8s (ASR 1.4s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.4:58398 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:38.400
+INFO:model:conversation_sample_45.mp3: 261 words, 49 units, ASR 6.4s
+INFO:model:conversation_sample_45.mp3: total 10.1s (ASR 6.4s, LLM 3.8s), yes=7/10
+INFO:     100.64.1.3:35776 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:32.480
+INFO:model:conversation_sample_46.mp3: 178 words, 50 units, ASR 7.7s
+INFO:model:conversation_sample_46.mp3: total 10.9s (ASR 7.7s, LLM 3.2s), yes=5/10
+INFO:     100.64.1.1:48904 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.080
+INFO:model:conversation_sample_51.mp3: 252 words, 56 units, ASR 2.8s
+INFO:model:conversation_sample_51.mp3: total 6.8s (ASR 2.8s, LLM 3.9s), yes=7/10
+INFO:     100.64.1.4:35136 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:17.840
+INFO:model:conversation_sample_60.mp3: 189 words, 48 units, ASR 6.2s
+INFO:model:conversation_sample_60.mp3: total 9.7s (ASR 6.2s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.4:35136 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:39.840
+INFO:model:conversation_sample_62.mp3: 274 words, 50 units, ASR 5.9s
+INFO:model:conversation_sample_62.mp3: total 9.6s (ASR 5.9s, LLM 3.6s), yes=6/10
+INFO:     100.64.1.5:42024 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:14.800
+INFO:model:conversation_sample_73.mp3: 198 words, 53 units, ASR 6.5s
+INFO:model:conversation_sample_73.mp3: total 10.4s (ASR 6.5s, LLM 3.9s), yes=5/10
+INFO:     100.64.1.4:33816 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:40.720
+INFO:model:conversation_sample_80.mp3: 433 words, 73 units, ASR 2.5s
+INFO:model:conversation_sample_80.mp3: total 7.0s (ASR 2.5s, LLM 4.5s), yes=3/10
+INFO:     100.64.1.4:33816 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.160
+INFO:model:conversation_sample_3.mp3: 269 words, 57 units, ASR 1.9s
+INFO:model:conversation_sample_3.mp3: total 6.3s (ASR 1.9s, LLM 4.4s), yes=6/10
+INFO:     100.64.1.5:35310 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:01.760
+INFO:model:conversation_sample_7.mp3: 473 words, 95 units, ASR 3.1s
+INFO:model:conversation_sample_7.mp3: total 6.1s (ASR 3.1s, LLM 3.0s), yes=3/10
+INFO:     100.64.1.2:35654 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:25.760
+INFO:model:conversation_sample_8.mp3: 356 words, 74 units, ASR 2.2s
+INFO:model:conversation_sample_8.mp3: total 6.6s (ASR 2.2s, LLM 4.4s), yes=6/10
+INFO:     100.64.1.1:38398 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:48.720
+INFO:model:conversation_sample_11.mp3: 284 words, 51 units, ASR 1.7s
+INFO:model:conversation_sample_11.mp3: total 5.6s (ASR 1.7s, LLM 3.8s), yes=3/10
+INFO:     100.64.1.4:40572 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:43.760
+INFO:model:conversation_sample_14.mp3: 358 words, 80 units, ASR 2.7s
+INFO:model:conversation_sample_14.mp3: total 7.4s (ASR 2.7s, LLM 4.7s), yes=6/10
+INFO:     100.64.1.1:38682 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:21.840
+INFO:model:conversation_sample_16.mp3: 346 words, 67 units, ASR 2.1s
+INFO:model:conversation_sample_16.mp3: total 6.2s (ASR 2.1s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.5:42196 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:23.440
+INFO:model:conversation_sample_24.mp3: 386 words, 71 units, ASR 2.3s
+INFO:model:conversation_sample_24.mp3: total 7.6s (ASR 2.3s, LLM 5.4s), yes=4/10
+INFO:     100.64.1.4:56410 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:18.240
+INFO:model:conversation_sample_26.mp3: 486 words, 80 units, ASR 2.8s
+INFO:model:conversation_sample_26.mp3: total 7.8s (ASR 2.8s, LLM 5.1s), yes=6/10
+INFO:     100.64.1.2:38378 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:50.880
+INFO:model:conversation_sample_30.mp3: 321 words, 54 units, ASR 1.7s
+INFO:model:conversation_sample_30.mp3: total 5.9s (ASR 1.7s, LLM 4.2s), yes=4/10
+INFO:     100.64.1.3:42568 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:05.760
+INFO:model:conversation_sample_31.mp3: 478 words, 84 units, ASR 4.2s
+INFO:model:conversation_sample_31.mp3: total 9.2s (ASR 4.2s, LLM 5.0s), yes=3/10
+INFO:     100.64.1.1:53032 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:37.120
+INFO:model:conversation_sample_40.mp3: 342 words, 70 units, ASR 2.4s
+INFO:model:conversation_sample_40.mp3: total 6.1s (ASR 2.4s, LLM 3.7s), yes=3/10
+INFO:     100.64.1.3:55110 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:20.080
+INFO:model:conversation_sample_44.mp3: 203 words, 39 units, ASR 1.4s
+INFO:model:conversation_sample_44.mp3: total 4.8s (ASR 1.4s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.4:48426 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:38.400
+INFO:model:conversation_sample_45.mp3: 270 words, 51 units, ASR 6.3s
+INFO:model:conversation_sample_45.mp3: total 10.3s (ASR 6.3s, LLM 4.0s), yes=7/10
+INFO:     100.64.1.4:48426 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:32.480
+INFO:model:conversation_sample_46.mp3: 163 words, 45 units, ASR 5.8s
+INFO:model:conversation_sample_46.mp3: total 8.8s (ASR 5.8s, LLM 3.0s), yes=5/10
+INFO:     100.64.1.4:48426 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.080
+INFO:model:conversation_sample_51.mp3: 252 words, 56 units, ASR 1.9s
+INFO:model:conversation_sample_51.mp3: total 5.9s (ASR 1.9s, LLM 3.9s), yes=7/10
+INFO:     100.64.1.4:48426 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:17.840
+INFO:model:conversation_sample_60.mp3: 188 words, 47 units, ASR 4.1s
+INFO:model:conversation_sample_60.mp3: total 7.6s (ASR 4.1s, LLM 3.4s), yes=7/10
+INFO:     100.64.1.2:45064 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:39.840
+INFO:model:conversation_sample_62.mp3: 292 words, 53 units, ASR 5.9s
+INFO:model:conversation_sample_62.mp3: total 9.6s (ASR 5.9s, LLM 3.7s), yes=6/10
+INFO:     100.64.1.1:60154 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:14.800
+INFO:model:conversation_sample_73.mp3: 189 words, 51 units, ASR 5.9s
+INFO:model:conversation_sample_73.mp3: total 9.7s (ASR 5.9s, LLM 3.8s), yes=5/10
+INFO:     100.64.1.1:60154 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:40.720
+INFO:model:conversation_sample_80.mp3: 433 words, 73 units, ASR 2.4s
+INFO:model:conversation_sample_80.mp3: total 6.9s (ASR 2.4s, LLM 4.5s), yes=3/10
+INFO:     100.64.1.4:47320 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.160
+INFO:model:conversation_sample_3.mp3: 269 words, 57 units, ASR 1.8s
+INFO:model:conversation_sample_3.mp3: total 6.4s (ASR 1.8s, LLM 4.6s), yes=6/10
+INFO:     100.64.1.5:48958 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:01.760
+INFO:model:conversation_sample_7.mp3: 473 words, 95 units, ASR 2.9s
+INFO:model:conversation_sample_7.mp3: total 5.8s (ASR 2.9s, LLM 3.0s), yes=3/10
+INFO:     100.64.1.4:47810 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:25.760
+INFO:model:conversation_sample_8.mp3: 356 words, 74 units, ASR 2.1s
+INFO:model:conversation_sample_8.mp3: total 6.5s (ASR 2.1s, LLM 4.4s), yes=6/10
+INFO:     100.64.1.2:51526 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:48.720
+INFO:model:conversation_sample_11.mp3: 284 words, 51 units, ASR 1.7s
+INFO:model:conversation_sample_11.mp3: total 5.7s (ASR 1.7s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.2:51526 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:43.760
+INFO:model:conversation_sample_14.mp3: 358 words, 80 units, ASR 2.5s
+INFO:model:conversation_sample_14.mp3: total 7.2s (ASR 2.5s, LLM 4.7s), yes=6/10
+INFO:     100.64.1.5:33422 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:21.840
+INFO:model:conversation_sample_16.mp3: 346 words, 67 units, ASR 2.1s
+INFO:model:conversation_sample_16.mp3: total 6.1s (ASR 2.1s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.1:39148 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:23.440
+INFO:model:conversation_sample_24.mp3: 386 words, 71 units, ASR 2.1s
+INFO:model:conversation_sample_24.mp3: total 7.5s (ASR 2.1s, LLM 5.3s), yes=4/10
+INFO:     100.64.1.2:41262 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:18.240
+INFO:model:conversation_sample_26.mp3: 486 words, 80 units, ASR 2.6s
+INFO:model:conversation_sample_26.mp3: total 8.1s (ASR 2.6s, LLM 5.5s), yes=6/10
+INFO:     100.64.1.4:33132 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:50.880
+INFO:model:conversation_sample_30.mp3: 321 words, 54 units, ASR 1.7s
+INFO:model:conversation_sample_30.mp3: total 5.9s (ASR 1.7s, LLM 4.2s), yes=4/10
+INFO:     100.64.1.1:39726 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:05.760
+INFO:model:conversation_sample_31.mp3: 478 words, 84 units, ASR 4.1s
+INFO:model:conversation_sample_31.mp3: total 9.0s (ASR 4.1s, LLM 4.9s), yes=3/10
+INFO:     100.64.1.1:39726 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:37.120
+INFO:model:conversation_sample_40.mp3: 342 words, 70 units, ASR 2.3s
+INFO:model:conversation_sample_40.mp3: total 6.1s (ASR 2.3s, LLM 3.7s), yes=3/10
+INFO:     100.64.1.5:49982 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:20.080
+INFO:model:conversation_sample_44.mp3: 203 words, 39 units, ASR 1.4s
+INFO:model:conversation_sample_44.mp3: total 4.7s (ASR 1.4s, LLM 3.4s), yes=7/10
+INFO:     100.64.1.5:49982 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:38.400
+INFO:model:conversation_sample_45.mp3: 244 words, 49 units, ASR 5.8s
+INFO:model:conversation_sample_45.mp3: total 9.6s (ASR 5.8s, LLM 3.9s), yes=7/10
+INFO:     100.64.1.5:49982 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:32.480
+INFO:model:conversation_sample_46.mp3: 165 words, 45 units, ASR 5.5s
+INFO:model:conversation_sample_46.mp3: total 8.5s (ASR 5.5s, LLM 3.0s), yes=5/10
+INFO:     100.64.1.3:32878 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.080
+INFO:model:conversation_sample_51.mp3: 252 words, 56 units, ASR 1.9s
+INFO:model:conversation_sample_51.mp3: total 5.9s (ASR 1.9s, LLM 4.0s), yes=7/10
+INFO:     100.64.1.1:46328 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:17.840
+INFO:model:conversation_sample_60.mp3: 189 words, 48 units, ASR 4.2s
+INFO:model:conversation_sample_60.mp3: total 7.6s (ASR 4.2s, LLM 3.4s), yes=7/10
+INFO:     100.64.1.5:44142 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:39.840
+INFO:model:conversation_sample_62.mp3: 266 words, 48 units, ASR 6.1s
+INFO:model:conversation_sample_62.mp3: total 9.5s (ASR 6.1s, LLM 3.4s), yes=6/10
+INFO:     100.64.1.4:45460 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:14.800
+INFO:model:conversation_sample_73.mp3: 188 words, 50 units, ASR 6.0s
+INFO:model:conversation_sample_73.mp3: total 10.1s (ASR 6.0s, LLM 4.1s), yes=5/10
+INFO:     100.64.1.3:38384 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:40.720
+INFO:model:conversation_sample_80.mp3: 433 words, 73 units, ASR 2.4s
+INFO:model:conversation_sample_80.mp3: total 6.9s (ASR 2.4s, LLM 4.5s), yes=3/10
+INFO:     100.64.1.1:57626 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.160
+INFO:model:conversation_sample_3.mp3: 269 words, 57 units, ASR 1.8s
+INFO:model:conversation_sample_3.mp3: total 6.4s (ASR 1.8s, LLM 4.6s), yes=6/10
+INFO:     100.64.1.4:35122 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:01.760
+INFO:model:conversation_sample_7.mp3: 473 words, 95 units, ASR 2.9s
+INFO:model:conversation_sample_7.mp3: total 6.0s (ASR 2.9s, LLM 3.0s), yes=3/10
+INFO:     100.64.1.5:33848 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:25.760
+INFO:model:conversation_sample_8.mp3: 356 words, 74 units, ASR 2.1s
+INFO:model:conversation_sample_8.mp3: total 6.5s (ASR 2.1s, LLM 4.4s), yes=6/10
+INFO:     100.64.1.1:56602 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:48.720
+INFO:model:conversation_sample_11.mp3: 284 words, 51 units, ASR 1.7s
+INFO:model:conversation_sample_11.mp3: total 5.6s (ASR 1.7s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.1:56602 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:43.760
+INFO:model:conversation_sample_14.mp3: 358 words, 80 units, ASR 2.5s
+INFO:model:conversation_sample_14.mp3: total 7.2s (ASR 2.5s, LLM 4.7s), yes=6/10
+INFO:     100.64.1.2:39258 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:21.840
+INFO:model:conversation_sample_16.mp3: 346 words, 67 units, ASR 2.0s
+INFO:model:conversation_sample_16.mp3: total 6.1s (ASR 2.0s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.4:49672 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:23.440
+INFO:model:conversation_sample_24.mp3: 386 words, 71 units, ASR 2.1s
+INFO:model:conversation_sample_24.mp3: total 7.4s (ASR 2.1s, LLM 5.3s), yes=4/10
+INFO:     100.64.1.3:60134 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:18.240
+INFO:model:conversation_sample_26.mp3: 486 words, 80 units, ASR 2.7s
+INFO:model:conversation_sample_26.mp3: total 8.1s (ASR 2.7s, LLM 5.4s), yes=6/10
+INFO:     100.64.1.1:57332 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:50.880
+INFO:model:conversation_sample_30.mp3: 321 words, 54 units, ASR 1.7s
+INFO:model:conversation_sample_30.mp3: total 5.8s (ASR 1.7s, LLM 4.2s), yes=4/10
+INFO:     100.64.1.5:55956 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:05.760
+INFO:model:conversation_sample_31.mp3: 478 words, 84 units, ASR 4.1s
+INFO:model:conversation_sample_31.mp3: total 8.9s (ASR 4.1s, LLM 4.9s), yes=3/10
+INFO:     100.64.1.5:55956 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:37.120
+INFO:model:conversation_sample_40.mp3: 342 words, 70 units, ASR 2.5s
+INFO:model:conversation_sample_40.mp3: total 6.2s (ASR 2.5s, LLM 3.8s), yes=3/10
+INFO:     100.64.1.3:46064 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:20.080
+INFO:model:conversation_sample_44.mp3: 203 words, 39 units, ASR 1.3s
+INFO:model:conversation_sample_44.mp3: total 4.7s (ASR 1.3s, LLM 3.4s), yes=7/10
+INFO:     100.64.1.4:43592 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:38.400
+INFO:model:conversation_sample_45.mp3: 261 words, 50 units, ASR 5.6s
+INFO:model:conversation_sample_45.mp3: total 9.5s (ASR 5.6s, LLM 4.0s), yes=7/10
+INFO:     100.64.1.5:37710 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:32.480
+INFO:model:conversation_sample_46.mp3: 180 words, 47 units, ASR 5.5s
+INFO:model:conversation_sample_46.mp3: total 8.6s (ASR 5.5s, LLM 3.1s), yes=5/10
+INFO:     100.64.1.1:48660 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.080
+INFO:model:conversation_sample_51.mp3: 252 words, 56 units, ASR 2.0s
+INFO:model:conversation_sample_51.mp3: total 5.9s (ASR 2.0s, LLM 3.9s), yes=7/10
+INFO:     100.64.1.2:35312 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:17.840
+INFO:model:conversation_sample_60.mp3: 189 words, 48 units, ASR 7.0s
+INFO:model:conversation_sample_60.mp3: total 10.5s (ASR 7.0s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.2:35312 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:39.840
+INFO:model:conversation_sample_62.mp3: 278 words, 50 units, ASR 6.7s
+INFO:model:conversation_sample_62.mp3: total 10.2s (ASR 6.7s, LLM 3.5s), yes=6/10
+INFO:     100.64.1.2:35312 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:14.800
+INFO:model:conversation_sample_73.mp3: 185 words, 50 units, ASR 5.8s
+INFO:model:conversation_sample_73.mp3: total 9.8s (ASR 5.8s, LLM 4.0s), yes=5/10
+INFO:     100.64.1.3:60372 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:40.720
+INFO:model:conversation_sample_80.mp3: 433 words, 73 units, ASR 2.4s
+INFO:model:conversation_sample_80.mp3: total 6.9s (ASR 2.4s, LLM 4.5s), yes=3/10
+INFO:     100.64.1.1:36898 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.160
+INFO:model:conversation_sample_3.mp3: 269 words, 57 units, ASR 1.8s
+INFO:model:conversation_sample_3.mp3: total 6.4s (ASR 1.8s, LLM 4.6s), yes=6/10
+INFO:     100.64.1.3:45064 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:01.760
+INFO:model:conversation_sample_7.mp3: 473 words, 95 units, ASR 3.0s
+INFO:model:conversation_sample_7.mp3: total 5.9s (ASR 3.0s, LLM 2.9s), yes=3/10
+INFO:     100.64.1.2:36058 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:25.760
+INFO:model:conversation_sample_8.mp3: 356 words, 74 units, ASR 2.1s
+INFO:model:conversation_sample_8.mp3: total 6.5s (ASR 2.1s, LLM 4.5s), yes=6/10
+INFO:     100.64.1.3:37146 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:48.720
+INFO:model:conversation_sample_11.mp3: 284 words, 51 units, ASR 1.7s
+INFO:model:conversation_sample_11.mp3: total 5.6s (ASR 1.7s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.5:44024 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:43.760
+INFO:model:conversation_sample_14.mp3: 358 words, 80 units, ASR 2.6s
+INFO:model:conversation_sample_14.mp3: total 7.2s (ASR 2.6s, LLM 4.7s), yes=6/10
+INFO:     100.64.1.5:44024 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:21.840
+INFO:model:conversation_sample_16.mp3: 346 words, 67 units, ASR 2.1s
+INFO:model:conversation_sample_16.mp3: total 6.1s (ASR 2.1s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.2:43820 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:23.440
+INFO:model:conversation_sample_24.mp3: 386 words, 71 units, ASR 2.1s
+INFO:model:conversation_sample_24.mp3: total 7.4s (ASR 2.1s, LLM 5.3s), yes=4/10
+INFO:     100.64.1.3:51460 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:18.240
+INFO:model:conversation_sample_26.mp3: 486 words, 80 units, ASR 2.6s
+INFO:model:conversation_sample_26.mp3: total 7.7s (ASR 2.6s, LLM 5.1s), yes=6/10
+INFO:     100.64.1.5:52736 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:50.880
+INFO:model:conversation_sample_30.mp3: 321 words, 54 units, ASR 1.7s
+INFO:model:conversation_sample_30.mp3: total 5.8s (ASR 1.7s, LLM 4.2s), yes=4/10
+INFO:     100.64.1.1:46044 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:05.760
+INFO:model:conversation_sample_31.mp3: 478 words, 84 units, ASR 4.1s
+INFO:model:conversation_sample_31.mp3: total 9.0s (ASR 4.1s, LLM 4.9s), yes=3/10
+INFO:     100.64.1.5:34314 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:37.120
+INFO:model:conversation_sample_40.mp3: 342 words, 70 units, ASR 2.4s
+INFO:model:conversation_sample_40.mp3: total 6.1s (ASR 2.4s, LLM 3.7s), yes=3/10
+INFO:     100.64.1.4:45124 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:20.080
+INFO:model:conversation_sample_44.mp3: 203 words, 39 units, ASR 1.4s
+INFO:model:conversation_sample_44.mp3: total 4.9s (ASR 1.4s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.2:36044 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:38.400
+INFO:model:conversation_sample_45.mp3: 243 words, 48 units, ASR 6.0s
+INFO:model:conversation_sample_45.mp3: total 9.6s (ASR 6.0s, LLM 3.6s), yes=7/10
+INFO:     100.64.1.5:52610 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:32.480
+INFO:model:conversation_sample_46.mp3: 162 words, 44 units, ASR 5.7s
+INFO:model:conversation_sample_46.mp3: total 8.7s (ASR 5.7s, LLM 3.0s), yes=5/10
+INFO:     100.64.1.2:33718 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.080
+INFO:model:conversation_sample_51.mp3: 252 words, 56 units, ASR 1.9s
+INFO:model:conversation_sample_51.mp3: total 5.8s (ASR 1.9s, LLM 3.9s), yes=7/10
+INFO:     100.64.1.1:47334 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:17.840
+INFO:model:conversation_sample_60.mp3: 189 words, 48 units, ASR 3.2s
+INFO:model:conversation_sample_60.mp3: total 6.7s (ASR 3.2s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.3:56072 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:39.840
+INFO:model:conversation_sample_62.mp3: 259 words, 47 units, ASR 5.7s
+INFO:model:conversation_sample_62.mp3: total 9.1s (ASR 5.7s, LLM 3.4s), yes=6/10
+INFO:     100.64.1.1:56616 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:14.800
+INFO:model:conversation_sample_73.mp3: 198 words, 53 units, ASR 6.0s
+INFO:model:conversation_sample_73.mp3: total 9.8s (ASR 6.0s, LLM 3.9s), yes=5/10
+INFO:     100.64.1.5:52316 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:40.720
+INFO:model:conversation_sample_80.mp3: 433 words, 73 units, ASR 2.4s
+INFO:model:conversation_sample_80.mp3: total 7.0s (ASR 2.4s, LLM 4.5s), yes=3/10
+INFO:     100.64.1.4:55786 - "POST /predict HTTP/1.1" 200 OK
+INFO:     100.64.1.1:44414 - "GET /api HTTP/1.1" 200 OK
+INFO:     100.64.1.3:56008 - "GET /api HTTP/1.1" 200 OK
+INFO:     100.64.1.2:44716 - "GET /api HTTP/1.1" 200 OK
+INFO:     100.64.1.1:56270 - "GET /api HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:46.880
+INFO:model:conversation_sample_1.mp3: 272 words, 59 units, ASR 7.7s
+INFO:model:conversation_sample_1.mp3: total 11.7s (ASR 7.7s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.5:60056 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:43.760
+INFO:model:conversation_sample_2.mp3: 278 words, 58 units, ASR 1.8s
+INFO:model:conversation_sample_2.mp3: total 5.8s (ASR 1.8s, LLM 3.9s), yes=4/10
+INFO:     100.64.1.2:56244 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.080
+INFO:model:conversation_sample_9.mp3: 336 words, 68 units, ASR 2.4s
+INFO:model:conversation_sample_9.mp3: total 7.3s (ASR 2.4s, LLM 4.9s), yes=7/10
+INFO:     100.64.1.2:56244 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:28.320
+INFO:model:conversation_sample_12.mp3: 372 words, 78 units, ASR 2.5s
+INFO:model:conversation_sample_12.mp3: total 8.0s (ASR 2.5s, LLM 5.5s), yes=3/10
+INFO:     100.64.1.1:51014 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:49.760
+INFO:model:conversation_sample_13.mp3: 471 words, 74 units, ASR 2.4s
+INFO:model:conversation_sample_13.mp3: total 7.7s (ASR 2.4s, LLM 5.3s), yes=7/10
+INFO:     100.64.1.3:54502 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:58.240
+INFO:model:conversation_sample_15.mp3: 328 words, 64 units, ASR 2.2s
+INFO:model:conversation_sample_15.mp3: total 6.2s (ASR 2.2s, LLM 4.0s), yes=7/10
+INFO:     100.64.1.1:50524 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:41.280
+INFO:model:conversation_sample_21.mp3: 481 words, 76 units, ASR 2.3s
+INFO:model:conversation_sample_21.mp3: total 7.9s (ASR 2.3s, LLM 5.6s), yes=5/10
+INFO:     100.64.1.5:49652 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:21.280
+INFO:model:conversation_sample_22.mp3: 476 words, 88 units, ASR 2.7s
+INFO:model:conversation_sample_22.mp3: total 6.7s (ASR 2.7s, LLM 3.9s), yes=7/10
+INFO:     100.64.1.4:57184 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:07.200
+INFO:model:conversation_sample_25.mp3: 475 words, 86 units, ASR 2.8s
+INFO:model:conversation_sample_25.mp3: total 8.3s (ASR 2.8s, LLM 5.4s), yes=6/10
+INFO:     100.64.1.4:57184 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:32.000
+INFO:model:conversation_sample_27.mp3: 399 words, 79 units, ASR 2.4s
+INFO:model:conversation_sample_27.mp3: total 7.9s (ASR 2.4s, LLM 5.4s), yes=3/10
+INFO:     100.64.1.4:57184 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:57.840
+INFO:model:conversation_sample_28.mp3: 532 words, 91 units, ASR 2.9s
+INFO:model:conversation_sample_28.mp3: total 6.3s (ASR 2.9s, LLM 3.4s), yes=3/10
+INFO:     100.64.1.3:36020 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:58.800
+INFO:model:conversation_sample_29.mp3: 459 words, 79 units, ASR 2.8s
+INFO:model:conversation_sample_29.mp3: total 7.9s (ASR 2.8s, LLM 5.1s), yes=4/10
+INFO:     100.64.1.2:54740 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:26.000
+INFO:model:conversation_sample_32.mp3: 353 words, 82 units, ASR 2.5s
+INFO:model:conversation_sample_32.mp3: total 6.7s (ASR 2.5s, LLM 4.2s), yes=5/10
+INFO:     100.64.1.3:42870 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:08.880
+INFO:model:conversation_sample_34.mp3: 194 words, 39 units, ASR 5.5s
+INFO:model:conversation_sample_34.mp3: total 9.1s (ASR 5.5s, LLM 3.6s), yes=4/10
+INFO:     100.64.1.5:57932 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:02.640
+INFO:model:conversation_sample_35.mp3: 309 words, 58 units, ASR 2.0s
+INFO:model:conversation_sample_35.mp3: total 6.1s (ASR 2.0s, LLM 4.1s), yes=3/10
+INFO:     100.64.1.5:57932 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:16.080
+INFO:model:conversation_sample_36.mp3: 228 words, 45 units, ASR 3.5s
+INFO:model:conversation_sample_36.mp3: total 7.0s (ASR 3.5s, LLM 3.5s), yes=7/10
+INFO:     100.64.1.2:57702 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:29.520
+INFO:model:conversation_sample_38.mp3: 356 words, 72 units, ASR 2.5s
+INFO:model:conversation_sample_38.mp3: total 6.7s (ASR 2.5s, LLM 4.3s), yes=7/10
+INFO:     100.64.1.3:43818 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:43.440
+INFO:model:conversation_sample_41.mp3: 250 words, 63 units, ASR 7.2s
+INFO:model:conversation_sample_41.mp3: total 11.0s (ASR 7.2s, LLM 3.8s), yes=5/10
+INFO:     100.64.1.1:59240 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:21.360
+INFO:model:conversation_sample_49.mp3: 359 words, 75 units, ASR 2.3s
+INFO:model:conversation_sample_49.mp3: total 7.0s (ASR 2.3s, LLM 4.7s), yes=4/10
+INFO:     100.64.1.2:37268 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:36.240
+INFO:model:conversation_sample_53.mp3: 242 words, 62 units, ASR 4.4s
+INFO:model:conversation_sample_53.mp3: total 8.8s (ASR 4.4s, LLM 4.3s), yes=4/10
+INFO:     100.64.1.1:55822 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:49.680
+INFO:model:conversation_sample_58.mp3: 291 words, 62 units, ASR 4.7s
+INFO:model:conversation_sample_58.mp3: total 8.5s (ASR 4.7s, LLM 3.7s), yes=6/10
+INFO:     100.64.1.2:42734 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:52.640
+INFO:model:conversation_sample_59.mp3: 243 words, 62 units, ASR 2.3s
+INFO:model:conversation_sample_59.mp3: total 6.1s (ASR 2.3s, LLM 3.8s), yes=5/10
+INFO:     100.64.1.3:57696 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:00.880
+INFO:model:conversation_sample_61.mp3: 288 words, 59 units, ASR 6.3s
+INFO:model:conversation_sample_61.mp3: total 10.2s (ASR 6.3s, LLM 3.9s), yes=5/10
+INFO:     100.64.1.3:57696 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:25.200
+INFO:model:conversation_sample_65.mp3: 244 words, 45 units, ASR 1.4s
+INFO:model:conversation_sample_65.mp3: total 4.9s (ASR 1.4s, LLM 3.5s), yes=4/10
+INFO:     100.64.1.4:60962 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:28.080
+INFO:model:conversation_sample_68.mp3: 229 words, 51 units, ASR 6.2s
+INFO:model:conversation_sample_68.mp3: total 10.1s (ASR 6.2s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.2:48178 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:42.720
+INFO:model:conversation_sample_72.mp3: 269 words, 49 units, ASR 1.5s
+INFO:model:conversation_sample_72.mp3: total 5.4s (ASR 1.5s, LLM 3.9s), yes=3/10
+INFO:     100.64.1.3:37384 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:04.800
+INFO:model:conversation_sample_74.mp3: 378 words, 70 units, ASR 2.5s
+INFO:model:conversation_sample_74.mp3: total 7.0s (ASR 2.5s, LLM 4.5s), yes=7/10
+INFO:     100.64.1.4:60822 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:11.520
+INFO:model:conversation_sample_76.mp3: 317 words, 62 units, ASR 1.9s
+INFO:model:conversation_sample_76.mp3: total 5.9s (ASR 1.9s, LLM 4.0s), yes=4/10
+INFO:     100.64.1.1:39248 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:08.160
+INFO:model:conversation_sample_78.mp3: 145 words, 39 units, ASR 4.7s
+INFO:model:conversation_sample_78.mp3: total 7.9s (ASR 4.7s, LLM 3.2s), yes=2/10
+INFO:     100.64.1.3:37558 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:08.960
+INFO:model:conversation_sample_83.mp3: 365 words, 60 units, ASR 4.6s
+INFO:model:conversation_sample_83.mp3: total 8.7s (ASR 4.6s, LLM 4.2s), yes=5/10
+INFO:     100.64.1.2:48936 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:32.880
+INFO:model:conversation_sample_85.mp3: 281 words, 48 units, ASR 5.5s
+INFO:model:conversation_sample_85.mp3: total 9.3s (ASR 5.5s, LLM 3.8s), yes=6/10
+INFO:     100.64.1.3:36328 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:33.760
+INFO:model:conversation_sample_87.mp3: 365 words, 78 units, ASR 2.3s
+INFO:model:conversation_sample_87.mp3: total 6.9s (ASR 2.3s, LLM 4.6s), yes=3/10
+INFO:     100.64.1.5:40654 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:38.480
+INFO:model:conversation_sample_88.mp3: 413 words, 87 units, ASR 2.4s
+INFO:model:conversation_sample_88.mp3: total 6.7s (ASR 2.4s, LLM 4.3s), yes=7/10
+INFO:     100.64.1.5:40654 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 03:14.800
+INFO:model:conversation_sample_89.mp3: 428 words, 31 units, ASR 2.2s
+INFO:model:conversation_sample_89.mp3: total 6.4s (ASR 2.2s, LLM 4.2s), yes=4/10
+INFO:     100.64.1.5:40654 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:39.680
+INFO:model:conversation_sample_91.mp3: 240 words, 50 units, ASR 1.6s
+INFO:model:conversation_sample_91.mp3: total 5.1s (ASR 1.6s, LLM 3.5s), yes=5/10
+INFO:     100.64.1.2:44990 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:11.680
+INFO:model:conversation_sample_93.mp3: 382 words, 76 units, ASR 2.1s
+INFO:model:conversation_sample_93.mp3: total 6.6s (ASR 2.1s, LLM 4.5s), yes=4/10
+INFO:     100.64.1.1:58110 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 02:18.000
+INFO:model:conversation_sample_94.mp3: 390 words, 78 units, ASR 2.2s
+INFO:model:conversation_sample_94.mp3: total 7.0s (ASR 2.2s, LLM 4.8s), yes=7/10
+INFO:     100.64.1.5:53236 - "POST /predict HTTP/1.1" 200 OK
+INFO:faster_whisper:Processing audio with duration 01:30.880
+INFO:model:conversation_sample_96.mp3: 195 words, 43 units, ASR 1.5s
+INFO:model:conversation_sample_96.mp3: total 4.7s (ASR 1.5s, LLM 3.2s), yes=6/10
+INFO:     100.64.1.4:32814 - "POST /predict HTTP/1.1" 200 OK
+INFO:     100.64.1.2:39298 - "GET /api HTTP/1.1" 200 OK
