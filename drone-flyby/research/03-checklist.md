@@ -90,6 +90,22 @@ The deployed F3 measured small_launcher 0.34 from Oslo against 0.56 in the night
 The harness's small_tower and tank labels are off the organisers' convention (the portal says F5 beats F3 on both), so
 cross-checkpoint routing still comes from same-day portal runs; the harness ranks policies on one checkpoint.
 
+## Oscar's synthetic flyover data (copied Sunday 02:15, read-only from his pod)
+
+Not mined validation truth: a synthetic training set. Blender flyovers with the calibrated organiser camera (600 m,
+pitch 71.2 deg, 13.9 m per frame) over 14 Finnish and Dutch sites, 36 flights of 13 frames. `flypaste-{train,val,both}-v3`:
+real sprites pasted in 2D on the empty renders at the organisers' density (10.4 objects per 4K frame), 256 px tiles at
+L0/L1/L2 with YOLO labels and a manifest with sprite provenance per box (about 15000 tiles per set, all 16 classes in
+train). `train` = sprites from the organisers' 25 reference frames only; `val` and `both` carry pixels of validation-flight
+objects and are evaluation only under our rule. `flyover-*-v1` = the earlier fully 3D-rendered sets; 468 empty 4K frames
+(6 GB); generator code (`paste_v3.py`, `paste_sets.py`, `drone/flyover/`). His `score-anchored-validation-v8` labels are the
+labels our harness already uses (987 boxes, identical per-class counts). Local copy outside the repo:
+`C:/Users/edlun/Desktop/lucky shots/drone-data/oscar-pod` (archives and `x/` unpacked). A committee of seven agents (two
+on Fable, five on Opus; angles: fine-tune design, a local detector benchmark checked against known portal verdicts,
+organiser-style box calibration, the tiny classes, synthetic flights as a second harness scene, false positives on
+unseen terrain, a red team on what may not transfer) reports into `elias/out/committee/<angle>/findings.md`; the merged
+ranked list goes to `research/07-committee.md`.
+
 ## The served config, same host and hour (Oslo pod, Sunday 00:00 to 00:50)
 
 Nine concealed thirds interleaved per window (`measure_pod2.log`, tags P3_*), every run 249 to 257 frames with 0 to 3
