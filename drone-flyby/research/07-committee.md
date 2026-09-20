@@ -76,6 +76,13 @@ pod refused SSH from 02:34).
 | 6 | Runbook: planning range 0.60 to 0.72; checklist: A11 closed, committee verdicts | finding 8 | no panic at a 0.65 rehearsal | writing | TODO |
 | 7 | Portal, morning (ask Oscar for 09:00 to 11:30): one-class large_launcher, large_tower F3 against the replay fine-tune, small_tower and tank F3 against F5, then the pre-flight third | findings 2, 4 | +0.01 to +0.03 together | pod 0.74 USD/h, portal | TODO |
 
+**Result of the night (05:40):** the `robust` mode of `elias/pod_start_final.sh` = routed + large_tower from F3HN +
+small_launcher merged over three models + box hedge + pair hedge (large_launcher with mine_roller, large_tower with
+medium_launcher, 0.3 x confidence; `classhedge_campaign.log`: harness 0.696 to 0.709, scene 0.615 to 0.638, no class
+loses, the default sibling groups cost small_launcher 0.014 and stay off). Exact served environment, run RC_ROBUST:
+**harness 0.709 against 0.686, exact-label unseen scene 0.638 against 0.584, false answers on eight empty flights 4.7
+against 14.4 per frame.** No portal number: `elias/morning_portal.sh` and the decision rule in `04-sunday-runbook.md`.
+
 Closed by the committee (do not reopen without a new reason): fine-tuning on flypaste sprites, the tile benchmark as a
 ranking, test-time magnification and crop passes, per-class birth thresholds, per-axis box scales and a centre shift, the
 terrain prior as protection, a forecast lead-time correction fitted on team labels, experiments on the un-interpolated

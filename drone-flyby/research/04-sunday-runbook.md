@@ -50,13 +50,17 @@ mixed per class), zoom on cue off (rejected).
 
 `robust` = `routed` plus three changes aimed at the unseen flight (`07-committee.md`): large_tower answered by
 `F3HN_m1280.pt` (a 2.5 minute replay fine-tune of F3 with unseen-terrain backgrounds and pure negatives), small_launcher
-merged over the three models, and the box hedge (a second box at the alternative size at 0.3 x confidence for
-medium_launcher, large_launcher, ta-ta and large_tower). `robust_hn` answers small_launcher from F3HN alone.
+merged over the three models, the box hedge (a second box at the alternative size at 0.3 x confidence for medium_launcher, large_launcher, ta-ta and large_tower)
+and the pair hedge (large_launcher and mine_roller, large_tower and medium_launcher answered under each other's name at
+0.3 x confidence: the exact-label scene shows large_launcher answered mine_roller on half its labels). On the harness only
+large_tower (0.64 to 0.72), small_launcher (0.55 to 0.59) and large_launcher (0.43 to 0.57) move; the other eight classes
+are identical to the digit. Three models cost 16 ms per frame on the laptop GPU (median 94 against 78 ms). `robust_hn` answers small_launcher from F3HN alone.
 
 | config | validation harness (team labels) | exact-label unseen scene | false answers per frame on 8 empty flights (worst flight) |
 |---|---:|---:|---:|
 | routed (served Saturday, portal 0.797) | 0.686 | 0.584 | 14.4 (73) |
-| robust | 0.696 | 0.615 | 4.6 (20) |
+| robust without the pair hedge | 0.696 | 0.615 | 4.6 (20) |
+| **robust** (as `pod_start_final.sh ... robust` serves it, run RC_ROBUST 05:40) | **0.709** | **0.638** | 4.7 (20) |
 | robust_hn | 0.696 | 0.605 | 1.6 (4.4) |
 
 **Morning decision, one command:** `bash elias/morning_portal.sh HOST SSH_PORT PUBLIC_PORT` runs the one-class pairs
