@@ -1122,7 +1122,7 @@ public:
             bool full = s.energy > s.max_energy - 30.;
             // Delayed-model policy experiments: avoid reserving a full fruit
             // when little of its energy fits. Baseline remains unchanged.
-            if(resource_synchronized&&(resource_mode==18||resource_mode==20)&&s.energy>s.max_energy-60.)return;
+            if(resource_synchronized&&((resource_mode==18||resource_mode==20||resource_mode==181||resource_mode==183))&&s.energy>s.max_energy-60.)return;
             double reach = m.old ? P.old_reach : global_scarcity_search()?2000.:P.fruit_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
             for (auto& f : g.near_fruits(m.pose->p, reach)) {
                 if (f->has_claim) continue;
@@ -1145,7 +1145,7 @@ public:
                 else if (P.feed_breed) bucket = s.energy < reserve() + 20. ? 1 : 2 + int_floordiv(s.energy, 120);
                 else bucket = int_floordiv(s.energy, 60);
                 double priority=-fitness(s);
-                if(resource_synchronized&&(resource_mode==19||resource_mode==20)){
+                if(resource_synchronized&&(resource_mode==19||resource_mode==20||resource_mode==181||resource_mode==182)){
                     double speed=pmax(1.,pmin(s.speed,s.sprint)*MOVE_PENALTY[s.biome]*10.);
                     double travel=d/speed;
                     double gain=pmin(60.,pmax(0.,s.max_energy-s.energy));

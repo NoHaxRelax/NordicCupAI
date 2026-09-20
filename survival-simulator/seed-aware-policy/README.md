@@ -7,3 +7,5 @@ The fresh 500-seed confirmation scored **2076.2007 mean** against baseline mode4
 Wave68 tested a turn-preserving safety scoring variant on 16 fresh pairs and lost by 186.2055, so it is not promoted. All experiments retain separate manifests, source hashes, and replay archives locally; compact summaries are included in `evidence/`.
 
 Build with Python 3.12 and the pinned native environment, then run `bench/policy_bench` with the manifest's delay parameter. No evaluation or validation API client is included.
+
+Wave69 tested exact-resource fruit allocation variants on 16 fresh pairs; all three lost to mode144 by 122–180 points and were rejected.
