@@ -185,3 +185,42 @@ one-time indexed preprocessing), measuring preprocessing separately from online
 recovery. Do not imply SIMD alone satisfies the small-CPU target. Oscar's updated
 seed-aware-policy branch c717732 reports mode46 improved oracle-model scores;
 that still requires verified shadow state before honest controller integration.
+
+
+## Update: pinned V4 reproduction and terrain-index pilot (07:30 UTC wake)
+
+Built all five frozen V4 binaries on the existing Runpod under its own
+`/workspace/lucas-seed-shadow/seed-recovery-v4/.venv`, Python 3.12.3 / NumPy 2.3.5.
+Installed the missing compiler development packages; other tasks' environments
+and services were not modified. `preflight.py --native` passes both positive
+terrain+wall confirmation and negative one-seed control. `v4-preflight.log` records
+these diagnostics; this is not a fresh blind full-domain recovery.
+
+New `scripts/make_public_replay_fixture.py` records only public DTOs and exact
+executed actions from the unmodified Python game. It uses deterministic random
+movement/reproduction, not the orchard policy. Seed 3 ran 460 frames before
+extinction. V4 replay has zero dynamic mismatches AND zero full DTO mismatches,
+0.185 seconds of replay. Raw packets and native replay stay on Runpod in
+v4-python-fixtures/ and v4-python-replay-seed3/. Local manifests record Python,
+NumPy, seed and packet hash. This short random-action check does not supersede
+known long-game divergence or prove universal shadow parity.
+
+`scripts/probe_seed_fingerprints.py` measures an OFFLINE index idea against
+200,000 uniformly sampled uint32 seeds. It synthesizes underlying Voronoi labels
+at sixteen fixed landmarks; these are not actual agent observations. Using the
+first four, six and eight landmarks estimates mean remaining seed populations of
+16.87 million, 1.13 million and 137,855 respectively. Four-landmark p99 is about
+20.8 million. More-landmark rare bucket quantiles have high sampling uncertainty.
+No live seed was recovered by this pilot. River labels, blocked landmarks and
+travel time are deliberately unmodeled and must be handled before any claim.
+
+Potential next implementation: store sixteen landmarks as 32 bit planes indexed
+by seed (16 GiB for all uint32 seeds), allowing any observed subset to filter via
+bitwise intersection. Eight-landmark bucketed seed lists are also 16 GiB and need
+much less I/O when the observed subset fits the fixed key. Build once on research
+compute, measure construction/distribution separately, then benchmark real cold
+and warm queries on Hetzner. Do not assume a small in-memory pilot establishes
+full-index I/O latency. Exact observed pixels and anchored poses are required;
+nearby terrain cannot silently substitute. River or obstructed/unvisited landmarks
+remain wildcards. Full observation filtering, wall verification and replay still
+must confirm any candidate. No full index has been built or deployed yet.

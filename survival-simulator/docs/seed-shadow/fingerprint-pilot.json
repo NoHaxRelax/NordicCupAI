@@ -1,0 +1,146 @@
+{
+  "scope": "Offline index selectivity pilot only; labels generated from seeds, NOT public observations. No seed recovery or latency claim.",
+  "seeds": 200000,
+  "sampling_seed": 2026092008,
+  "landmarks": [
+    [
+      200,
+      200
+    ],
+    [
+      1400,
+      1000
+    ],
+    [
+      1400,
+      200
+    ],
+    [
+      200,
+      1000
+    ],
+    [
+      800,
+      200
+    ],
+    [
+      800,
+      1000
+    ],
+    [
+      200,
+      600
+    ],
+    [
+      1400,
+      600
+    ],
+    [
+      500,
+      400
+    ],
+    [
+      1100,
+      800
+    ],
+    [
+      1100,
+      400
+    ],
+    [
+      500,
+      800
+    ],
+    [
+      800,
+      400
+    ],
+    [
+      800,
+      800
+    ],
+    [
+      500,
+      600
+    ],
+    [
+      1100,
+      600
+    ]
+  ],
+  "seconds": 3.460621023004933,
+  "rows": [
+    {
+      "known_landmarks": 4,
+      "observed_buckets": 256,
+      "singleton_query_fraction": 0.0,
+      "estimated_other_candidates_mean": 16871336.72896614,
+      "estimated_other_candidates_p50_p90_p95_p99": [
+        16557181.708133541,
+        18661726.205406025,
+        19606623.734793674,
+        20787745.646528233
+      ],
+      "largest_observed_bucket_fraction": 0.004915
+    },
+    {
+      "known_landmarks": 6,
+      "observed_buckets": 4096,
+      "singleton_query_fraction": 0.0,
+      "estimated_other_candidates_mean": 1132829.7022536257,
+      "estimated_other_candidates_p50_p90_p95_p99": [
+        1095222.1363356817,
+        1610620.7887289436,
+        1782420.3395266978,
+        2126019.4411222055
+      ],
+      "largest_observed_bucket_fraction": 0.00067
+    },
+    {
+      "known_landmarks": 8,
+      "observed_buckets": 50863,
+      "singleton_query_fraction": 0.069575,
+      "estimated_other_candidates_mean": 137854.75130281827,
+      "estimated_other_candidates_p50_p90_p95_p99": [
+        107374.71924859623,
+        300649.2138960695,
+        386548.9892949465,
+        536873.5962429813
+      ],
+      "largest_observed_bucket_fraction": 0.000245
+    },
+    {
+      "known_landmarks": 12,
+      "observed_buckets": 188184,
+      "singleton_query_fraction": 0.89045,
+      "estimated_other_candidates_mean": 3052.663268237591,
+      "estimated_other_candidates_p50_p90_p95_p99": [
+        0.0,
+        21474.94384971925,
+        21474.94384971925,
+        42949.8876994385
+      ],
+      "largest_observed_bucket_fraction": 7e-05
+    },
+    {
+      "known_landmarks": 16,
+      "observed_buckets": 198210,
+      "singleton_query_fraction": 0.982905,
+      "estimated_other_candidates_mean": 434.43811407982054,
+      "estimated_other_candidates_p50_p90_p95_p99": [
+        0.0,
+        0.0,
+        0.0,
+        21474.94384971925
+      ],
+      "largest_observed_bucket_fraction": 4e-05
+    }
+  ],
+  "index_storage_note": "8-landmark counting-sort seed lists require 16 GiB plus offsets for the entire uint32 domain; an unrestricted 16-landmark key+seed representation requires 32 GiB before overhead.",
+  "limitations": [
+    "No river masking or navigation simulated.",
+    "Rare bucket estimates are noisy; zero sampled peers does not mean unique.",
+    "Homogeneous maps can remain expensive even with many known landmarks.",
+    "Offline construction and download costs must be reported separately from online query."
+  ]
+}
