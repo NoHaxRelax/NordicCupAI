@@ -14,6 +14,6 @@ includes = ['-I'+sysconfig.get_path('include'), '-I'+numpy.get_include()]
 links = ['-L'+sysconfig.get_config_var('LIBDIR'), '-lpython3.12', '-ldl', '-lm'] + http
 for name in ['terrain_filter', 'stream_integration_filter']:
     subprocess.run(flags + [str(src/(name+'.cpp')), '-o', str(src/name)], check=True)
-for name in ['paced_native_v4', 'streaming_verification/coordinator', 'stream_integration_test']:
+for name in ['paced_native_v4', 'paced_native_mode144', 'streaming_verification/coordinator', 'stream_integration_test', 'live_game_client']:
     subprocess.run(flags + includes + [str(src/(name+'.cpp')), '-o', str(src/name)] + links, check=True)
 print('Built V4 and diagnostic tools. Run python preflight.py --native next.')
