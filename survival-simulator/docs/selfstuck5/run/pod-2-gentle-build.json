@@ -1,0 +1,60 @@
+{
+  "sources": {
+    "_policy.cpp": "ebddae90ef9d03d214a6a958b8976ed99a026045945b1ab9148ea05d1858cd10",
+    "_orchard_policy.cpp": "7a92b5506ab4856ef88f81a338441c2059b8eb43fb1fb908809c620891b15673",
+    "_engine.cpp": "45a5928464b5231feb8b1378fc0c4b593f22c7ba38040274ae7f4295d2581f5f",
+    "_orchard.hpp": "0a39a75a86ad5223a277ff98aee275ef9dd906da2dd5b4029e81bbc775f68dae",
+    "_evasion.hpp": "e0d8b87007fd731a7a01d430b9d7e1403c1d89565d264965d60ddcf9b8608a5b",
+    "policy_abi.hpp": "99d1367146689fd51cd7c464554bf0614698afc508452e1891c97841083e3536",
+    "policy_iface.hpp": "baa19b0c753338f8cb0584f5dd9378b99e2759f98819a21dbfbaf6a245541554",
+    "_shared_pysem.inc": "bb95cd0128d50f6d65d446d247c2bac9f20761bb23d0a53b4154e67ecab96433"
+  },
+  "binary_sha256": "1d69f886f2fabe5407316bb1285b86ca3a2fb00f7fa7f67c1a245f0903390e90",
+  "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+  "numpy": "2.3.5",
+  "commands": [
+    [
+      "c++",
+      "-O2",
+      "-std=c++17",
+      "-fPIC",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-fno-builtin-sin",
+      "-fno-builtin-cos",
+      "-fno-builtin-sincos",
+      "-I",
+      "/usr/include/python3.12",
+      "-I",
+      "/workspace/lucas-families10/.venv/lib/python3.12/site-packages/numpy/_core/include",
+      "-c",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_policy.cpp",
+      "-o",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_policy.o"
+    ],
+    [
+      "c++",
+      "-O2",
+      "-std=c++17",
+      "-fPIC",
+      "-ffp-contract=off",
+      "-fno-fast-math",
+      "-fno-builtin-sin",
+      "-fno-builtin-cos",
+      "-fno-builtin-sincos",
+      "-c",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_orchard_policy.cpp",
+      "-o",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_orchard_policy.o"
+    ],
+    [
+      "c++",
+      "-shared",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_policy.o",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_orchard_policy.o",
+      "-o",
+      "/workspace/lucas-selfstuck5/survival-simulator/vendor/gentle-migration/fastsim/_policy.cpython-312-x86_64-linux-gnu.tmp"
+    ]
+  ],
+  "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+}
