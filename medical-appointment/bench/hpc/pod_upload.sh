@@ -32,7 +32,7 @@ FILES=(model.py example.py api.py dtos.py bench/llm/prompts.py bench/llm/pool/la
 fail=0
 remote=$("${SSH[@]}" "cd $REMOTE && md5sum ${FILES[*]}")
 for f in "${FILES[@]}"; do
-  want=$(cd "$CASE" && git show "HEAD:medical-appointment/$f" | md5sum | cut -d' ' -f1)
+  want=$(cd "$CASE" && git show "HEAD:$(git rev-parse --show-prefix)$f" | md5sum | cut -d' ' -f1)   # works whether the case is the repo root or a subfolder
   got=$(echo "$remote" | awk -v f="$f" '$2==f {print $1}')
   if [ "$want" = "$got" ]; then echo "  ok   $f"; else echo "  DIFF $f  (HEAD $want, pod $got)"; fail=1; fi
 done
