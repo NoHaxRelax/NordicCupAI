@@ -34,9 +34,11 @@ int main(int argc,char**argv){
   if(!activated&&p.resource_synchronized){activated=true;apply_activation_overrides(p.P,config,mode);
    if(config.contains("birth_overrides")&&config.at("birth_overrides").contains(std::to_string(mode))){auto&b=config.at("birth_overrides").at(std::to_string(mode));births.age_floor=b.value("age_floor",-1.);births.walking_floor=b.value("walking_floor",-1.);births.urgent_floor=b.value("urgent_floor",-1.);}
    if(mode==12||mode==14){p.P.breed_reserve+=60.;p.P.breed_reserve_late+=60.;}if(mode==24||mode==25){p.P.tree_reach*=2.;p.P.fruit_reach*=2.;}}
+  if((mode==197||mode==198)&&p.resource_synchronized&&(p.future_built<0.||e->time-p.future_built>=30.))
+   p.forecast_future_fruits(*e,mode==197?60.:180.);
   std::map<int64_t,bool> old_heirs;if(BirthForecast::enabled(mode)&&p.resource_synchronized)p.minds.each([&](const int64_t&id,orchard::MindP&m){old_heirs[id]=m->heir_done;});
   auto acts=p.call(policy_states(e.get()),e->time);
-  if(((mode>=35&&mode<=38)||(mode>=140&&mode<=192))&&p.resource_synchronized)safety.apply(*e,p,acts,mode);
+  if(((mode>=35&&mode<=38)||(mode>=140&&mode<=198))&&p.resource_synchronized)safety.apply(*e,p,acts,mode);
   if(BirthForecast::enabled(mode)&&p.resource_synchronized)births.apply(*e,p,acts,mode,old_heirs);
   if(e->time<available_at){for(auto&a:acts){hash_word(a.aid);hash_double(a.dist);hash_double(a.direction);hash_double(a.turn);hash_word(a.spawn);}}
   for(auto&a:acts){size_t before=e->agents.size();e->agent_step({a.aid,a.dist,true,a.direction,a.turn,a.spawn});if(BirthForecast::enabled(mode)&&p.resource_synchronized&&e->agents.size()>before)births.verify(a.aid,e->agents.back());}

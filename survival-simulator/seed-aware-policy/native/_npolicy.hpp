@@ -1035,6 +1035,8 @@ public:
                 here += 55. * (double)u->fruit_free;
             }
         }
+        if (resource_synchronized && resource_mode >= 197 && resource_mode <= 198)
+            future += future_tree_value(t, time, resource_mode == 197 ? 60. : 180.);
         if (future + here <= 0.) return -OINF;
         if (s.energy - travel_e - wait - 12. < 0.) return -OINF;
         double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;

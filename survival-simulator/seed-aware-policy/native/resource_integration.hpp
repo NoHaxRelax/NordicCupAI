@@ -1,5 +1,6 @@
 // Structured synchronized-model input. Benchmarks explicitly use engine truth as an upper bound.
 struct ResourcePoint { P2 p; double age, energy; int biome=-1; };
+struct FutureFruitPoint { P2 p; double t, energy; };
 int resource_mode=0;
 bool harvest_mode()const{return resource_mode==10||resource_mode==11;}
 bool routing_mode()const{return harvest_mode()||resource_mode==23||resource_mode==24||(resource_mode==57&&resource_synchronized&&states.size()<=4&&time>900.)||(resource_mode==169&&resource_synchronized)||(resource_mode==170&&resource_synchronized&&time>900.);}
@@ -8,6 +9,8 @@ bool harvest_inventory()const{return harvest_mode()||resource_mode==16||resource
 bool resource_synchronized=false;
 double resource_time=-1.;
 std::vector<ResourcePoint> resource_trees,resource_fruits;
+std::vector<FutureFruitPoint> future_fruits;
+double future_built=-1.;
 std::unordered_map<const FruitM*,ResourcePoint> matched_fruit;
 std::unordered_map<const TreeM*,ResourcePoint> matched_tree;
 mutable std::unordered_map<const TreeM*,double> remaining_cache;
@@ -68,6 +71,21 @@ std::pair<bool,bool> forecast_ready(const FruitM& f,double energy,bool old)const
         return {true,left<=.05 || (!old && energy<left+P.hungry_margin)};
     }
     return {false,false};
+}
+// Seed-aware upper-bound schedule. This is called only after model activation;
+// it clones the synchronized engine and advances the non-agent world briefly.
+void forecast_future_fruits(Engine& current,double horizon){
+ future_fruits.clear(); future_built=time;
+ Engine oracle=current; oracle.on_kill=nullptr; oracle.agents.clear(); oracle.agent_observations.clear(); oracle.agents_dirty=true;
+ std::unordered_set<int64_t> known; for(auto&f:oracle.fruits)known.insert(f.fruit_id);
+ double end=oracle.time+horizon;
+ while(oracle.time+1e-7<end){
+  oracle.non_agent_step();
+  for(auto&f:oracle.fruits)if(!known.count(f.fruit_id)){known.insert(f.fruit_id);future_fruits.push_back({{f.x,f.y},oracle.time,f.energy});}
+ }
+}
+double future_tree_value(const TreeM& t,double now,double horizon)const{
+ double value=0.;for(auto&f:future_fruits){double d=dist(f.p,t.p);if(d>70.||f.t<now-1e-7||f.t>now+horizon+1e-7)continue;value+=pmin(60.,f.energy+2.*pmax(0.,now-f.t));}return value;
 }
 double forecast_post_adjustment(const TreeM& t,const Mind& m,const AState&,double travel){
  if(!resource_synchronized||(resource_mode!=21&&resource_mode!=22))return 0.;
