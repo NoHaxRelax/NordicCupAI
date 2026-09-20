@@ -14,6 +14,20 @@ hook in `.claude/settings.json`; the agent never writes `.claude/EVAL_UNLOCK`). 
 > below. Round trip Oslo to the Helsinki server 40 to 70 ms; a US pod had 250 ms and lost frames. Every other pod on the
 > account is Oscar's or Lucas's.
 
+## What to expect from the attempt (red team, Sunday 04:00)
+
+The 0.797 is a validation number and part of it will not transfer to an unseen flight. Plan with **0.60 to 0.72**; a
+rehearsal or a result in that range is the expected outcome, not a fault, and no reason for a last-minute change.
+
+| part of the 0.797 | on validation | on an unseen flight | why |
+|---|---:|---:|---|
+| F3 base | 0.697 | 0.60 to 0.70 | F3 was trained on validation sprites and backgrounds; the checkpoint that never saw them scores 0.601 on the same flight |
+| cluster births | +0.034 | 0 to +0.034 | fires only where two same-class objects stand close: 49 % of validation medium_planes, 0 of 259 objects in the organisers' reference frames |
+| launcher box 0.85 | +0.018 | -0.01 to +0.018 | needs the small launcher vehicle; safe on the Helsinki one (IoU 0.80), and the box hedge covers the other direction |
+| ta-ta on F5 | +0.038 | 0 to +0.038 | needs walkers; an absent class costs nothing (macro over classes present) |
+
+Details and the evidence: `07-committee.md`.
+
 ## What gets served
 
 `routed`: `DRONE_DETECTOR=elias.ensemble:build`, the deployed F3 checkpoint for every class and F5 for ta-ta (the only
