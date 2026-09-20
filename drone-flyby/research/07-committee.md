@@ -83,6 +83,28 @@ loses, the default sibling groups cost small_launcher 0.014 and stay off). Exact
 **harness 0.709 against 0.686, exact-label unseen scene 0.638 against 0.584, false answers on eight empty flights 4.7
 against 14.4 per frame.** No portal number: `elias/morning_portal.sh` and the decision rule in `04-sunday-runbook.md`.
 
+## Oscar's mined validation labels (branch `drone/oscar-annotation`, 08:04 Sunday): the harness is now near organiser-true
+
+`annotation/labels/mined-labels-v4.json`: 1358 boxes, all 249 frames, all 13 classes, 0.967 on the validation API
+(per-class AP of the labels 0.93 to 1.00; five classes hand-measured). Loaded as a NEW scene for MEASUREMENT ONLY:
+`C:/Users/edlun/Desktop/lucky shots/drone-data/scenes/validation_mined_v4` (images are a junction to `src/validation/images`;
+remove it with `cmd //c rmdir images`, never `rm -rf`). Run with `elias/out/committee/sequences/run_scene.sh`.
+
+| config | mined-label harness | portal |
+|---|---:|---:|
+| plain F3, no switches | 0.709 | 0.697 |
+| routed | 0.829 | 0.797 |
+| robust | 0.834 | not measured |
+
+The instrument tracks the portal (the offline clock loses no frames, hence the +0.01 to +0.03). Robust against routed
+per class: large_launcher +0.055, medium_launcher +0.023, small_launcher -0.007, large_tower -0.003, the other nine
+identical. Cluster births read small_plane 0.665 to 0.963 and medium_plane 0.418 to 0.765 (plain to routed). Loss
+decomposition of the robust run against these labels (`elias/miss_analysis.py --scene <that path>`): the box bin is
+empty except medium_launcher (21 %); **small_launcher loses 22 % of its labels and ta-ta 21 % as `lost`** (answered, then the
+track retired after three silent looks and the forecast stopped), 9 % and 19 % unseen; medium_plane 19 % never born;
+tank answered mine_roller on 5 %. Retired forecasts and the miss count are being re-measured against these labels
+(`mined_campaign2.log`); row B3 measured them neutral on the team labels, which could not see this.
+
 Closed by the committee (do not reopen without a new reason): fine-tuning on flypaste sprites, the tile benchmark as a
 ranking, test-time magnification and crop passes, per-class birth thresholds, per-axis box scales and a centre shift, the
 terrain prior as protection, a forecast lead-time correction fitted on team labels, experiments on the un-interpolated
