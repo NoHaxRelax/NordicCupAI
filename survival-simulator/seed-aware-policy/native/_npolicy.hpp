@@ -784,7 +784,7 @@ public:
             for (auto& e : m.edges)
                 if (dist_lt(a, e.a, 6) && dist_lt(b, e.b, 6)) { e = EdgeMem{a, b, time}; found = true; break; }
             if (!found) m.edges.push_back(EdgeMem{a, b, time});
-            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0. || P.refuge_mode > 0.) && g.anchored) add_wall(g, a, b, pose.p, m.aid);
+            if ((P.trap_mode > 0. || P.occ_walls > 0. || P.hide_mode > 0. || P.refuge_mode > 0.) && g.anchored && !(model_full()&&resource_mode>=66&&resource_mode<=68)) add_wall(g, a, b, pose.p, m.aid);
         }
         {
             std::vector<EdgeMem> keep;
@@ -997,7 +997,7 @@ public:
 
     double tree_value(Group& g, TreeM& t, Mind& m, const AState& s) {
         int64_t n = others_n(t.assigned, m.aid);
-        double reach = P.tree_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
+        double reach = global_scarcity_search()?2000.:P.tree_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
         if (dist_gt(t.p, m.pose->p, reach)) return -OINF;
         double d = dist(t.p, m.pose->p);
         double walk = pmax(1., pmin(s.speed, s.sprint) * MOVE_PENALTY[s.biome]);
@@ -1035,6 +1035,8 @@ public:
                 here += 55. * (double)u->fruit_free;
             }
         }
+        if (resource_synchronized && resource_mode >= 197 && resource_mode <= 198)
+            future += future_tree_value(t, time, resource_mode == 197 ? 60. : 180.);
         if (future + here <= 0.) return -OINF;
         if (s.energy - travel_e - wait - 12. < 0.) return -OINF;
         double value = (future + here) / (double)(n + 1) - travel_e - 0.5 * wait - P.dist_pen * d;
@@ -1106,6 +1108,7 @@ public:
     }
 
     struct FPair { int64_t bucket; double nf, d; int64_t a, fid; };
+    #include "fruit_assignment.hpp"
     void assign_fruits(Group& g) {
         g.agents.each([&](int64_t a) {
             Mind& m = M(a);
@@ -1121,11 +1124,16 @@ public:
             bool full = s.energy > s.max_energy - 30.;
             // Delayed-model policy experiments: avoid reserving a full fruit
             // when little of its energy fits. Baseline remains unchanged.
-            if(resource_synchronized&&(resource_mode==18||resource_mode==20)&&s.energy>s.max_energy-60.)return;
-            double reach = m.old ? P.old_reach : P.fruit_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
+            if(resource_synchronized&&((resource_mode==18||resource_mode==20||resource_mode==181||resource_mode==183))&&s.energy>s.max_energy-60.)return;
+            double reach = m.old ? P.old_reach : global_scarcity_search()?2000.:P.fruit_reach * (g.agents.size() <= 1 ? P.lone_reach_mult : 1.);
             for (auto& f : g.near_fruits(m.pose->p, reach)) {
                 if (f->has_claim) continue;
                 double d = dist(f->p, m.pose->p);
+                if(global_scarcity_search()&&d>P.fruit_reach){
+                    double penalty=MOVE_PENALTY[s.biome];double travel=d/pmax(1.,pmin(s.speed,s.sprint)*penalty*10.);
+                    if(s.energy<d*.05/pmax(.1,penalty)+2.*travel+20.)continue;
+                    auto it=matched_fruit.find(f.get());if(it!=matched_fruit.end()&&travel+.5>=(100.-it->second.age)/2.)continue;
+                }
                 bool bf = !m.old && below_floor(s);
                 if (!harvest_arrival_ready(*f,m,s,ready(*f, (bf && P.sprint_floor_unripe > 0.) ? -OINF : s.energy, m.old))) continue;
                 bool owe_heir = (!m.heir_done) && s.age >= heir_age_for(s.aid) - 5. && s.energy < P.heir_reserve + 20.;
@@ -1139,7 +1147,7 @@ public:
                 else if (P.feed_breed) bucket = s.energy < reserve() + 20. ? 1 : 2 + int_floordiv(s.energy, 120);
                 else bucket = int_floordiv(s.energy, 60);
                 double priority=-fitness(s);
-                if(resource_synchronized&&(resource_mode==19||resource_mode==20)){
+                if(resource_synchronized&&(resource_mode==19||resource_mode==20||resource_mode==181||resource_mode==182)){
                     double speed=pmax(1.,pmin(s.speed,s.sprint)*MOVE_PENALTY[s.biome]*10.);
                     double travel=d/speed;
                     double gain=pmin(60.,pmax(0.,s.max_energy-s.energy));
@@ -1150,6 +1158,7 @@ public:
                 pairs.push_back(FPair{bucket, priority, d, a, f->id});
             }
         });
+        if(economic_fruit_mode()){economic_assign(g,pairs);return;}
         std::sort(pairs.begin(), pairs.end(), [](const FPair& x, const FPair& y) {
             if (x.bucket != y.bucket) return x.bucket < y.bucket;
             if (x.nf != y.nf) return x.nf < y.nf;
@@ -2588,7 +2597,7 @@ public:
         for (int64_t a : frozen) if (plans.count(a)) plans[a] = Plan{0., 0., 0.};
         int64_t young_now = (int64_t)young.size();
         std::unordered_map<int64_t, double> fit;
-        for (const AState& s : states) fit[s.aid] = fitness(s);
+        for (const AState& s : states) fit[s.aid] = (model_full()&&resource_mode==65) ? 2.*pmin(2.,pmin(s.speed,s.sprint)/10.)+.6*pmin(2.,s.max_energy/500.) : fitness(s);
         std::vector<int64_t> elders;
         minds.each([&](const int64_t& a, MindP& m) { if (m->old || st(a).age >= heir_age_for(a)) elders.push_back(a); });
         std::stable_sort(elders.begin(), elders.end(), [&](int64_t a, int64_t b) { return -st(a).energy < -st(b).energy; });

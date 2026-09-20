@@ -27,27 +27,38 @@ struct PredictiveSafety {
    f.miny=*std::min_element(f.ry.begin(),f.ry.end());f.maxy=*std::max_element(f.ry.begin(),f.ry.end());
    frames.push_back(std::move(f));
   }
-  double margin=mode==35?2.:mode==36?12.:25.;
+  double margin=(mode>=140&&mode<=156)?0.:((mode>=157&&mode<=163)?1.:(mode==174?2.:mode==175?5.:mode==176?10.:mode==35?2.:mode==36?12.:25.));
   for(auto& act:acts){
    size_t ai=ids.at(act.aid);const Creature& agent=e.agents[ai];
+   if((mode==171&&agent.energy>0.5*agent.max_energy)||(mode==172&&agent.energy>0.7*agent.max_energy)||(mode==173&&agent.age>60.))continue;
    bool near=false;for(auto& f:frames)if(np_hypot(agent.x-f.pred.x,agent.y-f.pred.y)<100.){near=true;break;}
    if(!near)continue;++checked;
+   if(mode==187||mode==188){
+    double threshold=mode==187?0.:.5;bool approaching=false;
+    for(auto& f:frames){double dx=agent.x-f.pred.x,dy=agent.y-f.pred.y,d=np_hypot(dx,dy);if(d>=100.)continue;double toward=(dx*std::cos(f.pred.direction)+dy*std::sin(f.pred.direction))/std::max(1.,d);if(toward>threshold){approaching=true;break;}}
+    if(!approaching)continue;
+   }
    auto evaluate=[&](const orchard::Act& candidate){
     ++candidates;next[ai]=move(e,agent,candidate);
     std::vector<Engine::Target> targets;for(auto&a:next)targets.push_back({a.x,a.y,a.direction,a.id});
     double gap=1e6;
     for(auto&f:frames){
      Creature pred=f.pred;auto obs=f.edges;e.ring_x=f.rx;e.ring_y=f.ry;
-     e.process_objects(pred,targets,1,true,true,f.minx,f.maxx,f.miny,f.maxy,obs);
-     e.rng=original_rng;e.predator_act(pred,obs,f.walls);
-     e.rng=original_rng;e.predators_dirty=original_dirty;
-     gap=std::min(gap,np_hypot(next[ai].x-pred.x,next[ai].y-pred.y)-agent.size-pred.size);
+     int steps=(mode==167?2:mode==168?3:1);
+     for(int step=0;step<steps;++step){
+      e.process_objects(pred,targets,1,true,true,f.minx,f.maxx,f.miny,f.maxy,obs);
+      e.rng=original_rng;e.predator_act(pred,obs,f.walls);
+      e.rng=original_rng;e.predators_dirty=original_dirty;
+      gap=std::min(gap,np_hypot(next[ai].x-pred.x,next[ai].y-pred.y)-agent.size-pred.size);
+     }
     }
     return gap;
    };
    orchard::Act original=act;Creature original_next=next[ai];
    double baseline_gap=evaluate(original);
-   if(baseline_gap>=margin)continue;
+   auto& mind=policy.M(act.aid);
+   double trigger=(mode==177?-5.:mode==178?-10.:mode==179?-15.:mode==184?(mind.has_fruit?-5.:margin):mode==185?(mind.has_fruit?-10.:margin):mode==186?(mind.has_fruit?-1e30:margin):margin);
+   if(baseline_gap>=trigger)continue;
    ++searched;double best=-1e30;orchard::Act chosen=original;
    auto consider=[&](const orchard::Act& trial){
     double gap=evaluate(trial);
@@ -55,18 +66,30 @@ struct PredictiveSafety {
     // preserve task progress and energy rather than maximizing distance forever.
     double displacement=np_hypot(next[ai].x-original_next.x,next[ai].y-original_next.y);
     double cost=agent.energy-next[ai].energy;
-    double value=100.*std::min(gap,margin)-.25*displacement-.8*cost;
+    double disp_w=(mode==150?.10:mode==151?.50:mode==152?.10:mode==189?2.:mode==190?5.:mode==191?10.:.25);
+    double cost_w=(mode==150?1.50:mode==151?2.50:mode==152?4.00:mode==159?1.50:mode==160?2.50:mode==192?10.:.80);
+    double turn_delta=std::abs(wrap(trial.turn-original.turn));
+    double turn_w=(mode==180?0.80:0.);
+    double value=100.*std::min(gap,margin)-disp_w*displacement-cost_w*cost-turn_w*turn_delta;
     if(value>best){best=value;chosen=trial;}
    };
    consider(original);
    double nearest=1e9,face=agent.direction;
    for(auto&f:frames){double d=np_hypot(agent.x-f.pred.x,agent.y-f.pred.y);if(d<nearest){nearest=d;face=np_atan2(f.pred.y-agent.y,f.pred.x-agent.x);}}
-   for(int i=0;i<16;++i)for(double speed:{agent.speed,agent.sprint_speed})for(int facing=0;facing<2;++facing){
-    double heading=TWO_PI*i/16.;
-    orchard::Act trial{agent.id,speed,wrap(heading-agent.direction),wrap((facing?face:heading)-agent.direction),false};
+   int heading_n=(mode==199?32:16);std::vector<double> speeds{agent.speed,agent.sprint_speed};
+   if(mode==201)speeds.push_back(agent.speed*.5);
+   if(mode==202)speeds.push_back(agent.sprint_speed*.5);
+   for(int i=0;i<heading_n;++i)for(double speed:speeds)for(int facing=0;facing<2;++facing){
+    double heading=TWO_PI*i/heading_n;
+    orchard::Act trial{agent.id,speed,wrap(heading-agent.direction),wrap((facing?face:heading)-agent.direction),original.spawn};
     consider(trial);
    }
-   consider({agent.id,0.,0.,wrap(face-agent.direction),false});
+   if(mode==200)for(int k=-8;k<=8;++k)for(double speed:speeds)for(int facing=0;facing<2;++facing){
+    double heading=agent.direction+k*PI/16.;
+    orchard::Act trial{agent.id,speed,wrap(heading-agent.direction),wrap((facing?face:heading)-agent.direction),original.spawn};
+    consider(trial);
+   }
+   consider({agent.id,0.,0.,wrap(face-agent.direction),original.spawn});
    next[ai]=move(e,agent,chosen);
    if(chosen.dist!=original.dist||chosen.direction!=original.direction||chosen.turn!=original.turn||chosen.spawn!=original.spawn){
     ++changed;if(mode==38){next[ai]=original_next;continue;}act=chosen;auto&m=policy.M(act.aid);

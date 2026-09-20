@@ -1,13 +1,27 @@
-# Seed-aware C++ survival policy research
+# Seed-aware C++ survival policy checkpoint
 
-Selected development policy: **mode 46**, average **1809.62** on 128 fresh paired confirmation seeds, versus 1725.75 for mode 8. Paired gain 83.87, bootstrap 95% interval [29.65, 140.18], 76 wins and 52 losses. **The 2200 target is not achieved.**
+The current best policy is mode144: Lucas orchard behavior with the synchronized one-step predictive safety intervention and child-priority 60. The model becomes available after a configurable **180 simulated seconds**; before activation the controller uses only the public observation stream. The C++ harness checks that pre-activation action hashes match across paired modes and that birth forecasts do not mutate the live RNG.
 
-The controller retains Lucas orchard behaviour and full current resources and map. After configurable model activation, currently 180 simulated seconds, proposed births are checked against the synchronized model RNG. Mode 46 postpones a birth until the forecast child has an ageing threshold of at least 90, walking speed at least max(parent speed, 12), and nondecreasing sprint speed. Parent energy below 115 bypasses the delay. Only accepted births advance the forecast RNG; live RNG is untouched. Every accepted forecast is checked against the actual offspring. All 46,847 birth forecasts in confirmation matched, and all 128 paired pre-activation hashes matched.
+The fresh 500-seed confirmation scored **2076.2007 mean** against baseline mode46 at 1889.0477, for a paired gain of 187.1530. It had 363 wins and 137 losses, bootstrap 95% interval [155.6052, 218.5773], zero failures, zero cancellations, zero pre-activation hash conflicts, and 182833 verified birth forecasts. The 2200 target is not yet achieved.
 
-This requires a fully synchronized model including RNG, not merely a seed number or map. It is a native experiment with access to exact current state, not unknown-live validation or a promise of immutable future spawns. No evaluation or validation API client is included.
+Wave68 tested a turn-preserving safety scoring variant on 16 fresh pairs and lost by 186.2055, so it is not promoted. All experiments retain separate manifests, source hashes, and replay archives locally; compact summaries are included in `evidence/`.
 
-Use Linux Python 3.12 and NumPy 2.3.5. Python initializes NumPy compiled math kernels once; the simulation and policy loops are C++. Pin PYTHONPATH to that environment for the embedded interpreter. Build with `python build.py`, then run `bench/policy_bench configs/orchard.json SEED 46 3000 OUTPUT 180`.
+Build with Python 3.12 and the pinned native environment, then run `bench/policy_bench` with the manifest's delay parameter. No evaluation or validation API client is included.
 
-Rejected experiments are retained: exact predator location mode 27 failed 128-seed fresh confirmation; one-step predator action search modes 35 to 37 failed 16 paired seeds; exact-age lifecycle modes 39 to 42 failed 16 pairs; early fruit arrival modes 49 and 51 failed 16 pairs. Mode 50 inventory had a small unconfirmed gain. Their presence in history is not promotion. The next experiments are outside this frozen checkpoint.
+Wave69 tested exact-resource fruit allocation variants on 16 fresh pairs; all three lost to mode144 by 122–180 points and were rejected.
 
-Canonical numerical portability was verified by a full matching baseline game on mypc and Runpod with NumPy 2.3.5. Older NumPy 1.26.4 results are historical exploratory evidence and must not be pooled. Full completed state-only replays are retained locally; GitHub stores compact source and result evidence.
+Wave70 tested fruit-claim conditional safety triggers on 16 fresh pairs; all three lost to mode144 by 73–159 points and were rejected.
+
+Wave72 tested current-heading approaching-predator safety conditions on 16 fresh pairs; both variants lost to mode144 by 236–258 points and were rejected.
+
+Wave73 tested stronger safety displacement and energy penalties on 16 fresh pairs; all four variants lost to mode144 by 49–203 points and were rejected.
+
+Wave77 tested a cloned-engine future-fruit schedule on 8 fresh pairs; both horizons were harmful and rejected.
+
+Wave78 tested denser and local dodge headings on 16 fresh pairs; both were strongly harmful and rejected.
+
+Wave79 tested half-speed safety escape candidates on 16 fresh pairs; both were harmful and rejected.
+
+Wave80 tested smaller Lucas predator-dodge radii and angles on 16 fresh pairs; all four were harmful and rejected.
+
+Wave81: complete 16-pair predator-dodge ablation; all variants rejected versus mode144; 80 replays retained locally, not included in GitHub checkpoint.
