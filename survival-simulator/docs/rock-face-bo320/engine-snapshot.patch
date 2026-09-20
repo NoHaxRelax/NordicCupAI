@@ -1,0 +1,344 @@
+diff --git a/survival-simulator/fastsim/_engine.cpp b/survival-simulator/fastsim/_engine.cpp
+index 1e77f41..2c75aed 100644
+--- a/survival-simulator/fastsim/_engine.cpp
++++ b/survival-simulator/fastsim/_engine.cpp
+@@ -81,8 +81,12 @@ inline void vcos(const double* in, double* out, size_t n) { vec1(np_cos_l, libm_
+ inline void vatan2(const double* y, const double* x, double* out, size_t n) { vec2(np_atan2_l, libm_atan2, y, x, out, n); }
+ inline void vhypot(const double* x, const double* y, double* out, size_t n) { vec2(np_hypot_l, libm_hypot, x, y, out, n); }
+ 
+-inline double np_sin(double x) { return np_sin_l.fn ? call1(np_sin_l, x) : std::sin(x); }
+-inline double np_cos(double x) { return np_cos_l.fn ? call1(np_cos_l, x) : std::cos(x); }
++// NumPy's scalar float64 sin/cos loops resolve to the platform libm functions.
++// Calling libm directly avoids constructing the ufunc-loop ABI arrays for every
++// individual movement and facing calculation. Array calls still use NumPy's
++// selected vector loop through vsin/vcos.
++inline double np_sin(double x) { return std::sin(x); }
++inline double np_cos(double x) { return std::cos(x); }
+ inline double np_atan2(double y, double x) { return np_atan2_l.fn ? call2(np_atan2_l, y, x) : std::atan2(y, x); }
+ inline double np_hypot(double x, double y) { return np_hypot_l.fn ? call2(np_hypot_l, x, y) : std::hypot(x, y); }
+ 
+@@ -554,6 +558,7 @@ public:
+     std::vector<int32_t> edge_set_order;
+ 
+     int64_t next_agent_id = 0, next_fruit_id = 0, next_serial = 1;
++    std::vector<int32_t> agent_id_to_index;
+     double score = 0.0, time = 0.0;
+ 
+     std::unordered_map<int64_t, std::vector<Obs>> agent_observations;
+@@ -619,9 +624,12 @@ public:
+ 
+     // scratch
+     std::vector<double> rays, ring_x, ring_y, poly_key, e_vx, e_vy, e_a1, e_b1, e_nt;
++    std::vector<double> e_minx, e_maxx, e_miny, e_maxy;
+     std::vector<double> cdx, cdy, cbase, rcos, rsin, pdx, pdy, pang;
+     std::vector<double> odx, ody, ohyp, oang;
+     std::vector<size_t> oidx;
++    std::vector<size_t> emit_idx;
++    std::vector<double> rel_x, rel_y, rel_ang;
+     std::vector<double> vpx, vpy, pdist, pang2;
+     std::vector<char> pnear, pvis;
+     std::vector<int32_t> tmp_keys;
+@@ -925,6 +933,8 @@ public:
+     void add_agent(Creature a) {
+         a.id = next_agent_id++;
+         agents.push_back(a);
++        if (agent_id_to_index.size() <= (size_t)a.id) agent_id_to_index.resize((size_t)a.id + 1, -1);
++        agent_id_to_index[(size_t)a.id] = (int32_t)agents.size() - 1;
+         agents_dirty = true;
+     }
+     void spawn_agent_random() {
+@@ -977,10 +987,13 @@ public:
+     }
+     void kill_agent_at(size_t idx, int cause, int64_t predator_key=-1) {
+         const Creature& a = agents[idx];
++        int64_t dead_id = a.id;
+         events.push_back({cause, time, a.id, a.age, a.energy});
+         diagnostic(cause == 0 ? 8 : 9, a.id, predator_key, a.energy, a.age);
+         agent_observations.erase(a.id);
+         agents.erase(agents.begin() + idx);
++        agent_id_to_index[(size_t)dead_id] = -1;
++        for (size_t i = idx; i < agents.size(); i++) agent_id_to_index[(size_t)agents[i].id] = (int32_t)i;
+         agents_dirty = true;
+     }
+     bool try_add_fruit(double x, double y, double radius) {
+@@ -1101,6 +1114,7 @@ public:
+     // compute_visibility(): fills ring (agent position + sorted polygon, closed) and hit edges.
+     void compute_visibility(double x, double y, double dir, double cone, double vr,
+                             const std::vector<int32_t>& rank, int ci, std::vector<int32_t>& hit_edges,
++                            double dir_cos, double dir_sin, bool use_cone_filter, double cos_lim,
+                             double& minx, double& maxx, double& miny, double& maxy) {
+         const double eps = 1e-3;
+         rays.clear();
+@@ -1108,9 +1122,6 @@ public:
+         double half = cone / 2;
+         // Corners whose direction is > half + 0.01 rad off the view axis cannot yield a
+         // ray (offsets are only 0.001), so the exact test below is skipped for them.
+-        const double cd = np_cos(dir), sd = np_sin(dir);
+-        const bool use_cone_filter = half + 0.01 < PI / 2;
+-        const double cos_lim = use_cone_filter ? np_cos(half + 0.01) : -2.0;
+         cdx.clear(); cdy.clear();
+         const int gx0 = cell_x(x - vr - 1), gx1 = cell_x(x + vr + 1);
+         const int gy0 = cell_y(y - vr - 1), gy1 = cell_y(y + vr + 1);
+@@ -1122,7 +1133,7 @@ public:
+                     double d2 = dx * dx + dy * dy;
+                     if (!(d2 <= vr2)) continue;
+                     if (use_cone_filter) {
+-                        double dot = dx * cd + dy * sd;
++                        double dot = dx * dir_cos + dy * dir_sin;
+                         if (dot < cos_lim * std::sqrt(d2) - 1e-9 * (std::fabs(dx) + std::fabs(dy))) continue;
+                     }
+                     cdx.push_back(dx); cdy.push_back(dy);
+@@ -1150,6 +1161,7 @@ public:
+         // Edges that cannot be hit within the vision radius never change the result.
+         tmp_keys.clear();
+         e_vx.clear(); e_vy.clear(); e_a1.clear(); e_b1.clear(); e_nt.clear();
++        e_minx.clear(); e_maxx.clear(); e_miny.clear(); e_maxy.clear();
+         const double reach = vr + 1.0;
+         for (int32_t k : cell_candidates(cell_x(x), cell_y(y), ci, rank, vr)) {
+             const Edge& e = edges[k];
+@@ -1162,6 +1174,9 @@ public:
+             double vx = e.x2 - e.x1, vy = e.y2 - e.y1, a1 = e.x1 - x, b1 = e.y1 - y;
+             e_vx.push_back(vx); e_vy.push_back(vy); e_a1.push_back(a1); e_b1.push_back(b1);
+             e_nt.push_back(-vy * a1 + vx * b1);  // numerator of t, same for every ray
++            double a2 = a1 + vx, b2 = b1 + vy;
++            e_minx.push_back(std::min(a1, a2)); e_maxx.push_back(std::max(a1, a2));
++            e_miny.push_back(std::min(b1, b2)); e_maxy.push_back(std::max(b1, b2));
+         }
+ 
+         size_t nr = rays.size();
+@@ -1184,7 +1199,12 @@ public:
+             // |nt| > best*|det|*(1+2^-45) implies fl(nt/det) >= best, and
+             // |nu| > |det|*(1+2^-45) implies fl(nu/det) > 1 (rounding error is ~2^-52).
+             const double SLACK = 1.0 + 0x1p-45;
++            double ray_x = rdx * vr, ray_y = rdy * vr;
++            double ray_minx = std::min(0.0, ray_x), ray_maxx = std::max(0.0, ray_x);
++            double ray_miny = std::min(0.0, ray_y), ray_maxy = std::max(0.0, ray_y);
+             for (size_t q = 0; q < ne; q++) {
++                if (e_maxx[q] < ray_minx || e_minx[q] > ray_maxx ||
++                    e_maxy[q] < ray_miny || e_miny[q] > ray_maxy) continue;
+                 double det = -rdx * e_vy[q] + rdy * e_vx[q];
+                 if (!(std::fabs(det) >= 1e-8)) continue;
+                 const bool dneg = det < 0;
+@@ -1236,6 +1256,7 @@ public:
+ 
+     void process_objects(const Creature& c, const std::vector<Target>& objs, int tag, bool include_direction,
+                          bool include_id, double minx, double maxx, double miny, double maxy,
++                         double dir_cos, double dir_sin, bool use_cone_filter, double cos_lim,
+                          std::vector<Obs>& out) {
+         if (objs.empty()) return;
+         size_t n = objs.size();
+@@ -1249,9 +1270,6 @@ public:
+         // margin keeps this exact despite rounding in hypot.
+         double reach = std::max(c.hearing_radius, c.vision_radius) + 1.0;
+         double reach2 = reach * reach;
+-        const double cd = np_cos(c.direction), sd = np_sin(c.direction);
+-        const bool use_cone_filter = half + 0.01 < PI / 2;
+-        const double cos_lim = use_cone_filter ? np_cos(half + 0.01) : -2.0;
+         oidx.clear(); odx.clear(); ody.clear();
+         for (size_t i = 0; i < n; i++) {
+             nearby[i] = 0; visible[i] = 0;
+@@ -1268,7 +1286,7 @@ public:
+             double dx = odx[j], dy = ody[j];
+             dist[i] = ohyp[j];
+             if (!(dist[i] <= c.hearing_radius) && use_cone_filter &&
+-                dx * cd + dy * sd < cos_lim * std::sqrt(dx * dx + dy * dy) - 1e-9 * (std::fabs(dx) + std::fabs(dy)))
++                dx * dir_cos + dy * dir_sin < cos_lim * std::sqrt(dx * dx + dy * dy) - 1e-9 * (std::fabs(dx) + std::fabs(dy)))
+                 continue;  // outside the cone and not heard
+             oidx[k] = i; odx[k] = dx; ody[k] = dy; k++;
+         }
+@@ -1281,22 +1299,33 @@ public:
+             nearby[i] = dist[i] <= c.hearing_radius;
+             visible[i] = !nearby[i] && (dist[i] <= c.vision_radius) && (std::fabs(ang[i]) <= half);
+         }
+-        auto emit = [&](size_t i) {
++        emit_idx.clear();
++        for (size_t i = 0; i < n; i++)
++            if (nearby[i]) emit_idx.push_back(i);
++        for (size_t i = 0; i < n; i++)
++            if (visible[i] && polygon_contains(ring_x, ring_y, minx, maxx, miny, maxy, objs[i].x, objs[i].y))
++                emit_idx.push_back(i);
++        if (include_direction) {
++            rel_x.resize(emit_idx.size()); rel_y.resize(emit_idx.size()); rel_ang.resize(emit_idx.size());
++            for (size_t j = 0; j < emit_idx.size(); j++) {
++                size_t i = emit_idx[j];
++                rel_y[j] = c.y - objs[i].y; rel_x[j] = c.x - objs[i].x;
++            }
++            vatan2(rel_y.data(), rel_x.data(), rel_ang.data(), emit_idx.size());
++        }
++        for (size_t j = 0; j < emit_idx.size(); j++) {
++            size_t i = emit_idx[j];
+             Obs o;
+             o.type = tag; o.distance = dist[i]; o.angle = ang[i];
+             o.has_rel_dir = include_direction; o.has_id = include_id;
+             o.rel_dir = 0; o.id = 0;
+             if (include_direction) {
+-                double a = np_atan2(c.y - objs[i].y, c.x - objs[i].x) - objs[i].direction;
++                double a = rel_ang[j] - objs[i].direction;
+                 o.rel_dir = py_mod(a + PI, TWO_PI) - PI;
+             }
+             if (include_id) o.id = objs[i].id;
+             out.push_back(o);
+-        };
+-        for (size_t i = 0; i < n; i++)
+-            if (nearby[i]) emit(i);
+-        for (size_t i = 0; i < n; i++)
+-            if (visible[i] && polygon_contains(ring_x, ring_y, minx, maxx, miny, maxy, objs[i].x, objs[i].y)) emit(i);
++        }
+     }
+ 
+     std::vector<Target> t_fruits, t_agents, t_preds, t_trees;
+@@ -1315,16 +1344,22 @@ public:
+                  const PySetEmu* trees_set, const PySetEmu* preds_set, std::vector<Obs>& out) {
+         out.clear();
+         double cos_dir = np_cos(-c.direction), sin_dir = np_sin(-c.direction);
++        double dir_cos = np_cos(c.direction), dir_sin = np_sin(c.direction);
++        double half = c.cone_angle / 2.0;
++        bool use_cone_filter = half + 0.01 < PI / 2;
++        double cos_lim = use_cone_filter ? np_cos(half + 0.01) : -2.0;
+         double minx, maxx, miny, maxy;
+         long ccx = to_chunk(c.x), ccy = to_chunk(c.y);
+         ensure_local_static(ccx, ccy);
+         const std::vector<int32_t>& rank = local_edge_rank[chunk_index(ccx, ccy)];
+-        compute_visibility(c.x, c.y, c.direction, c.cone_angle, c.vision_radius, rank, chunk_index(ccx, ccy), hit_edges, minx, maxx, miny, maxy);
++        compute_visibility(c.x, c.y, c.direction, c.cone_angle, c.vision_radius, rank, chunk_index(ccx, ccy), hit_edges,
++                           dir_cos, dir_sin, use_cone_filter, cos_lim, minx, maxx, miny, maxy);
+ 
+         if (fruits_set && fruits_set->used) {
+             t_fruits.clear();
+             fruits_set->for_each([&](int32_t k) { const Fruit& f = fruits[key_to_index_fruit[k]]; t_fruits.push_back({f.x, f.y, 0, 0}); });
+-            process_objects(c, t_fruits, 0, false, false, minx, maxx, miny, maxy, out);
++            process_objects(c, t_fruits, 0, false, false, minx, maxx, miny, maxy,
++                            dir_cos, dir_sin, use_cone_filter, cos_lim, out);
+         }
+         if (agents_set && agents_set->used) {
+             t_agents.clear();
+@@ -1333,7 +1368,8 @@ public:
+                 const Creature& a = agents[key_to_index_agent[k]];
+                 t_agents.push_back({a.x, a.y, a.direction, a.id});
+             });
+-            process_objects(c, t_agents, 1, true, true, minx, maxx, miny, maxy, out);
++            process_objects(c, t_agents, 1, true, true, minx, maxx, miny, maxy,
++                            dir_cos, dir_sin, use_cone_filter, cos_lim, out);
+         }
+         if (preds_set && preds_set->used) {
+             t_preds.clear();
+@@ -1342,12 +1378,14 @@ public:
+                 const Creature& p = predators[key_to_index_pred[k]];
+                 t_preds.push_back({p.x, p.y, p.direction, 0});
+             });
+-            process_objects(c, t_preds, 2, true, false, minx, maxx, miny, maxy, out);
++            process_objects(c, t_preds, 2, true, false, minx, maxx, miny, maxy,
++                            dir_cos, dir_sin, use_cone_filter, cos_lim, out);
+         }
+         if (trees_set && trees_set->used) {
+             t_trees.clear();
+             trees_set->for_each([&](int32_t k) { const Tree& t = trees[key_to_index_tree[k]]; t_trees.push_back({t.x, t.y, 0, 0}); });
+-            process_objects(c, t_trees, 3, false, false, minx, maxx, miny, maxy, out);
++            process_objects(c, t_trees, 3, false, false, minx, maxx, miny, maxy,
++                            dir_cos, dir_sin, use_cone_filter, cos_lim, out);
+         }
+         for (int32_t k : hit_edges) {
+             const Edge& e = edges[k];
+@@ -1366,9 +1404,8 @@ public:
+     struct Action { int64_t agent_id; double move_distance; bool has_dir; double move_direction; double turn_angle; bool spawn; };
+ 
+     long find_agent(int64_t id) const {
+-        for (size_t i = 0; i < agents.size(); i++)
+-            if (agents[i].id == id) return (long)i;
+-        return -1;
++        if (id < 0 || (size_t)id >= agent_id_to_index.size()) return -1;
++        return agent_id_to_index[(size_t)id];
+     }
+ 
+     void agent_step(const Action& act) {
+@@ -1413,15 +1450,13 @@ public:
+             diagnostic(3, a.id, -1, energy_before-a.energy);
+ 
+             refresh_grids();
+-            s_agents = cached_union(grid_agents, uc_agents, a.x, a.y);
++            const PySetEmu& ag_set = cached_union(grid_agents, uc_agents, a.x, a.y);
+             const PySetEmu& fr_set = cached_union(grid_fruits, uc_fruits, a.x, a.y);
+             const PySetEmu& tr_set = cached_union(grid_trees, uc_trees, a.x, a.y);
+             // an agent is never in the predator set, so that set is used as cached
+             const PySetEmu& pr_set = cached_union(grid_predators, uc_preds, a.x, a.y);
+-            if (s_agents.lookup(a.key, a.hash) >= 0) s_agents.discard(a.key, a.hash);
+-
+             std::vector<Obs>& obs = agent_observations[a.id];
+-            observe(a, &s_agents, &fr_set, &tr_set, &pr_set, obs);
++            observe(a, &ag_set, &fr_set, &tr_set, &pr_set, obs);
+ 
+             if (fr_set.used) {
+                 // Touching does not depend on earlier meals, so collect in the engine's
+@@ -1464,15 +1499,15 @@ public:
+                 }
+             }
+             refresh_grids();
+-            s_agents = cached_union(grid_agents, uc_agents, predators[p].x, predators[p].y);
++            const PySetEmu& pred_ag_set = cached_union(grid_agents, uc_agents, predators[p].x, predators[p].y);
+             const std::vector<int32_t>& lobs = local_obstacles(predators[p].x, predators[p].y);
+-            observe(predators[p], &s_agents, nullptr, nullptr, nullptr, pred_obs);
++            observe(predators[p], &pred_ag_set, nullptr, nullptr, nullptr, pred_obs);
+             predator_act(predators[p], pred_obs, lobs);
+ 
+             refresh_grids();
+             Creature& pr = predators[p];
+-            s_agents = cached_union(grid_agents, uc_agents, pr.x, pr.y);
+-            s_agents.to_vector(keys_buf);
++            const PySetEmu& touching_agents = cached_union(grid_agents, uc_agents, pr.x, pr.y);
++            touching_agents.to_vector(keys_buf);
+             if (!keys_buf.empty()) {
+                 std::vector<int32_t> touching;
+                 for (size_t q = 0; q < keys_buf.size(); q++) {
+diff --git a/survival-simulator/fastsim/build.py b/survival-simulator/fastsim/build.py
+index b5219ba..2c702e8 100644
+--- a/survival-simulator/fastsim/build.py
++++ b/survival-simulator/fastsim/build.py
+@@ -5,7 +5,7 @@ Needs only a C++17 compiler and the Python headers (no pybind11/setuptools).
+ The sin/cos builtins are disabled so the compiler cannot merge them into a
+ sincos call, which may round differently from numpy's separate libm calls.
+ """
+-import os, subprocess, sys, sysconfig, pathlib, hashlib, json
++import os, subprocess, sys, sysconfig, pathlib, hashlib, json, shlex
+ import numpy
+ 
+ HERE = pathlib.Path(__file__).resolve().parent
+@@ -18,6 +18,7 @@ def build(verbose=True):
+     flags = ['-O2', '-std=c++17', '-fPIC', '-ffp-contract=off', '-fno-fast-math',
+              '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos',
+              '-I', sysconfig.get_paths()['include'], '-I', numpy.get_include()]
++    flags += shlex.split(os.environ.get('FASTSIM_EXTRA_FLAGS', ''))
+     env = dict(os.environ)
+     if sys.platform == 'darwin':
+         flags += ['-bundle', '-undefined', 'dynamic_lookup']
+diff --git a/survival-simulator/fastsim/build_policy.py b/survival-simulator/fastsim/build_policy.py
+index b503bf6..639a137 100644
+--- a/survival-simulator/fastsim/build_policy.py
++++ b/survival-simulator/fastsim/build_policy.py
+@@ -15,15 +15,16 @@ The build also regenerates _shared_pysem.inc (the CPython-semantics helpers the
+ needs: MT19937, set iteration order, float % and //, hash) out of _engine.cpp and fails
+ if the slice has drifted, so the two copies cannot diverge unnoticed.
+ """
+-import os, re, subprocess, sys, sysconfig, pathlib, hashlib, json
++import os, re, subprocess, sys, sysconfig, pathlib, hashlib, json, shlex
+ import numpy
+ 
+ HERE = pathlib.Path(__file__).resolve().parent
+ UNITS = ('_policy.cpp', '_orchard_policy.cpp')
+ HEADERS = ('_engine.cpp', '_orchard.hpp', '_evasion.hpp', 'policy_abi.hpp', 'policy_iface.hpp',
+            '_shared_pysem.inc')
++EXTRA_FLAGS = shlex.split(os.environ.get('FASTSIM_EXTRA_FLAGS', ''))
+ FLAGS = ['-O2', '-std=c++17', '-fPIC', '-ffp-contract=off', '-fno-fast-math',
+-         '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos']
++         '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos', *EXTRA_FLAGS]
+ 
+ 
+ def refresh_shared(check=True):
+@@ -79,7 +80,7 @@ def build(verbose=True):
+         subprocess.run(cmd, check=True, env=env)
+         objs.append(str(obj))
+     tmp = out.with_suffix('.tmp')
+-    cmd = [cxx, *link_flags, *objs, *link, '-o', str(tmp)]
++    cmd = [cxx, *link_flags, *EXTRA_FLAGS, *objs, *link, '-o', str(tmp)]
+     cmds.append(cmd)
+     if verbose:
+         print(' '.join(cmd))

@@ -15,15 +15,16 @@ The build also regenerates _shared_pysem.inc (the CPython-semantics helpers the 
 needs: MT19937, set iteration order, float % and //, hash) out of _engine.cpp and fails
 if the slice has drifted, so the two copies cannot diverge unnoticed.
 """
-import os, re, subprocess, sys, sysconfig, pathlib, hashlib, json
+import os, re, subprocess, sys, sysconfig, pathlib, hashlib, json, shlex
 import numpy
 
 HERE = pathlib.Path(__file__).resolve().parent
 UNITS = ('_policy.cpp', '_orchard_policy.cpp')
 HEADERS = ('_engine.cpp', '_orchard.hpp', '_evasion.hpp', 'policy_abi.hpp', 'policy_iface.hpp',
            '_shared_pysem.inc', '../models/self_stuck.hpp')
+EXTRA_FLAGS = shlex.split(os.environ.get('FASTSIM_EXTRA_FLAGS', ''))
 FLAGS = ['-O2', '-std=c++17', '-fPIC', '-ffp-contract=off', '-fno-fast-math',
-         '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos']
+         '-fno-builtin-sin', '-fno-builtin-cos', '-fno-builtin-sincos', *EXTRA_FLAGS]
 
 
 def refresh_shared(check=True):
@@ -79,7 +80,7 @@ def build(verbose=True):
         subprocess.run(cmd, check=True, env=env)
         objs.append(str(obj))
     tmp = out.with_suffix('.tmp')
-    cmd = [cxx, *link_flags, *objs, *link, '-o', str(tmp)]
+    cmd = [cxx, *link_flags, *EXTRA_FLAGS, *objs, *link, '-o', str(tmp)]
     cmds.append(cmd)
     if verbose:
         print(' '.join(cmd))
