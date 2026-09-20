@@ -25,3 +25,5 @@ Wave79 tested half-speed safety escape candidates on 16 fresh pairs; both were h
 Wave80 tested smaller Lucas predator-dodge radii and angles on 16 fresh pairs; all four were harmful and rejected.
 
 Wave81: complete 16-pair predator-dodge ablation; all variants rejected versus mode144; 80 replays retained locally, not included in GitHub checkpoint.
+
+Wave83: corrected fruit-readiness timing screen; all variants rejected versus mode144. Wave82 is recorded as an invalid unsupported-override attempt.

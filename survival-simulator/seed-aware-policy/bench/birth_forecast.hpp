@@ -3,7 +3,7 @@
 // of the synchronized model RNG, never changes the live generator, and advances
 // the copy only for accepted births in actual agent-action order.
 struct BirthForecast {
- static bool enabled(int mode){return (mode>=43&&mode<=48)||(mode>=52&&mode<=71)||(mode>=100&&mode<=210);}
+ static bool enabled(int mode){return (mode>=43&&mode<=48)||(mode>=52&&mode<=71)||(mode>=100&&mode<=214);}
  double age_floor=-1., walking_floor=-1., urgent_floor=-1.;
  uint64_t proposed=0, postponed=0, verified=0, protected_births=0;
  struct Child {double speed,sprint,max_energy,hearing,vision,cone,direction,max_age;};
