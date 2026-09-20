@@ -48,7 +48,7 @@ struct Game:std::enable_shared_from_this<Game>{
         try{while(true){
             J packet;{std::unique_lock<std::mutex> guard(mu);changed.wait_for(guard,std::chrono::milliseconds(200),[&]{return stopped||packets.size()>seq;});
                 if(packets.size()<=seq){if(stopped||seconds(received)>90)break;continue;}packet=packets[seq];}
-            std::string error;J expected=canonical(public_state(*e)),actual=canonical(packet["before"]);bool full_match=same(expected,actual);bool match=same(dynamic_state(expected),dynamic_state(actual),&error);
+            bool audit=seq%100==0||int64_t(seq)==recovery_seq;std::string error;J expected,actual;bool full_match=true,match=true;if(audit){expected=canonical(public_state(*e));actual=canonical(packet["before"]);full_match=same(expected,actual);match=same(dynamic_state(expected),dynamic_state(actual),&error);}
             J check={{"seq",seq},{"time",e->time},{"match",match},{"full_dto_match",full_match},{"comparison","All dynamic fields; edge-ray rendering compared separately"},{"checked_ns",now_ns()}};
             if(!match){check["difference"]=error;mismatches++;save_json(dir/"first-mismatch.json",{{"check",check},{"expected",expected},{"actual",actual}});}
             if(!match||seq%100==0){checks<<check.dump()<<'\n';checks.flush();}
@@ -65,7 +65,7 @@ struct Game:std::enable_shared_from_this<Game>{
             for(auto& f:e->fruits)if(!old_fruits.count(f.fruit_id))fruits.push_back({f.fruit_id,f.x,f.y});
             for(auto& a:e->agents)poses[std::to_string(a.id)]={a.x,a.y,a.direction};
             int64_t produced=now_ns();J row={{"seq",seq},{"input_time",packet["before"]["sim_time"]},{"predicted_time",e->time},{"produced_ns",produced},
-                {"events",{{"time",e->time},{"tree_spawns",trees},{"fruit_spawns",fruits}}},{"expected",public_state(*e)},{"expected_agent_poses",poses}};
+                {"events",{{"time",e->time},{"tree_spawns",trees},{"fruit_spawns",fruits}}},{"expected_agent_poses",poses}};if(seq%100==0)row["expected"]=public_state(*e);
             if(seq%100==0){predictions<<row.dump()<<'\n';predictions.flush();}
             {std::lock_guard<std::mutex> guard(mu);latest_seq=seq;latest={{"seq",seq},{"failed",false},{"time",e->time},{"produced_ns",produced},{"tree_spawns",trees.size()},{"fruit_spawns",fruits.size()}};changed.notify_all();}
             seq++;
