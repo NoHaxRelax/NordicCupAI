@@ -1,0 +1,79 @@
+{
+  "hello": true,
+  "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "sources": {
+    "fastsim/policy_iface.hpp": "baa19b0c753338f8cb0584f5dd9378b99e2759f98819a21dbfbaf6a245541554",
+    "fastsim/_orchard.hpp": "2df49b2b5c401b641d246f268bcecc9dc1c9d533da0c762c6a7da86230a32181",
+    "fastsim/_evasion.hpp": "07412c81c00f6dde61ba4d360fa8667487a8a1f7a8e0c562204daf4fa322bbdc",
+    "fastsim/policy_abi.hpp": "99d1367146689fd51cd7c464554bf0614698afc508452e1891c97841083e3536",
+    "fastsim/_engine.cpp": "78e20244f7cd330ea6f792a02fc917217999f4254ef53f5c7631fdccbdf76101",
+    "fastsim/_orchard_policy.cpp": "95727f2130639c7b0ad7771a18b1616585d68d257ef678ab1d4dd12adffc513f",
+    "fastsim/_policy.cpp": "ebddae90ef9d03d214a6a958b8976ed99a026045945b1ab9148ea05d1858cd10",
+    "models/self_stuck.hpp": "897dd92149d233e077c2301097916795a1b054c3bb79cba0e4d5e31975041690",
+    "scripts/rock320_config.py": "52fce017e887787892b28829d74035cee33b6fa736f32910cba0a79659e4ccb8",
+    "scripts/rock320_worker.py": "d8c6b295e3261deedbad4d6674975ee07dabe5d9eded6086d6f379b276f4af79",
+    "scripts/evaluate_frozen1000.py": "c0e9ec3aaf405629c92cddc3df27abce2905dc8a72e230c4f9925166ecbacb63"
+  },
+  "build": {
+    "sources": {
+      "_policy.cpp": "ebddae90ef9d03d214a6a958b8976ed99a026045945b1ab9148ea05d1858cd10",
+      "_orchard_policy.cpp": "95727f2130639c7b0ad7771a18b1616585d68d257ef678ab1d4dd12adffc513f",
+      "_engine.cpp": "78e20244f7cd330ea6f792a02fc917217999f4254ef53f5c7631fdccbdf76101",
+      "_orchard.hpp": "2df49b2b5c401b641d246f268bcecc9dc1c9d533da0c762c6a7da86230a32181",
+      "_evasion.hpp": "07412c81c00f6dde61ba4d360fa8667487a8a1f7a8e0c562204daf4fa322bbdc",
+      "policy_abi.hpp": "99d1367146689fd51cd7c464554bf0614698afc508452e1891c97841083e3536",
+      "policy_iface.hpp": "baa19b0c753338f8cb0584f5dd9378b99e2759f98819a21dbfbaf6a245541554",
+      "_shared_pysem.inc": "bb95cd0128d50f6d65d446d247c2bac9f20761bb23d0a53b4154e67ecab96433",
+      "../models/self_stuck.hpp": "897dd92149d233e077c2301097916795a1b054c3bb79cba0e4d5e31975041690"
+    },
+    "binary_sha256": "5c1a3679baedd0e07716b65c47f2fb98d63f2ff42f646a1c2a4bd76825897cc8",
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "numpy": "2.3.5",
+    "commands": [
+      [
+        "c++",
+        "-O2",
+        "-std=c++17",
+        "-fPIC",
+        "-ffp-contract=off",
+        "-fno-fast-math",
+        "-fno-builtin-sin",
+        "-fno-builtin-cos",
+        "-fno-builtin-sincos",
+        "-I",
+        "/usr/include/python3.12",
+        "-I",
+        "/workspace/lucas-families10/.venv/lib/python3.12/site-packages/numpy/_core/include",
+        "-c",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_policy.cpp",
+        "-o",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_policy.o"
+      ],
+      [
+        "c++",
+        "-O2",
+        "-std=c++17",
+        "-fPIC",
+        "-ffp-contract=off",
+        "-fno-fast-math",
+        "-fno-builtin-sin",
+        "-fno-builtin-cos",
+        "-fno-builtin-sincos",
+        "-c",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_orchard_policy.cpp",
+        "-o",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_orchard_policy.o"
+      ],
+      [
+        "c++",
+        "-shared",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_policy.o",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_orchard_policy.o",
+        "-o",
+        "/workspace/lucas-rock320/survival-simulator/fastsim/_policy.cpython-312-x86_64-linux-gnu.tmp"
+      ]
+    ],
+    "compiler": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0"
+  }
+}
