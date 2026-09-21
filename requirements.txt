@@ -1,0 +1,11 @@
+# Served with Python 3.12, torch 2.8 (CUDA 12.8) on one NVIDIA L40S.
+torch>=2.8
+torchvision>=0.23
+ultralytics>=8.4          # must know the YOLO26 architecture
+fastapi>=0.115
+uvicorn>=0.30
+pydantic>=2.7,<3
+numpy>=1.26
+opencv-python>=4.9
+requests>=2.31
+faster-coco-eval>=1.7.2,<2   # only for endpoint/local_evaluator.py (the organisers' scorer)
