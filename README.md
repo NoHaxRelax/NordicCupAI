@@ -1,3 +1,19 @@
+# Powered by Smørrebrød · Nordic AI Cup 2026
+
+This repository is our team's work on the three use cases of the Nordic AI Cup 2026: medical-appointment, drone-flyby
+and survival-simulator. Thank you to the four people who built it, all from the Technical University of Denmark (DTU).
+
+| Name | University | GitHub | LinkedIn |
+|---|---|---|---|
+| **Lucas Rieneck Gottfried Pedersen** | Technical University of Denmark (DTU) | [@LucasLista](https://github.com/LucasLista) | [lucasrgpedersen](https://www.linkedin.com/in/lucasrgpedersen/) |
+| **Oscar Thorsted Svendsen** | Technical University of Denmark (DTU) | [@Badecar](https://github.com/Badecar) | [oscar-thorsted-svendsen](https://www.linkedin.com/in/oscar-thorsted-svendsen/) |
+| **Nikolaj Jakobsen** | Technical University of Denmark (DTU) | [@NikolajHJ](https://github.com/NikolajHJ) | [nikolaj-jakobsen](https://www.linkedin.com/in/nikolaj-jakobsen/) |
+| **Elias D. Lunøe** | Technical University of Denmark (DTU) | [@NoHaxRelax](https://github.com/NoHaxRelax) | [eliaslunoe](https://www.linkedin.com/in/eliaslunoe/) |
+
+Thank you also to Ambolt AI for hosting the competition. The organisers' original description of the event follows below.
+
+---
+
 # Nordic AI Cup 2026
 
 Welcome to the **Nordic AI Cup**, hosted by [Ambolt AI](https://ambolt.io/). Previously held as the Danish national competition, the event now spans the whole of the Nordics, with a partner organization in each participating country.  
